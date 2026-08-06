@@ -1,0 +1,834 @@
+{
+  "architecture_principle": "Retrieval iteration must ACCUMULATE information state, never replace earlier context with the latest bridge. Pinned by tests/unit/test_information_state.py.",
+  "benchmark_lineage": {
+    "controlled_gate_a_v1": "SUPERSEDED_answer_leaked_into_one_question",
+    "controlled_gate_a_v2": "CANONICAL_for_gate_a0_and_gate_b",
+    "controlled_gate_a_v3": "HISTORICAL_qualitative_only_four_defects_documented",
+    "controlled_gate_a_v4": "CANONICAL_VALID_V4_true_frozen_before_evaluation",
+    "controlled_gate_c2_calibration_v1": "CANONICAL_for_gate_c2_component_selection_does_not_replace_v4"
+  },
+  "canonical_package": "hrm_adaptive_memory",
+  "capabilities": {
+    "adaptive_recurrence": "BLOCKED",
+    "adaptive_retrieval": "BLOCKED",
+    "agentdb_procedural_memory": "BLOCKED",
+    "bounded_chain_completion": "QUALIFIED",
+    "bounded_iterative_retrieval": "DOES_NOT_GENERALIZE",
+    "calculate_action": "UNQUALIFIED",
+    "candidate_generation_policy": "FROZEN_v1",
+    "executive_training": "BLOCKED",
+    "graphiti_temporal_memory": "BLOCKED",
+    "infini_consolidation": "BLOCKED",
+    "pixelrag": "BLOCKED",
+    "ruvector": "BLOCKED",
+    "single_pass_retrieval": "QUALIFIED",
+    "turbovec": "BLOCKED"
+  },
+  "environment_note": "Installing FlagEmbedding downgraded transformers to 4.57.6, and the HRM adapter's pinned-version guard refused to load rather than silently using a different architecture. FlagEmbedding is removed; transformers restored to 5.14.1. The guard did exactly its job.",
+  "gates": {
+    "gate_a0_controlled_evidence_use": "PASS",
+    "gate_a1_structural_generalization": "PENDING_AWAITING_V4",
+    "gate_b_single_pass_retrieval": "PASS",
+    "gate_c0_controlled_iterative_retrieval": "MECHANISM_SUCCESS_PROMOTION_BLOCKED_BY_BENCHMARK_STRUCTURE",
+    "gate_c1_structural_generalization_iterative_retrieval": "FAIL_MEASURED_ON_V4",
+    "gate_c2_i_identity_resolution": "PENDING",
+    "gate_c2_r_retrieval_coverage": "PASS_POLICY_FROZEN_c2_candidate_generation_v1",
+    "gate_c2_s_evidence_selection": "PASS_ID_PARTITION_structural_selection_captures_30pct_of_oracle_gap",
+    "gate_c2_semantic_information_gap_retrieval": "IN_PROGRESS_COVERAGE_MEASURED",
+    "gate_c2c_chain_completion": "FAIL_ON_ONE_BADLY_SPECIFIED_CRITERION",
+    "gate_c2c_chain_completion_qualified": "PASS_all_four_regimes_on_identifiable_corpus",
+    "gate_c2c_v2_chain_validation": "FAIL_ON_A_TRANSPLANTED_DESCRIPTION_THRESHOLD",
+    "gate_c2c_v3_chain_validation": "FAIL_description_regime_only",
+    "gate_c3_surface_identity_resolution": "PENDING_PROTOCOL_FROZEN_IMPLEMENTATION_NOT_STARTED",
+    "gate_d_conditional_retrieval_opportunity": "PENDING_ACTION_TOO_WEAK_TO_MEASURE",
+    "gate_e_learned_retrieval_control": "BLOCKED",
+    "gate_f_recurrence_opportunity": "BLOCKED",
+    "gate_g_adaptive_recurrence": "BLOCKED",
+    "gate_h_verification_control": "BLOCKED",
+    "gate_i_unified_executive": "BLOCKED",
+    "gate_j_persistent_memory": "BLOCKED",
+    "gate_k_consolidation": "BLOCKED",
+    "gate_l_latent_memory": "BLOCKED",
+    "gate_n1_natural_external_memory": "PENDING"
+  },
+  "hypothesis_only_not_measured": {
+    "_note": "Proposals from exploratory Colab analysis that were simulated or projected rather than measured. None may enter a canonical claim.",
+    "adaptive_router": "BLOCKED",
+    "batch_size_4_or_8": "UNQUALIFIED",
+    "bge_base": "HYPOTHESIS_ONLY",
+    "bge_micro": "HYPOTHESIS_ONLY",
+    "deberta_reranker": "HYPOTHESIS_ONLY",
+    "efficiency_gain_36_6_percent": "SIMULATED_ONLY",
+    "k_60": "UNQUALIFIED",
+    "rrf_on_synthetic_rankings": "HYPOTHESIS_ONLY_superseded_by_real_measurement_above"
+  },
+  "known_instrument_limitations": {
+    "oracle_bridge_arm": "RESOLVED for v4: hrm_adaptive_memory/experiments/oracle_ladder.py reads latent identity from the task proof graph and raises OracleMetadataMissing rather than falling back to surface derivation. R2 (bridge identity, current query style) and R3 (bridge + target relation) are separate arms, so bridge identification and query formulation no longer conflate. The v3 oracle_bridge arm remains invalid and its numbers stay voided.",
+    "v3_corpus": "Evidence-level style contamination both directions; alias regime is prefix truncation; 0/120 description tasks answerable from evidence; oracle_bridge reuses the extractor under test."
+  },
+  "negative_results": {
+    "adaptive_retrieval_trigger": "91 of 91 follow-ups positive, 0 negative; a fixed two-pass policy suffices and Gate D is expected to FAIL on this corpus",
+    "calculate_action": "100 answers produced, +0.000 marginal quality; NOT promoted",
+    "calculate_action_v3": "-0.008 on v3 qualification; harmful, remains unqualified",
+    "followup_dropped_the_subject": "MEASURED: the old follow-up discarded the subject after finding a bridge. Complete-set@50 by formulation: bridge alone 0.500, bridge+relation 0.625, subject+bridge+relation 0.900. Retention is worth +0.275, larger than any encoder change measured. Fixed by InformationState, which accumulates rather than replaces; bridge_only is retained as a named negative control.",
+    "gate_d_v3": "oracle trigger equals best fixed policy on both splits (opportunity +0.000); 50 positive / 450 neutral / 0 negative. No controller is justified.",
+    "rrf_k_sensitivity": "NEGATIVE_RESULT: complete_set@50 is 0.767 at every k in {10,30,60,100} on development. k was never worth tuning on this corpus. k=10 is used as the simplest deterministic value on a CES@10 tiebreak and is NOT claimed to be scientifically superior.",
+    "slot_label_echo": "99 -> 0 under precision packing; was an evidence-confusability artefact, not a prompt-interface or reasoning limit",
+    "slot_label_echoes": "Track evidence quality, not packet format: 85 -> 28 under precision packing, -> 3 under oracle evidence. F-arms would measure a symptom; implemented but unrun."
+  },
+  "next_work": "Gate C3 (Surface Identity Resolution) protocol is frozen at configs/gate_c3_protocol.json before any measurement: ladder I0-I6, primary metric S2cLiveRate (currently 0.0 on descv4_surface), no HRM initially, deterministic normalization before any learned resolver, no hardcoded entity vocabulary, and a fresh disjoint-vocabulary calibration corpus so the resolver is not tuned into a second surface-specific shortcut. Implementation NOT started, awaiting authorization. The anchor-found/anchor-missing routing policy is explicitly out of scope until resolution is itself qualified. S2c is promoted for the ID-partition mechanism only, not globally. Holdout untouched.",
+  "ood_taxonomy": {
+    "REFERENTIAL_OOD": {
+      "mechanism": "identity resolution + multi-hop retrieval",
+      "regime": "alias",
+      "status": "unsolved; needs Gate C2-I, not a better encoder"
+    },
+    "SEMANTIC_OOD": {
+      "mechanism": "semantic representation",
+      "regime": "description",
+      "status": "BGE improves 0.083 -> 0.242"
+    }
+  },
+  "qualified_claims": {
+    "gate_a0": {
+      "claim": "HRM-Text-1B can use correctly supplied external evidence on the controlled synthetic Gate A benchmark.",
+      "grouped_bootstrap_lcb95": 0.994,
+      "mean_b3_minus_b0": 0.998,
+      "not_a_claim_about": [
+        "general long-term memory",
+        "natural-document memory",
+        "open-domain RAG",
+        "persistent cognition"
+      ],
+      "report": "evidence/gate_a/qualified_run_002/gate_a_report_v2r1.json"
+    },
+    "gate_b": {
+      "best_arm": "bm25",
+      "claim": "Lexical retrieval (BM25) dominates the tested dense representation on this identifier-heavy synthetic corpus, and recovers enough complete evidence sets to lift downstream answer quality far above the no-evidence baseline.",
+      "complete_set_success": 0.818,
+      "downstream_quality": 0.8,
+      "not_a_claim_about": [
+        "dense retrieval being inferior in general",
+        "any dense stack other than MiniLM-L6-v2 single-vector mean-pooled cosine"
+      ],
+      "report": "GATE_B_REPORT.md"
+    },
+    "gate_c0": {
+      "claim": "Bounded two-pass retrieval with entity-anchored precision packing reaches the oracle ceiling (1.000 quality, 1.000 complete-evidence-set recovery) with zero failures on the controlled synthetic corpus.",
+      "marginal_utility": {
+        "calculate": 0.0,
+        "followup": 0.182,
+        "packing": 0.018
+      },
+      "mechanistically": "worked: reached the oracle ceiling with zero failures",
+      "not_a_claim_about": [
+        "generalisation to unseen templates, source styles, or entity formats",
+        "natural documents",
+        "any effect certified at family granularity"
+      ],
+      "report": "GATE_C_REPORT.md",
+      "statistically": "the pre-declared family-level promotion condition was not met; the rule was kept, the corpus is being replaced",
+      "verdict": "MECHANISM_SUCCESS_PROMOTION_BLOCKED_BY_BENCHMARK_STRUCTURE",
+      "why_not_promoted": "Bridge structure exists in only 1 of 5 families, so a family-clustered bootstrap cannot certify a family-concentrated effect: LCB95 is +0.0000 for family, +0.0659 for template_id, +0.1080 for source_cluster_id."
+    },
+    "gate_c1": {
+      "amended": "OOD measurements voided after four corpus defects were found; see data/hrm/controlled_gate_a_v3/V3_KNOWN_LIMITATIONS.md",
+      "claim": "Bounded two-pass retrieval with entity-anchored packing is identifier-dependent: ENTITY_PATTERN matches 0/250 v3 OOD questions and 0/160 natural_name qualification questions, so zero follow-ups fire. On v3 qualification it scores 0.394 against a 0.828 oracle-evidence ceiling.",
+      "decomposition_qualification": {
+        "_warning": "Raw arm differences, NOT validated causal attributions. The bridge and retrieval terms depend on an oracle_bridge instrument now known not to be independent (it re-runs the extractor under test), so the causal labels are weaker than the numbers. Only V4's R0-R5 ladder can establish the real decomposition.",
+        "bridge_arm_difference_UNVALIDATED": 0.146,
+        "iteration_arm_difference": 0.1,
+        "reader_error": 0.172,
+        "retrieval_arm_difference_UNVALIDATED": 0.288,
+        "selection_arm_difference": 0.048
+      },
+      "no_longer_usable": [
+        "the OOD magnitude",
+        "the bridge/retrieval causal split"
+      ],
+      "not_a_claim_about": [
+        "any quantitative OOD figure, which is voided: 48% of the v3 OOD split is unanswerable from evidence",
+        "source-style generalization, since the v3 holdout is violated at the evidence level",
+        "alias resolution, since the v3 alias regime is prefix truncation",
+        "the reader, which scores 0.828 given perfect evidence"
+      ],
+      "opportunity_groups_are_design_labels_not_utility_truth": "C_SECOND_PASS_CONFUSING produced 0 measured negative outcomes. A/B/C/D are generator design labels; controller labels must come from measured delta-U only.",
+      "report": "GATE_C1_REPORT.md",
+      "root_cause": "The mechanism performed lexical identifier chaining, not bridge inference. ENTITY_PATTERN requires a hyphen-digit suffix; it matches 0/250 OOD questions and 0/160 natural_name questions inside qualification, so zero follow-ups fire.",
+      "verdict": "FAIL_STRUCTURAL_GENERALIZATION",
+      "verified_diagnostic_qualification_split": {
+        "_note": "Independently recomputed from the frozen receipts. Qualification-split only, so unaffected by the v3 OOD defects. This is the cleanest available proof that the failure is retrieval infrastructure and not the reader.",
+        "interpretation": "HRM reads natural-name evidence as well as exact-id evidence (0.838 vs 0.847). Retrieval collapses to 0.206 on natural names. The ~0.63 gap is the deterministic entity/bridge infrastructure, not reader capability.",
+        "oracle_evidence_by_answer_kind": {
+          "boolean": 0.65,
+          "enum": 0.698,
+          "json_field": 0.716,
+          "numeric": 0.984,
+          "symbolic": 0.927
+        },
+        "oracle_evidence_by_entity_regime": {
+          "abbreviation": 0.8,
+          "exact_id": 0.847,
+          "natural_name": 0.838
+        },
+        "reader_error_is_not_uniform": "The 0.172 reader error concentrates in boolean (0.650) and enum (0.698) judgments, not numeric/symbolic extraction. Inspect those before any evidence-use training.",
+        "two_pass_by_entity_regime": {
+          "abbreviation": 0.488,
+          "exact_id": 0.476,
+          "natural_name": 0.206
+        }
+      },
+      "what_remains_strong": [
+        "the current mechanism materially improves some qualification tasks",
+        "natural_name tasks expose its syntactic brittleness (0/160 entities extracted)",
+        "ENTITY_PATTERN is lexical identifier chaining, not semantic bridge inference",
+        "HRM performs substantially better when supplied correct evidence"
+      ]
+    },
+    "gate_c1_v4_ladder": {
+      "arms_complete_set_qualification": {
+        "R0": 0.162,
+        "R1": 0.134,
+        "R2": 0.134,
+        "R3": 0.134,
+        "R4": 0.168,
+        "R5": 1.0
+      },
+      "arms_quality": {
+        "R0": {
+          "ood": 0.004,
+          "qual": 0.074
+        },
+        "R1": {
+          "ood": 0.016,
+          "qual": 0.062
+        },
+        "R2": {
+          "ood": 0.008,
+          "qual": 0.054
+        },
+        "R3": {
+          "ood": 0.008,
+          "qual": 0.054
+        },
+        "R4": {
+          "ood": 0.404,
+          "qual": 0.462
+        },
+        "R5": {
+          "ood": 0.908,
+          "qual": 0.88
+        }
+      },
+      "claim": "On frozen controlled_gate_a_v4 with the mechanism pinned at 3260ce0, the current retrieval path is near-inert: R1 two-pass reaches 0.062 qualification / 0.016 OOD against an oracle-evidence ceiling of 0.880 / 0.908.",
+      "critical_reading_of_R3_to_R4": "R4's complete-set success is only 0.168 while its quality is 0.462, so R4 answers many tasks from PARTIAL gold evidence. The +0.408 gain is therefore not 'better ranking' -- it is the effect of removing every non-gold record. Any distractor in the packet is close to catastrophic, and the reader can often work from an incomplete but clean packet. Do not read R3->R4 as a pure selection-ranking term.",
+      "not_a_claim_about": [
+        "any receipt-verified figure: the run's receipts were not pushed to this repository",
+        "selection ranking, since R4's gain comes from removing all non-gold records, not from ranking",
+        "the reader, which reaches 0.880/0.908 given the required evidence"
+      ],
+      "provenance": "Measured on Colab T4 at pinned commit 3b1fbd5, sequential generation (batch_equivalence_passed=false, batch_size=1). Values transcribed from the run output; the receipt files were not pushed back to this repository, so they are NOT independently re-verifiable here.",
+      "report": "GATE_C1_V4_REPORT.md"
+    },
+    "gate_c2_bge_dense": {
+      "claim": "A stronger pinned dense encoder (BAAI/bge-small-en-v1.5, CLS pooling, query-prefix only) earns promotion on OOD but not on qualification. Complete-set@50 rises 0.072 -> 0.152 OOD (more than doubling) while qualification moves only 0.364 -> 0.370.",
+      "claim_class_note": "The numbers stand (BGE OOD CES@50 0.152 vs MiniLM 0.072; description 0.083 -> 0.242). But this OOD set has now been used to decide whether BGE belongs in the architecture, so it is no longer a pristine final confirmation set for THIS C2 architecture-selection question. Class changed from 'final untouched confirmation' to 'measured exploratory evidence used for architecture selection'. A clean confirmation requires controlled_gate_c2_calibration_v1.",
+      "description_component_caveat": "The +0.14/+0.159 description gains were measured on the ambiguous corpus. They may show that BGE retrieves semantically related text better, but they do NOT establish entity-level description handling and must not be cited as such until reproduced on an identifiable corpus.",
+      "interpretation": "The entire OOD gain comes from the DESCRIPTION regime (+0.158, roughly 3x). That is mechanistically coherent: a description is a natural-language phrase, which is what a semantic encoder is for. An alias is an arbitrary name substitution that no encoder can resolve without retrieving the identity record, so alias remains a multi-hop retrieval problem rather than an embedding problem. Promoting BGE on aggregate recall alone would have obscured that split.",
+      "not_a_claim_about": [
+        "qualification, where the gain is +0.006 and within noise",
+        "alias resolution, which improves only +0.008 and is not a semantic-similarity problem",
+        "downstream answer quality, which was not measured here"
+      ],
+      "per_entity_regime_complete_set_at_50": {
+        "ood": {
+          "alias": {
+            "bge": 0.069,
+            "minilm": 0.061
+          },
+          "description": {
+            "bge": 0.242,
+            "minilm": 0.083
+          }
+        },
+        "qualification": {
+          "abbreviation": {
+            "bge": 0.34,
+            "minilm": 0.324
+          },
+          "canonical": {
+            "bge": 0.4,
+            "minilm": 0.404
+          }
+        }
+      },
+      "promotion_wording": "bge-small-en-v1.5 is promoted as the preferred dense representation for semantic-description OOD retrieval in V4 and as a candidate dense arm for Gate C2 fusion. NOT 'the best retriever'.",
+      "receipts": [
+        "evidence/gate_c2/retrieval/dense_bge_qualification/",
+        "evidence/gate_c2/retrieval/dense_bge_ood/"
+      ],
+      "report": "GATE_C2_BGE_REPORT.md",
+      "status": "MEASURED_EXPLORATORY_USED_FOR_ARCHITECTURE_SELECTION"
+    },
+    "gate_c2_calibration_corpus": {
+      "claim": "controlled_gate_c2_calibration_v1 exists solely for Gate C2 component selection. Three partitions: c2_cal_id (canonical+abbreviation, 100), c2_cal_surface (alias+description, 100), c2_cal_holdout (all four regimes, 100, RESERVED). All regimes balanced, all tasks inferable, zero leaks, zero latent-id exposure.",
+      "holdout_policy": "c2_cal_holdout is reserved. Selecting on calibration burns calibration exactly as using V4 OOD for architecture selection burned that split, so a pristine set is reserved up front rather than discovered missing later.",
+      "not_a_claim_about": [
+        "any retriever or selector result, none of which has been run on it",
+        "V4, which stays immutable",
+        "the holdout partition, which must never inform selection"
+      ],
+      "receipts": [
+        "data/hrm/controlled_gate_c2_calibration_v1/AUDIT.json",
+        "data/hrm/controlled_gate_c2_calibration_v1/RECEIPTS.sha256"
+      ],
+      "report": "GATE_C2_DEV_SWEEP_REPORT.md",
+      "status": "FROZEN_BEFORE_EVALUATION",
+      "v4_separation": "Disjoint entity heads (minerals vs V4's birds), disjoint roles, disjoint source styles, c2cal- task-id namespace, zero evidence-id collisions. Enforced by test, not just by construction."
+    },
+    "gate_c2_candidate_pools_frozen": {
+      "claim": "Candidate-generation policy c2_candidate_generation_v1 (P2 RRF bm25+bge k=10, plus C4 bounded chain completion, depth <= 2, runtime canonicalization) is frozen with immutable pools. Availability ceilings: complete-set 0.95 / 0.74, answer record 0.99 / 0.90, identity 1.00 / 0.99, partial proof 0.98 / 0.88.",
+      "not_a_claim_about": [
+        "selector performance",
+        "downstream quality beyond the S0/S5 gate"
+      ],
+      "provenance": "Pools carry policy_id, policy_version, p2/c4 config hashes, embedding config hash, query hash, per-candidate lexical/dense/fusion scores, follow-up depth, follow-up query digests, and the runtime canonicalization trace. Proof labels are excluded and stay evaluator-side.",
+      "receipts": [
+        "evidence/gate_c2/candidate_pools/v1/manifest.json",
+        "evidence/gate_c2/candidate_pools/v1/RESULTS.sha256"
+      ],
+      "report": "configs/gate_c2_protocol.json",
+      "status": "FROZEN"
+    },
+    "gate_c2_coverage": {
+      "claim": "Retrieval coverage measured without the reader on frozen V4. Dense beats BM25 on BOTH splits, reversing the Gate B ordering, and rank fusion beats either alone. Coverage remains the dominant constraint.",
+      "complete_set_at_10": {
+        "ood": {
+          "bm25": 0.0,
+          "dense": 0.004,
+          "rrf": 0.004,
+          "union": 0.008
+        },
+        "qualification": {
+          "bm25": 0.16,
+          "dense": 0.214,
+          "rrf": 0.222,
+          "union": 0.198
+        }
+      },
+      "complete_set_at_50": {
+        "ood": {
+          "bm25": 0.048,
+          "dense": 0.072,
+          "rrf": 0.128,
+          "union": 0.128
+        },
+        "qualification": {
+          "bm25": 0.35,
+          "dense": 0.364,
+          "rrf": 0.426,
+          "union": 0.422
+        }
+      },
+      "not_a_claim_about": [
+        "downstream answer quality, which was not measured in the coverage harness",
+        "any dense stack other than the pinned MiniLM encoder",
+        "reranking or selection, which are measured separately on frozen candidate pools"
+      ],
+      "receipts": "evidence/gate_c2/{qualification,ood}_coverage/",
+      "report": "GATE_C1_V4_REPORT.md",
+      "supersedes": "Gate B's finding that BM25 dominates the tested dense stack. That held on the identifier-heavy v2 corpus and does not survive v4."
+    },
+    "gate_c2_description_diagnostic": {
+      "ambiguity": {
+        "contrast_alias_distinct_surfaces_per_50": "40-42",
+        "distinct_description_strings_per_50_tasks": 4,
+        "entities_per_description_string_max": 13
+      },
+      "claim": "Staged funnel over all 150 description tasks. Identity retrieval, mention recognition, and resolver response are all 1.000; canonical correctness is 0.00-0.12. ResolutionRate 1.000 with ResolutionPrecision 0.00-0.12, dominant class AMBIGUOUS_MATCH. Root cause: only 4 descriptor phrases exist per corpus, so one description string refers to up to 13 different entities and the question does not identify a unique referent.",
+      "consequence": "The v3 description verdict measured an ill-posed regime, not a mechanism limitation. The oracle arm reached 1.000 only by reading true canonical identity from _oracle_metadata, bypassing an ambiguity no runtime resolver can resolve. All description-regime figures in C2-C-v1/v2/v3 and the description component of the BGE policy comparison are VOIDED as mechanism measurements. Canonical, abbreviation, and alias are unaffected.",
+      "funnel": {
+        "canonical_correct": {
+          "cal_v1": 0.12,
+          "chain_v2": 0.0,
+          "chain_v3": 0.04
+        },
+        "identity_record_retrieved": 1.0,
+        "mention_recognized": 1.0,
+        "resolver_returned": 1.0
+      },
+      "not_a_claim_about": [
+        "the resolver's capability on well-posed references",
+        "canonical, abbreviation, or alias regimes, which are unaffected",
+        "any promotion decision"
+      ],
+      "receipts": [
+        "evidence/gate_c2/description_diagnostic/description_canonicalization.json",
+        "evidence/gate_c2/description_diagnostic/RESULTS.sha256"
+      ],
+      "report": "data/hrm/DESCRIPTION_REGIME_ERRATUM.md",
+      "status": "MEASURED_RECEIPTED",
+      "why_prior_protocols_missed_it": "Absolute deltas made a near-zero gain look like a near-miss (+0.08 vs +0.10). Oracle-gap normalisation exposed the magnitude; only separating resolution RATE from resolution PRECISION found the cause. The resolver was always answering, and always wrong."
+    },
+    "gate_c2_dev_sweep": {
+      "CRITICAL_CONFOUND": "The development split contains ONLY the canonical and abbreviation regimes -- it has no description regime at all, because description and alias are held out for OOD. BGE's entire measured value was the description regime (0.083 -> 0.242 OOD). Development therefore CANNOT select for the capability BGE provides, and freezing the retriever on development alone would discard it for the wrong reason. The retriever freeze must not be decided on development complete-set alone.",
+      "claim": "Development-only sweep. Q3 formulation matters enormously: keeping the SUBJECT in the query alongside bridge and relation lifts complete-set@50 from 0.625 (bridge+relation) to 0.900 (subject+bridge+relation). RRF k is flat across {10,30,60,100} at 0.767. On development BM25 dominates both dense arms and contributes 25 unique gold records against 2 each for MiniLM and BGE.",
+      "frozen_rrf_k": 10,
+      "jaccard_overlap": {
+        "bm25_vs_bge": 0.3492,
+        "bm25_vs_minilm": 0.3299,
+        "minilm_vs_bge": 0.3873
+      },
+      "not_a_claim_about": [
+        "qualification or OOD, which were not touched",
+        "Q3 as a production mechanism -- it is oracle-informed",
+        "downstream HRM quality"
+      ],
+      "phase3_q3_complete_set_at_50": {
+        "Q3a_bridge": 0.5,
+        "Q3b_bridge_relation": 0.625,
+        "Q3c_subject_bridge_relation": 0.9,
+        "Q3d_relation_bridge": 0.617,
+        "Q3e_two_query_union": 0.617
+      },
+      "phase4_arms_complete_set_at_50": {
+        "P0_bm25": 0.758,
+        "P1_minilm": 0.533,
+        "P2_bge": 0.592,
+        "P3_rrf_bm25_minilm": 0.783,
+        "P4_rrf_bm25_bge": 0.767,
+        "P5_rrf_three_way": 0.758
+      },
+      "receipts": [
+        "evidence/gate_c2/dev_sweep/dev_sweep.json"
+      ],
+      "report": "GATE_C2_DEV_SWEEP_REPORT.md",
+      "status": "MEASURED_RECEIPTED_DEVELOPMENT_ONLY",
+      "unique_gold_contribution": {
+        "bge": 2,
+        "bm25": 25,
+        "minilm": 2
+      }
+    },
+    "gate_c2_policy_arms": {
+      "alias_decomposition_overturns_the_prior_hypothesis": "I predicted in advance that alias would fail because no arm traverses an identity record. The decomposition says otherwise: identity_record_recall is 0.96-1.00 on the surface partition, so identity records ARE being retrieved. The shortfall is target_recall_given_identity_found at 0.61-0.80, and complete-set at only 0.21-0.26. The bottleneck is assembling the COMPLETE multi-record proof path after identity is in hand, not finding the identity record. This reframes C2-I from 'identity resolution' toward chain completion.",
+      "claim": "On frozen calibration, judged against rules predeclared before the run: P1_bge passes description (+0.14) but destroys canonical (-0.30). P2_rrf_bm25_bge holds canonical (-0.02, exactly at threshold) and abbreviation (+0.04) but misses the description bar at +0.08 against a required +0.10. Neither is promotable.",
+      "complete_set_at_50": {
+        "c2_cal_id": {
+          "P0_bm25": 0.7,
+          "P1_bge": 0.54,
+          "P2_rrf_bm25_bge": 0.71
+        },
+        "c2_cal_surface": {
+          "P0_bm25": 0.21,
+          "P1_bge": 0.23,
+          "P2_rrf_bm25_bge": 0.26
+        }
+      },
+      "deltas_vs_reference_bm25": {
+        "P1_bge": {
+          "abbreviation": -0.02,
+          "alias": -0.1,
+          "canonical": -0.3,
+          "description": 0.14
+        },
+        "P2_rrf_bm25_bge": {
+          "abbreviation": 0.04,
+          "alias": 0.02,
+          "canonical": -0.02,
+          "description": 0.08
+        }
+      },
+      "not_a_claim_about": [
+        "the holdout partition, which was not evaluated",
+        "downstream HRM quality, not measured here",
+        "any threshold revision; the bar was frozen and is not being moved"
+      ],
+      "receipts": [
+        "evidence/gate_c2/policy_arms/policy_arms.json",
+        "evidence/gate_c2/policy_arms/RESULTS.sha256"
+      ],
+      "replication": "BGE's description advantage REPLICATES on a fresh corpus with fully disjoint vocabulary (+0.14 alone, +0.08 in fusion), so it is a real property of the regime rather than a V4 artifact. That is the strongest positive result here, even though the arm fails.",
+      "report": "configs/gate_c2_protocol.json",
+      "status": "MEASURED_RECEIPTED",
+      "verdict": "FAIL_CANDIDATE_COVERAGE for both P1_bge and P2_rrf_bm25_bge"
+    },
+    "gate_c2_protocol": {
+      "claim": "Gate C2 promotion rules, reference arm, and selection threshold are predeclared in configs/gate_c2_protocol.json before any calibration measurement. Reference arm is P0_bm25 and marked immutable; primary metric is complete_set@50; per-regime rules are canonical >= -0.02, abbreviation >= -0.02, description >= +0.10, alias report-only; tau_selection = 0.05 for the S0/S5 gate.",
+      "not_a_claim_about": [
+        "any result, since nothing has been run against calibration",
+        "P3 regime-aware policy, which is blocked until an alias mechanism exists"
+      ],
+      "receipts": [
+        "configs/gate_c2_protocol.json"
+      ],
+      "report": "configs/gate_c2_protocol.json",
+      "status": "FROZEN_BEFORE_ANY_CALIBRATION_RUN"
+    },
+    "gate_c2_query_ladder": {
+      "claim": "Q0-Q3 retrieval-only query ablation on frozen V4. Querying the bridge entity ALONE (Q1) is worse than the original question on both splits and collapses to 0.000 complete-set@50 on OOD, which explains why the V4 ladder's R2 did not beat R1. A fully rendered request (Q3) nearly doubles dense complete-set@10 on qualification (0.214 -> 0.416) and lifts fusion complete-set@50 from 0.426 to 0.614. On OOD even a perfect query reaches only 0.200, so retrieval representation, not query formulation, is the binding constraint there.",
+      "complete_set_at_50_fusion": {
+        "ood": {
+          "Q0": 0.128,
+          "Q1": 0.0,
+          "Q2": 0.1,
+          "Q3": 0.2
+        },
+        "qualification": {
+          "Q0": 0.426,
+          "Q1": 0.464,
+          "Q2": 0.438,
+          "Q3": 0.614
+        }
+      },
+      "implication": "Query formulation is a real opportunity on qualification but is NOT sufficient on OOD. Building a semantic gap reasoner alone would sit on top of an index that cannot exploit a perfect query out of distribution. Retrieval representation must improve alongside it.",
+      "not_a_claim_about": [
+        "downstream answer quality, which was not measured in this ablation",
+        "any learned query formulator, since Q1-Q3 are oracle-constructed",
+        "selection, which is measured separately on frozen candidate pools"
+      ],
+      "partial_proof_at_50_fusion": {
+        "ood": {
+          "Q0": 0.449,
+          "Q1": 0.472,
+          "Q2": 0.605,
+          "Q3": 0.528
+        },
+        "qualification": {
+          "Q0": 0.623,
+          "Q1": 0.658,
+          "Q2": 0.688,
+          "Q3": 0.765
+        }
+      },
+      "report": "GATE_C1_V4_REPORT.md"
+    },
+    "gate_c2c_chain_completion": {
+      "claim": "Bounded runtime chain completion produces large gains on the primary metric but fails a secondary conditional criterion that I specified badly. All four runtime arms clear five of six predeclared checks and fail only target_recall_given_identity_delta.",
+      "complete_set_at_50": {
+        "c2_cal_id": {
+          "C0_reference": 0.71,
+          "C1": 0.96,
+          "C2": 0.98,
+          "C3": 0.96,
+          "C4": 0.97,
+          "C5_oracle_query": 1.0,
+          "C6_oracle_evidence": 1.0
+        },
+        "c2_cal_surface": {
+          "C0_reference": 0.26,
+          "C1": 0.54,
+          "C2": 0.48,
+          "C3": 0.52,
+          "C4": 0.56,
+          "C5_oracle_query": 0.97,
+          "C6_oracle_evidence": 1.0
+        }
+      },
+      "deltas_best_arm_C4": {
+        "abbreviation": 0.52,
+        "alias": 0.42,
+        "canonical": 0.0,
+        "description": 0.18,
+        "mean_followup_depth": 2.0,
+        "target_given_identity": 0.0469
+      },
+      "description_endpoint_valid": false,
+      "description_invalidity_reason": "NON_IDENTIFIABLE_RUNTIME_REFERENT",
+      "experiment_verdict": "FAIL_CHAIN_COMPLETION",
+      "failure_reason": "PROMOTION_CRITERION_NOT_MET",
+      "mechanism_effect_observed": true,
+      "mechanism_finding": "Chain completion is highly effective. On c2_cal_id complete-set rises 0.710 -> 0.980, essentially reaching the 1.000 oracle-evidence ceiling. On c2_cal_surface it rises 0.260 -> 0.560. Alias improves +0.42 and abbreviation +0.52 against a required +0.10, with zero canonical regression and depth within the bound of 2. Canonicalization is purely runtime: identity statements are parsed out of retrieved candidate text, never read from _oracle_metadata.",
+      "my_specification_error": "Choosing a near-saturated conditional metric as a REQUIRED promotion criterion was a protocol-design mistake, made by me before the run. The correct response is not to move the bar after seeing results -- that would destroy the value of predeclaring. The verdict stands as FAIL. A successor protocol must predeclare criteria with measurable headroom, and these numbers are then exploratory with respect to that successor.",
+      "not_a_claim_about": [
+        "promotion; the frozen bar was not met and is not being moved",
+        "the holdout partition, untouched",
+        "downstream HRM quality, not measured"
+      ],
+      "receipts": [
+        "evidence/gate_c2/chain_completion/chain_completion.json",
+        "evidence/gate_c2/chain_completion/RESULTS.sha256"
+      ],
+      "report": "configs/gate_c2c_protocol.json",
+      "semantics_note": "experiment_verdict FAIL means the predeclared promotion criterion was not met. It does NOT mean the mechanism had no effect; mechanism_effect_observed is true and large. Historical verdicts are unchanged; the status model is now expressive enough to hold both facts at once.",
+      "status": "MEASURED_RECEIPTED",
+      "verdict": "FAIL_CHAIN_COMPLETION under the frozen protocol, on one criterion only",
+      "why_it_fails": "target_recall_given_identity_delta required >= +0.05. Measured: C1 +0.0144, C2 -0.0857, C3 -0.0143, C4 +0.0469. The reference already scored 0.96 on c2_cal_id and 0.80 on c2_cal_surface for that metric, so at most 0.20 of headroom existed and I still required +0.05 of it as a hard gate. C4 misses by 0.0031."
+    },
+    "gate_c2c_description_valid_v4": {
+      "aggregate": {
+        "descv4_id": {
+          "C0": 0.71,
+          "C4": 0.99
+        },
+        "descv4_surface": {
+          "C0": 0.24,
+          "C4": 0.88
+        }
+      },
+      "claim": "Fifth disjoint corpus (summit vocabulary) with injective, runtime-identifiable description references. Fixed C4, unchanged v3 oracle-gap-closure protocol, uniform tau=0.25. ALL FOUR regimes pass: canonical saturated-and-held, abbreviation OGC 0.966, alias OGC 0.839, description OGC 0.905.",
+      "experiment_verdict": "PASS_CHAIN_COMPLETION",
+      "mechanism_effect_observed": true,
+      "not_a_claim_about": [
+        "downstream HRM answer quality, which has not been measured",
+        "the reserved holdout, still untouched",
+        "selection, which remains unmeasured"
+      ],
+      "per_regime_oracle_gap_closure": {
+        "abbreviation": {
+          "C0": 0.42,
+          "C4": 0.98,
+          "C5": 1.0,
+          "OGC": 0.966,
+          "gap": 0.58
+        },
+        "alias": {
+          "C0": 0.32,
+          "C4": 0.84,
+          "C5": 0.94,
+          "OGC": 0.839,
+          "gap": 0.62
+        },
+        "canonical": {
+          "C0": 1.0,
+          "C4": 1.0,
+          "C5": 1.0,
+          "gap": 0.0,
+          "rule": "saturation"
+        },
+        "description": {
+          "C0": 0.16,
+          "C4": 0.92,
+          "C5": 1.0,
+          "OGC": 0.905,
+          "gap": 0.84
+        }
+      },
+      "receipts": [
+        "evidence/gate_c2/description_valid_v4/RESULTS.sha256",
+        "evidence/gate_c2/description_valid_v4/description_valid_v4.json",
+        "data/hrm/controlled_gate_c2_description_valid_v4/AUDIT.json"
+      ],
+      "replication_breadth": "Chain completion now measured on five corpora with disjoint vocabularies (birds, minerals, constellations, rivers, summits). Abbreviation OGC 0.960/0.966 and alias 0.815/0.839 across the two that used the OGC protocol; surface complete-set 0.26->0.56, 0.26->0.57, 0.32->0.55, 0.24->0.88.",
+      "report": "configs/gate_c2c_v3_protocol.json",
+      "status": "MEASURED_RECEIPTED",
+      "the_erratum_is_confirmed": "Description went from OGC 0.025 on the ambiguous corpus to 0.905 on the identifiable one, with the mechanism, parser, query templates, and thresholds all unchanged. That is direct confirmation that the prior description failures were benchmark non-identifiability and not a mechanism gap. Building the D0-D5 resolver ladder would have optimised against an impossible task."
+    },
+    "gate_c2c_v2_chain_validation": {
+      "claim": "Independent replication of the FIXED C4 mechanism on a third disjoint corpus (constellation vocabulary, zero id collisions with V4 or calibration v1). The mechanism replicates strongly: complete_set@50 0.720 -> 0.980 on ID and 0.260 -> 0.570 on surface. Alias +0.54 and abbreviation +0.52 against required +0.25/+0.20. The headroom-normalized conditional endpoint PASSES (HCR 0.192 vs 0.15). It fails description at +0.08 against a required +0.10.",
+      "description_endpoint_valid": false,
+      "description_invalidity_reason": "NON_IDENTIFIABLE_RUNTIME_REFERENT",
+      "experiment_verdict": "FAIL_CHAIN_COMPLETION",
+      "failure_reason": "PROMOTION_CRITERION_NOT_MET",
+      "mechanism_effect_observed": true,
+      "not_a_claim_about": [
+        "promotion; the frozen bar was not met and is not moving",
+        "the reserved holdout, still untouched",
+        "downstream HRM quality"
+      ],
+      "receipts": [
+        "evidence/gate_c2/chain_validation_v2/chain_validation_v2.json",
+        "evidence/gate_c2/chain_validation_v2/RESULTS.sha256"
+      ],
+      "replication_evidence": "The chain-completion effect is now measured on THREE independent corpora with disjoint vocabularies. v1 surface 0.260 -> 0.560, v2 surface 0.260 -> 0.570; v1 ID 0.710 -> 0.970, v2 ID 0.720 -> 0.980. Near-identical magnitudes across corpora that share no surface forms. This is a real mechanism, not benchmark exploitation.",
+      "report": "configs/gate_c2c_v2_protocol.json",
+      "semantics_note": "experiment_verdict FAIL means the predeclared promotion criterion was not met. It does NOT mean the mechanism had no effect; mechanism_effect_observed is true and large. Historical verdicts are unchanged; the status model is now expressive enough to hold both facts at once.",
+      "status": "MEASURED_RECEIPTED",
+      "the_reformulated_criterion_worked": "v1's ill-posed absolute +0.05 on a near-saturated diagnostic is replaced by headroom closure, and it PASSED at 0.192. The reformulation was correct and is now validated on data it was not fitted to.",
+      "verdict": "FAIL_CHAIN_COMPLETION on one endpoint; five of six pass",
+      "what_failed_and_why_it_is_not_the_mechanism": "description +0.08 vs required +0.10. Chain completion helps description least because a description question already resolves through one identity record; it has the shortest residual chain, so there is least for a follow-up to recover. The +0.10 bar was carried over from the policy-arm protocol where it measured a DIFFERENT intervention (a stronger encoder). Reusing an encoder-calibrated threshold for a chain-completion endpoint is a second protocol-specification error, distinct from v1's."
+    },
+    "gate_c2c_v3_chain_validation": {
+      "amended": "The description FAIL measured an ambiguous-by-construction regime. See data/hrm/DESCRIPTION_REGIME_ERRATUM.md. The FAIL verdict is preserved unchanged; the description figure is voided as a mechanism measurement. Abbreviation (0.960) and alias (0.815) oracle-gap closure stand.",
+      "claim": "Fourth disjoint corpus (river vocabulary), fixed C4, oracle-gap-closure protocol with uniform tau=0.25. Three of four regimes pass decisively: abbreviation OGC=0.960, alias OGC=0.815, canonical saturated-and-held. Description fails at OGC=0.025 against an oracle gap of 0.800 -- the largest headroom of any regime and almost none of it recovered.",
+      "description_endpoint_valid": false,
+      "description_invalidity_reason": "NON_IDENTIFIABLE_RUNTIME_REFERENT",
+      "experiment_verdict": "FAIL_CHAIN_COMPLETION",
+      "failure_reason": "PROMOTION_CRITERION_NOT_MET_description_regime",
+      "mechanism_effect_observed": true,
+      "not_a_claim_about": [
+        "promotion; the bar was not met and is not moving",
+        "the reserved holdout, still untouched",
+        "downstream HRM quality"
+      ],
+      "per_regime_oracle_gap_closure": {
+        "abbreviation": {
+          "C0": 0.5,
+          "C4": 0.98,
+          "C5": 1.0,
+          "OGC": 0.96,
+          "gap": 0.5,
+          "pass": true
+        },
+        "alias": {
+          "C0": 0.44,
+          "C4": 0.88,
+          "C5": 0.98,
+          "OGC": 0.815,
+          "gap": 0.54,
+          "pass": true
+        },
+        "canonical": {
+          "C0": 0.98,
+          "C4": 0.98,
+          "C5": 1.0,
+          "gap": 0.02,
+          "pass": true,
+          "rule": "saturation"
+        },
+        "description": {
+          "C0": 0.2,
+          "C4": 0.22,
+          "C5": 1.0,
+          "OGC": 0.025,
+          "gap": 0.8,
+          "pass": false
+        }
+      },
+      "receipts": [
+        "evidence/gate_c2/chain_validation_v3/chain_validation_v3.json",
+        "evidence/gate_c2/chain_validation_v3/RESULTS.sha256"
+      ],
+      "report": "configs/gate_c2c_v3_protocol.json",
+      "status": "MEASURED_RECEIPTED",
+      "the_normalizer_worked": "Oracle-gap closure was the right endpoint and it changed the diagnosis rather than merely the arithmetic. Under v2's absolute deltas, description looked like a near-miss (+0.08 vs +0.10). Normalized, it is a near-total failure: 0.025 of an available 0.800. The two prior protocols were hiding the single regime where the mechanism genuinely does not work.",
+      "what_this_isolates": "Chain completion is real and large for abbreviation and alias -- where a retrieved identity record names a canonical entity that runtime parsing can extract. Description references resolve through prose ('the ancillary unit charted during survey season'), and the canonicalization parser recovers them far less reliably, so the follow-up query is built from a subject it never resolved. C5 reaching 1.000 proves the evidence is retrievable given the right query, so this is a canonicalization-coverage failure, not a retrieval-ceiling failure."
+    },
+    "gate_c2s_relation_keyword_control": {
+      "canonical_name": "S_rel_only",
+      "claim": "The arm labelled S2_connectivity computes exactly as implemented but does not instantiate the chain-selection hypothesis it was built for. Its dominant term rewards records containing the target relation string. In this corpus 0/56 bridge records contain the target relation while 99/99 answer records do, so the arm cannot retain a bridge record: BridgeRetention=0.000 is arithmetically forced, not incidental. It fills 91.3% of each packet with relation-string matches, of which 79.3% of the packet are relation-matching records that are not required.",
+      "distinguished_from": "the ms-marco-MiniLM-L6-v2 arm, which was COMPUTATIONALLY invalid (NaN scores). This arm computes correctly; only its scientific interpretation was wrong. Its receipts are valid and retained.",
+      "experiment_verdict": "VALID_RECEIPTS_INVALID_HYPOTHESIS_IMPLEMENTATION",
+      "historical_arm_id": "S2_connectivity (unchanged in frozen receipts; renaming a measured arm id would break reproducibility)",
+      "kept_as": "negative control: target-relation keyword matching is insufficient for multi-hop packing and causes systematic distractor selection",
+      "not_a_claim_about": [
+        "whether relational chain selection works, which it does not test",
+        "the target relation being illegitimate input; it appears verbatim in 200/200 questions",
+        "the structural arms S2a/S2b/S2c, measured separately",
+        "final answer quality, where it was indistinguishable from S0",
+        "the reserved c2_cal_holdout, untouched"
+      ],
+      "receipts": [
+        "evidence/gate_c2/selector_ladder/cells.jsonl"
+      ],
+      "report": "configs/gate_c2_protocol.json",
+      "retained_because": "On descv4_surface it is the only arm with a significant gain (+0.170, CI excluding zero under all three groupings, SGC 30.9%). Relation scoring needs no entity anchor, so it still works where identity resolution fails. It is a useful fallback baseline for weak-identity conditions, not a bad implementation to forget.",
+      "status": "VALID_DIAGNOSTIC_CONTROL_relation_only_not_a_chain_selector"
+    },
+    "gate_c2s_selection_opportunity": {
+      "claim": "On frozen candidate pools with an identical 6-record packet budget, oracle selection beats raw top-N by +0.39 (descv4_id) and +0.55 (descv4_surface) HRM verified quality, against a predeclared tau of 0.05. Selection has a large real opportunity; S1-S4 are authorized.",
+      "experiment_verdict": "PASS_SELECTION_OPPORTUNITY",
+      "mechanism_effect_observed": true,
+      "not_a_claim_about": [
+        "any runtime selector, none of which has been built or measured",
+        "the reserved holdout, still untouched",
+        "candidate discovery, which is frozen and held constant here"
+      ],
+      "receipts": [
+        "evidence/gate_c2/selection_gate/s0_vs_s5.json",
+        "evidence/gate_c2/selection_gate/RESULTS.sha256"
+      ],
+      "report": "configs/gate_c2_protocol.json",
+      "results": {
+        "descv4_id": {
+          "CSR_S0": 0.4632,
+          "CSR_S5": 1.0,
+          "S0": 0.36,
+          "S5": 0.75,
+          "complete_set_available": 0.95,
+          "delta": 0.39
+        },
+        "descv4_surface": {
+          "CSR_S0": 0.2162,
+          "CSR_S5": 1.0,
+          "S0": 0.13,
+          "S5": 0.68,
+          "complete_set_available": 0.74,
+          "delta": 0.55
+        }
+      },
+      "status": "MEASURED_RECEIPTED",
+      "why_conditional_metrics_matter": "Retrieval is not being blamed for selection. Complete evidence is AVAILABLE in the pool for 0.95 and 0.74 of tasks, yet raw top-N retains it for only 0.46 and 0.22 of those available cases. The gap is selection discarding evidence the retriever already found."
+    },
+    "gate_c2s_selector_arm_defect": {
+      "claim": "The first S3 cross-encoder arm was dead and silently reported the baseline. cross-encoder/ms-marco-MiniLM-L6-v2 returns NaN from its first attention layer onward for every query/document pair under torch 2.10 / transformers 5.14.1, with finite fp32 weights (absmax 4.7) and clean embeddings. Python compares NaN sort keys as all-False, so the pool came back unreordered and the arm produced metrics identical to S0 to four decimals.",
+      "diagnosis_evidence": {
+        "first_nan_layer": "hidden_states[1]; hidden_states[0] finite",
+        "model_specific": "ms-marco-MiniLM-L-12-v2 scores +7.52 relevant / -11.14 irrelevant and TinyBERT-L-2-v2 scores +6.92 / -11.42 on the same stack, so the defect is the L6 checkpoint, not the environment or the harness",
+        "nan_scores": "50/50 candidates non-finite on every task checked",
+        "persists_under_eager_and_sdpa": true,
+        "persists_without_attention_mask": true,
+        "weights_absmax": 4.7158,
+        "weights_finite": true
+      },
+      "experiment_verdict": "NOT_AN_EXPERIMENT_A_DEFECT_REPORT",
+      "fix": "Added DegenerateRerankerError: a reranker returning any non-finite score, or one score for every candidate, now raises instead of emitting an order that duplicates the raw pool. Runs also record differs_from_s0 per arm, so a no-op arm is visible in the receipt. S3 is repinned to ms-marco-MiniLM-L-12-v2 at a fixed revision.",
+      "not_a_claim_about": [
+        "whether cross-encoder reranking helps selection, which remains unmeasured",
+        "any selector's effectiveness; no arm figures are claimed here",
+        "the descv4 partitions' selector results, still being measured",
+        "the reserved c2_cal_holdout, untouched",
+        "torch or transformers generally; only the L6 checkpoint is implicated"
+      ],
+      "receipts": [
+        "tests/unit/test_selector_arms.py",
+        "scripts/run_selector_ladder.py"
+      ],
+      "report": "configs/gate_c2_protocol.json",
+      "status": "DEFECT_FOUND_AND_FIXED_NO_RESULTS_CLAIMED",
+      "voided": "The earlier partial descv4_id figures are void: they came from an uncommitted /tmp script that wrote no manifest before timing out, and they included the dead S3 arm. They are not carried forward as evidence.",
+      "why_it_mattered": "Read naively, that arm said 'cross-encoder reranking does not help', which would have been a false negative about a component the roadmap depends on. The arm had not reranked anything."
+    },
+    "gate_c2s_selector_ladder_budget6": {
+      "ablation": "relation-only retains answers but destroys bridges (BridgeRetention 0.000); structure-only (S2b) retains bridges but collapses answer retention to 0.394 and LOSES quality (dQ=-0.100); structure plus relation as one component is the only combination that improves both and the only one that moves quality.",
+      "ceilings": {
+        "descv4_id": {
+          "baseline_S0": 0.36,
+          "reader_interface_residual_under_perfect_selection": 0.25,
+          "selector_ceiling_S5": 0.75,
+          "selector_opportunity": 0.39
+        },
+        "descv4_surface": {
+          "baseline_S0": 0.13,
+          "reader_interface_residual_under_perfect_selection": 0.32,
+          "selector_ceiling_S5": 0.68,
+          "selector_opportunity": 0.55
+        },
+        "note": "S5 is the ceiling for SELECTION over the frozen candidate pool. It is not the pipeline ceiling and must not be conflated with R5-style oracle-evidence arms, which bypass more of the pipeline."
+      },
+      "claim": "At packet budget 6 over the frozen pools, oracle selection is worth +0.390 quality on descv4_id (0.360 -> 0.750) and +0.550 on descv4_surface (0.130 -> 0.680), so evidence selection is a real and large lever. Of the runtime arms, only S2c_chain_plus_relation separates from S0 on descv4_id: dQ=+0.1200 with a paired grouped-bootstrap CI excluding zero under ALL THREE groupings (family [0.04,0.21], source_cluster [0.030,0.214], template [0.010,0.228]), capturing 30.8% of the oracle opportunity. S1/S2/S3/S4 and S2a/S2b do not separate from S0 on that partition.",
+      "connected_proof_retention": "VALID_METRIC_BUT_NONDISCRIMINATIVE_ON_V4_PATH_TOPOLOGY",
+      "dual_mechanism_note": "S2c appears to help through two distinct routes -- structural role recovery and packet cleanliness / distractor reduction -- which the current single score conflates. A future structural selector should make those terms explicit rather than fusing them.",
+      "earned_claim": "S2c improves evidence selection when the question entity can be resolved.",
+      "experiment_verdict": "STRUCTURAL_SELECTION_QUALIFIED_ON_ID_PARTITION_ONLY",
+      "mechanism_evidence": "Correct->wrong flips attribute pointwise failures to role loss: S1 loses the identity record on 10 of 13, S3 the answer record on 10 of 16, S4 answer on 8 and identity on 4 of 13. S2c's 22 fixes break down as 14 answer newly retained, 8 bridge newly retained, 7 both jointly, 15 with distractors reduced, and 7 with no new role retained -- so the gain is partly the intended structural recovery and partly a cleaner packet, NOT purely the claimed mechanism.",
+      "not_a_claim_about": [
+        "packet budgets other than 6, which were not swept",
+        "S2b/S2c behaviour on surface forms, where they were inert and unmeasured",
+        "promotion of any selector into the default pipeline",
+        "the candidate-pool ceiling, which sits upstream and is unmeasured here",
+        "the reserved c2_cal_holdout, untouched"
+      ],
+      "not_earned_claim": "S2c is the production selector for all V4 regimes.",
+      "promotion_status": "PROMOTED_FOR_ID_PARTITION_MECHANISM__NOT_GLOBAL_PIPELINE_PROMOTION",
+      "receipts": [
+        "evidence/gate_c2/selector_ladder/selector_ladder.json",
+        "evidence/gate_c2/selector_ladder/paired_analysis.json",
+        "evidence/gate_c2/selector_ladder/cells.jsonl",
+        "evidence/gate_c2/selector_ladder/tasks.jsonl"
+      ],
+      "report": "configs/gate_c2_protocol.json",
+      "status": "MEASURED_BOTH_PARTITIONS_BUDGET_6",
+      "surface_partition_defect": "S2b and S2c are INERT on descv4_surface: differs_from_s0=0.00 on every task. Question subjects there are truncated surface forms ('Ojos tension' vs canonical 'Ojos tension block'), so entity extraction yields no question entity on 100/100 tasks, no chains are enumerated, and packing falls back to pool order. Their surface figures are S0 replayed and are NOT measurements of those arms.",
+      "uncomfortable_result": "On descv4_surface the rescoped relation-keyword control is the only arm with a significant gain: dQ=+0.1700, CI excluding zero under all three groupings, SGC 30.9%. It needs no entity extraction, so it still works where identity resolution fails. This does not rehabilitate it as a chain selector -- its BridgeRetention is 0.000 on descv4_id -- but it is not merely an artifact either."
+    }
+  },
+  "testing_policy": "Tests assert structured state, never exact strings against narrative prose. Three separate failures came from matching capitalisation in text written separately from the assertion; the pattern was wrong, not merely careless. Prose is rendered from state, and state is what is tested.",
+  "verdict_semantics": {
+    "experiment_verdict": "whether the predeclared promotion criterion was met",
+    "failure_reason": "why, when it was not",
+    "mechanism_effect_observed": "whether a real effect was measured, independent of promotion",
+    "rule": "A FAIL verdict never implies absence of effect. Both are recorded separately."
+  },
+  "version": "3.7.1"
+}

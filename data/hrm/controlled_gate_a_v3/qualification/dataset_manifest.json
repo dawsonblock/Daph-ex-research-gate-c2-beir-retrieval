@@ -1,0 +1,68 @@
+{
+  "answer_kinds": [
+    "numeric",
+    "symbolic",
+    "enum",
+    "boolean",
+    "json_field"
+  ],
+  "claim_strength": "CONTROLLED_SYNTHETIC_BENCHMARK_ONLY",
+  "dataset_id": "controlled-gate-a-v3-qualification",
+  "entity_regimes": [
+    "exact_id",
+    "natural_name",
+    "abbreviation"
+  ],
+  "evidence_count": 1966,
+  "evidence_sha256": "ae663fcce5a1e4d07b33e3536caa94ae8aea03a2376fe712c84360b6609af128",
+  "families": [
+    "entity_attribute",
+    "ownership_chain",
+    "configuration_chain",
+    "dependency_chain",
+    "location_chain",
+    "temporal_chain",
+    "numeric_chain",
+    "procedural_chain",
+    "temporal_update",
+    "distractor_heavy"
+  ],
+  "generation_seed": 7004,
+  "held_out_regimes": [
+    "alias",
+    "description"
+  ],
+  "held_out_styles": [
+    "table_text",
+    "message"
+  ],
+  "iterative_families": [
+    "configuration_chain",
+    "dependency_chain",
+    "location_chain",
+    "numeric_chain",
+    "ownership_chain",
+    "procedural_chain",
+    "temporal_chain"
+  ],
+  "natural_memory_claim_allowed": false,
+  "opportunity_groups": [
+    "A_ONE_PASS_SUFFICIENT",
+    "B_SECOND_PASS_REQUIRED",
+    "C_SECOND_PASS_CONFUSING",
+    "D_SECOND_PASS_SUPPRESS"
+  ],
+  "purpose": "structural generalization; built to break the v2-saturating mechanism",
+  "source_cluster_count": 24,
+  "source_styles": [
+    "formal_registry",
+    "technical_note",
+    "key_value_log",
+    "change_log"
+  ],
+  "split": "qualification",
+  "task_count": 500,
+  "task_sha256": "96d5793dc904b0fc903907c5b4d8cbbc3b98fa506bec30caecf29b8181403365",
+  "tasks_per_family": 50,
+  "template_count": 160
+}

@@ -1,0 +1,317 @@
+{
+  "benchmark_lineage": {
+    "controlled_gate_a_v1": "SUPERSEDED_answer_leaked_into_one_question",
+    "controlled_gate_a_v2": "CANONICAL_for_gate_a0_and_gate_b",
+    "controlled_gate_a_v3": "HISTORICAL_qualitative_only_four_defects_documented",
+    "controlled_gate_a_v4": "CANONICAL_VALID_V4_true_frozen_before_evaluation"
+  },
+  "canonical_package": "hrm_adaptive_memory",
+  "capabilities": {
+    "adaptive_recurrence": "BLOCKED",
+    "adaptive_retrieval": "BLOCKED",
+    "agentdb_procedural_memory": "BLOCKED",
+    "bounded_iterative_retrieval": "DOES_NOT_GENERALIZE",
+    "calculate_action": "UNQUALIFIED",
+    "executive_training": "BLOCKED",
+    "graphiti_temporal_memory": "BLOCKED",
+    "infini_consolidation": "BLOCKED",
+    "pixelrag": "BLOCKED",
+    "ruvector": "BLOCKED",
+    "single_pass_retrieval": "QUALIFIED",
+    "turbovec": "BLOCKED"
+  },
+  "gates": {
+    "gate_a0_controlled_evidence_use": "PASS",
+    "gate_a1_structural_generalization": "PENDING_AWAITING_V4",
+    "gate_b_single_pass_retrieval": "PASS",
+    "gate_c0_controlled_iterative_retrieval": "MECHANISM_SUCCESS_PROMOTION_BLOCKED_BY_BENCHMARK_STRUCTURE",
+    "gate_c1_structural_generalization_iterative_retrieval": "FAIL_MEASURED_ON_V4",
+    "gate_c2_semantic_information_gap_retrieval": "IN_PROGRESS_COVERAGE_MEASURED",
+    "gate_d_conditional_retrieval_opportunity": "PENDING_ACTION_TOO_WEAK_TO_MEASURE",
+    "gate_e_learned_retrieval_control": "BLOCKED",
+    "gate_f_recurrence_opportunity": "BLOCKED",
+    "gate_g_adaptive_recurrence": "BLOCKED",
+    "gate_h_verification_control": "BLOCKED",
+    "gate_i_unified_executive": "BLOCKED",
+    "gate_j_persistent_memory": "BLOCKED",
+    "gate_k_consolidation": "BLOCKED",
+    "gate_l_latent_memory": "BLOCKED",
+    "gate_n1_natural_external_memory": "PENDING"
+  },
+  "hypothesis_only_not_measured": {
+    "_note": "Proposals from exploratory Colab analysis that were simulated or projected rather than measured. None may enter a canonical claim.",
+    "adaptive_router": "BLOCKED",
+    "batch_size_4_or_8": "UNQUALIFIED",
+    "bge_base": "HYPOTHESIS_ONLY",
+    "bge_micro": "HYPOTHESIS_ONLY",
+    "deberta_reranker": "HYPOTHESIS_ONLY",
+    "efficiency_gain_36_6_percent": "SIMULATED_ONLY",
+    "k_60": "UNQUALIFIED",
+    "rrf_on_synthetic_rankings": "HYPOTHESIS_ONLY_superseded_by_real_measurement_above"
+  },
+  "known_instrument_limitations": {
+    "oracle_bridge_arm": "RESOLVED for v4: hrm_adaptive_memory/experiments/oracle_ladder.py reads latent identity from the task proof graph and raises OracleMetadataMissing rather than falling back to surface derivation. R2 (bridge identity, current query style) and R3 (bridge + target relation) are separate arms, so bridge identification and query formulation no longer conflate. The v3 oracle_bridge arm remains invalid and its numbers stay voided.",
+    "v3_corpus": "Evidence-level style contamination both directions; alias regime is prefix truncation; 0/120 description tasks answerable from evidence; oracle_bridge reuses the extractor under test."
+  },
+  "negative_results": {
+    "adaptive_retrieval_trigger": "91 of 91 follow-ups positive, 0 negative; a fixed two-pass policy suffices and Gate D is expected to FAIL on this corpus",
+    "calculate_action": "100 answers produced, +0.000 marginal quality; NOT promoted",
+    "calculate_action_v3": "-0.008 on v3 qualification; harmful, remains unqualified",
+    "gate_d_v3": "oracle trigger equals best fixed policy on both splits (opportunity +0.000); 50 positive / 450 neutral / 0 negative. No controller is justified.",
+    "slot_label_echo": "99 -> 0 under precision packing; was an evidence-confusability artefact, not a prompt-interface or reasoning limit",
+    "slot_label_echoes": "Track evidence quality, not packet format: 85 -> 28 under precision packing, -> 3 under oracle evidence. F-arms would measure a symptom; implemented but unrun."
+  },
+  "next_work": "Freeze candidate pools from the winning retriever, then run S0-S5 selection on identical pools. Alias remains a retrieval/multi-hop problem, not an embedding one. Executive, adaptive recurrence, Graphiti, and learned routing stay blocked.",
+  "qualified_claims": {
+    "gate_a0": {
+      "claim": "HRM-Text-1B can use correctly supplied external evidence on the controlled synthetic Gate A benchmark.",
+      "grouped_bootstrap_lcb95": 0.994,
+      "mean_b3_minus_b0": 0.998,
+      "not_a_claim_about": [
+        "general long-term memory",
+        "natural-document memory",
+        "open-domain RAG",
+        "persistent cognition"
+      ],
+      "report": "evidence/gate_a/qualified_run_002/gate_a_report_v2r1.json"
+    },
+    "gate_b": {
+      "best_arm": "bm25",
+      "claim": "Lexical retrieval (BM25) dominates the tested dense representation on this identifier-heavy synthetic corpus, and recovers enough complete evidence sets to lift downstream answer quality far above the no-evidence baseline.",
+      "complete_set_success": 0.818,
+      "downstream_quality": 0.8,
+      "not_a_claim_about": [
+        "dense retrieval being inferior in general",
+        "any dense stack other than MiniLM-L6-v2 single-vector mean-pooled cosine"
+      ],
+      "report": "GATE_B_REPORT.md"
+    },
+    "gate_c0": {
+      "claim": "Bounded two-pass retrieval with entity-anchored precision packing reaches the oracle ceiling (1.000 quality, 1.000 complete-evidence-set recovery) with zero failures on the controlled synthetic corpus.",
+      "marginal_utility": {
+        "calculate": 0.0,
+        "followup": 0.182,
+        "packing": 0.018
+      },
+      "mechanistically": "worked: reached the oracle ceiling with zero failures",
+      "not_a_claim_about": [
+        "generalisation to unseen templates, source styles, or entity formats",
+        "natural documents",
+        "any effect certified at family granularity"
+      ],
+      "report": "GATE_C_REPORT.md",
+      "statistically": "the pre-declared family-level promotion condition was not met; the rule was kept, the corpus is being replaced",
+      "verdict": "MECHANISM_SUCCESS_PROMOTION_BLOCKED_BY_BENCHMARK_STRUCTURE",
+      "why_not_promoted": "Bridge structure exists in only 1 of 5 families, so a family-clustered bootstrap cannot certify a family-concentrated effect: LCB95 is +0.0000 for family, +0.0659 for template_id, +0.1080 for source_cluster_id."
+    },
+    "gate_c1": {
+      "amended": "OOD measurements voided after four corpus defects were found; see data/hrm/controlled_gate_a_v3/V3_KNOWN_LIMITATIONS.md",
+      "claim": "Bounded two-pass retrieval with entity-anchored packing is identifier-dependent: ENTITY_PATTERN matches 0/250 v3 OOD questions and 0/160 natural_name qualification questions, so zero follow-ups fire. On v3 qualification it scores 0.394 against a 0.828 oracle-evidence ceiling.",
+      "decomposition_qualification": {
+        "_warning": "Raw arm differences, NOT validated causal attributions. The bridge and retrieval terms depend on an oracle_bridge instrument now known not to be independent (it re-runs the extractor under test), so the causal labels are weaker than the numbers. Only V4's R0-R5 ladder can establish the real decomposition.",
+        "bridge_arm_difference_UNVALIDATED": 0.146,
+        "iteration_arm_difference": 0.1,
+        "reader_error": 0.172,
+        "retrieval_arm_difference_UNVALIDATED": 0.288,
+        "selection_arm_difference": 0.048
+      },
+      "no_longer_usable": [
+        "the OOD magnitude",
+        "the bridge/retrieval causal split"
+      ],
+      "not_a_claim_about": [
+        "any quantitative OOD figure, which is voided: 48% of the v3 OOD split is unanswerable from evidence",
+        "source-style generalization, since the v3 holdout is violated at the evidence level",
+        "alias resolution, since the v3 alias regime is prefix truncation",
+        "the reader, which scores 0.828 given perfect evidence"
+      ],
+      "opportunity_groups_are_design_labels_not_utility_truth": "C_SECOND_PASS_CONFUSING produced 0 measured negative outcomes. A/B/C/D are generator design labels; controller labels must come from measured delta-U only.",
+      "report": "GATE_C1_REPORT.md",
+      "root_cause": "The mechanism performed lexical identifier chaining, not bridge inference. ENTITY_PATTERN requires a hyphen-digit suffix; it matches 0/250 OOD questions and 0/160 natural_name questions inside qualification, so zero follow-ups fire.",
+      "verdict": "FAIL_STRUCTURAL_GENERALIZATION",
+      "verified_diagnostic_qualification_split": {
+        "_note": "Independently recomputed from the frozen receipts. Qualification-split only, so unaffected by the v3 OOD defects. This is the cleanest available proof that the failure is retrieval infrastructure and not the reader.",
+        "interpretation": "HRM reads natural-name evidence as well as exact-id evidence (0.838 vs 0.847). Retrieval collapses to 0.206 on natural names. The ~0.63 gap is the deterministic entity/bridge infrastructure, not reader capability.",
+        "oracle_evidence_by_answer_kind": {
+          "boolean": 0.65,
+          "enum": 0.698,
+          "json_field": 0.716,
+          "numeric": 0.984,
+          "symbolic": 0.927
+        },
+        "oracle_evidence_by_entity_regime": {
+          "abbreviation": 0.8,
+          "exact_id": 0.847,
+          "natural_name": 0.838
+        },
+        "reader_error_is_not_uniform": "The 0.172 reader error concentrates in boolean (0.650) and enum (0.698) judgments, not numeric/symbolic extraction. Inspect those before any evidence-use training.",
+        "two_pass_by_entity_regime": {
+          "abbreviation": 0.488,
+          "exact_id": 0.476,
+          "natural_name": 0.206
+        }
+      },
+      "what_remains_strong": [
+        "the current mechanism materially improves some qualification tasks",
+        "natural_name tasks expose its syntactic brittleness (0/160 entities extracted)",
+        "ENTITY_PATTERN is lexical identifier chaining, not semantic bridge inference",
+        "HRM performs substantially better when supplied correct evidence"
+      ]
+    },
+    "gate_c1_v4_ladder": {
+      "arms_complete_set_qualification": {
+        "R0": 0.162,
+        "R1": 0.134,
+        "R2": 0.134,
+        "R3": 0.134,
+        "R4": 0.168,
+        "R5": 1.0
+      },
+      "arms_quality": {
+        "R0": {
+          "ood": 0.004,
+          "qual": 0.074
+        },
+        "R1": {
+          "ood": 0.016,
+          "qual": 0.062
+        },
+        "R2": {
+          "ood": 0.008,
+          "qual": 0.054
+        },
+        "R3": {
+          "ood": 0.008,
+          "qual": 0.054
+        },
+        "R4": {
+          "ood": 0.404,
+          "qual": 0.462
+        },
+        "R5": {
+          "ood": 0.908,
+          "qual": 0.88
+        }
+      },
+      "claim": "On frozen controlled_gate_a_v4 with the mechanism pinned at 3260ce0, the current retrieval path is near-inert: R1 two-pass reaches 0.062 qualification / 0.016 OOD against an oracle-evidence ceiling of 0.880 / 0.908.",
+      "critical_reading_of_R3_to_R4": "R4's complete-set success is only 0.168 while its quality is 0.462, so R4 answers many tasks from PARTIAL gold evidence. The +0.408 gain is therefore not 'better ranking' -- it is the effect of removing every non-gold record. Any distractor in the packet is close to catastrophic, and the reader can often work from an incomplete but clean packet. Do not read R3->R4 as a pure selection-ranking term.",
+      "not_a_claim_about": [
+        "any receipt-verified figure: the run's receipts were not pushed to this repository",
+        "selection ranking, since R4's gain comes from removing all non-gold records, not from ranking",
+        "the reader, which reaches 0.880/0.908 given the required evidence"
+      ],
+      "provenance": "Measured on Colab T4 at pinned commit 3b1fbd5, sequential generation (batch_equivalence_passed=false, batch_size=1). Values transcribed from the run output; the receipt files were not pushed back to this repository, so they are NOT independently re-verifiable here.",
+      "report": "GATE_C1_V4_REPORT.md"
+    },
+    "gate_c2_bge_dense": {
+      "claim": "A stronger pinned dense encoder (BAAI/bge-small-en-v1.5, CLS pooling, query-prefix only) earns promotion on OOD but not on qualification. Complete-set@50 rises 0.072 -> 0.152 OOD (more than doubling) while qualification moves only 0.364 -> 0.370.",
+      "interpretation": "The entire OOD gain comes from the DESCRIPTION regime (+0.158, roughly 3x). That is mechanistically coherent: a description is a natural-language phrase, which is what a semantic encoder is for. An alias is an arbitrary name substitution that no encoder can resolve without retrieving the identity record, so alias remains a multi-hop retrieval problem rather than an embedding problem. Promoting BGE on aggregate recall alone would have obscured that split.",
+      "not_a_claim_about": [
+        "qualification, where the gain is +0.006 and within noise",
+        "alias resolution, which improves only +0.008 and is not a semantic-similarity problem",
+        "downstream answer quality, which was not measured here"
+      ],
+      "per_entity_regime_complete_set_at_50": {
+        "ood": {
+          "alias": {
+            "bge": 0.069,
+            "minilm": 0.061
+          },
+          "description": {
+            "bge": 0.242,
+            "minilm": 0.083
+          }
+        },
+        "qualification": {
+          "abbreviation": {
+            "bge": 0.34,
+            "minilm": 0.324
+          },
+          "canonical": {
+            "bge": 0.4,
+            "minilm": 0.404
+          }
+        }
+      },
+      "report": "GATE_C1_V4_REPORT.md"
+    },
+    "gate_c2_coverage": {
+      "claim": "Retrieval coverage measured without the reader on frozen V4. Dense beats BM25 on BOTH splits, reversing the Gate B ordering, and rank fusion beats either alone. Coverage remains the dominant constraint.",
+      "complete_set_at_10": {
+        "ood": {
+          "bm25": 0.0,
+          "dense": 0.004,
+          "rrf": 0.004,
+          "union": 0.008
+        },
+        "qualification": {
+          "bm25": 0.16,
+          "dense": 0.214,
+          "rrf": 0.222,
+          "union": 0.198
+        }
+      },
+      "complete_set_at_50": {
+        "ood": {
+          "bm25": 0.048,
+          "dense": 0.072,
+          "rrf": 0.128,
+          "union": 0.128
+        },
+        "qualification": {
+          "bm25": 0.35,
+          "dense": 0.364,
+          "rrf": 0.426,
+          "union": 0.422
+        }
+      },
+      "not_a_claim_about": [
+        "downstream answer quality, which was not measured in the coverage harness",
+        "any dense stack other than the pinned MiniLM encoder",
+        "reranking or selection, which are measured separately on frozen candidate pools"
+      ],
+      "receipts": "evidence/gate_c2/{qualification,ood}_coverage/",
+      "report": "GATE_C1_V4_REPORT.md",
+      "supersedes": "Gate B's finding that BM25 dominates the tested dense stack. That held on the identifier-heavy v2 corpus and does not survive v4."
+    },
+    "gate_c2_query_ladder": {
+      "claim": "Q0-Q3 retrieval-only query ablation on frozen V4. Querying the bridge entity ALONE (Q1) is worse than the original question on both splits and collapses to 0.000 complete-set@50 on OOD, which explains why the V4 ladder's R2 did not beat R1. A fully rendered request (Q3) nearly doubles dense complete-set@10 on qualification (0.214 -> 0.416) and lifts fusion complete-set@50 from 0.426 to 0.614. On OOD even a perfect query reaches only 0.200, so retrieval representation, not query formulation, is the binding constraint there.",
+      "complete_set_at_50_fusion": {
+        "ood": {
+          "Q0": 0.128,
+          "Q1": 0.0,
+          "Q2": 0.1,
+          "Q3": 0.2
+        },
+        "qualification": {
+          "Q0": 0.426,
+          "Q1": 0.464,
+          "Q2": 0.438,
+          "Q3": 0.614
+        }
+      },
+      "implication": "Query formulation is a real opportunity on qualification but is NOT sufficient on OOD. Building a semantic gap reasoner alone would sit on top of an index that cannot exploit a perfect query out of distribution. Retrieval representation must improve alongside it.",
+      "not_a_claim_about": [
+        "downstream answer quality, which was not measured in this ablation",
+        "any learned query formulator, since Q1-Q3 are oracle-constructed",
+        "selection, which is measured separately on frozen candidate pools"
+      ],
+      "partial_proof_at_50_fusion": {
+        "ood": {
+          "Q0": 0.449,
+          "Q1": 0.472,
+          "Q2": 0.605,
+          "Q3": 0.528
+        },
+        "qualification": {
+          "Q0": 0.623,
+          "Q1": 0.658,
+          "Q2": 0.688,
+          "Q3": 0.765
+        }
+      },
+      "report": "GATE_C1_V4_REPORT.md"
+    }
+  },
+  "version": "3.7.1"
+}
