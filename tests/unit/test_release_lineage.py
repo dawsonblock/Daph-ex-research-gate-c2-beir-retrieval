@@ -61,10 +61,18 @@ def test_research_status_declares_every_gate():
     assert set(gates) == expected
     # A gate may also fail for a reason that is about the benchmark rather
     # than the mechanism; that distinction must survive in the status file.
+    # SUPERSEDED is permitted so a placeholder gate can be retired in favour
+    # of a formal execution gate without leaving two active entries; the
+    # gate_lineage block must document the supersession.
     permitted_prefixes = ("PASS", "FAIL", "PENDING", "IN_PROGRESS", "BLOCKED",
-                          "MECHANISM_SUCCESS")
+                          "MECHANISM_SUCCESS", "SUPERSEDED")
     for name, value in gates.items():
         assert value.startswith(permitted_prefixes), f"{name} has unknown status {value!r}"
+        if value.startswith("SUPERSEDED"):
+            lineage = _status().get("gate_lineage", {})
+            assert name in lineage, (
+                f"{name} is marked SUPERSEDED but has no gate_lineage entry explaining why"
+            )
 
 
 def test_readme_does_not_claim_gate_a_is_unrun():

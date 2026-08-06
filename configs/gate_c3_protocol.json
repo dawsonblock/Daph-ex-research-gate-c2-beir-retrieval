@@ -17,12 +17,24 @@
   },
   "ladder": {
     "I0_current_surface_anchor_extraction": "baseline; the mechanism that is currently inert",
-    "I1_normalized_lexical_mention_matching": "case/punctuation/whitespace normalization only",
+    "I1_normalized_lexical_mention_matching": "case/punctuation/whitespace normalization only; NEGATIVE_CONTROL rung (see I1_classification). Normalization cannot recover a missing token, so on truncation failures I1 is expected to approximate I0. I1 tests whether trivial text normalization explains the failure; it is not expected to resolve truncation. The first rung that actually attacks the measured truncation defect is I2.",
     "I2_prefix_suffix_tolerant_resolution": "allow a mention to match a longer canonical form when the extension is a plausible entity-type continuation",
     "I3_alias_identity_record_retrieval": "retrieve identity records that state the mapping",
     "I4_bounded_canonicalization_through_retrieved_identity_edges": "follow refers_to edges found at runtime, bounded depth",
     "I5_oracle_identity_resolution_plus_real_selector": "perfect anchoring, real selection: isolates resolution from selection",
     "I6_oracle_evidence": "ceiling"
+  },
+  "I1_classification": {
+    "role": "NEGATIVE_CONTROL",
+    "intent": "Test whether trivial text normalization (case/punctuation/whitespace) explains the surface anchoring failure. It is NOT expected to resolve truncation failures such as 'Ojos tension' vs canonical 'Ojos tension block', because normalization cannot recover a missing token.",
+    "expected_relation_to_I0": "I1 ~= I0 on truncation failures. An I1 result indistinguishable from I0 is the predicted negative-control outcome, not an engineering setback.",
+    "first_rung_attacking_the_measured_defect": "I2_prefix_suffix_tolerant_resolution",
+    "report_obligation": "Any C3 report covering I1 must state this expectation explicitly so an unsurprising I1 failure is not misread as a resolver failure."
+  },
+  "resolution_contract": {
+    "outcomes": ["EXACT", "RESOLVED", "AMBIGUOUS", "UNRESOLVED"],
+    "rule": "Ambiguity MUST NOT be silently converted into a guessed canonical entity. A resolver is permitted to return AMBIGUOUS or UNRESOLVED and let retrieval continue another way; abstention is a legitimate, reportable outcome.",
+    "rationale": "The recall/liveness metrics below can be inflated by attaching every question to a vaguely compatible entity. The correctness metrics and the ResolutionUtility composite exist to make wrong canonical attachment more expensive than abstention."
   },
   "metrics": [
     "QuestionAnchorResolutionRate",
@@ -30,13 +42,42 @@
     "CanonicalEntityRecovery",
     "ChainEnumerationRate",
     "CandidateCompleteSet",
-    "S2cLiveRate"
+    "S2cLiveRate",
+    "CorrectAnchorRate",
+    "WrongAnchorRate",
+    "FalseResolutionRate",
+    "AmbiguousResolutionRate",
+    "UnresolvedRate"
   ],
+  "metric_definitions": {
+    "CorrectAnchorRate": "fraction of tasks whose resolved canonical entity equals the task's true canonical entity (EXACT or correctly RESOLVED).",
+    "WrongAnchorRate": "fraction of tasks whose resolver returned a canonical entity that is not the true one. This is the dangerous failure mode and MUST be reported as a headline, not buried.",
+    "FalseResolutionRate": "fraction of tasks the resolver marked RESOLVED but whose canonical entity is wrong. Distinct from UnresolvedRate.",
+    "AmbiguousResolutionRate": "fraction of tasks the resolver returned AMBIGUOUS for. Reporting this protects against silently guessing.",
+    "UnresolvedRate": "fraction of tasks the resolver returned UNRESOLVED for."
+  },
   "primary_metric": {
     "name": "S2cLiveRate",
     "definition": "fraction of tasks on which S2c can construct at least one nontrivial chain",
-    "current_value_on_descv4_surface": 0.0
+    "current_value_on_descv4_surface": 0.0,
+    "promotion_guard": "S2cLiveRate MUST NOT be the sole headline. A wrong live chain is worse than an unresolved task. Promotion decisions must also satisfy ResolutionUtility."
   },
+  "resolution_utility": {
+    "formula": "ResolutionUtility = CorrectResolution - lambda * WrongResolution",
+    "default_lambda": 2.0,
+    "lambda_constraint": "lambda > 1, so wrong canonical attachment is penalized harder than abstention. Used at minimum as a diagnostic; not required to be optimized yet.",
+    "purpose": "Make explicit that wrong canonical attachment is more dangerous than abstain / unresolved."
+  },
+  "primary_c3_table_columns": [
+    "arm",
+    "CorrectAnchorRate",
+    "WrongAnchorRate",
+    "AmbiguousResolutionRate",
+    "UnresolvedRate",
+    "ChainEnumerationRate_or_S2cLiveRate",
+    "CanonicalEntityRecovery",
+    "CandidateCompleteSet"
+  ],
   "reader_policy": {
     "hrm_in_initial_ladder": false,
     "rationale": "Resolution is measurable without the reader; adding generation first would confound resolution failure with reader error and cost hours per iteration."
@@ -57,14 +98,28 @@
   },
   "generalization_requirement": {
     "fresh_calibration_corpus_required": true,
-    "rationale": "Tuning a resolver on descv4_surface would build a second surface-specific shortcut, which is the failure already recorded for the relation-keyword arm.",
+    "rationale": "Tuning a resolver on descv4_surface would build a second surface-specific shortcut, which is the failure already recorded for the relation-keyword arm. The point of the new corpus is not merely to use a sixth noun family; it is to test whether the resolver generalizes rather than exploiting familiar textual structure.",
     "vocabulary_must_be_disjoint_from": [
       "birds (controlled_gate_a_v4)",
       "minerals (c2 calibration v1)",
       "constellations (chain_v2)",
       "rivers (chain_v3)",
       "summits (descv4)"
-    ]
+    ],
+    "freeze_audit_required_before_I0": {
+      "entity_surface_overlap": 0,
+      "alias_overlap": 0,
+      "description_overlap": 0,
+      "vocabulary_overlap": 0,
+      "source_cluster_overlap": 0,
+      "audit_note": "Each value is the maximum permitted overlap with the union of the five prior corpora. Zero overlap is required at minimum for entity surfaces, aliases, descriptions, vocabulary, and source clusters."
+    },
+    "template_policy": {
+      "exact_string_overlap_required": 0,
+      "semantic_task_schema_preserved": true,
+      "surface_realization_disjoint": true,
+      "note": "Abstract template families MAY remain structurally analogous so the same task is being tested; that is more scientifically precise than requiring every abstract template family to be unrelated. What must be disjoint is the surface realization. Record this distinction explicitly in the corpus freeze record rather than collapsing it into a single 'disjoint' flag."
+    }
   },
   "success_criteria": {
     "surface_question_anchor_resolution": "materially above the current 0%",
@@ -84,5 +139,48 @@
     "larger rerankers or additional model capacity",
     "global promotion of any selector",
     "packet-budget sweeps"
+  ],
+  "protocol_version": "v2_pre_measurement_amended",
+  "protocol_revision_log": [
+    {
+      "version": "v1_frozen",
+      "date": "2026-08-06",
+      "status": "ORIGINAL_FROZEN_PROTOCOL",
+      "note": "Original protocol frozen before any C3 measurement. No C3 implementation, receipts, evidence directory, or report existed at freeze time (verified by repository audit)."
+    },
+    {
+      "version": "v2_pre_measurement_amended",
+      "date": "2026-08-06",
+      "status": "PRE_MEASUREMENT_REVISION",
+      "no_c3_measurements_existed_at_revision_time": true,
+      "rationale": "Because no C3 data had been generated or measured yet, these amendments are a documented pre-measurement protocol revision and do not contaminate any experiment.",
+      "changes": [
+        {
+          "id": "amendment_7_false_resolution_metrics",
+          "summary": "Added CorrectAnchorRate, WrongAnchorRate, FalseResolutionRate, AmbiguousResolutionRate, UnresolvedRate to the metrics list; added resolution_contract with EXACT/RESOLVED/AMBIGUOUS/UNRESOLVED outcomes; added resolution_utility composite (CorrectResolution - lambda*WrongResolution, lambda>1) so wrong canonical attachment is more expensive than abstention; added primary_c3_table_columns and a promotion_guard on S2cLiveRate so liveness is not the sole headline.",
+          "reason": "The original metrics measured recall/liveness only. A resolver could inflate S2cLiveRate from 0 to 90% by attaching every question to a vaguely compatible entity, which would look successful until later. Ambiguity must not be silently converted into a guessed canonical entity."
+        },
+        {
+          "id": "amendment_8_sixth_corpus_disjointness",
+          "summary": "Added freeze_audit_required_before_I0 with required zero overlap for entity_surface, alias, description, vocabulary, and source_cluster. Added template_policy distinguishing semantic_task_schema_preserved from surface_realization_disjoint, with exact_string_overlap_required=0.",
+          "reason": "Vocabulary-name disjointness is necessary but not sufficient. The new corpus must test whether the resolver generalizes rather than exploiting familiar textual structure; that requires zero overlap on surfaces, aliases, descriptions, and source clusters, not just noun-family names."
+        },
+        {
+          "id": "amendment_9_I1_negative_control_classification",
+          "summary": "Classified I1_normalized_lexical_mention_matching as a NEGATIVE_CONTROL rung via I1_classification. Stated that I1 ~= I0 is the predicted outcome on truncation failures (normalization cannot recover a missing token) and that I2 is the first rung attacking the measured defect. Added a report_obligation that any C3 report covering I1 must state this expectation explicitly.",
+          "reason": "Without this classification, an unsurprising I1 failure can be misread as an engineering setback rather than the predicted negative-control outcome."
+        },
+        {
+          "id": "amendment_10_c2_i_registry_superseded",
+          "summary": "Marked gate_c2_i_identity_resolution = SUPERSEDED_BY_GATE_C3 in RESEARCH_STATUS.json and added a gate_lineage note. Gate C2-I was the earlier placeholder; Gate C3 is the formal execution gate. The two must not remain as apparently active parallel identity-resolution gates.",
+          "reason": "Resolves the dual identity-resolution gate ambiguity flagged in the audit. No C2-I implementation or measurement existed; the substantive work continues under C3."
+        },
+        {
+          "id": "provenance_selector_bundle_manifest_extension",
+          "summary": "Extended evidence/gate_c2/selector_ladder/RESULTS.sha256 to also cover cells.jsonl, tasks.jsonl, and paired_analysis.json (previously only selector_ladder.json was hashed).",
+          "reason": "The selector bundle contains four files; only the lead file was integrity-checked at rest. Extending the manifest gives the bundle the same integrity guarantee as the candidate-pool manifest, and is folded into this revision pass since provenance is already being touched."
+        }
+      ]
+    }
   ]
 }

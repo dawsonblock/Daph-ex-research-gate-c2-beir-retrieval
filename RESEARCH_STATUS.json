@@ -31,7 +31,7 @@
     "gate_b_single_pass_retrieval": "PASS",
     "gate_c0_controlled_iterative_retrieval": "MECHANISM_SUCCESS_PROMOTION_BLOCKED_BY_BENCHMARK_STRUCTURE",
     "gate_c1_structural_generalization_iterative_retrieval": "FAIL_MEASURED_ON_V4",
-    "gate_c2_i_identity_resolution": "PENDING",
+    "gate_c2_i_identity_resolution": "SUPERSEDED_BY_GATE_C3",
     "gate_c2_r_retrieval_coverage": "PASS_POLICY_FROZEN_c2_candidate_generation_v1",
     "gate_c2_s_evidence_selection": "PASS_ID_PARTITION_structural_selection_captures_30pct_of_oracle_gap",
     "gate_c2_semantic_information_gap_retrieval": "IN_PROGRESS_COVERAGE_MEASURED",
@@ -50,6 +50,9 @@
     "gate_k_consolidation": "BLOCKED",
     "gate_l_latent_memory": "BLOCKED",
     "gate_n1_natural_external_memory": "PENDING"
+  },
+  "gate_lineage": {
+    "gate_c2_i_identity_resolution": "Gate C2-I was the earlier placeholder identity-resolution gate. Gate C3 (gate_c3_surface_identity_resolution) is the formal execution gate with a frozen protocol; the two must not remain as apparently active parallel identity-resolution gates. C2-I is therefore marked SUPERSEDED_BY_GATE_C3. No C2-I implementation or measurement existed; the substantive work continues under C3."
   },
   "hypothesis_only_not_measured": {
     "_note": "Proposals from exploratory Colab analysis that were simulated or projected rather than measured. None may enter a canonical claim.",
