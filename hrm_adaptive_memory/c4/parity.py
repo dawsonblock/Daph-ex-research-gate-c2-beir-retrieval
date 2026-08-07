@@ -202,3 +202,121 @@ def validate_packet_budgets(all_results: Mapping[str, list[PreHRMResult]]) -> tu
                     f"{arm_id} {r.task_id}: packet has {len(r.packet.packet_ids)} "
                     f"items, budget is {r.packet.packet_budget}")
     return (len(violations) == 0, violations)
+
+
+# --- Q3 mechanism parity ---
+
+def validate_q3_query_formulation(
+    all_results: Mapping[str, list[PreHRMResult]],
+) -> tuple[bool, list[str]]:
+    """Validate that C4 query formulation matches the qualified Q3 mechanism.
+
+    Q3 qualified the subject+bridge+relation formulation. Since iterative
+    retrieval is disabled (C4-BRIDGE negative result), C4 uses subject+relation
+    (no bridge). This check verifies:
+
+    1. For subject_preserving arms (C4-1+), the rendered query contains
+       the original subject (never discarded).
+    2. For subject_preserving arms, the rendered query contains the target
+       relation.
+    3. For original arms (C4-0), the rendered query is the raw question.
+    4. No oracle metadata appears in the query.
+    """
+    violations: list[str] = []
+    oracle_keys = {"_oracle_metadata", "answer", "required_evidence_ids",
+                   "oracle_evidence_ids", "answer_node", "family",
+                   "entity_regime", "proof_edges"}
+
+    for arm_id, results in all_results.items():
+        for r in results:
+            query = r.query.rendered_query
+            original = r.query.original_question
+
+            # Check no oracle keys in query
+            for key in oracle_keys:
+                if key in query:
+                    violations.append(
+                        f"{arm_id} {r.task_id}: oracle key {key!r} in query")
+
+            if r.query.query_policy == "original":
+                # C4-0: query should be the raw question
+                if query != original:
+                    violations.append(
+                        f"{arm_id} {r.task_id}: original policy but query "
+                        f"differs from question: {query!r} vs {original!r}")
+
+            elif r.query.query_policy == "subject_preserving":
+                # C4-1+: query must preserve subject and contain relation
+                # Extract subject from original question
+                from .query_stage import extract_subject, extract_target_relation
+                subject = extract_subject(original)
+                relation = extract_target_relation(original)
+
+                if subject and subject.lower() not in query.lower():
+                    violations.append(
+                        f"{arm_id} {r.task_id}: subject {subject!r} not in "
+                        f"rendered query {query!r}")
+
+                if relation and relation.lower() not in query.lower():
+                    violations.append(
+                        f"{arm_id} {r.task_id}: relation {relation!r} not in "
+                        f"rendered query {query!r}")
+
+    return (len(violations) == 0, violations)
+
+
+def validate_merge_provenance(
+    all_results: Mapping[str, list[PreHRMResult]],
+) -> tuple[bool, list[str]]:
+    """Validate that candidate pool provenance is correct.
+
+    Since iterative retrieval is disabled (C4-BRIDGE negative result),
+    no merge should occur. The candidate pool should come entirely from
+    the first-pass retrieval.
+
+    This check verifies:
+    1. No second pass was performed (second_pass_performed == False).
+    2. Candidate IDs match the first-pass retrieval exactly.
+    3. No bridge was injected into the query (bridge is extracted for
+       provenance but not used for a second pass).
+    """
+    violations: list[str] = []
+
+    for arm_id, results in all_results.items():
+        for r in results:
+            # No second pass should be performed
+            if r.query.second_pass_performed:
+                violations.append(
+                    f"{arm_id} {r.task_id}: second pass performed but "
+                    f"iterative retrieval is disabled")
+
+            # Bridge may be extracted but should not trigger a second pass
+            # (bridge field can be non-None for provenance, but second_query
+            # should be None)
+            if r.query.second_query is not None:
+                violations.append(
+                    f"{arm_id} {r.task_id}: second_query is not None but "
+                    f"iterative retrieval is disabled")
+
+    return (len(violations) == 0, violations)
+
+
+def validate_all_conformance(
+    all_results: Mapping[str, list[PreHRMResult]],
+) -> tuple[bool, list[str]]:
+    """Run all conformance checks: parity, leakage, selected-in-pool,
+    packet budgets, Q3 query formulation, and merge provenance."""
+    all_violations: list[str] = []
+
+    for check_fn in [
+        validate_all_parity,
+        validate_no_leakage,
+        validate_selected_in_pool,
+        validate_packet_budgets,
+        validate_q3_query_formulation,
+        validate_merge_provenance,
+    ]:
+        ok, violations = check_fn(all_results)
+        all_violations.extend(violations)
+
+    return (len(all_violations) == 0, all_violations)

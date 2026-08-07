@@ -34,7 +34,9 @@ from hrm_adaptive_memory.c4.bridge_extraction import extract_bridge
 from hrm_adaptive_memory.c4.receipts import build_pre_hrm_receipt, assert_runtime_clean, build_full_receipt
 from hrm_adaptive_memory.c4.parity import (
     validate_all_parity, validate_no_leakage,
-    validate_selected_in_pool, validate_packet_budgets)
+    validate_selected_in_pool, validate_packet_budgets,
+    validate_q3_query_formulation, validate_merge_provenance,
+    validate_all_conformance)
 from hrm_adaptive_memory.evaluation.verifiers import verify_answer as _verify_answer_shared
 from hrm_adaptive_memory.c4.provenance import (
     build_manifest, write_results_hash, sha256_corpus)
@@ -627,6 +629,12 @@ def run_dry_run(split: str = "development", arm_ids: list[str] | None = None):
     ok, violations = validate_packet_budgets(all_results)
     print(f"  {'PASS' if ok else 'FAIL'}: packet budgets ({len(violations)} violations)")
     for v in violations[:5]: print(f"    {v}")
+    ok, violations = validate_q3_query_formulation(all_results)
+    print(f"  {'PASS' if ok else 'FAIL'}: Q3 query formulation ({len(violations)} violations)")
+    for v in violations[:5]: print(f"    {v}")
+    ok, violations = validate_merge_provenance(all_results)
+    print(f"  {'PASS' if ok else 'FAIL'}: merge provenance ({len(violations)} violations)")
+    for v in violations[:5]: print(f"    {v}")
 
     # Write dry-run receipts
     out_dir = OUT / "dry_run" / split
@@ -652,6 +660,8 @@ def run_dry_run(split: str = "development", arm_ids: list[str] | None = None):
         "parity": validate_all_parity(all_results)[0],
         "selected_in_pool": validate_selected_in_pool(all_results)[0],
         "packet_budgets": validate_packet_budgets(all_results)[0],
+        "q3_query_formulation": validate_q3_query_formulation(all_results)[0],
+        "merge_provenance": validate_merge_provenance(all_results)[0],
     }
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
 
