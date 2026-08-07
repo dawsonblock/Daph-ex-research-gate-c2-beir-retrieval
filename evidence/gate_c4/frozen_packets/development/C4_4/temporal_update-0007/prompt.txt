@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to OIM-1?
+[EVIDENCE]
+[E1]
+Revision 2 (effective 2031-06-01) supersedes revision 1: - updated Osprey intake manifold: operating tier now retired
+[E2]
+Abbreviation table: OIM-1 = Osprey intake manifold.
+[E3]
+Revision 1 (effective 2030-01-01, since superseded) recorded: - updated Osprey intake manifold: operating tier now accredited
+[E4]
+Registry entry: Ibis sensor array — release channel — 6392.
+[E5]
+Revision applied — Ibis control module mounted monitor changed to Bittern control module.
+[E6]
+Engineering notes indicate Osprey control module uses {"state": "provisional"} as its ownership tier.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

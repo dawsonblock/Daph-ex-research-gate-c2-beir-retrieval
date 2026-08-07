@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the ownership tier for PCM-8?
+[EVIDENCE]
+[E1]
+Note: the ownership tier for Marlin pressure assembly resolves to DELTA-AMBER.
+[E2]
+Per the ownership tier register, 7362 is allocated to Wren control module.
+[E3]
+In shorthand, Pelican control module is written PCM-8.
+[E4]
+For Heron intake manifold, ownership tier requires ETA-INDIGO.
+[E5]
+The ownership tier registry records that Kestrel relay unit is assigned {"state": "provisional"}.
+[E6]
+Abbreviation table: PCM-8 = Pelican control module.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

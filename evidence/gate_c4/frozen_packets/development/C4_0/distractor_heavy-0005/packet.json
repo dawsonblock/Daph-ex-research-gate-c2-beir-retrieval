@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "e49ef51c5e7a4f3554b0dbdb45b7a1f6355e04b7aa07ad39e18f9c368b36404d",
+  "canonical_subject": "",
+  "ordered_selected_ids": [
+    "distractor_heavy-0005/identity",
+    "distractor_heavy-0006/accepted",
+    "distractor_heavy-0006/near-near_relation",
+    "distractor_heavy-0000/near-near_entity",
+    "distractor_heavy-0002/accepted",
+    "distractor_heavy-0008/accepted"
+  ],
+  "ordered_text_sha256": [
+    "708c9dc492db737d94383dd874fd80a652706a0b41829c843dd8ac3f876f6771",
+    "35c088b905ca1e100cf3a0a9cb4c3d0599e0a3efb9878bada32732a948c7f865",
+    "3e965a9dfca57c7a0df0a5da1562ec81b7f3a32face95cd4b14b9c953917b75c",
+    "7dee1bf269f1419718daf72688b8d2b6f2acee61aa6eb5d09e2e58d1844f811b",
+    "10e1f7d695a02caabbf4bf640e49479d67c89c989ea7077356f0b9e0c8c264e0",
+    "069f1d21dc2f4377c2e97992d479cfb44ae937a22dc95de5a647f08a0d1858b0"
+  ],
+  "query_hash": "fe7103fe900c285ca633bb98ca90e1b1cc5fadb8971bf5c3412653334081a808",
+  "selector_policy_id": "s0",
+  "task_id": "distractor_heavy-0005"
+}

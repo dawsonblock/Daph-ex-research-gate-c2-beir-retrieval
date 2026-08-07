@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Heron control module, which release channel is recorded?
+[EVIDENCE]
+[E1]
+During setup, Heron control module was paired with Curlew control module for mounted monitor.
+[E2]
+subject=Heron control module; mounted monitor=Wren control module
+[E3]
+Per the required dependency register, Bittern drive cluster is allocated to Heron control module.
+[E4]
+{"subject": "Finch control module", "spare enclosure": "Heron control module"}
+[E5]
+It is recorded in the mounted monitor registry that Marlin relay unit holds Heron control module.
+[E6]
+The proposed release channel registry records that Bittern drive cluster is assigned retired. This proposal was rejected.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

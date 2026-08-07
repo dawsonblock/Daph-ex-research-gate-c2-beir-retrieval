@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to SPA-3?
+[EVIDENCE]
+[E1]
+SPA-3 is the short code for Sparrow pressure assembly.
+[E2]
+- updated Finch control module: ownership tier now 3529
+[E3]
+{"subject": "Teal drive cluster", "ownership tier": "retired"}
+[E4]
+[change] Osprey drive cluster :: ownership tier := accredited
+[E5]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E6]
+[change] Jacana sensor array :: required action := {"tier": "accredited"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "d41996b0476054b27e371f427bd4e739af54bff8ae4a55754d4cc2f2a7fd5779",
+  "canonical_subject": "Raven pressure assembly",
+  "ordered_selected_ids": [
+    "temporal_update-0003/current",
+    "temporal_update-0003/identity",
+    "temporal_update-0003/superseded",
+    "ownership_chain-0010/value",
+    "ownership_chain-0011/value",
+    "procedural_chain-0003/value"
+  ],
+  "ordered_text_sha256": [
+    "695c74be2cdee8cdbd6f188ff7081df2d31e1227db2fb5707d27c91132b6e061",
+    "99f42b211e16d9ed8ebef50107924eb5ad176e2c17a1c6f50f3ef6da4a0dfe3f",
+    "47f739950abff41eeaf79b8f6a03032bb41f88c125df4fb140db986e0564c77b",
+    "1b0baed9d6749a3af79465158860802ee9ec09a9a3fc049c6977064fb21fc2da",
+    "c6ed9bfae7afb5ec3d0cb77ed19cd2fbaf36257ec48f48a9ec5d4221c7e42a3b",
+    "ff67ee5c78a4593bbb78ceb453157c32ad6c926fd8710365567792bdee06f158"
+  ],
+  "query_hash": "b8af2f8050144509a0d2e0233dd9a070da9db9937ea0610f64a1b64d7eeb7b4c",
+  "selector_policy_id": "s2c",
+  "task_id": "temporal_update-0003"
+}

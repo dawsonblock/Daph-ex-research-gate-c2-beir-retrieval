@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which service region applies to WSA-5?
+[EVIDENCE]
+[E1]
+[change] Wren sensor array :: service region := {"grade": "provisional"}
+[E2]
+WSA-5 is the short code for Wren sensor array.
+[E3]
+In shorthand, Wren sensor array is written WSA-7.
+[E4]
+{"subject": "Ibis relay unit", "mounted monitor": "Pelican drive cluster"}
+[E5]
+MCM-5 is the short code for Marlin control module.
+[E6]
+In shorthand, Wren intake manifold is written WIM-5.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

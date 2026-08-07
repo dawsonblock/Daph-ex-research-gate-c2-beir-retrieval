@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "c98c02b17ac0120466a9a6a3c93c89e19f35296f82badee0310e6bbcaf7e9619",
+  "canonical_subject": "Marlin relay unit",
+  "ordered_selected_ids": [
+    "distractor_heavy-0006/near-near_entity",
+    "dependency_chain-0005/link",
+    "procedural_chain-0005/identity",
+    "dependency_chain-0007/link",
+    "procedural_chain-0000/value",
+    "procedural_chain-0004/value"
+  ],
+  "ordered_text_sha256": [
+    "28769f6a440ae6ceee787eebc559e4a825c478276258aacc02a2dd8e07e4f441",
+    "a2296910c430369794d947f92c9c3e37e15043ded0bbd8fadb745ccd0ab03dbc",
+    "12cc347a3abfc422f8fb2e4bcb837300ffcf35c5904a7c09be84a1fd5c84fd91",
+    "eac16d32c29c839e99a20e41bd1eea29a6803300f99da19ed61d06edd5a44a35",
+    "3bd57018037996a8bafb1487d55afa37512bb5cdd82bf43ca1b626f482a93b10",
+    "94421db368d5672327c3aa0a9b7a703776eaa8443894159b6f55950bf422b555"
+  ],
+  "query_hash": "22a200dfccf17d9120fc84798cd22c862520a28dcd63ca5dc13f2bd58a8bab84",
+  "selector_policy_id": "s2c",
+  "task_id": "procedural_chain-0005"
+}

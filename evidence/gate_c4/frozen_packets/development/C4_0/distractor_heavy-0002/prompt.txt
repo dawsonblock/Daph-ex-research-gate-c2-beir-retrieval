@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which routing class applies to Vireo intake manifold?
+[EVIDENCE]
+[E1]
+Changelog: calibration routing class for Vireo intake manifold set to suspended.
+[E2]
+subject=Vireo intake manifold; proposed routing class=provisional Status: rejected.
+[E3]
+The routing class registry records that Vireo intake manifold is assigned retired.
+[E4]
+Per the routing class register, 7050 is allocated to Wren intake manifold.
+[E5]
+During setup, Vireo intake manifold was paired with accredited for former routing class. This record is historical.
+[E6]
+Registry entry: Gannet intake manifold — routing class — BETA-GREEN.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

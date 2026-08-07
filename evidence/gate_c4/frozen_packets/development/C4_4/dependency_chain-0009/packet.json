@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "4fb010534cd5715389342196e8ffea5ba052e1d6bbfc3fc5263c135060ad9513",
+  "canonical_subject": "Jacana control module",
+  "ordered_selected_ids": [
+    "dependency_chain-0009/dead-end-0",
+    "dependency_chain-0009/identity",
+    "dependency_chain-0000/value",
+    "dependency_chain-0001/identity",
+    "dependency_chain-0001/value",
+    "dependency_chain-0002/link"
+  ],
+  "ordered_text_sha256": [
+    "d14f195ae72f2aa3d886c1252ce075ba1df1ed3f80a3d4dab10e3cd0c63419e2",
+    "a2db2a338033390fecd58a3bcf56c2ae8be6125b6d377e699e988689ca3ddbc8",
+    "91e88bd1d6699b0035930281acf5343654d48e0adbdb13f5f4609bd0e44cb079",
+    "97f1c873ce2e1927f245185b9c609f4208fec18539f75116fb65cf6ec53cc82b",
+    "b856767ce1f1b095442b51afbe649adb9573561424e8ae2252d06fe2ce78199a",
+    "f89360b33f0894ff2cece9c8b25273ecd17ea1bda15ad8e2ce8d2cb246f1165c"
+  ],
+  "query_hash": "e96288e8e367fe5585ac888238472ebf510ec064f62486e888f6fa060ac05b6d",
+  "selector_policy_id": "s2c",
+  "task_id": "dependency_chain-0009"
+}

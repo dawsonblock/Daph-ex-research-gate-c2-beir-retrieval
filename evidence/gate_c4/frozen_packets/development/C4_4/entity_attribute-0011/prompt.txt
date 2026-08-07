@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For RSA-8, which assigned category is recorded?
+[EVIDENCE]
+[E1]
+Per the assigned category register, {"state": "suspended"} is allocated to Raven sensor array.
+[E2]
+In shorthand, Raven sensor array is written RSA-8.
+[E3]
+- updated Wren intake manifold: parameter grade now {"category": "accredited"}
+[E4]
+For Heron sensor array, parameter grade requires {"category": "accredited"}.
+[E5]
+ICM-8 is the short code for Ibis control module.
+[E6]
+During setup, Kestrel pressure assembly was paired with {"category": "provisional"} for release channel.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

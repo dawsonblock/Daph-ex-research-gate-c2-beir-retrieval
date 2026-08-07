@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Pelican pressure assembly, which billing multiplier is recorded?
+[EVIDENCE]
+[E1]
+[change] Wren pressure assembly :: spare enclosure := Pelican pressure assembly
+[E2]
+Abbreviation table: WPA-6 = Wren pressure assembly.
+[E3]
+Abbreviation table: KPA-1 = Kestrel pressure assembly.
+[E4]
+Abbreviation table: PCM-8 = Pelican control module.
+[E5]
+subject=Ibis drive cluster; required dependency=Pelican pressure assembly
+[E6]
+- updated Pelican pressure assembly: release channel now {"grade": "quarantined"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

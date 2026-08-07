@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Osprey sensor array, which parameter grade is recorded?
+[EVIDENCE]
+[E1]
+For Heron sensor array, parameter grade requires {"category": "accredited"}.
+[E2]
+It is recorded in the parameter grade registry that Sparrow relay unit holds 8120.
+[E3]
+It is recorded in the parameter grade registry that Marlin control module holds {"state": "suspended"}.
+[E4]
+Changelog: parameter grade for Dunlin drive cluster set to {"grade": "provisional"}.
+[E5]
+{"subject": "Bluebird control module", "parameter grade": "{"grade": "provisional"}"}
+[E6]
+[parameter grade] Dunlin pressure assembly -> THETA-OLIVE
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

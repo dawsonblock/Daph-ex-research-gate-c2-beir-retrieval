@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "cd43ba50c5e811ec30879794995f10ebf50406677c371723b7e5d7f9a99c6335",
+  "canonical_subject": "Sparrow control module",
+  "ordered_selected_ids": [
+    "location_chain-0005/identity",
+    "dependency_chain-0007/identity",
+    "entity_attribute-0007/identity",
+    "procedural_chain-0007/identity",
+    "procedural_chain-0004/link",
+    "temporal_update-0006/current"
+  ],
+  "ordered_text_sha256": [
+    "e9f3228f9be392365ef1250eed5093a9ef346293c7d26436225a45166f0d9ed3",
+    "71b8a7cf3044099d63aa163ae565b419181b3908da9a9d449c487649663450f4",
+    "e2bdface038707467769882ee7c96d67f38eb2f6afcca2f88eddce25ef618062",
+    "ec6c22f209fa5bd2b8a83682e89dd5775ccf32092afc1ae93765b4bdcc5447d5",
+    "aabfaec26d06b1c5eeabaae14ce22cf0646537e3c2a4718dfe17abaacbb49a79",
+    "f94babb8fb3e62e083904b677c15595475aa8b21fb33d86908cde6362dab7fff"
+  ],
+  "query_hash": "e4e32770ee588c3b6c37eda32c6b3b0245469c9a224bc617128dc42f66344096",
+  "selector_policy_id": "s2c",
+  "task_id": "location_chain-0005"
+}

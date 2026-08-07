@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "819e603336a89915a6e18525ddfe1aba2b317c57f0a33f7b4b7f941571c813d0",
+  "canonical_subject": "Ibis control module",
+  "ordered_selected_ids": [
+    "configuration_chain-0007/dead-end-1",
+    "dependency_chain-0001/dead-end-0",
+    "dependency_chain-0001/identity",
+    "dependency_chain-0001/dead-end-1",
+    "dependency_chain-0001/link",
+    "ownership_chain-0006/dead-end-0"
+  ],
+  "ordered_text_sha256": [
+    "1ef6319d475ea39acc458f2b23dad664692f0d08c07c053bd84b863e3eabf643",
+    "95c4ac647f54dc6875c81dcd199d47565720143ee27fb528aee32e8e908a8e4c",
+    "97f1c873ce2e1927f245185b9c609f4208fec18539f75116fb65cf6ec53cc82b",
+    "19339805960659f810ca50ada7a6503aa21d841b8ae52ff9d3611214c8173eba",
+    "56ed7ed47ae8e3b4d8f43e477e417e36ab9d1fd8889ad273e990c95369dae26e",
+    "d6567fb94c39178b6234ce944c0749aa42df1cd01a60351c1caf945954bca908"
+  ],
+  "query_hash": "1532116cd4fa3bd90a2bf5502b1e60dc0ccd09e3cfd703952ba3da2297320411",
+  "selector_policy_id": "s2c",
+  "task_id": "procedural_chain-0010"
+}

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For KSA-6, which required action is recorded?
+[EVIDENCE]
+[E1]
+It is recorded in the required action registry that Finch drive cluster holds {"state": "provisional"}.
+[E2]
+For Finch pressure assembly, required action requires 9926.
+[E3]
+In shorthand, Kestrel sensor array is written KSA-6.
+[E4]
+It is recorded in the proposed required action registry that Bluebird pressure assembly holds suspended. This proposal was rejected.
+[E5]
+[required action] Finch drive cluster -> BETA-GREEN
+[E6]
+{"subject": "Bluebird pressure assembly", "required action": "retired"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

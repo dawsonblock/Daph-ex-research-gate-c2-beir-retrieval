@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "1443d61b2c1198194669432c5d8a7fb5764c415b53c16393da7066201dba8ebc",
+  "canonical_subject": "Bittern relay unit",
+  "ordered_selected_ids": [
+    "location_chain-0008/link",
+    "distractor_heavy-0009/near-near_status",
+    "distractor_heavy-0009/near-near_temporal",
+    "location_chain-0008/value",
+    "location_chain-0010/value",
+    "numeric_chain-0011/dead-end-1"
+  ],
+  "ordered_text_sha256": [
+    "5e7925c1fcef52db8228f8417f27de5d5a5a2e8be3b4e256e211da11b0e58bff",
+    "80bfc38c3a712063a55930ccac0432cfd57636f9c561eda17acb924b34695680",
+    "b7d3bed8e4a1b96fc40d633a5250875b53a4722d7ae1ca5fad032ab4ab5878bd",
+    "a8b36319f19bbdcea89a1a6c555e9502c84aaf8fff60eff7463c1e93eff7f134",
+    "d243d754aa60c4d575a6957abdd1fdb3b4320fe16a796f65562d577173fa88c9",
+    "1d19ce3cbb058d923bfbeffc8a5b799d4f6f014bbc1b3fb9bfbab37f8f3992d2"
+  ],
+  "query_hash": "8b5a6694df54fb59bb06d8487953649287ac3470d1f1d9ac24a2671a13bb7786",
+  "selector_policy_id": "s2c",
+  "task_id": "procedural_chain-0004"
+}

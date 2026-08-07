@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For MPA-5, which assigned category is recorded?
+[EVIDENCE]
+[E1]
+{"subject": "Marlin pressure assembly", "assigned category": "THETA-OLIVE"}
+[E2]
+The assigned category registry records that Quail control module is assigned THETA-OLIVE.
+[E3]
+In shorthand, Marlin pressure assembly is written MPA-5.
+[E4]
+MCM-5 is the short code for Marlin control module.
+[E5]
+{"subject": "Bluebird control module", "parameter grade": "{"grade": "provisional"}"}
+[E6]
+- updated Wren intake manifold: parameter grade now {"category": "accredited"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

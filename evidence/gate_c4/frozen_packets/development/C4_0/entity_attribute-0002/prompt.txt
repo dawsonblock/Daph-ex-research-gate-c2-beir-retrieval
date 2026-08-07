@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which assigned category applies to Jacana pressure assembly?
+[EVIDENCE]
+[E1]
+Changelog: assigned category for Jacana pressure assembly set to suspended.
+[E2]
+{"subject": "Marlin pressure assembly", "assigned category": "THETA-OLIVE"}
+[E3]
+Changelog: assigned unit for Sparrow pressure assembly set to Jacana intake manifold.
+[E4]
+Revision applied — Auk pressure assembly required action changed to {"category": "accredited"}.
+[E5]
+- updated Raven control module: assigned category now {"category": "quarantined"}
+[E6]
+Revision applied — Teal drive cluster assigned category changed to retired.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

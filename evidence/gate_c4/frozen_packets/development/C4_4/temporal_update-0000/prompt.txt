@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to Egret drive cluster?
+[EVIDENCE]
+[E1]
+[required dependency] Nimbus sensor array -> Egret drive cluster
+[E2]
+[change] Egret drive cluster :: proposed release channel := suspended This proposal was rejected.
+[E3]
+It is recorded in the proposed release channel registry that Egret drive cluster holds quarantined. This proposal was rejected.
+[E4]
+Revision applied — Egret drive cluster release channel changed to accredited.
+[E5]
+Revision 2 (effective 2031-06-01) supersedes revision 1: [operating tier] Egret drive cluster -> accredited
+[E6]
+- updated Jacana sensor array: assigned unit now Egret drive cluster
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which assigned category applies to QCM-4?
+[EVIDENCE]
+[E1]
+- updated Raven control module: assigned category now {"category": "quarantined"}
+[E2]
+Changelog: assigned category for Jacana pressure assembly set to suspended.
+[E3]
+Revision applied — Teal drive cluster assigned category changed to retired.
+[E4]
+Changelog: assigned category for Auk sensor array set to {"grade": "quarantined"}.
+[E5]
+Note: the assigned category for Marlin sensor array resolves to ZETA-CORAL.
+[E6]
+Note: the assigned category for Pelican intake manifold resolves to accredited.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

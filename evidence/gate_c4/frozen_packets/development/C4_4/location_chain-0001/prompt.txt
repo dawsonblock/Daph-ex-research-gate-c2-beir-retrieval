@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which service region applies to GRU-6?
+[EVIDENCE]
+[E1]
+GRU-6 is the short code for Gannet relay unit.
+[E2]
+Abbreviation table: GRU-2 = Gannet relay unit.
+[E3]
+Abbreviation table: FRU-4 = Finch relay unit.
+[E4]
+Abbreviation table: WPA-6 = Wren pressure assembly.
+[E5]
+GRU-2 is the short code for Gannet relay unit.
+[E6]
+Abbreviation table: KRU-7 = Kestrel relay unit.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

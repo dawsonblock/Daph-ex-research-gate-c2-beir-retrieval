@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the routing class for PCM-5?
+[EVIDENCE]
+[E1]
+Abbreviation table: PCM-5 = Pelican control module.
+[E2]
+Abbreviation table: PCM-8 = Pelican control module.
+[E3]
+Abbreviation table: RCM-5 = Raven control module.
+[E4]
+- updated Pelican control module: routing class now {"category": "retired"}
+[E5]
+[calibration routing class] Pelican control module -> {"category": "accredited"}
+[E6]
+Registry entry: Pelican control module — proposed routing class — {"grade": "suspended"}. Status: rejected.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "8c1394e5bc53300fabac337921acee8396359a3c7a3b55a8551954291add7a73",
+  "canonical_subject": "Wren sensor array",
+  "ordered_selected_ids": [
+    "location_chain-0003/direct",
+    "location_chain-0003/identity",
+    "numeric_chain-0011/identity",
+    "configuration_chain-0000/dead-end-1",
+    "configuration_chain-0003/identity",
+    "configuration_chain-0011/identity"
+  ],
+  "ordered_text_sha256": [
+    "e79a4a0ddd5795428aa8d285c8e9e3603032f6ab073ba48778fd554533b310f3",
+    "ba0404db37d8abb077cd09162119f040fac9751aa1dcc82444f6b263e42e7b28",
+    "21a5aa12363d23ef1e717c2714830604095f22193cf5646284c34ed225cc41d5",
+    "68b5f0ccb0cd1ffc0155ff2c6193e53b92786e3b0efb9436a4d2606f318f3fe9",
+    "7781404417d3bac13414a611a1f0507917583d783d62f5e85d4b958b0d397d71",
+    "a2341f5ac11530fcb0a5b6711ebbeca3dbc6f7728278074d356afd9bc8db41c7"
+  ],
+  "query_hash": "8f463115f4700da9daf351d35e97959e0651ec93dbe3f87678af02b46cc84fd4",
+  "selector_policy_id": "s2c",
+  "task_id": "location_chain-0003"
+}

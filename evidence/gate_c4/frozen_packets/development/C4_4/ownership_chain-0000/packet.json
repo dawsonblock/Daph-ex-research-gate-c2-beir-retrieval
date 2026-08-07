@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "9d16445fc20f30ebcf3606b8522dcbe97d14fdff1794d72ce159063373c98b03",
+  "canonical_subject": "Sparrow intake manifold",
+  "ordered_selected_ids": [
+    "ownership_chain-0000/dead-end-0",
+    "ownership_chain-0000/dead-end-1",
+    "ownership_chain-0000/link",
+    "ownership_chain-0000/value",
+    "configuration_chain-0005/dead-end-1",
+    "configuration_chain-0011/direct"
+  ],
+  "ordered_text_sha256": [
+    "7320f1d756817a6ccb391fefd20f715f7ec42356cbc73d4fc4b0478a5abdf578",
+    "fb0e06f8a42e25f291af79cd204d2b9ae5fe78a01f9fb68955abf3218fae2286",
+    "2a6a14987ab21229b2c0995df919ef9a3d0c05b3c889b4be157c8d8be8287adb",
+    "d7d7ff5d255454ac26b173f41ba3ac74325d557c6469d49af15c165c979177d7",
+    "758b7d889e6a28695d10c10ec2b3c69a68c46913026d3283e76abceb3b3ba202",
+    "4497f80268c25178cc60cf62d03c48e946b9512229de3d8e002b4fd7aac12dc7"
+  ],
+  "query_hash": "eb7c672e2ddb3855aaa06bb562fc1fe4b3c534fefeefb3d0a2bf71eb8830b038",
+  "selector_policy_id": "s2c",
+  "task_id": "ownership_chain-0000"
+}

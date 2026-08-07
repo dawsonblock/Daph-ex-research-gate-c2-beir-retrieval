@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "bfe4e530d9e7f122a8a43f128a7a738008431f8c93cc8154cf9cc161adc14251",
+  "canonical_subject": "Pelican control module",
+  "ordered_selected_ids": [
+    "configuration_chain-0009/identity",
+    "distractor_heavy-0007/identity",
+    "numeric_chain-0009/identity",
+    "ownership_chain-0005/identity",
+    "configuration_chain-0009/dead-end-0",
+    "configuration_chain-0009/dead-end-1"
+  ],
+  "ordered_text_sha256": [
+    "3d254e95330d4472f376c105d40788823a826a9658099c79f463af023a5f4bb8",
+    "e8f84dce6647a77657e5191790049aa120f50e21c26237cbea8db4d527afc7fc",
+    "f96063b0cb0be140a31ad4324443ee18a07513639a0dcf7d7296044d8fe1eac8",
+    "c648c38df9aea22771648969b72afc0fb7e6b0e98d4322c8360027c624361e45",
+    "bf1501d74fc7838c98e7a08aacab8ab48744d6b2e9ee3147702ed808f181e61c",
+    "5c384ec970fc314e276382c842f94208794fd36925fc761c0c1e54d9c097c44e"
+  ],
+  "query_hash": "7c3a564ac6397791d7e00ebef290dafb48039c2dbbd6c0b068093d97d3a26ebf",
+  "selector_policy_id": "s2c",
+  "task_id": "ownership_chain-0002"
+}

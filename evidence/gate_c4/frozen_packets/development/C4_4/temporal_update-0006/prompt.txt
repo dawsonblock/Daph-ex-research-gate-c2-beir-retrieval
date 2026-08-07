@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to Raven control module?
+[EVIDENCE]
+[E1]
+RCM-8 is the short code for Raven control module.
+[E2]
+Abbreviation table: RCM-3 = Raven control module.
+[E3]
+Abbreviation table: SCM-1 = Sparrow control module.
+[E4]
+Abbreviation table: RCM-5 = Raven control module.
+[E5]
+During setup, Raven control module was paired with THETA-OLIVE for routing class.
+[E6]
+During setup, Raven control module was paired with DELTA-AMBER for calibration routing class.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

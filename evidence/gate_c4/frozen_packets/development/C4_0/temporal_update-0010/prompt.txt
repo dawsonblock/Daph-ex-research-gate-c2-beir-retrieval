@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to Gannet sensor array?
+[EVIDENCE]
+[E1]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Engineering notes indicate Gannet sensor array uses 5038 as its operating tier.
+[E2]
+Revision 1 (effective 2030-01-01, since superseded) recorded: {"subject": "Gannet sensor array", "operating tier": "6243"}
+[E3]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Note: the operating tier for Gannet intake manifold resolves to 1391.
+[E4]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Per the operating tier register, 4792 is allocated to Auk sensor array.
+[E5]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Per the operating tier register, {"category": "retired"} is allocated to Gannet drive cluster.
+[E6]
+Revision 2 (effective 2031-06-01) supersedes revision 1: - updated Finch sensor array: operating tier now {"tier": "provisional"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

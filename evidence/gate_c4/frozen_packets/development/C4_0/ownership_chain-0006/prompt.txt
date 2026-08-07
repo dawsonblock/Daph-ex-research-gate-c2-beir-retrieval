@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the ownership tier for Ibis control module?
+[EVIDENCE]
+[E1]
+ICM-8 is the short code for Ibis control module.
+[E2]
+Per the ownership tier register, 7362 is allocated to Wren control module.
+[E3]
+- updated Finch control module: ownership tier now 3529
+[E4]
+- updated Marlin control module: ownership tier now suspended
+[E5]
+Per the proposed ownership tier register, retired is allocated to Marlin control module. This proposal was rejected.
+[E6]
+Note: the ownership tier for Marlin pressure assembly resolves to DELTA-AMBER.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

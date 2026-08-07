@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "b2de5d342e6412845b8cab5b32c658702bd0570cdf9dfbc230b7ea6da11c095b",
+  "canonical_subject": "Vireo control module",
+  "ordered_selected_ids": [
+    "dependency_chain-0002/dead-end-0",
+    "dependency_chain-0002/dead-end-1",
+    "dependency_chain-0002/link",
+    "location_chain-0011/link",
+    "location_chain-0011/value",
+    "ownership_chain-0009/dead-end-0"
+  ],
+  "ordered_text_sha256": [
+    "7926892e3ac60a5c680045d4ad2d746e6db27e4d4125e13ea7fefad5c7042cd7",
+    "df7bcba9f98b30a2f9ce32c232f9ca789daad0ea5f2ab63ac24f5c313254f415",
+    "f89360b33f0894ff2cece9c8b25273ecd17ea1bda15ad8e2ce8d2cb246f1165c",
+    "f4d81565c7911293c5836bb7b5851d994bfff4ae209000c94269c192f0203f96",
+    "3536c21681dfb23e2246a7f307f3f3444c590552f669791807bd3c98998154f3",
+    "87b2ae710372e0a7f0d4fe0864289928436a8b8cb4946b0fbe58a956f113caff"
+  ],
+  "query_hash": "0f25069ae7ccc7fa0845090142612abd9999765909a780720f07511362482964",
+  "selector_policy_id": "s2c",
+  "task_id": "dependency_chain-0002"
+}

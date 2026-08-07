@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "f9d499d61ca065812b2122481686485cd8fcff629dd895d12446ae51b609f4f1",
+  "canonical_subject": "",
+  "ordered_selected_ids": [
+    "procedural_chain-0001/value",
+    "procedural_chain-0011/value",
+    "procedural_chain-0008/value",
+    "procedural_chain-0001/link",
+    "procedural_chain-0003/value",
+    "procedural_chain-0007/direct"
+  ],
+  "ordered_text_sha256": [
+    "ef225590760f45bae6767bb0c8f8f1d8428314ec2c722a25c6dbbf7efffb00bc",
+    "94908b8d974b66e98850b0beaba4ce962a25ca211899db34d1da5960c8dc78ec",
+    "1e5e66d1a82754e5c6b6a5adcca2204654282b45094901cc712bf8fb6b7b2e72",
+    "b81e83e55ecd85867add9916c8ce4c0088267577a4b3f09a7ced83af19227d61",
+    "ff67ee5c78a4593bbb78ceb453157c32ad6c926fd8710365567792bdee06f158",
+    "02bfd7768d9081db8f8dad3308783855bc9a8a58c5e2f81390ea401b25652ed8"
+  ],
+  "query_hash": "62e8fa1c84c406824b28876afc78ffc6c30cbaa66853ec79caa65ff106121d97",
+  "selector_policy_id": "s0",
+  "task_id": "procedural_chain-0006"
+}

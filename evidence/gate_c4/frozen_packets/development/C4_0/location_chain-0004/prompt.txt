@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the service region for Pelican sensor array?
+[EVIDENCE]
+[E1]
+Registry entry: Egret sensor array — service region — THETA-OLIVE.
+[E2]
+[change] Wren sensor array :: service region := {"grade": "provisional"}
+[E3]
+{"subject": "Kestrel sensor array", "service region": "{"grade": "retired"}"}
+[E4]
+Note: the service region for Bittern drive cluster resolves to provisional.
+[E5]
+Note: the service region for Heron pressure assembly resolves to {"grade": "provisional"}.
+[E6]
+For Bittern relay unit, service region requires 1101.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

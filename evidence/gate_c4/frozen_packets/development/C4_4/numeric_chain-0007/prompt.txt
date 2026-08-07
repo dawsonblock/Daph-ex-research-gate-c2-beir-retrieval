@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the billing multiplier for HSA-2?
+[EVIDENCE]
+[E1]
+Abbreviation table: HSA-2 = Heron sensor array.
+[E2]
+Abbreviation table: GRU-2 = Gannet relay unit.
+[E3]
+Abbreviation table: TPA-2 = Teal pressure assembly.
+[E4]
+Abbreviation table: JSA-8 = Jacana sensor array.
+[E5]
+During setup, Heron sensor array was paired with {"tier": "retired"} for billing multiplier.
+[E6]
+{"subject": "Ibis intake manifold", "parameter grade": "7863"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

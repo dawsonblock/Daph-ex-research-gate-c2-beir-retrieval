@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to Pelican relay unit?
+[EVIDENCE]
+[E1]
+Engineering notes indicate Pelican relay unit uses Teal intake manifold as its spare enclosure.
+[E2]
+Engineering notes indicate Egret relay unit uses BETA-GREEN as its proposed routing class. Status: rejected.
+[E3]
+In shorthand, Egret relay unit is written ERU-7.
+[E4]
+{"subject": "Pelican relay unit", "mounted monitor": "Sparrow drive cluster"}
+[E5]
+The hosting venue registry records that Pelican relay unit is assigned Gannet pressure assembly.
+[E6]
+Engineering notes indicate Pelican control module uses Nimbus relay unit as its spare enclosure.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

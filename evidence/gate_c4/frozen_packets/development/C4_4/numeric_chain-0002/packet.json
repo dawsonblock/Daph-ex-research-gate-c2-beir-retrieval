@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "653a138d60e95de7b6c31632e812f71c28ffc786d152531aa755194ef3f74909",
+  "canonical_subject": "Auk sensor array",
+  "ordered_selected_ids": [
+    "entity_attribute-0003/fact",
+    "entity_attribute-0003/identity",
+    "numeric_chain-0002/dead-end-0",
+    "numeric_chain-0002/dead-end-1",
+    "numeric_chain-0002/link",
+    "temporal_chain-0010/current"
+  ],
+  "ordered_text_sha256": [
+    "7c481c2135ab190c88e6534edd7ddaa8580316fa0090f5051d1c347c8abe8097",
+    "bfa773e68dc299933542ae0f1d6340e357e481b94f0835e8745207cd38ca626a",
+    "2aca8e6f342598ae78beabc8ead859998a67b2bba29eb6c4496d5e576985bf77",
+    "8852bb8ee14f83642e2d9109b31d80f59cb759348213aef1db78af8317ec50e4",
+    "23cb8481f557a7d1cc95344a954f7df291be97a3d2b59f14f374e49903dfcc39",
+    "fcbb19960e67cd03178b44bb3467705c7d0f09442d264de832988b2fe41ab7a8"
+  ],
+  "query_hash": "de5f71221b16ca29a8ce2fa33c1891755d410e8016dcfe4f9ee4a4000b692501",
+  "selector_policy_id": "s2c",
+  "task_id": "numeric_chain-0002"
+}

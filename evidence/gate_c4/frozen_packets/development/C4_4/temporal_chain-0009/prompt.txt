@@ -1,0 +1,21 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to VSA-6?
+[EVIDENCE]
+[E1]
+In shorthand, Vireo sensor array is written VSA-6.
+[E2]
+Abbreviation table: QDC-6 = Quail drive cluster.
+[E3]
+service region:
+  subject: Vireo control module
+  value: {"grade": "retired"}
+[E4]
+ownership tier:
+  subject: Bluebird sensor array
+  value: 9167
+[E5]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E6]
+Note: the required action for Auk pressure assembly resolves to {"tier": "accredited"}.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

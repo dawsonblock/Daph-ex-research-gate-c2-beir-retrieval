@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "2a63e05a826f9177dcb8369cfd27d7b9fa757e3045036ebdf019b2af25dc4fe3",
+  "canonical_subject": "Marlin sensor array",
+  "ordered_selected_ids": [
+    "entity_attribute-0005/identity",
+    "configuration_chain-0005/identity",
+    "distractor_heavy-0005/identity",
+    "distractor_heavy-0007/identity",
+    "location_chain-0005/identity",
+    "numeric_chain-0007/identity"
+  ],
+  "ordered_text_sha256": [
+    "8524cfed305c687f27aec03e1554cb5f991f1644f725a94286376275f8b64168",
+    "97b412073e0e0b6ad9c4d2f4515629f43fa22d6c9602e04467b10ee61a07c414",
+    "708c9dc492db737d94383dd874fd80a652706a0b41829c843dd8ac3f876f6771",
+    "e8f84dce6647a77657e5191790049aa120f50e21c26237cbea8db4d527afc7fc",
+    "e9f3228f9be392365ef1250eed5093a9ef346293c7d26436225a45166f0d9ed3",
+    "49b53000990909b1840be1e6f6f190d04d48b3860def363c2db6a3127e3837fd"
+  ],
+  "query_hash": "b1cc4482926d64be7f8ce92ada03e045cf01aa15705f7756663619539dc20575",
+  "selector_policy_id": "s2c",
+  "task_id": "entity_attribute-0005"
+}

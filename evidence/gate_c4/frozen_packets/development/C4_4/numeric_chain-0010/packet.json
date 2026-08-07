@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "661ec8bab00ed8c4b588cd51ad8f44b62ce2966cb353280cd2cfa5ba183e0451",
+  "canonical_subject": "Teal control module",
+  "ordered_selected_ids": [
+    "numeric_chain-0010/dead-end-0",
+    "entity_attribute-0007/identity",
+    "procedural_chain-0007/identity",
+    "temporal_chain-0005/identity",
+    "numeric_chain-0010/dead-end-1",
+    "numeric_chain-0010/link"
+  ],
+  "ordered_text_sha256": [
+    "fe063e3694b116c6940b4f06f68be5e4e4af12c3d62fdf742c9216436d79e9d7",
+    "e2bdface038707467769882ee7c96d67f38eb2f6afcca2f88eddce25ef618062",
+    "ec6c22f209fa5bd2b8a83682e89dd5775ccf32092afc1ae93765b4bdcc5447d5",
+    "f5803280427b35ff8d41c9a7138cee1bed964d50f7d176df47e5bcbe7af53be5",
+    "23fd69c89be3a2044f9e2232f252cce10a6885ea2fc6f0f3796e6723c94261fd",
+    "f8f54d84c9d6e096c98796b435e5c41db6cc7c92e4d4513b3db54dd984696b75"
+  ],
+  "query_hash": "0d21ae9c18b7efcd1526abe9f54bc3d721598b4294a96d953d198e8cd6da41b6",
+  "selector_policy_id": "s2c",
+  "task_id": "numeric_chain-0010"
+}

@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "65ced0e8ad5198647ca41d314b6daadd7cb2961f47b4734d1bb92a213de92190",
+  "canonical_subject": "Heron relay unit",
+  "ordered_selected_ids": [
+    "configuration_chain-0005/link",
+    "configuration_chain-0005/value",
+    "location_chain-0009/identity",
+    "distractor_heavy-0000/accepted",
+    "distractor_heavy-0000/near-near_relation",
+    "distractor_heavy-0000/near-near_status"
+  ],
+  "ordered_text_sha256": [
+    "b6593e71122da791ce67ff950f1b989de94bebedc1a4c6d5b636182afd565372",
+    "699d2555495d168fb4c06877c19c0f663c2ad3325f4d12f2c9db98e40df97e7b",
+    "fdcf52aaf104ebc1a689cbf4b4300edabf5aa68687aff3966cfeeaab1be66321",
+    "cff7a4871879f7fb9bdd0eb8aa500d8a6c809d7fa69997dfda73de70570b075c",
+    "18ec4bbc123255a4b1d2128ff640adf951f4361a8fb4e03881131dff62cb06f8",
+    "c88075bd2306895780a46c443a3cd04badaeff1a681c4d4fb1ee9df7eb126b01"
+  ],
+  "query_hash": "800e371b2601f8672b9251b5e1721b316813542750f832b0e6ed6335ff9900d2",
+  "selector_policy_id": "s2c",
+  "task_id": "location_chain-0008"
+}

@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "d885e0f0c230aa9204d5c23df41b7a5c20d4305eb995578d00bf87c4ea5ca7c9",
+  "canonical_subject": "Osprey control module",
+  "ordered_selected_ids": [
+    "configuration_chain-0004/dead-end-0",
+    "dependency_chain-0011/dead-end-1",
+    "dependency_chain-0011/identity",
+    "dependency_chain-0011/direct",
+    "dependency_chain-0011/link",
+    "ownership_chain-0003/dead-end-0"
+  ],
+  "ordered_text_sha256": [
+    "5f46f34fb6488d874657fb9d4f5b126809d7119c9faea5ee372126587a22403b",
+    "1b227092354f16c267faf4888776e6b6c625cb9433727aa3b9a795282c28e507",
+    "f58830162de665e6402ae14f61d56b6571fdfb4b492e44dfc5522d347140d8f2",
+    "167c904bc898ef722bdf42c00908841f82cbd4cffce07eb0817fe50910017426",
+    "b7bf58c08f9c1660956b4ac2195a4a2dbeed2b862d88b0e2078936ec734595fe",
+    "1929a59c87e003cb9ae288cf4f1169c5738107dd7847e7e9c88e924bd6df87e3"
+  ],
+  "query_hash": "2ed89eeb771c311d13af4c5900c663bf05b65634b7ea7860f2a54ac49039966d",
+  "selector_policy_id": "s2c",
+  "task_id": "procedural_chain-0008"
+}

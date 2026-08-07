@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "971977855d6b1192d1e063201b9039a25e823c2e2a879782aa12b11f2e499ada",
+  "canonical_subject": "Pelican relay unit",
+  "ordered_selected_ids": [
+    "location_chain-0000/dead-end-0",
+    "location_chain-0000/dead-end-1",
+    "location_chain-0000/link",
+    "location_chain-0002/rejected-1",
+    "location_chain-0004/value",
+    "ownership_chain-0002/dead-end-0"
+  ],
+  "ordered_text_sha256": [
+    "cea60360af876a1c67c77b66b0e3604d5fb509b033134fde65f295680b2a6ff1",
+    "bc43e69850ff470b9733ae695eff74baab9843bc77ebdf4a2fcec18bc37fd335",
+    "9b61c340f0535b28bdcd04b40ab67e7926826f36dedb0bdcac8a212457def7f5",
+    "11d5df626850c20c004318da5fe8ff92222dda714b09cc4ea230e0c9cf7dec73",
+    "2f5544c939c339f559a1a28cf91adb75db38842ada83cd0398b016d3d784f7e5",
+    "04dd1da7f76a0030605af5619a5ecdab0c672c2481a30a012bafcd790219d45b"
+  ],
+  "query_hash": "f2df3698ea5c545ae1589536b95dafa723ceb1ad7576149fcd3e7201837280a5",
+  "selector_policy_id": "s2c",
+  "task_id": "location_chain-0000"
+}

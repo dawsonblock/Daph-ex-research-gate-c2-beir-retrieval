@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the service region for QDC-6?
+[EVIDENCE]
+[E1]
+Changelog: service region for Quail drive cluster set to {"grade": "retired"}.
+[E2]
+Abbreviation table: QDC-6 = Quail drive cluster.
+[E3]
+Abbreviation table: WPA-6 = Wren pressure assembly.
+[E4]
+Note: the hosting venue for Quail drive cluster resolves to Kestrel sensor array.
+[E5]
+Revision applied — Auk sensor array spare enclosure changed to Quail drive cluster.
+[E6]
+In shorthand, Kestrel sensor array is written KSA-6.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

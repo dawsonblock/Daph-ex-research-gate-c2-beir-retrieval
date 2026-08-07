@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "6a0430c29eca48555f48e74a874e90ad5486bfa78f384e9d276e0626900d7a05",
+  "canonical_subject": "Sparrow pressure assembly",
+  "ordered_selected_ids": [
+    "temporal_chain-0003/identity",
+    "ownership_chain-0000/value",
+    "ownership_chain-0006/value",
+    "ownership_chain-0010/value",
+    "ownership_chain-0011/value",
+    "procedural_chain-0003/direct"
+  ],
+  "ordered_text_sha256": [
+    "58569ba0b2d2955843ef6e75ce0ef7efa78c98ec881ff3fe24f1e190762cc62f",
+    "d7d7ff5d255454ac26b173f41ba3ac74325d557c6469d49af15c165c979177d7",
+    "a25108d3414b167c07da606b00bda69cd259e228368e48b2e6df81de145b2027",
+    "1b0baed9d6749a3af79465158860802ee9ec09a9a3fc049c6977064fb21fc2da",
+    "c6ed9bfae7afb5ec3d0cb77ed19cd2fbaf36257ec48f48a9ec5d4221c7e42a3b",
+    "3849040696c45bb45833bbf55597dacee6ec7ee66013bfb99550f645132272f5"
+  ],
+  "query_hash": "96c1a49aa6cfab5526db08b8db7b85a1e1957e9477295acb73fbbd1c93f08e85",
+  "selector_policy_id": "s2c",
+  "task_id": "temporal_chain-0003"
+}

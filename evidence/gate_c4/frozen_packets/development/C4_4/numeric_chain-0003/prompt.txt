@@ -1,0 +1,19 @@
+[OBJECTIVE]
+Which billing multiplier applies to FCM-1?
+[EVIDENCE]
+[E1]
+billing multiplier:
+  subject: Finch control module
+  value: {"state": "provisional"}
+[E2]
+FCM-1 is the short code for Finch control module.
+[E3]
+{"subject": "Ibis intake manifold", "parameter grade": "7863"}
+[E4]
+Abbreviation table: FRU-4 = Finch relay unit.
+[E5]
+Registry entry: Ibis sensor array — release channel — 6392.
+[E6]
+Revision applied — Finch relay unit required dependency changed to Kestrel intake manifold.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

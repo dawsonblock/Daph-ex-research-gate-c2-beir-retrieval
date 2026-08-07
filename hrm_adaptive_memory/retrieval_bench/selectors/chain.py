@@ -267,7 +267,7 @@ def s2a_entity_connectivity(candidates, *, budget: int, question: str, texts, **
     remaining = sorted(graph.record_ids)
     while len(chosen) < budget and remaining:
         best, best_score = None, -1e18
-        for record_id in remaining:
+        for idx, record_id in enumerate(remaining):
             entities = graph.linked_entities(record_id)
             score = 3.0 * len(entities & live)
             if record_id in graph.identity:
@@ -279,8 +279,8 @@ def s2a_entity_connectivity(candidates, *, budget: int, question: str, texts, **
             if record_id in graph.relation_records:
                 score += 1.0
             score -= 0.5 * len(entities - live)
-            # DETERMINISTIC: use sorted index instead of input-order index
-            score += 0.25 / (1 + remaining.index(record_id))
+            # DETERMINISTIC: use sorted index for stable tie-breaking
+            score += 0.25 / (1 + idx)
             if score > best_score:
                 best, best_score = record_id, score
         chosen.append(best)

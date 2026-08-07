@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For GCM-8, which service region is recorded?
+[EVIDENCE]
+[E1]
+[service region] Gannet control module -> {"grade": "retired"}
+[E2]
+In shorthand, Gannet control module is written GCM-8.
+[E3]
+{"subject": "Ibis relay unit", "mounted monitor": "Pelican drive cluster"}
+[E4]
+- updated Finch relay unit: active configuration now Heron relay unit
+[E5]
+ICM-8 is the short code for Ibis control module.
+[E6]
+In shorthand, Jacana control module is written JCM-8.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

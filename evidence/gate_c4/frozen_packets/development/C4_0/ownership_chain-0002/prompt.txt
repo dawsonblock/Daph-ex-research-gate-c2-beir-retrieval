@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which ownership tier applies to Pelican control module?
+[EVIDENCE]
+[E1]
+Per the ownership tier register, 7362 is allocated to Wren control module.
+[E2]
+- updated Finch control module: ownership tier now 3529
+[E3]
+- updated Marlin control module: ownership tier now suspended
+[E4]
+Revision applied — Marlin control module proposed ownership tier changed to quarantined. This proposal was rejected.
+[E5]
+Per the proposed ownership tier register, retired is allocated to Marlin control module. This proposal was rejected.
+[E6]
+Engineering notes indicate Osprey control module uses {"state": "provisional"} as its ownership tier.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,19 @@
+[OBJECTIVE]
+Which release channel applies to Vireo control module?
+[EVIDENCE]
+[E1]
+{"subject": "Vireo control module", "spare enclosure": "Finch drive cluster"}
+[E2]
+{"subject": "Vireo control module", "spare enclosure": "Bittern sensor array"}
+[E3]
+Changelog: required dependency for Vireo control module set to Nimbus intake manifold.
+[E4]
+Engineering notes indicate Gannet control module uses Vireo control module as its hosting venue.
+[E5]
+service region:
+  subject: Vireo control module
+  value: {"grade": "retired"}
+[E6]
+Changelog: spare enclosure for Jacana drive cluster set to Vireo control module.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

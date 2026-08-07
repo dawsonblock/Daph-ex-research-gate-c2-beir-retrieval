@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "b8b35977def5d3e22882fc4473d7a6b4de6ceb2e4b6c68d6dedafc426ab93ce0",
+  "canonical_subject": "",
+  "ordered_selected_ids": [
+    "distractor_heavy-0010/accepted",
+    "distractor_heavy-0010/near-near_relation",
+    "distractor_heavy-0010/near-near_status",
+    "distractor_heavy-0010/near-near_temporal",
+    "numeric_chain-0001/identity",
+    "procedural_chain-0003/identity"
+  ],
+  "ordered_text_sha256": [
+    "35a82f2423b060527fd8d0bff87c39385aadb2ce7bb58dcfe38b1ab1662e41ad",
+    "120e8d7e1e7a443db97da05588e9a910c0bcbd0fa7f0b58d9b80625703f30aff",
+    "666e31db7555505d3e18097c869701d01235bf0201c01023afd5452053b1ff17",
+    "5c9b22da1f623341c77694cdbd829b8a230f6580ddba6c4491d0dd065a30cb26",
+    "348ab49875e6863890a9b538cfcb387534ce36561b101d1645543857f27f01b7",
+    "0c3d13d12d53a54ac982609a328469d0c7f123f69fc53509ab83a62394d86d5e"
+  ],
+  "query_hash": "1546e5685078a60aa260545891b3097fb45f0739141a396b7f4de01349fb5358",
+  "selector_policy_id": "s0",
+  "task_id": "distractor_heavy-0010"
+}

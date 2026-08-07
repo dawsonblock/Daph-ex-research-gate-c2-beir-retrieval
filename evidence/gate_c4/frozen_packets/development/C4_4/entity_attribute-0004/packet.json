@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "ddbf9ee9772a9076d529743b268eae9016ed1ad765a130d982072d59fb196a8c",
+  "canonical_subject": "Curlew intake manifold",
+  "ordered_selected_ids": [
+    "dependency_chain-0008/dead-end-1",
+    "dependency_chain-0009/link",
+    "dependency_chain-0009/value",
+    "entity_attribute-0004/fact",
+    "configuration_chain-0002/dead-end-1",
+    "configuration_chain-0002/link"
+  ],
+  "ordered_text_sha256": [
+    "bb9064041b8539eec8ba458dc3986fe05b9c2540e66cb2cb5a053306d2040ca6",
+    "0aee05d5f12a3e752c7ca4d2a22897b4ad150e7de6491076f123e8c6ac58759b",
+    "0a0bd0178acab9ddf26acfb1601f2abfb617e505ca165d1ad9537f96c0f46f6b",
+    "cab653f21c59062280c29e217a4a929512f1c7615b7e2a735e68ba3c376fab10",
+    "5ba9b2cca84d1d097c562e772d9893f0de077566cca30ef01038c666b9e899df",
+    "cf4b09abb63695ad210d1c9457c03ca277451168c6b0dbc59bfa3b89e8962723"
+  ],
+  "query_hash": "85a07860539a5d3a7b7c39a1061a31b2de4cbf5e4a45409127bbd174c7683b22",
+  "selector_policy_id": "s2c",
+  "task_id": "entity_attribute-0004"
+}

@@ -1,0 +1,21 @@
+[OBJECTIVE]
+What is the parameter grade for Bluebird sensor array?
+[EVIDENCE]
+[E1]
+For Bluebird sensor array, spare enclosure requires Quail relay unit.
+[E2]
+[active configuration] Bluebird sensor array -> Vireo intake manifold
+[E3]
+proposed parameter grade:
+  subject: Vireo intake manifold
+  value: suspended This proposal was rejected.
+[E4]
+proposed parameter grade:
+  subject: Vireo intake manifold
+  value: retired This proposal was rejected.
+[E5]
+Per the parameter grade register, provisional is allocated to Vireo intake manifold.
+[E6]
+Registry entry: Wren pressure assembly — required dependency — Bluebird sensor array.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Finch pressure assembly, which parameter grade is recorded?
+[EVIDENCE]
+[E1]
+During setup, Finch pressure assembly was paired with Wren intake manifold for spare enclosure.
+[E2]
+subject=Finch pressure assembly; spare enclosure=Osprey sensor array
+[E3]
+Per the active configuration register, Raven pressure assembly is allocated to Finch pressure assembly.
+[E4]
+- updated Wren intake manifold: parameter grade now {"category": "accredited"}
+[E5]
+Engineering notes indicate Osprey control module uses Finch pressure assembly as its applicable procedure.
+[E6]
+For Finch pressure assembly, required action requires 9926.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

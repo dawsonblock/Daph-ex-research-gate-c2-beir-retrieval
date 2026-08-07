@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which billing multiplier applies to Finch intake manifold?
+[EVIDENCE]
+[E1]
+{"subject": "Finch intake manifold", "spare enclosure": "Curlew control module"}
+[E2]
+Per the mounted monitor register, Bluebird relay unit is allocated to Finch intake manifold.
+[E3]
+Changelog: rate record for Finch intake manifold set to Vireo pressure assembly.
+[E4]
+Registry entry: Vireo pressure assembly — billing multiplier — 9659.
+[E5]
+Registry entry: Raven pressure assembly — billing multiplier — {"state": "provisional"}.
+[E6]
+[active configuration] Kestrel drive cluster -> Ibis intake manifold
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

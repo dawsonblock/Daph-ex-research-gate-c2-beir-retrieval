@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For KSA-6, which required action is recorded?
+[EVIDENCE]
+[E1]
+{"subject": "Kestrel sensor array", "service region": "{"grade": "retired"}"}
+[E2]
+[required action] Kestrel sensor array -> {"state": "provisional"}
+[E3]
+In shorthand, Kestrel sensor array is written KSA-6.
+[E4]
+[assigned unit] Kestrel sensor array -> Auk intake manifold
+[E5]
+Changelog: required dependency for Sparrow pressure assembly set to Ibis sensor array.
+[E6]
+During setup, Ibis control module was paired with Auk drive cluster for required dependency.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

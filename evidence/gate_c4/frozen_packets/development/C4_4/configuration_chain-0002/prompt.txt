@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which parameter grade applies to Curlew sensor array?
+[EVIDENCE]
+[E1]
+Per the spare enclosure register, Finch drive cluster is allocated to Curlew sensor array.
+[E2]
+Engineering notes indicate Curlew sensor array uses Egret intake manifold as its mounted monitor.
+[E3]
+subject=Curlew sensor array; active configuration=Marlin intake manifold
+[E4]
+Engineering notes indicate Heron relay unit uses ALPHA-RED as its parameter grade.
+[E5]
+Engineering notes indicate Dunlin sensor array uses {"tier": "provisional"} as its routing class.
+[E6]
+Engineering notes indicate Dunlin sensor array uses {"tier": "quarantined"} as its calibration routing class.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

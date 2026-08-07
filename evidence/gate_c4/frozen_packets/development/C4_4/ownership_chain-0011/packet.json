@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "7098d68099d83436c6bdd1022af98c504ab5d6983b011512170ddcc1dc1da6b2",
+  "canonical_subject": "Nimbus intake manifold",
+  "ordered_selected_ids": [
+    "ownership_chain-0011/direct",
+    "ownership_chain-0011/identity",
+    "dependency_chain-0003/dead-end-1",
+    "distractor_heavy-0007/near-near_temporal",
+    "distractor_heavy-0011/accepted",
+    "distractor_heavy-0011/near-near_status"
+  ],
+  "ordered_text_sha256": [
+    "b8758ab973f0e2ab9f16ca37656f4570946267ee8f439c94b08b24705d0bdb20",
+    "97b828552b56cfe22955756fe84a9827cfbbe14141ba8a00d6436aaa8a5e87dc",
+    "0584abdf860031378c2c4c73a45d322ca18ff99af7785a60f3d8bd2d229d0801",
+    "bef2530b375ce0a54bc3bb7bea83b0ca7b5b894ea602033683fb02f85359ce80",
+    "cfce2be52682d9369786c7600c9ac0d9bcc02cee728d4f92270305e022e0ff42",
+    "91e79532e2c33aad75d24c609e5307469a5a0e322c7c0e781de9f211d354f932"
+  ],
+  "query_hash": "7517cf84dad232af4251de7ba322f625a892e0c88af447d31762f03b27da6628",
+  "selector_policy_id": "s2c",
+  "task_id": "ownership_chain-0011"
+}

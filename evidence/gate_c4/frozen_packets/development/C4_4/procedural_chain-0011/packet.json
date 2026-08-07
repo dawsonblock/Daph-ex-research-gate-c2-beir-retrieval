@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "70412965bcdced73d180ad5e25c1d5d57fc2914f7169f2bf1a4a2dd861868547",
+  "canonical_subject": "Kestrel sensor array",
+  "ordered_selected_ids": [
+    "location_chain-0007/value",
+    "procedural_chain-0011/direct",
+    "procedural_chain-0011/identity",
+    "temporal_chain-0006/link",
+    "dependency_chain-0000/link",
+    "dependency_chain-0001/link"
+  ],
+  "ordered_text_sha256": [
+    "65df2a887288128d1b83b9df4b9a89462dffbd0590336744dd3d0a6aaf0ae7e5",
+    "c9567f77df129fd4ed9d5f802bcf669cb026578dfaeba47026d17bc9dce84011",
+    "86f10d7294afa70d11a7172f9366bdf44f4fbc3c6a840987cae670fec0eb65bc",
+    "20ec30a1a022532e4afbdffc768430ae168a5035d32d58951987eebe65d2f19c",
+    "0c1f05411087c6e878692d3d7c000d96059311edeb57eb34bc60f4333afbe729",
+    "56ed7ed47ae8e3b4d8f43e477e417e36ab9d1fd8889ad273e990c95369dae26e"
+  ],
+  "query_hash": "cfa7d0e9d54ec92576161d917b8405ee530a54c8d8392d85de1720f98cb72caf",
+  "selector_policy_id": "s2c",
+  "task_id": "procedural_chain-0011"
+}

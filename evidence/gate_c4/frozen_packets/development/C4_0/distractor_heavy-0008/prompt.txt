@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Wren intake manifold, which routing class is recorded?
+[EVIDENCE]
+[E1]
+Per the routing class register, 7050 is allocated to Wren intake manifold.
+[E2]
+Per the calibration routing class register, 9170 is allocated to Wren intake manifold.
+[E3]
+Revision applied — Wren intake manifold proposed routing class changed to 4220. Status: rejected.
+[E4]
+Engineering notes indicate Wren intake manifold uses 8458 as its former routing class. This record is historical.
+[E5]
+Changelog: calibration routing class for Vireo intake manifold set to suspended.
+[E6]
+The routing class registry records that Vireo intake manifold is assigned retired.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

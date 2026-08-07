@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to Quail relay unit?
+[EVIDENCE]
+[E1]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Revision applied — Dunlin relay unit operating tier changed to true.
+[E2]
+Revision 2 (effective 2031-06-01) supersedes revision 1: {"subject": "Quail intake manifold", "operating tier": "EPSILON-SLATE"}
+[E3]
+Revision 2 (effective 2031-06-01) supersedes revision 1: subject=Kestrel relay unit; operating tier=9088
+[E4]
+Revision 1 (effective 2030-01-01, since superseded) recorded: Engineering notes indicate Dunlin relay unit uses false as its operating tier.
+[E5]
+Revision 1 (effective 2030-01-01, since superseded) recorded: {"subject": "Quail intake manifold", "operating tier": "ALPHA-RED"}
+[E6]
+Revision 1 (effective 2030-01-01, since superseded) recorded: The operating tier registry records that Kestrel relay unit is assigned 5267.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the ownership tier for Dunlin relay unit?
+[EVIDENCE]
+[E1]
+The ownership tier registry records that Kestrel relay unit is assigned {"state": "provisional"}.
+[E2]
+[change] Gannet relay unit :: ownership tier := {"grade": "quarantined"}
+[E3]
+Note: the ownership tier for Marlin pressure assembly resolves to DELTA-AMBER.
+[E4]
+GRU-6 is the short code for Gannet relay unit.
+[E5]
+ORU-7 is the short code for Osprey relay unit.
+[E6]
+GRU-2 is the short code for Gannet relay unit.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

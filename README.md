@@ -2,7 +2,7 @@
 
 > Pretrained-compatible adaptive computation with a physically ordered four-level effort hierarchy, plus a staged retrieval-and-memory research pipeline built on **HRM-Text-1B**.
 
-[![Tests](https://img.shields.io/badge/tests-548%20passed-brightgreen)](#tests)
+[![Tests](https://img.shields.io/badge/tests-607%20passed-brightgreen)](#tests)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](#install)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](#license)
 [![HRM--Text--1B](https://img.shields.io/badge/HRM--Text--1B-sapientinc-orange)](https://huggingface.co/sapientinc/HRM-Text-1B)
@@ -123,7 +123,7 @@ pip install -e ".[hrm]"
 
 ```bash
 python -m pytest -q
-# 548 passed, 2 skipped
+# 607 passed, 2 skipped
 ```
 
 ### Run the C4 pipeline
@@ -276,7 +276,7 @@ evidence/                     # Immutable evidence bundles
   gate_c3/                    #   C3 results
   gate_c2/                    #   C2 results
 
-tests/                        # 548 tests (unit + integration)
+tests/                        # 607 tests (unit + integration)
 data/hrm/controlled_gate_a_v4/# Frozen task corpus (120 dev + 120 qual + 120 OOD)
 ```
 
@@ -376,7 +376,7 @@ source of truth for answer correctness across all gates.
 
 ```bash
 python -m pytest -q
-# 548 passed, 2 skipped
+# 607 passed, 2 skipped
 ```
 
 ---

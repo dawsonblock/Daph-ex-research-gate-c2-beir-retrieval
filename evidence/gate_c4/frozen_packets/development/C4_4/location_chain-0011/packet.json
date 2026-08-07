@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "43739a9592ac8754a9b0ada245cb49684a4050b604ec436ee6313299606690e6",
+  "canonical_subject": "Gannet control module",
+  "ordered_selected_ids": [
+    "location_chain-0011/direct",
+    "location_chain-0011/identity",
+    "configuration_chain-0000/dead-end-1",
+    "configuration_chain-0005/link",
+    "dependency_chain-0001/identity",
+    "dependency_chain-0009/identity"
+  ],
+  "ordered_text_sha256": [
+    "a891021cdadbd3c2dc45a45568663162d6ec0e2c55b059be4dc7c400172ffa49",
+    "cf425adf6d6d79494f1114b3aa27f037aeac131fbecc4832fc94381009e8768d",
+    "68b5f0ccb0cd1ffc0155ff2c6193e53b92786e3b0efb9436a4d2606f318f3fe9",
+    "b6593e71122da791ce67ff950f1b989de94bebedc1a4c6d5b636182afd565372",
+    "97f1c873ce2e1927f245185b9c609f4208fec18539f75116fb65cf6ec53cc82b",
+    "a2db2a338033390fecd58a3bcf56c2ae8be6125b6d377e699e988689ca3ddbc8"
+  ],
+  "query_hash": "c9d22f1e491cf00f315b4ddddec680fcc86fa55421d6ef8f2c45bfccc7fd477d",
+  "selector_policy_id": "s2c",
+  "task_id": "location_chain-0011"
+}

@@ -1,0 +1,19 @@
+[OBJECTIVE]
+What is the ownership tier for Dunlin relay unit?
+[EVIDENCE]
+[E1]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Revision applied — Dunlin relay unit operating tier changed to true.
+[E2]
+Revision applied — Wren relay unit spare enclosure changed to Kestrel relay unit.
+[E3]
+Abbreviation table: KRU-7 = Kestrel relay unit.
+[E4]
+It is recorded in the mounted monitor registry that Dunlin relay unit holds Auk drive cluster.
+[E5]
+mounted monitor:
+  subject: Dunlin relay unit
+  value: Marlin intake manifold
+[E6]
+- updated Dunlin relay unit: registered asset now Wren control module
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

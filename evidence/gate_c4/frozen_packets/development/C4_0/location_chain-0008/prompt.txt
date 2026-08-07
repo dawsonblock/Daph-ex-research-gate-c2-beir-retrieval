@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Heron relay unit, which service region is recorded?
+[EVIDENCE]
+[E1]
+For Bittern relay unit, service region requires 1101.
+[E2]
+For Egret relay unit, service region requires provisional.
+[E3]
+[change] Auk relay unit :: service region := GAMMA-BLUE
+[E4]
+Note: the service region for Heron pressure assembly resolves to {"grade": "provisional"}.
+[E5]
+subject=Egret relay unit; proposed service region=accredited This proposal was rejected.
+[E6]
+During setup, Egret relay unit was paired with suspended for proposed service region. This proposal was rejected.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

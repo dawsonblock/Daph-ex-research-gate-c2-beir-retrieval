@@ -18,14 +18,6 @@ ROOT = Path(__file__).resolve().parents[1]
 ARCHIVE = ROOT / "evidence/c4_pre_repair"
 
 
-def _sha256(path: Path) -> str:
-    h = hashlib.sha256()
-    for chunk in iter(lambda: path.read_bytes().read(8192) if False else path.read_bytes(), b""):
-        h.update(chunk)
-        break
-    return h.hexdigest()
-
-
 def _file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 

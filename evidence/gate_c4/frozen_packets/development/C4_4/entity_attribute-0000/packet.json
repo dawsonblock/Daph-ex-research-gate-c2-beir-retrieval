@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "2562d7b4b68f32d009f6e79c82a4c6c3ad1310fc5b663d97ee1a6bbcac934398",
+  "canonical_subject": "Nimbus sensor array",
+  "ordered_selected_ids": [
+    "dependency_chain-0006/link",
+    "temporal_chain-0007/link",
+    "temporal_chain-0007/identity",
+    "dependency_chain-0006/dead-end-0",
+    "dependency_chain-0006/dead-end-1",
+    "distractor_heavy-0007/near-near_relation"
+  ],
+  "ordered_text_sha256": [
+    "8edfdc90abcbb2c03d89f5ef0ae3bcd8b891644eacf9d1b9d28519e19dd30bcf",
+    "64a3c5e963005fb6e14180d4833bdb649a58104644ad3762c043cfe669b2019b",
+    "7bb516297b55b9ef53bf7c454fd3bed33d7228cefb58dac928ae162eb618fce6",
+    "ab8172eaecca49a1c993456097a3dd5ab9e2736260c0b8ee8e78bacdd8b74311",
+    "e1a16c3535368593ee17e3688c14eb8e8f295f6148a78fff58d4c688e08e21ef",
+    "e0f24df2b23aa9e40ce0a3ff78763a514a12a37abb77c75462bbf73aa6ecba69"
+  ],
+  "query_hash": "3f4fb484b2c96ef7ac5301bf45671b1121b8fb8d53f36c5ea705e6bca3ca546b",
+  "selector_policy_id": "s2c",
+  "task_id": "entity_attribute-0000"
+}

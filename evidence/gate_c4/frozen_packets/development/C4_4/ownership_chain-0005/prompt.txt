@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the ownership tier for PCM-8?
+[EVIDENCE]
+[E1]
+Abbreviation table: PCM-5 = Pelican control module.
+[E2]
+In shorthand, Pelican control module is written PCM-8.
+[E3]
+Abbreviation table: PCM-8 = Pelican control module.
+[E4]
+Abbreviation table: GIM-8 = Gannet intake manifold.
+[E5]
+[former routing class] Pelican control module -> {"tier": "provisional"} This record is historical.
+[E6]
+Revision 1 (effective 2030-01-01, since superseded) recorded: [operating tier] Gannet intake manifold -> 9638
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

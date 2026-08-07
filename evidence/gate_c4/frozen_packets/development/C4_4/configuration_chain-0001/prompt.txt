@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which parameter grade applies to ODC-6?
+[EVIDENCE]
+[E1]
+ODC-6 is the short code for Osprey drive cluster.
+[E2]
+- updated Auk relay unit: parameter grade now 1101
+[E3]
+[parameter grade] Dunlin pressure assembly -> THETA-OLIVE
+[E4]
+{"subject": "Marlin intake manifold", "proposed parameter grade": "suspended"} This proposal was rejected.
+[E5]
+Per the proposed parameter grade register, retired is allocated to Marlin intake manifold. This proposal was rejected.
+[E6]
+Registry entry: Marlin intake manifold — parameter grade — accredited.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

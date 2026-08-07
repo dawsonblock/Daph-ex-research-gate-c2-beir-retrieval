@@ -249,7 +249,6 @@
     "D8_clean_release": "All tests pass, clean git tree, expected commit, expected protocol hash, expected dependencies."
   },
   "protocol_id": "c4_v2_reproducible_and_qualified",
-  "protocol_sha256": "85bcc3cc54691ff869abc0612da65234ae0dfe5ab4acab7b8819c89f9999a950",
   "protocol_version": "v2_frozen",
   "status": "PROTOCOL_V2_FROZEN_BEFORE_REQUALIFICATION",
   "supersedes": "v1_frozen",

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For WSA-7, which billing multiplier is recorded?
+[EVIDENCE]
+[E1]
+WSA-5 is the short code for Wren sensor array.
+[E2]
+Note: the billing multiplier for Wren sensor array resolves to {"category": "provisional"}.
+[E3]
+In shorthand, Wren sensor array is written WSA-7.
+[E4]
+Abbreviation table: WPA-6 = Wren pressure assembly.
+[E5]
+Revision applied — Egret drive cluster release channel changed to accredited.
+[E6]
+subject=Heron relay unit; calibration routing class=7299
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

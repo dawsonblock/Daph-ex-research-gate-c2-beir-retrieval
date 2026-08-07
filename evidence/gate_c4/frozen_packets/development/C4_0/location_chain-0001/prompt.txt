@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which service region applies to GRU-6?
+[EVIDENCE]
+[E1]
+Note: the service region for Bittern drive cluster resolves to provisional.
+[E2]
+Changelog: service region for Quail drive cluster set to {"grade": "retired"}.
+[E3]
+{"subject": "Bluebird intake manifold", "service region": "EPSILON-SLATE"}
+[E4]
+{"subject": "Quail control module", "service region": "provisional"}
+[E5]
+[change] Auk relay unit :: service region := GAMMA-BLUE
+[E6]
+[service region] Gannet control module -> {"grade": "retired"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

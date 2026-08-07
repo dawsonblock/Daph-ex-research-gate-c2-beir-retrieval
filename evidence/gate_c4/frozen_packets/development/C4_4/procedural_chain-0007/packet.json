@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "c01c73ab835db91dd3dacb0f773cb784b90ea557cd86b9d6bc9083c9f149500f",
+  "canonical_subject": "Raven control module",
+  "ordered_selected_ids": [
+    "distractor_heavy-0001/identity",
+    "entity_attribute-0007/identity",
+    "distractor_heavy-0007/identity",
+    "location_chain-0005/identity",
+    "procedural_chain-0007/identity",
+    "procedural_chain-0007/direct"
+  ],
+  "ordered_text_sha256": [
+    "ac4ec0d3a4456edf01408355376d79958531906b6c3a75b0190753583bffa211",
+    "e2bdface038707467769882ee7c96d67f38eb2f6afcca2f88eddce25ef618062",
+    "e8f84dce6647a77657e5191790049aa120f50e21c26237cbea8db4d527afc7fc",
+    "e9f3228f9be392365ef1250eed5093a9ef346293c7d26436225a45166f0d9ed3",
+    "ec6c22f209fa5bd2b8a83682e89dd5775ccf32092afc1ae93765b4bdcc5447d5",
+    "02bfd7768d9081db8f8dad3308783855bc9a8a58c5e2f81390ea401b25652ed8"
+  ],
+  "query_hash": "6a43ad22d2f0354222486db04a60b67aec21e87e5c542abd37b374f722bc4888",
+  "selector_policy_id": "s2c",
+  "task_id": "procedural_chain-0007"
+}

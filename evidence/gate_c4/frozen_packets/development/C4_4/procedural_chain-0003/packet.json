@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "c7f07943ad10065aa0a95eecf55f3c647f6c748af8d3f54e316040bfc56fabf7",
+  "canonical_subject": "Jacana sensor array",
+  "ordered_selected_ids": [
+    "numeric_chain-0001/identity",
+    "procedural_chain-0003/identity",
+    "procedural_chain-0009/identity",
+    "temporal_chain-0007/identity",
+    "ownership_chain-0007/identity",
+    "procedural_chain-0003/direct"
+  ],
+  "ordered_text_sha256": [
+    "348ab49875e6863890a9b538cfcb387534ce36561b101d1645543857f27f01b7",
+    "0c3d13d12d53a54ac982609a328469d0c7f123f69fc53509ab83a62394d86d5e",
+    "e58d0d37f91f978ba47613fc6035eaa4ee8c30a375c8ad796b3e725ea02eb1f5",
+    "7bb516297b55b9ef53bf7c454fd3bed33d7228cefb58dac928ae162eb618fce6",
+    "29b47a7d06dabedacfa169ae56fa6115acdd1fe7ae7c3a3d2dc4176c6fe2e6e6",
+    "3849040696c45bb45833bbf55597dacee6ec7ee66013bfb99550f645132272f5"
+  ],
+  "query_hash": "547f6fbcf73c83b157a704e02265a2226d3ecaa3156f85d7ee95737669a696d3",
+  "selector_policy_id": "s2c",
+  "task_id": "procedural_chain-0003"
+}

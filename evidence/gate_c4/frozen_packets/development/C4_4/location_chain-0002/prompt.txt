@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which service region applies to Wren relay unit?
+[EVIDENCE]
+[E1]
+Revision applied — Wren relay unit spare enclosure changed to Kestrel relay unit.
+[E2]
+Abbreviation table: KRU-7 = Kestrel relay unit.
+[E3]
+Abbreviation table: MRU-7 = Marlin relay unit.
+[E4]
+Revision applied — Ibis relay unit spare enclosure changed to Osprey relay unit.
+[E5]
+Engineering notes indicate Wren relay unit uses Jacana intake manifold as its spare enclosure.
+[E6]
+subject=Wren relay unit; hosting venue=Bittern drive cluster
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

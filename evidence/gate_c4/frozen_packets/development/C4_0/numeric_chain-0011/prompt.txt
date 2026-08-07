@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For WSA-7, which billing multiplier is recorded?
+[EVIDENCE]
+[E1]
+For Marlin sensor array, billing multiplier requires 7618.
+[E2]
+In shorthand, Wren sensor array is written WSA-7.
+[E3]
+Note: the billing multiplier for Bittern control module resolves to THETA-OLIVE.
+[E4]
+[change] Bluebird pressure assembly :: billing multiplier := quarantined
+[E5]
+Note: the billing multiplier for Wren sensor array resolves to {"category": "provisional"}.
+[E6]
+Registry entry: Vireo pressure assembly — billing multiplier — 9659.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

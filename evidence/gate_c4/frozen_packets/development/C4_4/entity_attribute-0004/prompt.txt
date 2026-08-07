@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the assigned category for Curlew intake manifold?
+[EVIDENCE]
+[E1]
+subject=Finch relay unit; mounted monitor=Curlew intake manifold
+[E2]
+Per the required dependency register, Curlew intake manifold is allocated to Jacana control module.
+[E3]
+It is recorded in the release channel registry that Curlew intake manifold holds GAMMA-BLUE.
+[E4]
+[assigned category] Curlew intake manifold -> 8563
+[E5]
+Engineering notes indicate Curlew sensor array uses Egret intake manifold as its mounted monitor.
+[E6]
+subject=Curlew sensor array; active configuration=Marlin intake manifold
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to PDC-7?
+[EVIDENCE]
+[E1]
+PDC-7 is the short code for Pelican drive cluster.
+[E2]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Note: the operating tier for Gannet intake manifold resolves to 1391.
+[E3]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Per the operating tier register, false is allocated to Bluebird pressure assembly.
+[E4]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Per the operating tier register, 4792 is allocated to Auk sensor array.
+[E5]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Per the operating tier register, ALPHA-RED is allocated to Bluebird intake manifold.
+[E6]
+Revision 1 (effective 2030-01-01, since superseded) recorded: Revision applied — Marlin intake manifold operating tier changed to {"tier": "suspended"}.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

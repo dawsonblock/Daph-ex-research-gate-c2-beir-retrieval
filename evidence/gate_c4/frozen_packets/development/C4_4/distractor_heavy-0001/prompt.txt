@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which routing class applies to RCM-8?
+[EVIDENCE]
+[E1]
+RCM-8 is the short code for Raven control module.
+[E2]
+Abbreviation table: RCM-3 = Raven control module.
+[E3]
+Abbreviation table: PCM-8 = Pelican control module.
+[E4]
+In shorthand, Pelican control module is written PCM-8.
+[E5]
+During setup, Raven control module was paired with THETA-OLIVE for routing class.
+[E6]
+Changelog: proposed routing class for Raven control module set to EPSILON-SLATE. Status: rejected.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

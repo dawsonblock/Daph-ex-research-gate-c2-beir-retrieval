@@ -13,7 +13,7 @@ Protocol hash is embedded in every manifest to prevent config drift.
 """
 from __future__ import annotations
 
-import argparse, hashlib, json, sys, time
+import argparse, hashlib, json, os, sys, time
 from pathlib import Path
 from dataclasses import asdict
 
@@ -47,8 +47,18 @@ HRM_MAX_NEW_TOKENS = 64
 
 
 def _protocol_hash() -> str:
-    return hashlib.sha256(
-        (ROOT / "configs/gate_c4_protocol.json").read_bytes()).hexdigest()
+    """Hash of the active C4 protocol file.
+
+    Selects v1 or v2 based on C4_PROTOCOL environment variable:
+        C4_PROTOCOL=v2  → configs/gate_c4_protocol_v2.json
+        (default)       → configs/gate_c4_protocol.json
+    """
+    protocol_version = os.environ.get("C4_PROTOCOL", "v1")
+    if protocol_version == "v2":
+        protocol_path = ROOT / "configs/gate_c4_protocol_v2.json"
+    else:
+        protocol_path = ROOT / "configs/gate_c4_protocol.json"
+    return hashlib.sha256(protocol_path.read_bytes()).hexdigest()
 
 
 def _load_split(split: str) -> tuple[list[dict], list[dict], dict[str, str]]:
@@ -402,7 +412,9 @@ def run_smoke(split: str = "development"):
                 [texts.get(eid, "") for eid in pre_hrm.selection.selected_ids if eid in texts])
 
             hrm_result = _run_hrm(adapter, condition, full_prompt)
-            quality_score, correct = _verify_answer(task, hrm_result.output)
+            _binary_score, correct = _verify_answer(task, hrm_result.output)
+            quality_score = _compute_quality(
+                task, list(pre_hrm.selection.selected_ids), evidence, correct)
             csr = _compute_csr(task, list(pre_hrm.selection.selected_ids))
             roles = _compute_role_retention(task, list(pre_hrm.selection.selected_ids), evidence)
 
@@ -520,7 +532,9 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
                 task["question"],
                 [texts.get(eid, "") for eid in pre_hrm.selection.selected_ids if eid in texts])
             hrm_result = _run_hrm(adapter, condition, full_prompt)
-            quality_score, correct = _verify_answer(task, hrm_result.output)
+            _binary_score, correct = _verify_answer(task, hrm_result.output)
+            quality_score = _compute_quality(
+                task, list(pre_hrm.selection.selected_ids), evidence, correct)
             csr = _compute_csr(task, list(pre_hrm.selection.selected_ids))
             roles = _compute_role_retention(task, list(pre_hrm.selection.selected_ids), evidence)
 

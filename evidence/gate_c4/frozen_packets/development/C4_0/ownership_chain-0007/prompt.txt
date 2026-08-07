@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the ownership tier for KRU-7?
+[EVIDENCE]
+[E1]
+KRU-7 is the short code for Kestrel relay unit.
+[E2]
+Note: the ownership tier for Marlin pressure assembly resolves to DELTA-AMBER.
+[E3]
+Per the ownership tier register, 7362 is allocated to Wren control module.
+[E4]
+For Heron intake manifold, ownership tier requires ETA-INDIGO.
+[E5]
+The ownership tier registry records that Kestrel relay unit is assigned {"state": "provisional"}.
+[E6]
+Abbreviation table: KRU-7 = Kestrel relay unit.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

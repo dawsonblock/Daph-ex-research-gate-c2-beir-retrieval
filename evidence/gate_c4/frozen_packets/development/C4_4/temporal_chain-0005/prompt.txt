@@ -1,0 +1,19 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to TPA-2?
+[EVIDENCE]
+[E1]
+Abbreviation table: TPA-2 = Teal pressure assembly.
+[E2]
+ownership tier:
+  subject: Bluebird sensor array
+  value: 9167
+[E3]
+Registry entry: Nimbus intake manifold — ownership tier — {"tier": "suspended"}.
+[E4]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E5]
+Revision 2 (effective 2031-06-01) supersedes revision 1: subject=Kestrel relay unit; operating tier=9088
+[E6]
+Revision 1 (effective 2030-01-01, since superseded) recorded: The operating tier registry records that Kestrel relay unit is assigned 5267.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

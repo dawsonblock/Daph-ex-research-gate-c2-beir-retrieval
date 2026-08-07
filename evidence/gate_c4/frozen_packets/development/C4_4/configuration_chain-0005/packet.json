@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "2c3a2f1d110f12dedc3fe8bd5d0dff20a5d760b819adb9e634ec75d0047872f6",
+  "canonical_subject": "Finch relay unit",
+  "ordered_selected_ids": [
+    "configuration_chain-0005/identity",
+    "configuration_chain-0000/value",
+    "configuration_chain-0001/value",
+    "configuration_chain-0002/rejected-0",
+    "configuration_chain-0002/rejected-1",
+    "configuration_chain-0002/value"
+  ],
+  "ordered_text_sha256": [
+    "97b412073e0e0b6ad9c4d2f4515629f43fa22d6c9602e04467b10ee61a07c414",
+    "8931dbfa124f0c48e999300068f0a32af4f3ef50e5bcd0251d8dfd7bacd857a7",
+    "ad6b9864d2ddd4564b3b6f6ef9ea98f44a61808d546de064162e9b0a5b75388f",
+    "4bf4cb3221ab06f66a3104d45f4341a8abd01a44aa164510b6827b31832fd782",
+    "ac424fcd119370ccdccb0aa89f756faaa09eb2408b29b2abf78cc5864b791a11",
+    "7bd10fa4e246023abb6b50b5670dcf3d0c73f807d0d2b0dd1a2f807baa06f3e6"
+  ],
+  "query_hash": "c2df662b74facc6d54fa5b70daa966d7052288e4a2dc8e2902cedf65ca74be48",
+  "selector_policy_id": "s2c",
+  "task_id": "configuration_chain-0005"
+}

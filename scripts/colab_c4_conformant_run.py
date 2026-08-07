@@ -123,7 +123,10 @@ def main():
     # Set environment variables for GPU optimization
     os.environ["HRM_DEVICE"] = "cuda"
     os.environ["HRM_DTYPE"] = "float16"
-    
+
+    # Use C4 protocol v2 (deterministic, reproducible)
+    os.environ["C4_PROTOCOL"] = "v2"
+
     # Check resumability
     out_dir = Path("evidence/gate_c4/full/development")
     if out_dir.exists():
@@ -133,7 +136,7 @@ def main():
                 with open(fpath) as f:
                     lines = sum(1 for _ in f if f.strip())
                 print(f"  {arm}: {lines}/120 existing results")
-    
+
     ret = run(["python", "scripts/run_gate_c4.py", "full", "--split", "development"],
               "Full Conformant Development Run (120 tasks × 7 arms)",
               stream=True)

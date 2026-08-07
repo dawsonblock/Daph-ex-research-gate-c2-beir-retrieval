@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "4237f961333a7123432fa977a606ae6d3b8a39beea25a6cef87e59f3138d7c3a",
+  "canonical_subject": "Ibis control module",
+  "ordered_selected_ids": [
+    "dependency_chain-0001/identity",
+    "dependency_chain-0000/value",
+    "dependency_chain-0001/value",
+    "dependency_chain-0002/link",
+    "dependency_chain-0002/rejected-0",
+    "dependency_chain-0002/rejected-1"
+  ],
+  "ordered_text_sha256": [
+    "97f1c873ce2e1927f245185b9c609f4208fec18539f75116fb65cf6ec53cc82b",
+    "91e88bd1d6699b0035930281acf5343654d48e0adbdb13f5f4609bd0e44cb079",
+    "b856767ce1f1b095442b51afbe649adb9573561424e8ae2252d06fe2ce78199a",
+    "f89360b33f0894ff2cece9c8b25273ecd17ea1bda15ad8e2ce8d2cb246f1165c",
+    "a4cb7c47da06889c358d395fbb80b7c994981088692ec9728ad1dccca1089b34",
+    "0679f18b3ff0a7815d98de8a5afb17a3169323ae4b876b2da0318b8d22ca750d"
+  ],
+  "query_hash": "fd980827ea0381749ae15d124bf61675cf6954fc37d31a45d748aca15b248c45",
+  "selector_policy_id": "s2c",
+  "task_id": "dependency_chain-0001"
+}

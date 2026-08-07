@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which ownership tier applies to ORU-7?
+[EVIDENCE]
+[E1]
+ORU-7 is the short code for Osprey relay unit.
+[E2]
+[former routing class] Pelican control module -> {"tier": "provisional"} This record is historical.
+[E3]
+In shorthand, Egret relay unit is written ERU-7.
+[E4]
+Engineering notes indicate Dunlin sensor array uses {"tier": "provisional"} as its routing class.
+[E5]
+During setup, Heron sensor array was paired with {"tier": "retired"} for billing multiplier.
+[E6]
+Revision applied — Ibis pressure assembly billing multiplier changed to {"tier": "retired"}.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "8b928fec224727d010968fc83849c9d6b7debd4e949bee9903a743c22f35ffbf",
+  "canonical_subject": "Curlew relay unit",
+  "ordered_selected_ids": [
+    "configuration_chain-0003/link",
+    "configuration_chain-0003/value",
+    "temporal_chain-0000/link",
+    "temporal_chain-0010/link",
+    "location_chain-0002/dead-end-0",
+    "ownership_chain-0007/direct"
+  ],
+  "ordered_text_sha256": [
+    "83e34d4b3999c1d275facf47b82b95e554570df621dc2cbe64b4fadc44a1454d",
+    "469b6711f15e9490e2e87fbb977d5b5fccea41915bf2dd53736aecbf37cbf9df",
+    "c13e69f36478a75f58f7a7d5f06f5b3fc825fae9e9c22f405fd125d4ebe433f8",
+    "5b635ba9ab96aeb4996b1d1514a795b430ac8c0b8edd9c423bab2a8f4aeebe9e",
+    "3c74a3dcd01a8bd34c7967cb14a812a403507c2c64348f55f7c062feba0e2804",
+    "97c57937bfa5b9e01db5f06c0a23b8223a7276afe0707bb1e164dbb8cc9b6c4b"
+  ],
+  "query_hash": "13aa593484370c2267ee000cb1063f3be14547d2c2795a78a8b8a9f2b9568efa",
+  "selector_policy_id": "s2c",
+  "task_id": "temporal_chain-0000"
+}

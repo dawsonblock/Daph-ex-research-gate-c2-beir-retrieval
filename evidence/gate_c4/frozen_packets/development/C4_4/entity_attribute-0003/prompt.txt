@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which assigned category applies to ASA-2?
+[EVIDENCE]
+[E1]
+Changelog: assigned category for Auk sensor array set to {"grade": "quarantined"}.
+[E2]
+ASA-2 is the short code for Auk sensor array.
+[E3]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Per the operating tier register, 4792 is allocated to Auk sensor array.
+[E4]
+{"subject": "Curlew relay unit", "assigned unit": "Auk sensor array"}
+[E5]
+The assigned unit registry records that Curlew relay unit is assigned Kestrel relay unit.
+[E6]
+Revision 2 (effective 2031-06-01) supersedes revision 1: subject=Kestrel relay unit; operating tier=9088
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

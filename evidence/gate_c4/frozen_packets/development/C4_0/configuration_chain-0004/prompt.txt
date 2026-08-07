@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the parameter grade for Kestrel drive cluster?
+[EVIDENCE]
+[E1]
+Changelog: parameter grade for Dunlin drive cluster set to {"grade": "provisional"}.
+[E2]
+Note: the parameter grade for Curlew relay unit resolves to {"state": "suspended"}.
+[E3]
+Per the parameter grade register, provisional is allocated to Vireo intake manifold.
+[E4]
+For Heron sensor array, parameter grade requires {"category": "accredited"}.
+[E5]
+ODC-6 is the short code for Osprey drive cluster.
+[E6]
+IDC-7 is the short code for Ibis drive cluster.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

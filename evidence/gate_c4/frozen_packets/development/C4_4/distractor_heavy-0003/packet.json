@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "4a49e48d69eb21a58309684e38b4f11ba02530d3f8edc6ca2ac681743fdf7b62",
+  "canonical_subject": "Dunlin sensor array",
+  "ordered_selected_ids": [
+    "distractor_heavy-0003/identity",
+    "distractor_heavy-0003/near-near_status",
+    "distractor_heavy-0003/near-near_temporal",
+    "distractor_heavy-0011/accepted",
+    "distractor_heavy-0011/near-near_status",
+    "distractor_heavy-0011/near-near_temporal"
+  ],
+  "ordered_text_sha256": [
+    "35b9373094096de4c08551712db51dac7d6951f9698c0bef0a4cecf1febbab9f",
+    "fcd20e3d17f12d8390d6ce148873ab436a1ba6e56aecd8fd2b959b37aff567f9",
+    "5c1c2a1849c759b3700d015c243b90dc79261dff26ce11b95beae96d41471b78",
+    "cfce2be52682d9369786c7600c9ac0d9bcc02cee728d4f92270305e022e0ff42",
+    "91e79532e2c33aad75d24c609e5307469a5a0e322c7c0e781de9f211d354f932",
+    "e05852bec5f1dad6ed71bac516d0ab9ceac8b5c5c5da343bd6f5c2d56c412622"
+  ],
+  "query_hash": "b0fc96d44d1ca3c9cb55028f962eda87263e84ee29b0d78555d957885d630293",
+  "selector_policy_id": "s2c",
+  "task_id": "distractor_heavy-0003"
+}

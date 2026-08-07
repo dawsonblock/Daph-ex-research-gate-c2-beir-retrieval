@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For PCM-4, which parameter grade is recorded?
+[EVIDENCE]
+[E1]
+In shorthand, Pelican control module is written PCM-4.
+[E2]
+Abbreviation table: PCM-5 = Pelican control module.
+[E3]
+Abbreviation table: RCM-3 = Raven control module.
+[E4]
+In shorthand, Pelican control module is written PCM-8.
+[E5]
+Abbreviation table: PCM-8 = Pelican control module.
+[E6]
+Abbreviation table: RCM-5 = Raven control module.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

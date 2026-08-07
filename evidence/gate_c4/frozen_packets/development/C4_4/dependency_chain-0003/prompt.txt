@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which release channel applies to IDC-7?
+[EVIDENCE]
+[E1]
+Revision applied — Ibis drive cluster spare enclosure changed to Nimbus control module.
+[E2]
+IDC-7 is the short code for Ibis drive cluster.
+[E3]
+IDC-8 is the short code for Ibis drive cluster.
+[E4]
+For Ibis drive cluster, release channel requires {"grade": "quarantined"}.
+[E5]
+Revision applied — Nimbus intake manifold proposed release channel changed to quarantined. This proposal was rejected.
+[E6]
+Revision applied — Egret drive cluster release channel changed to accredited.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

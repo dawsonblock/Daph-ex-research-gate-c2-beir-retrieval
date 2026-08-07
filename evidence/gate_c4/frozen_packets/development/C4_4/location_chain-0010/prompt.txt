@@ -1,0 +1,19 @@
+[OBJECTIVE]
+For Dunlin drive cluster, which service region is recorded?
+[EVIDENCE]
+[E1]
+mounted monitor:
+  subject: Dunlin drive cluster
+  value: Pelican drive cluster
+[E2]
+For Dunlin drive cluster, mounted monitor requires Ibis control module.
+[E3]
+Abbreviation table: DDC-8 = Dunlin drive cluster.
+[E4]
+Changelog: parameter grade for Dunlin drive cluster set to {"grade": "provisional"}.
+[E5]
+Registry entry: Dunlin drive cluster — active configuration — Bluebird control module.
+[E6]
+Engineering notes indicate Sparrow pressure assembly uses Dunlin drive cluster as its mounted monitor.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

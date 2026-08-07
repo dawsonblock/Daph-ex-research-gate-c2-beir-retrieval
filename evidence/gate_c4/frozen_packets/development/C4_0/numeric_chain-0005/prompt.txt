@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the billing multiplier for GRU-2?
+[EVIDENCE]
+[E1]
+GRU-2 is the short code for Gannet relay unit.
+[E2]
+Note: the billing multiplier for Bittern control module resolves to THETA-OLIVE.
+[E3]
+Note: the billing multiplier for Wren sensor array resolves to {"category": "provisional"}.
+[E4]
+For Marlin sensor array, billing multiplier requires 7618.
+[E5]
+[change] Bluebird pressure assembly :: billing multiplier := quarantined
+[E6]
+Registry entry: Vireo pressure assembly — billing multiplier — 9659.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

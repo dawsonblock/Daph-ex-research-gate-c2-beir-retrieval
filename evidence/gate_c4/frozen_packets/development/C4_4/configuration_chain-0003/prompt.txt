@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which parameter grade applies to MCM-5?
+[EVIDENCE]
+[E1]
+It is recorded in the parameter grade registry that Marlin control module holds {"state": "suspended"}.
+[E2]
+MCM-5 is the short code for Marlin control module.
+[E3]
+- updated Auk relay unit: parameter grade now 1101
+[E4]
+[parameter grade] Dunlin pressure assembly -> THETA-OLIVE
+[E5]
+{"subject": "Marlin intake manifold", "proposed parameter grade": "suspended"} This proposal was rejected.
+[E6]
+Per the proposed parameter grade register, retired is allocated to Marlin intake manifold. This proposal was rejected.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

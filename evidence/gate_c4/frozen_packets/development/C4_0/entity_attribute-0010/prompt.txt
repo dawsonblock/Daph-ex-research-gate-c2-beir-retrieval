@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Teal drive cluster, which assigned category is recorded?
+[EVIDENCE]
+[E1]
+Revision applied — Teal drive cluster assigned category changed to retired.
+[E2]
+- updated Teal pressure assembly: assigned unit now Raven drive cluster
+[E3]
+The assigned category registry records that Quail control module is assigned THETA-OLIVE.
+[E4]
+{"subject": "Teal drive cluster", "ownership tier": "retired"}
+[E5]
+The applicable procedure registry records that Ibis drive cluster is assigned Finch drive cluster.
+[E6]
+- updated Raven control module: assigned category now {"category": "quarantined"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

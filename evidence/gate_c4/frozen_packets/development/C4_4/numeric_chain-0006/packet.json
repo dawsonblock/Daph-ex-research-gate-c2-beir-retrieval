@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "899c1ca5ae517476bb0156d3b7c48e26e23eb7c61d5738b9cf545076e0bddfc0",
+  "canonical_subject": "Bluebird control module",
+  "ordered_selected_ids": [
+    "configuration_chain-0007/link",
+    "configuration_chain-0007/value",
+    "numeric_chain-0000/value",
+    "numeric_chain-0003/value",
+    "numeric_chain-0006/dead-end-0",
+    "numeric_chain-0006/dead-end-1"
+  ],
+  "ordered_text_sha256": [
+    "7035900bdb9fbc8860861e9e06eadd4ece89a7bf4249f391690501be2f9076de",
+    "838befbbf2aa573d0c2d76a9e992862376fdcd83fc383d0cb3f33aee9953b67d",
+    "61a469477e1bd6ec203d56f8345785d6e4b583478e095665aa3a5dc9210acadf",
+    "e8569e6792b50324d961d28332300ad93d85e9cb10a74cb6be9449699744b06b",
+    "e46130c1b948c703fdea88f7d19ff1869a9d1eadeb7b66efc8ab28327af4b20c",
+    "99ce5626e45d02941a14217a2025eabb2801933714d0bd9df776a54c89918c07"
+  ],
+  "query_hash": "0b49dff305fff326a401f2ba498355e950a34940e09f27b51d00e7c9e54fbfb1",
+  "selector_policy_id": "s2c",
+  "task_id": "numeric_chain-0006"
+}

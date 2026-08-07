@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Osprey control module, which required action is recorded?
+[EVIDENCE]
+[E1]
+[change] Kestrel drive cluster :: spare enclosure := Osprey control module
+[E2]
+Changelog: mounted monitor for Osprey control module set to Bluebird pressure assembly.
+[E3]
+In shorthand, Osprey control module is written OCM-3.
+[E4]
+[release channel] Osprey control module -> {"state": "accredited"}
+[E5]
+Engineering notes indicate Osprey control module uses Bittern pressure assembly as its required dependency.
+[E6]
+Per the mounted monitor register, Osprey control module is allocated to Gannet relay unit.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

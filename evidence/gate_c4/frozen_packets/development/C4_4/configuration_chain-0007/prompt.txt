@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the parameter grade for DDC-8?
+[EVIDENCE]
+[E1]
+Abbreviation table: DDC-8 = Dunlin drive cluster.
+[E2]
+Abbreviation table: JSA-8 = Jacana sensor array.
+[E3]
+Abbreviation table: GIM-8 = Gannet intake manifold.
+[E4]
+Changelog: parameter grade for Dunlin drive cluster set to {"grade": "provisional"}.
+[E5]
+- updated Auk relay unit: parameter grade now 1101
+[E6]
+[parameter grade] Dunlin pressure assembly -> THETA-OLIVE
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

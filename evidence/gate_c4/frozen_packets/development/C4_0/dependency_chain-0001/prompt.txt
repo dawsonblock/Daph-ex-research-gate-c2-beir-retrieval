@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which release channel applies to ICM-8?
+[EVIDENCE]
+[E1]
+Revision applied — Egret drive cluster release channel changed to accredited.
+[E2]
+[release channel] Auk drive cluster -> BETA-GREEN
+[E3]
+Note: the release channel for Nimbus intake manifold resolves to suspended.
+[E4]
+{"subject": "Bluebird sensor array", "release channel": "DELTA-AMBER"}
+[E5]
+[release channel] Osprey control module -> {"state": "accredited"}
+[E6]
+Per the release channel register, 8457 is allocated to Jacana pressure assembly.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

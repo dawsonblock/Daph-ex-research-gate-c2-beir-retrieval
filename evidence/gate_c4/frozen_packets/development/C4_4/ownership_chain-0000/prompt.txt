@@ -1,0 +1,19 @@
+[OBJECTIVE]
+Which ownership tier applies to Sparrow intake manifold?
+[EVIDENCE]
+[E1]
+{"subject": "Sparrow intake manifold", "mounted monitor": "Ibis intake manifold"}
+[E2]
+{"subject": "Sparrow intake manifold", "spare enclosure": "Raven sensor array"}
+[E3]
+The registered asset registry records that Sparrow intake manifold is assigned Finch control module.
+[E4]
+- updated Finch control module: ownership tier now 3529
+[E5]
+spare enclosure:
+  subject: Finch relay unit
+  value: Gannet intake manifold
+[E6]
+- updated Wren intake manifold: parameter grade now {"category": "accredited"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

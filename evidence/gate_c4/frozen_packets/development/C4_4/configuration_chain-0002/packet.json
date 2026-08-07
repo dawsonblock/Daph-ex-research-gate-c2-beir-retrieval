@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "fecaa8a32cb88ac8fb024a0d6fd41e210289537d6caf6ba2e7308b0645f99845",
+  "canonical_subject": "Curlew sensor array",
+  "ordered_selected_ids": [
+    "configuration_chain-0002/dead-end-0",
+    "configuration_chain-0002/dead-end-1",
+    "configuration_chain-0002/link",
+    "configuration_chain-0005/value",
+    "distractor_heavy-0011/accepted",
+    "distractor_heavy-0011/near-near_relation"
+  ],
+  "ordered_text_sha256": [
+    "f734889a78c30084e5bf588a4ff59028c606227b32f6e91d5fd7b8b44db2be97",
+    "5ba9b2cca84d1d097c562e772d9893f0de077566cca30ef01038c666b9e899df",
+    "cf4b09abb63695ad210d1c9457c03ca277451168c6b0dbc59bfa3b89e8962723",
+    "699d2555495d168fb4c06877c19c0f663c2ad3325f4d12f2c9db98e40df97e7b",
+    "cfce2be52682d9369786c7600c9ac0d9bcc02cee728d4f92270305e022e0ff42",
+    "55e649aa5bc26df8bdb22371bcff1fd46e4eda9c8555cd98c6c350edd2897b4c"
+  ],
+  "query_hash": "3f7b53ba796127061f14d85a18e5a18bca0abc1ee30348b7f809aaa0bd3690f8",
+  "selector_policy_id": "s2c",
+  "task_id": "configuration_chain-0002"
+}

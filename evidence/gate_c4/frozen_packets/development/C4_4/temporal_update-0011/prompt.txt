@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to BIM-5?
+[EVIDENCE]
+[E1]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E2]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Per the operating tier register, ALPHA-RED is allocated to Bluebird intake manifold.
+[E3]
+In shorthand, Bluebird intake manifold is written BIM-5.
+[E4]
+Revision 1 (effective 2030-01-01, since superseded) recorded: {"subject": "Bluebird intake manifold", "operating tier": "GAMMA-BLUE"}
+[E5]
+Revision 1 (effective 2030-01-01, since superseded) recorded: {"subject": "Quail intake manifold", "operating tier": "ALPHA-RED"}
+[E6]
+Revision 1 (effective 2030-01-01, since superseded) recorded: [operating tier] Auk intake manifold -> GAMMA-BLUE
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

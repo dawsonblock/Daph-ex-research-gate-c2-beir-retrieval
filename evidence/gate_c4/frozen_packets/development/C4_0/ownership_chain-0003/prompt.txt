@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which ownership tier applies to GRU-2?
+[EVIDENCE]
+[E1]
+Abbreviation table: GRU-2 = Gannet relay unit.
+[E2]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E3]
+Note: the ownership tier for Marlin pressure assembly resolves to DELTA-AMBER.
+[E4]
+Registry entry: Nimbus intake manifold — ownership tier — {"tier": "suspended"}.
+[E5]
+Per the ownership tier register, 7362 is allocated to Wren control module.
+[E6]
+{"subject": "Bluebird sensor array", "ownership tier": "GAMMA-BLUE"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

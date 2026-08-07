@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "170f041e9a01968da676f347f49e281f3feb3d69d09eb3877d9a5753e7895773",
+  "canonical_subject": "Quail relay unit",
+  "ordered_selected_ids": [
+    "configuration_chain-0006/dead-end-1",
+    "temporal_chain-0002/link",
+    "temporal_chain-0002/current",
+    "temporal_chain-0009/superseded",
+    "configuration_chain-0000/dead-end-0",
+    "location_chain-0002/dead-end-0"
+  ],
+  "ordered_text_sha256": [
+    "3cbf87e0b42d92ce346974900e0947f4fca5ae915204d8dd73258e53060ced0d",
+    "54054a61a5fed5201bea5a77b46d5a3e4f2fcd4907b29eeefe9b58f21fed464d",
+    "bef9aea194f548068dbc56abed2fbd580aac16be487c565b86a4c7cb997bef4f",
+    "8499ea7d9c2cd40864ab2cb1b37575d2365d35108e3ef73c04c37d906acfaddd",
+    "9d87cdb0dc7c3d4d55283acea1a9e05cf4c7aeef26814335238c740f605d77a6",
+    "3c74a3dcd01a8bd34c7967cb14a812a403507c2c64348f55f7c062feba0e2804"
+  ],
+  "query_hash": "afbe690052bb67e1d3bb2e7ebfee9035381eae31a144ccb92184c38080f954e3",
+  "selector_policy_id": "s2c",
+  "task_id": "temporal_chain-0002"
+}

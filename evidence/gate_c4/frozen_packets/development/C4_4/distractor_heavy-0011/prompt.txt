@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For DSA-1, which routing class is recorded?
+[EVIDENCE]
+[E1]
+DSA-7 is the short code for Dunlin sensor array.
+[E2]
+subject=Dunlin sensor array; proposed routing class={"category": "suspended"} Status: rejected.
+[E3]
+In shorthand, Dunlin sensor array is written DSA-1.
+[E4]
+subject=Dunlin sensor array; former routing class={"category": "retired"} This record is historical.
+[E5]
+Engineering notes indicate Dunlin sensor array uses {"tier": "provisional"} as its routing class.
+[E6]
+Engineering notes indicate Dunlin sensor array uses {"tier": "accredited"} as its proposed routing class. Status: rejected.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

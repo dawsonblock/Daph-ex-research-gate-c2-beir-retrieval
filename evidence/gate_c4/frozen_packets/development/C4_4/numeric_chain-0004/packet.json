@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "43690948cf58a8076277a7cef522f35752698e4f2b5835eefe484d912fcd223a",
+  "canonical_subject": "Osprey relay unit",
+  "ordered_selected_ids": [
+    "configuration_chain-0000/dead-end-0",
+    "configuration_chain-0001/dead-end-0",
+    "ownership_chain-0001/identity",
+    "dependency_chain-0007/dead-end-0",
+    "location_chain-0002/dead-end-0",
+    "numeric_chain-0002/rejected-1"
+  ],
+  "ordered_text_sha256": [
+    "9d87cdb0dc7c3d4d55283acea1a9e05cf4c7aeef26814335238c740f605d77a6",
+    "77045f992c58954d787ddcfc9c84dfdd72827e0d4d1041c4f5b93e0a560c8cf5",
+    "e511ee38287edbb5bfa637eb4899d90e4e3f028379511118ad3aea0b9f92db0c",
+    "86158daba130259aaa944e18e110a9f6c89fee5e1855153d3caf54a14d04a2ee",
+    "3c74a3dcd01a8bd34c7967cb14a812a403507c2c64348f55f7c062feba0e2804",
+    "fc267cbb7c4456192a0f5f222c1bc7e7295e46c352e47cf95215dc3ad4a2dde9"
+  ],
+  "query_hash": "627e0440afbcb6a58073f0daaac9cf8d3b2f5f78367cffc65d1a060e24299628",
+  "selector_policy_id": "s2c",
+  "task_id": "numeric_chain-0004"
+}

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to Quail sensor array?
+[EVIDENCE]
+[E1]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Per the operating tier register, 4792 is allocated to Auk sensor array.
+[E2]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Engineering notes indicate Gannet sensor array uses 5038 as its operating tier.
+[E3]
+Revision 2 (effective 2031-06-01) supersedes revision 1: - updated Finch sensor array: operating tier now {"tier": "provisional"}
+[E4]
+Revision 2 (effective 2031-06-01) supersedes revision 1: {"subject": "Quail intake manifold", "operating tier": "EPSILON-SLATE"}
+[E5]
+Revision applied — Auk sensor array spare enclosure changed to Quail drive cluster.
+[E6]
+Revision 1 (effective 2030-01-01, since superseded) recorded: {"subject": "Quail intake manifold", "operating tier": "ALPHA-RED"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which ownership tier applies to GRU-2?
+[EVIDENCE]
+[E1]
+Abbreviation table: GRU-2 = Gannet relay unit.
+[E2]
+[change] Gannet relay unit :: ownership tier := {"grade": "quarantined"}
+[E3]
+GRU-2 is the short code for Gannet relay unit.
+[E4]
+[former routing class] Pelican control module -> {"tier": "provisional"} This record is historical.
+[E5]
+Engineering notes indicate Dunlin sensor array uses {"tier": "provisional"} as its routing class.
+[E6]
+During setup, Heron sensor array was paired with {"tier": "retired"} for billing multiplier.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

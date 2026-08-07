@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For OCM-3, which release channel is recorded?
+[EVIDENCE]
+[E1]
+It is recorded in the release channel registry that Curlew intake manifold holds GAMMA-BLUE.
+[E2]
+For Kestrel intake manifold, release channel requires 7729.
+[E3]
+For Bittern drive cluster, release channel requires quarantined.
+[E4]
+For Ibis drive cluster, release channel requires {"grade": "quarantined"}.
+[E5]
+In shorthand, Osprey control module is written OCM-3.
+[E6]
+[release channel] Auk drive cluster -> BETA-GREEN
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.
