@@ -28,7 +28,7 @@
   "environment_note": "Installing FlagEmbedding downgraded transformers to 4.57.6, and the HRM adapter's pinned-version guard refused to load rather than silently using a different architecture. FlagEmbedding is removed; transformers restored to 5.14.1. The guard did exactly its job.",
   "gates": {
     "gate_a0_controlled_evidence_use": "PASS",
-    "gate_a1_structural_generalization": "PENDING_AWAITING_V4",
+    "gate_a1_structural_generalization": "PASS_V4_FROZEN_AND_USED",
     "gate_b_single_pass_retrieval": "PASS",
     "gate_c0_controlled_iterative_retrieval": "MECHANISM_SUCCESS_PROMOTION_BLOCKED_BY_BENCHMARK_STRUCTURE",
     "gate_c1_structural_generalization_iterative_retrieval": "FAIL_MEASURED_ON_V4",
@@ -51,7 +51,7 @@
     "gate_k_consolidation": "BLOCKED",
     "gate_l_latent_memory": "BLOCKED",
     "gate_n1_natural_external_memory": "PENDING",
-    "gate_c4_integrated_memory_pipeline": "IN_PROGRESS_CONFORMANCE_PLAN_BRIDGE_QUALIFICATION_REQUIRED_BEFORE_HRM_RERUN",
+    "gate_c4_integrated_memory_pipeline": "IN_PROGRESS_C4_V2_DEVELOPMENT_RERUN_PARTIAL_PROTOCOL_AND_DETERMINISM_INFRASTRUCTURE_READY",
     "gate_c4_bridge_runtime_acquisition": "FAIL_NO_RUNTIME_BRIDGE_MECHANISM_BEATS_ONE_PASS_BASELINE"
   },
   "gate_lineage": {
@@ -82,7 +82,7 @@
     "slot_label_echo": "99 -> 0 under precision packing; was an evidence-confusability artefact, not a prompt-interface or reasoning limit",
     "slot_label_echoes": "Track evidence quality, not packet format: 85 -> 28 under precision packing, -> 3 under oracle evidence. F-arms would measure a symptom; implemented but unrun."
   },
-  "next_work": "C4-BRIDGE gate COMPLETE: NEGATIVE RESULT. No runtime bridge mechanism beats one-pass baseline. C4 will use one-pass pipeline (no iterative retrieval). Next: (1) disable iterative retrieval in C4 harness, (2) diagnose S2c canonical regression, (3) upgrade analyzer with family/cluster/template CIs, (4) regenerate conformant dry run, (5) HRM smoke test, (6) full conformant development rerun. Central rule remains: DO NOT rerun HRM until all conformance fixes are complete.",
+  "next_work": "C4 v2 protocol and determinism infrastructure READY. Pre-HRM determinism qualified (120/120 identical packet hashes across hash seeds). Metric layer repaired (composite quality centralized in c4.metrics, OGC uses C4_4 not C4_5). Packet membership vs ordering separated. Frozen packet artifacts generated. Fail-closed runner implemented. Partial development run exists but is INCOMPLETE (C4_4 90/120, C4_5/C4_6 missing) and stored quality was binary not composite — must rerun from scratch on Colab T4. Next: (1) run colab_c4_requalify.py on T4 GPU for full 120x7 v2 development run, (2) verify composite quality in receipts, (3) run analyzer for family/cluster CIs and OGC/SGC, (4) write RESULTS.sha256 last, (5) apply D1-D8 promotion gates, (6) only then decide whether development authorizes qualification split.",
   "ood_taxonomy": {
     "REFERENTIAL_OOD": {
       "mechanism": "identity resolution + multi-hop retrieval",

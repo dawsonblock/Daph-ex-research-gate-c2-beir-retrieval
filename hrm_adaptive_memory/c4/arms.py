@@ -88,10 +88,40 @@ ARMS: dict[str, C4Arm] = {
         evidence_policy="bounded_packet",
         classification="CEILING",
     ),
+    # ── Diagnostic arms for ordering vs membership separation ──────────
+    # C4_3o: S0 membership + deterministic packet ordering (ordering-only)
+    # C4_4m: S2c membership + pool-order (membership-only, no deterministic order)
+    # These let you decompose Q(C4_4) - Q(C4_3) into:
+    #   ordering effect  = Q(C4_3o) - Q(C4_3)
+    #   membership effect = Q(C4_4m) - Q(C4_3)
+    #   combined effect   = Q(C4_4) - Q(C4_3)
+    "C4_3o": C4Arm(
+        arm_id="C4_3o",
+        description="diagnostic: S0 membership + deterministic packet ordering (ordering-only effect)",
+        query_policy="subject_preserving",
+        retrieval_policy="bm25_bge_fusion",
+        identity_policy="i3_explicit_identity",
+        selector_policy="s0",
+        evidence_policy="bounded_packet",
+        classification="DIAGNOSTIC",
+    ),
+    "C4_4m": C4Arm(
+        arm_id="C4_4m",
+        description="diagnostic: S2c membership + pool-order (membership-only effect, no deterministic order)",
+        query_policy="subject_preserving",
+        retrieval_policy="bm25_bge_fusion",
+        identity_policy="i3_explicit_identity",
+        selector_policy="s2c_with_s0_fallback",
+        evidence_policy="bounded_packet",
+        classification="DIAGNOSTIC",
+    ),
 }
 
 # Primary arm order for the development ladder
 PRIMARY_ORDER = ["C4_0", "C4_1", "C4_2", "C4_3", "C4_4", "C4_5", "C4_6"]
+
+# Diagnostic arm order (run after primary if desired)
+DIAGNOSTIC_ORDER = ["C4_3o", "C4_4m"]
 
 # Parity pairs: (arm_a, arm_b, expected_diff_field)
 PARITY_PAIRS = [

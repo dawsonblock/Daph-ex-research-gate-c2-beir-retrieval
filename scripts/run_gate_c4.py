@@ -13,7 +13,7 @@ Protocol hash is embedded in every manifest to prevent config drift.
 """
 from __future__ import annotations
 
-import argparse, hashlib, json, os, sys, time
+import argparse, hashlib, json, os, subprocess, sys, time
 from pathlib import Path
 from dataclasses import asdict
 
@@ -59,6 +59,15 @@ def _protocol_hash() -> str:
     else:
         protocol_path = ROOT / "configs/gate_c4_protocol.json"
     return hashlib.sha256(protocol_path.read_bytes()).hexdigest()
+
+
+def _detect_device() -> str:
+    """Detect torch device without importing at module level."""
+    try:
+        import torch
+        return "cuda" if torch.cuda.is_available() else "cpu"
+    except ImportError:
+        return "cpu"
 
 
 def _load_split(split: str) -> tuple[list[dict], list[dict], dict[str, str]]:
@@ -468,9 +477,14 @@ def run_smoke(split: str = "development"):
         "protocol_sha256": _protocol_hash(),
         "arm_ids": arm_ids,
         "task_count": len(tasks),
+        "git_commit": subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip(),
         "hrm_model_id": adapter.spec.model_id,
         "hrm_model_revision": adapter.spec.revision,
         "hrm_max_new_tokens": HRM_MAX_NEW_TOKENS,
+        "device": _detect_device(),
+        "dtype": os.environ.get("HRM_DTYPE", "float32"),
+        "generation_condition": "DIRECT",
         "created_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
@@ -597,9 +611,13 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
         tokens = sum(r["runtime_payload"]["packet"]["packet_token_count"] for r in receipts) / n
         print(f"{arm_id:<8} {q:8.3f} {dq:8.3f} {correct:8.3f} {csr:8.3f} {ans:8.3f} {brg:8.3f} {idr:8.3f} {tokens:8.1f}")
 
-    # Manifest (self-describing)
+    # Manifest (self-describing, fully populated)
     from hrm_adaptive_memory.retrieval.embedding import BGE_SMALL
-    from hrm_adaptive_memory.c4.contracts import C4_CANDIDATE_BUDGET, C4_RRF_K
+    from hrm_adaptive_memory.c4.contracts import (
+        C4_CANDIDATE_BUDGET, C4_RRF_K, C4_PRIMARY_PACKET_BUDGET)
+    import torch as _torch
+    _device = _detect_device()
+    _dtype = os.environ.get("HRM_DTYPE", "float32")
     manifest = build_manifest(
         repo=ROOT, mode="full", split=split, arm_ids=arm_ids,
         task_count=len(tasks),
@@ -611,15 +629,46 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
         hrm_max_new_tokens=HRM_MAX_NEW_TOKENS,
         bge_model_id=BGE_SMALL.get("model_id", ""),
         bge_revision=BGE_SMALL.get("revision", ""),
+        pooling=BGE_SMALL.get("pooling", ""),
+        normalization=str(BGE_SMALL.get("normalize", False)),
+        query_prefix=BGE_SMALL.get("query_prefix", ""),
         candidate_budget=C4_CANDIDATE_BUDGET,
+        packet_budget=C4_PRIMARY_PACKET_BUDGET,
         rrf_k=C4_RRF_K,
+        query_policy_version="v1_frozen",
+        bridge_policy_version="excluded_from_primary_c4",
+        identity_policy_version="i3_v1",
+        selector_version="s2c_deterministic_v1",
+        selector_config_hash=hashlib.sha256(
+            json.dumps({
+                "selector": "s2c_with_s0_fallback",
+                "packet_budget": C4_PRIMARY_PACKET_BUDGET,
+                "candidate_budget": C4_CANDIDATE_BUDGET,
+            }, sort_keys=True).encode()).hexdigest()[:16],
+        device=_device,
+        dtype=_dtype,
+        batch_size=1,
         generation_condition="DIRECT",
     )
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
 
-    # RESULTS.sha256
+    # Run analyzer to produce analysis.json BEFORE hashing
+    print("\n--- Running analyzer ---")
+    analyzer_cmd = [sys.executable, str(ROOT / "scripts/analyze_gate_c4.py"),
+                    "--dir", str(out_dir),
+                    "--output", str(out_dir / "analysis.json")]
+    analyzer_ret = subprocess.run(analyzer_cmd, capture_output=True, text=True)
+    if analyzer_ret.stdout:
+        print(analyzer_ret.stdout)
+    if analyzer_ret.returncode != 0:
+        print(f"  WARNING: Analyzer failed: {analyzer_ret.stderr[-300:]}")
+    else:
+        print("  Analysis complete.")
+
+    # RESULTS.sha256 written LAST, after all artifacts exist
     write_results_hash(out_dir)
     print(f"\n  receipts: {out_dir}")
+    print(f"  RESULTS.sha256 written last (after analysis)")
 
 
 def run_dry_run(split: str = "development", arm_ids: list[str] | None = None):

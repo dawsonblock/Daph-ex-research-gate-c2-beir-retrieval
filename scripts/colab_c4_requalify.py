@@ -234,6 +234,17 @@ def main():
               "Full Development Run", stream=True, check=True)
     print("  Full run complete!")
 
+    # ── Step 10b: Diagnostic arms (ordering vs membership separation) ───
+    step("10b", TOTAL_STEPS, "Diagnostic arms: C4_3o (S0+order) + C4_4m (S2c+pool-order)...")
+    print("  These decompose Q(C4_4) - Q(C4_3) into ordering vs membership effects.")
+    print("  ~5 minutes on T4 (240 additional generations)\n")
+
+    ret = run(["python", "scripts/run_gate_c4.py", "full", "--split", "development",
+               "--arms", "C4_3o", "C4_4m"],
+              "Diagnostic Arms (ordering vs membership)", stream=True, check=False)
+    if ret != 0:
+        print("  WARNING: Diagnostic arms failed (non-fatal, continuing)")
+
     # ── Step 11: Run analyzer ───────────────────────────────────────────
     step(11, TOTAL_STEPS, "Running analyzer (quality, gap capture, family CIs, flips)...")
 
@@ -303,6 +314,22 @@ def main():
             print(f"  Oracle gap capture:   {ogc:.4f}")
         if sgc is not None:
             print(f"  Selector gap capture: {sgc:.4f}")
+
+        # Ordering vs membership decomposition (if diagnostic arms exist)
+        aq = analysis.get("arm_quality", {})
+        q3 = aq.get("C4_3")
+        q3o = aq.get("C4_3o")
+        q4m = aq.get("C4_4m")
+        q4 = aq.get("C4_4")
+        if all(x is not None for x in [q3, q3o, q4m, q4]):
+            print(f"\n  Ordering vs Membership decomposition:")
+            print(f"    Q(C4_3)  = {q3:.4f}  (baseline: S0 + pool order)")
+            print(f"    Q(C4_3o) = {q3o:.4f}  (S0 + deterministic order)")
+            print(f"    Q(C4_4m) = {q4m:.4f}  (S2c + pool order)")
+            print(f"    Q(C4_4)  = {q4:.4f}  (S2c + deterministic order)")
+            print(f"    Ordering effect:   Q(C4_3o) - Q(C4_3) = {q3o - q3:+.4f}")
+            print(f"    Membership effect: Q(C4_4m) - Q(C4_3) = {q4m - q3:+.4f}")
+            print(f"    Combined effect:   Q(C4_4)  - Q(C4_3) = {q4 - q3:+.4f}")
 
     # RESULTS.sha256
     results_hash_path = out_dir / "RESULTS.sha256"
