@@ -1,0 +1,15 @@
+{
+  "audit": "gate_c3_i4_opportunity",
+  "corpus": "controlled_gate_c3_v1",
+  "decision_rule": "I4OpportunityRate < 0.25 => skip; >= 0.25 => authorize",
+  "definitions": {
+    "A": "RESOLVABLE_BY_SECOND_IDENTITY_EDGE",
+    "B": "RESOLVABLE_BY_NON_IDENTITY_CONTEXT",
+    "C": "GENUINELY_CONFLICTING_SURFACE_MAPPING",
+    "D": "REQUIRED_DISAMBIGUATING_EVIDENCE_ABSENT"
+  },
+  "description": "Classifies each ambiguous I3 task into A/B/C/D to determine whether I4 has measured opportunity.",
+  "frozen_threshold": 0.25,
+  "partition": "c3v1_surface",
+  "protocol_version": "v2_pre_measurement_amended"
+}

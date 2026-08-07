@@ -40,7 +40,7 @@
     "gate_c2c_chain_completion_qualified": "PASS_all_four_regimes_on_identifiable_corpus",
     "gate_c2c_v2_chain_validation": "FAIL_ON_A_TRANSPLANTED_DESCRIPTION_THRESHOLD",
     "gate_c2c_v3_chain_validation": "FAIL_description_regime_only",
-    "gate_c3_surface_identity_resolution": "IN_PROGRESS_I0_I1_I2_I3_MEASURED_I3_PROMOTED",
+    "gate_c3_surface_identity_resolution": "MECHANISM_SUCCESS_I3_IDENTITY_RECORD_RESOLUTION",
     "gate_d_conditional_retrieval_opportunity": "PENDING_ACTION_TOO_WEAK_TO_MEASURE",
     "gate_e_learned_retrieval_control": "BLOCKED",
     "gate_f_recurrence_opportunity": "BLOCKED",
@@ -80,7 +80,7 @@
     "slot_label_echo": "99 -> 0 under precision packing; was an evidence-confusability artefact, not a prompt-interface or reasoning limit",
     "slot_label_echoes": "Track evidence quality, not packet format: 85 -> 28 under precision packing, -> 3 under oracle evidence. F-arms would measure a symptom; implemented but unrun."
   },
-  "next_work": "Gate C3 I3 measured and PROMOTED: identity-record retrieval resolves 92/100 surface tasks correctly with 0% false resolution, 8% ambiguous (correct abstention), 0% unresolved. S2cLiveRate=0.92 (chains now active when anchor resolved). IdentityMappingExtractionRate=1.0. Gains across all 10 families. The 8 ambiguous tasks have surfaces that appear in multiple conflicting identity records — I3 correctly abstains rather than guessing. I3 is the surface-normalization layer. I4 (bounded canonicalization through retrieved identity edges) has NOT been run. Since I3 already achieves 92% correct resolution, I4 may have limited opportunity (only the 8 ambiguous tasks could benefit from deeper traversal). Stopping before I4 per the protocol ladder. No HRM.",
+  "next_work": "Gate C3 CLOSED with MECHANISM_SUCCESS_I3_IDENTITY_RECORD_RESOLUTION. I4 skipped (I4OpportunityRate=0.125 < 0.25 threshold; 7/8 ambiguous tasks are genuine conflicts). Final report at GATE_C3_REPORT.md. Next: Gate C4 (Integrated Non-Oracle Memory Pipeline) — freeze protocol, build InformationState contract, implement C4-0 through C4-6, run development first, then qualification/OOD. No HRM until C4 proves RETRIEVE is a useful real action.",
   "ood_taxonomy": {
     "REFERENTIAL_OOD": {
       "mechanism": "identity resolution + multi-hop retrieval",
@@ -862,6 +862,28 @@
       "report": "evidence/gate_c3/i0_i1_i2_i3_receipt.json",
       "experiment_verdict": "I3_PROMOTED_IDENTITY_RECORD_RETRIEVAL_RESOLVES_SURFACE_DEFECT",
       "earned_claim": "Reading the explicit surface-to-canonical mapping from runtime-visible identity records resolves the surface identity defect on the sixth-vocabulary corpus. The mechanism is safe: 0% false resolution, 8% correct abstention on conflicting mappings, 92% correct resolution. The parser (extract_identity_links) correctly extracts mappings at 100% rate when the identity record is present."
+    },
+    "gate_c3_i4_opportunity": {
+      "claim": "I4 opportunity audit: I4OpportunityRate=0.125 < 0.25 threshold. Of 8 ambiguous I3 tasks: 0 resolvable by second identity edge (A), 1 by non-identity context (B), 7 genuinely conflicting (C), 0 missing evidence (D). I4 skipped — insufficient measured opportunity for deeper identity traversal.",
+      "not_a_claim_about": [
+        "context disambiguation in a real retrieval pipeline with smaller pools, which is a C4 question",
+        "I4 implementation, which was not built"
+      ],
+      "report": "evidence/gate_c3/i4_opportunity/metrics.json",
+      "experiment_verdict": "I4_NO_MEASURED_OPPORTUNITY_SKIP",
+      "earned_claim": "The 8 ambiguous I3 tasks have insufficient opportunity for bounded canonicalization through identity edges. 7/8 are genuine surface collisions where two tasks share the same alias but map to different canonicals."
+    },
+    "gate_c3_final": {
+      "claim": "Gate C3 is closed. I3 identity-record retrieval is the qualified surface-normalization mechanism: 92% correct, 0% false resolution, 8% correct abstention on genuine conflicts, 92% S2cLiveRate. I0/I1/I2 are negative controls confirming the defect is identity-link resolution, not normalization or truncation. I4 is skipped due to insufficient opportunity.",
+      "not_a_claim_about": [
+        "identity resolution being solved generally",
+        "alias ambiguity being solved",
+        "graph traversal being required",
+        "the integrated end-to-end pipeline working"
+      ],
+      "report": "GATE_C3_REPORT.md",
+      "experiment_verdict": "MECHANISM_SUCCESS_I3_IDENTITY_RECORD_RESOLUTION",
+      "earned_claim": "Reading explicit surface-to-canonical mappings from runtime-visible identity records resolves the surface identity defect on a fresh sixth-vocabulary corpus with 92% accuracy and 0% false resolution."
     }
   },
   "testing_policy": "Tests assert structured state, never exact strings against narrative prose. Three separate failures came from matching capitalisation in text written separately from the assertion; the pattern was wrong, not merely careless. Prose is rendered from state, and state is what is tested.",
