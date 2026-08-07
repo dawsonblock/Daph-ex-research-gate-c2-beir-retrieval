@@ -36,6 +36,8 @@ from hrm_adaptive_memory.c4.parity import (
     validate_all_parity, validate_no_leakage,
     validate_selected_in_pool, validate_packet_budgets)
 from hrm_adaptive_memory.evaluation.verifiers import verify_answer as _verify_answer_shared
+from hrm_adaptive_memory.c4.provenance import (
+    build_manifest, write_results_hash, sha256_corpus)
 
 CORPUS = ROOT / "data/hrm/controlled_gate_a_v4"
 OUT = ROOT / "evidence/gate_c4"
@@ -560,19 +562,28 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
         tokens = sum(r["runtime_payload"]["packet"]["packet_token_count"] for r in receipts) / n
         print(f"{arm_id:<8} {q:8.3f} {dq:8.3f} {correct:8.3f} {csr:8.3f} {ans:8.3f} {brg:8.3f} {idr:8.3f} {tokens:8.1f}")
 
-    # Manifest
-    manifest = {
-        "mode": "full",
-        "split": split,
-        "protocol_sha256": _protocol_hash(),
-        "arm_ids": arm_ids,
-        "task_count": len(tasks),
-        "hrm_model_id": adapter.spec.model_id,
-        "hrm_model_revision": adapter.spec.revision,
-        "hrm_max_new_tokens": HRM_MAX_NEW_TOKENS,
-        "created_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-    }
+    # Manifest (self-describing)
+    from hrm_adaptive_memory.retrieval.embedding import BGE_SMALL
+    from hrm_adaptive_memory.c4.contracts import C4_CANDIDATE_BUDGET, C4_RRF_K
+    manifest = build_manifest(
+        repo=ROOT, mode="full", split=split, arm_ids=arm_ids,
+        task_count=len(tasks),
+        protocol_sha256=_protocol_hash(),
+        task_corpus_sha256=sha256_corpus(CORPUS / split / "oracle_tasks.jsonl"),
+        evidence_corpus_sha256=sha256_corpus(CORPUS / split / "evidence.jsonl"),
+        hrm_model_id=adapter.spec.model_id,
+        hrm_model_revision=adapter.spec.revision,
+        hrm_max_new_tokens=HRM_MAX_NEW_TOKENS,
+        bge_model_id=BGE_SMALL.get("model_id", ""),
+        bge_revision=BGE_SMALL.get("revision", ""),
+        candidate_budget=C4_CANDIDATE_BUDGET,
+        rrf_k=C4_RRF_K,
+        generation_condition="DIRECT",
+    )
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
+    # RESULTS.sha256
+    write_results_hash(out_dir)
     print(f"\n  receipts: {out_dir}")
 
 
@@ -623,21 +634,23 @@ def run_dry_run(split: str = "development", arm_ids: list[str] | None = None):
                 "evaluator_annotation": r.evaluator_annotation,
             }, sort_keys=True) + "\n" for r in receipts))
 
-    manifest = {
-        "mode": "dry_run",
-        "split": split,
-        "protocol_sha256": _protocol_hash(),
-        "arm_ids": arm_ids,
-        "task_count": len(tasks),
-        "validation": {
-            "no_leakage": validate_no_leakage(all_results)[0],
-            "parity": validate_all_parity(all_results)[0],
-            "selected_in_pool": validate_selected_in_pool(all_results)[0],
-            "packet_budgets": validate_packet_budgets(all_results)[0],
-        },
-        "created_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    manifest = build_manifest(
+        repo=ROOT, mode="dry_run", split=split, arm_ids=arm_ids,
+        task_count=len(tasks),
+        protocol_sha256=_protocol_hash(),
+        task_corpus_sha256=sha256_corpus(CORPUS / split / "oracle_tasks.jsonl"),
+        evidence_corpus_sha256=sha256_corpus(CORPUS / split / "evidence.jsonl"),
+    )
+    manifest["validation"] = {
+        "no_leakage": validate_no_leakage(all_results)[0],
+        "parity": validate_all_parity(all_results)[0],
+        "selected_in_pool": validate_selected_in_pool(all_results)[0],
+        "packet_budgets": validate_packet_budgets(all_results)[0],
     }
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
+    # RESULTS.sha256
+    write_results_hash(out_dir)
     print(f"\n  receipts: {out_dir}")
     all_pass = all(manifest["validation"].values())
     if all_pass:

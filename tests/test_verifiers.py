@@ -142,3 +142,139 @@ def test_parity_canonical_must_be_last():
     task = _make_task("canonical", "alpha")
     output = "alpha beta"
     assert historical_verify(task, output) == verify_answer("canonical", task.answer, output)
+
+
+# --- Extended coverage: symbolic, enum, boolean, json_field ---
+
+def test_symbolic_answer_with_control_token():
+    """Symbolic answers (e.g. THETA-OLIVE) must survive control token stripping."""
+    score, passed = verify_answer("canonical", "THETA-OLIVE", "THETA-OLIVE<|box_end|>")
+    assert passed and score == 1.0
+
+
+def test_enum_answer():
+    """Enum answers (e.g. 'accredited', 'provisional') use canonical verifier."""
+    score, passed = verify_answer("canonical", "accredited", "accredited<|box_end|>")
+    assert passed and score == 1.0
+
+
+def test_enum_answer_mismatch():
+    score, passed = verify_answer("canonical", "accredited", "provisional<|box_end|>")
+    assert not passed and score == 0.0
+
+
+def test_boolean_answer_true():
+    """Boolean answers use canonical verifier."""
+    score, passed = verify_answer("canonical", "true", "true<|box_end|>")
+    assert passed and score == 1.0
+
+
+def test_boolean_answer_false():
+    score, passed = verify_answer("canonical", "false", "false<|box_end|>")
+    assert passed and score == 1.0
+
+
+def test_json_field_answer():
+    """JSON field answers (e.g. '{"grade": "accredited"}') use canonical verifier."""
+    score, passed = verify_answer("canonical", '{"grade": "accredited"}', '{"grade": "accredited"}<|box_end|>')
+    assert passed and score == 1.0
+
+
+def test_json_field_answer_with_extra_text():
+    """JSON field answer must be the last candidate, not embedded in other text."""
+    score, passed = verify_answer("canonical", "accredited", "provisional accredited<|box_end|>")
+    assert passed and score == 1.0
+
+
+# --- Case and whitespace differences ---
+
+def test_case_difference_exact():
+    score, passed = verify_answer("exact", "Alpha", "ALPHA")
+    assert passed and score == 1.0
+
+
+def test_case_difference_canonical():
+    score, passed = verify_answer("canonical", "Theta-Olive", "theta-olive<|box_end|>")
+    assert passed and score == 1.0
+
+
+def test_whitespace_difference_exact():
+    score, passed = verify_answer("exact", "alpha  beta", "alpha beta")
+    assert passed and score == 1.0
+
+
+def test_whitespace_with_newlines():
+    score, passed = verify_answer("exact", "alpha", "\n  alpha  \n")
+    assert passed and score == 1.0
+
+
+def test_leading_trailing_whitespace_canonical():
+    score, passed = verify_answer("canonical", "alpha beta", "  alpha beta  <|box_end|>")
+    assert passed and score == 1.0
+
+
+# --- Extended parity: all verifier types ---
+
+def test_parity_symbolic():
+    task = _make_task("canonical", "THETA-OLIVE")
+    output = "THETA-OLIVE<|box_end|>"
+    assert historical_verify(task, output) == verify_answer("canonical", task.answer, output)
+
+
+def test_parity_enum():
+    task = _make_task("canonical", "accredited")
+    output = "accredited<|box_end|>"
+    assert historical_verify(task, output) == verify_answer("canonical", task.answer, output)
+
+
+def test_parity_boolean():
+    task = _make_task("canonical", "true")
+    output = "true<|box_end|>"
+    assert historical_verify(task, output) == verify_answer("canonical", task.answer, output)
+
+
+def test_parity_case_difference():
+    task = _make_task("exact", "Alpha")
+    output = "ALPHA<|box_end|>"
+    assert historical_verify(task, output) == verify_answer("exact", task.answer, output)
+
+
+def test_parity_whitespace():
+    task = _make_task("exact", "alpha beta")
+    output = "alpha   beta<|box_end|>"
+    assert historical_verify(task, output) == verify_answer("exact", task.answer, output)
+
+
+# --- Frozen fixture set: assert historical == shared for all types ---
+
+FROZEN_FIXTURES = [
+    ("exact", "THETA-OLIVE", "THETA-OLIVE<|box_end|>"),
+    ("exact", "alpha", "alpha"),
+    ("exact", "Alpha", "alpha"),
+    ("exact", "alpha beta", "alpha   beta"),
+    ("exact", "42", "42<|box_end|>"),
+    ("exact", "alpha", "beta"),
+    ("numeric", "42", "42<|box_end|>"),
+    ("numeric", "3.14", "3.14"),
+    ("numeric", "42", "7 and 42"),
+    ("numeric", "42", "7"),
+    ("canonical", "THETA-OLIVE", "THETA-OLIVE<|box_end|>"),
+    ("canonical", "alpha beta", "alpha beta<|box_end|>"),
+    ("canonical", "alpha", "alpha beta"),
+    ("canonical", "alpha", "beta<|box_end|>"),
+    ("canonical", "accredited", "accredited<|box_end|>"),
+    ("canonical", "true", "true<|box_end|>"),
+    ("canonical", "false", "false<|box_end|>"),
+]
+
+
+def test_frozen_fixture_set_historical_equals_shared():
+    """For every frozen fixture, historical verifier == shared verifier."""
+    for verifier, answer, output in FROZEN_FIXTURES:
+        task = _make_task(verifier, answer)
+        h = historical_verify(task, output)
+        s = verify_answer(verifier, answer, output)
+        assert h == s, (
+            f"Parity failure: verifier={verifier!r} answer={answer!r} "
+            f"output={output!r}: historical={h} shared={s}"
+        )

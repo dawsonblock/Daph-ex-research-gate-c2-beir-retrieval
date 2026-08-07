@@ -167,3 +167,43 @@ def test_none_policy_still_unresolved():
         texts,
     )
     assert result.status == "UNRESOLVED"
+
+
+def test_exact_rejects_substring_distractor_mention():
+    """A subject that appears only as a substring inside a distractor entity
+    should NOT trigger EXACT. The tightened detection uses parsed entity
+    equality, not substring matching.
+
+    Example: 'Falcon control' is a substring of 'Falcon control module', but
+    if the evidence only mentions 'Falcon control module', the subject
+    'Falcon control' should not be classified as EXACT.
+    """
+    texts = {
+        "distractor-0000/fact": "Some record about Falcon control module was updated.",
+    }
+    result = run_identity_stage(
+        "Which assigned category applies to Falcon control?",
+        _ARM_I3,
+        _retrieval(["distractor-0000/fact"]),
+        texts,
+    )
+    # 'Falcon control' is NOT a parsed V4 entity in the text —
+    # 'Falcon control module' is. So EXACT should not fire.
+    assert result.status == "UNRESOLVED"
+
+
+def test_exact_requires_full_entity_match():
+    """The subject must match a full parsed V4 entity, not just appear as
+    a substring in the evidence text."""
+    texts = {
+        "entity_attribute-0000/fact": "During setup, Sparrow intake manifold was paired with 1424.",
+    }
+    result = run_identity_stage(
+        "Which assigned category applies to Sparrow intake manifold?",
+        _ARM_I3,
+        _retrieval(["entity_attribute-0000/fact"]),
+        texts,
+    )
+    # 'Sparrow intake manifold' IS a parsed V4 entity in the text
+    assert result.status == "EXACT"
+    assert result.canonical == "Sparrow intake manifold"

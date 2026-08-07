@@ -51,7 +51,8 @@
     "gate_k_consolidation": "BLOCKED",
     "gate_l_latent_memory": "BLOCKED",
     "gate_n1_natural_external_memory": "PENDING",
-    "gate_c4_integrated_memory_pipeline": "IN_PROGRESS_DEVELOPMENT_RESCORED_EVALUATOR_V2_IMPLEMENTATION_CONFORMANCE_FIXES_APPLIED"
+    "gate_c4_integrated_memory_pipeline": "IN_PROGRESS_CONFORMANCE_PLAN_BRIDGE_QUALIFICATION_REQUIRED_BEFORE_HRM_RERUN",
+    "gate_c4_bridge_runtime_acquisition": "PENDING_PRE_HRM_QUALIFICATION_GATE"
   },
   "gate_lineage": {
     "gate_c2_i_identity_resolution": "Gate C2-I was the earlier placeholder identity-resolution gate. Gate C3 (gate_c3_surface_identity_resolution) is the formal execution gate with a frozen protocol; the two must not remain as apparently active parallel identity-resolution gates. C2-I is therefore marked SUPERSEDED_BY_GATE_C3. No C2-I implementation or measurement existed; the substantive work continues under C3."
@@ -81,7 +82,7 @@
     "slot_label_echo": "99 -> 0 under precision packing; was an evidence-confusability artefact, not a prompt-interface or reasoning limit",
     "slot_label_echoes": "Track evidence quality, not packet format: 85 -> 28 under precision packing, -> 3 under oracle evidence. F-arms would measure a symptom; implemented but unrun."
   },
-  "next_work": "Gate C4 development run rescored with corrected verifier (evaluator_v2). Three implementation conformance fixes applied: (1) canonical EXACT identity state, (2) iterative subject+bridge+relation retrieval, (3) protocol erratum for unobservable alias/description criterion on development. Next: rerun C4 development with fixed pipeline (all 7 arms, 120 tasks), then analyze with analyze_gate_c4.py, then qualification/OOD if development passes. Partial qualification run (290 C4_0 rows) VOIDED \u2014 started before valid development gate.",
+  "next_work": "C4 conformance plan: (1) fix release lineage test, (2) qualify runtime bridge acquisition via C4-BRIDGE gate (B0-B4 arms, no HRM), (3) diagnose S2c canonical regression, (4) upgrade analyzer with family/cluster/template CIs, (5) regenerate conformant dry run, (6) only then rerun HRM. Central rule: DO NOT rerun HRM until runtime InformationState/bridge acquisition is qualified. Old development rescored_v2 preserved as HISTORICAL_C4_DEVELOPMENT_RESCORED_V2 MECHANISM_SIGNAL_NONFINAL. Partial development rerun (C4_0=120, C4_1=80) VOIDED \u2014 started before bridge qualification.",
   "ood_taxonomy": {
     "REFERENTIAL_OOD": {
       "mechanism": "identity resolution + multi-hop retrieval",
@@ -885,6 +886,72 @@
       "report": "GATE_C3_REPORT.md",
       "experiment_verdict": "MECHANISM_SUCCESS_I3_IDENTITY_RECORD_RESOLUTION",
       "earned_claim": "Reading explicit surface-to-canonical mappings from runtime-visible identity records resolves the surface identity defect on a fresh sixth-vocabulary corpus with 92% accuracy and 0% false resolution."
+    },
+    "gate_c4_historical_development_rescored_v2": {
+      "claim": "HISTORICAL_C4_DEVELOPMENT_RESCORED_V2: The old C4 development run showed a genuine integrated signal (ProtocolQuality C4-4 - C4-0 = +0.1792, grouped family CI [+0.106, +0.263], exceeding the +0.15 frozen threshold). This is a MECHANISM_SIGNAL_NONFINAL result.",
+      "not_a_claim_about": [
+        "the full two-pass mechanism being previously qualified",
+        "runtime bridge discovery being qualified",
+        "S2c behavior under the conformant candidate distribution",
+        "final C4 promotion"
+      ],
+      "claim_boundaries": [
+        "query formulation given correctly specified InformationState was qualified (Q3)",
+        "runtime bridge discovery itself has NOT been qualified",
+        "the current runtime bridge heuristic performs poorly and does not improve aggregate candidate coverage",
+        "S2c remains promising but behaves differently under the integrated candidate distribution",
+        "the old run is non-final because the implementation did not fully conform to the frozen mechanism definitions"
+      ],
+      "supported": [
+        "the old C4 development run showed a genuine integrated signal",
+        "the old run is non-final because the implementation did not fully conform",
+        "the shared verifier is now corrected",
+        "canonical EXACT identity handling is now corrected",
+        "subject + bridge + relation is a qualified query formulation GIVEN a correct bridge"
+      ],
+      "do_not_write": [
+        "the full two-pass mechanism was previously qualified"
+      ],
+      "instead_write": [
+        "query formulation given correctly specified InformationState was qualified"
+      ],
+      "scores": {
+        "C4_0": {
+          "ProtocolQuality": 0.1625,
+          "BinaryAccuracy": 0.1667
+        },
+        "C4_1": {
+          "ProtocolQuality": 0.1708,
+          "BinaryAccuracy": 0.1583
+        },
+        "C4_2": {
+          "ProtocolQuality": 0.2125,
+          "BinaryAccuracy": 0.1667
+        },
+        "C4_3": {
+          "ProtocolQuality": 0.2125,
+          "BinaryAccuracy": 0.1667
+        },
+        "C4_4": {
+          "ProtocolQuality": 0.3417,
+          "BinaryAccuracy": 0.2583
+        },
+        "C4_5": {
+          "ProtocolQuality": 0.7917,
+          "BinaryAccuracy": 0.8833
+        },
+        "C4_6": {
+          "ProtocolQuality": 0.9542,
+          "BinaryAccuracy": 0.9083
+        }
+      },
+      "primary_delta": {
+        "C4_4_vs_C4_0": 0.1792,
+        "CI_lower": 0.106,
+        "CI_upper": 0.263,
+        "threshold": 0.15
+      },
+      "report": "evidence/gate_c4/full/development_evaluator_v2/RESCORE_REPORT.md"
     }
   },
   "testing_policy": "Tests assert structured state, never exact strings against narrative prose. Three separate failures came from matching capitalisation in text written separately from the assertion; the pattern was wrong, not merely careless. Prose is rendered from state, and state is what is tested.",

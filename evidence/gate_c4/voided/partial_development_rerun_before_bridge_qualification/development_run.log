@@ -1,0 +1,8 @@
+Full run: 120 tasks × 7 arms on development
+
+--- Loading HRM model ---
+Loading weights:   0%|          | 0/131 [00:00<?, ?it/s]Loading weights: 100%|██████████| 131/131 [00:00<00:00, 4011.26it/s]
+  HRM loaded in 4.9s
+  C4_0...   C4_0: 10/120  C4_0: 20/120  C4_0: 30/120  C4_0: 40/120  C4_0: 50/120  C4_0: 60/120  C4_0: 70/120  C4_0: 80/120  C4_0: 90/120  C4_0: 100/120  C4_0: 110/120  C4_0: 120/120  C4_0: 120/120 in 1325.5s  Q=0.167
+  C4_1...   C4_1: 10/120  C4_1: 20/120  C4_1: 30/120  C4_1: 40/120  C4_1: 50/120  C4_1: 60/120  C4_1: 70/120  C4_1: 80/120/Users/dawsonblock/.pyenv/versions/3.12.0/lib/python3.12/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

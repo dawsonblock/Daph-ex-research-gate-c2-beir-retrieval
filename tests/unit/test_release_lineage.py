@@ -52,6 +52,8 @@ def test_research_status_declares_every_gate():
         "gate_c2c_v3_chain_validation",
         "gate_c2c_chain_completion_qualified",
         "gate_c3_surface_identity_resolution",
+        "gate_c4_integrated_memory_pipeline",
+        "gate_c4_bridge_runtime_acquisition",
         "gate_n1_natural_external_memory",
         "gate_d_conditional_retrieval_opportunity", "gate_e_learned_retrieval_control",
         "gate_f_recurrence_opportunity", "gate_g_adaptive_recurrence",

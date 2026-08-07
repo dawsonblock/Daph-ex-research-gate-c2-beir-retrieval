@@ -12,6 +12,7 @@ from ..retrieval.canonicalization import (
     extract_identity_links, IdentityLink, _norm)
 from .contracts import C4Arm, IdentityResolution, RetrievalResult
 from .query_stage import extract_subject
+from .bridge_extraction import extract_v4_entities
 
 
 class _Rec:
@@ -84,14 +85,22 @@ def run_identity_stage(question: str, arm: C4Arm,
 
     if not mappings:
         # No identity record maps this surface. Check if the subject is already
-        # a canonical entity: if it appears in non-identity evidence records in
-        # the candidate pool, it is a known canonical that needs no resolution.
+        # a canonical entity: if it appears as a parsed entity (not merely a
+        # substring) in non-identity evidence records in the candidate pool,
+        # it is a known canonical that needs no resolution.
         # This is the EXACT path required by the C4 protocol.
+        #
+        # Tightened from substring matching to parsed entity equality so an
+        # incidental distractor mention cannot make a surface form appear
+        # canonical. The subject must match a V4 entity extracted from the
+        # evidence content.
         if subject_raw:
-            subject_lower = subject_raw.lower()
+            subject_norm = _norm(subject_raw)
             for eid in retrieval.candidate_ids:
                 if eid in texts and "/identity" not in eid:
-                    if subject_lower in texts[eid].lower():
+                    entities = extract_v4_entities(texts[eid])
+                    entity_norms = {_norm(e) for e in entities}
+                    if subject_norm in entity_norms:
                         return IdentityResolution(
                             status="EXACT",
                             surface=subject_raw,
