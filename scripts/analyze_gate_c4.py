@@ -281,29 +281,23 @@ def role_retention_stats(receipts: list[dict]) -> dict:
 
 
 def selector_gap_capture(arms: dict[str, list[dict]]) -> float | None:
-    """SGC = (C4_4 - C4_3) / (C4_5 - C4_3)."""
-    if "C4_3" not in arms or "C4_4" not in arms or "C4_5" not in arms:
-        return None
-    q3 = arm_quality(arms["C4_3"])
-    q4 = arm_quality(arms["C4_4"])
-    q5 = arm_quality(arms["C4_5"])
-    gap = q5 - q3
-    if abs(gap) < 1e-9:
-        return None
-    return (q4 - q3) / gap
+    """SGC = (C4_4 - C4_3) / (C4_5 - C4_3).
+
+    Uses the shared metrics module for the authoritative formula."""
+    from hrm_adaptive_memory.c4.metrics import selector_gap_capture as _sgc
+    qualities = {arm_id: arm_quality(recs) for arm_id, recs in arms.items()}
+    return _sgc(qualities)
 
 
 def oracle_gap_capture(arms: dict[str, list[dict]]) -> float | None:
-    """OGC = (C4_5 - C4_0) / (C4_6 - C4_0)."""
-    if "C4_0" not in arms or "C4_5" not in arms or "C4_6" not in arms:
-        return None
-    q0 = arm_quality(arms["C4_0"])
-    q5 = arm_quality(arms["C4_5"])
-    q6 = arm_quality(arms["C4_6"])
-    gap = q6 - q0
-    if abs(gap) < 1e-9:
-        return None
-    return (q5 - q0) / gap
+    """OGC = (C4_4 - C4_0) / (C4_6 - C4_0).
+
+    Uses the shared metrics module for the authoritative formula.
+    Note: the numerator uses C4_4 (the actual mechanism), NOT C4_5
+    (oracle selector).  The oracle gap is defined against C4_6."""
+    from hrm_adaptive_memory.c4.metrics import oracle_gap_capture as _ogc
+    qualities = {arm_id: arm_quality(recs) for arm_id, recs in arms.items()}
+    return _ogc(qualities)
 
 
 def validate_parity(arms: dict[str, list[dict]]) -> dict:

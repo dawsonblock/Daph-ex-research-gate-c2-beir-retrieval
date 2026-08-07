@@ -1,0 +1,149 @@
+{
+  "archives": {
+    "run_A": {
+      "files": {
+        "C4_0.jsonl": "5fae0a08799731f56ae25507fbb9a130f8cc6480322a8961c3d4905ac31bebe6",
+        "C4_1.jsonl": "b36d9ca26bec8dbc0ba4b631d3e26955def8464e5b16419b790386a53054b445",
+        "C4_2.jsonl": "24660e61903bd051600cc4d82cda934cf0288c567ac776141ee646dbf04f1d71",
+        "C4_3.jsonl": "f35ccac2a495f7c750980c2f4b2f12aa4c0897b136f7a5d223b0d3a5115a4e69",
+        "C4_4.jsonl": "cc5286f6898407536b48aa4a004287c74e89897b01b4c88aa60784be590582fb",
+        "C4_5.jsonl": "e77dcb770e9d5929b1f77048b92160df8fc79525928ef5d0e15feffe3ed4e546",
+        "C4_6.jsonl": "7552f5bfbfd1deeede9e4a0b12201ede8c4def4aa64aa9ad73ad978b277bef58",
+        "manifest.json": "f9ab8ca4207379f9d64601c0ea2a3dcfeb403261bb45176b0802912539e2f7a9"
+      },
+      "git_commit": "c57b03e01e6b63037df4499974235303763257e2",
+      "protocol_sha256": "9dc35bb8704f41e14e49cbeacc6db1a64da517a60cbd36f2c6fce48433d228fb",
+      "source": "development_v1_superseded",
+      "timestamp": "2026-08-07T07:41:59Z"
+    },
+    "run_B": {
+      "files": {
+        "C4_0.jsonl": "eb14dffb069373ab8f416c24b64b7f290cba3be5dbee84727da2963df18c90b6",
+        "C4_1.jsonl": "66979e5a310d9a072f853c93693f621ef027f02c58c4ee5e544dfaa951292bce",
+        "C4_2.jsonl": "16d8956ca275b721a58f14f39fbb01484a505f21e884a66673509c8aa982cee5",
+        "C4_3.jsonl": "51e543b9da8b95c1ef5eddb3184e562718a7702b81d30fb5a04e4382aca06076",
+        "C4_4.jsonl": "4e5b40ff1eea4327a24cd11039a8e7dea18cf7fededb3199df195be72754ffdd",
+        "C4_5.jsonl": "bd317a3ba9433c4a63a203fa43a0f4c343762437c3639521f09c7af8f9b8a4bf",
+        "C4_6.jsonl": "9a1285e1f34c58d10c5e536175e27b26cb47029a35bb11446bac0aa08cd934d6",
+        "analysis.json": "80c345a19d662111037cf32b058b43dd2cfd9b1dfcccef77b695a622fb1494d7",
+        "rescore_manifest.json": "d8ed399ca93b52dbb10f4af44c27462acdb3d4c970585005b3e049af246e130c"
+      },
+      "git_commit": "c57b03e01e6b63037df4499974235303763257e2",
+      "protocol_sha256": "9dc35bb8704f41e14e49cbeacc6db1a64da517a60cbd36f2c6fce48433d228fb",
+      "source": "development_evaluator_v2",
+      "timestamp": "2026-08-07T07:41:59Z"
+    }
+  },
+  "arm_comparisons": {
+    "C4_0": {
+      "arm_id": "C4_0",
+      "different_selected_membership": 0,
+      "different_selected_order": 0,
+      "n_common": 120,
+      "same_candidates": 120,
+      "same_candidates_rate": 1.0,
+      "same_identities": 120,
+      "same_identities_rate": 1.0,
+      "total_packet_diff_rate": 0.0,
+      "total_packet_differences": 0
+    },
+    "C4_1": {
+      "arm_id": "C4_1",
+      "different_selected_membership": 0,
+      "different_selected_order": 0,
+      "n_common": 120,
+      "same_candidates": 120,
+      "same_candidates_rate": 1.0,
+      "same_identities": 120,
+      "same_identities_rate": 1.0,
+      "total_packet_diff_rate": 0.0,
+      "total_packet_differences": 0
+    },
+    "C4_2": {
+      "arm_id": "C4_2",
+      "different_selected_membership": 0,
+      "different_selected_order": 0,
+      "n_common": 120,
+      "same_candidates": 120,
+      "same_candidates_rate": 1.0,
+      "same_identities": 120,
+      "same_identities_rate": 1.0,
+      "total_packet_diff_rate": 0.0,
+      "total_packet_differences": 0
+    },
+    "C4_3": {
+      "arm_id": "C4_3",
+      "different_selected_membership": 0,
+      "different_selected_order": 0,
+      "n_common": 120,
+      "same_candidates": 120,
+      "same_candidates_rate": 1.0,
+      "same_identities": 120,
+      "same_identities_rate": 1.0,
+      "total_packet_diff_rate": 0.0,
+      "total_packet_differences": 0
+    },
+    "C4_4": {
+      "arm_id": "C4_4",
+      "different_selected_membership": 0,
+      "different_selected_order": 0,
+      "n_common": 120,
+      "same_candidates": 120,
+      "same_candidates_rate": 1.0,
+      "same_identities": 120,
+      "same_identities_rate": 1.0,
+      "total_packet_diff_rate": 0.0,
+      "total_packet_differences": 0
+    },
+    "C4_5": {
+      "arm_id": "C4_5",
+      "different_selected_membership": 0,
+      "different_selected_order": 0,
+      "n_common": 120,
+      "same_candidates": 120,
+      "same_candidates_rate": 1.0,
+      "same_identities": 120,
+      "same_identities_rate": 1.0,
+      "total_packet_diff_rate": 0.0,
+      "total_packet_differences": 0
+    },
+    "C4_6": {
+      "arm_id": "C4_6",
+      "different_selected_membership": 0,
+      "different_selected_order": 0,
+      "n_common": 120,
+      "same_candidates": 120,
+      "same_candidates_rate": 1.0,
+      "same_identities": 120,
+      "same_identities_rate": 1.0,
+      "total_packet_diff_rate": 0.0,
+      "total_packet_differences": 0
+    }
+  },
+  "created_utc": "2026-08-07T07:41:59Z",
+  "git_commit": "c57b03e01e6b63037df4499974235303763257e2",
+  "hash_seed_nondeterminism": {
+    "conclusion": "S2c selector is hash-seed-dependent due to set iteration in enumerate_chains and _pack_chains",
+    "diff_identity": 0,
+    "diff_membership": 9,
+    "diff_order_only": 8,
+    "diff_packet_hash": 17,
+    "diff_selected": 17,
+    "test": "PYTHONHASHSEED=0 vs PYTHONHASHSEED=42, 20 tasks, C4_4"
+  },
+  "protocol_sha256": "9dc35bb8704f41e14e49cbeacc6db1a64da517a60cbd36f2c6fce48433d228fb",
+  "python_version": "3.12.0 (main, Apr 26 2026, 15:36:24) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "schema_version": "c4-pre-repair-comparison-v1",
+  "summary": {
+    "c4_4_different_selected_membership": 0,
+    "c4_4_different_selected_order": 0,
+    "c4_4_same_candidates": 120,
+    "c4_4_same_candidates_rate": 1.0,
+    "c4_4_same_identities": 120,
+    "c4_4_same_identities_rate": 1.0,
+    "c4_4_total_packet_differences": 0,
+    "defect_proven": true,
+    "defect_type": "hash_seed_nondeterminism_in_s2c_selector",
+    "hash_seed_diff_packet_hash": 17
+  }
+}

@@ -33,7 +33,7 @@ question → subject-preserving query → BM25+BGE retrieval
 
 | Gate | Status | Key result |
 |------|--------|------------|
-| **A0** Evidence use | ✅ PASS | HRM-Text-1B uses correctly supplied external evidence |
+| Gate A0 — PASSED | ✅ PASS | HRM-Text-1B uses correctly supplied external evidence |
 | **B** Single-pass retrieval | ✅ PASS | BM25 dominates tested dense representations on identifiable corpus |
 | **C0** Controlled iterative retrieval | ⚠️ MECHANISM_SUCCESS, PROMOTION_BLOCKED | Reaches oracle ceiling on v2 but cannot promote under its own statistical rule |
 | **C1** Structural generalization | ❌ FAIL | Inert out of distribution (0.080 vs 0.764) — entity chaining is lexical, not inferential |

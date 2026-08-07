@@ -91,19 +91,10 @@ def _verify_answer(task: dict, output: str) -> tuple[float, bool]:
 
 def _compute_quality(task: dict, selected_ids: list[str],
                      evidence: list[dict], correct: bool) -> float:
-    """Compute quality score (matches selector ladder definition)."""
-    required = set(task["required_evidence_ids"])
-    selected = set(selected_ids)
-    complete = required <= selected
-    # Quality = 1.0 if complete and HRM correct, 0.5 if complete but HRM wrong,
-    # 0.25 if partial but HRM correct, 0.0 otherwise.
-    if complete and correct:
-        return 1.0
-    elif complete and not correct:
-        return 0.5
-    elif not complete and correct:
-        return 0.25
-    return 0.0
+    """Compute quality score via the shared metrics module."""
+    from hrm_adaptive_memory.c4.metrics import compute_quality, evidence_complete
+    complete = evidence_complete(task["required_evidence_ids"], selected_ids)
+    return compute_quality(correct=correct, evidence_complete=complete)
 
 
 def _compute_csr(task: dict, selected_ids: list[str]) -> float:
