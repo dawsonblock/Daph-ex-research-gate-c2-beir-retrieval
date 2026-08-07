@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from hrm_adaptive_memory.c4.parity import (
     validate_q3_query_formulation, validate_merge_provenance,
-    validate_all_conformance,
+    validate_all_conformance, validate_causal_parity,
 )
 from hrm_adaptive_memory.c4.contracts import (
     PreHRMResult, QueryResult, RetrievalResult, IdentityResolution,
@@ -248,3 +248,118 @@ def test_all_conformance_passes():
     ok_merge, _ = validate_merge_provenance(results)
     assert ok_q3
     assert ok_merge
+
+
+# --- Causal parity ---
+
+def test_causal_parity_identity_only():
+    """C4_2→C4_3: only identity should change, not query or candidates."""
+    results = {
+        "C4_2": [_make_pre_hrm_result(
+            task_id="t1",
+            rendered_query="Nimbus sensor array ownership tier",
+            original_question="Which ownership tier applies to Nimbus sensor array?",
+            candidate_ids=("e1", "e2", "e3"),
+            identity_status="UNRESOLVED",
+        )],
+        "C4_3": [_make_pre_hrm_result(
+            task_id="t1",
+            rendered_query="Nimbus sensor array ownership tier",
+            original_question="Which ownership tier applies to Nimbus sensor array?",
+            candidate_ids=("e1", "e2", "e3"),
+            identity_status="EXACT",
+        )],
+    }
+    ok, violations = validate_causal_parity(results)
+    assert ok, violations
+
+
+def test_causal_parity_identity_violation_query_changed():
+    """C4_2→C4_3: query should NOT change if only identity differs."""
+    results = {
+        "C4_2": [_make_pre_hrm_result(
+            task_id="t1",
+            rendered_query="query A",
+            original_question="Which ownership tier applies to Nimbus sensor array?",
+            candidate_ids=("e1", "e2"),
+            identity_status="UNRESOLVED",
+        )],
+        "C4_3": [_make_pre_hrm_result(
+            task_id="t1",
+            rendered_query="query B",
+            original_question="Which ownership tier applies to Nimbus sensor array?",
+            candidate_ids=("e1", "e2"),
+            identity_status="EXACT",
+        )],
+    }
+    ok, violations = validate_causal_parity(results)
+    assert not ok
+    assert any("query changed" in v for v in violations)
+
+
+def test_causal_parity_identity_violation_candidates_changed():
+    """C4_2→C4_3: candidates should NOT change if only identity differs."""
+    results = {
+        "C4_2": [_make_pre_hrm_result(
+            task_id="t1",
+            rendered_query="same query",
+            original_question="Which ownership tier applies to Nimbus sensor array?",
+            candidate_ids=("e1", "e2"),
+            identity_status="UNRESOLVED",
+        )],
+        "C4_3": [_make_pre_hrm_result(
+            task_id="t1",
+            rendered_query="same query",
+            original_question="Which ownership tier applies to Nimbus sensor array?",
+            candidate_ids=("e1", "e3"),  # Different!
+            identity_status="EXACT",
+        )],
+    }
+    ok, violations = validate_causal_parity(results)
+    assert not ok
+    assert any("candidates changed" in v for v in violations)
+
+
+def test_causal_parity_selector_only():
+    """C4_3→C4_4: only selector should change, not query/candidates/identity."""
+    results = {
+        "C4_3": [_make_pre_hrm_result(
+            task_id="t1",
+            rendered_query="same query",
+            original_question="Which ownership tier applies to Nimbus sensor array?",
+            candidate_ids=("e1", "e2"),
+            identity_status="EXACT",
+        )],
+        "C4_4": [_make_pre_hrm_result(
+            task_id="t1",
+            rendered_query="same query",
+            original_question="Which ownership tier applies to Nimbus sensor array?",
+            candidate_ids=("e1", "e2"),
+            identity_status="EXACT",
+        )],
+    }
+    ok, violations = validate_causal_parity(results)
+    assert ok, violations
+
+
+def test_causal_parity_selector_violation_identity_changed():
+    """C4_3→C4_4: identity should NOT change if only selector differs."""
+    results = {
+        "C4_3": [_make_pre_hrm_result(
+            task_id="t1",
+            rendered_query="same query",
+            original_question="Which ownership tier applies to Nimbus sensor array?",
+            candidate_ids=("e1", "e2"),
+            identity_status="EXACT",
+        )],
+        "C4_4": [_make_pre_hrm_result(
+            task_id="t1",
+            rendered_query="same query",
+            original_question="Which ownership tier applies to Nimbus sensor array?",
+            candidate_ids=("e1", "e2"),
+            identity_status="RESOLVED",  # Changed!
+        )],
+    }
+    ok, violations = validate_causal_parity(results)
+    assert not ok
+    assert any("identity changed" in v for v in violations)

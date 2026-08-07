@@ -367,7 +367,25 @@
       "affected_criteria": [
         "1_quality_improvement"
       ],
-      "resolution": "Iterative retrieval is DISABLED in the C4 harness. C4 uses the one-pass pipeline (subject+relation query only). Bridge extraction code is retained for provenance and future re-evaluation. The C4 pipeline is now: QUESTION → SUBJECT-PRESERVING QUERY → BM25+BGE RETRIEVAL → I3 IDENTITY → S2c SELECTION → BOUNDED PACKET → HRM → VERIFIED ANSWER. Erratum 3 is superseded: the two-pass mechanism was implemented and tested, but the runtime bridge acquisition step did not qualify."
+      "resolution": "Iterative retrieval is DISABLED in the C4 harness. C4 uses the one-pass pipeline (subject+relation query only). Bridge extraction code is retained for provenance and future re-evaluation. The C4 pipeline is now: QUESTION \u2192 SUBJECT-PRESERVING QUERY \u2192 BM25+BGE RETRIEVAL \u2192 I3 IDENTITY \u2192 S2c SELECTION \u2192 BOUNDED PACKET \u2192 HRM \u2192 VERIFIED ANSWER. Erratum 3 is superseded: the two-pass mechanism was implemented and tested, but the runtime bridge acquisition step did not qualify."
     }
-  ]
+  ],
+  "metric_definitions": {
+    "quality": "Partial-credit metric: 1.0 for correct answer, 0.0 for incorrect. Verified by the shared verifier in hrm_adaptive_memory.evaluation.verifiers.",
+    "correct_rate": "Fraction of tasks where quality == 1.0.",
+    "csr": "Complete Set Retention: fraction of required_evidence_ids present in the selected evidence packet. Computed as len(required \u2229 selected) / len(required).",
+    "ces": "Complete Evidence Set: binary indicator that all required_evidence_ids are in the selected packet. CES = 1.0 if required \u2286 selected, else 0.0.",
+    "s2c_live_rate": "Fraction of tasks where the S2c selector was activated (vs S0 fallback).",
+    "false_resolution_rate": "Fraction of tasks where identity resolution produced a canonical that is NOT the true canonical entity. Measured by evaluator only.",
+    "selector_gap_capture": "SGC = (C4_4_quality - C4_3_quality) / (C4_5_quality - C4_3_quality). Measures how much of the selector gap S2c closes.",
+    "oracle_gap_capture": "OGC = (C4_5_quality - C4_0_quality) / (C4_6_quality - C4_0_quality). Measures how much of the total oracle gap the real pipeline closes.",
+    "answer_retention": "Fraction of tasks where the answer-bearing evidence record is in the selected packet.",
+    "bridge_retention": "Fraction of multi-hop tasks where the bridge-bearing evidence record is in the selected packet.",
+    "identity_retention": "Fraction of tasks with identity resolution where the identity record is in the selected packet.",
+    "primary_quality_delta": "C4_4 quality - C4_0 quality, with grouped bootstrap CI by family.",
+    "family_ci": "Bootstrap CI resampling whole families (preserving within-family correlation).",
+    "cluster_ci": "Bootstrap CI resampling whole source clusters.",
+    "template_ci": "Bootstrap CI resampling whole templates.",
+    "task_flip": "Per-task quality change between arms: improve (delta > 0), regress (delta < 0), unchanged (delta == 0)."
+  }
 }

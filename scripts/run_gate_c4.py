@@ -36,7 +36,7 @@ from hrm_adaptive_memory.c4.parity import (
     validate_all_parity, validate_no_leakage,
     validate_selected_in_pool, validate_packet_budgets,
     validate_q3_query_formulation, validate_merge_provenance,
-    validate_all_conformance)
+    validate_causal_parity, validate_all_conformance)
 from hrm_adaptive_memory.evaluation.verifiers import verify_answer as _verify_answer_shared
 from hrm_adaptive_memory.c4.provenance import (
     build_manifest, write_results_hash, sha256_corpus)
@@ -635,6 +635,9 @@ def run_dry_run(split: str = "development", arm_ids: list[str] | None = None):
     ok, violations = validate_merge_provenance(all_results)
     print(f"  {'PASS' if ok else 'FAIL'}: merge provenance ({len(violations)} violations)")
     for v in violations[:5]: print(f"    {v}")
+    ok, violations = validate_causal_parity(all_results)
+    print(f"  {'PASS' if ok else 'FAIL'}: causal parity ({len(violations)} violations)")
+    for v in violations[:5]: print(f"    {v}")
 
     # Write dry-run receipts
     out_dir = OUT / "dry_run" / split
@@ -662,6 +665,7 @@ def run_dry_run(split: str = "development", arm_ids: list[str] | None = None):
         "packet_budgets": validate_packet_budgets(all_results)[0],
         "q3_query_formulation": validate_q3_query_formulation(all_results)[0],
         "merge_provenance": validate_merge_provenance(all_results)[0],
+        "causal_parity": validate_causal_parity(all_results)[0],
     }
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
 
