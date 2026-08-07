@@ -65,6 +65,15 @@ def _family(receipt: dict) -> str:
     return receipt["evaluator_annotation"].get("family", "unknown")
 
 
+def _cluster(receipt: dict) -> str:
+    return receipt["evaluator_annotation"].get("source_cluster_id", "unknown")
+
+
+def _template(receipt: dict) -> str:
+    return receipt["evaluator_annotation"].get("template_id",
+        receipt["evaluator_annotation"].get("metadata", {}).get("template_id", "unknown"))
+
+
 def _task_id(receipt: dict) -> str:
     return receipt.get("task_id", receipt.get("runtime_payload", {}).get("task_id", ""))
 
@@ -141,30 +150,44 @@ def paired_deltas(arm_a: list[dict], arm_b: list[dict]) -> dict:
 
     common_ids = sorted(set(by_id_a) & set(by_id_b))
     deltas = []
-    groups = []
+    groups_family = []
+    groups_cluster = []
+    groups_template = []
     flips = {"improve": 0, "regress": 0, "unchanged": 0}
+    flip_details = {"improve": [], "regress": []}
 
     for tid in common_ids:
         qa = _quality(by_id_a[tid])
         qb = _quality(by_id_b[tid])
         delta = qb - qa
         deltas.append(delta)
-        groups.append(_family(by_id_a[tid]))
+        groups_family.append(_family(by_id_a[tid]))
+        groups_cluster.append(_cluster(by_id_a[tid]))
+        groups_template.append(_template(by_id_a[tid]))
 
         if delta > 0:
             flips["improve"] += 1
+            flip_details["improve"].append(tid)
         elif delta < 0:
             flips["regress"] += 1
+            flip_details["regress"].append(tid)
         else:
             flips["unchanged"] += 1
 
-    mean, lo, hi = grouped_bootstrap_ci(deltas, groups)
+    mean, lo, hi = grouped_bootstrap_ci(deltas, groups_family)
+    _, lo_cluster, hi_cluster = grouped_bootstrap_ci(deltas, groups_cluster)
+    _, lo_template, hi_template = grouped_bootstrap_ci(deltas, groups_template)
     return {
         "n": len(common_ids),
         "mean_delta": mean,
         "ci_lower": lo,
         "ci_upper": hi,
+        "ci_lower_cluster": lo_cluster,
+        "ci_upper_cluster": hi_cluster,
+        "ci_lower_template": lo_template,
+        "ci_upper_template": hi_template,
         "flips": flips,
+        "flip_details": flip_details,
     }
 
 
@@ -389,16 +412,24 @@ def main():
     print("\n--- Adjacent Deltas ---")
     for key, d in report["adjacent_deltas"].items():
         f = d["flips"]
-        print(f"{key}: mean={d['mean_delta']:+.4f} CI=[{d['ci_lower']:+.4f}, {d['ci_upper']:+.4f}] "
+        print(f"{key}: mean={d['mean_delta']:+.4f} "
+              f"CI_family=[{d['ci_lower']:+.4f}, {d['ci_upper']:+.4f}] "
+              f"CI_cluster=[{d.get('ci_lower_cluster', float('nan')):+.4f}, {d.get('ci_upper_cluster', float('nan')):+.4f}] "
+              f"CI_template=[{d.get('ci_lower_template', float('nan')):+.4f}, {d.get('ci_upper_template', float('nan')):+.4f}] "
               f"improve={f['improve']} regress={f['regress']} unchanged={f['unchanged']}")
 
     if report["primary_delta"]:
         d = report["primary_delta"]
         f = d["flips"]
         print(f"\n--- Primary Delta (C4-4 vs C4-0) ---")
-        print(f"mean={d['mean_delta']:+.4f} CI=[{d['ci_lower']:+.4f}, {d['ci_upper']:+.4f}] "
+        print(f"mean={d['mean_delta']:+.4f} "
+              f"CI_family=[{d['ci_lower']:+.4f}, {d['ci_upper']:+.4f}] "
+              f"CI_cluster=[{d.get('ci_lower_cluster', float('nan')):+.4f}, {d.get('ci_upper_cluster', float('nan')):+.4f}] "
+              f"CI_template=[{d.get('ci_lower_template', float('nan')):+.4f}, {d.get('ci_upper_template', float('nan')):+.4f}] "
               f"improve={f['improve']} regress={f['regress']} unchanged={f['unchanged']}")
         print(f"Protocol threshold: +0.15 → {'PASS' if d['mean_delta'] >= 0.15 else 'FAIL'}")
+        if d.get("flip_details", {}).get("regress"):
+            print(f"  Regressed tasks: {d['flip_details']['regress'][:10]}")
 
     print("\n--- Per-Regime Quality ---")
     for arm_id in sorted(arms):
