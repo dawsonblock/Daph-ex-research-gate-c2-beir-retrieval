@@ -1006,5 +1006,35 @@
     "mechanism_effect_observed": "whether a real effect was measured, independent of promotion",
     "rule": "A FAIL verdict never implies absence of effect. Both are recorded separately."
   },
-  "version": "3.7.1"
+  "version": "3.7.1",
+  "diagnostics": {
+    "s2c_canonical_regression": {
+      "finding": "S2c structural selection over-selects identity records (+116) from OTHER tasks, displacing value records (-142) needed for the current task. Net effect on EXACT tasks: 8 improved, 8 regressed (CES flat at 0.350). Net effect on RESOLVED tasks: 20 improved, 2 regressed (CES 0.200\u21920.500). Overall CES: 0.192 (C4_0) \u2192 0.425 (C4_4) vs 0.783 (C4_5 oracle).",
+      "root_cause": "S2c's structural criterion treats all identity/link records as equally valuable, but only identity/link records connected to the current subject are useful. Identity records from other tasks are distractors that displace answer-bearing value records.",
+      "record_type_delta": {
+        "identity": "+116",
+        "link": "+40",
+        "value": "-142",
+        "dead-end-0": "+34",
+        "dead-end-1": "+30",
+        "fact": "-19",
+        "direct": "-20"
+      },
+      "impact": {
+        "EXACT_improved": 8,
+        "EXACT_regressed": 8,
+        "EXACT_same": 44,
+        "RESOLVED_improved": 20,
+        "RESOLVED_regressed": 2,
+        "RESOLVED_same": 38
+      },
+      "oracle_gap": {
+        "C4_4_CES": 0.425,
+        "C4_5_CES": 0.783,
+        "headroom": 0.358
+      },
+      "potential_fix": "Make S2c's structural criterion task-aware: only prefer identity/link records that mention the current subject. This is a mechanism change requiring its own qualification.",
+      "report": "scripts/diagnose_c4_composition.py"
+    }
+  }
 }
