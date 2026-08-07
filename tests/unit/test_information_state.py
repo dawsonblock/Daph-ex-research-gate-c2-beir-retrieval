@@ -74,3 +74,30 @@ def test_provenance_accumulates_per_hop():
     assert s.provenance["hop1_identity_record"] == "id1"
     assert s.provenance["hop2_bridge_record"] == "id2"
     assert s.hop == 2
+
+
+def test_runtime_state_contains_no_oracle_metadata():
+    """The information state must never carry oracle-only fields.
+
+    Oracle metadata (_oracle_metadata, proof_edges, required_evidence_ids,
+    answer_node, family, entity_regime) is evaluator-only. The InformationState
+    is a runtime structure and must not contain or reference any of these.
+    """
+    s = InformationState(subject="Test subject", target_relation="test relation")
+    advanced = s.with_identity("Test subject", "Canonical name", record_id="e1")
+    advanced = advanced.with_bridge("Bridge entity", record_id="e2")
+
+    # The dataclass fields must not include any oracle keys
+    oracle_keys = {"_oracle_metadata", "proof_edges", "required_evidence_ids",
+                   "answer_node", "family", "entity_regime", "latent_subject",
+                   "latent_bridge", "oracle_evidence_ids"}
+    field_names = set(advanced.__dataclass_fields__.keys())
+    assert not (field_names & oracle_keys), (
+        f"InformationState contains oracle keys: {field_names & oracle_keys}")
+
+    # Provenance must not reference oracle metadata
+    for key, value in advanced.provenance.items():
+        assert not any(ok in str(key) for ok in oracle_keys), (
+            f"provenance key {key!r} references oracle metadata")
+        assert not any(ok in str(value) for ok in oracle_keys), (
+            f"provenance value {value!r} references oracle metadata")

@@ -1,0 +1,185 @@
+{
+  "gate": "C4_INTEGRATED_NON_ORACLE_MEMORY_PIPELINE",
+  "status": "PROTOCOL_FROZEN_BEFORE_MEASUREMENT",
+  "frozen_before_any_c4_measurement": true,
+  "protocol_version": "v1_frozen",
+  "goal": "Determine whether the independently qualified query, retrieval, identity-resolution, and structural-selection mechanisms compose into a materially better end-to-end HRM memory pipeline without oracle information at runtime.",
+  "primary_question": "Do the independently qualified mechanisms compose into a useful, non-oracle RETRIEVE action?",
+  "architecture": {
+    "pipeline": [
+      "QUESTION",
+      "INFORMATION_STATE (original subject, target relation, resolved canonical entities)",
+      "SUBJECT-PRESERVING FOLLOW-UP QUERY",
+      "BM25 + BGE CANDIDATE RETRIEVAL",
+      "I3 IDENTITY-RECORD RESOLUTION",
+      "CANONICALIZED INFORMATION STATE",
+      "S2c STRUCTURE + RELATION SELECTION",
+      "BOUNDED EVIDENCE PACKET",
+      "HRM",
+      "VERIFIED ANSWER"
+    ],
+    "runtime_purity": "No oracle metadata may enter runtime. _oracle_metadata, proof_edges, required_evidence_ids, answer_node, family, entity_regime, and evaluator canonical entity are evaluator-only."
+  },
+  "arms": {
+    "C4_0": {
+      "description": "current historical R1 pipeline baseline",
+      "mechanisms": ["original query", "BM25 retrieval", "S0 pool-order selection", "HRM"],
+      "changes_from_prior": "none; baseline"
+    },
+    "C4_1": {
+      "description": "C4-0 + subject-preserving information state + frozen improved follow-up query formulation",
+      "mechanisms": ["subject-preserving query", "BM25 retrieval", "S0 selection", "HRM"],
+      "changes_from_C4_0": "query formulation only"
+    },
+    "C4_2": {
+      "description": "C4-1 + BM25/BGE multi-signal candidate generation",
+      "mechanisms": ["subject-preserving query", "BM25+BGE RRF fusion", "S0 selection", "HRM"],
+      "changes_from_C4_1": "retrieval only"
+    },
+    "C4_3": {
+      "description": "C4-2 + I3 identity-record resolution + canonicalized state update",
+      "mechanisms": ["subject-preserving query", "BM25+BGE", "I3 resolution", "S0 selection", "HRM"],
+      "changes_from_C4_2": "identity resolution only"
+    },
+    "C4_4": {
+      "description": "C4-3 + S2c structure+relation selection",
+      "mechanisms": ["subject-preserving query", "BM25+BGE", "I3 resolution", "S2c selection", "HRM"],
+      "changes_from_C4_3": "selector only",
+      "deterministic_fallback": "if identity_status in {EXACT, RESOLVED}: selector = S2c; else: selector = S0"
+    },
+    "C4_4b": {
+      "description": "diagnostic: if identity resolved -> S2c; else -> s_rel_only",
+      "classification": "DIAGNOSTIC_ONLY",
+      "note": "Not promoted unless it separately earns promotion"
+    },
+    "C4_5": {
+      "description": "same real query/retrieval/identity candidate pool + oracle selector",
+      "mechanisms": ["subject-preserving query", "BM25+BGE", "I3 resolution", "oracle selection", "HRM"],
+      "changes_from_C4_4": "selector only (real vs oracle)",
+      "constraint": "must not inject unretrieved evidence"
+    },
+    "C4_6": {
+      "description": "oracle required evidence (R5-style ceiling)",
+      "mechanisms": ["oracle evidence", "HRM"],
+      "constraint": "may bypass retrieval because it is the reader/evidence ceiling"
+    }
+  },
+  "arm_parity_constraints": {
+    "C4_2_vs_C4_3": "same query, same retrieved candidate IDs, same candidate scores; only identity resolution/state update differs",
+    "C4_3_vs_C4_4": "same query, same candidate IDs, same identity state; only selector differs",
+    "C4_4_vs_C4_5": "same real candidate pool; only real vs oracle selection differs"
+  },
+  "information_state_contract": {
+    "fields": ["original_subject", "target_relation", "current_surface", "canonical_entity", "bridge_entities", "resolution_status", "resolution_evidence_ids"],
+    "invariant": "the original subject is never discarded during iterative retrieval",
+    "tests_required": [
+      "test_information_state_preserves_original_subject",
+      "test_information_state_preserves_target_relation",
+      "test_bridge_augments_state_not_replaces_state",
+      "test_identity_resolution_updates_canonical_without_dropping_surface",
+      "test_runtime_state_contains_no_oracle_metadata"
+    ]
+  },
+  "query_formulation": {
+    "policy": "development-qualified formulation that preserved subject + bridge + relation",
+    "do_not_retune": "Do not retune query wording on qualification/OOD",
+    "receipt_fields": ["original_question", "original_subject", "target_relation", "bridge", "rendered_query", "query_hash", "query_policy_version"]
+  },
+  "candidate_retrieval": {
+    "components": ["BM25", "BGE", "deterministic RRF fusion"],
+    "constraint": "Do not introduce another dense model during C4 unless C4 is explicitly voided and re-frozen",
+    "receipt_fields": ["bm25_ranked_ids", "bm25_scores", "bge_ranked_ids", "bge_scores", "fusion_ranked_ids", "fusion_scores", "candidate_pool_ids", "candidate_budget"],
+    "budget_constraint": "Use exact frozen candidate budget. Do not let one arm see more candidates than another."
+  },
+  "i3_integration": {
+    "rules": {
+      "unique_explicit_mapping": "RESOLVED",
+      "multiple_conflicting_mappings": "AMBIGUOUS",
+      "no_mapping": "UNRESOLVED",
+      "never_guess": "abstention is preferred over guessed resolution"
+    },
+    "canonical_abbreviation_note": "For canonical/abbreviation tasks, I3 should not unnecessarily rewrite an already valid canonical anchor",
+    "receipt_fields": ["surface_mention", "identity_records_inspected", "candidate_mappings", "resolution_status", "chosen_canonical", "resolution_evidence_ids", "resolution_needed", "resolution_attempted", "resolution_changed_state"]
+  },
+  "s2c_integration": {
+    "use_when": "valid anchor exists (identity_status in {EXACT, RESOLVED})",
+    "selector_uses": ["question/state", "candidate evidence", "runtime canonicalization", "target relation"],
+    "selector_must_not_access": ["required_evidence_ids", "proof graph", "answer node", "family", "entity regime", "oracle bridge"],
+    "receipt_fields": ["selected_ids", "selected_score_components", "chain_ids", "entity_connectivity_score", "relation_relevance_score", "distractor_redundancy_term", "packet_token_count"]
+  },
+  "receipt_contract": {
+    "per_task_fields": ["task_id", "split", "question", "information_state_before", "rendered_queries", "retrieval_rankings", "candidate_pool_ids", "identity_mappings", "information_state_after_resolution", "selector_chosen", "selected_evidence_ids", "evidence_roles_evaluator_side", "hrm_prompt_hash", "hrm_output", "verified_quality", "exact_match", "latency", "token_counts", "model_revision", "code_commit"],
+    "separation": "runtime_payload and evaluator_annotation must be physically or logically separated",
+    "validation": "runtime_payload must contain no oracle keys"
+  },
+  "development_first": {
+    "rule": "Run all C4 arms on development first. Do not touch qualification/OOD first.",
+    "primary_questions": [
+      "Does C4-1 improve over C4-0?",
+      "Does C4-2 improve candidate coverage?",
+      "Does C4-3 improve surface identity behavior?",
+      "Does C4-4 improve downstream HRM quality?",
+      "How much does C4-5 still exceed C4-4?",
+      "How much does C4-6 still exceed C4-5?"
+    ]
+  },
+  "per_regime_analysis": {
+    "mandatory_regimes": ["canonical", "abbreviation", "alias", "description"],
+    "also_by": ["family", "source_cluster", "template", "answer_kind", "proof_length", "required_evidence_count"],
+    "rule": "Do not allow aggregate gains to hide a regime collapse."
+  },
+  "promotion_criteria": {
+    "frozen_before_qualification": true,
+    "criteria": {
+      "1_quality_improvement": "C4-4 quality > C4-0 by at least +0.15 absolute on development",
+      "2_no_canonical_abbreviation_regression": "No material canonical/abbreviation regression > 0.05",
+      "3_alias_description_improve": "Alias and description both improve over C4-0",
+      "4_false_resolution": "FalseResolutionRate <= 0.02",
+      "5_oracle_selector_gap_reduced": "C4-4 materially reduces the C4-5 oracle-selector gap",
+      "6_oracle_leak_validation": "All runtime payloads pass oracle-leak validation",
+      "7_budget_fixed": "Candidate/evidence budgets remain fixed",
+      "8_statistical_confidence": "Grouped bootstrap lower bound for primary quality delta > 0",
+      "9_no_post_hoc_changes": "No post-hoc mechanism/config changes after freeze"
+    }
+  },
+  "oracle_gap_metrics": {
+    "OGC_C4": "Oracle Gap Capture = (Q(C4-4) - Q(C4-0)) / (Q(C4-6) - Q(C4-0))",
+    "SGC_C4": "Selector Gap Capture = (Q(C4-4) - Q(C4-3)) / (Q(C4-5) - Q(C4-3)) when denominator > 0",
+    "IGC_C4": "Identity-resolution Gap Capture = Q(C4-3) - Q(C4-2)",
+    "causal_caveat": "Do not call these exact causal effects unless arm parity checks pass"
+  },
+  "batch_policy": {
+    "rule": "Do not mix new batching work into C4 capability evaluation. Use the currently scientifically valid generation path.",
+    "if_sequential_only_qualified": "batch_size = 1; accept the runtime cost",
+    "batch_optimization": "separate from C4"
+  },
+  "qualification_policy": {
+    "rule": "Only after development config and thresholds are frozen. Run qualification once.",
+    "do_not_modify_after_seeing_results": ["query policy", "retriever", "fusion", "identity resolver", "selector weights", "candidate budget", "packet budget", "HRM prompt"],
+    "if_bug_found": "preserve run, mark VOID, fix, re-freeze, rerun. Do not overwrite."
+  },
+  "ood_policy": {
+    "rule": "After qualification, run OOD with identical frozen configuration. No tuning.",
+    "main_question": "Whether mechanisms learned from controlled development generalize across alias, description, surface variation without benchmark-specific rules."
+  },
+  "decision_gate": {
+    "outcome_A": "Integrated system succeeds strongly (C4-4 > 0.50+ with robust OOD gains) -> proceed to Gate D",
+    "outcome_B": "Retrieval/identity improve but selector gain disappears -> revisit structural selection, do not open Gate D",
+    "outcome_C": "ID works, surface still weak -> identity or retrieval remains bottleneck, do not open Gate D",
+    "outcome_D": "Oracle C4-5 remains dramatically above C4-4 -> selection remains opportunity, continue selector work before Gate D"
+  },
+  "gate_d_dependency": {
+    "rule": "Gate D only after C4 proves RETRIEVE is a competent real action",
+    "gate_d_question": "Is there a measured RETRIEVE action opportunity vs ANSWER_NOW?"
+  },
+  "explicitly_out_of_scope": [
+    "learned entity resolution",
+    "learned routers or executives",
+    "adaptive recurrence (Gate F)",
+    "verification (Gate G)",
+    "persistent memory (Gate J)",
+    "batch optimization",
+    "new dense models beyond BGE",
+    "tuning on qualification/OOD"
+  ]
+}
