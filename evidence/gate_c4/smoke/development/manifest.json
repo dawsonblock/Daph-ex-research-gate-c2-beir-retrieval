@@ -8,12 +8,12 @@
     "C4_5",
     "C4_6"
   ],
-  "created_utc": "2026-08-07T01:38:39Z",
+  "created_utc": "2026-08-07T05:45:14Z",
   "hrm_max_new_tokens": 64,
   "hrm_model_id": "sapientinc/HRM-Text-1B",
   "hrm_model_revision": "9f082d68b8cd0ebc56e33f1c88c45609174c272c",
   "mode": "smoke",
-  "protocol_sha256": "43f3f8b290d05790be1ed7972e420cb685c5d1a5fd4ae723edb30b2e8c0a3c96",
+  "protocol_sha256": "9dc35bb8704f41e14e49cbeacc6db1a64da517a60cbd36f2c6fce48433d228fb",
   "split": "development",
   "task_count": 3
 }

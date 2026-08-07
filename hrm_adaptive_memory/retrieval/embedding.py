@@ -81,6 +81,12 @@ class PinnedTransformerEmbedder:
         self.tokenizer = tokenizer
         self.model = model
         self.spec.validate_model(model.config)
+        # Move model to GPU if available
+        import torch
+        self._device = "cpu"
+        if torch.cuda.is_available():
+            self.model = self.model.to("cuda")
+            self._device = "cuda"
 
     def _encode(self, texts: Sequence[str]) -> list[list[float]]:
         import torch
@@ -93,6 +99,9 @@ class PinnedTransformerEmbedder:
                     batch, padding=True, truncation=True,
                     max_length=self.spec.max_sequence_length, return_tensors="pt",
                 )
+                # Move inputs to same device as model
+                if self._device != "cpu":
+                    encoded = {k: v.to(self._device) for k, v in encoded.items()}
                 hidden = self.model(**encoded).last_hidden_state
                 if self.spec.pooling == "mean":
                     mask = encoded["attention_mask"].unsqueeze(-1).to(hidden.dtype)

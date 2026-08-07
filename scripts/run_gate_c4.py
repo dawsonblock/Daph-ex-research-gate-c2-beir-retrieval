@@ -284,9 +284,28 @@ def run_pre_hrm_stages(task: dict, arm: C4Arm, records: list[IndexRecord],
 
 
 def _load_hrm():
-    """Load the HRM model (lazy, only when needed)."""
+    """Load the HRM model (lazy, only when needed).
+
+    Automatically uses GPU (CUDA) when available with fp16 for speed.
+    Set HRM_DEVICE=cuda and HRM_DTYPE=float16 via environment to override.
+    """
     from hrm_adaptive_memory.hrm.model import HRMAdapter, HRMModelSpec, PromptCondition
-    adapter = HRMAdapter.from_pretrained(spec=HRMModelSpec())
+    import torch
+
+    device_map = None
+    dtype = None
+
+    if torch.cuda.is_available():
+        device_map = "auto"
+        # Use fp16 on GPU for ~2x speedup
+        dtype = torch.float16
+        print(f"  [HRM] Using GPU: {torch.cuda.get_device_name(0)}")
+        print(f"  [HRM] dtype: {dtype}")
+    else:
+        print("  [HRM] Using CPU (no CUDA detected)")
+
+    adapter = HRMAdapter.from_pretrained(
+        spec=HRMModelSpec(), dtype=dtype, device_map=device_map)
     return adapter, PromptCondition.DIRECT
 
 
@@ -492,6 +511,9 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
         completed = 0
         for i, task in enumerate(tasks):
             tid = task["task_id"]
+            # Progress indicator every 10 tasks
+            if (i + 1) % 10 == 0:
+                print(f"  {arm_id}: {i+1}/{len(tasks)}", end="\r", flush=True)
             # Check resume cache
             pre_hrm = run_pre_hrm_stages(task, arm, records, texts)
             rkey = _resume_key(task, arm, pre_hrm.packet.packet_hash)
