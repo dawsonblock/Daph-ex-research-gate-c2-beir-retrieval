@@ -26,6 +26,7 @@ _SUBJECT_PATTERNS = [
     re.compile(r"(?:is the)\s+\S.*?\s+for\s+(.+?)\?$"),
     re.compile(r"recorded for\s+(.+?)\.$"),
     re.compile(r"attached to\s+(.+?)\.$"),
+    re.compile(r"associated with\s+(.+?)\.$"),
 ]
 
 # Target relation extraction (covers V4 and C3 templates)
@@ -35,6 +36,7 @@ _RELATION_PATTERNS = [
     re.compile(r"^(?:which|what)\s+([a-z]+(?:\s+[a-z]+){0,2}?)\s+(?:is held by|does)\b"),
     re.compile(r"^for\s+.+?,\s*which\s+([a-z]+(?:\s+[a-z]+){0,2}?)\s+(?:is|are|was)\b"),
     re.compile(r"^(?:as of\s+.+?,\s*)?which\s+([a-z]+(?:\s+[a-z]+){0,2}?)\s+(?:applies|is|are|was)\b"),
+    re.compile(r"^identify the\s+([a-z]+(?:\s+[a-z]+){0,2}?)\s+associated with\b"),
 ]
 
 
