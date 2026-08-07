@@ -50,6 +50,9 @@ def build_pre_hrm_receipt(result: PreHRMResult) -> TaskReceipt:
             "query_hash": result.query.query_hash,
             "query_policy": result.query.query_policy,
             "query_policy_version": result.query.query_policy_version,
+            "bridge": result.query.bridge,
+            "second_query": result.query.second_query,
+            "second_pass_performed": result.query.second_pass_performed,
         },
         "retrieval": {
             "candidate_ids": list(result.retrieval.candidate_ids),
