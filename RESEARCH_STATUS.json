@@ -40,7 +40,7 @@
     "gate_c2c_chain_completion_qualified": "PASS_all_four_regimes_on_identifiable_corpus",
     "gate_c2c_v2_chain_validation": "FAIL_ON_A_TRANSPLANTED_DESCRIPTION_THRESHOLD",
     "gate_c2c_v3_chain_validation": "FAIL_description_regime_only",
-    "gate_c3_surface_identity_resolution": "IN_PROGRESS_I0_I1_I2_MEASURED_I2_NOT_PROMOTED_MOVE_TO_I3",
+    "gate_c3_surface_identity_resolution": "IN_PROGRESS_I0_I1_I2_I3_MEASURED_I3_PROMOTED",
     "gate_d_conditional_retrieval_opportunity": "PENDING_ACTION_TOO_WEAK_TO_MEASURE",
     "gate_e_learned_retrieval_control": "BLOCKED",
     "gate_f_recurrence_opportunity": "BLOCKED",
@@ -80,7 +80,7 @@
     "slot_label_echo": "99 -> 0 under precision packing; was an evidence-confusability artefact, not a prompt-interface or reasoning limit",
     "slot_label_echoes": "Track evidence quality, not packet format: 85 -> 28 under precision packing, -> 3 under oracle evidence. F-arms would measure a symptom; implemented but unrun."
   },
-  "next_work": "Gate C3 I2 measured: prefix/suffix tolerant resolution found candidates on 46% of surface tasks but 0% correct and 12% false resolution. The alias surface has a different head from the canonical, so prefix/suffix matching finds wrong entities. TruncationRecoveryRate=0.0 on 50 eligible tasks. I2 NOT promoted (CorrectAnchorRate not > I1, FalseResolutionRate 0.12 > 0.02, S2cLiveRate 0). Decision: move directly to I3 identity-record resolution, since the surface failures are arbitrary aliases, not textual truncation. I3 has NOT been run. No HRM.",
+  "next_work": "Gate C3 I3 measured and PROMOTED: identity-record retrieval resolves 92/100 surface tasks correctly with 0% false resolution, 8% ambiguous (correct abstention), 0% unresolved. S2cLiveRate=0.92 (chains now active when anchor resolved). IdentityMappingExtractionRate=1.0. Gains across all 10 families. The 8 ambiguous tasks have surfaces that appear in multiple conflicting identity records — I3 correctly abstains rather than guessing. I3 is the surface-normalization layer. I4 (bounded canonicalization through retrieved identity edges) has NOT been run. Since I3 already achieves 92% correct resolution, I4 may have limited opportunity (only the 8 ambiguous tasks could benefit from deeper traversal). Stopping before I4 per the protocol ladder. No HRM.",
   "ood_taxonomy": {
     "REFERENTIAL_OOD": {
       "mechanism": "identity resolution + multi-hop retrieval",
@@ -849,6 +849,19 @@
       "report": "evidence/gate_c3/i0_i1_i2_receipt.json",
       "experiment_verdict": "I2_NOT_PROMOTED_SURFACE_FAILURES_ARE_ARBITRARY_ALIASES_NOT_TRUNCATION",
       "earned_claim": "Prefix/suffix tolerant resolution cannot solve the surface identity defect because the alias surface is a different name from the canonical, not a truncation of it. The next required operation is identity-record retrieval (I3), which reads the explicit surface-to-canonical mapping from evidence."
+    },
+    "gate_c3_i3": {
+      "claim": "I3 (identity-record retrieval) resolves 92/100 surface tasks correctly with 0% wrong anchor, 0% false resolution, 8% ambiguous, 0% unresolved. S2cLiveRate=0.92. IdentityMappingExtractionRate=1.0 (parser extracts correct mapping on all 100 eligible tasks). Gains across all 10 task families. The 8 ambiguous tasks have surfaces appearing in multiple conflicting identity records; I3 correctly abstains.",
+      "not_a_claim_about": [
+        "I4 or higher rungs, which have not been run",
+        "retrieval quality, since the candidate pool is the full evidence set",
+        "the ID partition, where S2c is already qualified",
+        "global pipeline promotion of any selector",
+        "downstream HRM improvement, which has not been measured"
+      ],
+      "report": "evidence/gate_c3/i0_i1_i2_i3_receipt.json",
+      "experiment_verdict": "I3_PROMOTED_IDENTITY_RECORD_RETRIEVAL_RESOLVES_SURFACE_DEFECT",
+      "earned_claim": "Reading the explicit surface-to-canonical mapping from runtime-visible identity records resolves the surface identity defect on the sixth-vocabulary corpus. The mechanism is safe: 0% false resolution, 8% correct abstention on conflicting mappings, 92% correct resolution. The parser (extract_identity_links) correctly extracts mappings at 100% rate when the identity record is present."
     }
   },
   "testing_policy": "Tests assert structured state, never exact strings against narrative prose. Three separate failures came from matching capitalisation in text written separately from the assertion; the pattern was wrong, not merely careless. Prose is rendered from state, and state is what is tested.",
