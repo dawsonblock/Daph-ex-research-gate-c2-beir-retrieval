@@ -263,7 +263,8 @@ def s2a_entity_connectivity(candidates, *, budget: int, question: str, texts, **
     anchors = _reachable_entities(graph)
     chosen: list[str] = []
     live = set(anchors)
-    remaining = list(graph.record_ids)
+    # DETERMINISTIC: sort remaining by record_id to ensure input-permutation invariance
+    remaining = sorted(graph.record_ids)
     while len(chosen) < budget and remaining:
         best, best_score = None, -1e18
         for record_id in remaining:
@@ -278,7 +279,8 @@ def s2a_entity_connectivity(candidates, *, budget: int, question: str, texts, **
             if record_id in graph.relation_records:
                 score += 1.0
             score -= 0.5 * len(entities - live)
-            score += 0.25 / (1 + graph.record_ids.index(record_id))
+            # DETERMINISTIC: use sorted index instead of input-order index
+            score += 0.25 / (1 + remaining.index(record_id))
             if score > best_score:
                 best, best_score = record_id, score
         chosen.append(best)
@@ -370,7 +372,8 @@ def _pack_chains(graph: TaskGraph, chains: list[Chain], budget: int,
         if len(chosen) + len(addition) <= budget:
             chosen.extend(addition)
     # Backfill from pool order only if the graph produced too little structure.
-    for record_id in graph.record_ids:
+    # DETERMINISTIC: sort record IDs to ensure input-permutation invariance.
+    for record_id in sorted(graph.record_ids):
         if len(chosen) >= budget:
             break
         if record_id not in chosen:
