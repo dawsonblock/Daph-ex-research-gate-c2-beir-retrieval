@@ -5,7 +5,8 @@
     "controlled_gate_a_v2": "CANONICAL_for_gate_a0_and_gate_b",
     "controlled_gate_a_v3": "HISTORICAL_qualitative_only_four_defects_documented",
     "controlled_gate_a_v4": "CANONICAL_VALID_V4_true_frozen_before_evaluation",
-    "controlled_gate_c2_calibration_v1": "CANONICAL_for_gate_c2_component_selection_does_not_replace_v4"
+    "controlled_gate_c2_calibration_v1": "CANONICAL_for_gate_c2_component_selection_does_not_replace_v4",
+    "controlled_gate_c3_v1": "CANONICAL_VALID_C3_lighthouse_vocabulary_frozen_before_measurement"
   },
   "canonical_package": "hrm_adaptive_memory",
   "capabilities": {
@@ -39,7 +40,7 @@
     "gate_c2c_chain_completion_qualified": "PASS_all_four_regimes_on_identifiable_corpus",
     "gate_c2c_v2_chain_validation": "FAIL_ON_A_TRANSPLANTED_DESCRIPTION_THRESHOLD",
     "gate_c2c_v3_chain_validation": "FAIL_description_regime_only",
-    "gate_c3_surface_identity_resolution": "PENDING_PROTOCOL_FROZEN_IMPLEMENTATION_NOT_STARTED",
+    "gate_c3_surface_identity_resolution": "IN_PROGRESS_I0_I1_MEASURED_ON_C3V1_NEGATIVE_CONTROL_CONFIRMED",
     "gate_d_conditional_retrieval_opportunity": "PENDING_ACTION_TOO_WEAK_TO_MEASURE",
     "gate_e_learned_retrieval_control": "BLOCKED",
     "gate_f_recurrence_opportunity": "BLOCKED",
@@ -79,7 +80,7 @@
     "slot_label_echo": "99 -> 0 under precision packing; was an evidence-confusability artefact, not a prompt-interface or reasoning limit",
     "slot_label_echoes": "Track evidence quality, not packet format: 85 -> 28 under precision packing, -> 3 under oracle evidence. F-arms would measure a symptom; implemented but unrun."
   },
-  "next_work": "Gate C3 (Surface Identity Resolution) protocol is frozen at configs/gate_c3_protocol.json before any measurement: ladder I0-I6, primary metric S2cLiveRate (currently 0.0 on descv4_surface), no HRM initially, deterministic normalization before any learned resolver, no hardcoded entity vocabulary, and a fresh disjoint-vocabulary calibration corpus so the resolver is not tuned into a second surface-specific shortcut. Implementation NOT started, awaiting authorization. The anchor-found/anchor-missing routing policy is explicitly out of scope until resolution is itself qualified. S2c is promoted for the ID-partition mechanism only, not globally. Holdout untouched.",
+  "next_work": "Gate C3 (Surface Identity Resolution) is IN_PROGRESS. Protocol amended to v2_pre_measurement_amended before any measurement (false-resolution metrics, sixth-corpus disjointness audit, I1 negative-control classification). Sixth-vocabulary corpus (lighthouses) built and frozen as controlled_gate_c3_v1 with all disjointness overlaps = 0. I0 and I1 measured on c3v1_surface: both 100% UNRESOLVED, 0% wrong resolution, 0% false resolution — the mechanism fails safely by abstaining. I1 ~= I0 as predicted (normalization cannot recover a missing token). IdentityRecordRecallAtK = 1.0 and CanonicalEntityRecovery = 1.0 confirm the problem is resolution, not retrieval. S2cLiveRate = 0.0 on both rungs. The first rung that attacks the measured defect is I2 (prefix/suffix tolerant resolution), which has NOT been run. Stopping before I2 per the protocol ladder.",
   "ood_taxonomy": {
     "REFERENTIAL_OOD": {
       "mechanism": "identity resolution + multi-hop retrieval",
@@ -824,6 +825,18 @@
       "status": "MEASURED_BOTH_PARTITIONS_BUDGET_6",
       "surface_partition_defect": "S2b and S2c are INERT on descv4_surface: differs_from_s0=0.00 on every task. Question subjects there are truncated surface forms ('Ojos tension' vs canonical 'Ojos tension block'), so entity extraction yields no question entity on 100/100 tasks, no chains are enumerated, and packing falls back to pool order. Their surface figures are S0 replayed and are NOT measurements of those arms.",
       "uncomfortable_result": "On descv4_surface the rescoped relation-keyword control is the only arm with a significant gain: dQ=+0.1700, CI excluding zero under all three groupings, SGC 30.9%. It needs no entity extraction, so it still works where identity resolution fails. This does not rehabilitate it as a chain selector -- its BridgeRetention is 0.000 on descv4_id -- but it is not merely an artifact either."
+    },
+    "gate_c3_i0_i1": {
+      "claim": "On the sixth-vocabulary (lighthouse) surface corpus, both I0 (current anchor extraction) and I1 (normalization-only negative control) resolve 0/100 surface tasks. The mechanism fails safely: 0% wrong resolution, 0% false resolution, 100% unresolved. I1 ~= I0 as predicted (normalization cannot recover a missing token). IdentityRecordRecallAtK = 1.0 and CanonicalEntityRecovery = 1.0 confirm the problem is resolution, not retrieval. S2cLiveRate = 0.0 on both rungs.",
+      "not_a_claim_about": [
+        "I2 or higher rungs, which have not been run",
+        "retrieval quality, since the candidate pool is the full evidence set",
+        "the ID partition, where S2c is already qualified",
+        "global pipeline promotion of any selector"
+      ],
+      "report": "evidence/gate_c3/i0_i1_receipt.json",
+      "experiment_verdict": "NEGATIVE_CONTROL_CONFIRMED_I0_AND_I1_BOTH_INERT_ON_SURFACE",
+      "earned_claim": "Trivial text normalization does not explain the surface anchoring failure; the defect is missing-token truncation, requiring prefix/suffix tolerant resolution (I2) or identity-record retrieval (I3)."
     }
   },
   "testing_policy": "Tests assert structured state, never exact strings against narrative prose. Three separate failures came from matching capitalisation in text written separately from the assertion; the pattern was wrong, not merely careless. Prose is rendered from state, and state is what is tested.",

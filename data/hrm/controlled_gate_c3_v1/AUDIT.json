@@ -1,0 +1,70 @@
+{
+  "VALID_C3_CORPUS": true,
+  "audit": {
+    "c3v1_id": {
+      "description_identifiability": {
+        "DESCRIPTION_SURFACE_UNIQUENESS": 0,
+        "IDENTITY_EVIDENCE_SUFFICIENCY": 0,
+        "NORMALIZED_SURFACE_COLLISION": 0,
+        "RUNTIME_REFERENT_IDENTIFIABILITY": 0,
+        "description_task_count": 0,
+        "distinct_description_surfaces": 0
+      },
+      "distractor_leaks": 0,
+      "id_collisions_with_prior_corpora": 0,
+      "latent_leaks": 0,
+      "not_inferable": 0,
+      "question_leaks": 0
+    },
+    "c3v1_surface": {
+      "description_identifiability": {
+        "DESCRIPTION_SURFACE_UNIQUENESS": 0,
+        "IDENTITY_EVIDENCE_SUFFICIENCY": 0,
+        "NORMALIZED_SURFACE_COLLISION": 0,
+        "RUNTIME_REFERENT_IDENTIFIABILITY": 0,
+        "description_task_count": 50,
+        "distinct_description_surfaces": 50
+      },
+      "distractor_leaks": 0,
+      "id_collisions_with_prior_corpora": 0,
+      "latent_leaks": 0,
+      "not_inferable": 0,
+      "question_leaks": 0
+    }
+  },
+  "freeze_audit": {
+    "alias_overlap": 0,
+    "description_overlap": 0,
+    "entity_surface_overlap": 0,
+    "evidence_exact_string_overlap": 0,
+    "source_cluster_overlap": 0,
+    "vocabulary_overlap": 0
+  },
+  "generator": "controlled_gate_c3_v1",
+  "problems": [],
+  "separation": {
+    "evidence_id_collisions": 0,
+    "overlap_with_cal_v1_heads": 0,
+    "overlap_with_v2_heads": 0,
+    "overlap_with_v3_heads": 0,
+    "overlap_with_v4_heads": 0,
+    "overlap_with_v4d_heads": 0,
+    "task_id_prefix": "c3v1-"
+  },
+  "state": {
+    "arm_reselection_forbidden": true,
+    "frozen_before_evaluation": true,
+    "holdout_touched": false,
+    "purpose": "gate_c3_surface_identity_resolution",
+    "replaces_prior_corpora": false,
+    "valid": true,
+    "vocabulary_domain": "lighthouses"
+  },
+  "template_policy": {
+    "exact_string_overlap_measured": 0,
+    "exact_string_overlap_required": 0,
+    "note": "Abstract template families are structurally analogous so the same task is being tested. Surface realization (entity names, roles, descriptors, symbolic codes) is fully disjoint. Template scaffolding (e.g. 'Survey finding: ...') is shared by design \u2014 the distinction is recorded here per the protocol's template_policy.",
+    "semantic_task_schema_preserved": true,
+    "surface_realization_disjoint": true
+  }
+}

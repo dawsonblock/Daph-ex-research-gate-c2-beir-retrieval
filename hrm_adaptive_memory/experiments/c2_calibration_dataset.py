@@ -489,3 +489,26 @@ VOCAB_V4D = {
     "BOOLEAN": ("true2", "false2"),
     "JSON_KEYS": ("grade4", "tier4", "state4", "band4"),
 }
+
+
+VOCAB_C3 = {
+    # Sixth domain: birds, minerals, constellations, rivers, summits, now
+    # lighthouses. Built for Gate C3 surface identity resolution. Every surface
+    # vocabulary token is disjoint from all five prior corpora so the resolver
+    # cannot succeed by recognizing familiar entity names.
+    "HEADS": ("Pharos", "Eddystone", "Fastnet", "Skellig", "Portland", "Lundy",
+              "Flannan", "Mullion", "Dungeness", "Beachy", "Cromer", "Whitby",
+              "Flamborough", "Spurn", "Berwick", "Stornoway", "Muckle", "Flugga",
+              "Bullars", "Mewstone", "Trevose", "Hartland"),
+    "ROLES": ("lens housing", "fog siren", "lamp chamber", "prism bracket",
+              "lantern gallery", "optic cradle"),
+    "DESCRIPTORS": ("unit logged during the lighthouse inspection",
+                    "unit entered in the keeper ledger",
+                    "unit noted on the coastal survey roll",
+                    "unit filed with the maritime report"),
+    "SYMBOLIC": ("ZETA3-RUBY", "ETA3-PEARL", "THETA3-OPAL", "IOTA3-SAPPHIRE",
+                 "KAPPA3-AGATE", "LAMBDA3-CINNABAR", "MU3-ONYX", "NU3-TURQUOISE"),
+    "ENUM": ("illuminated", "extinguished", "automated", "decommissioned", "relit"),
+    "BOOLEAN": ("active", "dormant"),
+    "JSON_KEYS": ("grade5", "tier5", "state5", "band5"),
+}
