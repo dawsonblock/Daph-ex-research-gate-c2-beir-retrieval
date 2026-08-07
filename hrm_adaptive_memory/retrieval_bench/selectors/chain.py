@@ -42,6 +42,80 @@ _RELATION_IN_QUESTION = re.compile(
 _MIN_HEADS_PER_TYPE = 2
 _MIN_RECORDS_PER_PHRASE = 2
 
+# DETERMINISTIC TIE-BREAK POLICY (C4 protocol v2, Phase 2.4)
+#
+# Every ranking function in this module uses the following total order:
+#   1. selector score descending (quantized to 12 decimal places)
+#   2. evidence role priority ascending (lower = higher priority)
+#   3. retrieval fusion score descending (quantized)
+#   4. record_id lexical ascending
+#
+# No two different records compare equal under this policy.
+# The quantization prevents floating-point noise from causing spurious
+# differences at machine precision.
+
+def _quantize(score: float) -> float:
+    """Quantize a score to 12 decimal places to eliminate FP noise."""
+    return round(float(score), 12)
+
+
+# Role priority table (C4 protocol v2, Phase 4)
+# Lower number = higher priority in the packet.
+ROLE_PRIORITY = {
+    "identity": 10,
+    "direct": 20,
+    "link": 20,
+    "bridge": 30,
+    "intermediate": 40,
+    "current": 50,
+    "value": 50,
+    "fact": 50,
+    "support": 60,
+    "superseded": 70,
+    "accepted": 80,
+    "rejected-0": 85,
+    "rejected-1": 85,
+    "dead-end-0": 90,
+    "dead-end-1": 90,
+    "distractor": 100,
+}
+
+
+def _role_priority(record_id: str) -> int:
+    """Extract role priority from the record ID suffix.
+
+    Record IDs have the form '<task_id>/<role>', e.g.
+    'ownership_chain-0002/value' or 'distractor_heavy-0007/identity'.
+    """
+    if "/" in record_id:
+        role = record_id.rsplit("/", 1)[-1]
+    else:
+        role = "unknown"
+    return ROLE_PRIORITY.get(role, 95)
+
+
+def candidate_sort_key(
+    selector_score: float,
+    retrieval_score: float,
+    record_id: str,
+) -> tuple:
+    """Canonical total-order key for ranking candidates.
+
+    Returns a tuple that defines a strict total order:
+        (-quantized(selector_score),
+         role_priority(record_id),
+         -quantized(retrieval_score),
+         record_id)
+
+    No two different records compare equal.
+    """
+    return (
+        -_quantize(selector_score),
+        _role_priority(record_id),
+        -_quantize(retrieval_score),
+        record_id,
+    )
+
 # Closed-class English function words cannot head an entity name. This is a
 # grammatical fact, not a corpus prior, and it rejects prose openers such as
 # "The survey lists", "Under survey", and "From the field" whose surface shape
@@ -228,7 +302,11 @@ class Chain:
 
 
 def enumerate_chains(graph: TaskGraph, *, max_hops: int = 3) -> list[Chain]:
-    """Bounded paths from a question entity toward a relation-bearing record."""
+    """Bounded paths from a question entity toward a relation-bearing record.
+
+    All set iterations are sorted to ensure hash-seed-independent
+    determinism.  The order of chain enumeration is fully deterministic.
+    """
     start = _reachable_entities(graph)
     chains: list[Chain] = []
     # Each state is (records so far, entities reached).
@@ -236,8 +314,10 @@ def enumerate_chains(graph: TaskGraph, *, max_hops: int = 3) -> list[Chain]:
     for _hop in range(max_hops):
         nxt: list[tuple[tuple[str, ...], frozenset[str]]] = []
         for records, reached in frontier:
-            for entity in reached:
-                for record_id in graph.records_by_entity.get(entity, ()):
+            # DETERMINISTIC: sort entities before iterating
+            for entity in sorted(reached):
+                # DETERMINISTIC: sort record IDs before iterating
+                for record_id in sorted(graph.records_by_entity.get(entity, ())):
                     if record_id in records:
                         continue
                     grown = records + (record_id,)
@@ -270,10 +350,16 @@ def _score_chain(chain: Chain, graph: TaskGraph, *, use_relation: bool) -> float
 
 def _pack_chains(graph: TaskGraph, chains: list[Chain], budget: int,
                  *, use_relation: bool) -> list[str]:
-    """Greedy chain packing: add whole structures, not top-scoring documents."""
+    """Greedy chain packing: add whole structures, not top-scoring documents.
+
+    The sort key is a total order: score descending, then chain length
+    ascending, then the tuple of record IDs lexicographically ascending.
+    No two different chains compare equal.
+    """
     scored = sorted(
         chains, key=lambda c: (-_score_chain(c, graph, use_relation=use_relation),
-                               len(c.records)))
+                               len(c.records),
+                               c.records))  # DETERMINISTIC final tie-break
     chosen: list[str] = []
     for chain in scored:
         if len(chosen) >= budget:
