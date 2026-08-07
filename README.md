@@ -1,210 +1,408 @@
-# DAPH-HRM adaptive memory control plane v3.7.1
+# DAPH-HRM Adaptive Memory Control Plane v3.7.1
 
-Pretrained-compatible adaptive computation with a physically ordered four-level effort hierarchy.
+> Pretrained-compatible adaptive computation with a physically ordered four-level effort hierarchy, plus a staged retrieval-and-memory research pipeline built on **HRM-Text-1B**.
+
+[![Tests](https://img.shields.io/badge/tests-548%20passed-brightgreen)](#tests)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](#install)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey)](#license)
+[![HRM--Text--1B](https://img.shields.io/badge/HRM--Text--1B-sapientinc-orange)](https://huggingface.co/sapientinc/HRM-Text-1B)
+
+---
+
+## What this repository does
+
+This is a **gate-structured research pipeline** that measures whether each
+mechanism in an adaptive memory stack earns its place before it is allowed
+into the canonical build. Every gate has a frozen protocol, pre-declared
+promotion thresholds, and immutable evidence bundles with SHA-256 hashing.
+
+The pipeline is built on **HRM-Text-1B** (sapientinc), a 1B-parameter
+PrefixLM reasoning model, and tests whether retrieval, identity resolution,
+evidence selection, and bridge acquisition each add measurable value
+before being composed into the integrated pipeline.
+
+```
+question → subject-preserving query → BM25+BGE retrieval
+         → I3 identity resolution → S2c structural selection
+         → bounded evidence packet → HRM-Text-1B → verified answer
+```
+
+---
+
+## Gate status dashboard
+
+| Gate | Status | Key result |
+|------|--------|------------|
+| **A0** Evidence use | ✅ PASS | HRM-Text-1B uses correctly supplied external evidence |
+| **B** Single-pass retrieval | ✅ PASS | BM25 dominates tested dense representations on identifiable corpus |
+| **C0** Controlled iterative retrieval | ⚠️ MECHANISM_SUCCESS, PROMOTION_BLOCKED | Reaches oracle ceiling on v2 but cannot promote under its own statistical rule |
+| **C1** Structural generalization | ❌ FAIL | Inert out of distribution (0.080 vs 0.764) — entity chaining is lexical, not inferential |
+| **C2-R** Retrieval coverage | ✅ PASS | Candidate-generation policy frozen (P2 RRF bm25+bge k=10) |
+| **C2-S** Evidence selection | ✅ PASS | Structural selection captures 30% of oracle gap on ID partition |
+| **C3** Surface identity resolution | ✅ MECHANISM_SUCCESS | I3 identity-record retrieval resolves surface defect with 92% accuracy, 0% false resolution |
+| **C4** Integrated memory pipeline | 🔄 IN_PROGRESS | Historical development: +0.1792 quality delta (CI [+0.106, +0.263], threshold +0.15) |
+| **C4-BRIDGE** Runtime bridge acquisition | ❌ NEGATIVE RESULT | No runtime bridge mechanism beats one-pass baseline (B0 CES=0.783 vs B2 CES=0.775) |
+| **D–N** Downstream gates | 🔒 BLOCKED | Pending C4 promotion |
+
+Full machine-readable state: [`RESEARCH_STATUS.json`](RESEARCH_STATUS.json)
+
+---
+
+## C4 integrated pipeline — current focus
+
+The C4 gate composes all qualified mechanisms into a single pipeline and
+measures whether the composition adds value beyond any single component.
+
+### Seven-arm ablation
+
+| Arm | Query | Retrieval | Identity | Selector | What it tests |
+|-----|-------|-----------|----------|----------|---------------|
+| C4_0 | original | BM25 | off | S0 | Baseline (no memory stack) |
+| C4_1 | subject-preserving | BM25 | off | S0 | Query formulation only |
+| C4_2 | subject-preserving | BM25+BGE | off | S0 | + Dense retrieval |
+| C4_3 | subject-preserving | BM25+BGE | I3 | S0 | + Identity resolution |
+| C4_4 | subject-preserving | BM25+BGE | I3 | S2c | + Structural selection |
+| C4_5 | subject-preserving | BM25+BGE | I3 | oracle | Oracle selector ceiling |
+| C4_6 | subject-preserving | BM25+BGE | oracle | oracle_evidence | Full oracle ceiling |
+
+### Historical development scores (rescored with corrected verifier)
+
+| Arm | Quality | Accuracy |
+|-----|---------|----------|
+| C4_0 | 0.1625 | 0.1667 |
+| C4_1 | 0.1708 | 0.1583 |
+| C4_2 | 0.2125 | 0.1667 |
+| C4_3 | 0.2125 | 0.1667 |
+| C4_4 | 0.3417 | 0.2583 |
+| C4_5 | 0.7917 | 0.8833 |
+| C4_6 | 0.9542 | 0.9083 |
+
+**Primary delta (C4_4 − C4_0): +0.1792**, family bootstrap CI [+0.106, +0.263], threshold +0.15.
+
+### C4-BRIDGE negative result
+
+Iterative retrieval was implemented and tested. No runtime bridge mechanism
+beats the one-pass baseline:
+
+| Mechanism | CES | Recall | Second-pass rate |
+|-----------|-----|--------|------------------|
+| B0 (one-pass baseline) | 0.783 | 0.925 | 0% |
+| B1 (heuristic) | 0.767 | 0.917 | 34.2% |
+| B2 (relation parser) | 0.775 | 0.921 | 35.0% |
+| B3 (connectivity) | 0.775 | 0.921 | 35.0% |
+| B4 (oracle bridge) | 0.933 | 0.975 | 60.0% |
+
+**Decision: iterative retrieval is disabled.** C4 uses the one-pass pipeline.
+Oracle bridge headroom exists (B4 CES=0.933) but no runtime mechanism captures it.
+
+### Conformance validation (7 gates)
+
+Every run passes all 7 conformance gates before HRM execution:
+
+1. ✅ No oracle leakage
+2. ✅ Arm parity (arms differ only where expected)
+3. ✅ Selected IDs in pool
+4. ✅ Packet budgets
+5. ✅ Q3 query formulation
+6. ✅ Merge provenance
+7. ✅ Causal parity (each mechanism change causes only expected downstream effects)
+
+---
+
+## Quick start
+
+### Install
+
+```bash
+pip install -e .
+# For HRM execution (requires transformers >= 5.9):
+pip install -e ".[hrm]"
+```
+
+### Run tests
+
+```bash
+python -m pytest -q
+# 548 passed, 2 skipped
+```
+
+### Run the C4 pipeline
+
+```bash
+# CPU-only dry run (validates all 7 conformance gates, ~15 seconds)
+python scripts/run_gate_c4.py dry-run
+
+# C4-BRIDGE gate (no HRM, ~2 seconds)
+python scripts/run_gate_c4_bridge.py
+
+# HRM smoke test (3 tasks × 7 arms, ~2-3 minutes on GPU)
+python scripts/run_gate_c4.py smoke
+
+# Full conformant development run (120 tasks × 7 arms, ~15-25 min on T4 GPU)
+python scripts/run_gate_c4.py full --split development
+
+# Analyze results (family/cluster/template CIs, task flips, gap capture)
+python scripts/analyze_gate_c4.py --dir evidence/gate_c4/full/development
+
+# Diagnose S2c selection behavior
+python scripts/diagnose_c4_composition.py
+```
+
+### Run on Google Colab (T4 GPU)
+
+The fastest way to run the full C4 conformant development rerun:
+
+1. Go to [Google Colab](https://colab.research.google.com/)
+2. **Runtime → Change runtime type → T4 GPU + High-RAM**
+3. **File → Upload notebook** → upload [`scripts/colab_c4_conformant_run.ipynb`](scripts/colab_c4_conformant_run.ipynb)
+4. **Runtime → Run all**
+
+Or run the Python script directly:
+
+```python
+!git clone https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval.git
+%cd Daph-ex-research-gate-c2-beir-retrieval
+!pip install -e ".[hrm]"
+!python scripts/colab_c4_conformant_run.py
+```
+
+**Expected time on T4 GPU: ~20-30 minutes** (vs 3+ hours on CPU).
+
+The run is resumable — if Colab disconnects, re-run picks up where it left off.
+
+---
+
+## Architecture
+
+### C4 pipeline stages
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  C4 Integrated Memory Pipeline                                   │
+│                                                                  │
+│  Question                                                        │
+│    │                                                             │
+│    ▼                                                             │
+│  Query Stage (Q3: subject-preserving)                            │
+│    │  Keeps subject entity, includes target relation             │
+│    ▼                                                             │
+│  Retrieval Stage (BM25 + BGE RRF fusion, k=10)                  │
+│    │  Pinned: BAAI/bge-small-en-v1.5, CLS pooling               │
+│    ▼                                                             │
+│  Identity Stage (I3: identity-record resolution)                 │
+│    │  Reads surface→canonical mappings from evidence             │
+│    │  EXACT / RESOLVED / AMBIGUOUS / UNRESOLVED                  │
+│    ▼                                                             │
+│  Selection Stage (S2c: structural selection)                     │
+│    │  Prefers identity/link/value records over dead-ends         │
+│    │  Falls back to S0 (BM25 score) when no structure            │
+│    ▼                                                             │
+│  Packet Stage (bounded evidence packet)                          │
+│    │  Precision packing with hash for provenance                 │
+│    ▼                                                             │
+│  HRM-Text-1B (PrefixLM reasoning, max 64 new tokens)            │
+│    │                                                             │
+│    ▼                                                             │
+│  Verified Answer (shared verifier)                               │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Key modules
+
+| Module | Purpose |
+|--------|---------|
+| `hrm_adaptive_memory/c4/arms.py` | 7-arm ablation definitions |
+| `hrm_adaptive_memory/c4/query_stage.py` | Q3 subject-preserving query formulation |
+| `hrm_adaptive_memory/c4/retrieval_stage.py` | BM25+BGE RRF fusion |
+| `hrm_adaptive_memory/c4/identity_stage.py` | I3 identity-record resolution |
+| `hrm_adaptive_memory/c4/selection_stage.py` | S2c structural selection |
+| `hrm_adaptive_memory/c4/packet_stage.py` | Bounded evidence packet with precision packing |
+| `hrm_adaptive_memory/c4/parity.py` | 7 conformance validation gates |
+| `hrm_adaptive_memory/c4/provenance.py` | Immutable result hashing (manifest + RESULTS.sha256) |
+| `hrm_adaptive_memory/c4/relational_state.py` | V4 link-record parser for relational graph |
+| `hrm_adaptive_memory/c4/bridge_extraction.py` | Bridge extraction (retained for provenance, disabled in pipeline) |
+| `hrm_adaptive_memory/hrm/model.py` | HRM-Text-1B adapter (PrefixLM, SDPA attention) |
+| `hrm_adaptive_memory/evaluation/verifiers.py` | Shared verifier (exact, symbolic, enum, boolean, JSON) |
+
+### Effort hierarchy (legacy architecture)
+
+`QwenExFusionModel` executes distinct compute graphs:
+
+| Mode | Execution | Intent |
+|------|-----------|--------|
+| E0 | first 50% of layers | Cheapest approximation |
+| E1 | first 75% of layers | Intermediate approximation |
+| E2 | all layers | Full pretrained anchor |
+| E3 | full backbone + bounded recurrent refinement | Additional compute for difficult inputs |
+
+Deterministic `EffortComputeReceipt` accounting proves:
+`C(E0) < C(E1) < C(E2) < C(E3)` and `C_norm(E2) = 1.0`.
+
+---
+
+## Repository structure
+
+```
+hrm_adaptive_memory/          # Active research implementation
+  c4/                         # C4 integrated pipeline (current focus)
+    arms.py                   #   7-arm ablation
+    query_stage.py            #   Q3 subject-preserving query
+    retrieval_stage.py        #   BM25+BGE RRF fusion
+    identity_stage.py         #   I3 identity resolution
+    selection_stage.py        #   S2c structural selection
+    packet_stage.py           #   Bounded evidence packet
+    parity.py                 #   7 conformance gates
+    provenance.py             #   Immutable result hashing
+    relational_state.py       #   V4 link-record parser
+    bridge_extraction.py      #   Bridge extraction (disabled)
+  hrm/                        # HRM-Text-1B adapter
+  retrieval/                  # BM25 + BGE embedder
+  evaluation/                 # Shared verifiers
+
+scripts/                      # 67 executable scripts
+  run_gate_c4.py              #   C4 harness (dry-run, smoke, full)
+  run_gate_c4_bridge.py       #   C4-BRIDGE qualification gate
+  analyze_gate_c4.py          #   C4 analyzer (CIs, flips, gap capture)
+  diagnose_c4_composition.py  #   S2c selection diagnostic
+  colab_c4_conformant_run.*   #   Colab T4 GPU scripts
+
+configs/                      # Frozen protocol configurations
+  gate_c4_protocol.json       #   C4 protocol (frozen before measurement)
+  gate_c3_protocol.json       #   C3 protocol
+  gate_c2_protocol.json       #   C2 protocol
+
+evidence/                     # Immutable evidence bundles
+  gate_c4/                    #   C4 results (dry_run, smoke, full, bridge)
+  gate_c3/                    #   C3 results
+  gate_c2/                    #   C2 results
+
+tests/                        # 548 tests (unit + integration)
+data/hrm/controlled_gate_a_v4/# Frozen task corpus (120 dev + 120 qual + 120 OOD)
+```
+
+---
+
+## Evidence integrity
+
+Every result bundle is cryptographically hashed for reproducibility:
+
+- **Protocol hash**: SHA-256 of the frozen protocol JSON, recorded in manifest
+- **Task corpus hash**: SHA-256 of the task corpus, recorded in manifest
+- **Evidence corpus hash**: SHA-256 of the evidence corpus, recorded in manifest
+- **RESULTS.sha256**: Per-file hashes of all result JSONL files
+- **Git commit**: Recorded in manifest for full traceability
+
+```json
+{
+  "protocol_sha256": "e4e803a2...",
+  "task_corpus_sha256": "71d13609...",
+  "evidence_corpus_sha256": "de6d710f...",
+  "git_commit": "9960806...",
+  "validation": {
+    "no_leakage": true,
+    "parity": true,
+    "selected_in_pool": true,
+    "packet_budgets": true,
+    "q3_query_formulation": true,
+    "merge_provenance": true,
+    "causal_parity": true
+  }
+}
+```
+
+---
+
+## Metrics
+
+All metrics are defined in the [protocol](configs/gate_c4_protocol.json) under
+`metric_definitions`:
+
+| Metric | Definition |
+|--------|------------|
+| **Quality** | Partial-credit: 1.0 for correct, 0.0 for incorrect (shared verifier) |
+| **CES** | Complete Evidence Set: 1.0 if all required evidence is selected, else 0.0 |
+| **CSR** | Complete Set Retention: fraction of required evidence selected |
+| **S2c live rate** | Fraction of tasks where S2c selector activated |
+| **SGC** | Selector Gap Capture: (C4_4 − C4_3) / (C4_5 − C4_3) |
+| **OGC** | Oracle Gap Capture: (C4_5 − C4_0) / (C4_6 − C4_0) |
+| **Primary delta** | C4_4 quality − C4_0 quality, with grouped bootstrap CI |
+| **Family CI** | Bootstrap CI resampling whole families |
+| **Cluster CI** | Bootstrap CI resampling whole source clusters |
+| **Template CI** | Bootstrap CI resampling whole templates |
+| **Task flip** | Per-task quality change: improve / regress / unchanged |
+
+---
+
+## Promotion criteria (frozen before qualification)
+
+1. C4_4 quality > C4_0 by at least +0.15 absolute on development
+2. No material canonical/abbreviation regression > 0.05
+3. Alias and description both improve over C4_0
+4. FalseResolutionRate ≤ 0.02
+5. C4_4 materially reduces the C4_5 oracle-selector gap
+6. All runtime payloads pass oracle-leak validation
+7. Candidate/evidence budgets remain fixed
+8. Grouped bootstrap lower bound for primary quality delta > 0
+9. No post-hoc mechanism/config changes after freeze
+
+---
+
+## Key reports
+
+- [Gate C4 Protocol](GATE_C4_PROTOCOL.md) — frozen protocol with metric definitions
+- [Gate C3 Report](GATE_C3_REPORT.md) — I3 identity-record resolution (MECHANISM_SUCCESS)
+- [Gate C1 Report](GATE_C1_REPORT.md) — structural generalization failure
+- [Gate B Report](GATE_B_REPORT.md) — single-pass retrieval qualification
+- [Research Status](RESEARCH_STATUS.json) — full machine-readable state
+- [Changelog](CHANGELOG.md) — version history
+
+---
 
 ## Repository ownership
 
 | Package | Status |
-|---|---|
-| `hrm_adaptive_memory/` | **ACTIVE_HRM_RESEARCH** — the only canonical research implementation; all new HRM work lands here |
-| `daph/` | LEGACY_QWEN_EXFUSION — frozen; tests kept passing, no new HRM work |
-| `daph_metareasoner/` | LEGACY_METAREASONING — frozen; tests kept passing, no new HRM work |
+|---------|--------|
+| `hrm_adaptive_memory/` | **ACTIVE_HRM_RESEARCH** — canonical research implementation |
+| `daph/` | LEGACY_QWEN_EXFUSION — frozen, tests maintained |
+| `daph_metareasoner/` | LEGACY_METAREASONING — frozen, tests maintained |
 
-Gate A0 (evidence use) and Gate B (single-pass retrieval) have **passed**.
-Gate C0 reached the oracle ceiling on the v2 corpus but could not be promoted
-under its own pre-declared statistical rule. **Gate C1 then failed**: on the
-harder `controlled_gate_a_v3` corpus the same mechanism scores 0.394 against a
-0.828 oracle-evidence ceiling, and is **entirely inert out of distribution**
-(0.080 vs 0.764) — the entity extractor matches nothing in 250 of 250 OOD
-questions, so no follow-up ever fires ([report](GATE_C1_REPORT.md)).
+---
 
-The mechanism was performing lexical identifier chaining, not bridge inference.
-The reader is not the bottleneck: given perfect evidence HRM scores 0.828 and
-0.764 on a corpus of aliases, descriptions, unseen source styles, and
-non-numeric answers. Memory-stack expansion (RuVector, TurboVec, Graphiti,
-adaptive recurrence, learned executive) stays blocked. Current state is
-machine-readable in [RESEARCH_STATUS.json](RESEARCH_STATUS.json).
+## Testing policy
 
-Gate B established that second-hop recall and evidence precision must be
-optimised **jointly**. Gate C1 added the constraint that neither may depend on
-surface identifier shape, so the next mechanism is an information-gap layer
-rather than entity chaining:
-
-```
-question → first-pass evidence
-        → explicit state: KNOWN / TARGET / MISSING RELATION / CANDIDATE BRIDGES
-        → query the missing *relation on the bridge*, not the bridge's name
-        → relation-aware connectivity (not entity-string anchoring)
-        → small coherent evidence subgraph → HRM
-```
-
-## Canonical architecture
-
-- `QwenCompatModel` is the exact source-compatible checkpoint representation used by Gate 0A.
-- `QwenExFusionModel` is the canonical pretrained adaptive-compute architecture and Gate 0B target.
-- `DAPHHybridModelV3` remains available as a legacy experimental SSM/attention/MoE research path.
-
-`QwenExFusionModel` reuses one imported backbone and executes distinct graphs:
-
-| Mode | Execution | Intent |
-|---|---|---|
-| E0 | first `ceil(0.50 × layers)` blocks → final RMSNorm/head | cheapest approximation |
-| E1 | first `ceil(0.75 × layers)` blocks → final RMSNorm/head | intermediate approximation |
-| E2 | every imported block → unchanged final RMSNorm/head | full pretrained anchor |
-| E3 | full backbone plus bounded recurrent refinement around a configured/profiled middle region | additional difficult-input compute |
-
-E0/E1 optionally enable a small zero-residual bottleneck continuation for frozen-backbone distillation; it is off by default so the direct shallow-exit baseline remains measurable.
-
-Deterministic `EffortComputeReceipt` accounting proves, for supported backbones with at least three resolvable depths:
-
-`C(E0) < C(E1) < C(E2) < C(E3)` and `C_norm(E2) = 1.0`.
-
-`effort_mode="adaptive"` runs a configurable shallow imported-Qwen prefix as a shared probe, pools its internal hidden state, and dispatches each sample to E0–E3 without re-running the prefix. Adaptive execution refuses to run without an installed `VERIFIED_FIT` controller. Policy training itself is blocked until both effort-arm and oracle-opportunity gates pass.
-
-The former final-state E3 remains available as `final_refine`. Canonical `middle_recurrent`, experimental zero-gated `middle_repeat`, and profile-guided selection are research variants. The attached single-layer-RL study motivates the middle-depth prior; it does not establish that recurrence or layer reuse will improve this model. The repository therefore measures contributions on the exact checkpoint and preserves negative findings.
-
-At conversion time all augmentation scales are exactly zero, preserving:
-
-`QwenExFusion(E2) == QwenCompat` to numerical tolerance.
-
-Inspired by architectural principles from Kimi K3, adapted for smaller experimental systems:
-
-- **Sequence mixing**: SelectiveSSM (default continuous state) + periodic global attention
-- **Width mixing**: LatentMoE (latent experts + RMSNorm + optional SiTU-GLU + Quantile Balancing)
-- **Depth mixing**: BlockAttnRes / AttnResBank
-- **Compute budget**: EffortController + cost-aware aux loss + early-exit
-- **Merging**: architecture-aware DARE → TIES (pure sign-majority) → Fisher
-
-## Install
-
-```bash
-pip install -e .
-# or just PYTHONPATH=.
-```
-
-## Legacy quick start
-
-```python
-from daph import DAPHConfigV3, DAPHHybridModelV3
-
-cfg = DAPHConfigV3(
-    hidden_size=256,
-    latent_size=128,
-    num_layers=6,
-    num_recurrent_per_block=3,
-    moe_activation="situ",
-    use_quantile_balancing=True,
-    use_attn_res=True,
-)
-model = DAPHHybridModelV3(cfg)
-out = model(input_ids)  # dict with logits, effort_scores, ...
-```
-
-## Tests
+Tests assert structured state, never exact strings against narrative prose.
+The shared verifier (`hrm_adaptive_memory.evaluation.verifiers`) is the single
+source of truth for answer correctness across all gates.
 
 ```bash
 python -m pytest -q
+# 548 passed, 2 skipped
 ```
 
-## Canonical experiment commands
+---
 
-```bash
-# Gate 0A and exact Gate 0B
-python scripts/run_phase0_retention.py \
-  --hf-model Qwen/Qwen2.5-0.5B-Instruct --hf-revision <commit-sha> \
-  --data val.jsonl --output runs/phase0 --phase both
+## License
 
-# Synthetic plumbing check (not a source-model qualification)
-python scripts/run_phase0_retention.py --synthetic --output runs/phase0_synthetic
+MIT. See [LICENSE](LICENSE) for details.
 
-# Staged adaptation, per-effort evaluation, counterfactual collection,
-# oracle qualification, and policy training use the public Python APIs:
-# TrainingStageConfig/train_adapt, eval_per_effort,
-# CounterfactualCollector/oracle_analysis, and EffortPolicyTrainer.
+---
+
+## Citation
+
+If you use this work, cite the repository and the HRM-Text-1B model:
+
+```bibtex
+@misc{daph-hrm-2024,
+  title  = {DAPH-HRM Adaptive Memory Control Plane},
+  author = {Dawson Block},
+  year   = {2024},
+  url    = {https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval}
+}
 ```
 
-The immutable experiment sequence is:
+---
 
-HF checkpoint → Gate 0A → QwenCompat → exact Gate 0B → layer profile → E3 hard-case training/ablations → effort qualification → freeze → counterfactual collection → oracle gate → hidden policy → sham/random controls → IID test → leave-family-out OOD test.
+## Acknowledgements
 
-See [`docs/PIPELINE_COMMANDS.md`](docs/PIPELINE_COMMANDS.md) for executable examples for every stage.
-
-E3 scientific accounting is specified in [`docs/UTILITY_ACCOUNTING_REPORT.md`](docs/UTILITY_ACCOUNTING_REPORT.md), with the enforced replicated protocol in [`docs/E3_EXPERIMENT_PROTOCOL_V341.md`](docs/E3_EXPERIMENT_PROTOCOL_V341.md), enforcement audit in [`docs/QUALIFICATION_ENFORCEMENT_REPORT_V341.md`](docs/QUALIFICATION_ENFORCEMENT_REPORT_V341.md), and immutable artifact contract in [`docs/EVIDENCE_SCHEMA_V340.md`](docs/EVIDENCE_SCHEMA_V340.md).
-
-## Standalone marginal-utility controller
-
-`daph_metareasoner` is the smaller controller-first research path. It wraps one frozen model with `STOP`, `THINK`, `VERIFY`, and `DECOMPOSE`, collects isolated state/action outcomes, proves oracle conditional value before training, compares hidden-state probes with cheap shams, and permits on-path execution only after paired IID/OOD utility gates pass. It intentionally excludes latent workspaces, specialists, retrieval, and vector-speaking agents.
-
-The first pinned 0.5B-Instruct engineering smoke failed the oracle opportunity gate, so no value controller was trained. See [`docs/MARGINAL_UTILITY_CONTROLLER.md`](docs/MARGINAL_UTILITY_CONTROLLER.md) for the architecture, commands, stop criteria, and negative evidence.
-
-GitHub Actions runs the complete Python compatibility matrix, exact architecture gates, synthetic Phase 0 evidence generation, and package build. See [`docs/CI_WORKFLOW.md`](docs/CI_WORKFLOW.md) for the job graph, artifact contract, and recommended branch protection.
-
-## Real-model smoke result
-
-The initial pinned `Qwen/Qwen2.5-0.5B` + WikiText-2 smoke exposed weak exits and an unstable E3 graph. The corrected run keeps exact E2, improves E0/E1 CE by `1.468`/`0.668`, and changes E3 from a `2.257×` degrading path into a stable `1.009×` final refinement with a small positive CE delta. This is an engineering pass, not yet a router-quality claim.
-
-See [`docs/QUALITY_CORRECTION_REPORT.md`](docs/QUALITY_CORRECTION_REPORT.md) for the root-cause analysis, corrected measurements, limitations, and next workflow. The original failure is retained in [`docs/REAL_MODEL_SMOKE_REPORT.md`](docs/REAL_MODEL_SMOKE_REPORT.md).
-
-The subsequent frozen-E2 hard-case ablation found a teacher-forced E3 CE dose response but no verified E2→E3 rescues on its held-out arithmetic tasks, so E3 remains unqualified. See [`docs/E3_HARDCASE_ABLATION_REPORT.md`](docs/E3_HARDCASE_ABLATION_REPORT.md).
-
-A corrected checkpoint-specific sparse profile then selected layers 12–14. In a small matched-budget smoke comparison, refinement at the profiled middle layer produced a `0.02070` held-out CE gain versus `0.00543` at the final layer (approximately `3.81×` larger at equal compute), but both variants still produced zero exact-answer rescues. See [`docs/E3_PROFILED_MIDDLE_SMOKE_REPORT.md`](docs/E3_PROFILED_MIDDLE_SMOKE_REPORT.md).
-
-The answer-only follow-up calibrated every split to 50% E2 accuracy and compared final, heuristic-middle, and profiled-middle refinement at a matched four-step dose. Heuristic-middle produced the first held-out verified rescue (`1` rescue, `0` regressions) and the largest CE improvement, but its paired 95% quality lower bound remained zero. The historical report did not price per-task compute and is now explicitly a mechanism signal, not utility qualification. E3 and policy training remain unqualified. See [`docs/E3_ANSWER_ONLY_MIXED_RESULT.md`](docs/E3_ANSWER_ONLY_MIXED_RESULT.md).
-
-The v3.4.1 real qualification preflight evaluated 3,100 E2 calibration candidates and stopped before E3 training: only three families could supply the required mixed-success capacity, below the predeclared minimum of five. This is a negative data-readiness result, not an E3 result. See [`docs/REAL_QUALIFICATION_PREFLIGHT_V341.md`](docs/REAL_QUALIFICATION_PREFLIGHT_V341.md).
-
-## HRM external-memory research path
-
-`hrm_adaptive_memory` is the canonical standalone control plane around the native, revision-pinned
-`sapientinc/HRM-Text-1B` checkpoint. It implements the untouched PrefixLM
-baseline adapter, append-only provenance memory, structural chunking, hybrid
-dense/BM25 retrieval, Reciprocal Rank Fusion, reranking interfaces, retrieval
-metrics, redundancy-aware evidence packing, the mandatory oracle-context gate,
-cycle tracing, and isolated counterfactual action utilities. Adaptive execution
-fails closed until a controller is marked `VERIFIED_FIT`.
-
-Release 3.6.1 removes model-visible context-arm labels, separates capability-use
-from grounded-abstention studies, adds an optional hard-distractor control and
-conservative template/family/source-cluster inference, and registers TurboVec
-as a disabled compressed-dense retrieval candidate. The old `hrm_memory`
-imports are deprecated compatibility aliases for this release only.
-
-The current code is an engineering foundation, not evidence that HRM benefits
-from RAG or extra recurrence. See
-[`docs/HRM_ADAPTIVE_MEMORY_CONTROL_PLANE.md`](docs/HRM_ADAPTIVE_MEMORY_CONTROL_PLANE.md)
-for the staged protocol and commands.
-
-## Status
-
-The canonical Qwen path, legacy hybrid path, standalone marginal-utility package, and HRM adaptive-memory control plane coexist. Machine-readable gate state lives in [RESEARCH_STATUS.json](RESEARCH_STATUS.json); tests fail if it disagrees with the packaged version.
-
-**Gate A0 — PASSED.** Native `sapientinc/HRM-Text-1B` uses correctly supplied external evidence on the controlled synthetic benchmark: mean B3−B0 = 0.998, grouped-bootstrap LCB95 = 0.994 across template, family, and source-cluster groupings ([report](evidence/gate_a/qualified_run_002/gate_a_report_v2r1.json)). This claim is scoped to the controlled synthetic corpus. It is **not** a claim about general long-term memory, natural-document memory, open-domain RAG, or persistent cognition.
-
-**Gate B — PASSED.** BM25 recovers complete evidence sets on 81.8% of tasks and lifts downstream answer quality to 0.800 against a 0.002 no-evidence baseline ([report](GATE_B_REPORT.md)). The scoped conclusion is that lexical retrieval dominates *the tested dense representation* (MiniLM-L6-v2, single-vector, mean-pooled, cosine) on this identifier-heavy corpus — not that dense retrieval is inferior in general. Untested alternatives include E5, BGE, GTE, ColBERT/MaxSim, cross-encoder reranking, and entity-aware or task-tuned embeddings.
-
-Gate B also established that retrieval **precision** is a binding constraint: holding required evidence present, answer quality falls 1.00 → 0.67 → 0.39 as distractors move from random to same-template to the retriever's own top-k ([diagnostic](evidence/gate_b/packing_diagnostic/packing_diagnostic.json)). Retrieving more is therefore counterproductive on its own.
-
-**Gate C1 — FAILED (structural generalization).** The v2 mechanism does not
-survive `controlled_gate_a_v3`: 0.394 on qualification against a 0.828
-oracle-evidence ceiling, and **entirely inert** out of distribution (0.080 vs
-0.764) where the entity extractor matches nothing at all — 0/250 questions
-([report](GATE_C1_REPORT.md)). The mechanism was performing lexical identifier
-chaining, not bridge inference. The reader is not the bottleneck: given perfect
-evidence it scores 0.828/0.764 on a corpus of aliases, descriptions, unseen
-source styles, and non-numeric answers.
-
-**Gate C0 — mechanism success, promotion blocked (v2).** Bounded two-pass retrieval
-with entity-anchored precision packing reaches the oracle ceiling — 1.000 answer
-quality and 1.000 complete-evidence-set recovery, zero failures across 500 tasks
-([report](GATE_C_REPORT.md)). It fails one pre-declared check: bridge structure
-exists in only one family of five, so a family-clustered bootstrap cannot certify
-a family-concentrated effect (LCB95 +0.0000 family, +0.0659 template, +0.1080
-source cluster). The bar was not moved; the corpus is the limiting factor, and
-`controlled_gate_a_v3` is the required next work.
-
-Three negative results from Gate C constrain what follows: the deterministic
-calculator produced 100 answers for **+0.000** quality and is not promoted;
-91 of 91 follow-ups were positive with none negative, so a fixed two-pass policy
-suffices and no learned trigger is justified; and the `[E4]` slot-label echo
-(99 → 0 under precision packing) was an evidence-confusability artefact, not a
-prompt-interface or reasoning limit. Adaptive retrieval, adaptive recurrence, executive training, Graphiti, RuVector, TurboVec, AgentDB procedural memory, Infini consolidation, and PixelRAG all remain blocked pending their own gates. Neither E3 task utility nor a learned controller is scientifically qualified.
+Inspired by architectural principles from Kimi K3, adapted for smaller
+experimental systems. HRM-Text-1B by sapientinc. BGE embeddings by BAAI.
