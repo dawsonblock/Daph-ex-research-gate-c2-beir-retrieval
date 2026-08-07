@@ -172,7 +172,8 @@ def extract_bridge(
 
     if template_bridges:
         # Return the most frequent template-extracted bridge
-        return max(template_bridges, key=lambda e: (template_bridges[e], -len(e)))
+        # DETERMINISTIC: sort keys before max to break ties by lexical order
+        return max(sorted(template_bridges), key=lambda e: (template_bridges[e], -len(e)))
 
     # Fall back to co-occurrence-based extraction
     # Extract entities from the question to exclude them
@@ -210,4 +211,5 @@ def extract_bridge(
         return None
 
     # Return the most frequent bridge (deterministic tie-break by name)
-    return max(bridges, key=lambda e: (support[e], -len(e)))
+    # DETERMINISTIC: sort bridges before max to break ties by lexical order
+    return max(sorted(bridges), key=lambda e: (support[e], -len(e)))

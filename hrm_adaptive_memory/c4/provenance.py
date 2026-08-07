@@ -176,3 +176,53 @@ def sha256_corpus(path: Path) -> str:
     if not path.exists():
         return ""
     return _sha256_file(path)
+
+
+# --- Phase 6: Canonical packet hashing ---
+
+def canonical_packet_hash(packet: dict) -> str:
+    """Compute SHA-256 of a canonical packet representation.
+
+    The packet is serialized using deterministic JSON:
+        json.dumps(packet, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+    This gives clear boundaries for debugging:
+        retrieval changed?    → candidate_pool_hash differs
+        membership changed?   → membership_hash differs
+        ordering changed?     → order_hash differs
+        prompt changed?       → prompt_hash differs
+    """
+    canonical = json.dumps(
+        packet, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(canonical.encode()).hexdigest()
+
+
+def build_canonical_packet(
+    *,
+    task_id: str,
+    query_hash: str,
+    canonical_subject: str,
+    candidate_pool_hash: str,
+    selector_policy_id: str,
+    ordered_selected_ids: list[str],
+    ordered_text_sha256: list[str],
+) -> dict:
+    """Build a canonical packet representation for hashing.
+
+    This is the frozen representation that gets hashed. Any change to
+    the packet contents will produce a different hash.
+    """
+    return {
+        "task_id": task_id,
+        "query_hash": query_hash,
+        "canonical_subject": canonical_subject,
+        "candidate_pool_hash": candidate_pool_hash,
+        "selector_policy_id": selector_policy_id,
+        "ordered_selected_ids": list(ordered_selected_ids),
+        "ordered_text_sha256": list(ordered_text_sha256),
+    }
+
+
+def hash_text(text: str) -> str:
+    """Compute SHA-256 of a text string."""
+    return hashlib.sha256(text.encode()).hexdigest()
