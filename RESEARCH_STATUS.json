@@ -52,7 +52,7 @@
     "gate_l_latent_memory": "BLOCKED",
     "gate_n1_natural_external_memory": "PENDING",
     "gate_c4_integrated_memory_pipeline": "IN_PROGRESS_CONFORMANCE_PLAN_BRIDGE_QUALIFICATION_REQUIRED_BEFORE_HRM_RERUN",
-    "gate_c4_bridge_runtime_acquisition": "PENDING_PRE_HRM_QUALIFICATION_GATE"
+    "gate_c4_bridge_runtime_acquisition": "FAIL_NO_RUNTIME_BRIDGE_MECHANISM_BEATS_ONE_PASS_BASELINE"
   },
   "gate_lineage": {
     "gate_c2_i_identity_resolution": "Gate C2-I was the earlier placeholder identity-resolution gate. Gate C3 (gate_c3_surface_identity_resolution) is the formal execution gate with a frozen protocol; the two must not remain as apparently active parallel identity-resolution gates. C2-I is therefore marked SUPERSEDED_BY_GATE_C3. No C2-I implementation or measurement existed; the substantive work continues under C3."
@@ -82,7 +82,7 @@
     "slot_label_echo": "99 -> 0 under precision packing; was an evidence-confusability artefact, not a prompt-interface or reasoning limit",
     "slot_label_echoes": "Track evidence quality, not packet format: 85 -> 28 under precision packing, -> 3 under oracle evidence. F-arms would measure a symptom; implemented but unrun."
   },
-  "next_work": "C4 conformance plan: (1) fix release lineage test, (2) qualify runtime bridge acquisition via C4-BRIDGE gate (B0-B4 arms, no HRM), (3) diagnose S2c canonical regression, (4) upgrade analyzer with family/cluster/template CIs, (5) regenerate conformant dry run, (6) only then rerun HRM. Central rule: DO NOT rerun HRM until runtime InformationState/bridge acquisition is qualified. Old development rescored_v2 preserved as HISTORICAL_C4_DEVELOPMENT_RESCORED_V2 MECHANISM_SIGNAL_NONFINAL. Partial development rerun (C4_0=120, C4_1=80) VOIDED \u2014 started before bridge qualification.",
+  "next_work": "C4-BRIDGE gate COMPLETE: NEGATIVE RESULT. No runtime bridge mechanism beats one-pass baseline. C4 will use one-pass pipeline (no iterative retrieval). Next: (1) disable iterative retrieval in C4 harness, (2) diagnose S2c canonical regression, (3) upgrade analyzer with family/cluster/template CIs, (4) regenerate conformant dry run, (5) HRM smoke test, (6) full conformant development rerun. Central rule remains: DO NOT rerun HRM until all conformance fixes are complete.",
   "ood_taxonomy": {
     "REFERENTIAL_OOD": {
       "mechanism": "identity resolution + multi-hop retrieval",
@@ -952,6 +952,51 @@
         "threshold": 0.15
       },
       "report": "evidence/gate_c4/full/development_evaluator_v2/RESCORE_REPORT.md"
+    },
+    "gate_c4_bridge_runtime_acquisition": {
+      "claim": "C4-BRIDGE NEGATIVE RESULT: No runtime bridge mechanism (B1 heuristic, B2 relation parser, B3 connectivity) outperforms the one-pass baseline (B0) on the frozen 120-task development corpus. B0 CES=0.783, B2 CES=0.775 (worse). The second pass introduces distractors that displace required evidence in the bounded candidate pool. Oracle bridge (B4) CES=0.933 shows significant headroom but no runtime mechanism captures it. Decision: DO NOT INTEGRATE ITERATION. C4 uses one-pass pipeline until a qualified bridge mechanism exists.",
+      "not_a_claim_about": [
+        "bridge acquisition being impossible in principle",
+        "the qualified subject+bridge+relation query formulation being invalid (it is qualified GIVEN a correct bridge)",
+        "the oracle bridge headroom being unreachable (B4 shows it exists)"
+      ],
+      "metrics": {
+        "B0": {
+          "CES": 0.783,
+          "Recall": 0.925,
+          "SecondPassRate": 0
+        },
+        "B1": {
+          "CES": 0.767,
+          "Recall": 0.917,
+          "Precision": 0.195,
+          "SecondPassRate": 0.342
+        },
+        "B2": {
+          "CES": 0.775,
+          "Recall": 0.921,
+          "Precision": 0.619,
+          "SecondPassRate": 0.35
+        },
+        "B3": {
+          "CES": 0.775,
+          "Recall": 0.921,
+          "Precision": 0.619,
+          "SecondPassRate": 0.35
+        },
+        "B4": {
+          "CES": 0.933,
+          "Recall": 0.975,
+          "Precision": 1.0,
+          "SecondPassRate": 0.6
+        }
+      },
+      "bridge_gap_capture": {
+        "B1": -0.111,
+        "B2": -0.056,
+        "B3": -0.056
+      },
+      "report": "evidence/gate_c4/bridge/metrics.json"
     }
   },
   "testing_policy": "Tests assert structured state, never exact strings against narrative prose. Three separate failures came from matching capitalisation in text written separately from the assertion; the pattern was wrong, not merely careless. Prose is rendered from state, and state is what is tested.",

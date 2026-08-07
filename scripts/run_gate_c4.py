@@ -192,6 +192,14 @@ def run_pre_hrm_stages(task: dict, arm: C4Arm, records: list[IndexRecord],
         → second retrieval → merge candidates
 
     For original query policy (C4-0), this is a single-pass retrieval.
+
+    NOTE: Iterative retrieval is DISABLED based on the C4-BRIDGE gate negative
+    result (no runtime bridge mechanism beats the one-pass baseline). The
+    second pass introduces distractors that displace required evidence in the
+    bounded candidate pool. See evidence/gate_c4/bridge/metrics.json and
+    RESEARCH_STATUS.json gate_c4_bridge_runtime_acquisition.
+    The bridge extraction code is retained for provenance and future
+    re-evaluation but the second pass is not performed.
     """
     question = task["question"]
     split = task.get("split", "development")
@@ -202,7 +210,9 @@ def run_pre_hrm_stages(task: dict, arm: C4Arm, records: list[IndexRecord],
     # Retrieval stage (first pass)
     retrieval_result = run_retrieval_stage(query_result.rendered_query, arm, records)
 
-    # Iterative retrieval: extract bridge and do second pass if found
+    # Iterative retrieval DISABLED (C4-BRIDGE negative result).
+    # Bridge is still extracted for provenance/diagnostics but no second
+    # retrieval pass is performed.
     bridge = None
     second_query = None
     second_pass_performed = False
@@ -213,18 +223,14 @@ def run_pre_hrm_stages(task: dict, arm: C4Arm, records: list[IndexRecord],
         if subject:
             bridge = extract_bridge(
                 subject, question, retrieval_result.candidate_ids, texts)
-            if bridge:
-                # Update state with bridge and render second query
-                state_after_query = state_before.with_bridge(bridge)
-                second_query = formulate_followup(
-                    state_after_query, formulation=FOLLOWUP_FORMULATION)
-                second_pass_performed = True
-
-                # Second pass retrieval
-                second_retrieval = run_retrieval_stage(second_query, arm, records)
-
-                # Merge candidate pools
-                retrieval_result = _merge_retrieval(retrieval_result, second_retrieval, arm)
+            # Second pass disabled — see C4-BRIDGE gate result
+            # if bridge:
+            #     state_after_query = state_before.with_bridge(bridge)
+            #     second_query = formulate_followup(
+            #         state_after_query, formulation=FOLLOWUP_FORMULATION)
+            #     second_pass_performed = True
+            #     second_retrieval = run_retrieval_stage(second_query, arm, records)
+            #     retrieval_result = _merge_retrieval(retrieval_result, second_retrieval, arm)
 
     # Update query result with iterative info
     query_result = QueryResult(

@@ -358,6 +358,16 @@
         "3_alias_description_improve"
       ],
       "resolution": "Criterion 3 is reclassified as OOD-only. It cannot be evaluated on development or qualification. For development promotion, criterion 3 is WAIVED with the note 'unobservable on development split'. For OOD confirmation, criterion 3 remains in effect. No OOD tuning is permitted to compensate. A C4 calibration split with all four regimes should be created if surface-specific mechanism selection is needed before OOD."
+    },
+    {
+      "id": "erratum_5_iterative_retrieval_disabled_negative_result",
+      "date": "2026-08-07",
+      "severity": "P0",
+      "description": "The C4-BRIDGE qualification gate (evidence/gate_c4/bridge/) tested whether any runtime bridge mechanism (B1 heuristic, B2 relation parser, B3 connectivity) could outperform the one-pass baseline (B0) on the frozen 120-task development corpus. NEGATIVE RESULT: no mechanism beats B0. B0 CES=0.783, B2 CES=0.775 (worse). The second pass introduces distractors that displace required evidence in the bounded candidate pool. Oracle bridge (B4) CES=0.933 shows significant headroom but no runtime mechanism captures it. The qualified subject+bridge+relation query formulation remains valid GIVEN a correct bridge, but runtime bridge acquisition is not qualified.",
+      "affected_criteria": [
+        "1_quality_improvement"
+      ],
+      "resolution": "Iterative retrieval is DISABLED in the C4 harness. C4 uses the one-pass pipeline (subject+relation query only). Bridge extraction code is retained for provenance and future re-evaluation. The C4 pipeline is now: QUESTION → SUBJECT-PRESERVING QUERY → BM25+BGE RETRIEVAL → I3 IDENTITY → S2c SELECTION → BOUNDED PACKET → HRM → VERIFIED ANSWER. Erratum 3 is superseded: the two-pass mechanism was implemented and tested, but the runtime bridge acquisition step did not qualify."
     }
   ]
 }
