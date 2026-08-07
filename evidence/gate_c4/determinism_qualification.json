@@ -1,0 +1,18 @@
+{
+  "diffs": {
+    "42": {
+      "identity_canonical": 0,
+      "identity_status": 0,
+      "packet_hash": 0,
+      "query": 0,
+      "selected_ids": 0
+    }
+  },
+  "result": "PASS",
+  "schema_version": "c4-determinism-qualification-v1",
+  "seeds": [
+    0,
+    42
+  ],
+  "tasks": 120
+}

@@ -30,7 +30,8 @@ def run_one_seed(seed: int, n_tasks: int, output_path: Path) -> dict:
     env = os.environ.copy()
     env["PYTHONHASHSEED"] = str(seed)
 
-    code = f"""
+    # Use replace() to avoid f-string/format() conflicts with dict braces
+    code_template = '''
 import json, sys, hashlib
 sys.path.insert(0, '.')
 from scripts.run_gate_c4 import run_pre_hrm_stages, _load_split, _to_index_records, ARMS
@@ -40,14 +41,13 @@ tasks, evidence, texts = _load_split('development')
 records = _to_index_records(evidence)
 
 results = []
-for task in tasks[:{n_tasks}]:
+for task in tasks[:__N_TASKS__]:
     arm = ARMS['C4_4']
     r = run_pre_hrm_stages(task, arm, records, texts)
-    
-    # Build canonical packet for hashing
+
     selected_ids = list(r.selection.selected_ids)
     ordered_text_hashes = [hash_text(texts.get(eid, '')) for eid in selected_ids]
-    
+
     packet = build_canonical_packet(
         task_id=task['task_id'],
         query_hash=hashlib.sha256(r.query.rendered_query.encode()).hexdigest(),
@@ -59,23 +59,26 @@ for task in tasks[:{n_tasks}]:
         ordered_selected_ids=selected_ids,
         ordered_text_sha256=ordered_text_hashes,
     )
-    
+
     packet_hash = canonical_packet_hash(packet)
-    
-    results.append({{
+
+    results.append({
         'task_id': task['task_id'],
         'identity_status': r.identity.status,
         'identity_canonical': r.identity.canonical or '',
         'selected_ids': selected_ids,
         'packet_hash': packet_hash,
         'query_text': r.query.rendered_query,
-    }})
+    })
 
-with open('{output_path}', 'w') as f:
+with open('__OUTPUT_PATH__', 'w') as f:
     json.dump(results, f, sort_keys=True)
-print(f'Seed {seed}: wrote {len(results)} results')
-"""
-    
+print('Seed __SEED__: wrote ' + str(len(results)) + ' results')
+'''
+    code = code_template.replace("__N_TASKS__", str(n_tasks)) \
+        .replace("__OUTPUT_PATH__", str(output_path)) \
+        .replace("__SEED__", str(seed))
+
     result = subprocess.run(
         [sys.executable, "-c", code],
         cwd=str(ROOT), env=env, capture_output=True, text=True, timeout=300
