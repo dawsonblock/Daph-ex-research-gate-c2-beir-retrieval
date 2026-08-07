@@ -1,0 +1,126 @@
+# Instincts generated from https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval
+# Generated: 2026-08-07T22:07:29.603Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: Daph-ex-research-gate-c2-beir-retrieval-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval
+---
+
+# Daph Ex Research Gate C2 Beir Retrieval Commit Length
+
+## Action
+
+Write moderate-length commit messages (~67 characters)
+
+## Evidence
+
+- Average commit message length: 67 chars
+- Based on 1 commits
+
+---
+id: Daph-ex-research-gate-c2-beir-retrieval-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval
+---
+
+# Daph Ex Research Gate C2 Beir Retrieval Naming Files
+
+## Action
+
+Use snake_case naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: snake_case
+
+---
+id: Daph-ex-research-gate-c2-beir-retrieval-import-relative
+trigger: "when importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval
+---
+
+# Daph Ex Research Gate C2 Beir Retrieval Import Relative
+
+## Action
+
+Use relative imports for project files
+
+## Evidence
+
+- Import analysis shows relative import pattern
+- Example: import { x } from '../lib/x'
+
+---
+id: Daph-ex-research-gate-c2-beir-retrieval-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval
+---
+
+# Daph Ex Research Gate C2 Beir Retrieval Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: Daph-ex-research-gate-c2-beir-retrieval-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval
+---
+
+# Daph Ex Research Gate C2 Beir Retrieval Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
+---
+id: Daph-ex-research-gate-c2-beir-retrieval-test-naming
+trigger: "when creating a test file"
+confidence: 0.85
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval
+---
+
+# Daph Ex Research Gate C2 Beir Retrieval Test Naming
+
+## Action
+
+Name test files using the pattern: *.test.ts
+
+## Evidence
+
+- File pattern: *.test.ts
+- Consistent across test files
+
