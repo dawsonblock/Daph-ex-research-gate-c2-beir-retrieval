@@ -1,0 +1,325 @@
+{
+  "architecture": {
+    "one_pass_only": "C4 v2 is a one-pass pipeline. Iterative retrieval is OUTSIDE PRIMARY C4.",
+    "pipeline": [
+      "FROZEN_TASK",
+      "DETERMINISTIC_QUERY_CONSTRUCTION",
+      "BM25 + BGE CANDIDATE RETRIEVAL (P2 RRF, frozen)",
+      "CANONICAL_IDENTITY_RESOLUTION (I3)",
+      "DETERMINISTIC_S2c_MEMBERSHIP_SELECTION",
+      "DETERMINISTIC_PACKET_ORDERING (c4_packet_ordering_v1)",
+      "CANONICAL_SERIALIZATION",
+      "PACKET_SHA256",
+      "IMMUTABLE_FROZEN_PACKET",
+      "HRM",
+      "RAW_GENERATION_RECEIPT",
+      "CANONICAL_EVALUATOR",
+      "CORRECT_PROTOCOL_QUALITY",
+      "CRYPTOGRAPHICALLY_BOUND_ANALYSIS"
+    ],
+    "runtime_purity": "No oracle metadata may enter runtime. _oracle_metadata, proof_edges, required_evidence_ids, answer_node, family, entity_regime, and evaluator canonical entity are evaluator-only."
+  },
+  "arms": {
+    "C4_0": {
+      "changes_from_prior": "none; baseline",
+      "description": "current historical R1 pipeline baseline",
+      "mechanisms": [
+        "original query",
+        "BM25 retrieval",
+        "S0 pool-order selection",
+        "HRM"
+      ]
+    },
+    "C4_1": {
+      "changes_from_C4_0": "query formulation only",
+      "description": "C4-0 + subject-preserving information state + frozen improved follow-up query formulation",
+      "mechanisms": [
+        "subject-preserving query",
+        "BM25 retrieval",
+        "S0 selection",
+        "HRM"
+      ]
+    },
+    "C4_2": {
+      "changes_from_C4_1": "retrieval only",
+      "description": "C4-1 + BM25/BGE multi-signal candidate generation",
+      "mechanisms": [
+        "subject-preserving query",
+        "BM25+BGE RRF fusion",
+        "S0 selection",
+        "HRM"
+      ]
+    },
+    "C4_3": {
+      "changes_from_C4_2": "identity resolution only",
+      "description": "C4-2 + I3 identity-record resolution + canonicalized state update",
+      "mechanisms": [
+        "subject-preserving query",
+        "BM25+BGE",
+        "I3 resolution",
+        "S0 selection",
+        "HRM"
+      ]
+    },
+    "C4_4": {
+      "changes_from_C4_3": "selector + packet ordering",
+      "description": "C4-3 + deterministic S2c structure+relation selection + deterministic packet ordering",
+      "determinism_guarantee": "Same task + same candidate pool + same identity + same config always produces same selected evidence + same order + same packet hash",
+      "deterministic_fallback": "if identity_status in {EXACT, RESOLVED}: selector = S2c; else: selector = S0",
+      "mechanisms": [
+        "subject-preserving query",
+        "BM25+BGE",
+        "I3 resolution",
+        "deterministic S2c selection",
+        "deterministic packet ordering",
+        "HRM"
+      ]
+    },
+    "C4_5": {
+      "changes_from_C4_4": "selector only (real vs oracle)",
+      "constraint": "must not inject unretrieved evidence",
+      "description": "same real query/retrieval/identity candidate pool + oracle selector",
+      "mechanisms": [
+        "subject-preserving query",
+        "BM25+BGE",
+        "I3 resolution",
+        "oracle selection",
+        "HRM"
+      ]
+    },
+    "C4_6": {
+      "constraint": "may bypass retrieval because it is the reader/evidence ceiling",
+      "description": "oracle required evidence (R5-style ceiling)",
+      "mechanisms": [
+        "oracle evidence",
+        "HRM"
+      ]
+    }
+  },
+  "certification": {
+    "artifact": "CERTIFICATION.json",
+    "recompute_from_raw_receipts": [
+      "arm quality",
+      "binary accuracy",
+      "complete-set retention (CSR)",
+      "primary delta",
+      "selector_gap_capture",
+      "oracle_gap_capture",
+      "family-grouped CI",
+      "cluster-grouped CI",
+      "arm receipt counts",
+      "task-set equality"
+    ],
+    "rule": "Never trust analysis.json because it is present. Every derived metric is recomputed from raw receipts and compared; any mismatch beyond tolerance sets VALID_RUN = false.",
+    "tolerance": 1e-09,
+    "valid_run_rule": "VALID_RUN = conjunction of every derived gate. No gate may be asserted as a literal; each is a function over the artifacts. A gate that cannot be evaluated FAILS."
+  },
+  "determinism_requirements": {
+    "hash_seed_invariance_required": true,
+    "input_permutation_invariance_required": true,
+    "no_two_records_compare_equal": true,
+    "packet_ordering_authority": "packet_ordering_policy.canonical_sort_key is the sole definition of packet order. No other section may restate it.",
+    "pass_criterion": "120/120 identical packet hashes across all runs",
+    "rule": "Every intermediate collection entering S2c must have a canonical ordering, and every ranking must define a total order.",
+    "selector_tie_break_policy": {
+      "order": [
+        "1. chain score descending (quantized to 12 decimal places)",
+        "2. chain length ascending",
+        "3. record_id tuple lexical ascending"
+      ],
+      "scope": "The SELECTOR's ranking over candidate chains. This is not the packet order; see packet_ordering_policy.canonical_sort_key."
+    }
+  },
+  "diagnostic_arms": {
+    "arms": [
+      "C4_3o",
+      "C4_4m"
+    ],
+    "cells": {
+      "C4_3": "S0 membership + pool order",
+      "C4_3o": "S0 membership + deterministic order",
+      "C4_4": "S2c membership + deterministic order",
+      "C4_4m": "S2c membership + pool order"
+    },
+    "effects": {
+      "E_membership_pool": "Q(C4_4m) - Q(C4_3)",
+      "E_order_S0": "Q(C4_3o) - Q(C4_3)",
+      "E_order_S2c": "Q(C4_4) - Q(C4_4m)",
+      "interaction": "[Q(C4_4) - Q(C4_4m)] - [Q(C4_3o) - Q(C4_3)]"
+    },
+    "isolation_rule": "DIAGNOSTIC arms explain C4_4. They must not enter the primary seven-arm ladder, the arm-count completeness gate, the promotion threshold, or any gap-capture formula. They do not become tuning candidates unless a new protocol version explicitly opens them.",
+    "purpose": "Complete the membership x ordering 2x2 so Q(C4_4) - Q(C4_3) decomposes into ordering, membership and interaction."
+  },
+  "do_not_modify_during_repair": [
+    "BM25",
+    "BGE",
+    "fusion weights",
+    "candidate pool depth",
+    "query construction",
+    "canonical identity logic"
+  ],
+  "evaluator_provenance": {
+    "fail_closed": "If source hash does not match manifest, FAIL CLOSED. Do not silently continue.",
+    "manifest_schema": "c4-evaluator-manifest-v3",
+    "rule": "Every evaluator output must declare its exact input via cryptographic hash binding.",
+    "would_have_caught": "Two different C4-4 raw files sharing byte-identical evaluator-v2 outputs"
+  },
+  "fail_closed_runner": {
+    "abort_conditions": [
+      "git tree dirty",
+      "git revision unexpected",
+      "protocol hash mismatch",
+      "test suite fails",
+      "dependency version mismatch",
+      "source receipt missing",
+      "source hash mismatch",
+      "output file already exists unexpectedly",
+      "prompt binding violated (packet.prompt_hash != generated prompt hash)",
+      "receipt missing a declared packet boundary hash",
+      "determinism receipt did not compare every claimed field",
+      "derived metric disagrees with recomputation from raw receipts"
+    ],
+    "failed_run_artifacts": "evidence/failed_runs/<run-id>/",
+    "valid_run_status": "VALID_RUN=true only if every prerequisite passed"
+  },
+  "frozen_before_any_c4_v2_measurement": true,
+  "gate": "C4_INTEGRATED_NON_ORACLE_MEMORY_PIPELINE",
+  "goal": "Determine whether the independently qualified query, retrieval, identity-resolution, and structural-selection mechanisms compose into a materially better end-to-end HRM memory pipeline without oracle information at runtime, with deterministic reproducibility and cryptographic provenance.",
+  "iterative_retrieval_status": {
+    "classification": "OUTSIDE_PRIMARY_C4",
+    "may_reconnect_when": "Runtime bridge predictor shows positive utility in controlled experiments",
+    "reason": "Oracle bridge strongly improves evidence acquisition, but runtime bridge inference failed qualification. Therefore second pass is withheld from primary C4.",
+    "status": "EXPERIMENTAL_BRIDGE_RESEARCH_ONLY"
+  },
+  "lineage": {
+    "affected_prior_results": "Results labelled C4_4 under v2 measured S2c membership under pool order (the C4_4m cell). They remain valid measurements of membership and are reclassified, not voided. See RESEARCH_STATUS.json historical_development_signal.",
+    "arms_unchanged": true,
+    "conformance_defect_repaired": "Under v2 the deterministic packet order was computed and hashed but the runner recomposed the HRM prompt from selection.selected_ids, so the ordering policy never reached the model. v2_1 requires the prompt to be built from the ordered packet and requires packet.prompt_hash to equal the prompt hash the model actually consumed.",
+    "mechanism_change": false,
+    "metrics_unchanged": true,
+    "reason": "resolve contradictory packet ordering specification and bind actual prompt-order semantics",
+    "scientific_change": "clarification/conformance repair",
+    "supersedes": "gate_c4_protocol_v2.json",
+    "supersedes_sha256": "97ff92c1a7ed0b23ed9117e2b02c9ea809bd1a5cfc0b1b04bf5e68a09e5e1107",
+    "thresholds_unchanged": true
+  },
+  "membership_vs_ordering": {
+    "hashes": [
+      "membership_hash (order-independent)",
+      "order_hash (order-sensitive)"
+    ],
+    "receipt_fields": [
+      "selected_set_ids (lexically sorted for identity checks)",
+      "ordered_selected_ids (actual HRM order)"
+    ],
+    "separation": "Membership selection (which records survive) and packet ordering (in what sequence HRM receives them) are distinct stages."
+  },
+  "metric_definitions": {
+    "oracle_gap_capture": {
+      "authoritative_module": "hrm_adaptive_memory.c4.metrics",
+      "formula": "(Q(C4_4) - Q(C4_0)) / (Q(C4_6) - Q(C4_0))",
+      "numerator_uses": "C4_4 (actual mechanism), NOT C4_5"
+    },
+    "quality": {
+      "authoritative_module": "hrm_adaptive_memory.c4.metrics",
+      "function": "compute_quality(correct, evidence_complete)",
+      "note": "Binary correctness stored separately. Never overload quality with accuracy.",
+      "states": {
+        "complete_and_correct": 1.0,
+        "complete_and_incorrect": 0.5,
+        "incomplete_and_correct": 0.25,
+        "incomplete_and_incorrect": 0.0
+      }
+    },
+    "selector_gap_capture": {
+      "authoritative_module": "hrm_adaptive_memory.c4.metrics",
+      "formula": "(Q(C4_4) - Q(C4_3)) / (Q(C4_5) - Q(C4_3))"
+    }
+  },
+  "packet_hashing": {
+    "canonical_serialization": "json.dumps(packet, sort_keys=True, separators=(',',':'), ensure_ascii=False)",
+    "hash_algorithm": "SHA-256",
+    "hash_fields": [
+      "candidate_pool_hash",
+      "membership_hash",
+      "order_hash",
+      "packet_hash",
+      "prompt_hash"
+    ],
+    "purpose": "Clear boundaries for debugging: retrieval changed? membership changed? ordering changed? prompt changed?"
+  },
+  "packet_ordering_policy": {
+    "applies_to_arms": [
+      "C4_4",
+      "C4_3o"
+    ],
+    "canonical_sort_key": [
+      "1. evidence role priority ascending (role tier)",
+      "2. retrieval fusion score descending (quantized to 12 decimal places)",
+      "3. record_id lexical ascending"
+    ],
+    "chain_order": [
+      "identity",
+      "direct",
+      "link",
+      "bridge",
+      "intermediate",
+      "current",
+      "value",
+      "fact",
+      "support",
+      "superseded",
+      "accepted",
+      "rejected",
+      "dead-end",
+      "distractor"
+    ],
+    "no_two_records_compare_equal": "record_id is unique within a packet, so rule 3 makes the key a strict total order regardless of score ties.",
+    "note": "This is NOT claimed to be optimal. It is explicit, versioned, testable, and deterministic. Ordering is measured as a separate ablation via C4_3o and C4_4m.",
+    "other_arms_use": "retrieval pool order as emitted by the selector",
+    "policy_id": "c4_packet_ordering_v1",
+    "selector_score_excluded": {
+      "excluded": true,
+      "reason": "S2c scores CHAINS, not records: _score_chain is a property of a path, a record may appear in many chains, and records enter the packet by greedy chain packing plus pool-order backfill. There is no per-record selector score to order by. Projecting the chain score onto records would be a new mechanism, not the exposure of an existing quantity, so selector score is removed from packet ordering rather than manufactured.",
+      "where_selector_scores_do_apply": "The selector's own total order over chains, defined in hrm_adaptive_memory.retrieval_bench.selectors.chain (_pack_chains, candidate_sort_key). That is a distinct ordering at a distinct granularity and is not packet ordering."
+    },
+    "version": "1.0.0"
+  },
+  "policy_versions": {
+    "evaluator_manifest_version": "c4-evaluator-manifest-v3",
+    "identity_policy_version": "i3_v1",
+    "metric_policy_version": "c4_quality_v2",
+    "ordering_policy_version": "c4_packet_ordering_v1",
+    "query_policy_version": "v1_frozen",
+    "retrieval_policy_version": "p2_rrf_v1",
+    "selector_policy_version": "s2c_deterministic_v1"
+  },
+  "pre_hrm_freeze": {
+    "architecture": "PRE-HRM FREEZE -> immutable packets -> HRM generation",
+    "artifacts_per_task_arm": [
+      "packet.json",
+      "packet.sha256",
+      "prompt.txt",
+      "prompt.sha256"
+    ],
+    "prompt_binding_rule": "HRM must generate from the prompt composed over the ORDERED packet. packet.prompt_hash is computed pre-HRM from that text and must equal the prompt hash recorded for the generation. A mismatch aborts the task.",
+    "purpose": "If HRM results change later, you can prove whether the input changed.",
+    "rule": "HRM stage consumes frozen packets. It does not rerun retrieval or selection internally."
+  },
+  "primary_question": "Do the independently qualified mechanisms compose into a useful, non-oracle RETRIEVE action, reproducibly?",
+  "promotion_gates": {
+    "D1_determinism": "0 packet differences across repeated processes. PASS required.",
+    "D2_provenance": "Every evaluator artifact cryptographically references its exact raw source. PASS required.",
+    "D3_metric_correctness": "Golden tests verify all quality and gap formulas. PASS required.",
+    "D4_mechanism_gain": "On untouched evaluation: Q(C4_4) - Q(C4_0) > 0 with predeclared statistical threshold.",
+    "D5_no_family_regression": "Require family-level reporting. No catastrophic collapse in any important family.",
+    "D6_canonical_identity_safety": "False canonical resolution = 0 or strict predeclared threshold.",
+    "D7_artifact_integrity": "Every file in run manifest matches its hash.",
+    "D8_clean_release": "All tests pass, clean git tree, expected commit, expected protocol hash, expected dependencies."
+  },
+  "protocol_id": "c4_v2_1_reproducible_and_qualified",
+  "protocol_version": "v2_1_frozen",
+  "status": "PROTOCOL_V2_1_FROZEN_BEFORE_REQUALIFICATION",
+  "supersedes": "gate_c4_protocol_v2.json",
+  "supersedes_reason": "v2 specified packet ordering twice, inconsistently: determinism_requirements.tie_break_policy put selector score before role priority, while packet_ordering_policy.within_role_tier put role tier first. Reproducibility cannot be certified against an internally inconsistent contract. v2_1 defines exactly one packet order and scopes the selector's own total order separately."
+}

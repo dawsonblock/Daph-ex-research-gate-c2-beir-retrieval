@@ -29,6 +29,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 ARMS = ["C4_0", "C4_1", "C4_2", "C4_3", "C4_4", "C4_5", "C4_6"]
+# Diagnostic arms completing the membership x ordering 2x2. Loaded when present
+# but excluded from the primary ladder's adjacent deltas and parity check.
+DIAGNOSTIC_ARMS = ["C4_3o", "C4_4m"]
 GROUPING_KEYS = ("family", "template_id", "source_cluster_id")
 BOOTSTRAP = 10000
 SEED = 20260807
@@ -40,9 +43,13 @@ def load_arm(path: Path) -> list[dict]:
 
 
 def load_all(base_dir: Path) -> dict[str, list[dict]]:
-    """Load all arms."""
+    """Load all arms, primary and diagnostic.
+
+    Diagnostic receipts were previously dropped on the floor here, which made
+    running C4_3o/C4_4m produce no analysis at all.
+    """
     arms = {}
-    for arm_id in ARMS:
+    for arm_id in ARMS + DIAGNOSTIC_ARMS:
         p = base_dir / f"{arm_id}.jsonl"
         if p.exists():
             arms[arm_id] = load_arm(p)
@@ -301,13 +308,64 @@ def oracle_gap_capture(arms: dict[str, list[dict]]) -> float | None:
 
 
 def validate_parity(arms: dict[str, list[dict]]) -> dict:
-    """Validate arm parity: arms differ only where expected."""
-    # Check that all arms have the same task set
-    task_sets = {arm: set(_task_id(r) for r in recs) for arm, recs in arms.items()}
+    """Validate arm parity: arms differ only where expected.
+
+    Task-set parity is judged over the PRIMARY arms. Diagnostic arms are
+    reported separately so a partially-run diagnostic cannot fail the primary
+    parity gate (nor silently pass it).
+    """
+    primary = {a: recs for a, recs in arms.items() if a in ARMS}
+    diagnostic = {a: recs for a, recs in arms.items() if a in DIAGNOSTIC_ARMS}
+
+    task_sets = {arm: set(_task_id(r) for r in recs) for arm, recs in primary.items()}
     common = set.intersection(*task_sets.values()) if task_sets else set()
-    return {
-        "all_arms_same_tasks": all(s == common for s in task_sets.values()),
+    result = {
+        "all_arms_same_tasks": bool(task_sets) and all(
+            s == common for s in task_sets.values()),
         "n_common_tasks": len(common),
+        "primary_arms_present": sorted(primary),
+        "primary_arms_missing": [a for a in ARMS if a not in primary],
+        "diagnostic_arms_present": sorted(diagnostic),
+    }
+    result["diagnostic_arms_same_tasks"] = all(
+        set(_task_id(r) for r in recs) == common for recs in diagnostic.values()
+    ) if diagnostic and common else None
+    return result
+
+
+def ordering_membership_decomposition(arms: dict[str, list[dict]]) -> dict | None:
+    """Decompose Q(C4_4) - Q(C4_3) into ordering, membership and interaction.
+
+        C4_3  = S0  membership + pool order
+        C4_3o = S0  membership + deterministic order
+        C4_4m = S2c membership + pool order
+        C4_4  = S2c membership + deterministic order
+
+    Returns None unless all four arms are present, so a missing diagnostic arm
+    can never be reported as a zero effect.
+    """
+    needed = ("C4_3", "C4_3o", "C4_4m", "C4_4")
+    if any(a not in arms for a in needed):
+        return {
+            "available": False,
+            "missing_arms": [a for a in needed if a not in arms],
+            "note": "Run: run_gate_c4.py full --arms C4_3o C4_4m",
+        }
+
+    q = {a: arm_quality(arms[a]) for a in needed}
+    ordering = q["C4_3o"] - q["C4_3"]
+    membership = q["C4_4m"] - q["C4_3"]
+    combined = q["C4_4"] - q["C4_3"]
+    return {
+        "available": True,
+        "quality": q,
+        "ordering_effect": ordering,
+        "membership_effect": membership,
+        "combined_effect": combined,
+        "interaction_effect": combined - ordering - membership,
+        # Paired, family-grouped CIs so an effect can be called nonzero.
+        "ordering_paired": paired_deltas(arms["C4_3"], arms["C4_3o"]),
+        "membership_paired": paired_deltas(arms["C4_3"], arms["C4_4m"]),
     }
 
 
@@ -340,6 +398,7 @@ def main():
         "role_retention": {},
         "selector_gap_capture": None,
         "oracle_gap_capture": None,
+        "ordering_membership_decomposition": None,
     }
 
     # Arm summaries
@@ -388,6 +447,9 @@ def main():
     # Gap capture metrics
     report["selector_gap_capture"] = selector_gap_capture(arms)
     report["oracle_gap_capture"] = oracle_gap_capture(arms)
+
+    # Ordering vs membership decomposition (needs the diagnostic arms)
+    report["ordering_membership_decomposition"] = ordering_membership_decomposition(arms)
 
     # Print summary
     print("=" * 70)
@@ -466,6 +528,25 @@ def main():
     ogc = report["oracle_gap_capture"]
     print(f"  Selector Gap Capture (SGC): {sgc:.4f}" if sgc is not None else "  SGC: N/A")
     print(f"  Oracle Gap Capture (OGC): {ogc:.4f}" if ogc is not None else "  OGC: N/A")
+
+    print("\n--- Ordering vs Membership (2x2) ---")
+    dec = report["ordering_membership_decomposition"]
+    if not dec.get("available"):
+        print(f"  NOT AVAILABLE — missing arms: {dec.get('missing_arms')}")
+        print(f"  {dec.get('note', '')}")
+    else:
+        q = dec["quality"]
+        print(f"  Q(C4_3)  = {q['C4_3']:.4f}   S0  membership + pool order")
+        print(f"  Q(C4_3o) = {q['C4_3o']:.4f}   S0  membership + deterministic order")
+        print(f"  Q(C4_4m) = {q['C4_4m']:.4f}   S2c membership + pool order")
+        print(f"  Q(C4_4)  = {q['C4_4']:.4f}   S2c membership + deterministic order")
+        op, mp = dec["ordering_paired"], dec["membership_paired"]
+        print(f"  ordering effect    = {dec['ordering_effect']:+.4f}  "
+              f"CI_family=[{op['ci_lower']:+.4f}, {op['ci_upper']:+.4f}]")
+        print(f"  membership effect  = {dec['membership_effect']:+.4f}  "
+              f"CI_family=[{mp['ci_lower']:+.4f}, {mp['ci_upper']:+.4f}]")
+        print(f"  combined effect    = {dec['combined_effect']:+.4f}")
+        print(f"  interaction        = {dec['interaction_effect']:+.4f}")
 
     # Write output
     if args.output:

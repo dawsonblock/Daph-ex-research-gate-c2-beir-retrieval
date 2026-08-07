@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""C4 Conformant Development Rerun — Optimized for Google Colab T4 GPU.
+"""SUPERSEDED — DO NOT USE FOR QUALIFICATION.
 
-This script runs the full C4 conformant development pipeline on a T4 GPU.
-It is designed to be pasted into a Colab cell or uploaded as a .py file.
+Authoritative execution path: scripts/colab_c4_requalify.py
 
-Usage in Colab:
-    1. Runtime → Change runtime type → T4 GPU + High-RAM
-    2. !python colab_c4_conformant_run.py
+Retained for provenance only. This was a second, independent implementation of
+the C4 development run, with the same fail-open defects as the notebooks beside
+it: a non-aborting test suite, unpinned dependency installation, and no
+certification step. Runs produced by this path also predate the prompt-order
+conformance repair, so results it labelled C4_4 measured S2c membership under
+pool order. See RESEARCH_STATUS.json -> historical_development_signal.
 
-Or run cells individually from the companion notebook.
-
-Expected time on T4: ~15-25 minutes (vs 3+ hours on CPU).
+Do not extend this file. One implementation, in scripts/, covered by pytest.
 """
 import os
 import sys
@@ -60,7 +60,7 @@ def main():
         print(f"CUDA available: {torch.cuda.is_available()}")
         if torch.cuda.is_available():
             print(f"GPU: {torch.cuda.get_device_name(0)}")
-            mem = torch.cuda.get_device_properties(0).total_mem / 1e9
+            mem = torch.cuda.get_device_properties(0).total_memory / 1e9
             print(f"GPU memory: {mem:.1f} GB")
         else:
             print("ERROR: No GPU detected. Enable T4 GPU in Runtime settings.")

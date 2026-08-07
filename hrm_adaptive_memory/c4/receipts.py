@@ -87,6 +87,20 @@ def build_pre_hrm_receipt(result: PreHRMResult) -> TaskReceipt:
             "packet_token_count": result.packet.packet_token_count,
             "packet_hash": result.packet.packet_hash,
             "packet_budget": result.packet.packet_budget,
+            # Protocol v2 packet_hashing.hash_fields — boundary hashes that
+            # localize a change to pool / membership / order / prompt.
+            "candidate_pool_hash": result.packet.candidate_pool_hash,
+            "membership_hash": result.packet.membership_hash,
+            "order_hash": result.packet.order_hash,
+            "prompt_hash": result.packet.prompt_hash,
+            "ordering_policy_id": result.packet.ordering_policy_id,
+            "ordering_applied": result.packet.ordering_applied,
+            "score_sources": dict(result.packet.score_sources),
+            # Membership is order-independent; kept separately from packet_ids
+            # so membership and ordering never get conflated (protocol v2
+            # membership_vs_ordering.receipt_fields).
+            "selected_set_ids": sorted(result.selection.selected_ids),
+            "ordered_selected_ids": list(result.packet.packet_ids),
         },
         "information_state_before": dict(result.information_state_before),
         "information_state_after": dict(result.information_state_after),

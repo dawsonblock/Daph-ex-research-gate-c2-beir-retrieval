@@ -51,7 +51,7 @@
     "gate_k_consolidation": "BLOCKED",
     "gate_l_latent_memory": "BLOCKED",
     "gate_n1_natural_external_memory": "PENDING",
-    "gate_c4_integrated_memory_pipeline": "IN_PROGRESS_C4_V2_DEVELOPMENT_RERUN_PARTIAL_PROTOCOL_AND_DETERMINISM_INFRASTRUCTURE_READY",
+    "gate_c4_integrated_memory_pipeline": "IN_PROGRESS_RERUN_REQUIRED_AFTER_PACKET_ORDERING_CONFORMANCE_DEFECT",
     "gate_c4_bridge_runtime_acquisition": "FAIL_NO_RUNTIME_BRIDGE_MECHANISM_BEATS_ONE_PASS_BASELINE"
   },
   "gate_lineage": {
@@ -82,7 +82,53 @@
     "slot_label_echo": "99 -> 0 under precision packing; was an evidence-confusability artefact, not a prompt-interface or reasoning limit",
     "slot_label_echoes": "Track evidence quality, not packet format: 85 -> 28 under precision packing, -> 3 under oracle evidence. F-arms would measure a symptom; implemented but unrun."
   },
-  "next_work": "C4 v2 protocol and determinism infrastructure READY. Pre-HRM determinism qualified (120/120 identical packet hashes across hash seeds). Metric layer repaired (composite quality centralized in c4.metrics, OGC uses C4_4 not C4_5). Packet membership vs ordering separated. Frozen packet artifacts generated. Fail-closed runner implemented. Partial development run exists but is INCOMPLETE (C4_4 90/120, C4_5/C4_6 missing) and stored quality was binary not composite — must rerun from scratch on Colab T4. Next: (1) run colab_c4_requalify.py on T4 GPU for full 120x7 v2 development run, (2) verify composite quality in receipts, (3) run analyzer for family/cluster CIs and OGC/SGC, (4) write RESULTS.sha256 last, (5) apply D1-D8 promotion gates, (6) only then decide whether development authorizes qualification split.",
+  "historical_development_signal": {
+    "C4_4_reported_q": 0.3729,
+    "arm_label_at_measurement": "C4_4 (declared: S2c membership + deterministic packet ordering)",
+    "reinterpretation": "S2c membership + retrieval/pool order",
+    "status": "VALID_HISTORICAL_MECHANISM_SIGNAL__NOT_C4_V2_FINAL",
+    "reason": "Deterministic packet ordering was computed and hashed but did not reach the HRM prompt. scripts/run_gate_c4.py recomposed the prompt from selection.selected_ids instead of packet.packet_ids, so c4_packet_ordering_v1 never affected generation. The generations answered a legitimate question; it was not the question the arm label claimed.",
+    "defect_class": "IMPLEMENTATION_CONFORMANCE_DEFECT",
+    "mechanism_change": false,
+    "measured_run": {
+      "source": "Colab T4, 2026-08-07, Untitled4.ipynb",
+      "split": "development",
+      "tasks": 120,
+      "arms_completed": 7,
+      "arm_quality": {
+        "C4_0": 0.1625,
+        "C4_1": 0.1708,
+        "C4_2": 0.2125,
+        "C4_3": 0.2125,
+        "C4_4": 0.3729,
+        "C4_5": 0.7917,
+        "C4_6": 0.9542
+      },
+      "selector_gap_capture": 0.277,
+      "oracle_gap_capture": 0.2658,
+      "self_reported_certification": "FAILED (the run's own VALID_RUN cell could not resolve the active protocol file)"
+    },
+    "what_it_does_support": "The C4_3 -> C4_4_historical delta of +0.1604 (0.2125 -> 0.3729) is evidence for S2c structural MEMBERSHIP selection alone, measured with query, retrieval and identity held fixed. Because the ordering policy never reached HRM, the delta is not diluted by an ordering contribution, which makes it a cleaner membership result than originally reported.",
+    "what_it_does_not_support": "It is not evidence for deterministic packet ordering, and it is not the C4-v2 final result for C4_4. The C4_4 cell under the intended prompt-order intervention has never been measured.",
+    "disposition": "RETAINED_AND_RECLASSIFIED__NOT_VOID"
+  },
+  "next_work": "C4 v2 certification infrastructure is COMPLETE and fail-closed. A certifying rerun is required; see historical_development_signal for the status of the 2026-08-07 numbers. Repairs already landed: HRM consumes PreHRMResult.prompt with _assert_prompt_binding enforcing packet.prompt_hash == hrm.prompt_hash per task; PIPELINE_VERSION invalidates stale resume keys; the analyzer no longer drops C4_3o/C4_4m receipts and emits the ordering/membership/interaction decomposition with grouped CIs; a fail-closed protocol semantic validator resolves the identity and selector invariants the Colab audit printed as N/A; every receipt carries the five protocol packet boundary hashes; determinism qualification v2 measures every field it claims; an environment lock plus verifier exists; scripts/certify_c4_run.py emits CERTIFICATION.json where VALID_RUN is the conjunction of derived gates and every metric is recomputed from raw receipts; scripts/c4_void_packets.py proves non-conformance before voiding and preserves data. Ordered next steps: (1) freeze the exact runtime environment with scripts/c4_freeze_environment.py (configs/c4_requirements.lock currently holds transcribed values with null pins and fails certification by design), (2) clean the git tree, (3) run the full test suite fail-closed, (4) run multi-seed pre-HRM determinism requiring candidate/membership/order/packet/prompt hash invariance, (5) run smoke, (6) execute C4_3, C4_3o, C4_4m and C4_4 with the real prompt-order intervention, (7) complete all seven primary arms C4_0..C4_6, (8) recompute all metrics from raw receipts, (9) analyze the membership/order decomposition, (10) generate family and cluster CIs, (11) run scripts/certify_c4_run.py, (12) write RESULTS.sha256 last and verify it, (13) emit VALID_RUN=true only if every derived gate passes, (14) stop before qualification. C4_3o and C4_4m are DIAGNOSTIC: they explain C4_4 and must not enter the primary seven-arm ladder, the arm-count gate or the promotion threshold. Do not optimize HRM recurrence: selection remains the dominant gap (C4_4 complete-set retention 0.4333 vs oracle-over-real-pool 0.7833 on the same candidate pool).",
+  "ordering_decomposition_to_measure": {
+    "cells": {
+      "C4_3": "S0 membership + pool order",
+      "C4_3o": "S0 membership + deterministic order",
+      "C4_4m": "S2c membership + pool order",
+      "C4_4": "S2c membership + deterministic order"
+    },
+    "effects": {
+      "E_order_S0": "Q(C4_3o) - Q(C4_3)",
+      "E_membership_pool": "Q(C4_4m) - Q(C4_3)",
+      "E_order_S2c": "Q(C4_4) - Q(C4_4m)",
+      "interaction": "[Q(C4_4) - Q(C4_4m)] - [Q(C4_3o) - Q(C4_3)]"
+    },
+    "question": "Whether deterministic packet ordering helps independently, hurts independently, only helps under S2c membership, or is neutral.",
+    "note": "Q(C4_4m) is expected to reproduce the historical 0.3729 cell, which makes it a consistency check on the rerun as well as a decomposition term."
+  },
   "ood_taxonomy": {
     "REFERENTIAL_OOD": {
       "mechanism": "identity resolution + multi-hop retrieval",

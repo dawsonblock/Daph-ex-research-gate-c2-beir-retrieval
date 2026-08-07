@@ -93,12 +93,25 @@ class SelectionResult:
 
 @dataclass(frozen=True)
 class PacketResult:
-    """Output of the packet stage."""
+    """Output of the packet stage.
+
+    The four boundary hashes below are the protocol v2 ``packet_hashing``
+    fields. They localize any change: pool -> membership -> order -> prompt.
+    """
     packet_ids: tuple[str, ...]
     packet_contents: tuple[str, ...]
     packet_token_count: int
     packet_hash: str
     packet_budget: int
+    candidate_pool_hash: str = ""
+    membership_hash: str = ""
+    order_hash: str = ""
+    prompt_hash: str = ""
+    ordering_policy_id: str = ""
+    ordering_applied: bool = False
+    # Which ordering tie-break score inputs were actually available. An absent
+    # source means that tie-break term was inert for this packet.
+    score_sources: Mapping[str, bool] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -118,6 +131,10 @@ class PreHRMResult:
     packet: PacketResult
     information_state_before: Mapping[str, Any]
     information_state_after: Mapping[str, Any]
+    # The exact prompt HRM must consume. Carried on the result so no caller
+    # has to recompose it (recomposition is how the ordering policy got
+    # bypassed under protocol v1).
+    prompt: str = ""
 
 
 @dataclass(frozen=True)

@@ -1,0 +1,18 @@
+{
+  "accelerator": {
+    "available": true,
+    "cuda": "12.8",
+    "gpu_name": "Tesla T4"
+  },
+  "note": "TRANSCRIBED, NOT CAPTURED. Values below were read off the Colab session of 2026-08-07 (Untitled4.ipynb) that produced Q(C4_0)=0.1625 / Q(C4_4)=0.3729. That session installed dependencies unpinned, so only the versions it happened to print are known; the rest are null and will FAIL certification by design. Regenerate this file with `python scripts/c4_freeze_environment.py` inside the environment that produces the run to be certified, BEFORE the run.",
+  "packages": {
+    "huggingface_hub": null,
+    "numpy": null,
+    "safetensors": null,
+    "tokenizers": null,
+    "torch": "2.11.0+cu128",
+    "transformers": "5.13.1"
+  },
+  "python": "3.12.13",
+  "schema_version": "c4-environment-lock-v1"
+}

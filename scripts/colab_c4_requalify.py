@@ -3,36 +3,42 @@
 
 One script. Paste into a Colab cell and run. That's it.
 
-    !pip install -q rank-bm25 numpy pytest
     !git clone https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval.git
     %cd Daph-ex-research-gate-c2-beir-retrieval
-    !pip install -q -e .
     !python scripts/colab_c4_requalify.py
 
-Or even simpler — just run this entire file as a notebook cell:
-
-    !wget -q https://raw.githubusercontent.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval/main/scripts/colab_c4_requalify.py -O colab_c4_requalify.py
-    !python colab_c4_requalify.py
-
 Prerequisites:
-    - Runtime → Change runtime type → T4 GPU + High-RAM
-    - Expected time: ~20-30 minutes on T4
+    - Runtime -> Change runtime type -> T4 GPU + High-RAM
+    - Expected time: ~30-40 minutes on T4
+
+FAIL-CLOSED. Every step that the protocol names as an abort condition aborts.
+In particular the test suite: the previous version printed
+
+    "WARNING: Some tests failed... Continuing anyway"
+
+which directly contradicts ``fail_closed_runner.abort_conditions``,
+where "test suite fails" is an abort. A run that continues past a failing suite
+cannot be certified, so continuing only wastes GPU time.
 
 What it does (in order):
-    1.  Verify GPU is available
+    1.  Verify GPU
     2.  Clone/pull the repository
-    3.  Install dependencies
-    4.  Run the test suite (607 tests)
-    5.  Run pre-HRM determinism qualification (120/120 must match)
-    6.  Freeze deterministic packets (immutable, hashed)
-    7.  Run CPU-only dry-run validation (7 conformance gates)
-    8.  Run C4-BRIDGE gate (no HRM, ~2 seconds)
-    9.  Run HRM smoke test (3 tasks × 7 arms)
-    10. Run full HRM development run (120 tasks × 7 arms = 840 generations)
-    11. Run the analyzer (quality, gap capture, family CIs, flips)
-    12. Run composition diagnostic
-    13. Verify results integrity (manifest, hashes, receipt counts)
-    14. Package everything into a zip for download
+    3.  Install dependencies from the environment lock
+    4.  Freeze/verify the environment lock
+    5.  Validate the active protocol semantically (fail-closed)
+    6.  Run the full test suite                          [ABORTS on failure]
+    7.  Pre-HRM determinism qualification (multi-seed)   [ABORTS on failure]
+    8.  Freeze deterministic packets
+    9.  CPU-only dry run (conformance gates)             [ABORTS on failure]
+    10. C4-BRIDGE gate (expected negative, informational)
+    11. HRM smoke test
+    12. Full HRM development run (120 x 7 = 840 generations)
+    13. Diagnostic arms C4_3o + C4_4m (ordering vs membership 2x2)
+    14. Analyzer                                         [ABORTS on failure]
+    15. Composition diagnostic (informational)
+    16. Results summary
+    17. Certification -> CERTIFICATION.json               [decides VALID_RUN]
+    18. Package for download (name reflects the verdict)
 """
 import os
 import sys
@@ -43,14 +49,17 @@ import subprocess
 from pathlib import Path
 
 
-# ── Config ──────────────────────────────────────────────────────────────────
+# -- Config -----------------------------------------------------------------
 
 REPO_URL = "https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval.git"
 REPO_DIR = "/content/Daph-ex-research-gate-c2-beir-retrieval"
 ARMS = ["C4_0", "C4_1", "C4_2", "C4_3", "C4_4", "C4_5", "C4_6"]
+DIAGNOSTIC_ARMS = ["C4_3o", "C4_4m"]
+DETERMINISM_SEEDS = "0,42,12345"
+TOTAL_STEPS = 18
 
 
-# ── Helpers ─────────────────────────────────────────────────────────────────
+# -- Helpers ----------------------------------------------------------------
 
 def banner(text, char="=", width=70):
     """Print a visible section banner."""
@@ -59,8 +68,19 @@ def banner(text, char="=", width=70):
     print(f"{char * width}")
 
 
-def run(cmd, label, timeout=600, stream=False, check=True):
-    """Run a command with a label and timing."""
+def abort(step_label, message):
+    """Stop the run. The protocol prefers no result over an uncertifiable one."""
+    print(f"\n{'!' * 70}")
+    print(f"  ABORT at {step_label}")
+    print(f"  {message}")
+    print(f"{'!' * 70}")
+    print("\n  Nothing downstream of this point could be certified, so the run")
+    print("  stops here rather than consuming GPU time on an invalid result.")
+    sys.exit(1)
+
+
+def run(cmd, label, timeout=1800, stream=False, check=True):
+    """Run a command with a label and timing. Aborts on failure unless check=False."""
     print(f"\n--- {label} ---")
     t0 = time.time()
 
@@ -77,10 +97,9 @@ def run(cmd, label, timeout=600, stream=False, check=True):
         if result.stdout:
             print(result.stdout)
         if result.stderr:
-            # Only show last 500 chars of stderr to avoid noise
             err = result.stderr.strip()
             if err:
-                print(f"STDERR: {err[-500:]}")
+                print(f"STDERR: {err[-1500:]}")
         retcode = result.returncode
 
     elapsed = time.time() - t0
@@ -88,294 +107,389 @@ def run(cmd, label, timeout=600, stream=False, check=True):
     print(f"--- {label}: {status} ({elapsed:.1f}s) ---\n")
 
     if check and retcode != 0:
-        print(f"ERROR: {label} failed with exit code {retcode}")
-        sys.exit(1)
+        abort(label, f"exited with code {retcode}")
 
     return retcode
 
 
-def step(n, total, text):
+def step(n, text):
     """Print a step indicator."""
-    print(f"\n[{n}/{total}] {text}")
+    print(f"\n[{n}/{TOTAL_STEPS}] {text}")
 
 
-# ── Main pipeline ───────────────────────────────────────────────────────────
+# -- Main pipeline ----------------------------------------------------------
 
 def main():
-    TOTAL_STEPS = 14
-
-    banner("C4 Requalification Run — T4 GPU")
+    banner("C4 Requalification Run — T4 GPU (fail-closed)")
     print(f"Repository: {REPO_URL}")
-    print(f"Protocol:   C4 v2 (deterministic, reproducible)")
+    print("Protocol:   C4 v2_1 (deterministic, reproducible, single ordering spec)")
     print(f"Steps:      {TOTAL_STEPS}")
-    print(f"Expected:   ~20-30 minutes on T4 GPU")
+    print("Expected:   ~30-40 minutes on T4 GPU")
 
-    # ── Step 1: Verify GPU ──────────────────────────────────────────────
-    step(1, TOTAL_STEPS, "Verifying GPU...")
+    # -- Step 1: Verify GPU ------------------------------------------------
+    step(1, "Verifying GPU...")
 
     try:
         import torch
         print(f"  PyTorch: {torch.__version__}")
         if not torch.cuda.is_available():
-            print("  ERROR: No GPU detected!")
-            print("  Fix: Runtime → Change runtime type → T4 GPU")
-            sys.exit(1)
+            abort("Step 1", "No GPU detected. Runtime -> Change runtime type -> T4 GPU")
         print(f"  GPU: {torch.cuda.get_device_name(0)}")
-        mem = torch.cuda.get_device_properties(0).total_mem / 1e9
+        # NB: the attribute is total_memory. The previous `total_mem` raised
+        # AttributeError and killed this script on its first step.
+        mem = torch.cuda.get_device_properties(0).total_memory / 1e9
         print(f"  GPU memory: {mem:.1f} GB")
+        print(f"  CUDA: {torch.version.cuda}")
     except ImportError:
-        print("  ERROR: PyTorch not installed")
-        sys.exit(1)
+        abort("Step 1", "PyTorch is not installed")
 
-    # ── Step 2: Clone repository ────────────────────────────────────────
-    step(2, TOTAL_STEPS, "Cloning repository...")
+    # -- Step 2: Clone repository ------------------------------------------
+    step(2, "Cloning repository...")
 
     if os.path.exists(REPO_DIR):
-        print(f"  Repository exists, pulling latest...")
+        print("  Repository exists, pulling latest...")
         subprocess.run(["git", "-C", REPO_DIR, "pull", "--rebase"],
                        capture_output=True, check=False)
     else:
-        subprocess.run(["git", "clone", "--depth", "1", REPO_URL, REPO_DIR], check=True)
+        subprocess.run(["git", "clone", REPO_URL, REPO_DIR], check=True)
 
     os.chdir(REPO_DIR)
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"]).decode().strip()
+    dirty = subprocess.check_output(["git", "status", "--porcelain"]).decode().strip()
     print(f"  Commit: {commit[:12]}")
     print(f"  Working dir: {os.getcwd()}")
+    if dirty:
+        # D8_clean_release requires a clean tree; certification will fail on it,
+        # so say so now rather than after the GPU run.
+        print("  WARNING: working tree is dirty. Certification gate "
+              "'source_lineage' will FAIL:")
+        for line in dirty.splitlines()[:10]:
+            print(f"    {line}")
 
-    # ── Step 3: Install dependencies ────────────────────────────────────
-    step(3, TOTAL_STEPS, "Installing dependencies...")
+    # -- Step 3: Install dependencies from the lock ------------------------
+    step(3, "Installing dependencies from the environment lock...")
 
-    subprocess.run(["pip", "install", "-q", "transformers>=5.9.0",
-                    "huggingface-hub>=0.34"], check=True)
-    subprocess.run(["pip", "install", "-q", "rank-bm25", "numpy"], check=True)
-    subprocess.run(["pip", "install", "-q", "pytest"], check=False)
-    subprocess.run(["pip", "install", "-q", "-e", "."], check=True)
+    lock_path = Path("configs/c4_requirements.lock")
+    if not lock_path.is_file():
+        abort("Step 3", f"{lock_path} is missing. The environment cannot be "
+                        f"reproduced without a lock.")
 
-    import transformers
-    print(f"  transformers: {transformers.__version__}")
-    print(f"  torch: {torch.__version__}")
+    sys.path.insert(0, os.getcwd())
+    from hrm_adaptive_memory.c4.environment_lock import (
+        capture_environment, load_lock, pip_requirements, verify_environment)
 
-    # ── Step 4: Run test suite ──────────────────────────────────────────
-    step(4, TOTAL_STEPS, "Running test suite (607 tests)...")
+    lock = load_lock(lock_path)
+    requirements = Path("/content/c4_requirements.txt")
+    requirements.write_text(pip_requirements(lock))
+    print(f"  Lock pins: python=={lock.get('python')}")
+    for name, version in sorted((lock.get("packages") or {}).items()):
+        print(f"    {name}=={version}")
 
-    ret = run(["python", "-m", "pytest", "tests/", "-q", "--tb=line",
-               "--timeout=60"],
-              "Test Suite", timeout=180, check=False)
-    if ret != 0:
-        print("  WARNING: Some tests failed. Check output above.")
-        print("  Continuing anyway (tests may fail due to environment differences)...")
+    unrecorded = [n for n, v in (lock.get("packages") or {}).items() if v is None]
+    if unrecorded:
+        print(f"\n  NOTE: {unrecorded} are unrecorded in the lock.")
+        print("  Certification will FAIL on them (MUST_RECORD). If this is the")
+        print("  environment you intend to certify, regenerate the lock with:")
+        print("    python scripts/c4_freeze_environment.py --note 'colab T4'")
+        print("  then commit it and re-run.")
+
+    run(["pip", "install", "-q", "-r", str(requirements)],
+        "Install locked dependencies", timeout=1200, check=False)
+    run(["pip", "install", "-q", "-e", "."], "Install repository (editable)",
+        timeout=900)
+
+    # -- Step 4: Verify the environment against the lock -------------------
+    step(4, "Verifying environment against the lock...")
+
+    ok, violations, observed = verify_environment(load_lock(lock_path))
+    print(f"  python: {observed['python']}")
+    for name, version in sorted(observed["packages"].items()):
+        print(f"  {name}: {version}")
+    print(f"  accelerator: cuda={observed['accelerator']['cuda']} "
+          f"gpu={observed['accelerator']['gpu_name']}")
+    if ok:
+        print("\n  Environment matches the lock.")
     else:
-        print("  All tests passed!")
+        print(f"\n  {len(violations)} environment violation(s):")
+        for v in violations:
+            print(f"    - {v}")
+        print("\n  Continuing (the run is still useful as a measurement), but")
+        print("  certification WILL report VALID_RUN=false until the lock and")
+        print("  the environment agree.")
 
-    # ── Step 5: Determinism qualification ───────────────────────────────
-    step(5, TOTAL_STEPS, "Pre-HRM determinism qualification (120 tasks, 2 hash seeds)...")
+    # -- Step 5: Validate the active protocol ------------------------------
+    step(5, "Validating the active protocol (semantic, fail-closed)...")
 
-    ret = run(["python", "scripts/c4_determinism_qualification.py",
-               "--tasks", "120", "--seeds", "0,42"],
-              "Determinism Qualification", timeout=300, check=False)
-    if ret != 0:
-        print("  ERROR: Determinism qualification FAILED!")
-        print("  The pipeline is not deterministic. Do not continue to HRM.")
-        sys.exit(1)
-    print("  120/120 identical packet hashes — PASS")
+    from hrm_adaptive_memory.c4.protocol_validation import (
+        ProtocolViolation, load_and_validate_protocol)
 
-    # ── Step 6: Freeze deterministic packets ────────────────────────────
-    step(6, TOTAL_STEPS, "Freezing deterministic packets (immutable, hashed)...")
+    protocol_path = Path("configs/gate_c4_protocol_v2_1.json")
+    try:
+        protocol, protocol_sha, checks = load_and_validate_protocol(protocol_path)
+    except ProtocolViolation as exc:
+        abort("Step 5", f"Protocol validation failed: {exc}")
 
-    ret = run(["python", "scripts/c4_freeze_packets.py",
-               "--split", "development"],
-              "Freeze Packets", timeout=300)
-    print("  Packets frozen: packet.json + packet.sha256 + prompt.txt + prompt.sha256")
+    print(f"  Protocol:      {protocol_path}")
+    print(f"  SHA256:        {protocol_sha}")
+    print(f"  protocol_id:   {protocol.get('protocol_id')}")
+    print("  Resolved invariants (previously printed as 'N/A'):")
+    print("    identity resolution (C4_3+): i3_explicit_identity")
+    print("    structural selector (C4_4):  s2c_with_s0_fallback")
+    print("    fallback selector:           s0 when identity unresolved")
+    print("    C4_5 selector:               oracle over the real pool")
+    print("    C4_6 selector:               oracle_evidence (reader ceiling)")
+    print(f"    ordering policy:             {checks['ordering_policy']}")
+    print("    iterative retrieval:         OUTSIDE_PRIMARY_C4")
+    print(f"    metric module:               {checks['metric_module']}")
+    print(f"    arms validated:              {checks['arms_present']}")
 
-    # ── Step 7: CPU-only dry run (conformance validation) ───────────────
-    step(7, TOTAL_STEPS, "CPU-only dry run (7 conformance gates)...")
+    # -- Step 6: Run test suite (ABORTS on failure) ------------------------
+    step(6, "Running the full test suite...")
+    print("  Protocol abort condition: 'test suite fails'. No exceptions.")
 
-    ret = run(["python", "scripts/run_gate_c4.py", "dry-run"],
-              "Dry Run (7 Conformance Gates)", timeout=300)
-    print("  All conformance gates passed!")
+    run(["python", "-m", "pytest", "tests/", "-q", "--tb=short"],
+        "Test Suite", timeout=1800, stream=True, check=True)
+    print("  All tests passed.")
 
-    # ── Step 8: C4-BRIDGE gate ──────────────────────────────────────────
-    step(8, TOTAL_STEPS, "C4-BRIDGE gate (no HRM, ~2 seconds)...")
+    # -- Step 7: Determinism qualification (ABORTS on failure) -------------
+    step(7, f"Pre-HRM determinism qualification (120 tasks, seeds {DETERMINISM_SEEDS})...")
 
-    ret = run(["python", "scripts/run_gate_c4_bridge.py"],
-              "C4-BRIDGE Gate", timeout=300, check=False)
-    # BRIDGE gate is expected to show a negative result — that's fine
-    print("  C4-BRIDGE negative result confirmed (expected)")
+    run(["python", "scripts/c4_determinism_qualification.py",
+         "--tasks", "120", "--seeds", DETERMINISM_SEEDS, "--arms", "C4_4"],
+        "Determinism Qualification", timeout=1800, stream=True, check=True)
+    print("  Every compared field identical across seeds.")
 
-    # ── Step 9: HRM smoke test ──────────────────────────────────────────
-    step(9, TOTAL_STEPS, "HRM smoke test (3 tasks × 7 arms)...")
+    # -- Step 8: Freeze deterministic packets ------------------------------
+    step(8, "Freezing deterministic packets (immutable, hashed)...")
 
-    # Set GPU + protocol v2 environment
+    run(["python", "scripts/c4_freeze_packets.py", "--split", "development"],
+        "Freeze Packets", timeout=900)
+
+    # -- Step 9: CPU-only dry run ------------------------------------------
+    step(9, "CPU-only dry run (conformance gates)...")
+
+    run(["python", "scripts/run_gate_c4.py", "dry-run"],
+        "Dry Run (Conformance Gates)", timeout=1800, stream=True, check=True)
+
+    # -- Step 10: C4-BRIDGE gate (informational) ---------------------------
+    step(10, "C4-BRIDGE gate (expected negative result)...")
+
+    run(["python", "scripts/run_gate_c4_bridge.py"],
+        "C4-BRIDGE Gate", timeout=600, check=False)
+    print("  Informational: the negative result is why iterative retrieval is "
+          "outside primary C4.")
+
+    # -- Step 11: HRM smoke test -------------------------------------------
+    step(11, "HRM smoke test...")
+
     os.environ["HRM_DEVICE"] = "cuda"
     os.environ["HRM_DTYPE"] = "float16"
-    os.environ["C4_PROTOCOL"] = "v2"
+    os.environ["C4_PROTOCOL"] = "v2_1"
 
-    ret = run(["python", "scripts/run_gate_c4.py", "smoke"],
-              "HRM Smoke Test", timeout=600)
-    print("  Smoke test passed — model loads on GPU correctly")
+    run(["python", "scripts/run_gate_c4.py", "smoke"], "HRM Smoke Test",
+        timeout=1800, stream=True, check=True)
 
-    # ── Step 10: Full HRM development run ───────────────────────────────
-    step(10, TOTAL_STEPS, "Full HRM development run (120 tasks × 7 arms = 840 generations)")
-    print("  This is the main run. Expected: ~15-25 minutes on T4.")
-    print("  Resumable — if Colab disconnects, re-run picks up where it left off.\n")
+    # -- Step 12: Full HRM development run ---------------------------------
+    step(12, "Full HRM development run (120 tasks x 7 arms = 840 generations)")
+    print("  Expected: ~15-25 minutes on T4. Resumable.\n")
 
-    # Check resumability
     out_dir = Path("evidence/gate_c4/full/development")
     if out_dir.exists():
         for arm in ARMS:
             fpath = out_dir / f"{arm}.jsonl"
             if fpath.exists():
-                with open(fpath) as f:
-                    lines = sum(1 for l in f if l.strip())
-                if lines > 0:
-                    print(f"  {arm}: {lines}/120 existing results (will resume)")
+                lines = sum(1 for l in fpath.read_text().splitlines() if l.strip())
+                if lines:
+                    print(f"  {arm}: {lines}/120 existing results (resume key "
+                          f"decides reuse)")
 
-    ret = run(["python", "scripts/run_gate_c4.py", "full", "--split", "development"],
-              "Full Development Run", stream=True, check=True)
-    print("  Full run complete!")
+    run(["python", "scripts/run_gate_c4.py", "full", "--split", "development"],
+        "Full Development Run", stream=True, check=True)
 
-    # ── Step 10b: Diagnostic arms (ordering vs membership separation) ───
-    step("10b", TOTAL_STEPS, "Diagnostic arms: C4_3o (S0+order) + C4_4m (S2c+pool-order)...")
-    print("  These decompose Q(C4_4) - Q(C4_3) into ordering vs membership effects.")
+    # -- Step 13: Diagnostic arms ------------------------------------------
+    step(13, "Diagnostic arms C4_3o + C4_4m (ordering vs membership 2x2)...")
+    print("  Decomposes Q(C4_4) - Q(C4_3) into ordering, membership, interaction:")
+    print("    C4_3  = S0  membership + pool order")
+    print("    C4_3o = S0  membership + deterministic order")
+    print("    C4_4m = S2c membership + pool order")
+    print("    C4_4  = S2c membership + deterministic order")
     print("  ~5 minutes on T4 (240 additional generations)\n")
 
-    ret = run(["python", "scripts/run_gate_c4.py", "full", "--split", "development",
-               "--arms", "C4_3o", "C4_4m"],
-              "Diagnostic Arms (ordering vs membership)", stream=True, check=False)
-    if ret != 0:
-        print("  WARNING: Diagnostic arms failed (non-fatal, continuing)")
+    run(["python", "scripts/run_gate_c4.py", "full", "--split", "development",
+         "--arms"] + DIAGNOSTIC_ARMS,
+        "Diagnostic Arms (ordering vs membership)", stream=True, check=True)
 
-    # ── Step 11: Run analyzer ───────────────────────────────────────────
-    step(11, TOTAL_STEPS, "Running analyzer (quality, gap capture, family CIs, flips)...")
+    # -- Step 14: Analyzer (ABORTS on failure) -----------------------------
+    step(14, "Running the analyzer (quality, gap capture, family CIs, flips)...")
+    print("  The analyzer is authoritative for promotion, so it is not optional.")
 
-    ret = run(["python", "scripts/analyze_gate_c4.py",
-               "--dir", "evidence/gate_c4/full/development",
-               "--output", "evidence/gate_c4/full/development/analysis.json"],
-              "C4 Analyzer", timeout=120, check=False)
+    run(["python", "scripts/analyze_gate_c4.py",
+         "--dir", str(out_dir),
+         "--output", str(out_dir / "analysis.json")],
+        "C4 Analyzer", timeout=600, stream=True, check=True)
 
-    # ── Step 12: Composition diagnostic ─────────────────────────────────
-    step(12, TOTAL_STEPS, "Composition diagnostic...")
+    # RESULTS.sha256 must be rewritten after the analyzer and the diagnostic
+    # arms changed the bundle contents, or the hash gate fails on stale data.
+    from hrm_adaptive_memory.c4.provenance import write_results_hash
+    write_results_hash(out_dir)
+    print(f"  RESULTS.sha256 rewritten over the final bundle contents.")
 
-    ret = run(["python", "scripts/diagnose_c4_composition.py"],
-              "Composition Diagnostic", timeout=60, check=False)
+    # -- Step 15: Composition diagnostic (informational) -------------------
+    step(15, "Composition diagnostic...")
 
-    # ── Step 13: Verify results ─────────────────────────────────────────
-    step(13, TOTAL_STEPS, "Verifying results integrity...")
+    run(["python", "scripts/diagnose_c4_composition.py"],
+        "Composition Diagnostic", timeout=300, check=False)
+
+    # -- Step 16: Results summary ------------------------------------------
+    step(16, "Results summary...")
 
     banner("Results Summary", char="-", width=50)
 
-    # Manifest
     manifest_path = out_dir / "manifest.json"
     if manifest_path.exists():
         manifest = json.loads(manifest_path.read_text())
-        print(f"  Git commit:       {manifest.get('git_commit', 'N/A')[:12]}")
-        print(f"  Protocol SHA256:  {manifest.get('protocol_sha256', 'N/A')[:16]}...")
+        print(f"  Git commit:       {str(manifest.get('git_commit', 'N/A'))[:12]}")
+        print(f"  Protocol SHA256:  {str(manifest.get('protocol_sha256', 'N/A'))[:16]}...")
         print(f"  HRM model:        {manifest.get('hrm_model_id', 'N/A')}")
         print(f"  Device:           {manifest.get('device', 'N/A')}")
         print(f"  Created:          {manifest.get('created_utc', 'N/A')}")
 
-    # Receipt counts
-    print(f"\n  Per-arm receipt counts:")
-    all_complete = True
-    for arm_id in ARMS:
+    print("\n  Per-arm receipt counts:")
+    for arm_id in ARMS + DIAGNOSTIC_ARMS:
         arm_path = out_dir / f"{arm_id}.jsonl"
         if arm_path.exists():
             lines = [l for l in arm_path.read_text().splitlines() if l.strip()]
-            status = "OK" if len(lines) == 120 else "INCOMPLETE"
-            if len(lines) != 120:
-                all_complete = False
-            print(f"    {arm_id}: {len(lines)}/120  [{status}]")
+            flag = "OK" if len(lines) == 120 else "INCOMPLETE"
+            print(f"    {arm_id}: {len(lines)}/120  [{flag}]")
         else:
-            all_complete = False
             print(f"    {arm_id}: MISSING")
 
-    # Quality summary from analysis
     analysis_path = out_dir / "analysis.json"
     if analysis_path.exists():
         analysis = json.loads(analysis_path.read_text())
-        print(f"\n  Quality scores:")
-        for arm_id in ARMS:
-            q = analysis.get("arm_quality", {}).get(arm_id)
-            if q is not None:
-                print(f"    {arm_id}: {q:.4f}")
 
-        delta = analysis.get("primary_delta")
-        if delta is not None:
-            print(f"\n  Primary delta (C4_4 - C4_0): {delta:+.4f}")
+        # analysis.json stores arm quality under arm_summary[arm]["quality"];
+        # the previous code read a nonexistent "arm_quality" key and printed
+        # nothing, and formatted the primary_delta dict as a float (TypeError).
+        arm_summary = analysis.get("arm_summary", {})
+        print("\n  Quality scores:")
+        for arm_id in ARMS + DIAGNOSTIC_ARMS:
+            summary = arm_summary.get(arm_id)
+            if summary is not None:
+                print(f"    {arm_id}: {summary['quality']:.4f} "
+                      f"(correct {summary['correct_rate']:.4f}, n={summary['n']})")
+
+        delta = analysis.get("primary_delta") or {}
+        if delta:
+            print(f"\n  Primary delta (C4_4 - C4_0): {delta['mean_delta']:+.4f}")
+            print(f"    family CI:   [{delta['ci_lower']:+.4f}, {delta['ci_upper']:+.4f}]")
+            print(f"    cluster CI:  [{delta.get('ci_lower_cluster', float('nan')):+.4f}, "
+                  f"{delta.get('ci_upper_cluster', float('nan')):+.4f}]")
+            print(f"    template CI: [{delta.get('ci_lower_template', float('nan')):+.4f}, "
+                  f"{delta.get('ci_upper_template', float('nan')):+.4f}]")
             threshold = 0.15
-            if delta >= threshold:
-                print(f"  Threshold ({threshold:+.2f}): PASS ✓")
-            else:
-                print(f"  Threshold ({threshold:+.2f}): FAIL ✗")
+            verdict = "PASS" if delta["mean_delta"] >= threshold else "FAIL"
+            print(f"    threshold {threshold:+.2f}: {verdict}")
 
-        ogc = analysis.get("oracle_gap_capture")
         sgc = analysis.get("selector_gap_capture")
+        ogc = analysis.get("oracle_gap_capture")
+        if sgc is not None:
+            print(f"\n  Selector gap capture: {sgc:.4f}")
         if ogc is not None:
             print(f"  Oracle gap capture:   {ogc:.4f}")
-        if sgc is not None:
-            print(f"  Selector gap capture: {sgc:.4f}")
 
-        # Ordering vs membership decomposition (if diagnostic arms exist)
-        aq = analysis.get("arm_quality", {})
-        q3 = aq.get("C4_3")
-        q3o = aq.get("C4_3o")
-        q4m = aq.get("C4_4m")
-        q4 = aq.get("C4_4")
-        if all(x is not None for x in [q3, q3o, q4m, q4]):
-            print(f"\n  Ordering vs Membership decomposition:")
-            print(f"    Q(C4_3)  = {q3:.4f}  (baseline: S0 + pool order)")
-            print(f"    Q(C4_3o) = {q3o:.4f}  (S0 + deterministic order)")
-            print(f"    Q(C4_4m) = {q4m:.4f}  (S2c + pool order)")
-            print(f"    Q(C4_4)  = {q4:.4f}  (S2c + deterministic order)")
-            print(f"    Ordering effect:   Q(C4_3o) - Q(C4_3) = {q3o - q3:+.4f}")
-            print(f"    Membership effect: Q(C4_4m) - Q(C4_3) = {q4m - q3:+.4f}")
-            print(f"    Combined effect:   Q(C4_4)  - Q(C4_3) = {q4 - q3:+.4f}")
+        dec = analysis.get("ordering_membership_decomposition") or {}
+        print("\n  Ordering vs membership decomposition:")
+        if not dec.get("available"):
+            print(f"    NOT AVAILABLE (missing {dec.get('missing_arms')})")
+        else:
+            q = dec["quality"]
+            print(f"    Q(C4_3)  = {q['C4_3']:.4f}  (S0  + pool order)")
+            print(f"    Q(C4_3o) = {q['C4_3o']:.4f}  (S0  + deterministic order)")
+            print(f"    Q(C4_4m) = {q['C4_4m']:.4f}  (S2c + pool order)")
+            print(f"    Q(C4_4)  = {q['C4_4']:.4f}  (S2c + deterministic order)")
+            print(f"    ordering effect   = {dec['ordering_effect']:+.4f}")
+            print(f"    membership effect = {dec['membership_effect']:+.4f}")
+            print(f"    combined effect   = {dec['combined_effect']:+.4f}")
+            print(f"    interaction       = {dec['interaction_effect']:+.4f}")
 
-    # RESULTS.sha256
-    results_hash_path = out_dir / "RESULTS.sha256"
-    if results_hash_path.exists():
-        print(f"\n  RESULTS.sha256:")
-        for line in results_hash_path.read_text().strip().split("\n"):
-            print(f"    {line}")
+    # -- Step 17: Certification --------------------------------------------
+    step(17, "Certification (decides VALID_RUN)...")
+    print("  VALID_RUN is the conjunction of every gate, each derived from the")
+    print("  artifacts. Tests are re-run inside certification against the exact")
+    print("  bundle being certified.\n")
 
-    if not all_complete:
-        print("\n  WARNING: Not all arms have 120 receipts!")
-        print("  You may need to re-run to complete missing tasks.")
+    cert_ret = run(["python", "scripts/certify_c4_run.py",
+                    "--bundle", str(out_dir),
+                    "--protocol", "configs/gate_c4_protocol_v2_1.json",
+                    "--lock", "configs/c4_requirements.lock"],
+                   "Certification", timeout=2400, stream=True, check=False)
 
-    # ── Step 14: Package for download ───────────────────────────────────
-    step(14, TOTAL_STEPS, "Packaging results for download...")
+    cert_path = out_dir / "certification/CERTIFICATION.json"
+    valid_run = False
+    certificate = {}
+    if cert_path.exists():
+        certificate = json.loads(cert_path.read_text())
+        valid_run = bool(certificate.get("VALID_RUN"))
+        print(f"\n  VALID_RUN: {valid_run}")
+        print(f"  verdict:   {certificate.get('verdict')}")
+        print(f"  gates:     {certificate.get('gates_passed')}/"
+              f"{certificate.get('gates_total')} passed")
+        if certificate.get("gates_failed"):
+            print(f"  failed:    {certificate['gates_failed']}")
+    else:
+        print(f"\n  Certification produced no artifact (exit {cert_ret}).")
 
-    zip_path = "/content/c4_requalify_results.zip"
-    shutil.make_archive(zip_path.replace(".zip", ""), "zip", "evidence/gate_c4")
+    # -- Step 18: Package for download -------------------------------------
+    step(18, "Packaging results for download...")
+
+    # The archive name states the verdict. An uncertified bundle must never be
+    # named VALID_CONFORMANT_*: the name is the thing people cite later.
+    stem = ("VALID_CONFORMANT_C4_V2_DEVELOPMENT_RESULT" if valid_run
+            else "UNCERTIFIED_C4_V2_DEVELOPMENT_RESULT")
+    zip_base = f"/content/{stem}"
+    shutil.make_archive(zip_base, "zip", "evidence/gate_c4")
+    zip_path = f"{zip_base}.zip"
     size_mb = os.path.getsize(zip_path) / 1e6
     print(f"  Created: {zip_path}")
     print(f"  Size: {size_mb:.1f} MB")
 
-    # Download (works in Colab)
     try:
         from google.colab import files
         files.download(zip_path)
         print("  Download started in browser.")
     except ImportError:
-        print("  (Not in Colab — zip is at /content/c4_requalify_results.zip)")
+        print(f"  (Not in Colab — zip is at {zip_path})")
 
-    # ── Done ────────────────────────────────────────────────────────────
-    banner("COMPLETE")
-    print("""
-  What to check next:
-    1. Primary delta (C4_4 - C4_0) must be >= +0.15
-    2. Family CI lower bound must be > 0
-    3. No canonical/abbreviation regression > 0.05
-    4. Oracle gap capture > 0 (mechanism closes some of the gap)
-    5. If development passes → run qualification split
-    6. If qualification passes → run OOD split
-    7. Gate D decision based on all three splits
+    # -- Done ---------------------------------------------------------------
+    if valid_run:
+        banner("COMPLETE — VALID_RUN = true")
+        print(f"""
+  Certified bundle: {zip_path}
+  Certificate:      {cert_path}
 
-  Results are in: evidence/gate_c4/full/development/
-  Analysis:       evidence/gate_c4/full/development/analysis.json
-  Frozen packets: evidence/gate_c4/frozen_packets/development/
+  Next:
+    1. Commit the certificate and the environment lock.
+    2. Run the untouched qualification split.
+    3. Then the OOD split.
+    4. Gate D decision across all three splits.
 """)
+        return 0
+
+    banner("COMPLETE — VALID_RUN = false (NOT CERTIFIED)")
+    print(f"""
+  The measurement finished, but the run is NOT certified.
+
+  Bundle:      {zip_path}
+  Certificate: {cert_path}
+  Failed gates: {certificate.get('gates_failed', 'certification did not run')}
+
+  The numbers in this bundle may be scientifically informative, but do not
+  cite them as a conformant C4 v2 result and do not rename the archive to
+  VALID_CONFORMANT_* until every gate passes.
+""")
+    return 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

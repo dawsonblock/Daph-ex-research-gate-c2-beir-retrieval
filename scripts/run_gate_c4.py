@@ -46,19 +46,35 @@ OUT = ROOT / "evidence/gate_c4"
 HRM_MAX_NEW_TOKENS = 64
 
 
-def _protocol_hash() -> str:
-    """Hash of the active C4 protocol file.
+ACTIVE_PROTOCOL = "v2_1"
 
-    Selects v1 or v2 based on C4_PROTOCOL environment variable:
-        C4_PROTOCOL=v2  → configs/gate_c4_protocol_v2.json
-        (default)       → configs/gate_c4_protocol.json
+# Only v2_1 is certifiable. v2 specified packet ordering twice, inconsistently,
+# and v1 predates the determinism repair. Both remain readable for lineage.
+PROTOCOL_FILES = {
+    "v2_1": "configs/gate_c4_protocol_v2_1.json",
+    "v2": "configs/gate_c4_protocol_v2.json",
+    "v1": "configs/gate_c4_protocol.json",
+}
+
+
+def _protocol_path() -> Path:
+    """Path to the active C4 protocol file.
+
+    Selected by the C4_PROTOCOL environment variable; defaults to the active
+    protocol rather than to v1, so a bundle produced without setting the
+    variable is not silently stamped with a superseded protocol hash.
     """
-    protocol_version = os.environ.get("C4_PROTOCOL", "v1")
-    if protocol_version == "v2":
-        protocol_path = ROOT / "configs/gate_c4_protocol_v2.json"
-    else:
-        protocol_path = ROOT / "configs/gate_c4_protocol.json"
-    return hashlib.sha256(protocol_path.read_bytes()).hexdigest()
+    version = os.environ.get("C4_PROTOCOL", ACTIVE_PROTOCOL)
+    if version not in PROTOCOL_FILES:
+        raise ValueError(
+            f"C4_PROTOCOL={version!r} is not a known protocol. "
+            f"Known: {sorted(PROTOCOL_FILES)}")
+    return ROOT / PROTOCOL_FILES[version]
+
+
+def _protocol_hash() -> str:
+    """Hash of the active C4 protocol file."""
+    return hashlib.sha256(_protocol_path().read_bytes()).hexdigest()
 
 
 def _detect_device() -> str:
@@ -276,8 +292,10 @@ def run_pre_hrm_stages(task: dict, arm: C4Arm, records: list[IndexRecord],
         task.get("required_evidence_ids", []),
         canonical_question=canonical_question)
 
-    # Packet stage
-    prompt, packet_result = run_packet_stage(arm, question, selection_result, texts)
+    # Packet stage. `retrieval_result` supplies the candidate pool hash and the
+    # fusion scores used by the ordering policy's tie-break rules.
+    prompt, packet_result = run_packet_stage(
+        arm, question, selection_result, texts, retrieval=retrieval_result)
 
     return PreHRMResult(
         task_id=task["task_id"],
@@ -290,6 +308,7 @@ def run_pre_hrm_stages(task: dict, arm: C4Arm, records: list[IndexRecord],
         packet=packet_result,
         information_state_before=_state_to_dict(state_before),
         information_state_after=_state_to_dict(state_after),
+        prompt=prompt,
     )
 
 
@@ -338,11 +357,35 @@ def _run_hrm(adapter, condition, prompt: str) -> HRMResult:
     )
 
 
+def _assert_prompt_binding(pre_hrm: PreHRMResult, hrm: HRMResult) -> None:
+    """Fail closed if HRM did not consume the frozen packet prompt.
+
+    ``PacketResult.prompt_hash`` is computed pre-HRM from the ordered packet.
+    ``HRMResult.prompt_hash`` is computed from whatever text was actually
+    generated on. If they diverge, the ordering policy was bypassed and the
+    receipt would misdescribe the run.
+    """
+    if pre_hrm.packet.prompt_hash != hrm.prompt_hash:
+        raise AssertionError(
+            f"Prompt binding violated for {pre_hrm.task_id}/{pre_hrm.arm_id}: "
+            f"packet prompt_hash={pre_hrm.packet.prompt_hash[:16]} but HRM "
+            f"consumed prompt_hash={hrm.prompt_hash[:16]}. HRM must generate "
+            f"from PreHRMResult.prompt.")
+
+
+# Bumped whenever a change alters the prompt HRM sees for an unchanged packet
+# hash. Without this, resumption silently reuses receipts generated under the
+# previous prompt-construction path.
+#   v2: packet ordering + fusion tie-breaks actually applied to the prompt
+PIPELINE_VERSION = "c4_pipeline_v2_ordered_packet"
+
+
 def _resume_key(task: dict, arm: C4Arm, packet_hash: str) -> str:
     """Build a resume key that invalidates on config/code changes."""
     return hashlib.sha256(
         f"{task['task_id']}|{arm.arm_id}|{packet_hash}|{arm.query_policy}|"
-        f"{arm.retrieval_policy}|{arm.identity_policy}|{arm.selector_policy}".encode()
+        f"{arm.retrieval_policy}|{arm.identity_policy}|{arm.selector_policy}|"
+        f"{PIPELINE_VERSION}".encode()
     ).hexdigest()[:16]
 
 
@@ -414,13 +457,10 @@ def run_smoke(split: str = "development"):
         for i, task in enumerate(tasks):
             pre_hrm = all_pre_hrm[arm_id][i]
             pre_receipt = build_pre_hrm_receipt(pre_hrm)
-            prompt = pre_hrm.packet.packet_contents
-            from hrm_adaptive_memory.evidence.packing import compose_evidence_prompt
-            full_prompt = compose_evidence_prompt(
-                task["question"],
-                [texts.get(eid, "") for eid in pre_hrm.selection.selected_ids if eid in texts])
-
-            hrm_result = _run_hrm(adapter, condition, full_prompt)
+            # HRM consumes the frozen packet prompt — never a recomposition
+            # from selected_ids, which would bypass the ordering policy.
+            hrm_result = _run_hrm(adapter, condition, pre_hrm.prompt)
+            _assert_prompt_binding(pre_hrm, hrm_result)
             _binary_score, correct = _verify_answer(task, hrm_result.output)
             quality_score = _compute_quality(
                 task, list(pre_hrm.selection.selected_ids), evidence, correct)
@@ -539,13 +579,10 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
                 completed += 1
                 continue
 
-            # Run HRM
+            # Run HRM on the frozen packet prompt (pre_hrm_freeze.rule)
             pre_receipt = build_pre_hrm_receipt(pre_hrm)
-            from hrm_adaptive_memory.evidence.packing import compose_evidence_prompt
-            full_prompt = compose_evidence_prompt(
-                task["question"],
-                [texts.get(eid, "") for eid in pre_hrm.selection.selected_ids if eid in texts])
-            hrm_result = _run_hrm(adapter, condition, full_prompt)
+            hrm_result = _run_hrm(adapter, condition, pre_hrm.prompt)
+            _assert_prompt_binding(pre_hrm, hrm_result)
             _binary_score, correct = _verify_answer(task, hrm_result.output)
             quality_score = _compute_quality(
                 task, list(pre_hrm.selection.selected_ids), evidence, correct)

@@ -32,13 +32,25 @@ class TestOrderPacket:
         ordered = order_packet(ids)
         assert ordered[-1] == "task/distractor"
 
-    def test_same_role_sorted_by_selector_score(self):
-        """Within the same role, higher selector score comes first."""
+    def test_same_role_sorted_by_retrieval_score(self):
+        """Within the same role, higher retrieval fusion score comes first."""
         ids = ["task/value", "task-2/value"]
         scores = {"task/value": 5.0, "task-2/value": 3.0}
-        ordered = order_packet(ids, selector_scores=scores)
+        ordered = order_packet(ids, retrieval_scores=scores)
         assert ordered[0] == "task/value"
         assert ordered[1] == "task-2/value"
+
+    def test_selector_score_is_not_an_ordering_input(self):
+        """Protocol v2_1 removes selector score from packet ordering.
+
+        S2c scores chains, not records, so there is no per-record selector
+        score to order by. The parameter must be absent rather than accepted
+        and ignored, so a caller cannot believe it had an effect.
+        """
+        import inspect
+        assert "selector_scores" not in inspect.signature(order_packet).parameters
+        with pytest.raises(TypeError):
+            order_packet(["task/value"], selector_scores={"task/value": 1.0})
 
     def test_same_role_same_score_sorted_by_record_id(self):
         """Within the same role and score, record_id breaks ties."""
