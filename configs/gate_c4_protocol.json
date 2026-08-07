@@ -23,27 +23,54 @@
   "arms": {
     "C4_0": {
       "description": "current historical R1 pipeline baseline",
-      "mechanisms": ["original query", "BM25 retrieval", "S0 pool-order selection", "HRM"],
+      "mechanisms": [
+        "original query",
+        "BM25 retrieval",
+        "S0 pool-order selection",
+        "HRM"
+      ],
       "changes_from_prior": "none; baseline"
     },
     "C4_1": {
       "description": "C4-0 + subject-preserving information state + frozen improved follow-up query formulation",
-      "mechanisms": ["subject-preserving query", "BM25 retrieval", "S0 selection", "HRM"],
+      "mechanisms": [
+        "subject-preserving query",
+        "BM25 retrieval",
+        "S0 selection",
+        "HRM"
+      ],
       "changes_from_C4_0": "query formulation only"
     },
     "C4_2": {
       "description": "C4-1 + BM25/BGE multi-signal candidate generation",
-      "mechanisms": ["subject-preserving query", "BM25+BGE RRF fusion", "S0 selection", "HRM"],
+      "mechanisms": [
+        "subject-preserving query",
+        "BM25+BGE RRF fusion",
+        "S0 selection",
+        "HRM"
+      ],
       "changes_from_C4_1": "retrieval only"
     },
     "C4_3": {
       "description": "C4-2 + I3 identity-record resolution + canonicalized state update",
-      "mechanisms": ["subject-preserving query", "BM25+BGE", "I3 resolution", "S0 selection", "HRM"],
+      "mechanisms": [
+        "subject-preserving query",
+        "BM25+BGE",
+        "I3 resolution",
+        "S0 selection",
+        "HRM"
+      ],
       "changes_from_C4_2": "identity resolution only"
     },
     "C4_4": {
       "description": "C4-3 + S2c structure+relation selection",
-      "mechanisms": ["subject-preserving query", "BM25+BGE", "I3 resolution", "S2c selection", "HRM"],
+      "mechanisms": [
+        "subject-preserving query",
+        "BM25+BGE",
+        "I3 resolution",
+        "S2c selection",
+        "HRM"
+      ],
       "changes_from_C4_3": "selector only",
       "deterministic_fallback": "if identity_status in {EXACT, RESOLVED}: selector = S2c; else: selector = S0"
     },
@@ -54,13 +81,22 @@
     },
     "C4_5": {
       "description": "same real query/retrieval/identity candidate pool + oracle selector",
-      "mechanisms": ["subject-preserving query", "BM25+BGE", "I3 resolution", "oracle selection", "HRM"],
+      "mechanisms": [
+        "subject-preserving query",
+        "BM25+BGE",
+        "I3 resolution",
+        "oracle selection",
+        "HRM"
+      ],
       "changes_from_C4_4": "selector only (real vs oracle)",
       "constraint": "must not inject unretrieved evidence"
     },
     "C4_6": {
       "description": "oracle required evidence (R5-style ceiling)",
-      "mechanisms": ["oracle evidence", "HRM"],
+      "mechanisms": [
+        "oracle evidence",
+        "HRM"
+      ],
       "constraint": "may bypass retrieval because it is the reader/evidence ceiling"
     }
   },
@@ -70,7 +106,15 @@
     "C4_4_vs_C4_5": "same real candidate pool; only real vs oracle selection differs"
   },
   "information_state_contract": {
-    "fields": ["original_subject", "target_relation", "current_surface", "canonical_entity", "bridge_entities", "resolution_status", "resolution_evidence_ids"],
+    "fields": [
+      "original_subject",
+      "target_relation",
+      "current_surface",
+      "canonical_entity",
+      "bridge_entities",
+      "resolution_status",
+      "resolution_evidence_ids"
+    ],
     "invariant": "the original subject is never discarded during iterative retrieval",
     "tests_required": [
       "test_information_state_preserves_original_subject",
@@ -83,12 +127,33 @@
   "query_formulation": {
     "policy": "development-qualified formulation that preserved subject + bridge + relation",
     "do_not_retune": "Do not retune query wording on qualification/OOD",
-    "receipt_fields": ["original_question", "original_subject", "target_relation", "bridge", "rendered_query", "query_hash", "query_policy_version"]
+    "receipt_fields": [
+      "original_question",
+      "original_subject",
+      "target_relation",
+      "bridge",
+      "rendered_query",
+      "query_hash",
+      "query_policy_version"
+    ]
   },
   "candidate_retrieval": {
-    "components": ["BM25", "BGE", "deterministic RRF fusion"],
+    "components": [
+      "BM25",
+      "BGE",
+      "deterministic RRF fusion"
+    ],
     "constraint": "Do not introduce another dense model during C4 unless C4 is explicitly voided and re-frozen",
-    "receipt_fields": ["bm25_ranked_ids", "bm25_scores", "bge_ranked_ids", "bge_scores", "fusion_ranked_ids", "fusion_scores", "candidate_pool_ids", "candidate_budget"],
+    "receipt_fields": [
+      "bm25_ranked_ids",
+      "bm25_scores",
+      "bge_ranked_ids",
+      "bge_scores",
+      "fusion_ranked_ids",
+      "fusion_scores",
+      "candidate_pool_ids",
+      "candidate_budget"
+    ],
     "budget_constraint": "Use exact frozen candidate budget. Do not let one arm see more candidates than another."
   },
   "i3_integration": {
@@ -99,16 +164,67 @@
       "never_guess": "abstention is preferred over guessed resolution"
     },
     "canonical_abbreviation_note": "For canonical/abbreviation tasks, I3 should not unnecessarily rewrite an already valid canonical anchor",
-    "receipt_fields": ["surface_mention", "identity_records_inspected", "candidate_mappings", "resolution_status", "chosen_canonical", "resolution_evidence_ids", "resolution_needed", "resolution_attempted", "resolution_changed_state"]
+    "receipt_fields": [
+      "surface_mention",
+      "identity_records_inspected",
+      "candidate_mappings",
+      "resolution_status",
+      "chosen_canonical",
+      "resolution_evidence_ids",
+      "resolution_needed",
+      "resolution_attempted",
+      "resolution_changed_state"
+    ]
   },
   "s2c_integration": {
     "use_when": "valid anchor exists (identity_status in {EXACT, RESOLVED})",
-    "selector_uses": ["question/state", "candidate evidence", "runtime canonicalization", "target relation"],
-    "selector_must_not_access": ["required_evidence_ids", "proof graph", "answer node", "family", "entity regime", "oracle bridge"],
-    "receipt_fields": ["selected_ids", "selected_score_components", "chain_ids", "entity_connectivity_score", "relation_relevance_score", "distractor_redundancy_term", "packet_token_count"]
+    "selector_uses": [
+      "question/state",
+      "candidate evidence",
+      "runtime canonicalization",
+      "target relation"
+    ],
+    "selector_must_not_access": [
+      "required_evidence_ids",
+      "proof graph",
+      "answer node",
+      "family",
+      "entity regime",
+      "oracle bridge"
+    ],
+    "receipt_fields": [
+      "selected_ids",
+      "selected_score_components",
+      "chain_ids",
+      "entity_connectivity_score",
+      "relation_relevance_score",
+      "distractor_redundancy_term",
+      "packet_token_count"
+    ]
   },
   "receipt_contract": {
-    "per_task_fields": ["task_id", "split", "question", "information_state_before", "rendered_queries", "retrieval_rankings", "candidate_pool_ids", "identity_mappings", "information_state_after_resolution", "selector_chosen", "selected_evidence_ids", "evidence_roles_evaluator_side", "hrm_prompt_hash", "hrm_output", "verified_quality", "exact_match", "latency", "token_counts", "model_revision", "code_commit"],
+    "per_task_fields": [
+      "task_id",
+      "split",
+      "question",
+      "information_state_before",
+      "rendered_queries",
+      "retrieval_rankings",
+      "candidate_pool_ids",
+      "identity_mappings",
+      "information_state_after_resolution",
+      "selector_chosen",
+      "selected_evidence_ids",
+      "evidence_roles_evaluator_side",
+      "hrm_prompt_hash",
+      "hrm_output",
+      "verified_quality",
+      "exact_match",
+      "latency",
+      "token_counts",
+      "model_revision",
+      "code_commit"
+    ],
     "separation": "runtime_payload and evaluator_annotation must be physically or logically separated",
     "validation": "runtime_payload must contain no oracle keys"
   },
@@ -124,8 +240,20 @@
     ]
   },
   "per_regime_analysis": {
-    "mandatory_regimes": ["canonical", "abbreviation", "alias", "description"],
-    "also_by": ["family", "source_cluster", "template", "answer_kind", "proof_length", "required_evidence_count"],
+    "mandatory_regimes": [
+      "canonical",
+      "abbreviation",
+      "alias",
+      "description"
+    ],
+    "also_by": [
+      "family",
+      "source_cluster",
+      "template",
+      "answer_kind",
+      "proof_length",
+      "required_evidence_count"
+    ],
     "rule": "Do not allow aggregate gains to hide a regime collapse."
   },
   "promotion_criteria": {
@@ -155,7 +283,16 @@
   },
   "qualification_policy": {
     "rule": "Only after development config and thresholds are frozen. Run qualification once.",
-    "do_not_modify_after_seeing_results": ["query policy", "retriever", "fusion", "identity resolver", "selector weights", "candidate budget", "packet budget", "HRM prompt"],
+    "do_not_modify_after_seeing_results": [
+      "query policy",
+      "retriever",
+      "fusion",
+      "identity resolver",
+      "selector weights",
+      "candidate budget",
+      "packet budget",
+      "HRM prompt"
+    ],
     "if_bug_found": "preserve run, mark VOID, fix, re-freeze, rerun. Do not overwrite."
   },
   "ood_policy": {
@@ -181,5 +318,46 @@
     "batch optimization",
     "new dense models beyond BGE",
     "tuning on qualification/OOD"
+  ],
+  "errata": [
+    {
+      "id": "erratum_1_evaluator_v1_void",
+      "date": "2026-08-07",
+      "severity": "P0",
+      "description": "The original C4 evaluator (evaluator_v1) failed to strip HRM control tokens (e.g. <|box_end|>) before comparing answers. All C4 development scores from evaluator_v1 are VOID. Corrected scores are in evaluator_v2 (evidence/gate_c4/full/development_evaluator_v2/). No HRM rerun was required \u2014 only evaluator annotations changed.",
+      "affected_criteria": "all",
+      "resolution": "Shared verifier in hrm_adaptive_memory.evaluation.verifiers replaces all local verifier copies. Verifier parity tests added."
+    },
+    {
+      "id": "erratum_2_canonical_exact_missing",
+      "date": "2026-08-07",
+      "severity": "P1",
+      "description": "The identity stage never produced status='EXACT' for canonical subjects, so S2c was disabled on all canonical development tasks. This is an implementation conformance defect, not a protocol change. The protocol always intended canonical subjects to be EXACT.",
+      "affected_criteria": [
+        "1_quality_improvement",
+        "2_no_canonical_abbreviation_regression"
+      ],
+      "resolution": "Identity stage now detects canonical subjects by checking if the subject appears in non-identity evidence records. EXACT activates S2c with the original question (no rewriting needed)."
+    },
+    {
+      "id": "erratum_3_iterative_retrieval_not_implemented",
+      "date": "2026-08-07",
+      "severity": "P1",
+      "description": "C4-1 rendered queries without a bridge term (bridge=None), so it did not reproduce the qualified subject+bridge+relation iterative retrieval mechanism. The single-pass subject+relation query is not equivalent to the qualified two-pass mechanism.",
+      "affected_criteria": [
+        "1_quality_improvement"
+      ],
+      "resolution": "C4 harness now implements two-pass iterative retrieval: first pass retrieves with subject+relation, extracts bridge from first-pass evidence, second pass retrieves with subject+bridge+relation, candidates are merged."
+    },
+    {
+      "id": "erratum_4_alias_description_unobservable_on_development",
+      "date": "2026-08-07",
+      "severity": "P1",
+      "description": "Criterion 3 ('Alias and description both improve over C4-0') is structurally unobservable on the V4 development split, which contains only canonical and abbreviation tasks (0 alias, 0 description). The same applies to the qualification split. Only the OOD split contains alias and description tasks. This is a protocol design inconsistency, not a measurement error.",
+      "affected_criteria": [
+        "3_alias_description_improve"
+      ],
+      "resolution": "Criterion 3 is reclassified as OOD-only. It cannot be evaluated on development or qualification. For development promotion, criterion 3 is WAIVED with the note 'unobservable on development split'. For OOD confirmation, criterion 3 remains in effect. No OOD tuning is permitted to compensate. A C4 calibration split with all four regimes should be created if surface-specific mechanism selection is needed before OOD."
+    }
   ]
 }

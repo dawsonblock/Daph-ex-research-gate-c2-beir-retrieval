@@ -13,7 +13,7 @@ Protocol hash is embedded in every manifest to prevent config drift.
 """
 from __future__ import annotations
 
-import argparse, hashlib, json, sys, time, re, math
+import argparse, hashlib, json, sys, time
 from pathlib import Path
 from dataclasses import asdict
 
@@ -23,15 +23,19 @@ sys.path.insert(0, str(ROOT))
 from hrm_adaptive_memory.contracts import IndexRecord
 from hrm_adaptive_memory.c4.contracts import *
 from hrm_adaptive_memory.c4.arms import ARMS, PRIMARY_ORDER
-from hrm_adaptive_memory.c4.query_stage import run_query_stage
+from hrm_adaptive_memory.c4.query_stage import run_query_stage, extract_subject
+from hrm_adaptive_memory.retrieval.information_state import (
+    InformationState, formulate_followup, FOLLOWUP_FORMULATION)
 from hrm_adaptive_memory.c4.retrieval_stage import run_retrieval_stage, clear_backend_cache
 from hrm_adaptive_memory.c4.identity_stage import run_identity_stage
 from hrm_adaptive_memory.c4.selection_stage import run_selection_stage
 from hrm_adaptive_memory.c4.packet_stage import run_packet_stage
+from hrm_adaptive_memory.c4.bridge_extraction import extract_bridge
 from hrm_adaptive_memory.c4.receipts import build_pre_hrm_receipt, assert_runtime_clean, build_full_receipt
 from hrm_adaptive_memory.c4.parity import (
     validate_all_parity, validate_no_leakage,
     validate_selected_in_pool, validate_packet_budgets)
+from hrm_adaptive_memory.evaluation.verifiers import verify_answer as _verify_answer_shared
 
 CORPUS = ROOT / "data/hrm/controlled_gate_a_v4"
 OUT = ROOT / "evidence/gate_c4"
@@ -70,29 +74,15 @@ def _state_to_dict(state) -> dict:
 
 
 def _verify_answer(task: dict, output: str) -> tuple[float, bool]:
-    """Verify HRM output against the task answer (evaluator-side only)."""
+    """Verify HRM output against the task answer (evaluator-side only).
+
+    Delegates to the shared verifier in ``hrm_adaptive_memory.evaluation.verifiers``
+    so that C4 semantics are identical to the historical V4 verifier, including
+    stripping of HRM control tokens (e.g. ``<|box_end|>``).
+    """
     verifier = task.get("verifier", "exact")
     answer = task["answer"]
-
-    def _norm(s):
-        return " ".join(re.findall(r"\w+", s.lower()))
-
-    if verifier == "exact":
-        passed = _norm(output) == _norm(answer)
-    elif verifier == "numeric":
-        numbers = re.findall(r"[-+]?\d+(?:\.\d+)?", output)
-        passed = bool(numbers) and math.isclose(
-            float(numbers[-1]), float(answer), rel_tol=1e-9, abs_tol=1e-9)
-    elif verifier == "canonical":
-        answer_terms = tuple(re.findall(r"\w+", _norm(answer)))
-        output_terms = tuple(re.findall(r"\w+", _norm(output)))
-        width = len(answer_terms)
-        starts = [i for i in range(len(output_terms) - width + 1)
-                  if output_terms[i:i + width] == answer_terms] if width else []
-        passed = bool(starts) and starts[-1] + width == len(output_terms)
-    else:
-        passed = _norm(output) == _norm(answer)
-    return float(passed), passed
+    return _verify_answer_shared(verifier, answer, output)
 
 
 def _compute_quality(task: dict, selected_ids: list[str],
@@ -154,27 +144,107 @@ def _compute_role_retention(task: dict, selected_ids: list[str],
     }
 
 
+def _merge_retrieval(first: RetrievalResult, second: RetrievalResult,
+                     arm: C4Arm) -> RetrievalResult:
+    """Merge two retrieval results by interleaving candidates (RRF-style)."""
+    # Combine rankings with RRF
+    all_bm25 = list(first.bm25_ranked) + list(second.bm25_ranked)
+    all_bge = list(first.bge_ranked) + list(second.bge_ranked)
+
+    # RRF merge of candidate IDs
+    k = first.rrf_k
+    scores: dict[str, float] = {}
+    for ranking in [list(first.bm25_ranked), list(second.bm25_ranked)]:
+        for i, (eid, _) in enumerate(ranking, 1):
+            scores[eid] = scores.get(eid, 0.0) + 1.0 / (k + i)
+    if first.bge_ranked or second.bge_ranked:
+        for ranking in [list(first.bge_ranked), list(second.bge_ranked)]:
+            for i, (eid, _) in enumerate(ranking, 1):
+                scores[eid] = scores.get(eid, 0.0) + 1.0 / (k + i)
+
+    merged_ranked = tuple(sorted(scores.items(), key=lambda x: (-x[1], x[0]))[:first.candidate_budget])
+    candidate_ids = tuple(eid for eid, _ in merged_ranked)
+
+    return RetrievalResult(
+        bm25_ranked=tuple(all_bm25),
+        bge_ranked=tuple(all_bge),
+        fusion_ranked=merged_ranked,
+        candidate_ids=candidate_ids,
+        candidate_budget=first.candidate_budget,
+        retrieval_policy=first.retrieval_policy,
+        bm25_backend=first.bm25_backend,
+        bge_model_id=first.bge_model_id,
+        bge_revision=first.bge_revision,
+        rrf_k=first.rrf_k,
+    )
+
+
 def run_pre_hrm_stages(task: dict, arm: C4Arm, records: list[IndexRecord],
                        texts: dict[str, str]) -> PreHRMResult:
-    """Run all pre-HRM stages for one task under one arm."""
+    """Run all pre-HRM stages for one task under one arm.
+
+    For subject_preserving query policy (C4-1+), this implements the qualified
+    two-pass iterative retrieval:
+
+        question → first retrieval → discover bridge → subject + bridge + relation
+        → second retrieval → merge candidates
+
+    For original query policy (C4-0), this is a single-pass retrieval.
+    """
     question = task["question"]
     split = task.get("split", "development")
 
-    # Query stage
+    # Query stage (first pass)
     state_before, query_result = run_query_stage(question, arm)
 
-    # Retrieval stage
+    # Retrieval stage (first pass)
     retrieval_result = run_retrieval_stage(query_result.rendered_query, arm, records)
+
+    # Iterative retrieval: extract bridge and do second pass if found
+    bridge = None
+    second_query = None
+    second_pass_performed = False
+    state_after_query = state_before
+
+    if arm.query_policy == "subject_preserving":
+        subject = extract_subject(question)
+        if subject:
+            bridge = extract_bridge(
+                subject, question, retrieval_result.candidate_ids, texts)
+            if bridge:
+                # Update state with bridge and render second query
+                state_after_query = state_before.with_bridge(bridge)
+                second_query = formulate_followup(
+                    state_after_query, formulation=FOLLOWUP_FORMULATION)
+                second_pass_performed = True
+
+                # Second pass retrieval
+                second_retrieval = run_retrieval_stage(second_query, arm, records)
+
+                # Merge candidate pools
+                retrieval_result = _merge_retrieval(retrieval_result, second_retrieval, arm)
+
+    # Update query result with iterative info
+    query_result = QueryResult(
+        original_question=query_result.original_question,
+        rendered_query=query_result.rendered_query,
+        query_hash=query_result.query_hash,
+        query_policy=query_result.query_policy,
+        query_policy_version=query_result.query_policy_version,
+        bridge=bridge,
+        second_query=second_query,
+        second_pass_performed=second_pass_performed,
+    )
 
     # Identity stage
     identity_result = run_identity_stage(question, arm, retrieval_result, texts)
 
     # If identity resolved, update state
-    state_after = state_before
+    state_after = state_after_query
     canonical_question = None
     if identity_result.status == "RESOLVED" and identity_result.canonical:
-        state_after = state_before.with_identity(
-            identity_result.surface or state_before.subject,
+        state_after = state_after_query.with_identity(
+            identity_result.surface or state_after_query.subject,
             identity_result.canonical)
         canonical_question = question.replace(
             identity_result.surface or "",

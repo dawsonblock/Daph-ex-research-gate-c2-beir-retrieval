@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import math
 import re
 from dataclasses import asdict, dataclass, field
 from enum import Enum
@@ -18,6 +17,7 @@ from ..contracts import (
     RetrievalReceipt,
     sha256_text,
 )
+from ..evaluation.verifiers import normalize_answer as _normalize_shared, verify_answer as _verify_answer_shared
 
 
 class StudyCondition(str, Enum):
@@ -229,32 +229,14 @@ class ContextStudyReceipt:
 
 
 def _normalize(value: str) -> str:
-    value = re.sub(r"<\|[^>]+\|>", " ", value.lower().strip())
-    return " ".join(value.split())
+    # Delegated to the shared verifier to guarantee identical semantics across
+    # all gates. Kept as a thin wrapper for backward compatibility with code
+    # that imports ``_normalize`` from this module.
+    return _normalize_shared(value)
 
 
 def verify_answer(task: OracleTask, output: str) -> tuple[float, bool]:
-    if task.verifier == "exact":
-        passed = _normalize(output) == _normalize(task.answer)
-    elif task.verifier == "numeric":
-        numbers = re.findall(r"[-+]?\d+(?:\.\d+)?", output)
-        passed = bool(numbers) and math.isclose(float(numbers[-1]), float(task.answer), rel_tol=1e-9, abs_tol=1e-9)
-    elif task.verifier == "canonical":
-        # Non-numeric answers (symbolic labels, enums, booleans, entity names,
-        # small JSON fields). Mirrors the numeric verifier's semantics: the
-        # answer must be the last candidate the output commits to, so an output
-        # that lists several candidates does not pass on the strength of one.
-        answer_terms = tuple(re.findall(r"\w+", _normalize(task.answer)))
-        output_terms = tuple(re.findall(r"\w+", _normalize(output)))
-        width = len(answer_terms)
-        starts = [
-            index for index in range(len(output_terms) - width + 1)
-            if output_terms[index:index + width] == answer_terms
-        ] if width else []
-        passed = bool(starts) and starts[-1] + width == len(output_terms)
-    else:
-        raise ValueError(f"Unsupported verifier: {task.verifier}")
-    return float(passed), passed
+    return _verify_answer_shared(task.verifier, task.answer, output)
 
 
 class ContextConstructor:

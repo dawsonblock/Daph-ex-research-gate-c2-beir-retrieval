@@ -45,6 +45,10 @@ class QueryResult:
     query_hash: str
     query_policy: str
     query_policy_version: str
+    # Iterative retrieval fields (populated when subject_preserving + bridge found)
+    bridge: str | None = None
+    second_query: str | None = None
+    second_pass_performed: bool = False
 
 
 @dataclass(frozen=True)

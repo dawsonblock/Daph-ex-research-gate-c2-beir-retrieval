@@ -83,6 +83,25 @@ def run_identity_stage(question: str, arm: C4Arm,
     resolution_attempted = True
 
     if not mappings:
+        # No identity record maps this surface. Check if the subject is already
+        # a canonical entity: if it appears in non-identity evidence records in
+        # the candidate pool, it is a known canonical that needs no resolution.
+        # This is the EXACT path required by the C4 protocol.
+        if subject_raw:
+            subject_lower = subject_raw.lower()
+            for eid in retrieval.candidate_ids:
+                if eid in texts and "/identity" not in eid:
+                    if subject_lower in texts[eid].lower():
+                        return IdentityResolution(
+                            status="EXACT",
+                            surface=subject_raw,
+                            canonical=subject_raw,
+                            evidence_ids=(),
+                            candidate_mappings=(),
+                            resolution_needed=False,
+                            resolution_attempted=True,
+                            resolution_changed_state=False,
+                        )
         return IdentityResolution(
             status="UNRESOLVED",
             surface=subject_raw or None,

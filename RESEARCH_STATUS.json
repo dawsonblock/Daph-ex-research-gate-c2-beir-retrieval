@@ -50,7 +50,8 @@
     "gate_j_persistent_memory": "BLOCKED",
     "gate_k_consolidation": "BLOCKED",
     "gate_l_latent_memory": "BLOCKED",
-    "gate_n1_natural_external_memory": "PENDING"
+    "gate_n1_natural_external_memory": "PENDING",
+    "gate_c4_integrated_memory_pipeline": "IN_PROGRESS_DEVELOPMENT_RESCORED_EVALUATOR_V2_IMPLEMENTATION_CONFORMANCE_FIXES_APPLIED"
   },
   "gate_lineage": {
     "gate_c2_i_identity_resolution": "Gate C2-I was the earlier placeholder identity-resolution gate. Gate C3 (gate_c3_surface_identity_resolution) is the formal execution gate with a frozen protocol; the two must not remain as apparently active parallel identity-resolution gates. C2-I is therefore marked SUPERSEDED_BY_GATE_C3. No C2-I implementation or measurement existed; the substantive work continues under C3."
@@ -80,7 +81,7 @@
     "slot_label_echo": "99 -> 0 under precision packing; was an evidence-confusability artefact, not a prompt-interface or reasoning limit",
     "slot_label_echoes": "Track evidence quality, not packet format: 85 -> 28 under precision packing, -> 3 under oracle evidence. F-arms would measure a symptom; implemented but unrun."
   },
-  "next_work": "Gate C3 CLOSED with MECHANISM_SUCCESS_I3_IDENTITY_RECORD_RESOLUTION. I4 skipped (I4OpportunityRate=0.125 < 0.25 threshold; 7/8 ambiguous tasks are genuine conflicts). Final report at GATE_C3_REPORT.md. Next: Gate C4 (Integrated Non-Oracle Memory Pipeline) — freeze protocol, build InformationState contract, implement C4-0 through C4-6, run development first, then qualification/OOD. No HRM until C4 proves RETRIEVE is a useful real action.",
+  "next_work": "Gate C4 development run rescored with corrected verifier (evaluator_v2). Three implementation conformance fixes applied: (1) canonical EXACT identity state, (2) iterative subject+bridge+relation retrieval, (3) protocol erratum for unobservable alias/description criterion on development. Next: rerun C4 development with fixed pipeline (all 7 arms, 120 tasks), then analyze with analyze_gate_c4.py, then qualification/OOD if development passes. Partial qualification run (290 C4_0 rows) VOIDED \u2014 started before valid development gate.",
   "ood_taxonomy": {
     "REFERENTIAL_OOD": {
       "mechanism": "identity resolution + multi-hop retrieval",
@@ -864,7 +865,7 @@
       "earned_claim": "Reading the explicit surface-to-canonical mapping from runtime-visible identity records resolves the surface identity defect on the sixth-vocabulary corpus. The mechanism is safe: 0% false resolution, 8% correct abstention on conflicting mappings, 92% correct resolution. The parser (extract_identity_links) correctly extracts mappings at 100% rate when the identity record is present."
     },
     "gate_c3_i4_opportunity": {
-      "claim": "I4 opportunity audit: I4OpportunityRate=0.125 < 0.25 threshold. Of 8 ambiguous I3 tasks: 0 resolvable by second identity edge (A), 1 by non-identity context (B), 7 genuinely conflicting (C), 0 missing evidence (D). I4 skipped — insufficient measured opportunity for deeper identity traversal.",
+      "claim": "I4 opportunity audit: I4OpportunityRate=0.125 < 0.25 threshold. Of 8 ambiguous I3 tasks: 0 resolvable by second identity edge (A), 1 by non-identity context (B), 7 genuinely conflicting (C), 0 missing evidence (D). I4 skipped \u2014 insufficient measured opportunity for deeper identity traversal.",
       "not_a_claim_about": [
         "context disambiguation in a real retrieval pipeline with smaller pools, which is a C4 question",
         "I4 implementation, which was not built"
