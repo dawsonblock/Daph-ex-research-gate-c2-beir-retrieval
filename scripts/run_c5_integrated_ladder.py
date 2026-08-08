@@ -64,13 +64,42 @@ from scripts.run_gate_c4 import (  # noqa: E402
     _load_split as load_split, _to_index_records as to_index_records)
 
 PROTOCOL = ROOT / "configs/gate_c5_integrated_v1.json"
-ARM_ORDER = ("I0", "I1", "I2", "I3", "I4", "I5")
 FUSIONS = {"frozen_rrf": frozen_rrf, "R1_max_reciprocal": max_reciprocal}
-ARM_SPEC = {
-    "I0": ("frozen_rrf", "S0"), "I1": ("R1_max_reciprocal", "S0"),
-    "I2": ("frozen_rrf", "S2"), "I3": ("R1_max_reciprocal", "S2"),
-    "I4": ("R1_max_reciprocal", "oracle"), "I5": ("R1_max_reciprocal", "oracle_evidence"),
+
+# Two ladders. The I ladder was the original 2x2 over {fusion} x {selector}; it
+# established that R1 adds nothing downstream once S2 is active (Q(I3)-Q(I2) =
+# -0.0021, interaction -0.0104). The J ladder is the post-amendment build with
+# R1 DROPPED from the primary mechanism: a single-factor selector ladder on the
+# frozen retrieval, plus J1r retained as a diagnostic so the R1 interaction
+# stays measurable without entering the promotion decision.
+LADDERS: dict[str, dict[str, tuple[str, str]]] = {
+    "I": {
+        "I0": ("frozen_rrf", "S0"), "I1": ("R1_max_reciprocal", "S0"),
+        "I2": ("frozen_rrf", "S2"), "I3": ("R1_max_reciprocal", "S2"),
+        "I4": ("R1_max_reciprocal", "oracle"),
+        "I5": ("R1_max_reciprocal", "oracle_evidence"),
+    },
+    "J": {
+        "J0": ("frozen_rrf", "S0"), "J1": ("frozen_rrf", "S2"),
+        "J2": ("frozen_rrf", "oracle"), "J3": ("frozen_rrf", "oracle_evidence"),
+        "J1r": ("R1_max_reciprocal", "S2"),
+    },
 }
+#: Arms excluded from the promotion decision by protocol, not by convention.
+NON_PROMOTABLE = {"I0", "I4", "I5", "J0", "J2", "J3", "J1r"}
+PRIMARY_ARM = {"I": "I3", "J": "J1"}
+BASELINE_ARM = {"I": "I0", "J": "J0"}
+
+ARM_ORDER: tuple[str, ...] = tuple(LADDERS["I"])
+ARM_SPEC: dict[str, tuple[str, str]] = dict(LADDERS["I"])
+
+
+def use_ladder(name: str) -> None:
+    """Select the active ladder. Module-level so the replay subprocess and the
+    parity checker see the same arms as the main run."""
+    global ARM_ORDER, ARM_SPEC
+    ARM_SPEC = dict(LADDERS[name])
+    ARM_ORDER = tuple(ARM_SPEC)
 
 
 def _sha(text: str) -> str:
@@ -173,7 +202,9 @@ def evaluate_task(task: dict, arm, records, texts, depth: int) -> dict[str, Any]
 _REPLAY = '''
 import json, sys
 sys.path.insert(0, ".")
-from scripts.run_c5_integrated_ladder import evaluate_task, ARM_ORDER
+from scripts.run_c5_integrated_ladder import evaluate_task, use_ladder
+use_ladder("__LADDER__")
+from scripts.run_c5_integrated_ladder import ARM_ORDER
 from scripts.run_gate_c4 import _load_split, _to_index_records, ARMS
 tasks, ev, texts = _load_split("__SPLIT__")
 records = _to_index_records(ev)
@@ -191,7 +222,8 @@ open("__OUT__", "w").write(json.dumps(rows, sort_keys=True))
 '''
 
 
-def run_determinism(split: str, n_tasks: int, seeds: list[int]) -> bool:
+def run_determinism(split: str, n_tasks: int, seeds: list[int],
+                    ladder: str = "J") -> bool:
     """Replay under varied PYTHONHASHSEED; require exact equality. Fail-closed."""
     import tempfile
     print(f"--- determinism precondition ({n_tasks} tasks, seeds {seeds}) ---")
@@ -201,7 +233,8 @@ def run_determinism(split: str, n_tasks: int, seeds: list[int]) -> bool:
             out = Path(tmp) / f"seed_{seed}.json"
             env = {**os.environ, "PYTHONHASHSEED": str(seed)}
             code = (_REPLAY.replace("__SPLIT__", split)
-                    .replace("__N__", str(n_tasks)).replace("__OUT__", str(out)))
+                    .replace("__N__", str(n_tasks)).replace("__OUT__", str(out))
+                    .replace("__LADDER__", ladder))
             proc = subprocess.run([sys.executable, "-c", code], cwd=str(ROOT),
                                   env=env, capture_output=True, text=True,
                                   timeout=3600)
@@ -227,30 +260,39 @@ def run_determinism(split: str, n_tasks: int, seeds: list[int]) -> bool:
 def check_crossover_parity(row: dict[str, Any]) -> list[str]:
     """Only the intended intervention may differ between paired arms.
 
-    Checked programmatically rather than asserted in prose: arms differing only
-    in selector must share a candidate_pool_hash, and arms differing only in
-    fusion must share query and identity state.
+    Checked programmatically rather than asserted in prose. Derived from the
+    ACTIVE ladder's own spec rather than hardcoded pairs, so it stays correct
+    when the ladder changes: any two arms sharing a fusion must share a
+    candidate_pool_hash, and any two sharing a selector must share identity
+    state. A hardcoded pair list silently stops checking anything the moment the
+    arms are renamed.
     """
     arms = row["arms"]
-    violations = []
-    for a, b, label in (("I0", "I2", "selector only"),
-                        ("I1", "I3", "selector only")):
-        if arms[a]["candidate_pool_hash"] != arms[b]["candidate_pool_hash"]:
-            violations.append(
-                f"{a} vs {b} ({label}): candidate pools differ, so the "
-                f"comparison is confounded by retrieval")
-    for a, b, label in (("I0", "I1", "fusion only"),
-                        ("I2", "I3", "fusion only")):
-        if arms[a]["identity_status"] != arms[b]["identity_status"]:
-            violations.append(f"{a} vs {b} ({label}): identity status differs")
-        if arms[a]["selector"] != arms[b]["selector"]:
-            violations.append(f"{a} vs {b} ({label}): selector differs")
+    violations: list[str] = []
+    names = [a for a in ARM_ORDER if a in arms]
+
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            same_fusion = ARM_SPEC[a][0] == ARM_SPEC[b][0]
+            same_selector = ARM_SPEC[a][1] == ARM_SPEC[b][1]
+            if same_fusion and (arms[a]["candidate_pool_hash"]
+                                != arms[b]["candidate_pool_hash"]):
+                violations.append(
+                    f"{a} vs {b} (same fusion): candidate pools differ, so a "
+                    f"selector comparison would be confounded by retrieval")
+            if same_selector and (arms[a]["identity_status"]
+                                  != arms[b]["identity_status"]):
+                violations.append(
+                    f"{a} vs {b} (same selector): identity status differs")
     return violations
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="C5 integrated ladder")
     parser.add_argument("--split", default="development")
+    parser.add_argument("--ladder", choices=sorted(LADDERS), default="J",
+                        help="J is the post-amendment build (R1 dropped from "
+                             "the primary mechanism); I is the original 2x2")
     parser.add_argument("--arm-for-queries", default="C4_4")
     parser.add_argument("--determinism", action="store_true")
     parser.add_argument("--determinism-tasks", type=int, default=20)
@@ -260,11 +302,14 @@ def main() -> int:
     parser.add_argument("--out", default=None)
     args = parser.parse_args()
 
+    use_ladder(args.ladder)
     protocol = json.loads(PROTOCOL.read_text())
     seeds = protocol["determinism_precondition"]["seeds"]
+    primary, baseline = PRIMARY_ARM[args.ladder], BASELINE_ARM[args.ladder]
 
     if args.determinism:
-        if not run_determinism(args.split, args.determinism_tasks, seeds):
+        if not run_determinism(args.split, args.determinism_tasks, seeds,
+                               args.ladder):
             print("ABORT: determinism precondition failed. No GPU spend.")
             return 1
         if not (args.dry_pass or args.with_hrm):
@@ -308,7 +353,8 @@ def main() -> int:
     meta: dict[str, dict[str, str]] = {}
     binding_failures = 0
     receipt_path = (Path(args.out).with_suffix(".receipts.jsonl") if args.out else
-                    ROOT / f"evidence/gate_c4/diagnosis/{args.split}_c5_integrated"
+                    ROOT / f"evidence/gate_c4/diagnosis/{args.split}_c5_"
+                           f"{args.ladder}ladder"
                            f"{'_hrm' if args.with_hrm else '_dry'}.receipts.jsonl")
     receipt_path.parent.mkdir(parents=True, exist_ok=True)
     receipt_file = receipt_path.open("w")
@@ -322,7 +368,7 @@ def main() -> int:
 
         required = set(task["required_evidence_ids"])
         terminals = set(terminal_records(task))
-        group = f"{row['arms']['I3']['identity_status']}_{task_shape(task)}"
+        group = f"{row['arms'][primary]['identity_status']}_{task_shape(task)}"
         task_id = task["task_id"]
         meta[task_id] = {"family": task["family"],
                          "entity_regime": task["metadata"]["entity_regime"],
@@ -395,6 +441,8 @@ def main() -> int:
     report: dict[str, Any] = {
         "schema_version": "c5-integrated-ladder-v1",
         "protocol_id": protocol["protocol_id"], "split": args.split,
+        "ladder": args.ladder, "primary_arm": primary, "baseline_arm": baseline,
+        "non_promotable_arms": sorted(a for a in ARM_ORDER if a in NON_PROMOTABLE),
         "task_count": n, "with_hrm": args.with_hrm,
         "candidate_budget": C4_CANDIDATE_BUDGET, "packet_budget": packet_budget,
         **config_hashes(),
@@ -454,15 +502,21 @@ def main() -> int:
             return round(means[int(0.025 * len(means))], 4) if means else 0.0
 
         report["primary_contrast_ci"] = {
-            "contrast": "Q(I3) - Q(I0)",
-            "family_grouped_lcb": lcb("I3", "I0", "family"),
-            "source_cluster_grouped_lcb": lcb("I3", "I0", "source_cluster_id"),
+            "contrast": f"Q({primary}) - Q({baseline})",
+            "family_grouped_lcb": lcb(primary, baseline, "family"),
+            "source_cluster_grouped_lcb": lcb(primary, baseline, "source_cluster_id"),
         }
-        report["secondary_contrast_ci"] = {
-            "I2_vs_I0_family_lcb": lcb("I2", "I0", "family"),
-            "I3_vs_I2_family_lcb": lcb("I3", "I2", "family"),
-            "note": "I3 vs I2 isolates whether adding R1 to S2 helps at all.",
-        }
+        secondary: dict[str, Any] = {}
+        if "J1r" in per_task_q and "J1" in per_task_q:
+            secondary["J1r_vs_J1_family_lcb"] = lcb("J1r", "J1", "family")
+            secondary["note"] = (
+                "J1r vs J1 keeps the R1 interaction measurable. DIAGNOSTIC "
+                "ONLY -- it does not enter the promotion decision.")
+        if {"I2", "I3", "I0"} <= set(per_task_q):
+            secondary["I2_vs_I0_family_lcb"] = lcb("I2", "I0", "family")
+            secondary["I3_vs_I2_family_lcb"] = lcb("I3", "I2", "family")
+        if secondary:
+            report["secondary_contrast_ci"] = secondary
 
         q = {a: report["downstream_q"][a]["q"] for a in report["downstream_q"]}
         if {"I0", "I1", "I2", "I3"} <= set(q):
@@ -474,7 +528,7 @@ def main() -> int:
             }
 
     out = Path(args.out) if args.out else (
-        ROOT / f"evidence/gate_c4/diagnosis/{args.split}_c5_integrated"
+        ROOT / f"evidence/gate_c4/diagnosis/{args.split}_c5_{args.ladder}ladder"
                f"{'_hrm' if args.with_hrm else '_dry'}.json")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
@@ -507,10 +561,9 @@ def main() -> int:
             print(f"\n  primary contrast {ci['contrast']} grouped LCBs:")
             print(f"    family-grouped        : {ci['family_grouped_lcb']:+.4f}")
             print(f"    cluster-grouped       : {ci['source_cluster_grouped_lcb']:+.4f}")
-            sc = report["secondary_contrast_ci"]
-            print(f"    I2 vs I0 (family)     : {sc['I2_vs_I0_family_lcb']:+.4f}")
-            print(f"    I3 vs I2 (family)     : {sc['I3_vs_I2_family_lcb']:+.4f}"
-                  f"   <- does R1 add anything?")
+            for k, v in (report.get("secondary_contrast_ci") or {}).items():
+                if isinstance(v, float):
+                    print(f"    {k:<22}: {v:+.4f}")
         cd = report.get("causal_decomposition")
         if cd:
             print("\n  causal decomposition:")

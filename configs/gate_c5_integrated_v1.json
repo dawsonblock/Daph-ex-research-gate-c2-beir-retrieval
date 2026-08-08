@@ -1,4 +1,67 @@
 {
+  "J_ladder_frozen_2026_08_08": {
+    "all_other_criteria_unchanged": "subgroup tolerance -0.05 on BOTH family and entity_regime; canonical Q must not fall below the no-mechanism baseline; J1 EXACT_bridged answer retention >= 0.60; J1 identity and bridge retention >= J0 - 0.01; candidate budget 50; packet budget 6; prompt_binding_failures == 0; causal parity pass; determinism precondition; dry-pass precondition.",
+    "arms": {
+      "J0": {
+        "promotable": false,
+        "retrieval": "frozen_rrf",
+        "role": "BASELINE",
+        "selector": "S0_frozen_s2c"
+      },
+      "J1": {
+        "retrieval": "frozen_rrf",
+        "role": "PRIMARY -- the integrated mechanism",
+        "selector": "S2"
+      },
+      "J1r": {
+        "explicitly_excluded_from_promotion": "J1r must not enter the promotion decision. It exists so the R1 interaction remains measurable and auditable, not as a candidate.",
+        "promotable": false,
+        "retrieval": "R1_max_reciprocal",
+        "role": "DIAGNOSTIC ONLY -- preserves the retrieval-interaction check",
+        "selector": "S2"
+      },
+      "J2": {
+        "promotable": false,
+        "retrieval": "frozen_rrf",
+        "role": "CEILING: best selection on these pools",
+        "selector": "oracle_over_pool"
+      },
+      "J3": {
+        "promotable": false,
+        "retrieval": "frozen_rrf",
+        "role": "CEILING: reader ceiling",
+        "selector": "oracle_evidence"
+      }
+    },
+    "primary_criterion": {
+      "metric": "Q(J1) - Q(J0)",
+      "note": "Thresholds are UNCHANGED from the original freeze. Dropping R1 narrows the mechanism; it does not license relaxing any bar.",
+      "statistical": [
+        "family-grouped bootstrap CI lower bound > 0",
+        "source_cluster_id-grouped bootstrap CI lower bound > 0"
+      ],
+      "threshold": 0.15
+    },
+    "required_fixes_now_in_the_runner": [
+      "persist per-task Q",
+      "incremental JSONL receipts",
+      "family-grouped bootstrap LCB",
+      "source_cluster-grouped bootstrap LCB",
+      "explicit S2-vs-baseline paired contrast",
+      "prompt-binding and causal-parity checks retained",
+      "same packet budget and HRM settings"
+    ],
+    "status": "FROZEN BEFORE THE RERUN",
+    "the_two_ci_criteria_are_not_waived": "They were missed by a runner defect, not by a decision. One clean rerun closes them. No threshold is being relaxed and neither criterion is dropped."
+  },
+  "amendment_2026_08_08_drop_R1": {
+    "architectural_implication": "The selector repair is doing almost all of the useful work, which makes the system SIMPLER rather than more complex: old retrieval -> information state -> S2 bridge-aware connected selector -> HRM. Fewer moving parts at equal or better Q is the better outcome, and complexity that does not earn its keep is removed rather than retained out of sunk cost.",
+    "b1_is_not_erased": "Sprint B1's result stands as a valid NEGATIVE INTEGRATION result, recorded rather than discarded: R1 improves candidate CES by +2.5pp under fixed k=50 (75.8% -> 78.3%, Pareto-safe, 3 tasks gained 0 lost), and that retrieval gain is real and reproducible -- but it does not translate into downstream Q once S2 is present. A retrieval-side improvement that does not survive integration is a finding, not a failure to be hidden.",
+    "decision": "R1 is DROPPED from the primary integrated mechanism, by explicit owner decision, on the evidence of the I-ladder run.",
+    "evidence": "Q(I3) - Q(I2) = 0.5250 - 0.5271 = -0.0021, with interaction -0.0104. Once S2 is active, R1 adds no downstream value and is marginally negative.",
+    "expected_primary_effect": "Q(J1) - Q(J0) ~ 0.5271 - 0.3521 = +0.1750 from the I-ladder run, cleaner than the +0.1729 of R1+S2. Stated as an EXPECTATION carried over from a prior run, not as a result -- the rerun measures it independently.",
+    "new_primary": "old frozen retrieval (frozen_rrf) + S2"
+  },
   "arm_naming_note": "I0-I5 map to C5-0..C5-5 for continuity with the older naming scheme.",
   "arms": {
     "I0": {
@@ -279,7 +342,7 @@
       "disconnected packet rate"
     ]
   },
-  "status": "DEVELOPMENT_RUN_COMPLETE__2_REQUIRED_CI_CRITERIA_OUTSTANDING",
+  "status": "AMENDED__PRIMARY_IS_NOW_S2_ONLY__J_LADDER_PENDING_RERUN",
   "subgroup_safety": {
     "abbreviation_q_must_not_materially_regress": "tolerance -0.05; the RESOLVED/abbreviation path was already healthy and the repair must not trade it away",
     "axes": [
