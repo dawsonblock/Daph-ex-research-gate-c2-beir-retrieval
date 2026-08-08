@@ -271,6 +271,22 @@ def check_crossover_parity(row: dict[str, Any]) -> list[str]:
     violations: list[str] = []
     names = [a for a in ARM_ORDER if a in arms]
 
+    # First: what each arm REPORTS must match what the ladder spec says it is.
+    # Deriving the pair comparisons below from ARM_SPEC is only sound if the
+    # executed arms actually correspond to their spec, so a row whose reported
+    # fusion or selector has drifted must be caught here rather than silently
+    # trusted.
+    for a in names:
+        spec_fusion, spec_selector = ARM_SPEC[a]
+        if arms[a].get("fusion") not in (None, spec_fusion):
+            violations.append(
+                f"{a}: reported fusion {arms[a]['fusion']!r} does not match "
+                f"the ladder spec {spec_fusion!r}")
+        if arms[a].get("selector") not in (None, spec_selector):
+            violations.append(
+                f"{a}: reported selector {arms[a]['selector']!r} does not "
+                f"match the ladder spec {spec_selector!r}")
+
     for i, a in enumerate(names):
         for b in names[i + 1:]:
             same_fusion = ARM_SPEC[a][0] == ARM_SPEC[b][0]

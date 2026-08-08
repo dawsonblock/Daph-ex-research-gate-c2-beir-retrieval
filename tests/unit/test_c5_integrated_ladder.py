@@ -33,6 +33,7 @@ def _row(**overrides):
         base[arm] = {
             "candidate_pool_hash": f"pool_{fusion}",
             "identity_status": "EXACT",
+            "fusion": fusion,
             "selector": selector,
         }
     for arm, patch in overrides.items():
@@ -80,11 +81,36 @@ class TestCrossoverParityChecker:
         assert any("I0 vs I1" in v and "identity status differs" in v
                    for v in violations)
 
-    def test_detects_selector_drift_across_a_fusion_only_pair(self):
-        violations = lad.check_crossover_parity(
-            _row(I3={"selector": "S0"}))
-        assert any("I2 vs I3" in v and "selector differs" in v
+    def test_detects_an_arm_whose_reported_selector_drifted_from_spec(self):
+        """The pair comparisons are derived from ARM_SPEC, which is only sound
+        if each executed arm really is its spec. A row reporting a different
+        selector than the ladder declares must be caught, or the derivation
+        would be trusting the thing it depends on."""
+        violations = lad.check_crossover_parity(_row(I3={"selector": "S0"}))
+        assert any("I3" in v and "does not match the ladder spec" in v
                    for v in violations)
+
+    def test_detects_an_arm_whose_reported_fusion_drifted_from_spec(self):
+        violations = lad.check_crossover_parity(
+            _row(I3={"fusion": "frozen_rrf"}))
+        assert any("I3" in v and "reported fusion" in v for v in violations)
+
+    def test_j_ladder_parity_pairs_are_derived_not_hardcoded(self):
+        """Renaming the arms must not silently disable the checks."""
+        lad.use_ladder("J")
+        try:
+            clean = {"arms": {a: {"candidate_pool_hash": f"pool_{lad.ARM_SPEC[a][0]}",
+                                  "identity_status": "EXACT",
+                                  "fusion": lad.ARM_SPEC[a][0],
+                                  "selector": lad.ARM_SPEC[a][1]}
+                              for a in lad.ARM_ORDER}}
+            assert lad.check_crossover_parity(clean) == []
+            # J0/J1/J2/J3 all share frozen_rrf, so a pool mismatch must be caught.
+            clean["arms"]["J1"]["candidate_pool_hash"] = "pool_DIFFERENT"
+            violations = lad.check_crossover_parity(clean)
+            assert any("candidate pools differ" in v for v in violations)
+        finally:
+            lad.use_ladder("I")
 
 
 class TestConfigHashesArePinned:
