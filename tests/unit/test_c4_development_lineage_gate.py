@@ -133,12 +133,20 @@ class TestHardRequirements:
         assert any("protocol_sha256 differs" in v for v in g.violations)
 
     def test_non_ancestor_commit_fails(self, repo_with_dev_commit):
-        """History rewritten/reset backward must abort, not silently pass."""
+        """History rewritten/reset backward must abort, not silently pass.
+
+        Uses an orphan branch specifically because dev_commit's object stays
+        reachable in the repo's object store (checkout --orphan doesn't
+        prune it) while no longer being on the current branch's history --
+        this is case 2 in _check_ancestry: the commit IS present locally,
+        merge-base just says it isn't an ancestor. That's genuine
+        divergence, distinct from the shallow-clone false negative covered
+        below.
+        """
         repo, dev_commit = repo_with_dev_commit
         cert = _dev_certification(dev_commit, PROTOCOL_SHA)
         cert_path = _write_cert_dir(repo, cert)
 
-        # Reset to an orphan branch: dev_commit is no longer an ancestor.
         _git(repo, "checkout", "--orphan", "rewritten")
         (repo / "protocol.json").write_text("v2-rewritten\n")
         _git(repo, "add", "-A")
@@ -147,7 +155,76 @@ class TestHardRequirements:
         manifest = {"split": "qualification", "protocol_sha256": PROTOCOL_SHA}
         g = certify_mod.gate_development_lineage(manifest, cert_path, repo=repo)
         assert not g.passed
-        assert any("not an ancestor" in v for v in g.violations)
+        assert any("NOT an ancestor" in v for v in g.violations)
+        assert any("history was rewritten" in v for v in g.violations)
+        # Must NOT be misdiagnosed as a clone-depth problem.
+        assert not any("shallow clone" in v for v in g.violations)
+
+    def test_shallow_clone_is_diagnosed_distinctly_not_as_divergence(
+            self, tmp_path):
+        """The exact false negative found running qualification for real:
+        `git fetch --depth 1` to sync a runner to a new commit silently
+        makes the local repo shallow, truncating history at the fetch
+        boundary. dev_commit (several commits earlier) then reads as
+        "not an ancestor" via plain merge-base, even though it plainly is
+        on the real remote history. This must be reported as a clone-depth
+        problem, not as history divergence -- those imply very different
+        remediation (re-fetch vs. investigate a rewrite)."""
+        bare = tmp_path / "origin.git"
+        _git(tmp_path, "init", "--bare", "--quiet", str(bare))
+
+        seed = tmp_path / "seed"
+        seed.mkdir()
+        _git(seed, "init", "--quiet")
+        _git(seed, "config", "user.email", "t@example.com")
+        _git(seed, "config", "user.name", "t")
+        _git(seed, "remote", "add", "origin", str(bare))
+
+        (seed / "f.txt").write_text("1\n")
+        _git(seed, "add", "-A")
+        _git(seed, "commit", "--quiet", "-m", "commit 1 (dev_commit)")
+        dev_commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=seed,
+            capture_output=True, text=True).stdout.strip()
+        _git(seed, "push", "--quiet", "origin", "HEAD:main")
+
+        for i in (2, 3, 4, 5, 6):
+            (seed / "f.txt").write_text(f"{i}\n")
+            _git(seed, "add", "-A")
+            _git(seed, "commit", "--quiet", "-m", f"commit {i}")
+        _git(seed, "push", "--quiet", "origin", "HEAD:main")
+
+        # A shallow clone of just the tip: dev_commit is genuinely absent.
+        # --no-local forces git to use network-style clone semantics; the
+        # default local-filesystem transport silently ignores --depth and
+        # copies the full object database instead.
+        shallow = tmp_path / "shallow"
+        _git(tmp_path, "clone", "--quiet", "--no-local", "--depth", "1",
+             "--branch", "main", str(bare), str(shallow))
+        this_head = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=shallow,
+            capture_output=True, text=True).stdout.strip()
+
+        is_shallow = subprocess.run(
+            ["git", "rev-parse", "--is-shallow-repository"], cwd=shallow,
+            capture_output=True, text=True).stdout.strip()
+        assert is_shallow == "true"  # sanity: the fixture is actually shallow
+
+        cert_path = _write_cert_dir(
+            shallow, _dev_certification(dev_commit, PROTOCOL_SHA))
+        manifest = {"split": "qualification", "protocol_sha256": PROTOCOL_SHA}
+        g = certify_mod.gate_development_lineage(manifest, cert_path, repo=shallow)
+
+        assert not g.passed
+        assert any("clone-depth problem" in v for v in g.violations)
+        assert any("git fetch --unshallow" in v for v in g.violations)
+        # Must NOT be misdiagnosed as real divergence.
+        assert not any("history was rewritten" in v for v in g.violations)
+
+        # The fix: unshallowing recovers the true (positive) ancestry result.
+        _git(shallow, "fetch", "--quiet", "--unshallow")
+        g2 = certify_mod.gate_development_lineage(manifest, cert_path, repo=shallow)
+        assert g2.passed, g2.violations
 
     def test_dev_certificate_with_valid_run_false_fails(self, repo_with_dev_commit):
         repo, dev_commit = repo_with_dev_commit

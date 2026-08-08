@@ -47,6 +47,67 @@ class LineageCheck:
         }
 
 
+def _check_ancestry(dev_commit: str, this_head: str | None,
+                    repo: Path) -> list[str]:
+    """Diagnose why dev_commit isn't recognized as this run's own HEAD.
+
+    ``git merge-base --is-ancestor`` returns non-zero for two very different
+    reasons, and conflating them produces a misleading diagnosis:
+
+      1. dev_commit's object is genuinely absent from local history --
+         usually a SHALLOW clone (``git fetch --depth N``), which truncates
+         history at the fetch boundary. This is a clone-depth problem, not
+         evidence of anything wrong with the actual commit graph. Found the
+         hard way: syncing a runner with ``git fetch --depth 1`` after an
+         initial full clone silently converts the repo shallow, and a
+         5-commit-old dev_commit then reads as "not an ancestor" even though
+         it plainly is on the real, remote history.
+      2. dev_commit's object IS present locally, but merge-base still says
+         it isn't an ancestor -- that is real: a rebase, force-push, or
+         cherry-pick actually rewrote history instead of advancing it.
+
+    Only case 2 is genuine divergence. Returns a list of violations (empty
+    if the ancestry actually holds once the right check is used).
+    """
+    if not this_head:
+        return ["this run has no resolvable HEAD"]
+
+    has_commit = subprocess.run(
+        ["git", "cat-file", "-e", dev_commit],
+        cwd=repo, capture_output=True, text=True).returncode == 0
+
+    if not has_commit:
+        shallow = subprocess.run(
+            ["git", "rev-parse", "--is-shallow-repository"],
+            cwd=repo, capture_output=True, text=True).stdout.strip()
+        if shallow == "true":
+            return [
+                f"cannot verify commit ancestry: development's certified "
+                f"commit {dev_commit[:12]} is not present in this shallow "
+                f"clone's local history. This is a clone-depth problem, not "
+                f"necessarily divergence -- fetch full history "
+                f"(git fetch --unshallow, or clone/fetch without --depth) "
+                f"and retry."]
+        return [
+            f"development's certified commit {dev_commit[:12]} does not "
+            f"exist anywhere in this repository's local history, and the "
+            f"repository is not shallow -- this points to real divergence "
+            f"(a different repository, or history that was rewritten), not "
+            f"an incomplete clone."]
+
+    ancestor_check = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", dev_commit, this_head],
+        cwd=repo, capture_output=True, text=True)
+    if ancestor_check.returncode != 0:
+        return [
+            f"development's certified commit {dev_commit[:12]} exists in "
+            f"this repository's history but is NOT an ancestor of this "
+            f"run's commit {this_head[:12]} -- history was rewritten "
+            f"(rebase, force-push, or cherry-pick) rather than simply "
+            f"advanced."]
+    return []
+
+
 def check_development_lineage(
     *, dev_certification_path: Path, this_protocol_sha256: str | None,
     repo: Path,
@@ -114,15 +175,7 @@ def check_development_lineage(
     elif not dev_commit:
         violations.append("development certificate does not record a commit hash")
     elif not git_state.revision_matches(state.head, dev_commit):
-        ancestor_check = subprocess.run(
-            ["git", "merge-base", "--is-ancestor", dev_commit, state.head or ""],
-            cwd=repo, capture_output=True, text=True)
-        if ancestor_check.returncode != 0:
-            violations.append(
-                f"development's certified commit {dev_commit[:12]} is not "
-                f"an ancestor of this run's commit "
-                f"{(state.head or '?')[:12]} -- history diverged or was "
-                f"rewritten")
+        violations.extend(_check_ancestry(dev_commit, state.head, repo))
 
     drift_summary: dict[str, Any] | None = None
     try:
