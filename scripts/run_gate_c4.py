@@ -44,6 +44,11 @@ from hrm_adaptive_memory.c4.provenance import (
 CORPUS = ROOT / "data/hrm/controlled_gate_a_v4"
 OUT = ROOT / "evidence/gate_c4"
 HRM_MAX_NEW_TOKENS = 64
+# Prompts sharing one HRM forward pass in run_full(). Only valid because
+# generate_batch() is verified byte-identical to sequential generate() --
+# see tests/unit/test_batched_generation.py. 1 reproduces the old sequential
+# behavior exactly, for anyone who wants to disable batching.
+HRM_BATCH_SIZE = int(os.environ.get("HRM_BATCH_SIZE", "16"))
 
 
 ACTIVE_PROTOCOL = "v2_1"
@@ -399,6 +404,37 @@ def _run_hrm(adapter, condition, prompt: str) -> HRMResult:
     )
 
 
+def _run_hrm_batch(adapter, condition, prompts: list[str]) -> list[HRMResult]:
+    """Run HRM generation for several prompts in one forward pass.
+
+    Only usable where tests/unit/test_batched_generation.py's
+    test_batched_matches_sequential_on_the_real_checkpoint passes: batched and
+    sequential generation are not assumed equivalent, they are verified
+    equivalent (greedy, byte-identical) before this is wired into a real run.
+    latency_seconds is the shared batch latency divided evenly across its
+    members -- it is receipt metadata only, never read by any gate.
+    """
+    import time as _time
+    if not prompts:
+        return []
+    t0 = _time.perf_counter()
+    rows = adapter.generate_batch(
+        prompts, condition=condition, max_new_tokens=HRM_MAX_NEW_TOKENS)
+    per_task_latency = (_time.perf_counter() - t0) / len(prompts)
+    results = []
+    for prompt, row in zip(prompts, rows):
+        results.append(HRMResult(
+            output=row["text"],
+            prompt_hash=hashlib.sha256(prompt.encode()).hexdigest(),
+            prompt_tokens=row["prompt_tokens"],
+            completion_tokens=row["completion_tokens"],
+            model_id=adapter.spec.model_id,
+            model_revision=adapter.spec.revision,
+            latency_seconds=per_task_latency,
+        ))
+    return results
+
+
 def _assert_prompt_binding(pre_hrm: PreHRMResult, hrm: HRMResult) -> None:
     """Fail closed if HRM did not consume the frozen packet prompt.
 
@@ -606,31 +642,34 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
 
         print(f"  {arm_id}...", end=" ", flush=True)
         t0 = time.time()
-        receipts = []
+        receipts: list[dict | None] = [None] * len(tasks)
         completed = 0
+
+        # Pre-HRM stages (retrieval/identity/selection/ordering) are CPU-only
+        # and unaffected by batching; run them for every task up front so the
+        # GPU-bound HRM calls below can be grouped. Anything already resumed
+        # from a prior run is filled in immediately and never re-sent to HRM.
+        pending: list[tuple[int, dict, str]] = []  # (task index, pre_hrm, resume_key)
+        pre_hrm_by_index: dict[int, object] = {}
         for i, task in enumerate(tasks):
             tid = task["task_id"]
-            # Progress indicator every 10 tasks
-            if (i + 1) % 10 == 0:
-                print(f"  {arm_id}: {i+1}/{len(tasks)}", end="\r", flush=True)
-            # Check resume cache
             pre_hrm = run_pre_hrm_stages(task, arm, records, texts)
             rkey = _resume_key(task, arm, pre_hrm.packet.packet_hash)
             if tid in existing and existing[tid].get("resume_key") == rkey:
-                receipts.append(existing[tid])
+                receipts[i] = existing[tid]
                 completed += 1
                 continue
+            pre_hrm_by_index[i] = pre_hrm
+            pending.append((i, pre_hrm, rkey))
 
-            # Run HRM on the frozen packet prompt (pre_hrm_freeze.rule)
-            pre_receipt = build_pre_hrm_receipt(pre_hrm)
-            hrm_result = _run_hrm(adapter, condition, pre_hrm.prompt)
+        def _build_receipt(task: dict, pre_hrm, rkey: str, hrm_result: HRMResult) -> dict:
             _assert_prompt_binding(pre_hrm, hrm_result)
+            pre_receipt = build_pre_hrm_receipt(pre_hrm)
             _binary_score, correct = _verify_answer(task, hrm_result.output)
             quality_score = _compute_quality(
                 task, list(pre_hrm.selection.selected_ids), evidence, correct)
             csr = _compute_csr(task, list(pre_hrm.selection.selected_ids))
             roles = _compute_role_retention(task, list(pre_hrm.selection.selected_ids), evidence)
-
             evaluator = {
                 "answer": task["answer"],
                 "verifier": task.get("verifier", "exact"),
@@ -646,7 +685,7 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
                 "role_retention": roles,
             }
             full_receipt = build_full_receipt(pre_receipt, hrm_result, evaluator)
-            receipt_dict = {
+            return {
                 "task_id": full_receipt.task_id,
                 "arm_id": full_receipt.arm_id,
                 "split": full_receipt.split,
@@ -654,18 +693,28 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
                 "runtime_payload": full_receipt.runtime_payload,
                 "evaluator_annotation": full_receipt.evaluator_annotation,
             }
-            receipts.append(receipt_dict)
-            completed += 1
+
+        # HRM generation, grouped into batches. Only usable because
+        # tests/unit/test_batched_generation.py verifies batched output is
+        # byte-identical to the sequential path -- this is not a mechanism
+        # change, only how many prompts share one forward pass.
+        for batch_start in range(0, len(pending), HRM_BATCH_SIZE):
+            batch = pending[batch_start:batch_start + HRM_BATCH_SIZE]
+            prompts = [pre_hrm_by_index[i].prompt for i, _, _ in batch]
+            hrm_results = _run_hrm_batch(adapter, condition, prompts)
+            for (i, pre_hrm, rkey), hrm_result in zip(batch, hrm_results):
+                receipts[i] = _build_receipt(tasks[i], pre_hrm, rkey, hrm_result)
+                completed += 1
 
             # Incremental write (append to file)
-            if completed % 10 == 0 or i == len(tasks) - 1:
-                arm_file.write_text(
-                    "".join(json.dumps(r, sort_keys=True) + "\n" for r in receipts))
-                print(f"\r  {arm_id}: {completed}/{len(tasks)}", end="", flush=True)
+            arm_file.write_text(
+                "".join(json.dumps(r, sort_keys=True) + "\n"
+                        for r in receipts if r is not None))
+            print(f"\r  {arm_id}: {completed}/{len(tasks)}", end="", flush=True)
 
         # Final write
         arm_file.write_text(
-            "".join(json.dumps(r, sort_keys=True) + "\n" for r in receipts))
+            "".join(json.dumps(r, sort_keys=True) + "\n" for r in receipts if r is not None))
         all_receipts[arm_id] = receipts
         elapsed = time.time() - t0
         q_scores = [r["evaluator_annotation"]["quality"] for r in receipts]
@@ -726,7 +775,7 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
             }, sort_keys=True).encode()).hexdigest()[:16],
         device=_device,
         dtype=_dtype,
-        batch_size=1,
+        batch_size=HRM_BATCH_SIZE,
         generation_condition="DIRECT",
     )
     # Merge arm_ids with any manifest.json already at this path: run_full()
