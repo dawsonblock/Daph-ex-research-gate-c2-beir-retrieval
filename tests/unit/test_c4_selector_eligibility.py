@@ -128,13 +128,27 @@ class TestNoForbiddenSignalsInTheRule:
         assert "required_evidence_ids" in audit["forbidden"]
 
 
-class TestProtocolIsStillUnfrozenOnTheOpenDecision:
-    """No arm may run while the eligibility rule is unresolved."""
+class TestTheEligibilityDecisionTrailIsPreserved:
+    """The decision started OPEN and was resolved by explicit choice. Both
+    states must stay auditable: the resolution, and the superseded original it
+    replaced -- otherwise a later reader cannot tell that the rule was corrected
+    BEFORE any arm ran rather than after seeing results."""
 
-    def test_open_decision_is_recorded(self):
-        protocol = json.loads(PROTOCOL.read_text())
-        assert "OPEN_DECISION_BEFORE_ANY_ARM_RUNS" in protocol
-        assert protocol["status"].startswith("PREREGISTERED")
+    def test_decision_is_resolved_and_records_the_frozen_rule(self):
+        resolved = json.loads(PROTOCOL.read_text())["RESOLVED_DECISION"]
+        assert "bridge_aware_anchor" in resolved["decision"]
+        assert "frozen before any arm ran" in resolved["decision"]
+        assert resolved["frozen_tie_break"][0].startswith("direct subject anchor")
+
+    def test_superseded_open_decision_is_retained_not_deleted(self):
+        resolved = json.loads(PROTOCOL.read_text())["RESOLVED_DECISION"]
+        superseded = resolved["superseded_open_decision"]
+        assert "originally_specified_rule" in superseded
+        assert "measured_fire_rate_on_development" in superseded
+
+    def test_one_hop_bound_is_declared(self):
+        resolved = json.loads(PROTOCOL.read_text())["RESOLVED_DECISION"]
+        assert "forbidden" in resolved["one_hop_bound"]
 
     def test_promotion_criteria_are_frozen_before_arms(self):
         protocol = json.loads(PROTOCOL.read_text())

@@ -25,26 +25,42 @@
     },
     "why": "record_kind values in this corpus are generator answer-key labels: 'required', 'required_identity', 'required_current', 'direct_answer', 'dead_end_link', 'rejected_candidate', 'superseded', 'near_duplicate_*'. A runtime selector reading 'required' would be reading the answer key. No existing C4 selector touches evidence metadata -- s0/s2c/s2 receive only candidate ids and content text -- so using it would also be a new and undisclosed information channel."
   },
-  "OPEN_DECISION_BEFORE_ANY_ARM_RUNS": {
-    "alternative_if_correction_is_rejected": "Keep the original rule but restate S1's hypothesis honestly as covering UNBRIDGED EXACT tasks only (n=18 development, 5 defect cases), and expect no material aggregate movement. Then S2's connectivity constraint becomes the real primary hypothesis and should be promoted to S1's position in the ladder.",
-    "issue": "The eligibility rule as originally specified cannot fire on the population that carries the defect.",
-    "measured_fire_rate_on_development": {
-      "authoritative_source": "evidence/gate_c4/diagnosis/development_selector_eligibility.json, produced by scripts/diagnose_c4_selector_eligibility.py",
-      "bridged_tasks": "18/84 = 21.4%",
-      "consequence_if_frozen_as_written": "A knowingly-underpowered arm on the majority of the defect -- the same failure mode as Sprint B1's R4, except foreseen in advance rather than discovered afterwards, which is what makes freezing it as-is the worse choice.",
-      "correction_note": "An earlier ad-hoc check reported 0% on bridged tasks. That check was WRONG: it evaluated the rule using the ORACLE canonical surface instead of identity.canonical from the I3 stage, which is the signal the rule would actually see at runtime. The committed script uses the runtime signal and is authoritative. Recording the error rather than quietly replacing the number.",
-      "coverage_of_the_defect_population": "The EXACT defect population is 39 cases on development, 34 of them bridged (87.2%). At a 21.4% bridged fire rate the rule reaches roughly 7 of those 34, plus about 5 unbridged: on the order of 12 of 39 defect cases, leaving most of the measured defect untouched.",
-      "reason_for_the_gap": "A bridged task's terminal-answer record is anchored on the BRIDGE entity, not the query subject. Worked example, ownership_chain-0000: question 'Which ownership tier applies to Sparrow intake manifold?', parsed relation 'ownership tier', terminal record '- updated Finch control module: ownership tier now 3529'. The record carries the relation and the bridge but never the query subject, so canonical_subject_match fails. The 21.4% that do fire are bridged tasks where the runtime canonical happens to appear in the terminal record anyway.",
-      "unbridged_tasks": "36/36 = 100%"
+  "RESOLVED_DECISION": {
+    "decision": "bridge_aware_anchor ADOPTED as S1's eligibility rule, by explicit owner choice, frozen before any arm ran.",
+    "frozen_fallback": {
+      "EXACT_and_eligible": "protect best eligible record, frozen S2c fills remaining slots",
+      "EXACT_and_none_eligible": "frozen S2c unchanged",
+      "RESOLVED_or_other": "frozen S2c unchanged"
     },
-    "originally_specified_rule": "eligible iff canonical_subject_match AND target_relation_match AND record_kind is answer-support-compatible; tie-break fusion score then record_id",
-    "proposed_correction": {
-      "name": "bridge_aware_anchor",
-      "relationship_to_S2": "This makes the connectivity idea part of the PRIMARY hypothesis rather than an increment, because the defect lives in bridged tasks. Under the original ladder, S1 would be near-inert and S2 would carry the effect, which would misattribute the mechanism.",
-      "rule": "eligible iff target_relation_match AND (canonical_subject_match OR bridge_anchor_match), where bridge_anchor_match means the record's subject is an entity that appears as the TARGET of another candidate record whose subject matches the canonical query subject -- i.e. the record is reachable from the query subject in one hop through the candidate pool itself.",
-      "why_it_stays_non_leaking": "Reachability is computed over candidate-pool CONTENT via the existing V4 entity extractor, using only the parsed target relation and identity.canonical. It never reads proof_edges, latent_bridge, answer_node, required_evidence_ids, or record_kind."
-    },
-    "requires": "explicit owner choice; no arm is run until this is resolved and frozen"
+    "frozen_rule": "eligible iff target_relation(question) matches candidate text AND (canonical subject appears in candidate OR candidate is anchored on an entity reachable by EXACTLY ONE runtime-visible hop from the canonical subject)",
+    "frozen_tie_break": [
+      "direct subject anchor preferred over bridge anchor",
+      "higher frozen fusion score",
+      "lower retrieval rank",
+      "record_id lexical"
+    ],
+    "one_hop_bound": "Exactly one hop. subject->bridge->bridge->terminal is forbidden and asserted by test, because unbounded reachability is how this becomes graph search rather than a narrow repair.",
+    "superseded_open_decision": {
+      "alternative_if_correction_is_rejected": "Keep the original rule but restate S1's hypothesis honestly as covering UNBRIDGED EXACT tasks only (n=18 development, 5 defect cases), and expect no material aggregate movement. Then S2's connectivity constraint becomes the real primary hypothesis and should be promoted to S1's position in the ladder.",
+      "issue": "The eligibility rule as originally specified cannot fire on the population that carries the defect.",
+      "measured_fire_rate_on_development": {
+        "authoritative_source": "evidence/gate_c4/diagnosis/development_selector_eligibility.json, produced by scripts/diagnose_c4_selector_eligibility.py",
+        "bridged_tasks": "18/84 = 21.4%",
+        "consequence_if_frozen_as_written": "A knowingly-underpowered arm on the majority of the defect -- the same failure mode as Sprint B1's R4, except foreseen in advance rather than discovered afterwards, which is what makes freezing it as-is the worse choice.",
+        "correction_note": "An earlier ad-hoc check reported 0% on bridged tasks. That check was WRONG: it evaluated the rule using the ORACLE canonical surface instead of identity.canonical from the I3 stage, which is the signal the rule would actually see at runtime. The committed script uses the runtime signal and is authoritative. Recording the error rather than quietly replacing the number.",
+        "coverage_of_the_defect_population": "The EXACT defect population is 39 cases on development, 34 of them bridged (87.2%). At a 21.4% bridged fire rate the rule reaches roughly 7 of those 34, plus about 5 unbridged: on the order of 12 of 39 defect cases, leaving most of the measured defect untouched.",
+        "reason_for_the_gap": "A bridged task's terminal-answer record is anchored on the BRIDGE entity, not the query subject. Worked example, ownership_chain-0000: question 'Which ownership tier applies to Sparrow intake manifold?', parsed relation 'ownership tier', terminal record '- updated Finch control module: ownership tier now 3529'. The record carries the relation and the bridge but never the query subject, so canonical_subject_match fails. The 21.4% that do fire are bridged tasks where the runtime canonical happens to appear in the terminal record anyway.",
+        "unbridged_tasks": "36/36 = 100%"
+      },
+      "originally_specified_rule": "eligible iff canonical_subject_match AND target_relation_match AND record_kind is answer-support-compatible; tie-break fusion score then record_id",
+      "proposed_correction": {
+        "name": "bridge_aware_anchor",
+        "relationship_to_S2": "This makes the connectivity idea part of the PRIMARY hypothesis rather than an increment, because the defect lives in bridged tasks. Under the original ladder, S1 would be near-inert and S2 would carry the effect, which would misattribute the mechanism.",
+        "rule": "eligible iff target_relation_match AND (canonical_subject_match OR bridge_anchor_match), where bridge_anchor_match means the record's subject is an entity that appears as the TARGET of another candidate record whose subject matches the canonical query subject -- i.e. the record is reachable from the query subject in one hop through the candidate pool itself.",
+        "why_it_stays_non_leaking": "Reachability is computed over candidate-pool CONTENT via the existing V4 entity extractor, using only the parsed target relation and identity.canonical. It never reads proof_edges, latent_bridge, answer_node, required_evidence_ids, or record_kind."
+      },
+      "requires": "explicit owner choice; no arm is run until this is resolved and frozen"
+    }
   },
   "arms": {
     "S0": {
@@ -75,6 +91,89 @@
     }
   },
   "created_utc": "2026-08-08T10:00:00Z",
+  "development_results_2026_08_08": {
+    "answer_support_retention": {
+      "S0": {
+        "ALL": 0.313,
+        "EXACT_bridged": 0.128,
+        "EXACT_unbridged": 0.722,
+        "RESOLVED": 0.31
+      },
+      "S1": {
+        "ALL": 0.522,
+        "EXACT_bridged": 0.667,
+        "EXACT_unbridged": 0.889,
+        "RESOLVED": 0.31
+      },
+      "S2": {
+        "ALL": 0.504,
+        "EXACT_bridged": 0.667,
+        "EXACT_unbridged": 0.889,
+        "RESOLVED": 0.276
+      },
+      "S3": {
+        "ALL": 0.504,
+        "EXACT_bridged": 0.667,
+        "EXACT_unbridged": 0.889,
+        "RESOLVED": 0.276
+      },
+      "S4_ceiling": {
+        "ALL": 0.844,
+        "EXACT_bridged": 1.0,
+        "EXACT_unbridged": 1.0,
+        "RESOLVED": 0.69
+      }
+    },
+    "artifact": "evidence/gate_c4/diagnosis/development_selector_ladder.json",
+    "primary_criterion": {
+      "S1": {
+        "bootstrap_lcb": 0.359,
+        "delta": 0.5385,
+        "n": 39
+      },
+      "S2": {
+        "bootstrap_lcb": 0.3571,
+        "delta": 0.5385,
+        "n": 39
+      },
+      "S3": {
+        "bootstrap_lcb": 0.3571,
+        "delta": 0.5385,
+        "n": 39
+      },
+      "bar": "+0.20",
+      "metric": "EXACT_bridged answer-support retention delta vs S0"
+    },
+    "protection_behavior": {
+      "DIRECT_SUBJECT_TARGET": 19,
+      "ONE_HOP_BRIDGE_TARGET": 35,
+      "fired": 54,
+      "note": "35 of 54 protections used the BRIDGE anchor -- the population the original subject+relation rule could not reach at all. This is direct evidence the corrected rule was necessary rather than merely broader. The 17 protections that spent a slot on a non-required record are the cost of the intervention and are reported, not hidden.",
+      "protected_record_was_required": "37/54 = 68.5%"
+    },
+    "selected_ces": {
+      "S0": 0.425,
+      "S1": 0.567,
+      "S2": 0.583,
+      "S3": 0.583,
+      "S4_ceiling": 0.783
+    },
+    "selection_only": "No HRM. The PRIMARY frozen criterion is a selection property and needed no generation. Downstream Q remains a REQUIRED gate and is NOT yet measured.",
+    "structural": {
+      "bridge_retention": {
+        "S0": 0.596,
+        "S1": 0.575,
+        "S2": 0.66,
+        "S3": 0.66
+      },
+      "identity_retention": {
+        "S0": 1.0,
+        "S1": 1.0,
+        "S2": 1.0,
+        "S3": 1.0
+      }
+    }
+  },
   "fixed_conditions": {
     "candidate_budget": 50,
     "corpus": "development split only for construction; the consumed qualification split is never used to select or evaluate an arm",
@@ -171,10 +270,31 @@
   },
   "protocol_id": "c4_selector_v1",
   "sprint": "B2 -- selector repair",
-  "status": "PREREGISTERED__ONE_DECISION_OPEN_BEFORE_ANY_ARM_RUNS",
+  "status": "S1_FROZEN_AND_RUN__DOWNSTREAM_Q_GATES_OUTSTANDING",
   "stop_rule": {
     "adoption_is_development_only": "Any arm frozen here is a development-side mechanism decision. It is confirmed later on a FRESH untouched split, never on the consumed qualification split.",
     "if_S1_fails": "record descriptively, do not iterate variants inside this protocol",
     "no_mechanism_edits_after_results_begin": "Once S0-S4 start, no arm definition, eligibility rule, threshold or measurement may be changed. A defect discovered mid-run is recorded and addressed in a successor protocol."
+  },
+  "verdict_2026_08_08": {
+    "NO_ARM_ADOPTED_YET": "Three frozen gates are REQUIRED and remain unmeasured because they need HRM generation: downstream Q >= S0, no family Q regression worse than -0.05, no entity_regime Q regression worse than -0.05. Per the frozen criteria no arm may be promoted until those are measured. Recording selection results now is not adoption.",
+    "S1": {
+      "FAILS": "structural bridge retention 0.575 vs S0 0.596 = -0.0212, outside the frozen -0.01 allowance",
+      "cause": "the packet-budget invariant working as intended: protection consumes one slot, so frozen S2c has 5 slots instead of 6 and sometimes drops a bridge record. The primary repair is large (+0.5385) but it is not free.",
+      "measurable_gates": "7 of 8 PASS",
+      "status": "PRIMARY HYPOTHESIS CONFIRMED, ARM NON-COMPLIANT on one frozen structural gate"
+    },
+    "S2": {
+      "bridge_retention": "0.660 vs S0 0.596 = +0.0639, i.e. it REPAIRS S1's only failure",
+      "incremental_value_over_S1": "Yes, and specifically the value the frozen criteria demand: it restores bridge retention above baseline while preserving the identical primary effect. Its own cost is a RESOLVED retention regression of -0.0344 (within the frozen -0.05 allowance).",
+      "measurable_gates": "8 of 8 PASS",
+      "status": "PASSES ALL MEASURABLE FROZEN GATES"
+    },
+    "S3": {
+      "incremental_value_over_S2": "NONE -- identical on every reported metric; temporal swaps did not change any outcome.",
+      "measurable_gates": "8 of 8 PASS",
+      "status": "NOT ADOPTED, per the frozen rule that an increment matching the arm below it loses and the simpler mechanism wins ties"
+    },
+    "bug_found_and_fixed_mid_analysis": "select_s1 requested budget-1 records from the frozen selector and then filtered out the protected record, silently returning a packet of budget-2 whenever the frozen selector had also chosen it. A packet SMALLER than the budget is its own violation of the fixed-budget invariant and would understate the arm. Fixed to request the full budget and drop the overlap. The ladder was re-run from scratch afterwards; development numbers were unchanged, verified rather than assumed."
   }
 }
