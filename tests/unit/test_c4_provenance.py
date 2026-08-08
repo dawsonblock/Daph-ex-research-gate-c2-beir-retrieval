@@ -10,6 +10,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 from hrm_adaptive_memory.c4.provenance import (
     build_manifest, write_results_hash, verify_results_hash,
     compute_results_hash, sha256_corpus, _sha256_file,
+    write_bundle_hash, verify_bundle_hash, compute_bundle_hash,
+    BUNDLE_HASH_FILENAME,
 )
 
 
@@ -104,3 +106,94 @@ def test_results_hash_excludes_itself():
 
 def test_sha256_corpus_returns_empty_for_missing_file():
     assert sha256_corpus(Path("/nonexistent/file.jsonl")) == ""
+
+
+# --- BUNDLE.sha256: the root hash covering everything, including
+# certification/, which RESULTS.sha256 was never scoped to cover. ---
+
+def _certified_bundle(d: Path) -> None:
+    """A bundle shaped like a real certified one: results + certification/."""
+    (d / "manifest.json").write_text(json.dumps({"a": 1}))
+    (d / "C4_0.jsonl").write_text('{"task_id": "t1"}\n')
+    write_results_hash(d)
+    cert = d / "certification"
+    cert.mkdir()
+    (cert / "CERTIFICATION.json").write_text(json.dumps({"VALID_RUN": True}))
+    (cert / "ENVIRONMENT.lock").write_text(json.dumps({"python": "3.12"}))
+    (cert / "source_snapshot.zip").write_bytes(b"not a real zip, just bytes")
+
+
+def test_bundle_hash_covers_certification_subdirectory():
+    """The gap RESULTS.sha256 leaves: certification/ must be covered."""
+    with tempfile.TemporaryDirectory() as tmp:
+        d = Path(tmp)
+        _certified_bundle(d)
+        content = compute_bundle_hash(d)
+        assert "certification/CERTIFICATION.json" in content
+        assert "certification/ENVIRONMENT.lock" in content
+        assert "certification/source_snapshot.zip" in content
+        assert "RESULTS.sha256" in content
+        assert "C4_0.jsonl" in content
+
+
+def test_bundle_hash_deterministic():
+    with tempfile.TemporaryDirectory() as tmp:
+        d = Path(tmp)
+        _certified_bundle(d)
+        assert compute_bundle_hash(d) == compute_bundle_hash(d)
+
+
+def test_write_and_verify_bundle_hash():
+    with tempfile.TemporaryDirectory() as tmp:
+        d = Path(tmp)
+        _certified_bundle(d)
+        write_bundle_hash(d)
+        assert (d / BUNDLE_HASH_FILENAME).exists()
+        assert verify_bundle_hash(d) is True
+
+
+def test_bundle_hash_detects_tampering_in_certification_dir():
+    """The exact gap being closed: a change under certification/ must be caught."""
+    with tempfile.TemporaryDirectory() as tmp:
+        d = Path(tmp)
+        _certified_bundle(d)
+        write_bundle_hash(d)
+        assert verify_bundle_hash(d) is True
+
+        (d / "certification" / "CERTIFICATION.json").write_text(
+            json.dumps({"VALID_RUN": False}))
+        assert verify_bundle_hash(d) is False, (
+            "RESULTS.sha256 alone would miss this -- it never covered "
+            "certification/, which is exactly the gap BUNDLE.sha256 closes")
+
+
+def test_bundle_hash_excludes_itself():
+    with tempfile.TemporaryDirectory() as tmp:
+        d = Path(tmp)
+        _certified_bundle(d)
+        write_bundle_hash(d)
+        h1 = (d / BUNDLE_HASH_FILENAME).read_text()
+        write_bundle_hash(d)
+        h2 = (d / BUNDLE_HASH_FILENAME).read_text()
+        assert h1 == h2
+
+    assert BUNDLE_HASH_FILENAME not in h1
+
+
+def test_missing_bundle_hash_file_fails_verification():
+    with tempfile.TemporaryDirectory() as tmp:
+        d = Path(tmp)
+        _certified_bundle(d)
+        assert verify_bundle_hash(d) is False
+
+
+def test_bundle_hash_written_after_results_hash_still_covers_it():
+    """Writing order matters: BUNDLE.sha256 must be written LAST so it can
+    cover RESULTS.sha256 and CERTIFICATION.json, which is exactly why
+    certify_c4_run.py calls write_bundle_hash() after every other artifact."""
+    with tempfile.TemporaryDirectory() as tmp:
+        d = Path(tmp)
+        _certified_bundle(d)
+        content = compute_bundle_hash(d)
+        assert "RESULTS.sha256" in content
+        assert "certification/CERTIFICATION.json" in content

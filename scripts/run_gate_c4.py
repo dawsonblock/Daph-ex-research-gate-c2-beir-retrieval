@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT))
 
 from hrm_adaptive_memory.contracts import IndexRecord
 from hrm_adaptive_memory.c4.contracts import *
-from hrm_adaptive_memory.c4.arms import ARMS, PRIMARY_ORDER
+from hrm_adaptive_memory.c4.arms import ARMS, DIAGNOSTIC_ORDER, PRIMARY_ORDER
 from hrm_adaptive_memory.c4.query_stage import run_query_stage, extract_subject
 from hrm_adaptive_memory.retrieval.information_state import (
     InformationState, formulate_followup, FOLLOWUP_FORMULATION)
@@ -44,21 +44,47 @@ from hrm_adaptive_memory.c4.provenance import (
 CORPUS = ROOT / "data/hrm/controlled_gate_a_v4"
 OUT = ROOT / "evidence/gate_c4"
 HRM_MAX_NEW_TOKENS = 64
+# Prompts sharing one HRM forward pass in run_full(). Must stay 1 by default:
+# tests/unit/test_batched_generation.py's real-checkpoint equivalence check
+# (HRM_EQUIVALENCE_TEST=1) currently FAILS for sapientinc/HRM-Text-1B at both
+# float16 and bfloat16 -- on a Lightning A100, batching produced a genuinely
+# different completion (not just a trailing-token artifact) for the shortest
+# prompt in a mixed-length batch. Root cause not yet found; suspected
+# interaction between left-padding and this model's recurrent H/L-cycle
+# architecture, which is not a standard decoder-only transformer. Do not
+# raise this default until that equivalence test passes.
+HRM_BATCH_SIZE = int(os.environ.get("HRM_BATCH_SIZE", "1"))
+
+
+ACTIVE_PROTOCOL = "v2_1"
+
+# Only v2_1 is certifiable. v2 specified packet ordering twice, inconsistently,
+# and v1 predates the determinism repair. Both remain readable for lineage.
+PROTOCOL_FILES = {
+    "v2_1": "configs/gate_c4_protocol_v2_1.json",
+    "v2": "configs/gate_c4_protocol_v2.json",
+    "v1": "configs/gate_c4_protocol.json",
+}
+
+
+def _protocol_path() -> Path:
+    """Path to the active C4 protocol file.
+
+    Selected by the C4_PROTOCOL environment variable; defaults to the active
+    protocol rather than to v1, so a bundle produced without setting the
+    variable is not silently stamped with a superseded protocol hash.
+    """
+    version = os.environ.get("C4_PROTOCOL", ACTIVE_PROTOCOL)
+    if version not in PROTOCOL_FILES:
+        raise ValueError(
+            f"C4_PROTOCOL={version!r} is not a known protocol. "
+            f"Known: {sorted(PROTOCOL_FILES)}")
+    return ROOT / PROTOCOL_FILES[version]
 
 
 def _protocol_hash() -> str:
-    """Hash of the active C4 protocol file.
-
-    Selects v1 or v2 based on C4_PROTOCOL environment variable:
-        C4_PROTOCOL=v2  → configs/gate_c4_protocol_v2.json
-        (default)       → configs/gate_c4_protocol.json
-    """
-    protocol_version = os.environ.get("C4_PROTOCOL", "v1")
-    if protocol_version == "v2":
-        protocol_path = ROOT / "configs/gate_c4_protocol_v2.json"
-    else:
-        protocol_path = ROOT / "configs/gate_c4_protocol.json"
-    return hashlib.sha256(protocol_path.read_bytes()).hexdigest()
+    """Hash of the active C4 protocol file."""
+    return hashlib.sha256(_protocol_path().read_bytes()).hexdigest()
 
 
 def _detect_device() -> str:
@@ -276,8 +302,10 @@ def run_pre_hrm_stages(task: dict, arm: C4Arm, records: list[IndexRecord],
         task.get("required_evidence_ids", []),
         canonical_question=canonical_question)
 
-    # Packet stage
-    prompt, packet_result = run_packet_stage(arm, question, selection_result, texts)
+    # Packet stage. `retrieval_result` supplies the candidate pool hash and the
+    # fusion scores used by the ordering policy's tie-break rules.
+    prompt, packet_result = run_packet_stage(
+        arm, question, selection_result, texts, retrieval=retrieval_result)
 
     return PreHRMResult(
         task_id=task["task_id"],
@@ -290,6 +318,7 @@ def run_pre_hrm_stages(task: dict, arm: C4Arm, records: list[IndexRecord],
         packet=packet_result,
         information_state_before=_state_to_dict(state_before),
         information_state_after=_state_to_dict(state_after),
+        prompt=prompt,
     )
 
 
@@ -319,6 +348,48 @@ def _load_hrm():
     return adapter, PromptCondition.DIRECT
 
 
+def _merged_arm_manifest_fields(out_dir: Path, arm_ids: list[str]) -> dict:
+    """Merge this invocation's arm_ids into any manifest.json already present.
+
+    run_full() is called twice per requalify run -- once with PRIMARY_ORDER,
+    once with the diagnostic arms -- and both write manifest.json to the same
+    out_dir. Without merging, the second call's manifest.json overwrote the
+    first entirely, leaving arm_ids=["C4_3o","C4_4m"] as the on-disk record
+    even though the bundle directory holds receipts for all nine arms.
+    certify_c4_run.py never depended on this field (it reconstructs arm
+    completeness from the actual C4_*.jsonl files present), so the bug never
+    affected a certification verdict -- but the manifest is supposed to be a
+    readable record of what's in the bundle, and it wasn't one.
+
+    Returns the union of arm_ids (this call's plus any prior), split into
+    primary_arm_ids and diagnostic_arm_ids by membership in the canonical
+    orderings, plus the union itself under the pre-existing "arm_ids" key for
+    backward compatibility with anything that already reads it.
+    """
+    existing_path = out_dir / "manifest.json"
+    prior_arm_ids: list[str] = []
+    if existing_path.is_file():
+        try:
+            prior = json.loads(existing_path.read_text())
+            prior_arm_ids = list(prior.get("arm_ids") or [])
+            # Absorb old-schema split fields too, in case of a future format
+            # change; union is idempotent either way.
+            prior_arm_ids += list(prior.get("primary_arm_ids") or [])
+            prior_arm_ids += list(prior.get("diagnostic_arm_ids") or [])
+        except (json.JSONDecodeError, OSError):
+            pass
+
+    union = set(prior_arm_ids) | set(arm_ids)
+    primary = [a for a in PRIMARY_ORDER if a in union]
+    diagnostic = [a for a in DIAGNOSTIC_ORDER if a in union]
+    other = sorted(union - set(primary) - set(diagnostic))
+    return {
+        "arm_ids": primary + diagnostic + other,
+        "primary_arm_ids": primary,
+        "diagnostic_arm_ids": diagnostic,
+    }
+
+
 def _run_hrm(adapter, condition, prompt: str) -> HRMResult:
     """Run HRM generation for one prompt."""
     import time as _time
@@ -338,11 +409,66 @@ def _run_hrm(adapter, condition, prompt: str) -> HRMResult:
     )
 
 
+def _run_hrm_batch(adapter, condition, prompts: list[str]) -> list[HRMResult]:
+    """Run HRM generation for several prompts in one forward pass.
+
+    Only usable where tests/unit/test_batched_generation.py's
+    test_batched_matches_sequential_on_the_real_checkpoint passes: batched and
+    sequential generation are not assumed equivalent, they are verified
+    equivalent (greedy, byte-identical) before this is wired into a real run.
+    latency_seconds is the shared batch latency divided evenly across its
+    members -- it is receipt metadata only, never read by any gate.
+    """
+    import time as _time
+    if not prompts:
+        return []
+    t0 = _time.perf_counter()
+    rows = adapter.generate_batch(
+        prompts, condition=condition, max_new_tokens=HRM_MAX_NEW_TOKENS)
+    per_task_latency = (_time.perf_counter() - t0) / len(prompts)
+    results = []
+    for prompt, row in zip(prompts, rows):
+        results.append(HRMResult(
+            output=row["text"],
+            prompt_hash=hashlib.sha256(prompt.encode()).hexdigest(),
+            prompt_tokens=row["prompt_tokens"],
+            completion_tokens=row["completion_tokens"],
+            model_id=adapter.spec.model_id,
+            model_revision=adapter.spec.revision,
+            latency_seconds=per_task_latency,
+        ))
+    return results
+
+
+def _assert_prompt_binding(pre_hrm: PreHRMResult, hrm: HRMResult) -> None:
+    """Fail closed if HRM did not consume the frozen packet prompt.
+
+    ``PacketResult.prompt_hash`` is computed pre-HRM from the ordered packet.
+    ``HRMResult.prompt_hash`` is computed from whatever text was actually
+    generated on. If they diverge, the ordering policy was bypassed and the
+    receipt would misdescribe the run.
+    """
+    if pre_hrm.packet.prompt_hash != hrm.prompt_hash:
+        raise AssertionError(
+            f"Prompt binding violated for {pre_hrm.task_id}/{pre_hrm.arm_id}: "
+            f"packet prompt_hash={pre_hrm.packet.prompt_hash[:16]} but HRM "
+            f"consumed prompt_hash={hrm.prompt_hash[:16]}. HRM must generate "
+            f"from PreHRMResult.prompt.")
+
+
+# Bumped whenever a change alters the prompt HRM sees for an unchanged packet
+# hash. Without this, resumption silently reuses receipts generated under the
+# previous prompt-construction path.
+#   v2: packet ordering + fusion tie-breaks actually applied to the prompt
+PIPELINE_VERSION = "c4_pipeline_v2_ordered_packet"
+
+
 def _resume_key(task: dict, arm: C4Arm, packet_hash: str) -> str:
     """Build a resume key that invalidates on config/code changes."""
     return hashlib.sha256(
         f"{task['task_id']}|{arm.arm_id}|{packet_hash}|{arm.query_policy}|"
-        f"{arm.retrieval_policy}|{arm.identity_policy}|{arm.selector_policy}".encode()
+        f"{arm.retrieval_policy}|{arm.identity_policy}|{arm.selector_policy}|"
+        f"{PIPELINE_VERSION}".encode()
     ).hexdigest()[:16]
 
 
@@ -414,13 +540,10 @@ def run_smoke(split: str = "development"):
         for i, task in enumerate(tasks):
             pre_hrm = all_pre_hrm[arm_id][i]
             pre_receipt = build_pre_hrm_receipt(pre_hrm)
-            prompt = pre_hrm.packet.packet_contents
-            from hrm_adaptive_memory.evidence.packing import compose_evidence_prompt
-            full_prompt = compose_evidence_prompt(
-                task["question"],
-                [texts.get(eid, "") for eid in pre_hrm.selection.selected_ids if eid in texts])
-
-            hrm_result = _run_hrm(adapter, condition, full_prompt)
+            # HRM consumes the frozen packet prompt — never a recomposition
+            # from selected_ids, which would bypass the ordering policy.
+            hrm_result = _run_hrm(adapter, condition, pre_hrm.prompt)
+            _assert_prompt_binding(pre_hrm, hrm_result)
             _binary_score, correct = _verify_answer(task, hrm_result.output)
             quality_score = _compute_quality(
                 task, list(pre_hrm.selection.selected_ids), evidence, correct)
@@ -524,34 +647,34 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
 
         print(f"  {arm_id}...", end=" ", flush=True)
         t0 = time.time()
-        receipts = []
+        receipts: list[dict | None] = [None] * len(tasks)
         completed = 0
+
+        # Pre-HRM stages (retrieval/identity/selection/ordering) are CPU-only
+        # and unaffected by batching; run them for every task up front so the
+        # GPU-bound HRM calls below can be grouped. Anything already resumed
+        # from a prior run is filled in immediately and never re-sent to HRM.
+        pending: list[tuple[int, dict, str]] = []  # (task index, pre_hrm, resume_key)
+        pre_hrm_by_index: dict[int, object] = {}
         for i, task in enumerate(tasks):
             tid = task["task_id"]
-            # Progress indicator every 10 tasks
-            if (i + 1) % 10 == 0:
-                print(f"  {arm_id}: {i+1}/{len(tasks)}", end="\r", flush=True)
-            # Check resume cache
             pre_hrm = run_pre_hrm_stages(task, arm, records, texts)
             rkey = _resume_key(task, arm, pre_hrm.packet.packet_hash)
             if tid in existing and existing[tid].get("resume_key") == rkey:
-                receipts.append(existing[tid])
+                receipts[i] = existing[tid]
                 completed += 1
                 continue
+            pre_hrm_by_index[i] = pre_hrm
+            pending.append((i, pre_hrm, rkey))
 
-            # Run HRM
+        def _build_receipt(task: dict, pre_hrm, rkey: str, hrm_result: HRMResult) -> dict:
+            _assert_prompt_binding(pre_hrm, hrm_result)
             pre_receipt = build_pre_hrm_receipt(pre_hrm)
-            from hrm_adaptive_memory.evidence.packing import compose_evidence_prompt
-            full_prompt = compose_evidence_prompt(
-                task["question"],
-                [texts.get(eid, "") for eid in pre_hrm.selection.selected_ids if eid in texts])
-            hrm_result = _run_hrm(adapter, condition, full_prompt)
             _binary_score, correct = _verify_answer(task, hrm_result.output)
             quality_score = _compute_quality(
                 task, list(pre_hrm.selection.selected_ids), evidence, correct)
             csr = _compute_csr(task, list(pre_hrm.selection.selected_ids))
             roles = _compute_role_retention(task, list(pre_hrm.selection.selected_ids), evidence)
-
             evaluator = {
                 "answer": task["answer"],
                 "verifier": task.get("verifier", "exact"),
@@ -567,7 +690,7 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
                 "role_retention": roles,
             }
             full_receipt = build_full_receipt(pre_receipt, hrm_result, evaluator)
-            receipt_dict = {
+            return {
                 "task_id": full_receipt.task_id,
                 "arm_id": full_receipt.arm_id,
                 "split": full_receipt.split,
@@ -575,18 +698,28 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
                 "runtime_payload": full_receipt.runtime_payload,
                 "evaluator_annotation": full_receipt.evaluator_annotation,
             }
-            receipts.append(receipt_dict)
-            completed += 1
+
+        # HRM generation, grouped into batches. Only usable because
+        # tests/unit/test_batched_generation.py verifies batched output is
+        # byte-identical to the sequential path -- this is not a mechanism
+        # change, only how many prompts share one forward pass.
+        for batch_start in range(0, len(pending), HRM_BATCH_SIZE):
+            batch = pending[batch_start:batch_start + HRM_BATCH_SIZE]
+            prompts = [pre_hrm_by_index[i].prompt for i, _, _ in batch]
+            hrm_results = _run_hrm_batch(adapter, condition, prompts)
+            for (i, pre_hrm, rkey), hrm_result in zip(batch, hrm_results):
+                receipts[i] = _build_receipt(tasks[i], pre_hrm, rkey, hrm_result)
+                completed += 1
 
             # Incremental write (append to file)
-            if completed % 10 == 0 or i == len(tasks) - 1:
-                arm_file.write_text(
-                    "".join(json.dumps(r, sort_keys=True) + "\n" for r in receipts))
-                print(f"\r  {arm_id}: {completed}/{len(tasks)}", end="", flush=True)
+            arm_file.write_text(
+                "".join(json.dumps(r, sort_keys=True) + "\n"
+                        for r in receipts if r is not None))
+            print(f"\r  {arm_id}: {completed}/{len(tasks)}", end="", flush=True)
 
         # Final write
         arm_file.write_text(
-            "".join(json.dumps(r, sort_keys=True) + "\n" for r in receipts))
+            "".join(json.dumps(r, sort_keys=True) + "\n" for r in receipts if r is not None))
         all_receipts[arm_id] = receipts
         elapsed = time.time() - t0
         q_scores = [r["evaluator_annotation"]["quality"] for r in receipts]
@@ -647,9 +780,14 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
             }, sort_keys=True).encode()).hexdigest()[:16],
         device=_device,
         dtype=_dtype,
-        batch_size=1,
+        batch_size=HRM_BATCH_SIZE,
         generation_condition="DIRECT",
     )
+    # Merge arm_ids with any manifest.json already at this path: run_full()
+    # is called once for the primary ladder and again for the diagnostic
+    # arms, both targeting the same out_dir, and a plain overwrite would lose
+    # the first call's arm list.
+    manifest.update(_merged_arm_manifest_fields(out_dir, arm_ids))
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
 
     # Run analyzer to produce analysis.json BEFORE hashing

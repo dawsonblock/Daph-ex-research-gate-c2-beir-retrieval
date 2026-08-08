@@ -51,7 +51,7 @@
     "gate_k_consolidation": "BLOCKED",
     "gate_l_latent_memory": "BLOCKED",
     "gate_n1_natural_external_memory": "PENDING",
-    "gate_c4_integrated_memory_pipeline": "IN_PROGRESS_C4_V2_DEVELOPMENT_RERUN_PARTIAL_PROTOCOL_AND_DETERMINISM_INFRASTRUCTURE_READY",
+    "gate_c4_integrated_memory_pipeline": "MECHANISM_SUCCESS_DEVELOPMENT_CERTIFIED_VALID_RUN_TRUE_QUALIFICATION_PENDING",
     "gate_c4_bridge_runtime_acquisition": "FAIL_NO_RUNTIME_BRIDGE_MECHANISM_BEATS_ONE_PASS_BASELINE"
   },
   "gate_lineage": {
@@ -82,7 +82,286 @@
     "slot_label_echo": "99 -> 0 under precision packing; was an evidence-confusability artefact, not a prompt-interface or reasoning limit",
     "slot_label_echoes": "Track evidence quality, not packet format: 85 -> 28 under precision packing, -> 3 under oracle evidence. F-arms would measure a symptom; implemented but unrun."
   },
-  "next_work": "C4 v2 protocol and determinism infrastructure READY. Pre-HRM determinism qualified (120/120 identical packet hashes across hash seeds). Metric layer repaired (composite quality centralized in c4.metrics, OGC uses C4_4 not C4_5). Packet membership vs ordering separated. Frozen packet artifacts generated. Fail-closed runner implemented. Partial development run exists but is INCOMPLETE (C4_4 90/120, C4_5/C4_6 missing) and stored quality was binary not composite — must rerun from scratch on Colab T4. Next: (1) run colab_c4_requalify.py on T4 GPU for full 120x7 v2 development run, (2) verify composite quality in receipts, (3) run analyzer for family/cluster CIs and OGC/SGC, (4) write RESULTS.sha256 last, (5) apply D1-D8 promotion gates, (6) only then decide whether development authorizes qualification split.",
+  "certified_development_result": {
+    "status": "VALID_RUN_TRUE",
+    "certified_utc": "2026-08-08T02:38:57Z",
+    "verdict": "VALID_CONFORMANT_C4_V2_RESULT",
+    "gates_passed": "16/16",
+    "protocol_sha256": "b4e22a551532acd230157cb6a85505ffc2a9108778dd726d9c9b6057160165a4",
+    "protocol_file": "configs/gate_c4_protocol_v2_1.json",
+    "run_environment": "RunPod, NVIDIA GeForce RTX 5090, CUDA 12.8, torch 2.8.0+cu128, transformers 5.14.1, python 3.12.3 (configs/c4_requirements.lock, CAPTURED not transcribed)",
+    "certificate_path": "evidence/gate_c4/full/development/certification/CERTIFICATION.json",
+    "bundle_path": "evidence/gate_c4/full/development",
+    "bundle_root_hash": "evidence/gate_c4/full/development/BUNDLE.sha256",
+    "known_bundle_defect": "manifest.json.arm_ids shows only ['C4_3o','C4_4m'], not all nine arms. Cause: scripts/run_gate_c4.py's run_full() writes manifest.json unconditionally on every call, and colab_c4_requalify.py calls it twice against the same output directory (primary ladder, then diagnostic arms), so the second write clobbered the first's arm_ids. Fixed in scripts/run_gate_c4.py (_merged_arm_manifest_fields) for all future runs, which also add explicit primary_arm_ids/diagnostic_arm_ids fields. NOT retroactively applied to this already-certified bundle: doing so would change manifest.json's bytes, invalidating RESULTS.sha256 for a file CERTIFICATION.json already verified, without a real rerun to justify a new certificate. Did not affect the certification verdict: certify_c4_run.py's gate_arms_complete reconstructs arm presence from the actual C4_*.jsonl files present in the bundle, never from manifest.json.",
+    "arm_quality": {
+      "C4_0": 0.1625, "C4_1": 0.175, "C4_2": 0.2125, "C4_3": 0.2125,
+      "C4_3o": 0.2146, "C4_4": 0.3625, "C4_4m": 0.3729, "C4_5": 0.7917,
+      "C4_6": 0.9542
+    },
+    "primary_delta": {
+      "value": "Q(C4_4) - Q(C4_0) = +0.2000",
+      "threshold": "+0.15",
+      "verdict": "PASS",
+      "ci_family": [0.1354, 0.2604],
+      "ci_cluster": [0.0583, 0.3521]
+    },
+    "selector_gap_capture": 0.259,
+    "oracle_gap_capture": 0.2526,
+    "ordering_membership_decomposition": {
+      "cells": {
+        "C4_3": "S0 membership + pool order, Q=0.2125",
+        "C4_3o": "S0 membership + deterministic order, Q=0.2146",
+        "C4_4m": "S2c membership + pool order, Q=0.3729",
+        "C4_4": "S2c membership + deterministic order (the real arm), Q=0.3625"
+      },
+      "E_order_S0": {"value": 0.0021, "ci_family": [-0.0167, 0.025], "note": "analyzer's 'ordering_effect', with a computed paired family-grouped CI"},
+      "E_membership_pool": {"value": 0.1604, "ci_family": [0.0979, 0.2271], "note": "analyzer's 'membership_effect', with a computed paired family-grouped CI"},
+      "E_order_S2c": {"value": -0.0104, "note": "Q(C4_4)-Q(C4_4m), a point estimate derived here; the analyzer did not compute a paired CI for this specific contrast"},
+      "interaction": -0.0125,
+      "finding": "Deterministic packet ordering is NEUTRAL: E_order_S0's family CI straddles zero, and E_order_S2c is small and slightly negative (no CI computed for that specific contrast, so treat it as a point estimate, not a significance claim). The entire mechanism gain is the S2c structural membership selector (E_membership_pool's family CI clearly excludes zero). Q(C4_4m)=0.3729 matches the 2026-08-07 historical measurement to four decimal places, confirming the rerun measured the same real phenomenon the historical run did, now correctly attributed.",
+      "recommendation": "Per the pre-registered runbook decision table (docs/C4_V2_1_COLAB_RUNBOOK.md section 5), E_order_S2c ~ 0 maps to: consider freezing C4_4m as the primary arm instead of C4_4 -- simpler mechanism (membership only), same result, one fewer moving part. This is a recommendation, not yet a protocol decision; changing the frozen primary arm requires an explicit new protocol version, same as v2 -> v2_1."
+    },
+    "note": "This certifies the DEVELOPMENT split only. Qualification and OOD splits, and any Gate D promotion decision, remain pending."
+  },
+  "qualification_result": {
+    "status": "VALID_RUN_FALSE",
+    "certified_utc": "2026-08-08T08:16:05Z",
+    "verdict": "NOT_CERTIFIED",
+    "gates_passed": "17/18",
+    "failed_gates": ["statistical_gate"],
+    "protocol_sha256": "b4e22a551532acd230157cb6a85505ffc2a9108778dd726d9c9b6057160165a4",
+    "protocol_file": "configs/gate_c4_protocol_v2_1.json",
+    "run_environment": "Lightning AI Studio, NVIDIA A100-SXM4-80GB, CUDA 12.8, torch 2.8.0+cu128, transformers 5.14.1, python 3.12.11 (configs/c4_requirements.lock, CAPTURED not transcribed)",
+    "git_commit": "b3db3e5e1218b556af8cbb79b1c91040aa596df2",
+    "certificate_path": "evidence/gate_c4/full/qualification/certification/CERTIFICATION.json",
+    "bundle_path": "evidence/gate_c4/full/qualification",
+    "bundle_root_hash": "evidence/gate_c4/full/qualification/BUNDLE.sha256",
+    "independent_reverification": "Recomputed from raw receipts on a second, unrelated machine (local, no GPU, different python/torch/numpy versions) after downloading the bundle. Every substantive gate (arms_complete, no_oracle_leakage, receipt_hash_fields, prompt_binding, ordering_conformance, causal_parity, metric_correctness, derived_metric_agreement, determinism, family_regression, results_hash, development_lineage, statistical_gate) reproduced identically, including the exact statistical_gate failure. The only gates that differed (source_lineage, environment_lock) failed purely because of the local machine's own unrelated working-tree file and non-matching hardware/software -- not evidence of anything wrong with the qualification run itself.",
+    "task_count": 500,
+    "arm_quality": {
+      "C4_0": 0.098, "C4_1": 0.1265, "C4_2": 0.1435, "C4_3": 0.1435,
+      "C4_4": 0.189, "C4_5": 0.4455, "C4_6": 0.939
+    },
+    "primary_delta": {
+      "value": "Q(C4_4) - Q(C4_0) = +0.0910",
+      "threshold": "+0.15",
+      "verdict": "FAIL",
+      "ci_lower_family": 0.0345,
+      "ci_lower_cluster": 0.0036,
+      "ci_lower_template": 0.091,
+      "flips": {"improve": 104, "regress": 58, "unchanged": 338}
+    },
+    "family_regression_d5": {
+      "verdict": "PASS",
+      "worst_family": "temporal_update",
+      "worst_delta": -0.1,
+      "threshold": -0.1,
+      "note": "Exactly at the frozen -0.10 threshold, not below it -- passes per d5_family_regression_criterion's exact wording ('worse than -0.10'), but this is a boundary case worth flagging honestly, not a comfortable margin. All other 9 families improved or were roughly flat."
+    },
+    "comparison_to_development": {
+      "development_primary_delta": 0.2,
+      "qualification_primary_delta": 0.091,
+      "reader_ceiling_c4_6": {"development": 0.9542, "qualification": 0.939, "note": "nearly unchanged -- the HRM reader's raw capability given oracle evidence generalizes fine"},
+      "oracle_selection_c4_5": {"development": 0.7917, "qualification": 0.4455, "note": "large drop -- oracle selection over the real (non-oracle) candidate pool degrades substantially on qualification's task distribution, well beyond what the reader-ceiling comparison alone would suggest"},
+      "no_mechanism_baseline_c4_0": {"development": 0.1625, "qualification": 0.098, "note": "also drops -- qualification's task distribution is harder overall, not just harder for the mechanism specifically"},
+      "interpretation": "The mechanism's development-measured gain (+0.20) roughly halved on held-out data (+0.091), missing the pre-registered D4 threshold (+0.15). This looks like a genuine generalization gap concentrated in retrieval/selection quality (C4_5 dropped much more than C4_6, the reader-only ceiling), not a collapse of the reader or a catastrophic single-family failure (D5 passed)."
+    },
+    "note": "This certifies the QUALIFICATION split only, run exactly against development's frozen, certified v2.1 configuration (development_lineage gate PASS: protocol_sha256 equality plus commit-ancestry verified). Per the pre-registered rule, this result was NOT used to choose between C4_4 and C4_4m -- that decision was already made on development data alone, before this run. Gate D promotion decision remains pending OOD."
+  },
+  "c4_v2_1_disposition": {
+    "development": "MECHANISM_SUCCESS_CERTIFIED",
+    "qualification": "NOT_CERTIFIED",
+    "failure_mode": {
+      "retrieval_generalization": "dominant (55.6% of qualification failures) -- but see sprint_a_retrieval_diagnosis: the cause is candidate-budget scaling, NOT retrieval representation",
+      "selector_generalization": "secondary (21.0%), concentrated on EXACT-identity tasks",
+      "reader_generalization": "minor (10.0%); reader ceiling essentially unchanged"
+    },
+    "qualification_split_is_now_CONSUMED": {
+      "status": "NO_LONGER_AN_UNTOUCHED_HOLDOUT",
+      "why": "The 500-task qualification split has been used for failure decomposition, retrieval probing, and mechanism-design decisions. It has therefore informed the design of the next version and can no longer serve as that version's final test. Reusing it would be selection on the test set with extra steps, regardless of how disciplined the intervening work is.",
+      "consequence": "vNext needs a FRESH holdout. Recommended hierarchy: development (mechanism construction) -> calibration (thresholds and non-final policy decisions) -> confirmation (one-shot frozen test) -> ood (later external structural stress). Do not call the old qualification split 'qualification' for vNext; it is diagnostic historical data.",
+      "immutability": "The failed v2.1 qualification bundle stays byte-immutable: threshold +0.15 unchanged, D5 verdict unchanged, BUNDLE.sha256 preserved and verified by test, diagnosis artifacts written OUTSIDE the bundle. Never rerun that same split after tuning."
+    }
+  },
+  "sprint_a_retrieval_diagnosis": {
+    "status": "COMPLETE__REVISES_THE_REPAIR_PLAN",
+    "produced_by": "scripts/diagnose_c4_retrieval.py (CPU-only, no HRM, no mechanism change)",
+    "artifacts": ["evidence/gate_c4/diagnosis/development_retrieval.json",
+                  "evidence/gate_c4/diagnosis/qualification_retrieval.json"],
+    "method": "Frozen receipts truncate bm25_ranked/bge_ranked/fusion_ranked at the candidate budget (50), so a required record at true rank 73 is indistinguishable from one at rank 2000 -- both merely absent. This re-runs the SAME frozen retrieval (query construction via run_query_stage, backends via get_cached_backend, fusion via retrieval_stage._rrf, corpus loading imported from run_gate_c4 rather than reimplemented) at full-corpus probe depth and records where required evidence actually ranks. Observation window widens; mechanism unchanged.",
+    "headline_finding": "The retrieval 'availability collapse' is NOT a representation failure. On BOTH splits, 100% of missing required records are ranked by the frozen retrievers and merely fall below the candidate cutoff -- development 29/29, qualification 370/370. Zero unranked. CES reaches 100% at sufficient depth on both splits.",
+    "the_generalization_artifact": {
+      "corpus_records": {"development": 534, "qualification": 2216, "ratio": 4.15},
+      "budget_coverage": {"development": "9.36% of corpus", "qualification": "2.26% of corpus"},
+      "ces_at_equal_absolute_budget": {"k10": {"dev": 0.383, "qual": 0.252}, "k20": {"dev": 0.567, "qual": 0.328}, "k50": {"dev": 0.758, "qual": 0.442}, "k100": {"dev": 0.842, "qual": 0.616}},
+      "ces_at_equal_corpus_fraction": {"1.9pct": {"dev": 0.383, "qual": 0.416}, "3.8pct": {"dev": 0.567, "qual": 0.584}, "9.4pct": {"dev": 0.758, "qual": 0.778}, "19pct": {"dev": 0.842, "qual": 0.824}, "37.5pct": {"dev": 0.892, "qual": 0.878}},
+      "interpretation": "At equal ABSOLUTE budget the dev->qual gap is -13% to -32%. At equal corpus FRACTION the gap is +3.3% to -1.8%, i.e. indistinguishable. Retrieval's ranking quality generalizes essentially perfectly; the measured collapse is an artifact of holding a fixed absolute candidate budget (50) while the corpus grew 4.15x. This substantially revises the assumed repair: the retrieval lane is primarily a budget/pool-sizing question, not a query-reformulation or representation-learning question."
+    },
+    "two_separable_repairs": {
+      "1_fusion_displacement_budget_neutral": {
+        "finding": "RRF discards required evidence that a single retriever already had INSIDE the budget: 88/370 qualification misses (23.8%), 7/29 development misses (24.1%). Of the qualification cases BM25 had 61 inside budget (median rank 37) and BGE had 27 (median rank 42).",
+        "counterfactual_gain_at_unchanged_k50": {"development": "+5.8% CES (75.8% -> 81.7%)", "qualification": "+10.8% CES (44.2% -> 55.0%)"},
+        "why_it_matters": "This is recoverable WITHOUT enlarging the candidate pool, so it does not change what the selector must cope with. Cheapest available retrieval win and the one to test first."
+      },
+      "2_budget_scaling_needs_a_protocol_version": {
+        "finding": "The remaining 76% of misses are genuinely below the cutoff and need a larger (or corpus-relative) budget.",
+        "open_design_question": "Whether the candidate budget should be corpus-relative rather than a fixed absolute constant. A fraction generalizes across these two corpora but will not scale to natural corpora where a fixed fraction of millions of documents is meaningless. Needs an explicit design decision, frozen in the new protocol, not a tuned constant.",
+        "critical_unmeasured_interaction": "Raising k is NOT established as a net win. A larger pool means more distractors for a selector already shown to drop 48% of AVAILABLE evidence (and to over-expand specifically on EXACT-identity tasks). Availability and final quality can move in opposite directions here. This interaction must be MEASURED on development before any budget change is frozen -- do not assume bigger k improves Q."
+      }
+    },
+    "role_recall_at_frozen_budget": {
+      "development": {"IDENTITY": 1.0, "TERMINAL_ANSWER": 0.979, "TEMPORAL_CURRENT": 0.833, "BRIDGE": 0.651},
+      "qualification": {"IDENTITY": 0.992, "TERMINAL_ANSWER": 0.608, "TEMPORAL_CURRENT": 0.43, "BRIDGE": 0.446},
+      "interpretation": "Identity retrieval is solved on both splits (>=99%). The roles that starve under a tight budget are BRIDGE and TEMPORAL_CURRENT -- exactly the multi-hop roles, which rank lower and so are cut first. Consistent with budget starvation rather than representation failure, since all of them are ranked somewhere."
+    },
+    "temporal_chain_reframed": {
+      "previous_reading": "temporal_chain candidate CES 0.060 looked like a representation failure needing temporal embeddings / graph machinery.",
+      "corrected_reading": "temporal_chain reaches 100% CES at sufficient depth and is 94.0% budget-recoverable. Its required records ARE retrieved and ranked, just deepest. Phase 7's temporal sub-experiment should therefore start by asking why temporal records rank low under a tight budget, not by adding temporal representation machinery."
+    },
+    "plan_phases_this_affects": "Phases 4-7 of the repair plan (structured query builder, role-aware retrieval passes, terminal-answer retrieval optimization, temporal query handling) were premised on required evidence being absent from retrieval. It is not absent -- it is ranked and truncated. Those phases may still be worth doing to raise evidence RANK (so it survives a tight budget), which is a different and more precisely stated objective than raising recall. Recommend re-scoping them around rank improvement plus the two separable repairs above, before building new retrieval mechanisms."
+  },
+  "qualification_failure_decomposition": {
+    "status": "DIAGNOSTIC_ONLY__NOT_A_GATE",
+    "produced_by": "scripts/diagnose_c4_generalization.py (no GPU; reads frozen receipts)",
+    "artifact": "evidence/gate_c4/diagnosis/qualification_generalization.json",
+    "method": "Every task lands in exactly one bucket of a mutually exclusive, exhaustive chain following the pipeline's own stages: A_RETRIEVAL (required evidence never reached the candidate pool), B_SELECTOR (it was in the pool and the selector dropped it), C_READER (it survived into the packet and HRM still answered wrong), SUCCESS. Verified exhaustive/exclusive by test, including the case where a wrong-evidence task happens to answer correctly (still counted against retrieval, so A cannot be understated).",
+    "qualification_500_tasks": {
+      "A_RETRIEVAL": {"n": 278, "share": 0.556},
+      "B_SELECTOR": {"n": 105, "share": 0.21},
+      "C_READER": {"n": 50, "share": 0.1},
+      "SUCCESS": {"n": 67, "share": 0.134}
+    },
+    "development_120_tasks": {
+      "A_RETRIEVAL": {"n": 26, "share": 0.217},
+      "B_SELECTOR": {"n": 42, "share": 0.35},
+      "C_READER": {"n": 17, "share": 0.142},
+      "SUCCESS": {"n": 35, "share": 0.292}
+    },
+    "headline_finding_bottleneck_inversion": "The dominant bottleneck INVERTED between splits. On development the selector was the largest lane (35.0% vs retrieval 21.7%); on qualification retrieval dominates (55.6% vs selector 21.0%). Development work would therefore naturally have chased the selector, because that is where the visible headroom was, while the thing that actually broke generalization was retrieval -- which looked healthy on development (candidate CES 0.7833) and roughly halved on qualification (0.4440). This is the single most useful output of the qualification run: it says the next sprint's priority is NOT what development's own numbers would have suggested.",
+    "evidence_availability": {
+      "candidate_ces_development": 0.7833,
+      "candidate_ces_qualification": 0.444,
+      "delta": -0.3393,
+      "c4_5_q_drop": -0.3462,
+      "note": "The C4_5 (oracle selection over the real pool) quality drop tracks the candidate-availability drop almost one-for-one (-0.3462 vs -0.3393), which is why the generalization loss is attributed upstream of selection rather than to the selector alone."
+    },
+    "selector_efficiency_did_not_collapse": {
+      "retained_fraction_of_available_development": 0.5532,
+      "retained_fraction_of_available_qualification": 0.527,
+      "note": "S2c's efficiency at preserving AVAILABLE complete sets is nearly unchanged (55.3% -> 52.7%). Most of its absolute degradation is inherited from a much worse input pool, not from the selector getting worse. This is what separates 'retrieval regressed' from 'selector regressed'."
+    },
+    "exact_identity_over_expansion": {
+      "finding": "The selector's failure is concentrated almost entirely on tasks whose identity was already EXACT. Keep-rate of AVAILABLE required evidence, qualification: EXACT 27/122 = 22.1%, RESOLVED 90/98 = 91.8%. Development shows the same asymmetry: EXACT 18/57 = 31.6%, RESOLVED 34/37 = 91.9%.",
+      "strongest_form": "32 of the 95 EXACT-identity drops on qualification dropped evidence the retriever had ranked FIRST in fusion. Retrieval had already solved those tasks and the selector discarded the answer.",
+      "worked_example": "qualification entity_attribute-0000: identity EXACT, required evidence entity_attribute-0000/fact ranked #1 in fusion and present in the candidate pool; S2c selected six records (dead-ends, links, near-entity distractors from unrelated tasks) and none of them the answer. Q=0.0, correct=false.",
+      "subgroup_signature": "Q by entity_regime, qualification: abbreviation C4_3 0.0720 -> C4_4 0.2970 (+0.2250); canonical C4_3 0.2150 -> C4_4 0.0810 (-0.1340). Against the no-mechanism baseline the canonical delta is -0.1090, i.e. on canonical tasks S2c performs WORSE than doing nothing at all. Development already showed the same sign at smaller magnitude (canonical -0.0500).",
+      "hypothesis_this_motivates": "Structural expansion is over-aggressive when the subject needs no resolution: with EXACT identity and a high-ranked candidate directly expressing the target relation, the answer-bearing record should be preserved before structural expansion fills the remaining budget. For RESOLVED/abbreviation cases the broader S2c behavior is clearly helping (+0.2250) and should be kept. That is an information-state-routed selector, not a global policy change.",
+      "critically_developable_without_qualification": "The asymmetry is present in DEVELOPMENT data at essentially the same magnitude (EXACT 31.6% vs RESOLVED 91.9% keep-rate). The selector fix can therefore be designed, implemented and certified entirely on development data, and confirmed later on a fresh untouched split -- there is no need, and no license, to tune against these qualification receipts.",
+      "bounded_ceiling_estimate": {
+        "population": "EXACT identity + single required fact + fact present in pool: n=75 of 500",
+        "dropped_by_s2c": 51,
+        "mean_q_when_dropped": 0.0147,
+        "mean_q_when_kept": 0.7083,
+        "max_primary_delta_gain": 0.0707,
+        "hypothetical_ceiling": 0.1617,
+        "threshold": 0.15,
+        "caveat": "An UPPER BOUND on what this one failure mode is worth, not a prediction, and computed on qualification receipts purely to size the research bet. It says a partial fix could plausibly clear +0.15, which is why the selector lane is worth opening. It is NOT permission to iterate against these 500 tasks until the number passes."
+      }
+    },
+    "two_independent_research_lanes": {
+      "retrieval_dominated_families": {
+        "families": {"temporal_chain": 0.06, "location_chain": 0.24, "numeric_chain": 0.28, "procedural_chain": 0.28, "configuration_chain": 0.34, "dependency_chain": 0.34, "ownership_chain": 0.4},
+        "metric": "candidate_ces on qualification",
+        "note": "temporal_chain has the full evidence set in the candidate pool for only 6% of tasks. No selector can fix that; it is a retrieval/representation problem and the sharpest available diagnostic for the retrieval lane."
+      },
+      "selector_dominated_families": {
+        "families": {"temporal_update": {"candidate_ces": 0.72, "selected_ces": 0.24, "selector_headroom": 0.48}, "entity_attribute": {"candidate_ces": 0.98, "selected_ces": 0.52, "selector_headroom": 0.46}, "distractor_heavy": {"candidate_ces": 0.8, "selected_ces": 0.6, "selector_headroom": 0.2}},
+        "note": "entity_attribute has near-perfect availability (0.98) and the selector still keeps the needed evidence only 52% of the time. Pure selector headroom, no retrieval work required to exploit it."
+      },
+      "conclusion": "These are two independent problems with different owners and different experiments, not one 'C4 fix'. Retrieval is the larger lane by task count (55.6% vs 21.0%) and can be worked without HRM at all (retrieval-only CES@k / required-evidence recall on frozen pools). The selector lane is smaller but has the cleaner, better-localized hypothesis."
+    },
+    "reader_is_not_the_constraint": {
+      "c4_6_development": 0.9542,
+      "c4_6_qualification": 0.939,
+      "c4_6_accuracy_development": 0.9083,
+      "c4_6_accuracy_qualification": 0.878,
+      "note": "Given correct evidence the reader generalizes nearly unchanged from 120 to 500 held-out tasks, and only 10.0% of qualification tasks fail with complete evidence in the packet. Do not spend effort on HRM recurrence or reader capacity; the memory system around it is the constraint."
+    },
+    "identity_is_not_the_constraint": {
+      "qualification_status_counts": {"EXACT": 250, "RESOLVED": 245, "AMBIGUOUS": 5, "UNRESOLVED": 0},
+      "note": "99% EXACT or RESOLVED, so S2c was active on 495/500. The I3 mechanism from Gate C3 is doing its job; 'identity failed on qualification' is ruled out as an explanation. The 5 AMBIGUOUS cases are the designed abstain path."
+    }
+  },
+  "d5_axis_limitation_observed_after_qualification": {
+    "status": "RECORDED__FROZEN_CRITERION_NOT_CHANGED",
+    "verdict_neutral": "This observation changes NOTHING about the qualification verdict. statistical_gate already failed, so VALID_RUN=false regardless of D5. Recording it therefore cannot be self-serving in either direction, which is exactly why it is safe to state plainly.",
+    "what_happened": "D5 passed as frozen: on the task-structure family axis the worst family is temporal_update at exactly -0.1000, which is not worse than the -0.10 threshold and so correctly passes. Applying the SAME -0.10 threshold to entity_regime instead gives canonical at -0.1090, which would have failed.",
+    "why_this_matters": "d5_family_regression_criterion's own recorded rationale identified entity_regime as the axis where a regression had already been observed in development (-0.029, judged acceptable at the time) and explicitly rejected it as the monitored axis because it 'would need separate, not-yet-built code'. The qualification regression then materialized on precisely that unmonitored axis, at -0.1090, and the failure decomposition independently traced it to a concrete mechanism (EXACT-identity over-expansion) rather than noise.",
+    "temporal_update_boundary": "Separately, temporal_update landing at exactly the -0.10 boundary is a technical pass, not a comfortable one. Treat temporal-update handling as a real warning signal, not a cleared check.",
+    "explicitly_not_done": "The frozen criterion was NOT edited, re-axed, or re-thresholded after seeing results, per the pre-registered commitment ('do not touch this threshold, axis, or statistic after seeing qualification results'). Retro-fitting a gate to a result it has already seen would destroy its evidential value.",
+    "carry_forward": "The NEXT protocol version's promotion gates should monitor BOTH axes (task-structure family AND entity_regime), decided and frozen before that version's qualification run. That is a forward-looking design change for a new protocol, not a retroactive amendment to this one."
+  },
+  "historical_development_signal": {
+    "C4_4_reported_q": 0.3729,
+    "arm_label_at_measurement": "C4_4 (declared: S2c membership + deterministic packet ordering)",
+    "reinterpretation": "S2c membership + retrieval/pool order",
+    "status": "VALID_HISTORICAL_MECHANISM_SIGNAL__NOT_C4_V2_FINAL",
+    "reason": "Deterministic packet ordering was computed and hashed but did not reach the HRM prompt. scripts/run_gate_c4.py recomposed the prompt from selection.selected_ids instead of packet.packet_ids, so c4_packet_ordering_v1 never affected generation. The generations answered a legitimate question; it was not the question the arm label claimed.",
+    "defect_class": "IMPLEMENTATION_CONFORMANCE_DEFECT",
+    "mechanism_change": false,
+    "measured_run": {
+      "source": "Colab T4, 2026-08-07, Untitled4.ipynb",
+      "split": "development",
+      "tasks": 120,
+      "arms_completed": 7,
+      "arm_quality": {
+        "C4_0": 0.1625,
+        "C4_1": 0.1708,
+        "C4_2": 0.2125,
+        "C4_3": 0.2125,
+        "C4_4": 0.3729,
+        "C4_5": 0.7917,
+        "C4_6": 0.9542
+      },
+      "selector_gap_capture": 0.277,
+      "oracle_gap_capture": 0.2658,
+      "self_reported_certification": "FAILED (the run's own VALID_RUN cell could not resolve the active protocol file)"
+    },
+    "what_it_does_support": "The C4_3 -> C4_4_historical delta of +0.1604 (0.2125 -> 0.3729) is evidence for S2c structural MEMBERSHIP selection alone, measured with query, retrieval and identity held fixed. Because the ordering policy never reached HRM, the delta is not diluted by an ordering contribution, which makes it a cleaner membership result than originally reported.",
+    "what_it_does_not_support": "It is not evidence for deterministic packet ordering, and it is not the C4-v2 final result for C4_4. The C4_4 cell under the intended prompt-order intervention has never been measured.",
+    "disposition": "RETAINED_AND_RECLASSIFIED__NOT_VOID"
+  },
+  "d5_family_regression_criterion": {
+    "status": "FROZEN_BEFORE_QUALIFICATION",
+    "frozen_utc": "2026-08-08T00:00:00Z",
+    "decided_by": "explicit user decision, not improvised by the assistant",
+    "protocol_text": "configs/gate_c4_protocol_v2_1.json promotion_gates.D5_no_family_regression already reads 'No catastrophic collapse in any important family' and was left unedited -- D4's own threshold (0.15) is likewise prose-only in the protocol JSON, with the concrete number living in code (certify_c4_run.py PRIMARY_DELTA_THRESHOLD). D5 follows the same precedent: no protocol version bump, no risk to the already-certified development bundle's protocol_sha256 or the development_lineage gate's equality check.",
+    "axis": "task-structure family (the 10-value 'family' field already used everywhere else for the primary delta's grouped CI: ownership_chain, temporal_chain, entity_attribute, etc.) -- NOT entity_regime (canonical/abbreviation), where the actual -0.029 development regression was observed. Rejected because entity_regime is a materially different grouping and checking it would need separate, not-yet-built code; family is what the protocol's own wording and existing CI infrastructure already mean.",
+    "threshold": -0.10,
+    "threshold_rationale": "~3.4x margin above the actual observed development regression (-0.029, entity_regime canonical, judged acceptable), while meaningfully tighter than the +0.15 primary D4 gain threshold. Rejected -0.05 (too tight, ~1.7x margin, more false-positive risk on ordinary per-subgroup noise) and -0.15 (too loose, a subgroup could erase the entire primary gain before tripping).",
+    "statistic": "point-estimate paired delta only (C4_4 - C4_0, per family, reusing the same paired-task methodology as the primary delta). NOT CI-based: development has only ~12 tasks per family, too few for a per-family CI to be trustworthy; qualification's ~500 tasks give the point estimate itself enough stability.",
+    "implementation": "scripts/analyze_gate_c4.py family_regression() (D5_FAMILY_REGRESSION_THRESHOLD constant) computes and writes analysis.json.family_regression; scripts/certify_c4_run.py gate_family_regression recomputes independently from raw receipts and cross-checks against analysis.json, following the same 'never trust the report because it is present' discipline as every other derived metric. Applies to every split, not just qualification -- it is a general safety criterion, not a development-vs-later-split check (that is development_lineage's separate job).",
+    "verified_against_certified_development_bundle": "PASS. Worst family temporal_chain at -0.0208, well inside the -0.10 threshold. All 10 families individually improve or are flat; none regress. This was verified but is NOT part of the original 16/16 certificate (D5 did not exist yet when that bundle was certified) -- see certified_development_result.known_bundle_defect for the same non-retroactive-editing principle applied to the manifest bug.",
+    "commitment": "Frozen now, before any qualification run. Per the user's explicit sequence: do not touch this threshold, axis, or statistic after seeing qualification results."
+  },
+  "next_work": "C4 v2_1 DEVELOPMENT is certified: VALID_RUN=true, 16/16 gates, on RunPod (RTX 5090) at commit b0c9d6e96eb20a9dae8217977e9428da0372c926, protocol SHA b4e22a55...107. See certified_development_result for the full numbers; historical_development_signal is retained as lineage for the pre-repair measurement it reclassifies. The measured 2x2 shows deterministic packet ordering is neutral (E_order_S0 CI [-0.017,+0.025], E_order_S2c point estimate -0.0104) and S2c structural membership is the entire mechanism (E_membership_pool CI [+0.098,+0.227], clearly nonzero). Q(C4_4m)=0.3729 reproduced the 2026-08-07 historical figure to four decimals -- the pipeline is stable across independent runs and environments (T4 -> RTX 5090). D5 (family regression) is now frozen -- see d5_family_regression_criterion -- and verified PASS on the certified development bundle. QUALIFICATION HAS NOW RUN: see qualification_result. VALID_RUN=false, 17/18 gates, on Lightning AI (A100) at commit b3db3e5e1218b556af8cbb79b1c91040aa596df2, the exact frozen v2.1 config (development_lineage gate confirmed no development-side changes). The only failed gate is statistical_gate: primary delta +0.091 vs the pre-registered +0.15 threshold. D5 passed (worst family temporal_update at exactly -0.10, the threshold boundary -- not a comfortable margin). Independently re-verified by recomputing from raw receipts on a second machine; the substantive result reproduced exactly. Per comparison_to_development, the reader ceiling (C4_6) barely moved (0.9542 -> 0.939) while oracle-over-real-pool (C4_5) dropped sharply (0.7917 -> 0.4455), pointing to a generalization gap in retrieval/selection quality specifically, not a reader failure or a single-family collapse. This is the qualification finding the pre-registered plan exists to produce, not a defect to fix. Per the user's own framing: 'If certified C4 generalizes, you have a solid foundation... If it doesn't, you diagnose generalization before adding higher-level intelligence' -- this result says it does not fully generalize at the pre-registered bar, so the next decision (not yet made, and explicitly the user's call, not to be improvised) is whether to run OOD anyway for the full picture, treat this as sufficient signal to stop and diagnose the selection-generalization gap first, or something else. Do not treat +0.091 as passing, do not lower the threshold post hoc, and do not use this result to relitigate the C4_4 vs C4_4m decision -- that was already made on development data alone, before this run, per the pre-registered rule. C4_3o and C4_4m remain DIAGNOSTIC in the current frozen protocol and were correctly skipped for this split (qualification/ood only run the 7 primary arms). Do not optimize HRM recurrence: selection remains the dominant gap, now confirmed on held-out data too.",
+  "ordering_decomposition_to_measure": {
+    "cells": {
+      "C4_3": "S0 membership + pool order",
+      "C4_3o": "S0 membership + deterministic order",
+      "C4_4m": "S2c membership + pool order",
+      "C4_4": "S2c membership + deterministic order"
+    },
+    "effects": {
+      "E_order_S0": "Q(C4_3o) - Q(C4_3)",
+      "E_membership_pool": "Q(C4_4m) - Q(C4_3)",
+      "E_order_S2c": "Q(C4_4) - Q(C4_4m)",
+      "interaction": "[Q(C4_4) - Q(C4_4m)] - [Q(C4_3o) - Q(C4_3)]"
+    },
+    "question": "Whether deterministic packet ordering helps independently, hurts independently, only helps under S2c membership, or is neutral.",
+    "note": "Q(C4_4m) is expected to reproduce the historical 0.3729 cell, which makes it a consistency check on the rerun as well as a decomposition term."
+  },
   "ood_taxonomy": {
     "REFERENTIAL_OOD": {
       "mechanism": "identity resolution + multi-hop retrieval",

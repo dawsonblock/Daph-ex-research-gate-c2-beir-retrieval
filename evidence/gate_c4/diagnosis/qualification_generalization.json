@@ -1,0 +1,299 @@
+{
+  "arms": {
+    "baseline": "C4_0",
+    "oracle": "C4_5",
+    "primary": "C4_4"
+  },
+  "bundle": "evidence/gate_c4/full/qualification",
+  "diagnostic_only": "Not a gate. Does not decide VALID_RUN and writes no certified artifact. A fix motivated by these numbers must be developed and certified on development data, then confirmed on a fresh untouched split -- sizing a bet against these receipts is legitimate, tuning against them is not.",
+  "failure_decomposition": {
+    "D_exact_over_expansion": {
+      "available_evidence_keep_rate_by_identity_status": {
+        "AMBIGUOUS": {
+          "available": 2,
+          "dropped": 2,
+          "keep_rate": 0.0,
+          "kept": 0
+        },
+        "EXACT": {
+          "available": 122,
+          "dropped": 95,
+          "keep_rate": 0.2213,
+          "kept": 27
+        },
+        "RESOLVED": {
+          "available": 98,
+          "dropped": 8,
+          "keep_rate": 0.9184,
+          "kept": 90
+        }
+      },
+      "rank_1_drop_examples": [
+        {
+          "family": "entity_attribute",
+          "identity_status": "EXACT",
+          "required": [
+            "entity_attribute-0000/fact"
+          ],
+          "selected": [
+            "configuration_chain-0030/dead-end-1",
+            "dependency_chain-0011/dead-end-1",
+            "entity_attribute-0005/identity",
+            "dependency_chain-0043/link",
+            "distractor_heavy-0006/near-near_entity",
+            "distractor_heavy-0016/accepted"
+          ],
+          "task_id": "entity_attribute-0000"
+        },
+        {
+          "family": "entity_attribute",
+          "identity_status": "RESOLVED",
+          "required": [
+            "entity_attribute-0007/fact",
+            "entity_attribute-0007/identity"
+          ],
+          "selected": [
+            "entity_attribute-0007/identity",
+            "dependency_chain-0005/identity",
+            "ownership_chain-0001/identity",
+            "ownership_chain-0021/identity",
+            "temporal_chain-0037/identity",
+            "temporal_update-0023/identity"
+          ],
+          "task_id": "entity_attribute-0007"
+        },
+        {
+          "family": "entity_attribute",
+          "identity_status": "EXACT",
+          "required": [
+            "entity_attribute-0008/fact"
+          ],
+          "selected": [
+            "distractor_heavy-0029/identity",
+            "location_chain-0007/identity",
+            "location_chain-0035/identity",
+            "configuration_chain-0047/dead-end-0",
+            "dependency_chain-0016/link",
+            "dependency_chain-0016/value"
+          ],
+          "task_id": "entity_attribute-0008"
+        },
+        {
+          "family": "entity_attribute",
+          "identity_status": "EXACT",
+          "required": [
+            "entity_attribute-0010/fact"
+          ],
+          "selected": [
+            "configuration_chain-0034/link",
+            "entity_attribute-0017/identity",
+            "location_chain-0047/identity",
+            "dependency_chain-0026/link",
+            "dependency_chain-0026/rejected-0",
+            "dependency_chain-0026/rejected-1"
+          ],
+          "task_id": "entity_attribute-0010"
+        },
+        {
+          "family": "entity_attribute",
+          "identity_status": "EXACT",
+          "required": [
+            "entity_attribute-0020/fact"
+          ],
+          "selected": [
+            "configuration_chain-0012/dead-end-0",
+            "configuration_chain-0012/dead-end-1",
+            "dependency_chain-0047/identity",
+            "configuration_chain-0012/link",
+            "dependency_chain-0047/dead-end-1",
+            "dependency_chain-0047/link"
+          ],
+          "task_id": "entity_attribute-0020"
+        }
+      ],
+      "reads": "A large EXACT/RESOLVED gap in keep_rate supports routing the selector on information state rather than applying one global expansion policy. Cases where the dropped evidence was the retriever's own rank-1 candidate are the least ambiguous form of over-expansion: retrieval had already solved the task.",
+      "selector_drops_by_identity_status": {
+        "AMBIGUOUS": {
+          "n": 2,
+          "required_was_fusion_rank_1": 0
+        },
+        "EXACT": {
+          "n": 95,
+          "required_was_fusion_rank_1": 32
+        },
+        "RESOLVED": {
+          "n": 8,
+          "required_was_fusion_rank_1": 5
+        }
+      }
+    },
+    "buckets": {
+      "A_RETRIEVAL": {
+        "mean_quality": 0.0063,
+        "n": 278,
+        "share": 0.556
+      },
+      "B_SELECTOR": {
+        "mean_quality": 0.0071,
+        "n": 105,
+        "share": 0.21
+      },
+      "C_READER": {
+        "mean_quality": 0.5,
+        "n": 50,
+        "share": 0.1
+      },
+      "SUCCESS": {
+        "mean_quality": 1.0,
+        "n": 67,
+        "share": 0.134
+      }
+    },
+    "task_count": 500
+  },
+  "per_family_bottleneck": {
+    "configuration_chain": {
+      "bottleneck": "RETRIEVAL",
+      "candidate_ces": 0.34,
+      "n": 50,
+      "oracle_selected_ces": 0.34,
+      "retrieval_deficit": 0.66,
+      "selected_ces": 0.16,
+      "selector_headroom": 0.18
+    },
+    "dependency_chain": {
+      "bottleneck": "RETRIEVAL",
+      "candidate_ces": 0.34,
+      "n": 50,
+      "oracle_selected_ces": 0.34,
+      "retrieval_deficit": 0.66,
+      "selected_ces": 0.12,
+      "selector_headroom": 0.22
+    },
+    "distractor_heavy": {
+      "bottleneck": "SELECTOR",
+      "candidate_ces": 0.8,
+      "n": 50,
+      "oracle_selected_ces": 0.8,
+      "retrieval_deficit": 0.2,
+      "selected_ces": 0.6,
+      "selector_headroom": 0.2
+    },
+    "entity_attribute": {
+      "bottleneck": "SELECTOR",
+      "candidate_ces": 0.98,
+      "n": 50,
+      "oracle_selected_ces": 0.98,
+      "retrieval_deficit": 0.02,
+      "selected_ces": 0.52,
+      "selector_headroom": 0.46
+    },
+    "location_chain": {
+      "bottleneck": "RETRIEVAL",
+      "candidate_ces": 0.24,
+      "n": 50,
+      "oracle_selected_ces": 0.24,
+      "retrieval_deficit": 0.76,
+      "selected_ces": 0.08,
+      "selector_headroom": 0.16
+    },
+    "numeric_chain": {
+      "bottleneck": "RETRIEVAL",
+      "candidate_ces": 0.28,
+      "n": 50,
+      "oracle_selected_ces": 0.28,
+      "retrieval_deficit": 0.72,
+      "selected_ces": 0.2,
+      "selector_headroom": 0.08
+    },
+    "ownership_chain": {
+      "bottleneck": "RETRIEVAL",
+      "candidate_ces": 0.4,
+      "n": 50,
+      "oracle_selected_ces": 0.4,
+      "retrieval_deficit": 0.6,
+      "selected_ces": 0.24,
+      "selector_headroom": 0.16
+    },
+    "procedural_chain": {
+      "bottleneck": "RETRIEVAL",
+      "candidate_ces": 0.28,
+      "n": 50,
+      "oracle_selected_ces": 0.28,
+      "retrieval_deficit": 0.72,
+      "selected_ces": 0.18,
+      "selector_headroom": 0.1
+    },
+    "temporal_chain": {
+      "bottleneck": "RETRIEVAL",
+      "candidate_ces": 0.06,
+      "n": 50,
+      "oracle_selected_ces": 0.06,
+      "retrieval_deficit": 0.94,
+      "selected_ces": 0.0,
+      "selector_headroom": 0.06
+    },
+    "temporal_update": {
+      "bottleneck": "SELECTOR",
+      "candidate_ces": 0.72,
+      "n": 50,
+      "oracle_selected_ces": 0.72,
+      "retrieval_deficit": 0.28,
+      "selected_ces": 0.24,
+      "selector_headroom": 0.48
+    }
+  },
+  "schema_version": "c4-generalization-diagnosis-v1",
+  "subgroup_delta_entity_regime": {
+    "abbreviation": {
+      "mean_delta": 0.291,
+      "n": 250
+    },
+    "canonical": {
+      "mean_delta": -0.109,
+      "n": 250
+    }
+  },
+  "subgroup_delta_family": {
+    "configuration_chain": {
+      "mean_delta": 0.145,
+      "n": 50
+    },
+    "dependency_chain": {
+      "mean_delta": 0.1,
+      "n": 50
+    },
+    "distractor_heavy": {
+      "mean_delta": 0.145,
+      "n": 50
+    },
+    "entity_attribute": {
+      "mean_delta": 0.09,
+      "n": 50
+    },
+    "location_chain": {
+      "mean_delta": 0.06,
+      "n": 50
+    },
+    "numeric_chain": {
+      "mean_delta": 0.165,
+      "n": 50
+    },
+    "ownership_chain": {
+      "mean_delta": 0.19,
+      "n": 50
+    },
+    "procedural_chain": {
+      "mean_delta": 0.12,
+      "n": 50
+    },
+    "temporal_chain": {
+      "mean_delta": -0.005,
+      "n": 50
+    },
+    "temporal_update": {
+      "mean_delta": -0.1,
+      "n": 50
+    }
+  }
+}

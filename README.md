@@ -150,25 +150,33 @@ python scripts/diagnose_c4_composition.py
 
 ### Run on Google Colab (T4 GPU)
 
-The fastest way to run the full C4 conformant development rerun:
+The full C4 v2_1 fail-closed requalification:
 
 1. Go to [Google Colab](https://colab.research.google.com/)
 2. **Runtime → Change runtime type → T4 GPU + High-RAM**
-3. **File → Upload notebook** → upload [`scripts/colab_c4_conformant_run.ipynb`](scripts/colab_c4_conformant_run.ipynb)
+3. **File → Upload notebook** → upload [`notebooks/colab_c4_requalify.ipynb`](notebooks/colab_c4_requalify.ipynb)
 4. **Runtime → Run all**
 
-Or run the Python script directly:
+Or run the scripts directly:
 
 ```python
 !git clone https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval.git
 %cd Daph-ex-research-gate-c2-beir-retrieval
 !pip install -e ".[hrm]"
-!python scripts/colab_c4_conformant_run.py
+!python scripts/c4_freeze_environment.py --note 'colab T4 certifying run'
+!python scripts/colab_c4_requalify.py
 ```
 
-**Expected time on T4 GPU: ~20-30 minutes** (vs 3+ hours on CPU).
+**Expected time on T4 GPU: ~30-40 minutes** (vs 3+ hours on CPU).
 
-The run is resumable — if Colab disconnects, re-run picks up where it left off.
+The run is resumable, and fail-closed: it aborts on any protocol abort
+condition rather than producing a result that cannot be certified. It ends by
+writing `CERTIFICATION.json`, where `VALID_RUN` is the conjunction of every
+derived gate. The archive is named `UNCERTIFIED_*` unless `VALID_RUN` is true.
+
+The notebook contains **no scientific logic** — it only invokes the tested
+scripts. See [`notebooks/README.md`](notebooks/README.md) for why, and for the
+retired execution paths under `notebooks/superseded/`.
 
 ---
 
@@ -264,10 +272,20 @@ scripts/                      # 67 executable scripts
   run_gate_c4_bridge.py       #   C4-BRIDGE qualification gate
   analyze_gate_c4.py          #   C4 analyzer (CIs, flips, gap capture)
   diagnose_c4_composition.py  #   S2c selection diagnostic
-  colab_c4_conformant_run.*   #   Colab T4 GPU scripts
+  colab_c4_requalify.py       #   Authoritative C4 run (Colab T4, fail-closed)
+  certify_c4_run.py           #   VALID_RUN = conjunction of derived gates
+  c4_freeze_environment.py    #   Environment lock freeze/verify
+  c4_void_packets.py          #   Void with proof, preserve the data
+
+notebooks/                    # Launchers only — no scientific logic
+  colab_c4_requalify.ipynb    #   Invokes scripts/colab_c4_requalify.py
+  superseded/                 #   Retired execution paths (provenance only)
 
 configs/                      # Frozen protocol configurations
-  gate_c4_protocol.json       #   C4 protocol (frozen before measurement)
+  gate_c4_protocol_v2_1.json  #   C4 ACTIVE protocol (single ordering spec)
+  gate_c4_protocol_v2.json    #   C4 v2 (superseded: contradictory ordering)
+  gate_c4_protocol.json       #   C4 v1 (superseded)
+  c4_requirements.lock        #   C4 environment lock (null pins fail closed)
   gate_c3_protocol.json       #   C3 protocol
   gate_c2_protocol.json       #   C2 protocol
 
