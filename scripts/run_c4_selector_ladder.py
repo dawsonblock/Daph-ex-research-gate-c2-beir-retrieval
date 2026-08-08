@@ -39,6 +39,8 @@ from hrm_adaptive_memory.c4.fusion import max_reciprocal  # noqa: E402
 from hrm_adaptive_memory.c4.identity_stage import run_identity_stage  # noqa: E402
 from hrm_adaptive_memory.c4.query_stage import run_query_stage  # noqa: E402
 from hrm_adaptive_memory.c4.retrieval_stage import get_cached_backend  # noqa: E402
+from hrm_adaptive_memory.c4.packet_stage import run_packet_stage  # noqa: E402
+from hrm_adaptive_memory.c4.contracts import SelectionResult  # noqa: E402
 from hrm_adaptive_memory.c4.selector_v2 import (  # noqa: E402
     select_s1, select_s2, select_s3)
 from hrm_adaptive_memory.c4.contracts import RetrievalResult  # noqa: E402
@@ -91,6 +93,10 @@ def main() -> int:
     parser.add_argument("--split", default="development")
     parser.add_argument("--arm-for-queries", default="C4_4")
     parser.add_argument("--limit", type=int, default=0)
+    parser.add_argument("--with-hrm", action="store_true",
+                        help="also measure downstream Q (needs a GPU); the "
+                             "frozen criteria REQUIRE this before any arm may "
+                             "be promoted")
     parser.add_argument("--out", default=None)
     args = parser.parse_args()
 
@@ -101,6 +107,13 @@ def main() -> int:
     records = to_index_records(evidence)
     arm = ARMS[args.arm_for_queries]
     cand_budget, packet_budget = C4_CANDIDATE_BUDGET, C4_PRIMARY_PACKET_BUDGET
+
+    adapter = condition = None
+    if args.with_hrm:
+        from scripts.run_gate_c4 import _load_hrm, _run_hrm, _verify_answer, _compute_quality
+        print("--- Loading HRM ---")
+        adapter, condition = _load_hrm()
+        print(f"  loaded {adapter.spec.model_id}\n")
 
     print(f"=== B2 selector ladder ({protocol['protocol_id']}) ===")
     print(f"  split={args.split}  tasks={len(tasks)}  fusion=R1_max_reciprocal")
@@ -113,6 +126,10 @@ def main() -> int:
     packet_sizes = defaultdict(list)
     disconnected = defaultdict(int)
     receipts: list[dict[str, Any]] = []
+    q_by_arm: dict[str, list[float]] = defaultdict(list)
+    q_by_arm_family: dict[str, dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
+    q_by_arm_regime: dict[str, dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
+    correct_by_arm: dict[str, list[float]] = defaultdict(list)
     per_task_primary: dict[str, dict[str, float]] = defaultdict(dict)
     meta: dict[str, dict[str, str]] = {}
 
@@ -174,6 +191,24 @@ def main() -> int:
                              "protected_is_terminal":
                                  s1_receipt.protected_record_id in terminals,
                              **s1_receipt.summary()})
+
+        if args.with_hrm:
+            from scripts.run_gate_c4 import (
+                _run_hrm, _verify_answer, _compute_quality)
+            for name, selected in selections.items():
+                sel_result = SelectionResult(
+                    selector=name, selected_ids=tuple(selected),
+                    selector_policy=arm.selector_policy,
+                    identity_status=identity.status)
+                prompt, _packet = run_packet_stage(
+                    arm, task["question"], sel_result, texts, retrieval)
+                hrm = _run_hrm(adapter, condition, prompt)
+                _score, ok = _verify_answer(task, hrm.output)
+                q = _compute_quality(task, list(selected), evidence, ok)
+                q_by_arm[name].append(q)
+                correct_by_arm[name].append(1.0 if ok else 0.0)
+                q_by_arm_family[name][meta[task_id]["family"]].append(q)
+                q_by_arm_regime[name][meta[task_id]["entity_regime"]].append(q)
 
         available = required <= set(pool)
         for name, selected in selections.items():
@@ -247,6 +282,26 @@ def main() -> int:
             "n_exact_bridged": len(flat),
         }
     report["primary_criterion_exact_bridged"] = prim
+
+    if args.with_hrm:
+        def mean(v): return round(sum(v) / len(v), 4) if v else 0.0
+        report["downstream_q"] = {
+            name: {
+                "q": mean(q_by_arm[name]),
+                "correct": mean(correct_by_arm[name]),
+                "q_by_family": {f: mean(v) for f, v in sorted(q_by_arm_family[name].items())},
+                "q_by_entity_regime": {r: mean(v) for r, v in sorted(q_by_arm_regime[name].items())},
+            } for name in ARMS_ORDER if q_by_arm[name]}
+        base = report["downstream_q"].get("S0")
+        if base:
+            for name, row in report["downstream_q"].items():
+                row["q_delta_vs_S0"] = round(row["q"] - base["q"], 4)
+                row["worst_family_delta_vs_S0"] = min(
+                    ((f, round(row["q_by_family"][f] - base["q_by_family"].get(f, 0.0), 4))
+                     for f in row["q_by_family"]), key=lambda kv: kv[1], default=("-", 0.0))
+                row["worst_regime_delta_vs_S0"] = min(
+                    ((r, round(row["q_by_entity_regime"][r] - base["q_by_entity_regime"].get(r, 0.0), 4))
+                     for r in row["q_by_entity_regime"]), key=lambda kv: kv[1], default=("-", 0.0))
     report["s1_protection_receipts"] = receipts
 
     out = Path(args.out) if args.out else (
@@ -286,7 +341,21 @@ def main() -> int:
               f"{sum(r['protected_is_terminal'] for r in receipts)}/{len(receipts)}")
 
     print(f"\n  written: {out}")
-    print("\n  Downstream Q is a REQUIRED gate and is not measured here (needs GPU).")
+    if "downstream_q" in report:
+        print("\n  DOWNSTREAM Q (the remaining frozen gates):")
+        print(f"    {'arm':<5}{'Q':>8}{'correct':>10}{'dQ vs S0':>11}"
+              f"{'worst family':>28}{'worst regime':>26}")
+        for name in ARMS_ORDER:
+            row = report["downstream_q"].get(name)
+            if not row:
+                continue
+            wf, wr = row.get("worst_family_delta_vs_S0"), row.get("worst_regime_delta_vs_S0")
+            print(f"    {name:<5}{row['q']:>8.4f}{row['correct']:>10.4f}"
+                  f"{row.get('q_delta_vs_S0', 0):>+11.4f}"
+                  f"{f'{wf[0]}={wf[1]:+.3f}' if wf else '-':>28}"
+                  f"{f'{wr[0]}={wr[1]:+.3f}' if wr else '-':>26}")
+    else:
+        print("\n  Downstream Q is a REQUIRED gate and is not measured here (needs GPU).")
     return 0
 
 
