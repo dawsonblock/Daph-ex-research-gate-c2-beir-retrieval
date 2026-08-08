@@ -1,0 +1,134 @@
+{
+  "protocol_id": "c4_retrieval_fusion_v1",
+  "status": "PREREGISTERED_MECHANISMS__FREEZE_THRESHOLD_PENDING_OWNER_DECISION",
+  "created_utc": "2026-08-08T09:00:00Z",
+  "parent_protocol": {
+    "protocol_id": "c4_v2_1_reproducible_and_qualified",
+    "protocol_sha256": "b4e22a551532acd230157cb6a85505ffc2a9108778dd726d9c9b6057160165a4",
+    "relationship": "This is a SEPARATE retrieval-only protocol. It does not modify, supersede, or re-open C4 v2.1. The v2.1 certified development bundle and its NOT_CERTIFIED qualification bundle remain immutable, and hrm_adaptive_memory/c4/retrieval_stage.py's frozen behavior is untouched -- new fusion policies are additive and opt-in."
+  },
+
+  "objective": {
+    "primary": "rank survival of required evidence under a FIXED information budget",
+    "not": "generic recall. Sprint A established that required evidence is already ranked by the frozen retrievers on both splits (0 unranked of 29 development / 370 qualification misses); the failure is truncation at the candidate cutoff. Optimizing recall would therefore be optimizing a metric that is already saturated at depth.",
+    "candidate_budget": 50,
+    "budget_is_fixed_deliberately": "This experiment must not confound a fusion change with a budget change. Budget scaling is a separate factor tested later (Sprint B3), after the known selector pathology is repaired, because a larger pool changes the distractor burden on a selector already dropping 48% of available evidence."
+  },
+
+  "diagnosed_pathology": {
+    "name": "RRF consensus bonus displaces single-retriever-confident evidence",
+    "mechanism": "RRF scores a record as the SUM over constituent lists of 1/(k_rrf + rank), contributing 0 where a record is absent from a list. A record present in only one list therefore earns at most 1/(k_rrf + rank), while a record present in both earns roughly double. Algebraically, a single-list record at rank s is outranked by any both-list record at rank b whenever b < 2s + k_rrf. With the frozen k_rrf = 10, a record BM25 ranks 37th -- comfortably inside the budget of 50 -- is displaced by any record both retrievers rank better than 84th.",
+    "why_this_is_harmful_on_this_corpus": "Gate B established that lexical retrieval (BM25) DOMINATES the tested dense representation on this identifier-heavy corpus. The consensus bonus therefore systematically discards the stronger retriever's unique finds in favor of records the weaker retriever also happens to rank. The penalty is applied to exactly the signal that is more reliable here.",
+    "measured_cost": {
+      "development": "7 of 29 missing required records (24.1%) were inside a constituent retriever's top-50 and were displaced by fusion. Eliminating displacement alone recovers CES 75.8% -> 81.7% (+5.8pp) at unchanged k=50.",
+      "qualification": "88 of 370 (23.8%); BM25 held 61 of them at median rank 37, BGE 27 at median rank 42. Recovers CES 44.2% -> 55.0% (+10.8pp) at unchanged k=50.",
+      "source": "evidence/gate_c4/diagnosis/{development,qualification}_retrieval.json"
+    }
+  },
+
+  "arms": {
+    "R0": {
+      "name": "frozen_rrf",
+      "role": "BASELINE",
+      "definition": "Exactly the frozen C4 v2.1 fusion: RRF with k_rrf=10 over [bm25_ranked, bge_ranked], truncated to 50. Delegates to hrm_adaptive_memory.c4.retrieval_stage._rrf so the baseline cannot drift from the certified path.",
+      "parameters": "none beyond the frozen k_rrf=10"
+    },
+    "R1": {
+      "name": "max_reciprocal",
+      "role": "TREATMENT (minimal, parameter-free)",
+      "definition": "Identical to R0 except the per-record aggregation is MAX over constituent lists instead of SUM: score = max_i 1/(k_rrf + rank_i). A record's score becomes its single best constituent rank.",
+      "rationale": "This is the smallest possible edit that removes the diagnosed pathology, and it removes it exactly rather than compensating for it: with max aggregation there is no consensus bonus, so a record no constituent ranks highly can no longer outrank one that a constituent ranks highly. Retains k_rrf and the rank-reciprocal shape, so it is not a new scoring family.",
+      "parameters": "none beyond the frozen k_rrf=10",
+      "preregistered_prediction": "Should recover most of the displacement loss. If R1 alone captures the measured displacement-recoverable CES, R2 is unnecessary and must not be adopted."
+    },
+    "R2": {
+      "name": "reserved_slot_interleave",
+      "role": "TREATMENT -- FOUND NOT INDEPENDENT OF R1, see correction below",
+      "definition": "Deterministic round-robin over the constituent lists -- bm25[0], bge[0], bm25[1], bge[1], ... -- deduplicating on first occurrence, until the budget is filled.",
+      "original_rationale_WITHDRAWN": "This arm was preregistered on the claim that 'R1 keeps a global score ordering, R2 guarantees per-retriever depth', so comparing them would separate 'remove the consensus bonus' from 'guarantee constituent depth'. That claim is FALSE for two constituent lists and is withdrawn.",
+      "correction": "max_i 1/(k + rank_i) = 1/(k + min_i rank_i), so R1's descending-score order IS ascending min-rank order. Round-robin emits a record at the position equal to its min-rank, so R2 is the SAME ordering. They differ only in tie-breaking -- R1 by evidence_id, R2 by list position. Verified empirically over 300 randomized two-list trials at budget 50: identical membership in 264, membership differing in 36 (12%), and those differences arise purely from tie-breaks at the budget boundary. For two lists, guaranteeing constituent depth and removing the consensus bonus are the same intervention.",
+      "status": "RETAINED AS A TIE-BREAK SENSITIVITY CHECK ONLY. R2 must not be reported as independent corroboration of R1, and a 'both arms agree' statement would be circular.",
+      "parameters": "none"
+    },
+    "R3": {
+      "name": "oracle_fusion",
+      "role": "CEILING (diagnostic, never promotable)",
+      "definition": "Given the same two constituent lists, select the 50 candidates that maximize complete-evidence-set availability using oracle knowledge of required_evidence_ids; fill remaining slots in frozen RRF order.",
+      "rationale": "Upper bound on what ANY reordering of these constituent lists can achieve at k=50. If R3's CES is far below 100%, the residual loss is genuinely below the constituent retrievers' own depth and cannot be fixed by fusion at all -- it is a budget or ranking problem, which is exactly the Sprint B3 question. R3 bounds the fusion lane's total headroom.",
+      "never_promotable": "Uses oracle labels. Reported for headroom only, exactly as C4_5/C4_6 are in the main ladder."
+    }
+  },
+
+  "determinism_requirements": {
+    "tie_breaking": "Every arm must order by (-score, evidence_id) so equal scores resolve identically across processes and platforms. R2's round-robin is already positionally deterministic.",
+    "invariance": "Output must be invariant to PYTHONHASHSEED and to input candidate permutation, verified by the same discipline as scripts/c4_determinism_qualification.py.",
+    "no_randomness": "No sampling, no ties broken by dict/set iteration order."
+  },
+
+  "metrics": {
+    "primary": "CES@50 -- share of tasks whose COMPLETE required evidence set is present in the 50-candidate pool",
+    "secondary": [
+      "role recall @50 for IDENTITY / BRIDGE / TERMINAL_ANSWER / TEMPORAL_CURRENT",
+      "displacement_residual: required records still lost to fusion despite being inside a constituent top-50",
+      "mean rank of required evidence within the pool (rank survival margin)",
+      "pool composition change vs R0 (how many candidates differ, to show the intervention is small)"
+    ],
+    "grouped_intervals": "paired bootstrap CI on the CES delta vs R0, grouped by family and by source_cluster_id, matching the main protocol's methodology"
+  },
+
+  "subgroup_safety": {
+    "axes": ["family", "entity_regime"],
+    "rationale": "BOTH axes are monitored, unlike C4 v2.1's D5 which watched task-structure family only. The qualification run's real regression appeared on entity_regime (canonical -0.1090) -- the axis D5 explicitly declined to monitor -- while family passed. That gap must not be repeated.",
+    "requirement": "No family and no entity_regime may regress on CES@50 relative to R0 beyond a threshold frozen BEFORE this experiment is run.",
+    "threshold_status": "PENDING_OWNER_DECISION -- see freeze_criteria_pending below. Deliberately left unset rather than improvised."
+  },
+
+  "freeze_criteria_pending": {
+    "status": "NOT_YET_FROZEN",
+    "why_deferred": "The promotion threshold and the maximum acceptable subgroup regression are owner decisions, per the standing rule that cutoffs are not improvised and are not derived from the consumed qualification split. Sprint A's development-side counterfactual (+5.8pp CES recoverable from displacement) is available as an input to that decision.",
+    "must_be_set_before": "any arm is declared the winner or frozen for integration",
+    "explicitly_forbidden": [
+      "deriving the threshold from the failed qualification bundle",
+      "running the consumed qualification split to evaluate these arms",
+      "adjusting the threshold after seeing arm results"
+    ],
+    "note": "Running the arms on DEVELOPMENT and reporting effects is exploratory mechanism construction, which is what development data is for. Freezing a winner is the step that requires the frozen criterion."
+  },
+
+  "development_results_2026_08_08": {
+    "artifact": "evidence/gate_c4/diagnosis/development_fusion_ladder.json",
+    "split": "development",
+    "tasks": 120,
+    "ces_at_budget": {"R0": 0.7583, "R1": 0.7833, "R2": 0.7833, "R3_ceiling": 1.0},
+    "r1_vs_r0_paired": {"complete_in_both": 91, "gained": 3, "lost": 0,
+                        "incomplete_in_both": 26, "net": "+3 tasks = +2.5pp"},
+    "r1_is_pareto_safe": "R1 lost ZERO tasks that R0 had complete, on either safety axis, and no family or entity_regime regressed. It is a strict improvement -- small, but not a trade.",
+    "shortfall_vs_sprint_a_prediction": {
+      "predicted": "+5.8pp (Sprint A's counterfactual: 'if fusion displacement were eliminated')",
+      "achieved": "+2.5pp (43% of it)",
+      "cause": "STRUCTURAL, now understood. Under min-rank ordering, at most L*r records can have min-rank <= r, so survival is guaranteed only to depth B/L. For budget 50 and 2 lists that is depth 25. Sprint A measured the MEDIAN displaced record at BM25 rank 41 (development) and 37 (qualification) -- well beyond 25. Both lists' top-37 can supply up to 74 records competing for 50 slots, so min-rank reordering cannot reliably rescue the typical displaced record.",
+      "correction_to_sprint_a": "Sprint A's counterfactual is an upper bound on what ANY displacement fix could recover, not what a rank-symmetric reordering recovers. It implicitly assumed rescued records displace nothing, whereas a real policy reorders the whole pool. It should be read as headroom, not as a prediction for a specific rule."
+    },
+    "r3_ceiling_interpretation": "R3 reaches 100% CES at UNCHANGED budget 50, so the required evidence is reorderable into the pool -- the fusion lane's headroom is real and large (+24.2pp). R1/R2 simply do not capture it. The gap between R1 (+2.5pp) and R3 (+24.2pp) is what a better-designed fusion rule could still win at fixed k, before any budget change.",
+    "role_recall": {"R0": {"BRIDGE": 0.651, "IDENTITY": 1.0, "TEMPORAL_CURRENT": 0.833, "TERMINAL_ANSWER": 0.979},
+                    "R1": {"BRIDGE": 0.667, "IDENTITY": 1.0, "TEMPORAL_CURRENT": 0.833, "TERMINAL_ANSWER": 0.99},
+                    "R3": {"BRIDGE": 1.0, "IDENTITY": 1.0, "TEMPORAL_CURRENT": 1.0, "TERMINAL_ANSWER": 1.0}},
+    "no_winner_declared": "freeze_criteria_pending is still unset. R1's +2.5pp is reported, not adopted."
+  },
+
+  "candidate_next_arm_NOT_YET_RUN": {
+    "id": "R4",
+    "name": "asymmetric_constituent_protection",
+    "status": "PROPOSED__REQUIRES_OWNER_APPROVAL_BEFORE_RUNNING",
+    "mechanism_derived_rationale": "The guarantee-depth result (B/L = 25) says a rank-SYMMETRIC rule cannot protect a record at rank ~40 in one list. Protecting that depth requires spending the budget asymmetrically -- reserving more slots for one constituent than the other. Gate B independently established that lexical retrieval (BM25) DOMINATES the tested dense representation on this identifier-heavy corpus, which names WHICH constituent should be favored without reference to any C4 outcome.",
+    "why_this_is_not_outcome_tuning": "The rationale comes from (a) closed-form guarantee-depth algebra and (b) Gate B, a separate prior gate. It does not come from inspecting which arm scored better, and it does not use the consumed qualification split. It must still be preregistered with its reserved-slot parameter fixed BEFORE running, since that parameter is exactly the knob that could otherwise be tuned to the answer.",
+    "discipline_warning": "Adding arms after seeing earlier arms underperform is the pattern that becomes tuning if left unchecked. R4 should be approved and its parameter frozen explicitly, not appended silently."
+  },
+
+  "scope_limits": {
+    "no_hrm": "This experiment is retrieval-only and requires no generation. Final answer quality is not measured here; a CES gain is necessary but NOT sufficient for a mechanism win, because the selector may still discard recovered evidence.",
+    "no_budget_change": "k stays 50 in every arm.",
+    "no_selector_change": "Selection is out of scope; Sprint B2 handles it independently.",
+    "does_not_reopen_c4_v2_1": "No arm here may be described as a C4 v2.1 result."
+  }
+}
