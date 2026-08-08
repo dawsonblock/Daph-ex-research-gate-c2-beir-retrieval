@@ -53,6 +53,8 @@ from hrm_adaptive_memory.c4.metrics import (  # noqa: E402
 from hrm_adaptive_memory.c4.packet_ordering import ORDERING_POLICY_ID  # noqa: E402
 from hrm_adaptive_memory.c4.protocol_validation import (  # noqa: E402
     ProtocolViolation, load_and_validate_protocol)
+from hrm_adaptive_memory.c4.development_lineage import (  # noqa: E402
+    check_development_lineage)
 from hrm_adaptive_memory.c4.provenance import verify_results_hash  # noqa: E402
 from hrm_adaptive_memory.c4.receipts import assert_runtime_clean  # noqa: E402
 
@@ -736,11 +738,55 @@ def gate_results_hash(bundle: Path) -> Gate:
     return g.finalize()
 
 
+def gate_development_lineage(manifest: dict, dev_certification_path: Path,
+                             *, repo: Path) -> Gate:
+    """For non-development splits: prove this run did not silently diverge
+    from the development configuration that earned VALID_RUN.
+
+    Thin wrapper around hrm_adaptive_memory.c4.development_lineage's
+    check_development_lineage -- the same function
+    scripts/colab_c4_requalify.py calls EARLY (before any GPU work) so a
+    mismatch aborts before the run's cost is spent, not after it. This gate
+    is the authoritative, non-bypassable version of that same check, run
+    again at certification time regardless of what the launcher already did.
+
+    'No development-side changes' is enforced at the granularity this project
+    already uses to define a frozen scientific configuration: the protocol.
+    Any change to the actual mechanism -- selection, ordering, retrieval,
+    metrics -- requires a new protocol version by this project's own
+    convention (v2 -> v2_1 is the precedent), and protocol_validation.py
+    cross-checks the live code against the declared protocol on every run. So
+    protocol_sha256 equality is both necessary and, together with that
+    cross-check, a strong proxy for 'the mechanism has not changed'. The
+    second hard requirement is that development's certified commit must be an
+    ancestor of this run's commit (history was not rewritten or reset
+    backward). A full file-level diff against development's
+    SOURCE_SNAPSHOT.json is always attached as detail -- visible to any
+    reviewer -- but does not itself fail the gate: tooling and
+    certification-infrastructure files are expected to keep evolving between
+    splits, and hiding that diff would be worse than reporting it while
+    trusting the two hard checks above to catch what actually matters.
+    """
+    g = Gate("development_lineage")
+    g.detail["dev_certification_path"] = str(dev_certification_path)
+
+    result = check_development_lineage(
+        dev_certification_path=dev_certification_path,
+        this_protocol_sha256=manifest.get("protocol_sha256"),
+        repo=repo,
+    )
+    g.detail.update(result.summary())
+    for v in result.violations:
+        g.fail(v)
+    return g.finalize()
+
+
 # --- Orchestration ----------------------------------------------------------
 
 def certify(bundle: Path, protocol_path: Path, lock_path: Path,
             determinism_receipt: Path, run_tests: bool, tests_path: str,
-            expect_source_sha: str | None) -> dict:
+            expect_source_sha: str | None,
+            dev_certification_path: Path | None = None) -> dict:
     """Evaluate every gate and assemble the certificate."""
     gates: list[Gate] = []
     prelude: list[str] = []
@@ -781,6 +827,19 @@ def certify(bundle: Path, protocol_path: Path, lock_path: Path,
     gates.append(gate_derived_metric_agreement(arms, analysis))
     gates.append(gate_statistical(analysis))
     gates.append(gate_results_hash(bundle))
+
+    # Only non-development splits are required to prove lineage back to a
+    # certified development configuration. Development has nothing prior to
+    # compare itself against, and this must never add a 17th gate to the
+    # already-certified development bundle's own history.
+    if manifest.get("split") and manifest.get("split") != "development":
+        # bundle is e.g. evidence/gate_c4/full/qualification; the development
+        # bundle is the SIBLING evidence/gate_c4/full/development, so only
+        # ONE .parent step up from bundle, not two.
+        default_dev_cert = (bundle.parent / "development" /
+                            "certification" / "CERTIFICATION.json")
+        gates.append(gate_development_lineage(
+            manifest, dev_certification_path or default_dev_cert, repo=ROOT))
 
     gate_map = {g.name: g.to_dict() for g in gates}
     valid_run = bool(gates) and not prelude and all(g.passed for g in gates)
@@ -870,6 +929,12 @@ def main() -> int:
     parser.add_argument("--no-tests", action="store_true",
                         help="Do not run the suite. The test gate then FAILS.")
     parser.add_argument("--expect-source-sha", default=None)
+    parser.add_argument("--dev-certification", type=Path, default=None,
+                        help="Development CERTIFICATION.json to prove lineage "
+                             "against. Only used when this bundle's split is "
+                             "not 'development'. Defaults to "
+                             "<bundle>/../../development/certification/"
+                             "CERTIFICATION.json.")
     args = parser.parse_args()
 
     if not args.bundle.is_dir():
@@ -892,6 +957,7 @@ def main() -> int:
         run_tests=not args.no_tests,
         tests_path=args.tests_path,
         expect_source_sha=args.expect_source_sha,
+        dev_certification_path=args.dev_certification,
     )
 
     for name, result in certificate["gates"].items():

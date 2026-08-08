@@ -203,7 +203,13 @@ class TestRevisionStepFailsClosed:
         step2 = step2.split("Step 3", 1)[0]
         assert "source_changes" in step2
         assert 'abort("Step 2"' in step2
-        assert "WARNING" not in step2
+        # The original fail-open bug: printing this exact WARNING phrase and
+        # continuing past a dirty tree instead of aborting. A genuinely
+        # different, benign WARNING now also lives in step 2 (a best-effort
+        # early protocol read that gracefully defers to step 5's
+        # authoritative check on failure) -- that one is fine; this specific
+        # phrase, on a dirty tree, is not.
+        assert "working tree is dirty. Certification gate" not in step2
 
     def test_revision_mismatch_aborts(self, source):
         step2 = source.split("Step 2: Verify the source revision", 1)[1]
@@ -253,7 +259,7 @@ class TestDeclaredAbortSteps:
         assert "check=True" in block
 
     def test_full_run_aborts(self, source):
-        block = source.split("Step 12: Full HRM development run", 1)[1]
+        block = source.split("Step 12: Full HRM", 1)[1]
         block = block.split("Step 13", 1)[0]
         assert "check=True" in block
 

@@ -229,6 +229,43 @@ verifying it verifies the certificate too.
 
 ---
 
+## 4b. Running qualification (or ood)
+
+The launcher takes `--split`, defaulting to `development`. Once development
+is `VALID_RUN: true`, qualification runs the SAME script against the same
+commit (or a descendant of it):
+
+```python
+!python scripts/colab_c4_requalify.py \
+    --expected-commit <SHA> --split qualification
+```
+
+Two differences from development, both automatic:
+
+* **Diagnostic arms are skipped.** `C4_3o`/`C4_4m` explain `C4_4` on
+  development; per section 5 below, a later split must never be used to
+  choose between arms, so the launcher does not even run them.
+* **An early lineage check runs right after step 2, before any dependency
+  install or GPU work.** It requires `protocol_sha256` to exactly match what
+  development certified, and development's certified commit to be an
+  ancestor of the current one (history not rewritten). This is enforced at
+  protocol granularity, not git-commit equality: this project already
+  requires a new protocol version for any mechanism change (v2 → v2.1 is the
+  precedent), so a later commit containing only tooling fixes — like the
+  ones that produced `BUNDLE.sha256` and the manifest merge fix — is fine to
+  run qualification from. A full file-level diff against development's
+  `SOURCE_SNAPSHOT.json` is always printed for visibility; it is
+  informational, not a second gate. `certify_c4_run.py` re-checks the same
+  two hard conditions, authoritatively, at the end via its
+  `development_lineage` gate — the early check exists purely so a mismatch
+  aborts in seconds instead of after the full run.
+
+The task count, output paths (`evidence/gate_c4/full/qualification`), and
+archive name (`VALID_CONFORMANT_C4_V2_QUALIFICATION_RESULT.zip`) all follow
+`--split` automatically.
+
+---
+
 ## 5. Pre-registered interpretation
 
 Decide this **before** seeing the numbers.

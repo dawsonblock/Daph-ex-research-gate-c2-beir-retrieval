@@ -158,19 +158,61 @@ def parse_args(argv=None):
         help="Full or abbreviated (>=7 char) SHA of the revision to certify. "
              "Required: a certifying run must name the revision it certifies, "
              "and HEAD must match it.")
+    parser.add_argument(
+        "--split", default="development",
+        choices=["development", "qualification", "ood"],
+        help="Which split to run. Development is the default and is the "
+             "only split with nothing to prove lineage against. "
+             "qualification and ood both require a certified development "
+             "run first: this script verifies protocol_sha256 equality and "
+             "commit ancestry EARLY, before any GPU work, using the same "
+             "check certify_c4_run.py's development_lineage gate applies "
+             "again at the end.")
+    parser.add_argument(
+        "--dev-certification", type=Path, default=None,
+        help="Development CERTIFICATION.json to prove lineage against. Only "
+             "used when --split is not 'development'. Defaults to "
+             "evidence/gate_c4/full/development/certification/"
+             "CERTIFICATION.json.")
     return parser.parse_args(argv)
+
+
+def _task_count(split: str) -> int:
+    """Task count for a split, read directly from its corpus file.
+
+    Used for print messages and the determinism qualification's --tasks
+    value. Development is 120; qualification and ood are larger (500, 250),
+    so hardcoding 120 everywhere -- which the original script did -- would
+    silently under-report progress and under-run the determinism check on
+    any other split.
+    """
+    path = Path("data/hrm/controlled_gate_a_v4") / split / "oracle_tasks.jsonl"
+    if not path.is_file():
+        return 0
+    return sum(1 for line in path.read_text().splitlines() if line.strip())
 
 
 def main(argv=None):
     global EXPECTED_COMMIT
     args = parse_args(argv)
     EXPECTED_COMMIT = args.expected_commit.strip()
+    split = args.split
+    is_development = split == "development"
+    task_count = _task_count(split)
 
     banner("C4 Requalification Run — T4 GPU (fail-closed)")
     print(f"Revision:   {EXPECTED_COMMIT}")
+    print(f"Split:      {split} ({task_count} tasks)")
     print("Protocol:   C4 v2_1 (deterministic, reproducible, single ordering spec)")
     print(f"Steps:      {TOTAL_STEPS}")
-    print("Expected:   ~30-40 minutes on T4 GPU")
+    print("Expected:   ~30-40 minutes on T4 GPU"
+          if is_development else
+          f"Expected:   scales with task count relative to development's "
+          f"120 tasks (~{task_count / 120:.1f}x)")
+    if not is_development:
+        print(f"\n  NOTE: diagnostic arms (C4_3o, C4_4m) only run for "
+              f"--split development. Per the pre-registered runbook: do not "
+              f"use {split} to choose between C4_4 and C4_4m.")
 
     # -- Step 1: Verify GPU ------------------------------------------------
     step(1, "Verifying GPU...")
@@ -238,6 +280,53 @@ def main(argv=None):
               f"commit, push, and re-clone.")
     print(f"  Source tree: clean ({len(state.output_changes)} pre-existing "
           f"evidence change(s), which are expected)")
+
+    # Non-development splits must prove lineage back to a certified
+    # development run BEFORE any GPU work starts. certify_c4_run.py's
+    # development_lineage gate checks this again, authoritatively, at the
+    # very end -- this is purely a fail-fast optimization so a protocol
+    # mismatch aborts in seconds, not after burning the whole run (500+
+    # tasks x 7 arms is a lot more GPU time to waste than development's 120).
+    if not is_development:
+        from hrm_adaptive_memory.c4.development_lineage import (
+            check_development_lineage)
+        from hrm_adaptive_memory.c4.protocol_validation import (
+            load_and_validate_protocol as _peek_protocol)
+
+        dev_cert_path = (args.dev_certification or
+                         Path("evidence/gate_c4/full/development/"
+                              "certification/CERTIFICATION.json"))
+        try:
+            _protocol, live_protocol_sha, _checks = _peek_protocol(
+                Path("configs/gate_c4_protocol_v2_1.json"))
+        except Exception as exc:  # noqa: BLE001
+            live_protocol_sha = None
+            print(f"  WARNING: could not read live protocol for the early "
+                  f"lineage check ({exc}); step 5 will validate it properly.")
+
+        lineage = check_development_lineage(
+            dev_certification_path=dev_cert_path,
+            this_protocol_sha256=live_protocol_sha, repo=Path.cwd())
+        print(f"  Development certificate: {dev_cert_path}")
+        print(f"  Development commit:      {lineage.dev_commit}")
+        print(f"  Development protocol:    "
+              f"{(lineage.dev_protocol_sha256 or '')[:16]}...")
+        if not lineage.ok:
+            detail = "\n".join(f"    - {v}" for v in lineage.violations)
+            abort("Step 2",
+                  f"{split} cannot be pinned to development's certified "
+                  f"configuration:\n{detail}\n"
+                  f"  This is checked again, authoritatively, at "
+                  f"certification -- aborting now instead of after the GPU "
+                  f"run.")
+        drift = lineage.source_drift or {}
+        if drift.get("changed_count") or drift.get("missing_count"):
+            print(f"  Source drift from development (informational, not "
+                  f"blocking): {drift.get('changed_count', 0)} changed, "
+                  f"{drift.get('missing_count', 0)} missing -- see the "
+                  f"certificate's development_lineage gate for the full list.")
+        print("  Lineage OK: protocol matches, commit descends from "
+              "development's certified state.")
 
     # -- Step 3: Install dependencies from the lock ------------------------
     step(3, "Installing dependencies from the environment lock...")
@@ -331,23 +420,25 @@ def main(argv=None):
     print("  All tests passed.")
 
     # -- Step 7: Determinism qualification (ABORTS on failure) -------------
-    step(7, f"Pre-HRM determinism qualification (120 tasks, seeds {DETERMINISM_SEEDS})...")
+    step(7, f"Pre-HRM determinism qualification ({task_count} tasks, "
+            f"seeds {DETERMINISM_SEEDS})...")
 
     run(["python", "scripts/c4_determinism_qualification.py",
-         "--tasks", "120", "--seeds", DETERMINISM_SEEDS, "--arms", "C4_4"],
+         "--split", split, "--tasks", str(task_count),
+         "--seeds", DETERMINISM_SEEDS, "--arms", "C4_4"],
         "Determinism Qualification", timeout=1800, stream=True, check=True)
     print("  Every compared field identical across seeds.")
 
     # -- Step 8: Freeze deterministic packets ------------------------------
     step(8, "Freezing deterministic packets (immutable, hashed)...")
 
-    run(["python", "scripts/c4_freeze_packets.py", "--split", "development"],
+    run(["python", "scripts/c4_freeze_packets.py", "--split", split],
         "Freeze Packets", timeout=900)
 
     # -- Step 9: CPU-only dry run ------------------------------------------
     step(9, "CPU-only dry run (conformance gates)...")
 
-    run(["python", "scripts/run_gate_c4.py", "dry-run"],
+    run(["python", "scripts/run_gate_c4.py", "dry-run", "--split", split],
         "Dry Run (Conformance Gates)", timeout=1800, stream=True, check=True)
 
     # -- Step 10: C4-BRIDGE gate (informational) ---------------------------
@@ -365,38 +456,48 @@ def main(argv=None):
     os.environ["HRM_DTYPE"] = "float16"
     os.environ["C4_PROTOCOL"] = "v2_1"
 
-    run(["python", "scripts/run_gate_c4.py", "smoke"], "HRM Smoke Test",
-        timeout=1800, stream=True, check=True)
+    run(["python", "scripts/run_gate_c4.py", "smoke", "--split", split],
+        "HRM Smoke Test", timeout=1800, stream=True, check=True)
 
-    # -- Step 12: Full HRM development run ---------------------------------
-    step(12, "Full HRM development run (120 tasks x 7 arms = 840 generations)")
-    print("  Expected: ~15-25 minutes on T4. Resumable.\n")
+    # -- Step 12: Full HRM run -----------------------------------------
+    step(12, f"Full HRM {split} run ({task_count} tasks x 7 arms = "
+             f"{task_count * 7} generations)")
+    print(f"  Expected: scales with task count. Resumable.\n")
 
-    out_dir = Path("evidence/gate_c4/full/development")
+    out_dir = Path("evidence/gate_c4/full") / split
     if out_dir.exists():
         for arm in ARMS:
             fpath = out_dir / f"{arm}.jsonl"
             if fpath.exists():
                 lines = sum(1 for l in fpath.read_text().splitlines() if l.strip())
                 if lines:
-                    print(f"  {arm}: {lines}/120 existing results (resume key "
-                          f"decides reuse)")
+                    print(f"  {arm}: {lines}/{task_count} existing results "
+                          f"(resume key decides reuse)")
 
-    run(["python", "scripts/run_gate_c4.py", "full", "--split", "development"],
-        "Full Development Run", stream=True, check=True)
+    run(["python", "scripts/run_gate_c4.py", "full", "--split", split],
+        f"Full {split.capitalize()} Run", stream=True, check=True)
 
-    # -- Step 13: Diagnostic arms ------------------------------------------
+    # -- Step 13: Diagnostic arms (development only) ------------------------
     step(13, "Diagnostic arms C4_3o + C4_4m (ordering vs membership 2x2)...")
-    print("  Decomposes Q(C4_4) - Q(C4_3) into ordering, membership, interaction:")
-    print("    C4_3  = S0  membership + pool order")
-    print("    C4_3o = S0  membership + deterministic order")
-    print("    C4_4m = S2c membership + pool order")
-    print("    C4_4  = S2c membership + deterministic order")
-    print("  ~5 minutes on T4 (240 additional generations)\n")
 
-    run(["python", "scripts/run_gate_c4.py", "full", "--split", "development",
-         "--arms"] + DIAGNOSTIC_ARMS,
-        "Diagnostic Arms (ordering vs membership)", stream=True, check=True)
+    if not is_development:
+        print(f"  SKIPPED for --split {split}: C4_3o/C4_4m are DIAGNOSTIC, "
+              f"explaining C4_4 on development. Per the pre-registered "
+              f"runbook, {split} must not be used to choose between C4_4 "
+              f"and C4_4m -- that decision is made on development alone, "
+              f"before qualification runs.")
+    else:
+        print("  Decomposes Q(C4_4) - Q(C4_3) into ordering, membership, "
+              "interaction:")
+        print("    C4_3  = S0  membership + pool order")
+        print("    C4_3o = S0  membership + deterministic order")
+        print("    C4_4m = S2c membership + pool order")
+        print("    C4_4  = S2c membership + deterministic order")
+        print("  ~5 minutes on T4 (240 additional generations)\n")
+
+        run(["python", "scripts/run_gate_c4.py", "full", "--split", split,
+             "--arms"] + DIAGNOSTIC_ARMS,
+            "Diagnostic Arms (ordering vs membership)", stream=True, check=True)
 
     # -- Step 14: Analyzer (ABORTS on failure) -----------------------------
     step(14, "Running the analyzer (quality, gap capture, family CIs, flips)...")
@@ -433,13 +534,15 @@ def main(argv=None):
         print(f"  Device:           {manifest.get('device', 'N/A')}")
         print(f"  Created:          {manifest.get('created_utc', 'N/A')}")
 
+    summary_arms = ARMS + (DIAGNOSTIC_ARMS if is_development else [])
+
     print("\n  Per-arm receipt counts:")
-    for arm_id in ARMS + DIAGNOSTIC_ARMS:
+    for arm_id in summary_arms:
         arm_path = out_dir / f"{arm_id}.jsonl"
         if arm_path.exists():
             lines = [l for l in arm_path.read_text().splitlines() if l.strip()]
-            flag = "OK" if len(lines) == 120 else "INCOMPLETE"
-            print(f"    {arm_id}: {len(lines)}/120  [{flag}]")
+            flag = "OK" if len(lines) == task_count else "INCOMPLETE"
+            print(f"    {arm_id}: {len(lines)}/{task_count}  [{flag}]")
         else:
             print(f"    {arm_id}: MISSING")
 
@@ -452,7 +555,7 @@ def main(argv=None):
         # nothing, and formatted the primary_delta dict as a float (TypeError).
         arm_summary = analysis.get("arm_summary", {})
         print("\n  Quality scores:")
-        for arm_id in ARMS + DIAGNOSTIC_ARMS:
+        for arm_id in summary_arms:
             summary = arm_summary.get(arm_id)
             if summary is not None:
                 print(f"    {arm_id}: {summary['quality']:.4f} "
@@ -498,11 +601,14 @@ def main(argv=None):
     print("  artifacts. Tests are re-run inside certification against the exact")
     print("  bundle being certified.\n")
 
-    cert_ret = run(["python", "scripts/certify_c4_run.py",
-                    "--bundle", str(out_dir),
-                    "--protocol", "configs/gate_c4_protocol_v2_1.json",
-                    "--lock", "configs/c4_requirements.lock"],
-                   "Certification", timeout=2400, stream=True, check=False)
+    cert_cmd = ["python", "scripts/certify_c4_run.py",
+               "--bundle", str(out_dir),
+               "--protocol", "configs/gate_c4_protocol_v2_1.json",
+               "--lock", "configs/c4_requirements.lock"]
+    if not is_development:
+        cert_cmd += ["--dev-certification", str(dev_cert_path)]
+    cert_ret = run(cert_cmd, "Certification", timeout=2400, stream=True,
+                   check=False)
 
     cert_path = out_dir / "certification/CERTIFICATION.json"
     valid_run = False
@@ -524,8 +630,9 @@ def main(argv=None):
 
     # The archive name states the verdict. An uncertified bundle must never be
     # named VALID_CONFORMANT_*: the name is the thing people cite later.
-    stem = ("VALID_CONFORMANT_C4_V2_DEVELOPMENT_RESULT" if valid_run
-            else "UNCERTIFIED_C4_V2_DEVELOPMENT_RESULT")
+    split_upper = split.upper()
+    stem = (f"VALID_CONFORMANT_C4_V2_{split_upper}_RESULT" if valid_run
+            else f"UNCERTIFIED_C4_V2_{split_upper}_RESULT")
     zip_base = str(scratch_dir() / stem)
     shutil.make_archive(zip_base, "zip", "evidence/gate_c4")
     zip_path = f"{zip_base}.zip"
@@ -542,20 +649,37 @@ def main(argv=None):
 
     # -- Done ---------------------------------------------------------------
     if valid_run:
-        banner("COMPLETE — VALID_RUN = true")
+        banner(f"COMPLETE — {split} VALID_RUN = true")
+        if is_development:
+            next_steps = """  Next:
+    1. Commit the certificate and the environment lock.
+    2. Decide C4_4 vs C4_4m as primary if the ordering effect warrants it
+       (a protocol decision, not automatic -- see the ordering vs membership
+       decomposition above).
+    3. Run the untouched qualification split:
+       python scripts/colab_c4_requalify.py --split qualification \\
+           --expected-commit <THIS_COMMIT>
+    4. Then the OOD split.
+    5. Gate D decision across all three splits."""
+        else:
+            next_steps = f"""  This split is certified against development's configuration --
+  protocol and mechanism unchanged, commit descends from development's
+  certified state.
+
+  Do NOT use this split's numbers to choose between C4_4 and C4_4m; that
+  decision is made on development alone.
+
+  Next: if this was qualification, run ood next. If this was ood, all
+  three splits are complete -- move to the Gate D promotion decision."""
         print(f"""
   Certified bundle: {zip_path}
   Certificate:      {cert_path}
 
-  Next:
-    1. Commit the certificate and the environment lock.
-    2. Run the untouched qualification split.
-    3. Then the OOD split.
-    4. Gate D decision across all three splits.
+{next_steps}
 """)
         return 0
 
-    banner("COMPLETE — VALID_RUN = false (NOT CERTIFIED)")
+    banner(f"COMPLETE — {split} VALID_RUN = false (NOT CERTIFIED)")
     print(f"""
   The measurement finished, but the run is NOT certified.
 
