@@ -1,0 +1,180 @@
+{
+  "LEAKAGE_CORRECTION_APPLIED": {
+    "clause_removed": "AND record_kind is answer-support-compatible",
+    "replacement": "Eligibility is decided from record CONTENT plus the parsed target relation and identity.canonical only. Nothing else is read.",
+    "runtime_signal_audit": {
+      "forbidden": [
+        "record_kind",
+        "_oracle_metadata",
+        "proof_edges",
+        "latent_bridge",
+        "latent_subject",
+        "answer_node",
+        "required_evidence_ids",
+        "oracle_evidence_ids",
+        "answer",
+        "family",
+        "entity_regime"
+      ],
+      "permitted": [
+        "record content text",
+        "extract_target_relation(question) -- parsed from the question, verified equal to the oracle relation on 120/120 development tasks",
+        "identity.canonical / identity.surface from the I3 stage",
+        "fusion score and rank"
+      ]
+    },
+    "why": "record_kind values in this corpus are generator answer-key labels: 'required', 'required_identity', 'required_current', 'direct_answer', 'dead_end_link', 'rejected_candidate', 'superseded', 'near_duplicate_*'. A runtime selector reading 'required' would be reading the answer key. No existing C4 selector touches evidence metadata -- s0/s2c/s2 receive only candidate ids and content text -- so using it would also be a new and undisclosed information channel."
+  },
+  "OPEN_DECISION_BEFORE_ANY_ARM_RUNS": {
+    "alternative_if_correction_is_rejected": "Keep the original rule but restate S1's hypothesis honestly as covering UNBRIDGED EXACT tasks only (n=18 development, 5 defect cases), and expect no material aggregate movement. Then S2's connectivity constraint becomes the real primary hypothesis and should be promoted to S1's position in the ladder.",
+    "issue": "The eligibility rule as originally specified cannot fire on the population that carries the defect.",
+    "measured_fire_rate_on_development": {
+      "authoritative_source": "evidence/gate_c4/diagnosis/development_selector_eligibility.json, produced by scripts/diagnose_c4_selector_eligibility.py",
+      "bridged_tasks": "18/84 = 21.4%",
+      "consequence_if_frozen_as_written": "A knowingly-underpowered arm on the majority of the defect -- the same failure mode as Sprint B1's R4, except foreseen in advance rather than discovered afterwards, which is what makes freezing it as-is the worse choice.",
+      "correction_note": "An earlier ad-hoc check reported 0% on bridged tasks. That check was WRONG: it evaluated the rule using the ORACLE canonical surface instead of identity.canonical from the I3 stage, which is the signal the rule would actually see at runtime. The committed script uses the runtime signal and is authoritative. Recording the error rather than quietly replacing the number.",
+      "coverage_of_the_defect_population": "The EXACT defect population is 39 cases on development, 34 of them bridged (87.2%). At a 21.4% bridged fire rate the rule reaches roughly 7 of those 34, plus about 5 unbridged: on the order of 12 of 39 defect cases, leaving most of the measured defect untouched.",
+      "reason_for_the_gap": "A bridged task's terminal-answer record is anchored on the BRIDGE entity, not the query subject. Worked example, ownership_chain-0000: question 'Which ownership tier applies to Sparrow intake manifold?', parsed relation 'ownership tier', terminal record '- updated Finch control module: ownership tier now 3529'. The record carries the relation and the bridge but never the query subject, so canonical_subject_match fails. The 21.4% that do fire are bridged tasks where the runtime canonical happens to appear in the terminal record anyway.",
+      "unbridged_tasks": "36/36 = 100%"
+    },
+    "originally_specified_rule": "eligible iff canonical_subject_match AND target_relation_match AND record_kind is answer-support-compatible; tie-break fusion score then record_id",
+    "proposed_correction": {
+      "name": "bridge_aware_anchor",
+      "relationship_to_S2": "This makes the connectivity idea part of the PRIMARY hypothesis rather than an increment, because the defect lives in bridged tasks. Under the original ladder, S1 would be near-inert and S2 would carry the effect, which would misattribute the mechanism.",
+      "rule": "eligible iff target_relation_match AND (canonical_subject_match OR bridge_anchor_match), where bridge_anchor_match means the record's subject is an entity that appears as the TARGET of another candidate record whose subject matches the canonical query subject -- i.e. the record is reachable from the query subject in one hop through the candidate pool itself.",
+      "why_it_stays_non_leaking": "Reachability is computed over candidate-pool CONTENT via the existing V4 entity extractor, using only the parsed target relation and identity.canonical. It never reads proof_edges, latent_bridge, answer_node, required_evidence_ids, or record_kind."
+    },
+    "requires": "explicit owner choice; no arm is run until this is resolved and frozen"
+  },
+  "arms": {
+    "S0": {
+      "definition": "frozen current selector: s2c_with_s0_fallback, unchanged",
+      "promotable": false,
+      "role": "BASELINE"
+    },
+    "S1": {
+      "definition": "S0 plus terminal-answer protection when identity_status == EXACT: reserve ONE packet slot for the highest-ranked eligible direct-answer record, then fill the remaining budget with unchanged S2c. If no eligible record exists, fall back to S0 behavior with no change at all.",
+      "hypothesis": "When identity is EXACT, protecting the strongest direct target-relation record before structural selection prevents S2c from displacing an answer the retriever already found.",
+      "role": "PRIMARY TREATMENT"
+    },
+    "S2": {
+      "definition": "S1 plus a connectivity constraint: every selected non-identity structural record must connect to the canonical query subject or to an already-selected bridge, else it is rejected and the slot goes to the next candidate.",
+      "must_show": "incremental value over S1, not parity",
+      "role": "INCREMENT"
+    },
+    "S3": {
+      "definition": "S2 plus temporal-current precedence: where two candidates describe the same subject and relation across time, prefer the currently-valid record. Precedence is read from record content, never from embedding similarity.",
+      "must_show": "incremental value over S2, not parity",
+      "role": "INCREMENT"
+    },
+    "S4": {
+      "definition": "oracle selector over the same candidate pool (existing C4_5 behavior)",
+      "promotable": false,
+      "purpose": "bounds what any selector could achieve on these pools",
+      "role": "CEILING"
+    }
+  },
+  "created_utc": "2026-08-08T10:00:00Z",
+  "fixed_conditions": {
+    "candidate_budget": 50,
+    "corpus": "development split only for construction; the consumed qualification split is never used to select or evaluate an arm",
+    "fusion": "R1_max_reciprocal",
+    "identity_stage": "frozen, unchanged",
+    "packet_budget": 6,
+    "packet_budget_invariant": "PROTECTED EVIDENCE CONSUMES ONE SLOT FROM THE SAME FIXED PACKET BUDGET. Packet size never increases. Without this, a gain could come from simply giving HRM more evidence rather than from better selection.",
+    "query_construction": "frozen, unchanged",
+    "retrievers": "frozen, unchanged"
+  },
+  "frozen_measurements": [
+    "selected complete-evidence-set retention (primary selector metric)",
+    "downstream Q versus S0",
+    "answer-support retention overall and split by EXACT / RESOLVED",
+    "canonical Q and abbreviation Q separately",
+    "identity retention",
+    "bridge retention",
+    "temporal-current retention",
+    "disconnected-packet rate",
+    "per-family Q regression",
+    "per-entity_regime Q regression",
+    "packet size (must remain within the fixed packet budget)"
+  ],
+  "measured_defect_being_repaired": {
+    "REFRAMED_BY_PRE_FREEZE_MEASUREMENT": {
+      "consistency_with_role_retention": "Matches the earlier role-retention result: identity retention 1.000 and bridge retention 1.000 while answer-support retention is 0.529 (development) and 0.278 (qualification). S2c reliably assembles identity and bridge records and drops the terminal answer.",
+      "cross_tabulation_development": {
+        "EXACT_bridged": {
+          "dropped": 34,
+          "keep_rate": 0.128,
+          "kept": 5
+        },
+        "EXACT_unbridged": {
+          "dropped": 5,
+          "keep_rate": 0.722,
+          "kept": 13
+        },
+        "RESOLVED_bridged": {
+          "dropped": 1,
+          "keep_rate": 0.95,
+          "kept": 19
+        },
+        "RESOLVED_unbridged": {
+          "dropped": 2,
+          "keep_rate": 0.882,
+          "kept": 15
+        }
+      },
+      "finding": "The defect is not 'EXACT identity' as such. It is EXACT AND BRIDGED. Measured on development, keep-rate of AVAILABLE required evidence:",
+      "why_this_matters": "RESOLVED+bridged is essentially healthy at 95%, so multi-hop structure alone is not the problem. The failure is concentrated specifically in EXACT+bridged at 12.8%. 34 of the 39 EXACT-identity drops on development (87.2%) are bridged tasks."
+    },
+    "replicated_across_both_splits": {
+      "canonical_below_baseline_on_qualification": "canonical C4_4 Q 0.081 vs C4_0 0.190, i.e. -0.1090 -- S2c performs worse than no mechanism at all on canonical tasks",
+      "definition": "share of tasks whose required evidence WAS in the candidate pool and survived selection",
+      "exact_keep_rate": {
+        "development": 0.316,
+        "qualification": 0.221
+      },
+      "resolved_keep_rate": {
+        "development": 0.919,
+        "qualification": 0.918
+      }
+    }
+  },
+  "parent_protocols": {
+    "c4_retrieval_fusion_v1": {
+      "frozen_outcome": "RETRIEVAL_VNEXT = R1_max_reciprocal",
+      "relationship": "Every S-arm here uses R1 fusion, so candidate pools are IDENTICAL across S0-S4 and the only thing varying is selector treatment. Budget scaling (Sprint B3) is deliberately NOT combined."
+    },
+    "c4_v2_1": {
+      "protocol_sha256": "b4e22a551532acd230157cb6a85505ffc2a9108778dd726d9c9b6057160165a4",
+      "relationship": "Not reopened. The certified development bundle and the NOT_CERTIFIED qualification bundle stay immutable."
+    }
+  },
+  "promotion_criteria_S1": {
+    "ces": "improve or preserve overall selected complete-set retention",
+    "entity_regime_safety": "must not reduce any entity_regime Q by more than 0.05",
+    "family_safety": "must not reduce any family Q by more than 0.05",
+    "frozen_before_any_arm_runs": true,
+    "mechanical": [
+      "packet budget unchanged",
+      "deterministic replay PASS",
+      "zero forbidden-signal access",
+      "identical candidate pools across arms"
+    ],
+    "primary": "materially improve EXACT answer-support retention versus S0",
+    "resolved_safety": "must not reduce RESOLVED answer-support retention by more than 0.05",
+    "role_preservation": "identity retention and bridge retention preserved within 0.01",
+    "statistical": "paired grouped bootstrap LCB > 0 for the primary selector metric"
+  },
+  "promotion_criteria_S2_S3": {
+    "requirement": "incremental value over the preceding arm, not merely parity",
+    "rule": "an increment that only matches the arm below it is NOT adopted -- the simpler mechanism wins ties"
+  },
+  "protocol_id": "c4_selector_v1",
+  "sprint": "B2 -- selector repair",
+  "status": "PREREGISTERED__ONE_DECISION_OPEN_BEFORE_ANY_ARM_RUNS",
+  "stop_rule": {
+    "adoption_is_development_only": "Any arm frozen here is a development-side mechanism decision. It is confirmed later on a FRESH untouched split, never on the consumed qualification split.",
+    "if_S1_fails": "record descriptively, do not iterate variants inside this protocol",
+    "no_mechanism_edits_after_results_begin": "Once S0-S4 start, no arm definition, eligibility rule, threshold or measurement may be changed. A defect discovered mid-run is recorded and addressed in a successor protocol."
+  }
+}
