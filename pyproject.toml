@@ -19,7 +19,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=7.0"]
 pretrained = ["transformers>=4.40"]
-hrm = ["transformers>=5.9.0", "huggingface-hub>=0.34"]
+hrm = ["transformers>=5.9.0", "huggingface-hub>=0.34", "accelerate>=0.34"]
 
 [tool.setuptools.packages.find]
 where = ["."]
