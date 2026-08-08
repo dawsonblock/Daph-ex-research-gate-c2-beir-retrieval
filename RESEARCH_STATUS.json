@@ -169,6 +169,87 @@
     },
     "note": "This certifies the QUALIFICATION split only, run exactly against development's frozen, certified v2.1 configuration (development_lineage gate PASS: protocol_sha256 equality plus commit-ancestry verified). Per the pre-registered rule, this result was NOT used to choose between C4_4 and C4_4m -- that decision was already made on development data alone, before this run. Gate D promotion decision remains pending OOD."
   },
+  "qualification_failure_decomposition": {
+    "status": "DIAGNOSTIC_ONLY__NOT_A_GATE",
+    "produced_by": "scripts/diagnose_c4_generalization.py (no GPU; reads frozen receipts)",
+    "artifact": "evidence/gate_c4/diagnosis/qualification_generalization.json",
+    "method": "Every task lands in exactly one bucket of a mutually exclusive, exhaustive chain following the pipeline's own stages: A_RETRIEVAL (required evidence never reached the candidate pool), B_SELECTOR (it was in the pool and the selector dropped it), C_READER (it survived into the packet and HRM still answered wrong), SUCCESS. Verified exhaustive/exclusive by test, including the case where a wrong-evidence task happens to answer correctly (still counted against retrieval, so A cannot be understated).",
+    "qualification_500_tasks": {
+      "A_RETRIEVAL": {"n": 278, "share": 0.556},
+      "B_SELECTOR": {"n": 105, "share": 0.21},
+      "C_READER": {"n": 50, "share": 0.1},
+      "SUCCESS": {"n": 67, "share": 0.134}
+    },
+    "development_120_tasks": {
+      "A_RETRIEVAL": {"n": 26, "share": 0.217},
+      "B_SELECTOR": {"n": 42, "share": 0.35},
+      "C_READER": {"n": 17, "share": 0.142},
+      "SUCCESS": {"n": 35, "share": 0.292}
+    },
+    "headline_finding_bottleneck_inversion": "The dominant bottleneck INVERTED between splits. On development the selector was the largest lane (35.0% vs retrieval 21.7%); on qualification retrieval dominates (55.6% vs selector 21.0%). Development work would therefore naturally have chased the selector, because that is where the visible headroom was, while the thing that actually broke generalization was retrieval -- which looked healthy on development (candidate CES 0.7833) and roughly halved on qualification (0.4440). This is the single most useful output of the qualification run: it says the next sprint's priority is NOT what development's own numbers would have suggested.",
+    "evidence_availability": {
+      "candidate_ces_development": 0.7833,
+      "candidate_ces_qualification": 0.444,
+      "delta": -0.3393,
+      "c4_5_q_drop": -0.3462,
+      "note": "The C4_5 (oracle selection over the real pool) quality drop tracks the candidate-availability drop almost one-for-one (-0.3462 vs -0.3393), which is why the generalization loss is attributed upstream of selection rather than to the selector alone."
+    },
+    "selector_efficiency_did_not_collapse": {
+      "retained_fraction_of_available_development": 0.5532,
+      "retained_fraction_of_available_qualification": 0.527,
+      "note": "S2c's efficiency at preserving AVAILABLE complete sets is nearly unchanged (55.3% -> 52.7%). Most of its absolute degradation is inherited from a much worse input pool, not from the selector getting worse. This is what separates 'retrieval regressed' from 'selector regressed'."
+    },
+    "exact_identity_over_expansion": {
+      "finding": "The selector's failure is concentrated almost entirely on tasks whose identity was already EXACT. Keep-rate of AVAILABLE required evidence, qualification: EXACT 27/122 = 22.1%, RESOLVED 90/98 = 91.8%. Development shows the same asymmetry: EXACT 18/57 = 31.6%, RESOLVED 34/37 = 91.9%.",
+      "strongest_form": "32 of the 95 EXACT-identity drops on qualification dropped evidence the retriever had ranked FIRST in fusion. Retrieval had already solved those tasks and the selector discarded the answer.",
+      "worked_example": "qualification entity_attribute-0000: identity EXACT, required evidence entity_attribute-0000/fact ranked #1 in fusion and present in the candidate pool; S2c selected six records (dead-ends, links, near-entity distractors from unrelated tasks) and none of them the answer. Q=0.0, correct=false.",
+      "subgroup_signature": "Q by entity_regime, qualification: abbreviation C4_3 0.0720 -> C4_4 0.2970 (+0.2250); canonical C4_3 0.2150 -> C4_4 0.0810 (-0.1340). Against the no-mechanism baseline the canonical delta is -0.1090, i.e. on canonical tasks S2c performs WORSE than doing nothing at all. Development already showed the same sign at smaller magnitude (canonical -0.0500).",
+      "hypothesis_this_motivates": "Structural expansion is over-aggressive when the subject needs no resolution: with EXACT identity and a high-ranked candidate directly expressing the target relation, the answer-bearing record should be preserved before structural expansion fills the remaining budget. For RESOLVED/abbreviation cases the broader S2c behavior is clearly helping (+0.2250) and should be kept. That is an information-state-routed selector, not a global policy change.",
+      "critically_developable_without_qualification": "The asymmetry is present in DEVELOPMENT data at essentially the same magnitude (EXACT 31.6% vs RESOLVED 91.9% keep-rate). The selector fix can therefore be designed, implemented and certified entirely on development data, and confirmed later on a fresh untouched split -- there is no need, and no license, to tune against these qualification receipts.",
+      "bounded_ceiling_estimate": {
+        "population": "EXACT identity + single required fact + fact present in pool: n=75 of 500",
+        "dropped_by_s2c": 51,
+        "mean_q_when_dropped": 0.0147,
+        "mean_q_when_kept": 0.7083,
+        "max_primary_delta_gain": 0.0707,
+        "hypothetical_ceiling": 0.1617,
+        "threshold": 0.15,
+        "caveat": "An UPPER BOUND on what this one failure mode is worth, not a prediction, and computed on qualification receipts purely to size the research bet. It says a partial fix could plausibly clear +0.15, which is why the selector lane is worth opening. It is NOT permission to iterate against these 500 tasks until the number passes."
+      }
+    },
+    "two_independent_research_lanes": {
+      "retrieval_dominated_families": {
+        "families": {"temporal_chain": 0.06, "location_chain": 0.24, "numeric_chain": 0.28, "procedural_chain": 0.28, "configuration_chain": 0.34, "dependency_chain": 0.34, "ownership_chain": 0.4},
+        "metric": "candidate_ces on qualification",
+        "note": "temporal_chain has the full evidence set in the candidate pool for only 6% of tasks. No selector can fix that; it is a retrieval/representation problem and the sharpest available diagnostic for the retrieval lane."
+      },
+      "selector_dominated_families": {
+        "families": {"temporal_update": {"candidate_ces": 0.72, "selected_ces": 0.24, "selector_headroom": 0.48}, "entity_attribute": {"candidate_ces": 0.98, "selected_ces": 0.52, "selector_headroom": 0.46}, "distractor_heavy": {"candidate_ces": 0.8, "selected_ces": 0.6, "selector_headroom": 0.2}},
+        "note": "entity_attribute has near-perfect availability (0.98) and the selector still keeps the needed evidence only 52% of the time. Pure selector headroom, no retrieval work required to exploit it."
+      },
+      "conclusion": "These are two independent problems with different owners and different experiments, not one 'C4 fix'. Retrieval is the larger lane by task count (55.6% vs 21.0%) and can be worked without HRM at all (retrieval-only CES@k / required-evidence recall on frozen pools). The selector lane is smaller but has the cleaner, better-localized hypothesis."
+    },
+    "reader_is_not_the_constraint": {
+      "c4_6_development": 0.9542,
+      "c4_6_qualification": 0.939,
+      "c4_6_accuracy_development": 0.9083,
+      "c4_6_accuracy_qualification": 0.878,
+      "note": "Given correct evidence the reader generalizes nearly unchanged from 120 to 500 held-out tasks, and only 10.0% of qualification tasks fail with complete evidence in the packet. Do not spend effort on HRM recurrence or reader capacity; the memory system around it is the constraint."
+    },
+    "identity_is_not_the_constraint": {
+      "qualification_status_counts": {"EXACT": 250, "RESOLVED": 245, "AMBIGUOUS": 5, "UNRESOLVED": 0},
+      "note": "99% EXACT or RESOLVED, so S2c was active on 495/500. The I3 mechanism from Gate C3 is doing its job; 'identity failed on qualification' is ruled out as an explanation. The 5 AMBIGUOUS cases are the designed abstain path."
+    }
+  },
+  "d5_axis_limitation_observed_after_qualification": {
+    "status": "RECORDED__FROZEN_CRITERION_NOT_CHANGED",
+    "verdict_neutral": "This observation changes NOTHING about the qualification verdict. statistical_gate already failed, so VALID_RUN=false regardless of D5. Recording it therefore cannot be self-serving in either direction, which is exactly why it is safe to state plainly.",
+    "what_happened": "D5 passed as frozen: on the task-structure family axis the worst family is temporal_update at exactly -0.1000, which is not worse than the -0.10 threshold and so correctly passes. Applying the SAME -0.10 threshold to entity_regime instead gives canonical at -0.1090, which would have failed.",
+    "why_this_matters": "d5_family_regression_criterion's own recorded rationale identified entity_regime as the axis where a regression had already been observed in development (-0.029, judged acceptable at the time) and explicitly rejected it as the monitored axis because it 'would need separate, not-yet-built code'. The qualification regression then materialized on precisely that unmonitored axis, at -0.1090, and the failure decomposition independently traced it to a concrete mechanism (EXACT-identity over-expansion) rather than noise.",
+    "temporal_update_boundary": "Separately, temporal_update landing at exactly the -0.10 boundary is a technical pass, not a comfortable one. Treat temporal-update handling as a real warning signal, not a cleared check.",
+    "explicitly_not_done": "The frozen criterion was NOT edited, re-axed, or re-thresholded after seeing results, per the pre-registered commitment ('do not touch this threshold, axis, or statistic after seeing qualification results'). Retro-fitting a gate to a result it has already seen would destroy its evidential value.",
+    "carry_forward": "The NEXT protocol version's promotion gates should monitor BOTH axes (task-structure family AND entity_regime), decided and frozen before that version's qualification run. That is a forward-looking design change for a new protocol, not a retroactive amendment to this one."
+  },
   "historical_development_signal": {
     "C4_4_reported_q": 0.3729,
     "arm_label_at_measurement": "C4_4 (declared: S2c membership + deterministic packet ordering)",
