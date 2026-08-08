@@ -47,6 +47,17 @@ COMPARED_FIELDS: list[tuple[str, str]] = [
     ("prompt_hash", "identical prompt hashes"),
 ]
 
+# identity_canonical is legitimately blank when identity resolution abstains
+# (status UNRESOLVED or AMBIGUOUS -- see identity_stage.py's "never guess"
+# rule). A blank canonical is therefore not evidence of a skipped/broken
+# computation the way a blank hash would be: identity_status (always a
+# non-blank string) already witnesses that resolution ran, and _diff() still
+# compares identity_canonical for cross-seed equality regardless of this
+# exemption. Every other field has no legitimate blank state, so a blank
+# there really would let two seeds that both skipped the computation compare
+# equal and manufacture a false pass.
+FIELDS_ALLOWING_BLANK = {"identity_canonical"}
+
 # The replay body. Every value it records is one of COMPARED_FIELDS, so the
 # payload and the comparison cannot drift apart.
 _REPLAY_TEMPLATE = '''
@@ -120,6 +131,8 @@ def _assert_payload_complete(records: list[dict]) -> None:
             f"Replay payload is missing compared fields {missing}. The summary "
             f"would claim invariance that was never measured.")
     for key, _ in COMPARED_FIELDS:
+        if key in FIELDS_ALLOWING_BLANK:
+            continue
         blank = [r["task_id"] for r in records if r[key] in ("", [], None)]
         if blank:
             raise AssertionError(
