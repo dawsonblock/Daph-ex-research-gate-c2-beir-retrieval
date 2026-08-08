@@ -125,6 +125,58 @@
       }
     },
     "artifact": "evidence/gate_c4/diagnosis/development_selector_ladder.json",
+    "downstream_q": {
+      "correct": {
+        "S0": 0.3,
+        "S1": 0.4333,
+        "S2": 0.4833,
+        "S3": 0.4583,
+        "S4_ceiling": 0.8667
+      },
+      "measured_on": "Lightning A100-SXM4-80GB, commit 69ef0405dc4f895e27d45e7d584b9121bbcfb7fe, 5 arms x 120 tasks = 600 generations",
+      "note": "Every arm's WORST family and WORST entity_regime delta is >= 0. No subgroup regressed at all on either monitored axis, so the two subgroup Q gates pass with margin rather than narrowly.",
+      "q": {
+        "S0": 0.3604,
+        "S1": 0.4875,
+        "S2": 0.525,
+        "S3": 0.5125,
+        "S4_ceiling": 0.7875
+      },
+      "q_delta_vs_S0": {
+        "S1": 0.1271,
+        "S2": 0.1646,
+        "S3": 0.1521,
+        "S4_ceiling": 0.4271
+      },
+      "worst_family_delta_vs_S0": {
+        "S1": [
+          "procedural_chain",
+          0.0208
+        ],
+        "S2": [
+          "ownership_chain",
+          0.0625
+        ],
+        "S3": [
+          "temporal_update",
+          0.0
+        ]
+      },
+      "worst_regime_delta_vs_S0": {
+        "S1": [
+          "abbreviation",
+          0.0
+        ],
+        "S2": [
+          "abbreviation",
+          0.0375
+        ],
+        "S3": [
+          "abbreviation",
+          0.0292
+        ]
+      }
+    },
     "primary_criterion": {
       "S1": {
         "bootstrap_lcb": 0.359,
@@ -270,31 +322,38 @@
   },
   "protocol_id": "c4_selector_v1",
   "sprint": "B2 -- selector repair",
-  "status": "S1_FROZEN_AND_RUN__DOWNSTREAM_Q_GATES_OUTSTANDING",
+  "status": "SPRINT_B2_CLOSED__S2_FROZEN_AS_SELECTOR_VNEXT",
   "stop_rule": {
     "adoption_is_development_only": "Any arm frozen here is a development-side mechanism decision. It is confirmed later on a FRESH untouched split, never on the consumed qualification split.",
     "if_S1_fails": "record descriptively, do not iterate variants inside this protocol",
     "no_mechanism_edits_after_results_begin": "Once S0-S4 start, no arm definition, eligibility rule, threshold or measurement may be changed. A defect discovered mid-run is recorded and addressed in a successor protocol."
   },
   "verdict_2026_08_08": {
-    "NO_ARM_ADOPTED_YET": "Three frozen gates are REQUIRED and remain unmeasured because they need HRM generation: downstream Q >= S0, no family Q regression worse than -0.05, no entity_regime Q regression worse than -0.05. Per the frozen criteria no arm may be promoted until those are measured. Recording selection results now is not adoption.",
+    "FROZEN_OUTCOME": {
+      "SELECTOR_VNEXT": "S2 = bridge-aware terminal-answer protection for EXACT identity, plus the connectivity constraint",
+      "development_only": "This is a development-side mechanism decision. It must be confirmed on a FRESH untouched split, never on the consumed qualification split.",
+      "headroom_left": "S4 ceiling Q 0.7875 vs S2 0.5250 -- a further +0.2625 is available to some better selector on these same pools. Deliberately not pursued inside this protocol.",
+      "justification": "Only arm passing all 11 frozen gates, with genuine incremental value over S1 rather than parity, and it repairs the one structural regression S1 introduces."
+    },
     "S1": {
-      "FAILS": "structural bridge retention 0.575 vs S0 0.596 = -0.0212, outside the frozen -0.01 allowance",
-      "cause": "the packet-budget invariant working as intended: protection consumes one slot, so frozen S2c has 5 slots instead of 6 and sometimes drops a bridge record. The primary repair is large (+0.5385) but it is not free.",
-      "measurable_gates": "7 of 8 PASS",
-      "status": "PRIMARY HYPOTHESIS CONFIRMED, ARM NON-COMPLIANT on one frozen structural gate"
+      "all_q_gates_pass": "Q 0.4875 vs S0 0.3604 = +0.1271; worst family +0.0208; worst regime +0.0000",
+      "cause": "the packet-budget invariant working as designed: protection consumes one slot, frozen S2c gets 5 instead of 6, and sometimes drops a bridge record. The repair is large but not free.",
+      "fails": "structural bridge retention 0.575 vs S0 0.596 = -0.0212, outside the frozen -0.01 allowance",
+      "gates": "10 of 11 PASS",
+      "status": "PRIMARY HYPOTHESIS CONFIRMED (+0.5385 EXACT_bridged retention, LCB +0.3590) but the ARM IS NON-COMPLIANT on one frozen structural gate. Not promotable as-is."
     },
     "S2": {
-      "bridge_retention": "0.660 vs S0 0.596 = +0.0639, i.e. it REPAIRS S1's only failure",
-      "incremental_value_over_S1": "Yes, and specifically the value the frozen criteria demand: it restores bridge retention above baseline while preserving the identical primary effect. Its own cost is a RESOLVED retention regression of -0.0344 (within the frozen -0.05 allowance).",
-      "measurable_gates": "8 of 8 PASS",
-      "status": "PASSES ALL MEASURABLE FROZEN GATES"
+      "cost": "RESOLVED answer retention -0.0344, inside the frozen -0.05 allowance.",
+      "gates": "11 of 11 PASS",
+      "incremental_value_over_S1": "Yes, on every axis the criteria care about: downstream Q +0.0375 (0.5250 vs 0.4875), bridge retention 0.660 vs 0.575 (it REPAIRS S1's only failure, landing +0.0639 above baseline), selected CES 0.583 vs 0.567. Identical primary effect. Not parity.",
+      "status": "PASSES EVERY FROZEN GATE"
     },
     "S3": {
-      "incremental_value_over_S2": "NONE -- identical on every reported metric; temporal swaps did not change any outcome.",
-      "measurable_gates": "8 of 8 PASS",
-      "status": "NOT ADOPTED, per the frozen rule that an increment matching the arm below it loses and the simpler mechanism wins ties"
+      "gates": "11 of 11 PASS in isolation",
+      "note": "This is why downstream Q was kept as a required gate rather than inferred from selection metrics: it is the only measurement that separated S3 from S2.",
+      "reason": "Fails the frozen increment requirement against S2: downstream Q 0.5125 vs S2 0.5250 = -0.0125. Selection-only metrics were identical to S2, so before Q was measured S3 looked like pure parity; with Q it is a small REGRESSION. Temporal-current precedence adds nothing on this corpus and costs a little. The simpler mechanism wins.",
+      "status": "NOT ADOPTED"
     },
-    "bug_found_and_fixed_mid_analysis": "select_s1 requested budget-1 records from the frozen selector and then filtered out the protected record, silently returning a packet of budget-2 whenever the frozen selector had also chosen it. A packet SMALLER than the budget is its own violation of the fixed-budget invariant and would understate the arm. Fixed to request the full budget and drop the overlap. The ladder was re-run from scratch afterwards; development numbers were unchanged, verified rather than assumed."
+    "bug_found_and_fixed_mid_analysis": "select_s1 requested budget-1 records from the frozen selector then filtered out the protected record, silently returning budget-2 whenever the frozen selector had also chosen it. A packet SMALLER than the budget is its own violation of the fixed-budget invariant and would understate the arm. Fixed to request the full budget and drop the overlap; the ladder was re-run from scratch and selection numbers were unchanged -- verified, not assumed."
   }
 }

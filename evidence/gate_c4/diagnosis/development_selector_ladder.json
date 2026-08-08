@@ -87,6 +87,153 @@
     }
   },
   "candidate_budget": 50,
+  "downstream_q": {
+    "S0": {
+      "correct": 0.3,
+      "q": 0.3604,
+      "q_by_entity_regime": {
+        "abbreviation": 0.4875,
+        "canonical": 0.2333
+      },
+      "q_by_family": {
+        "configuration_chain": 0.2917,
+        "dependency_chain": 0.2083,
+        "distractor_heavy": 0.7083,
+        "entity_attribute": 0.5833,
+        "location_chain": 0.2708,
+        "numeric_chain": 0.25,
+        "ownership_chain": 0.375,
+        "procedural_chain": 0.1667,
+        "temporal_chain": 0.0833,
+        "temporal_update": 0.6667
+      },
+      "q_delta_vs_S0": 0.0,
+      "worst_family_delta_vs_S0": [
+        "configuration_chain",
+        0.0
+      ],
+      "worst_regime_delta_vs_S0": [
+        "abbreviation",
+        0.0
+      ]
+    },
+    "S1": {
+      "correct": 0.4333,
+      "q": 0.4875,
+      "q_by_entity_regime": {
+        "abbreviation": 0.4875,
+        "canonical": 0.4875
+      },
+      "q_by_family": {
+        "configuration_chain": 0.5417,
+        "dependency_chain": 0.5625,
+        "distractor_heavy": 0.7917,
+        "entity_attribute": 0.625,
+        "location_chain": 0.4583,
+        "numeric_chain": 0.2917,
+        "ownership_chain": 0.4792,
+        "procedural_chain": 0.1875,
+        "temporal_chain": 0.1875,
+        "temporal_update": 0.75
+      },
+      "q_delta_vs_S0": 0.1271,
+      "worst_family_delta_vs_S0": [
+        "procedural_chain",
+        0.0208
+      ],
+      "worst_regime_delta_vs_S0": [
+        "abbreviation",
+        0.0
+      ]
+    },
+    "S2": {
+      "correct": 0.4833,
+      "q": 0.525,
+      "q_by_entity_regime": {
+        "abbreviation": 0.525,
+        "canonical": 0.525
+      },
+      "q_by_family": {
+        "configuration_chain": 0.5417,
+        "dependency_chain": 0.5625,
+        "distractor_heavy": 0.7917,
+        "entity_attribute": 0.7083,
+        "location_chain": 0.4375,
+        "numeric_chain": 0.375,
+        "ownership_chain": 0.4375,
+        "procedural_chain": 0.3542,
+        "temporal_chain": 0.25,
+        "temporal_update": 0.7917
+      },
+      "q_delta_vs_S0": 0.1646,
+      "worst_family_delta_vs_S0": [
+        "ownership_chain",
+        0.0625
+      ],
+      "worst_regime_delta_vs_S0": [
+        "abbreviation",
+        0.0375
+      ]
+    },
+    "S3": {
+      "correct": 0.4583,
+      "q": 0.5125,
+      "q_by_entity_regime": {
+        "abbreviation": 0.5167,
+        "canonical": 0.5083
+      },
+      "q_by_family": {
+        "configuration_chain": 0.5417,
+        "dependency_chain": 0.5625,
+        "distractor_heavy": 0.7917,
+        "entity_attribute": 0.7083,
+        "location_chain": 0.4375,
+        "numeric_chain": 0.375,
+        "ownership_chain": 0.4375,
+        "procedural_chain": 0.3542,
+        "temporal_chain": 0.25,
+        "temporal_update": 0.6667
+      },
+      "q_delta_vs_S0": 0.1521,
+      "worst_family_delta_vs_S0": [
+        "temporal_update",
+        0.0
+      ],
+      "worst_regime_delta_vs_S0": [
+        "abbreviation",
+        0.0292
+      ]
+    },
+    "S4": {
+      "correct": 0.8667,
+      "q": 0.7875,
+      "q_by_entity_regime": {
+        "abbreviation": 0.6667,
+        "canonical": 0.9083
+      },
+      "q_by_family": {
+        "configuration_chain": 0.8125,
+        "dependency_chain": 0.7917,
+        "distractor_heavy": 0.875,
+        "entity_attribute": 1.0,
+        "location_chain": 0.8125,
+        "numeric_chain": 0.7708,
+        "ownership_chain": 0.7917,
+        "procedural_chain": 0.7083,
+        "temporal_chain": 0.3958,
+        "temporal_update": 0.9167
+      },
+      "q_delta_vs_S0": 0.4271,
+      "worst_family_delta_vs_S0": [
+        "distractor_heavy",
+        0.1667
+      ],
+      "worst_regime_delta_vs_S0": [
+        "abbreviation",
+        0.1792
+      ]
+    }
+  },
   "fusion": "R1_max_reciprocal",
   "packet_budget": 6,
   "primary_criterion_exact_bridged": {
