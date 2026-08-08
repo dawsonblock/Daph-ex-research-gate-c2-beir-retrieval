@@ -124,6 +124,51 @@
     },
     "note": "This certifies the DEVELOPMENT split only. Qualification and OOD splits, and any Gate D promotion decision, remain pending."
   },
+  "qualification_result": {
+    "status": "VALID_RUN_FALSE",
+    "certified_utc": "2026-08-08T08:16:05Z",
+    "verdict": "NOT_CERTIFIED",
+    "gates_passed": "17/18",
+    "failed_gates": ["statistical_gate"],
+    "protocol_sha256": "b4e22a551532acd230157cb6a85505ffc2a9108778dd726d9c9b6057160165a4",
+    "protocol_file": "configs/gate_c4_protocol_v2_1.json",
+    "run_environment": "Lightning AI Studio, NVIDIA A100-SXM4-80GB, CUDA 12.8, torch 2.8.0+cu128, transformers 5.14.1, python 3.12.11 (configs/c4_requirements.lock, CAPTURED not transcribed)",
+    "git_commit": "b3db3e5e1218b556af8cbb79b1c91040aa596df2",
+    "certificate_path": "evidence/gate_c4/full/qualification/certification/CERTIFICATION.json",
+    "bundle_path": "evidence/gate_c4/full/qualification",
+    "bundle_root_hash": "evidence/gate_c4/full/qualification/BUNDLE.sha256",
+    "independent_reverification": "Recomputed from raw receipts on a second, unrelated machine (local, no GPU, different python/torch/numpy versions) after downloading the bundle. Every substantive gate (arms_complete, no_oracle_leakage, receipt_hash_fields, prompt_binding, ordering_conformance, causal_parity, metric_correctness, derived_metric_agreement, determinism, family_regression, results_hash, development_lineage, statistical_gate) reproduced identically, including the exact statistical_gate failure. The only gates that differed (source_lineage, environment_lock) failed purely because of the local machine's own unrelated working-tree file and non-matching hardware/software -- not evidence of anything wrong with the qualification run itself.",
+    "task_count": 500,
+    "arm_quality": {
+      "C4_0": 0.098, "C4_1": 0.1265, "C4_2": 0.1435, "C4_3": 0.1435,
+      "C4_4": 0.189, "C4_5": 0.4455, "C4_6": 0.939
+    },
+    "primary_delta": {
+      "value": "Q(C4_4) - Q(C4_0) = +0.0910",
+      "threshold": "+0.15",
+      "verdict": "FAIL",
+      "ci_lower_family": 0.0345,
+      "ci_lower_cluster": 0.0036,
+      "ci_lower_template": 0.091,
+      "flips": {"improve": 104, "regress": 58, "unchanged": 338}
+    },
+    "family_regression_d5": {
+      "verdict": "PASS",
+      "worst_family": "temporal_update",
+      "worst_delta": -0.1,
+      "threshold": -0.1,
+      "note": "Exactly at the frozen -0.10 threshold, not below it -- passes per d5_family_regression_criterion's exact wording ('worse than -0.10'), but this is a boundary case worth flagging honestly, not a comfortable margin. All other 9 families improved or were roughly flat."
+    },
+    "comparison_to_development": {
+      "development_primary_delta": 0.2,
+      "qualification_primary_delta": 0.091,
+      "reader_ceiling_c4_6": {"development": 0.9542, "qualification": 0.939, "note": "nearly unchanged -- the HRM reader's raw capability given oracle evidence generalizes fine"},
+      "oracle_selection_c4_5": {"development": 0.7917, "qualification": 0.4455, "note": "large drop -- oracle selection over the real (non-oracle) candidate pool degrades substantially on qualification's task distribution, well beyond what the reader-ceiling comparison alone would suggest"},
+      "no_mechanism_baseline_c4_0": {"development": 0.1625, "qualification": 0.098, "note": "also drops -- qualification's task distribution is harder overall, not just harder for the mechanism specifically"},
+      "interpretation": "The mechanism's development-measured gain (+0.20) roughly halved on held-out data (+0.091), missing the pre-registered D4 threshold (+0.15). This looks like a genuine generalization gap concentrated in retrieval/selection quality (C4_5 dropped much more than C4_6, the reader-only ceiling), not a collapse of the reader or a catastrophic single-family failure (D5 passed)."
+    },
+    "note": "This certifies the QUALIFICATION split only, run exactly against development's frozen, certified v2.1 configuration (development_lineage gate PASS: protocol_sha256 equality plus commit-ancestry verified). Per the pre-registered rule, this result was NOT used to choose between C4_4 and C4_4m -- that decision was already made on development data alone, before this run. Gate D promotion decision remains pending OOD."
+  },
   "historical_development_signal": {
     "C4_4_reported_q": 0.3729,
     "arm_label_at_measurement": "C4_4 (declared: S2c membership + deterministic packet ordering)",
@@ -167,7 +212,7 @@
     "verified_against_certified_development_bundle": "PASS. Worst family temporal_chain at -0.0208, well inside the -0.10 threshold. All 10 families individually improve or are flat; none regress. This was verified but is NOT part of the original 16/16 certificate (D5 did not exist yet when that bundle was certified) -- see certified_development_result.known_bundle_defect for the same non-retroactive-editing principle applied to the manifest bug.",
     "commitment": "Frozen now, before any qualification run. Per the user's explicit sequence: do not touch this threshold, axis, or statistic after seeing qualification results."
   },
-  "next_work": "C4 v2_1 DEVELOPMENT is certified: VALID_RUN=true, 16/16 gates, on RunPod (RTX 5090) at commit b0c9d6e96eb20a9dae8217977e9428da0372c926, protocol SHA b4e22a55...107. See certified_development_result for the full numbers; historical_development_signal is retained as lineage for the pre-repair measurement it reclassifies. The measured 2x2 shows deterministic packet ordering is neutral (E_order_S0 CI [-0.017,+0.025], E_order_S2c point estimate -0.0104) and S2c structural membership is the entire mechanism (E_membership_pool CI [+0.098,+0.227], clearly nonzero). Q(C4_4m)=0.3729 reproduced the 2026-08-07 historical figure to four decimals -- the pipeline is stable across independent runs and environments (T4 -> RTX 5090). D5 (family regression) is now frozen -- see d5_family_regression_criterion -- and verified PASS on the certified development bundle. The qualification launcher (scripts/colab_c4_requalify.py --split qualification) now exists, enforcing protocol_sha256 equality and commit ancestry against development's certificate before any GPU work starts (hrm_adaptive_memory/c4/development_lineage.py), with the same check re-applied authoritatively at certification via the new development_lineage gate. Open decision (not yet made): whether to freeze C4_4m as the primary arm instead of C4_4, per docs/C4_V2_1_COLAB_RUNBOOK.md section 5's pre-registered table for an E_order_S2c ~ 0 outcome -- simpler mechanism (membership only), same measured result. That requires an explicit new protocol version if adopted; do not silently swap the frozen arm. Next: (1) decide C4_4 vs C4_4m as primary, (2) if changing, write and freeze that protocol version, (3) run the untouched qualification split: python scripts/colab_c4_requalify.py --split qualification --expected-commit <SHA>, (4) then ood, (5) Gate D promotion decision across all three splits, applying D5 alongside D4. Do not use qualification or ood to choose between C4_4 and C4_4m -- that decision is made on development alone, before qualification runs. C4_3o and C4_4m remain DIAGNOSTIC in the current frozen protocol: they explain C4_4 and do not themselves enter the primary seven-arm ladder or promotion threshold unless a new protocol version explicitly promotes one. Do not optimize HRM recurrence: selection remains the dominant gap (C4_4 complete-set retention 0.4333 vs oracle-over-real-pool 0.7833 on the same candidate pool).",
+  "next_work": "C4 v2_1 DEVELOPMENT is certified: VALID_RUN=true, 16/16 gates, on RunPod (RTX 5090) at commit b0c9d6e96eb20a9dae8217977e9428da0372c926, protocol SHA b4e22a55...107. See certified_development_result for the full numbers; historical_development_signal is retained as lineage for the pre-repair measurement it reclassifies. The measured 2x2 shows deterministic packet ordering is neutral (E_order_S0 CI [-0.017,+0.025], E_order_S2c point estimate -0.0104) and S2c structural membership is the entire mechanism (E_membership_pool CI [+0.098,+0.227], clearly nonzero). Q(C4_4m)=0.3729 reproduced the 2026-08-07 historical figure to four decimals -- the pipeline is stable across independent runs and environments (T4 -> RTX 5090). D5 (family regression) is now frozen -- see d5_family_regression_criterion -- and verified PASS on the certified development bundle. QUALIFICATION HAS NOW RUN: see qualification_result. VALID_RUN=false, 17/18 gates, on Lightning AI (A100) at commit b3db3e5e1218b556af8cbb79b1c91040aa596df2, the exact frozen v2.1 config (development_lineage gate confirmed no development-side changes). The only failed gate is statistical_gate: primary delta +0.091 vs the pre-registered +0.15 threshold. D5 passed (worst family temporal_update at exactly -0.10, the threshold boundary -- not a comfortable margin). Independently re-verified by recomputing from raw receipts on a second machine; the substantive result reproduced exactly. Per comparison_to_development, the reader ceiling (C4_6) barely moved (0.9542 -> 0.939) while oracle-over-real-pool (C4_5) dropped sharply (0.7917 -> 0.4455), pointing to a generalization gap in retrieval/selection quality specifically, not a reader failure or a single-family collapse. This is the qualification finding the pre-registered plan exists to produce, not a defect to fix. Per the user's own framing: 'If certified C4 generalizes, you have a solid foundation... If it doesn't, you diagnose generalization before adding higher-level intelligence' -- this result says it does not fully generalize at the pre-registered bar, so the next decision (not yet made, and explicitly the user's call, not to be improvised) is whether to run OOD anyway for the full picture, treat this as sufficient signal to stop and diagnose the selection-generalization gap first, or something else. Do not treat +0.091 as passing, do not lower the threshold post hoc, and do not use this result to relitigate the C4_4 vs C4_4m decision -- that was already made on development data alone, before this run, per the pre-registered rule. C4_3o and C4_4m remain DIAGNOSTIC in the current frozen protocol and were correctly skipped for this split (qualification/ood only run the 7 primary arms). Do not optimize HRM recurrence: selection remains the dominant gap, now confirmed on held-out data too.",
   "ordering_decomposition_to_measure": {
     "cells": {
       "C4_3": "S0 membership + pool order",
