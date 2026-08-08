@@ -307,6 +307,11 @@ def main() -> int:
     per_task_q: dict[str, dict[str, float]] = defaultdict(dict)
     meta: dict[str, dict[str, str]] = {}
     binding_failures = 0
+    receipt_path = (Path(args.out).with_suffix(".receipts.jsonl") if args.out else
+                    ROOT / f"evidence/gate_c4/diagnosis/{args.split}_c5_integrated"
+                           f"{'_hrm' if args.with_hrm else '_dry'}.receipts.jsonl")
+    receipt_path.parent.mkdir(parents=True, exist_ok=True)
+    receipt_file = receipt_path.open("w")
 
     for index, task in enumerate(tasks, 1):
         if index % 10 == 0 or index == len(tasks):
@@ -320,7 +325,8 @@ def main() -> int:
         group = f"{row['arms']['I3']['identity_status']}_{task_shape(task)}"
         task_id = task["task_id"]
         meta[task_id] = {"family": task["family"],
-                         "entity_regime": task["metadata"]["entity_regime"]}
+                         "entity_regime": task["metadata"]["entity_regime"],
+                         "source_cluster_id": task.get("source_cluster_id", "")}
 
         oracle = task.get("_oracle_metadata") or {}
         bridge_recs = {e["record_id"] for e in (oracle.get("proof_edges") or [])
@@ -359,6 +365,29 @@ def main() -> int:
                 q_regime[arm_id][meta[task_id]["entity_regime"]].append(q)
                 per_task_q[arm_id][task_id] = q
 
+        # Incremental receipt per task: resume safety, and the per-task record
+        # the grouped bootstrap CIs are computed from. Omitting per-task Q the
+        # first time made two REQUIRED frozen criteria uncomputable without a
+        # second GPU run, so it is persisted as it is produced.
+        receipt_file.write(json.dumps({
+            "task_id": task_id, **meta[task_id],
+            "query_hash": row["query_hash"],
+            **config_hashes(),
+            "arms": {a: {
+                "fusion": row["arms"][a]["fusion"],
+                "selector": row["arms"][a]["selector"],
+                "selected": row["arms"][a]["selected"],
+                "candidate_pool_hash": row["arms"][a]["candidate_pool_hash"],
+                "membership_hash": row["arms"][a]["membership_hash"],
+                "order_hash": row["arms"][a]["order_hash"],
+                "packet_hash": row["arms"][a]["packet_hash"],
+                "prompt_hash": row["arms"][a]["prompt_hash"],
+                "q": per_task_q[a].get(task_id),
+            } for a in ARM_ORDER},
+        }, sort_keys=True) + "\n")
+        receipt_file.flush()
+
+    receipt_file.close()
     n = len(tasks)
     print(" " * 30, end="\r")
 
@@ -400,6 +429,41 @@ def main() -> int:
                 "q_by_family": {f: mean(v) for f, v in sorted(q_family[a].items())},
                 "q_by_entity_regime": {r: mean(v) for r, v in sorted(q_regime[a].items())}}
             for a in ARM_ORDER if q_by_arm[a]}
+        report["per_task_q"] = {a: per_task_q[a] for a in per_task_q}
+        report["task_meta"] = meta
+
+        def lcb(arm_a: str, arm_b: str, axis: str) -> float:
+            """Grouped bootstrap lower bound on Q(arm_a) - Q(arm_b)."""
+            import random
+            groups: dict[str, list[float]] = defaultdict(list)
+            for tid, qa in per_task_q[arm_a].items():
+                qb = per_task_q[arm_b].get(tid)
+                if qb is not None:
+                    groups[meta[tid][axis]].append(qa - qb)
+            keys = sorted(groups)
+            if not keys:
+                return 0.0
+            rng = random.Random(12345)
+            means = []
+            for _ in range(2000):
+                picked = [groups[keys[rng.randrange(len(keys))]] for _ in keys]
+                flat = [v for g in picked for v in g]
+                if flat:
+                    means.append(sum(flat) / len(flat))
+            means.sort()
+            return round(means[int(0.025 * len(means))], 4) if means else 0.0
+
+        report["primary_contrast_ci"] = {
+            "contrast": "Q(I3) - Q(I0)",
+            "family_grouped_lcb": lcb("I3", "I0", "family"),
+            "source_cluster_grouped_lcb": lcb("I3", "I0", "source_cluster_id"),
+        }
+        report["secondary_contrast_ci"] = {
+            "I2_vs_I0_family_lcb": lcb("I2", "I0", "family"),
+            "I3_vs_I2_family_lcb": lcb("I3", "I2", "family"),
+            "note": "I3 vs I2 isolates whether adding R1 to S2 helps at all.",
+        }
+
         q = {a: report["downstream_q"][a]["q"] for a in report["downstream_q"]}
         if {"I0", "I1", "I2", "I3"} <= set(q):
             report["causal_decomposition"] = {
@@ -438,6 +502,15 @@ def main() -> int:
             row = report["downstream_q"].get(a)
             if row:
                 print(f"  {a:<4}{row['q']:>9.4f}{row['correct']:>10.4f}")
+        ci = report.get("primary_contrast_ci")
+        if ci:
+            print(f"\n  primary contrast {ci['contrast']} grouped LCBs:")
+            print(f"    family-grouped        : {ci['family_grouped_lcb']:+.4f}")
+            print(f"    cluster-grouped       : {ci['source_cluster_grouped_lcb']:+.4f}")
+            sc = report["secondary_contrast_ci"]
+            print(f"    I2 vs I0 (family)     : {sc['I2_vs_I0_family_lcb']:+.4f}")
+            print(f"    I3 vs I2 (family)     : {sc['I3_vs_I2_family_lcb']:+.4f}"
+                  f"   <- does R1 add anything?")
         cd = report.get("causal_decomposition")
         if cd:
             print("\n  causal decomposition:")

@@ -1,0 +1,262 @@
+{
+  "arms": {
+    "I0": {
+      "answer_retention": {
+        "ALL": 0.3158,
+        "EXACT": 0.2909,
+        "EXACT_bridged": 0.1081,
+        "EXACT_unbridged": 0.6667,
+        "RESOLVED": 0.339,
+        "RESOLVED_bridged": 0.0952,
+        "RESOLVED_unbridged": 0.9412
+      },
+      "bridge_retention": 0.6522,
+      "candidate_ces": 0.7583,
+      "disconnected_in_packet": 0,
+      "fusion": "frozen_rrf",
+      "identity_retention": 1.0,
+      "max_packet_size": 6,
+      "selected_ces": 0.425,
+      "selector": "S0"
+    },
+    "I1": {
+      "answer_retention": {
+        "ALL": 0.313,
+        "EXACT": 0.3158,
+        "EXACT_bridged": 0.1282,
+        "EXACT_unbridged": 0.7222,
+        "RESOLVED": 0.3103,
+        "RESOLVED_bridged": 0.0732,
+        "RESOLVED_unbridged": 0.8824
+      },
+      "bridge_retention": 0.5957,
+      "candidate_ces": 0.7833,
+      "disconnected_in_packet": 0,
+      "fusion": "R1_max_reciprocal",
+      "identity_retention": 1.0,
+      "max_packet_size": 6,
+      "selected_ces": 0.425,
+      "selector": "S0"
+    },
+    "I2": {
+      "answer_retention": {
+        "ALL": 0.5,
+        "EXACT": 0.7273,
+        "EXACT_bridged": 0.6757,
+        "EXACT_unbridged": 0.8333,
+        "RESOLVED": 0.2881,
+        "RESOLVED_bridged": 0.0238,
+        "RESOLVED_unbridged": 0.9412
+      },
+      "bridge_retention": 0.6957,
+      "candidate_ces": 0.7583,
+      "disconnected_in_packet": 0,
+      "fusion": "frozen_rrf",
+      "identity_retention": 1.0,
+      "max_packet_size": 6,
+      "selected_ces": 0.5833,
+      "selector": "S2"
+    },
+    "I3": {
+      "answer_retention": {
+        "ALL": 0.5043,
+        "EXACT": 0.7368,
+        "EXACT_bridged": 0.6667,
+        "EXACT_unbridged": 0.8889,
+        "RESOLVED": 0.2759,
+        "RESOLVED_bridged": 0.0244,
+        "RESOLVED_unbridged": 0.8824
+      },
+      "bridge_retention": 0.6596,
+      "candidate_ces": 0.7833,
+      "disconnected_in_packet": 0,
+      "fusion": "R1_max_reciprocal",
+      "identity_retention": 1.0,
+      "max_packet_size": 6,
+      "selected_ces": 0.5833,
+      "selector": "S2"
+    },
+    "I4": {
+      "answer_retention": {
+        "ALL": 0.8435,
+        "EXACT": 1.0,
+        "EXACT_bridged": 1.0,
+        "EXACT_unbridged": 1.0,
+        "RESOLVED": 0.6897,
+        "RESOLVED_bridged": 0.561,
+        "RESOLVED_unbridged": 1.0
+      },
+      "bridge_retention": 0.9362,
+      "candidate_ces": 0.7833,
+      "disconnected_in_packet": 0,
+      "fusion": "R1_max_reciprocal",
+      "identity_retention": 1.0,
+      "max_packet_size": 3,
+      "selected_ces": 0.7833,
+      "selector": "oracle"
+    },
+    "I5": {
+      "answer_retention": {
+        "ALL": 0.8435,
+        "EXACT": 1.0,
+        "EXACT_bridged": 1.0,
+        "EXACT_unbridged": 1.0,
+        "RESOLVED": 0.6897,
+        "RESOLVED_bridged": 0.561,
+        "RESOLVED_unbridged": 1.0
+      },
+      "bridge_retention": 0.9362,
+      "candidate_ces": 0.7833,
+      "disconnected_in_packet": 0,
+      "fusion": "R1_max_reciprocal",
+      "identity_retention": 1.0,
+      "max_packet_size": 3,
+      "selected_ces": 0.7833,
+      "selector": "oracle_evidence"
+    }
+  },
+  "candidate_budget": 50,
+  "causal_decomposition": {
+    "E_combined": 0.1729,
+    "E_interaction": -0.0104,
+    "E_retrieval": 0.0083,
+    "E_selector": 0.175
+  },
+  "crossover_parity": {
+    "passed": true,
+    "violation_count": 0,
+    "violations": []
+  },
+  "downstream_q": {
+    "I0": {
+      "correct": 0.2917,
+      "q": 0.3521,
+      "q_by_entity_regime": {
+        "abbreviation": 0.5083,
+        "canonical": 0.1958
+      },
+      "q_by_family": {
+        "configuration_chain": 0.2917,
+        "dependency_chain": 0.2083,
+        "distractor_heavy": 0.6667,
+        "entity_attribute": 0.5833,
+        "location_chain": 0.2708,
+        "numeric_chain": 0.25,
+        "ownership_chain": 0.375,
+        "procedural_chain": 0.2083,
+        "temporal_chain": 0.0833,
+        "temporal_update": 0.5833
+      }
+    },
+    "I1": {
+      "correct": 0.3,
+      "q": 0.3604,
+      "q_by_entity_regime": {
+        "abbreviation": 0.4875,
+        "canonical": 0.2333
+      },
+      "q_by_family": {
+        "configuration_chain": 0.2917,
+        "dependency_chain": 0.2083,
+        "distractor_heavy": 0.7083,
+        "entity_attribute": 0.5833,
+        "location_chain": 0.2708,
+        "numeric_chain": 0.25,
+        "ownership_chain": 0.375,
+        "procedural_chain": 0.1667,
+        "temporal_chain": 0.0833,
+        "temporal_update": 0.6667
+      }
+    },
+    "I2": {
+      "correct": 0.4917,
+      "q": 0.5271,
+      "q_by_entity_regime": {
+        "abbreviation": 0.55,
+        "canonical": 0.5042
+      },
+      "q_by_family": {
+        "configuration_chain": 0.5417,
+        "dependency_chain": 0.5625,
+        "distractor_heavy": 0.7083,
+        "entity_attribute": 0.7917,
+        "location_chain": 0.4375,
+        "numeric_chain": 0.375,
+        "ownership_chain": 0.4375,
+        "procedural_chain": 0.3958,
+        "temporal_chain": 0.2292,
+        "temporal_update": 0.7917
+      }
+    },
+    "I3": {
+      "correct": 0.4833,
+      "q": 0.525,
+      "q_by_entity_regime": {
+        "abbreviation": 0.525,
+        "canonical": 0.525
+      },
+      "q_by_family": {
+        "configuration_chain": 0.5417,
+        "dependency_chain": 0.5625,
+        "distractor_heavy": 0.7917,
+        "entity_attribute": 0.7083,
+        "location_chain": 0.4375,
+        "numeric_chain": 0.375,
+        "ownership_chain": 0.4375,
+        "procedural_chain": 0.3542,
+        "temporal_chain": 0.25,
+        "temporal_update": 0.7917
+      }
+    },
+    "I4": {
+      "correct": 0.8667,
+      "q": 0.7875,
+      "q_by_entity_regime": {
+        "abbreviation": 0.6667,
+        "canonical": 0.9083
+      },
+      "q_by_family": {
+        "configuration_chain": 0.8125,
+        "dependency_chain": 0.7917,
+        "distractor_heavy": 0.875,
+        "entity_attribute": 1.0,
+        "location_chain": 0.8125,
+        "numeric_chain": 0.7708,
+        "ownership_chain": 0.7917,
+        "procedural_chain": 0.7083,
+        "temporal_chain": 0.3958,
+        "temporal_update": 0.9167
+      }
+    },
+    "I5": {
+      "correct": 0.9083,
+      "q": 0.9542,
+      "q_by_entity_regime": {
+        "abbreviation": 0.95,
+        "canonical": 0.9583
+      },
+      "q_by_family": {
+        "configuration_chain": 1.0,
+        "dependency_chain": 0.9583,
+        "distractor_heavy": 0.9583,
+        "entity_attribute": 1.0,
+        "location_chain": 1.0,
+        "numeric_chain": 0.9583,
+        "ownership_chain": 0.9167,
+        "procedural_chain": 0.8333,
+        "temporal_chain": 1.0,
+        "temporal_update": 0.9167
+      }
+    }
+  },
+  "git_commit": "35b5bc4124b0fd7a27ba8e38366ca2aa7338b0b9",
+  "packet_budget": 6,
+  "prompt_binding_failures": 0,
+  "protocol_id": "c5_integrated_v1",
+  "retrieval_config_hash": "ddef908055b7de2b",
+  "schema_version": "c5-integrated-ladder-v1",
+  "selector_config_hash": "29bc817bc722943a",
+  "split": "development",
+  "task_count": 120,
+  "with_hrm": true
+}
