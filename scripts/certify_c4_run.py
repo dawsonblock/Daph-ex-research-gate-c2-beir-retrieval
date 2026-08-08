@@ -908,11 +908,22 @@ def main() -> int:
     cert_path = write_certification_artifacts(
         args.bundle, certificate, snapshot, lock, args.protocol)
 
+    # Root hash written LAST, after CERTIFICATION.json and every other
+    # artifact exist, so it is the one file that covers the whole bundle:
+    # raw receipts, analysis, manifest, and everything under certification/
+    # (including the certificate itself). RESULTS.sha256 stays narrow and
+    # keeps verifying just the raw results, exactly as before; this is the
+    # broader root of trust for the bundle as a whole.
+    from hrm_adaptive_memory.c4.provenance import write_bundle_hash
+    write_bundle_hash(args.bundle)
+
     print()
     print(f"  gates passed: {certificate['gates_passed']}/{certificate['gates_total']}")
     print(f"  VALID_RUN:    {certificate['VALID_RUN']}")
     print(f"  verdict:      {certificate['verdict']}")
     print(f"  certificate:  {cert_path}")
+    print(f"  bundle hash:  {args.bundle / 'BUNDLE.sha256'} "
+          f"(covers everything, including certification/)")
     if not certificate["VALID_RUN"]:
         print()
         print("  NOT CERTIFIED. Do not name the bundle "

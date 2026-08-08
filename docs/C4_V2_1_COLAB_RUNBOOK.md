@@ -169,7 +169,7 @@ Then:
 | 14 | Analyzer | **yes** | `analysis.json`, then `RESULTS.sha256` rewritten |
 | 15 | Composition diagnostic | no | informational |
 | 16 | Results summary | no | quality table + 2×2 decomposition |
-| 17 | Certification | no | `CERTIFICATION.json`, 16 gates |
+| 17 | Certification | no | `CERTIFICATION.json`, 16 gates, then `BUNDLE.sha256` written last |
 | 18 | Package | no | archive named for the verdict |
 
 Steps 2, 3, 4, 6, 7, 9, 12, 13 and 14 are declared abort conditions. If one
@@ -212,11 +212,20 @@ print(cert["VALID_RUN"], cert["verdict"], cert["gates_failed"])
 The archive is named `UNCERTIFIED_C4_V2_DEVELOPMENT_RESULT.zip` unless it is
 `true`. Do not rename it by hand.
 
-Finally, hashes last:
+Finally, hashes last. Two files, two scopes:
 
 ```bash
-cd evidence/gate_c4/full/development && sha256sum -c RESULTS.sha256
+cd evidence/gate_c4/full/development
+sha256sum -c RESULTS.sha256   # raw receipts + analysis.json + manifest.json
+sha256sum -c BUNDLE.sha256    # everything, including certification/ (the
+                               # certificate itself, ENVIRONMENT.lock,
+                               # PROTOCOL.json, the source snapshot)
 ```
+
+`RESULTS.sha256` is written mid-pipeline (step 14, before certification runs)
+and stays narrow on purpose. `BUNDLE.sha256` is written last, after
+`CERTIFICATION.json` exists, and is the actual root of trust for the bundle:
+verifying it verifies the certificate too.
 
 ---
 
@@ -298,6 +307,7 @@ CERTIFICATION.json
   VALID_RUN: true
   gates_passed: 16/16
 sha256sum -c RESULTS.sha256   -> all OK
+sha256sum -c BUNDLE.sha256    -> all OK
 ```
 
 Then, and only then:

@@ -51,7 +51,7 @@
     "gate_k_consolidation": "BLOCKED",
     "gate_l_latent_memory": "BLOCKED",
     "gate_n1_natural_external_memory": "PENDING",
-    "gate_c4_integrated_memory_pipeline": "DEVELOPMENT_CERTIFIED_VALID_RUN_TRUE_16_OF_16_GATES__ORDERING_MEASURED_NEUTRAL",
+    "gate_c4_integrated_memory_pipeline": "MECHANISM_SUCCESS_DEVELOPMENT_CERTIFIED_VALID_RUN_TRUE_QUALIFICATION_PENDING",
     "gate_c4_bridge_runtime_acquisition": "FAIL_NO_RUNTIME_BRIDGE_MECHANISM_BEATS_ONE_PASS_BASELINE"
   },
   "gate_lineage": {
@@ -92,6 +92,8 @@
     "run_environment": "RunPod, NVIDIA GeForce RTX 5090, CUDA 12.8, torch 2.8.0+cu128, transformers 5.14.1, python 3.12.3 (configs/c4_requirements.lock, CAPTURED not transcribed)",
     "certificate_path": "evidence/gate_c4/full/development/certification/CERTIFICATION.json",
     "bundle_path": "evidence/gate_c4/full/development",
+    "bundle_root_hash": "evidence/gate_c4/full/development/BUNDLE.sha256",
+    "known_bundle_defect": "manifest.json.arm_ids shows only ['C4_3o','C4_4m'], not all nine arms. Cause: scripts/run_gate_c4.py's run_full() writes manifest.json unconditionally on every call, and colab_c4_requalify.py calls it twice against the same output directory (primary ladder, then diagnostic arms), so the second write clobbered the first's arm_ids. Fixed in scripts/run_gate_c4.py (_merged_arm_manifest_fields) for all future runs, which also add explicit primary_arm_ids/diagnostic_arm_ids fields. NOT retroactively applied to this already-certified bundle: doing so would change manifest.json's bytes, invalidating RESULTS.sha256 for a file CERTIFICATION.json already verified, without a real rerun to justify a new certificate. Did not affect the certification verdict: certify_c4_run.py's gate_arms_complete reconstructs arm presence from the actual C4_*.jsonl files present in the bundle, never from manifest.json.",
     "arm_quality": {
       "C4_0": 0.1625, "C4_1": 0.175, "C4_2": 0.2125, "C4_3": 0.2125,
       "C4_3o": 0.2146, "C4_4": 0.3625, "C4_4m": 0.3729, "C4_5": 0.7917,

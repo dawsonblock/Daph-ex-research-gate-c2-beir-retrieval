@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT))
 
 from hrm_adaptive_memory.contracts import IndexRecord
 from hrm_adaptive_memory.c4.contracts import *
-from hrm_adaptive_memory.c4.arms import ARMS, PRIMARY_ORDER
+from hrm_adaptive_memory.c4.arms import ARMS, DIAGNOSTIC_ORDER, PRIMARY_ORDER
 from hrm_adaptive_memory.c4.query_stage import run_query_stage, extract_subject
 from hrm_adaptive_memory.retrieval.information_state import (
     InformationState, formulate_followup, FOLLOWUP_FORMULATION)
@@ -336,6 +336,48 @@ def _load_hrm():
     adapter = HRMAdapter.from_pretrained(
         spec=HRMModelSpec(), dtype=dtype, device_map=device_map)
     return adapter, PromptCondition.DIRECT
+
+
+def _merged_arm_manifest_fields(out_dir: Path, arm_ids: list[str]) -> dict:
+    """Merge this invocation's arm_ids into any manifest.json already present.
+
+    run_full() is called twice per requalify run -- once with PRIMARY_ORDER,
+    once with the diagnostic arms -- and both write manifest.json to the same
+    out_dir. Without merging, the second call's manifest.json overwrote the
+    first entirely, leaving arm_ids=["C4_3o","C4_4m"] as the on-disk record
+    even though the bundle directory holds receipts for all nine arms.
+    certify_c4_run.py never depended on this field (it reconstructs arm
+    completeness from the actual C4_*.jsonl files present), so the bug never
+    affected a certification verdict -- but the manifest is supposed to be a
+    readable record of what's in the bundle, and it wasn't one.
+
+    Returns the union of arm_ids (this call's plus any prior), split into
+    primary_arm_ids and diagnostic_arm_ids by membership in the canonical
+    orderings, plus the union itself under the pre-existing "arm_ids" key for
+    backward compatibility with anything that already reads it.
+    """
+    existing_path = out_dir / "manifest.json"
+    prior_arm_ids: list[str] = []
+    if existing_path.is_file():
+        try:
+            prior = json.loads(existing_path.read_text())
+            prior_arm_ids = list(prior.get("arm_ids") or [])
+            # Absorb old-schema split fields too, in case of a future format
+            # change; union is idempotent either way.
+            prior_arm_ids += list(prior.get("primary_arm_ids") or [])
+            prior_arm_ids += list(prior.get("diagnostic_arm_ids") or [])
+        except (json.JSONDecodeError, OSError):
+            pass
+
+    union = set(prior_arm_ids) | set(arm_ids)
+    primary = [a for a in PRIMARY_ORDER if a in union]
+    diagnostic = [a for a in DIAGNOSTIC_ORDER if a in union]
+    other = sorted(union - set(primary) - set(diagnostic))
+    return {
+        "arm_ids": primary + diagnostic + other,
+        "primary_arm_ids": primary,
+        "diagnostic_arm_ids": diagnostic,
+    }
 
 
 def _run_hrm(adapter, condition, prompt: str) -> HRMResult:
@@ -687,6 +729,11 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
         batch_size=1,
         generation_condition="DIRECT",
     )
+    # Merge arm_ids with any manifest.json already at this path: run_full()
+    # is called once for the primary ladder and again for the diagnostic
+    # arms, both targeting the same out_dir, and a plain overwrite would lose
+    # the first call's arm list.
+    manifest.update(_merged_arm_manifest_fields(out_dir, arm_ids))
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
 
     # Run analyzer to produce analysis.json BEFORE hashing
