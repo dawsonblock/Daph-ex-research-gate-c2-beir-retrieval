@@ -40,7 +40,7 @@ from hrm_adaptive_memory.c4.arms import ARMS  # noqa: E402
 from hrm_adaptive_memory.c4.contracts import (  # noqa: E402
     C4_CANDIDATE_BUDGET, C4_RRF_K)
 from hrm_adaptive_memory.c4.fusion import (  # noqa: E402
-    ORACLE_POLICY, POLICIES, oracle_fusion)
+    ORACLE_POLICY, POLICIES, R4_BM25_RESERVED_SLOTS, oracle_fusion)
 from hrm_adaptive_memory.c4.query_stage import run_query_stage  # noqa: E402
 from hrm_adaptive_memory.c4.retrieval_stage import get_cached_backend  # noqa: E402
 from scripts.diagnose_c4_retrieval import role_of  # noqa: E402
@@ -137,6 +137,7 @@ def main() -> int:
     pool_changed: dict[str, int] = defaultdict(int)
     per_task_ces: dict[str, dict[str, float]] = defaultdict(dict)
     task_meta: dict[str, dict[str, str]] = {}
+    rescue_events: list[dict[str, Any]] = []
 
     for index, task in enumerate(tasks, 1):
         if index % 25 == 0 or index == len(tasks):
@@ -160,6 +161,41 @@ def main() -> int:
         pools[ORACLE_POLICY] = [
             eid for eid, _ in
             oracle_fusion([bm25, bge], C4_RRF_K, budget, required=required)]
+
+        # Preregistered R4 rescue accounting: does R4 win for the CLAIMED
+        # reason (preserving BM25-unique evidence at depth 26-40) or through
+        # incidental redistribution? Recorded per changed task, with the
+        # constituent origin and ranks of each required record.
+        if "R4_asymmetric_constituent_depth" in pools:
+            p0 = set(pools["R0_frozen_rrf"])
+            p1 = set(pools["R1_max_reciprocal"])
+            p4 = set(pools["R4_asymmetric_constituent_depth"])
+            req_set = set(required)
+            transition = None
+            if not req_set <= p1 and req_set <= p4:
+                transition = "R1_miss_to_R4_hit"
+            elif req_set <= p1 and not req_set <= p4:
+                transition = "R1_hit_to_R4_miss"
+            elif not req_set <= p0 and req_set <= p4:
+                transition = "R0_miss_to_R4_hit"
+            if transition:
+                for eid in required:
+                    b_rank = bm25.index(eid) + 1 if eid in bm25 else None
+                    d_rank = bge.index(eid) + 1 if eid in bge else None
+                    in_bm = b_rank is not None and b_rank <= budget
+                    in_bg = d_rank is not None and d_rank <= budget
+                    origin = ("both" if in_bm and in_bg else
+                              "bm25_only" if in_bm else
+                              "dense_only" if in_bg else "neither")
+                    rescue_events.append({
+                        "task_id": task_id, "transition": transition,
+                        "record_id": eid, "origin": origin,
+                        "bm25_rank": b_rank, "dense_rank": d_rank,
+                        "in_r1_pool": eid in p1, "in_r4_pool": eid in p4,
+                        "bm25_rank_in_reserved_window": (
+                            b_rank is not None
+                            and R4_BM25_RESERVED_SLOTS >= b_rank > budget // 2),
+                    })
 
         baseline_pool = set(pools["R0_frozen_rrf"])
         for name, pool in pools.items():
@@ -226,6 +262,75 @@ def main() -> int:
             "promotable": name != ORACLE_POLICY,
         }
 
+    # --- preregistered R4 rescue accounting -------------------------------
+    if rescue_events:
+        from collections import Counter
+        gained = [e for e in rescue_events
+                  if e["transition"] == "R1_miss_to_R4_hit" and e["in_r4_pool"]
+                  and not e["in_r1_pool"]]
+        report["r4_rescue_accounting"] = {
+            "transitions": dict(Counter(
+                e["transition"] for e in rescue_events)),
+            "rescued_record_origin": dict(Counter(e["origin"] for e in gained)),
+            "rescued_in_bm25_reserved_window_26_to_40": sum(
+                1 for e in gained if e["bm25_rank_in_reserved_window"]),
+            "rescued_total": len(gained),
+            "events": rescue_events,
+            "interpretation_rule": (
+                "Gains concentrated in bm25_only records ranked 26-40 confirm "
+                "the theorized mechanism. Gains elsewhere mean the arm worked "
+                "for a different reason and the asymmetry rationale is NOT "
+                "confirmed even if the primary criterion passes."),
+        }
+
+    # --- prospective R4 vs R1 criteria (frozen before the run) ------------
+    r4, r1 = "R4_asymmetric_constituent_depth", "R1_max_reciprocal"
+    if r4 in report["arms"]:
+        d_by_family: dict[str, list[float]] = defaultdict(list)
+        d_by_regime: dict[str, list[float]] = defaultdict(list)
+        for task_id in per_task_ces[r4]:
+            delta = per_task_ces[r4][task_id] - per_task_ces[r1][task_id]
+            d_by_family[task_meta[task_id]["family"]].append(delta)
+            d_by_regime[task_meta[task_id]["entity_regime"]].append(delta)
+        flat = [v for g in d_by_family.values() for v in g]
+        primary = round(sum(flat) / len(flat), 4) if flat else 0.0
+        lcb = _bootstrap_ci(d_by_family)[0]
+        worst_family = min(((k, sum(v) / len(v)) for k, v in d_by_family.items()),
+                           key=lambda kv: kv[1], default=("-", 0.0))
+        worst_regime = min(((k, sum(v) / len(v)) for k, v in d_by_regime.items()),
+                           key=lambda kv: kv[1], default=("-", 0.0))
+        rr4 = report["arms"][r4]["role_recall"]
+        rr1 = report["arms"][r1]["role_recall"]
+        checks = {
+            "primary_ces_delta_vs_R1_ge_0.025": (primary >= 0.025, primary),
+            "bootstrap_lcb_vs_R1_gt_0": (lcb > 0, lcb),
+            "family_regression_not_worse_than_-0.05": (
+                worst_family[1] >= -0.05, {worst_family[0]: round(worst_family[1], 4)}),
+            "entity_regime_regression_not_worse_than_-0.05": (
+                worst_regime[1] >= -0.05, {worst_regime[0]: round(worst_regime[1], 4)}),
+            "role_BRIDGE_ge_R1": (rr4.get("BRIDGE", 0) >= rr1.get("BRIDGE", 0),
+                                  [rr1.get("BRIDGE"), rr4.get("BRIDGE")]),
+            "role_TERMINAL_ANSWER_ge_R1": (
+                rr4.get("TERMINAL_ANSWER", 0) >= rr1.get("TERMINAL_ANSWER", 0),
+                [rr1.get("TERMINAL_ANSWER"), rr4.get("TERMINAL_ANSWER")]),
+            "role_TEMPORAL_CURRENT_ge_R1": (
+                rr4.get("TEMPORAL_CURRENT", 0) >= rr1.get("TEMPORAL_CURRENT", 0),
+                [rr1.get("TEMPORAL_CURRENT"), rr4.get("TEMPORAL_CURRENT")]),
+            "role_IDENTITY_ge_R1_minus_0.01": (
+                rr4.get("IDENTITY", 0) >= rr1.get("IDENTITY", 0) - 0.01,
+                [rr1.get("IDENTITY"), rr4.get("IDENTITY")]),
+        }
+        report["r4_prospective_criteria"] = {
+            "frozen_before_run": True,
+            "applies_to": "the R4 decision only; never retroactively to R0-R3",
+            "checks": {k: {"passed": bool(v[0]), "observed": v[1]}
+                       for k, v in checks.items()},
+            "all_passed": all(v[0] for v in checks.values()),
+            "verdict": ("PROMOTE_R4_AS_RETRIEVAL_VNEXT"
+                        if all(v[0] for v in checks.values())
+                        else "R4_FAILS__FREEZE_R1_AS_MINIMAL_REPAIR"),
+        }
+
     out = Path(args.out) if args.out else (
         ROOT / f"evidence/gate_c4/diagnosis/{args.split}_fusion_ladder.json")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -259,6 +364,23 @@ def main() -> int:
     for name in arm_names:
         pr = report["arms"][name]["per_entity_regime_ces_delta"]
         print(f"  {name:<30}" + "  ".join(f"{k}={v:+.1%}" for k, v in pr.items()))
+
+    if "r4_rescue_accounting" in report:
+        ra = report["r4_rescue_accounting"]
+        print("\n  R4 rescue accounting (preregistered):")
+        print(f"    transitions            : {ra['transitions']}")
+        print(f"    rescued records        : {ra['rescued_total']}")
+        print(f"    rescued by origin      : {ra['rescued_record_origin']}")
+        print(f"    of those, bm25 rank 26-40: "
+              f"{ra['rescued_in_bm25_reserved_window_26_to_40']}")
+
+    if "r4_prospective_criteria" in report:
+        pc = report["r4_prospective_criteria"]
+        print("\n  R4 PROSPECTIVE criteria (frozen before this run):")
+        for name, res in pc["checks"].items():
+            mark = "PASS" if res["passed"] else "FAIL"
+            print(f"    [{mark}] {name:<48} observed={res['observed']}")
+        print(f"\n    VERDICT: {pc['verdict']}")
 
     print(f"\n  written: {out}")
     print("\n  NOTE: no winner is declared here. freeze_criteria_pending in the "

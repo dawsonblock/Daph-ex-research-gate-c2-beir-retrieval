@@ -118,6 +118,85 @@ def reserved_slot_interleave(rankings: Sequence[Sequence[str]], k: int,
     return [(eid, 1.0 / (index + 1)) for index, eid in enumerate(selected)]
 
 
+#: R4's frozen allocation, preregistered in
+#: configs/gate_c4_retrieval_fusion_v1.json before any R4 result existed.
+#: BM25 is favored because Gate B established it dominates the tested dense
+#: representation on this identifier-heavy corpus -- a prior result, not a C4
+#: outcome. 40 (not 35) because the point is to clear the symmetric B/L = 25
+#: depth limit and reach where the observed BM25-only evidence actually sits.
+R4_BM25_RESERVED_SLOTS = 40
+R4_DENSE_RESERVED_SLOTS = 10
+
+
+def asymmetric_constituent_depth(
+    rankings: Sequence[Sequence[str]], k: int, limit: int, *,
+    primary_slots: int = R4_BM25_RESERVED_SLOTS,
+    secondary_slots: int = R4_DENSE_RESERVED_SLOTS,
+) -> list[tuple[str, float]]:
+    """R4: spend the budget asymmetrically across constituents.
+
+    ``rankings[0]`` is treated as the PRIMARY (stronger) constituent and
+    ``rankings[1]`` as secondary; the caller passes [bm25, bge].
+
+    Why asymmetry at all: :func:`max_reciprocal` and
+    :func:`reserved_slot_interleave` are both rank-symmetric and so both
+    guarantee survival only to depth ``limit // n_lists`` -- 25 for the frozen
+    budget of 50. Sprint A measured the median displaced record at rank 37-41,
+    beyond that depth, so no symmetric rule can protect it. Reserving 40 slots
+    for the primary constituent raises its guaranteed depth to 40 directly.
+
+    Construction (frozen, from the protocol):
+      1. Walk the primary ranking, taking unique records until ``primary_slots``
+         are held.
+      2. Walk the secondary ranking, adding the first ``secondary_slots``
+         records not already selected.
+      3. If either quota underfills, fill remaining slots by min-rank ordering
+         (the R1 rule) over records not yet selected.
+      4. Emit exactly ``limit`` candidates where the material allows.
+      5. Ties broken by record_id, via the min-rank fill.
+
+    Scores are descending positional surrogates, matching the other policies so
+    callers can treat every policy's output identically.
+    """
+    if not rankings:
+        return []
+    primary = list(rankings[0])
+    secondary = list(rankings[1]) if len(rankings) > 1 else []
+
+    selected: list[str] = []
+    seen: set[str] = set()
+
+    def take(source: Sequence[str], quota: int) -> None:
+        added = 0
+        for evidence_id in source:
+            if added >= quota or len(selected) >= limit:
+                return
+            if evidence_id in seen:
+                continue
+            seen.add(evidence_id)
+            selected.append(evidence_id)
+            added += 1
+
+    take(primary, primary_slots)
+    take(secondary, secondary_slots)
+
+    # Step 3: a quota may underfill (short list, or heavy overlap between the
+    # constituents leaving the secondary with fewer than its quota of NEW
+    # records). Backfill deterministically by the R1 rule rather than by
+    # continuing down either list, so the remainder is not silently biased
+    # toward whichever constituent happened to be walked last.
+    if len(selected) < limit:
+        for evidence_id, _score in max_reciprocal(rankings, k, len(seen) + limit):
+            if len(selected) >= limit:
+                break
+            if evidence_id in seen:
+                continue
+            seen.add(evidence_id)
+            selected.append(evidence_id)
+
+    return [(eid, 1.0 / (index + 1)) for index, eid in enumerate(selected)]
+
+
 def oracle_fusion(rankings: Sequence[Sequence[str]], k: int, limit: int, *,
                   required: Iterable[str]) -> list[tuple[str, float]]:
     """R3 ceiling: bound what ANY reordering of these lists can reach at k.
@@ -153,6 +232,7 @@ POLICIES: dict[str, FusionPolicy] = {
     "R0_frozen_rrf": frozen_rrf,
     "R1_max_reciprocal": max_reciprocal,
     "R2_reserved_slot_interleave": reserved_slot_interleave,
+    "R4_asymmetric_constituent_depth": asymmetric_constituent_depth,
 }
 
 ORACLE_POLICY = "R3_oracle_fusion"

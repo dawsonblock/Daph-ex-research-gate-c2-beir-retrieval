@@ -19,8 +19,8 @@ import pytest
 
 from hrm_adaptive_memory.c4.contracts import C4_CANDIDATE_BUDGET, C4_RRF_K
 from hrm_adaptive_memory.c4.fusion import (
-    POLICIES, frozen_rrf, max_reciprocal, oracle_fusion,
-    reserved_slot_interleave)
+    POLICIES, asymmetric_constituent_depth, frozen_rrf, max_reciprocal,
+    oracle_fusion, reserved_slot_interleave)
 from hrm_adaptive_memory.c4.retrieval_stage import _rrf
 
 K = C4_RRF_K
@@ -126,6 +126,66 @@ class TestGuaranteeDepth:
         pool = {e for e, _ in max_reciprocal([bm25, bge], K, 100)}
         assert "a49" in pool, "rank 50 is inside B/L = 50"
         assert "a50" not in pool, "rank 51 is past it"
+
+
+class TestR4AsymmetricAllocation:
+    """R4's frozen 40/10 construction, preregistered before it was run."""
+
+    def test_primary_constituent_gets_its_reserved_depth(self):
+        """The whole point: BM25 rank 40 must survive, which no symmetric rule
+        guarantees (their limit is B/L = 25)."""
+        bm25 = [f"a{i}" for i in range(60)]
+        bge = [f"b{i}" for i in range(60)]
+        pool = {e for e, _ in asymmetric_constituent_depth([bm25, bge], K, 50)}
+        assert "a39" in pool, "BM25 rank 40 is inside the 40 reserved slots"
+        assert "a25" in pool, "and so is rank 26, which symmetric rules drop"
+
+    def test_secondary_constituent_gets_exactly_its_quota(self):
+        bm25 = [f"a{i}" for i in range(60)]
+        bge = [f"b{i}" for i in range(60)]
+        pool = [e for e, _ in asymmetric_constituent_depth([bm25, bge], K, 50)]
+        assert sum(1 for e in pool if e.startswith("b")) == 10
+        assert sum(1 for e in pool if e.startswith("a")) == 40
+
+    def test_budget_is_exactly_respected(self):
+        """Frozen mechanical criterion: candidate count exactly 50."""
+        a, b = _lists(21)
+        assert len(asymmetric_constituent_depth([a, b], K, 50)) == 50
+
+    def test_overlap_underfill_is_backfilled_not_left_short(self):
+        """If the constituents overlap heavily the secondary cannot supply 10
+        NEW records; the budget must still be filled rather than truncated."""
+        shared = [f"s{i}" for i in range(45)]
+        bm25 = shared + [f"a{i}" for i in range(15)]
+        bge = shared[:]  # nothing new to contribute
+        out = [e for e, _ in asymmetric_constituent_depth([bm25, bge], K, 50)]
+        assert len(out) == 50
+        assert len(set(out)) == 50
+
+    def test_single_constituent_does_not_crash(self):
+        a, _ = _lists(22)
+        out = asymmetric_constituent_depth([a], K, 50)
+        assert len(out) == 50
+
+    def test_deterministic_across_repeated_calls(self):
+        a, b = _lists(23)
+        first = asymmetric_constituent_depth([a, b], K, 50)
+        for _ in range(5):
+            assert asymmetric_constituent_depth([a, b], K, 50) == first
+
+    def test_frozen_parameters_match_the_protocol(self):
+        """The 40/10 split is preregistered; changing the code default without
+        amending the protocol would silently invalidate the frozen arm."""
+        import json
+        from hrm_adaptive_memory.c4.fusion import (
+            R4_BM25_RESERVED_SLOTS, R4_DENSE_RESERVED_SLOTS)
+        protocol = json.loads(
+            (ROOT_CONFIG := __import__("pathlib").Path(__file__).resolve()
+             .parents[2] / "configs/gate_c4_retrieval_fusion_v1.json").read_text())
+        frozen = protocol["R4_preregistered_2026_08_08"]["frozen_parameters"]
+        assert R4_BM25_RESERVED_SLOTS == frozen["bm25_reserved_unique_slots"] == 40
+        assert R4_DENSE_RESERVED_SLOTS == frozen["dense_reserved_unique_slots"] == 10
+        assert frozen["candidate_budget"] == B
 
 
 class TestOracleCeiling:
