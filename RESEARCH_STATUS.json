@@ -51,7 +51,7 @@
     "gate_k_consolidation": "BLOCKED",
     "gate_l_latent_memory": "BLOCKED",
     "gate_n1_natural_external_memory": "PENDING",
-    "gate_c4_integrated_memory_pipeline": "IN_PROGRESS_RERUN_REQUIRED_AFTER_PACKET_ORDERING_CONFORMANCE_DEFECT",
+    "gate_c4_integrated_memory_pipeline": "DEVELOPMENT_CERTIFIED_VALID_RUN_TRUE_16_OF_16_GATES__ORDERING_MEASURED_NEUTRAL",
     "gate_c4_bridge_runtime_acquisition": "FAIL_NO_RUNTIME_BRIDGE_MECHANISM_BEATS_ONE_PASS_BASELINE"
   },
   "gate_lineage": {
@@ -81,6 +81,46 @@
     "rrf_k_sensitivity": "NEGATIVE_RESULT: complete_set@50 is 0.767 at every k in {10,30,60,100} on development. k was never worth tuning on this corpus. k=10 is used as the simplest deterministic value on a CES@10 tiebreak and is NOT claimed to be scientifically superior.",
     "slot_label_echo": "99 -> 0 under precision packing; was an evidence-confusability artefact, not a prompt-interface or reasoning limit",
     "slot_label_echoes": "Track evidence quality, not packet format: 85 -> 28 under precision packing, -> 3 under oracle evidence. F-arms would measure a symptom; implemented but unrun."
+  },
+  "certified_development_result": {
+    "status": "VALID_RUN_TRUE",
+    "certified_utc": "2026-08-08T02:38:57Z",
+    "verdict": "VALID_CONFORMANT_C4_V2_RESULT",
+    "gates_passed": "16/16",
+    "protocol_sha256": "b4e22a551532acd230157cb6a85505ffc2a9108778dd726d9c9b6057160165a4",
+    "protocol_file": "configs/gate_c4_protocol_v2_1.json",
+    "run_environment": "RunPod, NVIDIA GeForce RTX 5090, CUDA 12.8, torch 2.8.0+cu128, transformers 5.14.1, python 3.12.3 (configs/c4_requirements.lock, CAPTURED not transcribed)",
+    "certificate_path": "evidence/gate_c4/full/development/certification/CERTIFICATION.json",
+    "bundle_path": "evidence/gate_c4/full/development",
+    "arm_quality": {
+      "C4_0": 0.1625, "C4_1": 0.175, "C4_2": 0.2125, "C4_3": 0.2125,
+      "C4_3o": 0.2146, "C4_4": 0.3625, "C4_4m": 0.3729, "C4_5": 0.7917,
+      "C4_6": 0.9542
+    },
+    "primary_delta": {
+      "value": "Q(C4_4) - Q(C4_0) = +0.2000",
+      "threshold": "+0.15",
+      "verdict": "PASS",
+      "ci_family": [0.1354, 0.2604],
+      "ci_cluster": [0.0583, 0.3521]
+    },
+    "selector_gap_capture": 0.259,
+    "oracle_gap_capture": 0.2526,
+    "ordering_membership_decomposition": {
+      "cells": {
+        "C4_3": "S0 membership + pool order, Q=0.2125",
+        "C4_3o": "S0 membership + deterministic order, Q=0.2146",
+        "C4_4m": "S2c membership + pool order, Q=0.3729",
+        "C4_4": "S2c membership + deterministic order (the real arm), Q=0.3625"
+      },
+      "E_order_S0": {"value": 0.0021, "ci_family": [-0.0167, 0.025], "note": "analyzer's 'ordering_effect', with a computed paired family-grouped CI"},
+      "E_membership_pool": {"value": 0.1604, "ci_family": [0.0979, 0.2271], "note": "analyzer's 'membership_effect', with a computed paired family-grouped CI"},
+      "E_order_S2c": {"value": -0.0104, "note": "Q(C4_4)-Q(C4_4m), a point estimate derived here; the analyzer did not compute a paired CI for this specific contrast"},
+      "interaction": -0.0125,
+      "finding": "Deterministic packet ordering is NEUTRAL: E_order_S0's family CI straddles zero, and E_order_S2c is small and slightly negative (no CI computed for that specific contrast, so treat it as a point estimate, not a significance claim). The entire mechanism gain is the S2c structural membership selector (E_membership_pool's family CI clearly excludes zero). Q(C4_4m)=0.3729 matches the 2026-08-07 historical measurement to four decimal places, confirming the rerun measured the same real phenomenon the historical run did, now correctly attributed.",
+      "recommendation": "Per the pre-registered runbook decision table (docs/C4_V2_1_COLAB_RUNBOOK.md section 5), E_order_S2c ~ 0 maps to: consider freezing C4_4m as the primary arm instead of C4_4 -- simpler mechanism (membership only), same result, one fewer moving part. This is a recommendation, not yet a protocol decision; changing the frozen primary arm requires an explicit new protocol version, same as v2 -> v2_1."
+    },
+    "note": "This certifies the DEVELOPMENT split only. Qualification and OOD splits, and any Gate D promotion decision, remain pending."
   },
   "historical_development_signal": {
     "C4_4_reported_q": 0.3729,
@@ -112,7 +152,7 @@
     "what_it_does_not_support": "It is not evidence for deterministic packet ordering, and it is not the C4-v2 final result for C4_4. The C4_4 cell under the intended prompt-order intervention has never been measured.",
     "disposition": "RETAINED_AND_RECLASSIFIED__NOT_VOID"
   },
-  "next_work": "C4 v2 certification infrastructure is COMPLETE and fail-closed. A certifying rerun is required; see historical_development_signal for the status of the 2026-08-07 numbers. Repairs already landed: HRM consumes PreHRMResult.prompt with _assert_prompt_binding enforcing packet.prompt_hash == hrm.prompt_hash per task; PIPELINE_VERSION invalidates stale resume keys; the analyzer no longer drops C4_3o/C4_4m receipts and emits the ordering/membership/interaction decomposition with grouped CIs; a fail-closed protocol semantic validator resolves the identity and selector invariants the Colab audit printed as N/A; every receipt carries the five protocol packet boundary hashes; determinism qualification v2 measures every field it claims; an environment lock plus verifier exists; scripts/certify_c4_run.py emits CERTIFICATION.json where VALID_RUN is the conjunction of derived gates and every metric is recomputed from raw receipts; scripts/c4_void_packets.py proves non-conformance before voiding and preserves data. Ordered next steps: (1) freeze the exact runtime environment with scripts/c4_freeze_environment.py (configs/c4_requirements.lock currently holds transcribed values with null pins and fails certification by design), (2) clean the git tree, (3) run the full test suite fail-closed, (4) run multi-seed pre-HRM determinism requiring candidate/membership/order/packet/prompt hash invariance, (5) run smoke, (6) execute C4_3, C4_3o, C4_4m and C4_4 with the real prompt-order intervention, (7) complete all seven primary arms C4_0..C4_6, (8) recompute all metrics from raw receipts, (9) analyze the membership/order decomposition, (10) generate family and cluster CIs, (11) run scripts/certify_c4_run.py, (12) write RESULTS.sha256 last and verify it, (13) emit VALID_RUN=true only if every derived gate passes, (14) stop before qualification. C4_3o and C4_4m are DIAGNOSTIC: they explain C4_4 and must not enter the primary seven-arm ladder, the arm-count gate or the promotion threshold. Do not optimize HRM recurrence: selection remains the dominant gap (C4_4 complete-set retention 0.4333 vs oracle-over-real-pool 0.7833 on the same candidate pool).",
+  "next_work": "C4 v2_1 DEVELOPMENT is certified: VALID_RUN=true, 16/16 gates, on RunPod (RTX 5090) at commit b0c9d6e96eb20a9dae8217977e9428da0372c926, protocol SHA b4e22a55...107. See certified_development_result for the full numbers; historical_development_signal is retained as lineage for the pre-repair measurement it reclassifies. The measured 2x2 shows deterministic packet ordering is neutral (E_order_S0 CI [-0.017,+0.025], E_order_S2c point estimate -0.0104) and S2c structural membership is the entire mechanism (E_membership_pool CI [+0.098,+0.227], clearly nonzero). Q(C4_4m)=0.3729 reproduced the 2026-08-07 historical figure to four decimals -- the pipeline is stable across independent runs and environments (T4 -> RTX 5090). Open decision (not yet made): whether to freeze C4_4m as the primary arm instead of C4_4, per docs/C4_V2_1_COLAB_RUNBOOK.md section 5's pre-registered table for an E_order_S2c ~ 0 outcome -- simpler mechanism (membership only), same measured result. That requires an explicit new protocol version if adopted; do not silently swap the frozen arm. Next: (1) decide C4_4 vs C4_4m as primary, (2) if changing, write and freeze that protocol version, (3) run the untouched qualification split under whichever protocol is decided, (4) then OOD, (5) Gate D promotion decision across all three splits. C4_3o and C4_4m remain DIAGNOSTIC in the current frozen protocol: they explain C4_4 and do not themselves enter the primary seven-arm ladder or promotion threshold unless a new protocol version explicitly promotes one. Do not optimize HRM recurrence: selection remains the dominant gap (C4_4 complete-set retention 0.4333 vs oracle-over-real-pool 0.7833 on the same candidate pool).",
   "ordering_decomposition_to_measure": {
     "cells": {
       "C4_3": "S0 membership + pool order",
