@@ -166,6 +166,28 @@
     "enforcement": "checked programmatically per task, not asserted in prose: the runner verifies that arms differing only in selector share an identical candidate_pool_hash, and arms differing only in fusion share an identical query_hash and identity state.",
     "requirement": "For every paired arm, only the intended intervention may differ: same task set, HRM, generation parameters, prompt template, candidate corpus, identity mechanism, verifier, packet budget."
   },
+  "confirmation_split_built_2026_08_08": {
+    "additive_write_verified": "Only the new confirmation/ directory was created. Verified after writing: git shows no modification to any existing file, both certified bundles' task_corpus_sha256 and evidence_corpus_sha256 still MATCH, and both BUNDLE.sha256 still verify.",
+    "audit_reuse": "The original build_gate_a_v4_dataset.audit() is called with the three frozen splits loaded from disk PLUS confirmation, so confirmation passes every per-split audit (inferability, retrievability, leakage, oracle isolation) under the same code that gated the original dataset, and the frozen splits are re-verified as a side effect.",
+    "builder": "scripts/build_c5_confirmation_split.py (fail-closed; refuses to overwrite)",
+    "content_isolation": "ZERO shared questions, ZERO shared question+answer pairs and ZERO shared evidence text against development, qualification AND ood.",
+    "corpus_scaling_reproduced": "2224 records vs qualification's 2216 (within 0.4%), 4.165x development. v2.1 failed because a fixed k=50 met a 4.15x larger corpus; a confirmation split at development's scale would have dodged exactly that condition.",
+    "digests": {
+      "dataset_manifest.json": "76d2215f1cc3bc96fffdbd89ace159f1bd14376d56910d029c3c4bfed587a1a9",
+      "evidence.jsonl": "25190bda081f1f16a4649c811ee92677ea425207323512a14a8ae60624dd0ee0",
+      "oracle_tasks.jsonl": "0f164ed54fd17b760d1d625f405c9365d2fd417a1c13345c6d59c7658100111b"
+    },
+    "evidence_records": 2224,
+    "how_isolation_was_achieved": "Seed choice alone CANNOT produce a clean 4th split: the generator draws entity names from a finite vocabulary, and across seeds 9104-9123 every seed collided with the 870 frozen tasks (1-6 duplicate question+answer pairs, 23-48 same-question collisions). Selecting the least-colliding seed would have been optimizing a number over 20 attempts rather than fixing the problem. Instead the builder OVER-GENERATES at 70 tasks/family, DROPS every task whose question or whose required evidence text collides with any frozen split (39 question collisions, 21 required-evidence collisions removed), then trims deterministically to exactly 50/family in generation order.",
+    "next": "Run the J ladder once on --split confirmation with --with-hrm (600 generations), evaluate the same 12 frozen criteria, and record the outcome whichever way it goes.",
+    "one_shot_discipline": "Frozen criteria are already fixed in configs/gate_c5_integrated_v1.json and are NOT to be changed. This split is run ONCE against J1 with no tuning; a failure is recorded as a negative result, not iterated against.",
+    "path": "data/hrm/controlled_gate_a_v4/confirmation/",
+    "seed": 9104,
+    "status": "FROZEN, UNRUN. Built before any confirmation result exists.",
+    "structure_preserved": "10 families x 50 tasks; canonical 246 / abbreviation 254; 350 of 500 bridged; both temporal families present; 160 templates, 24 source clusters, 5 answer kinds.",
+    "tasks": 500,
+    "why": "The 500-task qualification split is CONSUMED -- it informed the retrieval diagnosis, selector diagnosis, failure decomposition and the design of S2 -- so it cannot test the mechanism it shaped. J1 met all 12 frozen criteria on development, and a development pass is not a generalization claim: v2.1 also passed development (+0.200) then failed qualification (+0.091)."
+  },
   "created_utc": "2026-08-08T21:00:00Z",
   "deferred_until_after_integration": {
     "executive_gate": "ANSWER_NOW vs RETRIEVE_WITH_C4_VNEXT, requiring U_oracle_policy > max(U_always_answer, U_always_retrieve) with a positive lower bound and non-degenerate action use, before any learned executive is trained.",
@@ -392,7 +414,7 @@
       "disconnected packet rate"
     ]
   },
-  "status": "J_LADDER_DEVELOPMENT_PASS__AWAITING_FRESH_CONFIRMATION_SPLIT",
+  "status": "J_LADDER_DEVELOPMENT_PASS__CONFIRMATION_SPLIT_FROZEN_AND_UNRUN",
   "subgroup_safety": {
     "abbreviation_q_must_not_materially_regress": "tolerance -0.05; the RESOLVED/abbreviation path was already healthy and the repair must not trade it away",
     "axes": [
