@@ -44,11 +44,16 @@ from hrm_adaptive_memory.c4.provenance import (
 CORPUS = ROOT / "data/hrm/controlled_gate_a_v4"
 OUT = ROOT / "evidence/gate_c4"
 HRM_MAX_NEW_TOKENS = 64
-# Prompts sharing one HRM forward pass in run_full(). Only valid because
-# generate_batch() is verified byte-identical to sequential generate() --
-# see tests/unit/test_batched_generation.py. 1 reproduces the old sequential
-# behavior exactly, for anyone who wants to disable batching.
-HRM_BATCH_SIZE = int(os.environ.get("HRM_BATCH_SIZE", "16"))
+# Prompts sharing one HRM forward pass in run_full(). Must stay 1 by default:
+# tests/unit/test_batched_generation.py's real-checkpoint equivalence check
+# (HRM_EQUIVALENCE_TEST=1) currently FAILS for sapientinc/HRM-Text-1B at both
+# float16 and bfloat16 -- on a Lightning A100, batching produced a genuinely
+# different completion (not just a trailing-token artifact) for the shortest
+# prompt in a mixed-length batch. Root cause not yet found; suspected
+# interaction between left-padding and this model's recurrent H/L-cycle
+# architecture, which is not a standard decoder-only transformer. Do not
+# raise this default until that equivalence test passes.
+HRM_BATCH_SIZE = int(os.environ.get("HRM_BATCH_SIZE", "1"))
 
 
 ACTIVE_PROTOCOL = "v2_1"
