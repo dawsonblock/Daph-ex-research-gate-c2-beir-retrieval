@@ -571,6 +571,86 @@ class TestStatisticalGate:
         assert any("cluster-grouped" in v for v in g.violations)
 
 
+class TestFamilyRegressionGate:
+    """D5: no task-structure family may regress worse than -0.10 Q, checked
+    both independently (recomputed from receipts) and cross-referenced
+    against analysis.json -- the same "never trust the report" discipline as
+    every other derived metric in this certifier."""
+
+    def _arms_with_families(self, family_qualities: dict[str, tuple[float, float]],
+                            n_per_family: int = 4) -> dict[str, list[dict]]:
+        """family_qualities: {family: (c4_0_quality, c4_4_quality)}."""
+        arms = {a: [] for a in PRIMARY}
+        for fam, (q0, q4) in family_qualities.items():
+            for i in range(n_per_family):
+                tid = f"{fam}-{i}"
+                for arm in PRIMARY:
+                    q = q4 if arm == "C4_4" else q0
+                    r = _receipt(arm, tid, quality=q, correct=q >= 0.5)
+                    r["evaluator_annotation"]["family"] = fam
+                    arms[arm].append(r)
+        return arms
+
+    def _analysis_for(self, arms: dict[str, list[dict]]) -> dict:
+        analyzer = certify_mod._load_analyzer()
+        return {"family_regression": analyzer.family_regression(arms)}
+
+    def test_all_families_safe_passes(self):
+        arms = self._arms_with_families(
+            {"fam_a": (0.2, 0.4), "fam_b": (0.2, 0.5)})
+        g = certify_mod.gate_family_regression(arms, self._analysis_for(arms))
+        assert g.passed, g.violations
+
+    def test_one_family_regressed_fails(self):
+        arms = self._arms_with_families(
+            {"fam_a": (0.2, 0.4), "fam_b": (0.5, 0.2)})  # fam_b: -0.30
+        g = certify_mod.gate_family_regression(arms, self._analysis_for(arms))
+        assert not g.passed
+        assert any("fam_b" in v and "regressed" in v for v in g.violations)
+
+    def test_regression_just_under_threshold_still_passes(self):
+        arms = self._arms_with_families({"fam_a": (0.3, 0.21)})  # -0.09
+        g = certify_mod.gate_family_regression(arms, self._analysis_for(arms))
+        assert g.passed, g.violations
+
+    def test_missing_c4_0_fails(self):
+        arms = self._arms_with_families({"fam_a": (0.2, 0.4)})
+        del arms["C4_0"]
+        g = certify_mod.gate_family_regression(arms, {"family_regression": None})
+        assert not g.passed
+        assert any("C4_0 or C4_4 missing" in v for v in g.violations)
+
+    def test_missing_from_analysis_json_fails(self):
+        """The exact historical pattern: a report that predates a new field
+        must not be silently treated as passing that new criterion."""
+        arms = self._arms_with_families({"fam_a": (0.2, 0.4)})
+        g = certify_mod.gate_family_regression(arms, {})  # no family_regression key
+        assert not g.passed
+        assert any("does not report family_regression" in v for v in g.violations)
+
+    def test_tampered_analysis_delta_fails(self):
+        arms = self._arms_with_families({"fam_a": (0.2, 0.4)})
+        analysis = self._analysis_for(arms)
+        analysis["family_regression"]["per_family"]["fam_a"]["mean_delta"] = 0.99
+        g = certify_mod.gate_family_regression(arms, analysis)
+        assert not g.passed
+        assert any("analysis reports delta" in v for v in g.violations)
+
+    def test_multiple_regressed_families_all_named(self):
+        arms = self._arms_with_families(
+            {"fam_a": (0.5, 0.2), "fam_b": (0.5, 0.1), "fam_c": (0.2, 0.4)})
+        g = certify_mod.gate_family_regression(arms, self._analysis_for(arms))
+        assert not g.passed
+        assert any("fam_a" in v for v in g.violations)
+        assert any("fam_b" in v for v in g.violations)
+        assert not any("fam_c" in v for v in g.violations)
+
+    def test_detail_records_the_threshold(self):
+        arms = self._arms_with_families({"fam_a": (0.2, 0.4)})
+        g = certify_mod.gate_family_regression(arms, self._analysis_for(arms))
+        assert g.detail["threshold"] == -0.10
+
+
 class TestDeterminismGate:
     def _receipt_v2(self, tmp_path: Path, **kw) -> Path:
         payload = {

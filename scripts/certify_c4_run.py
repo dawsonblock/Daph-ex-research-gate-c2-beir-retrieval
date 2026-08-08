@@ -676,7 +676,14 @@ def gate_derived_metric_agreement(arms: dict[str, list[dict]],
 
 
 def gate_statistical(analysis: dict) -> Gate:
-    """Protocol D4/D5: predeclared threshold and grouped CI lower bounds."""
+    """Protocol D4: predeclared threshold and grouped CI lower bounds.
+
+    D5 (family regression) is gate_family_regression, below -- kept separate
+    so a failed certificate distinguishes "the aggregate gain is too small or
+    unstable" from "one family collapsed while the aggregate looked fine".
+    This docstring previously claimed D5 too; the function never actually
+    checked it.
+    """
     g = Gate("statistical_gate")
     delta = analysis.get("primary_delta") or {}
     if not delta:
@@ -703,6 +710,65 @@ def gate_statistical(analysis: dict) -> Gate:
 
     flips = delta.get("flips") or {}
     g.detail["flips"] = flips
+    return g.finalize()
+
+
+def gate_family_regression(arms: dict[str, list[dict]], analysis: dict) -> Gate:
+    """D5: no task-structure family may regress worse than the frozen
+    threshold. Frozen BEFORE any qualification run, per RESEARCH_STATUS.json.
+
+    Recomputed independently from raw receipts using the same
+    family_regression() function analyze_gate_c4.py uses to write
+    analysis.json, then cross-checked against what analysis.json reports --
+    the same "never trust analysis.json because it is present" discipline
+    every other derived metric in this certifier already follows.
+
+    A point-estimate check, not CI-based: development has ~12 tasks per
+    family, too few for a per-family CI to mean much; qualification's larger
+    per-family N is what makes the point estimate itself trustworthy there.
+    """
+    g = Gate("family_regression")
+
+    analyzer = _load_analyzer()
+    if analyzer is None:
+        g.fail("could not import scripts/analyze_gate_c4.py to recompute "
+               "per-family deltas")
+        return g.finalize()
+
+    threshold = analyzer.D5_FAMILY_REGRESSION_THRESHOLD
+    g.detail["threshold"] = threshold
+
+    if "C4_0" not in arms or "C4_4" not in arms:
+        g.fail("C4_0 or C4_4 missing: cannot compute the primary delta this "
+               "gate is scoped to")
+        return g.finalize()
+
+    recomputed = analyzer.family_regression(arms, threshold=threshold)
+    g.detail["recomputed"] = recomputed
+
+    reported = analysis.get("family_regression")
+    g.detail["reported"] = reported
+    if reported is None:
+        g.fail("analysis.json does not report family_regression")
+    else:
+        for fam, r_detail in (recomputed or {}).get("per_family", {}).items():
+            rep_detail = (reported.get("per_family") or {}).get(fam)
+            if rep_detail is None:
+                g.fail(f"analysis.json is missing family {fam!r}")
+                continue
+            if abs(rep_detail.get("mean_delta", float("nan")) -
+                  r_detail["mean_delta"]) > 1e-9:
+                g.fail(f"family {fam}: analysis reports delta "
+                       f"{rep_detail.get('mean_delta')}, receipts give "
+                       f"{r_detail['mean_delta']}")
+
+    if recomputed and not recomputed["safe"]:
+        for fam in recomputed["regressed_families"]:
+            d = recomputed["per_family"][fam]
+            g.fail(f"family {fam!r} regressed {d['mean_delta']:+.4f}, "
+                   f"below the D5 threshold {threshold:+.2f} "
+                   f"(n={d['n']} tasks)")
+
     return g.finalize()
 
 
@@ -826,6 +892,7 @@ def certify(bundle: Path, protocol_path: Path, lock_path: Path,
     gates.append(gate_metric_correctness(arms, analysis))
     gates.append(gate_derived_metric_agreement(arms, analysis))
     gates.append(gate_statistical(analysis))
+    gates.append(gate_family_regression(arms, analysis))
     gates.append(gate_results_hash(bundle))
 
     # Only non-development splits are required to prove lineage back to a

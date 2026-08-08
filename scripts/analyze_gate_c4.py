@@ -28,6 +28,17 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# D5 (protocol promotion_gates.D5_no_family_regression): "No catastrophic
+# collapse in any important family." Frozen BEFORE qualification runs, per
+# the same discipline this project already applies to every other threshold
+# -- see RESEARCH_STATUS.json for the decision record. Point-estimate delta
+# per task-structure family (the same "family" grouping already used
+# everywhere else for the primary delta's grouped CI), C4_4 vs C4_0, on the
+# common task set. Not CI-based: development has only ~12 tasks per family,
+# too few for a per-family CI to be trustworthy; qualification's ~500 tasks
+# give point estimates enough stability on their own.
+D5_FAMILY_REGRESSION_THRESHOLD = -0.10
+
 ARMS = ["C4_0", "C4_1", "C4_2", "C4_3", "C4_4", "C4_5", "C4_6"]
 # Diagnostic arms completing the membership x ordering 2x2. Loaded when present
 # but excluded from the primary ladder's adjacent deltas and parity check.
@@ -333,6 +344,59 @@ def validate_parity(arms: dict[str, list[dict]]) -> dict:
     return result
 
 
+def family_regression(arms: dict[str, list[dict]],
+                      threshold: float = D5_FAMILY_REGRESSION_THRESHOLD,
+                      ) -> dict | None:
+    """D5: no task-structure family may regress worse than ``threshold``.
+
+    Point-estimate paired delta (C4_4 - C4_0) restricted to each family's
+    tasks, reusing paired_deltas() so this is the exact same paired-task
+    methodology as the primary delta -- just filtered to one family instead
+    of all tasks. No per-family CI: development's ~12 tasks per family are
+    too few to trust one; qualification's much larger per-family N makes the
+    point estimate itself the meaningful signal.
+
+    Returns None (not a dict with empty families) when C4_0 or C4_4 is
+    missing, so a missing-arms condition can never be silently reported as
+    "zero families regressed".
+    """
+    if "C4_0" not in arms or "C4_4" not in arms:
+        return None
+
+    by_id_0 = {_task_id(r): r for r in arms["C4_0"]}
+    by_id_4 = {_task_id(r): r for r in arms["C4_4"]}
+    common = sorted(set(by_id_0) & set(by_id_4))
+    families = sorted({_family(by_id_0[t]) for t in common})
+
+    per_family: dict[str, dict] = {}
+    worst_family = None
+    worst_delta = None
+    for fam in families:
+        fam_ids = [t for t in common if _family(by_id_0[t]) == fam]
+        recs_0 = [by_id_0[t] for t in fam_ids]
+        recs_4 = [by_id_4[t] for t in fam_ids]
+        delta = paired_deltas(recs_0, recs_4)
+        mean_delta = delta["mean_delta"]
+        per_family[fam] = {
+            "n": len(fam_ids),
+            "mean_delta": mean_delta,
+            "regressed": mean_delta < threshold,
+        }
+        if worst_delta is None or mean_delta < worst_delta:
+            worst_delta = mean_delta
+            worst_family = fam
+
+    regressed = [f for f, d in per_family.items() if d["regressed"]]
+    return {
+        "threshold": threshold,
+        "per_family": per_family,
+        "worst_family": worst_family,
+        "worst_delta": worst_delta,
+        "regressed_families": regressed,
+        "safe": not regressed,
+    }
+
+
 def ordering_membership_decomposition(arms: dict[str, list[dict]]) -> dict | None:
     """Decompose Q(C4_4) - Q(C4_3) into ordering, membership and interaction.
 
@@ -399,6 +463,7 @@ def main():
         "selector_gap_capture": None,
         "oracle_gap_capture": None,
         "ordering_membership_decomposition": None,
+        "family_regression": None,
     }
 
     # Arm summaries
@@ -450,6 +515,9 @@ def main():
 
     # Ordering vs membership decomposition (needs the diagnostic arms)
     report["ordering_membership_decomposition"] = ordering_membership_decomposition(arms)
+
+    # D5: no task-structure family may regress worse than the frozen threshold
+    report["family_regression"] = family_regression(arms)
 
     # Print summary
     print("=" * 70)
@@ -547,6 +615,22 @@ def main():
               f"CI_family=[{mp['ci_lower']:+.4f}, {mp['ci_upper']:+.4f}]")
         print(f"  combined effect    = {dec['combined_effect']:+.4f}")
         print(f"  interaction        = {dec['interaction_effect']:+.4f}")
+
+    print(f"\n--- D5: Family Regression (threshold "
+          f"{D5_FAMILY_REGRESSION_THRESHOLD:+.2f}) ---")
+    fr = report["family_regression"]
+    if fr is None:
+        print("  NOT AVAILABLE — C4_0 or C4_4 missing")
+    else:
+        for fam, d in sorted(fr["per_family"].items()):
+            flag = "REGRESSED" if d["regressed"] else "ok"
+            print(f"  {fam:<22} n={d['n']:>4}  delta={d['mean_delta']:+.4f}  "
+                  f"[{flag}]")
+        print(f"  worst family: {fr['worst_family']} "
+              f"({fr['worst_delta']:+.4f})")
+        print(f"  D5: {'PASS' if fr['safe'] else 'FAIL'}"
+              + (f" — regressed: {fr['regressed_families']}"
+                 if not fr["safe"] else ""))
 
     # Write output
     if args.output:
