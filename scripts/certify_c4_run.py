@@ -44,6 +44,7 @@ from typing import Any, Callable
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from hrm_adaptive_memory.c4 import git_state  # noqa: E402
 from hrm_adaptive_memory.c4.arms import PRIMARY_ORDER  # noqa: E402
 from hrm_adaptive_memory.c4.environment_lock import (  # noqa: E402
     load_lock, verify_environment)
@@ -55,9 +56,9 @@ from hrm_adaptive_memory.c4.protocol_validation import (  # noqa: E402
 from hrm_adaptive_memory.c4.provenance import verify_results_hash  # noqa: E402
 from hrm_adaptive_memory.c4.receipts import assert_runtime_clean  # noqa: E402
 
-# Source tree that must be snapshotted and hashed for lineage.
-SOURCE_PATHS = ("hrm_adaptive_memory", "daph", "scripts", "configs", "tests",
-                "pyproject.toml")
+# Source tree that must be snapshotted and hashed for lineage. Defined once in
+# git_state so the snapshot and the cleanliness check cannot disagree.
+SOURCE_PATHS = git_state.SOURCE_PATHS
 
 # Determinism fields the qualification receipt must have compared.
 REQUIRED_DETERMINISM_FIELDS = frozenset({
@@ -181,25 +182,32 @@ def gate_source_lineage(bundle: Path, manifest: dict,
     if not commit or commit == "unknown":
         g.fail("manifest.git_commit is missing or 'unknown': the bundle cannot "
                "be tied to a source revision")
-    else:
-        try:
-            head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
-                                  capture_output=True, text=True, timeout=10)
-            if head.returncode == 0:
-                head_sha = head.stdout.strip()
-                g.detail["current_git_commit"] = head_sha
-                if head_sha != commit:
-                    g.fail(f"bundle was produced at {commit[:12]} but the "
-                           f"working tree is at {head_sha[:12]}")
-                dirty = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT,
-                                       capture_output=True, text=True, timeout=10)
-                if dirty.returncode == 0 and dirty.stdout.strip():
-                    g.detail["dirty_files"] = dirty.stdout.strip().splitlines()[:20]
-                    g.fail("git tree is dirty (protocol abort condition)")
-            else:
-                g.fail("not a git repository: cannot verify the expected commit")
-        except Exception as exc:  # noqa: BLE001
-            g.fail(f"git verification failed: {exc}")
+
+    state = git_state.inspect(ROOT)
+    g.detail["git"] = state.summary()
+
+    if not state.is_repo:
+        g.fail(f"{state.error}: cannot verify the source revision")
+        return g.finalize(), snapshot
+
+    if commit and commit != "unknown" and not git_state.revision_matches(
+            state.head, commit):
+        g.fail(f"bundle was produced at {commit[:12]} but the working tree is "
+               f"at {(state.head or '?')[:12]}")
+
+    # Cleanliness is scoped to the paths that DEFINE the revision. A certifying
+    # run necessarily rewrites tracked files under evidence/ (frozen packets,
+    # determinism receipt, dry-run and smoke receipts), so an unscoped dirty
+    # check would make VALID_RUN unreachable by construction.
+    if state.source_changes:
+        g.fail(f"source tree is dirty in {len(state.source_changes)} place(s) "
+               f"(protocol abort condition D8_clean_release): "
+               f"{[c[3:] for c in state.source_changes[:5]]}")
+    if state.other_changes:
+        g.fail(f"unclassified changes outside source and evidence paths: "
+               f"{[c[3:] for c in state.other_changes[:5]]}")
+    # Recorded, never fatal: this is the run's own output.
+    g.detail["evidence_change_count"] = len(state.output_changes)
 
     return g.finalize(), snapshot
 

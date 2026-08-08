@@ -658,6 +658,108 @@ class TestResultsHashGate:
         assert any("missing" in v for v in g.violations)
 
 
+class TestSourceLineageScoping:
+    """`VALID_RUN: true` must be reachable after a real run.
+
+    A certifying run rewrites tracked files under evidence/ — frozen packets,
+    the determinism receipt, dry-run and smoke receipts. If the source_lineage
+    gate treated that as a dirty tree, the gate would fail on every genuine run
+    and no bundle could ever certify.
+    """
+
+    def _repo(self, tmp_path: Path) -> Path:
+        """A repo containing every SOURCE_PATH, so the gate can hash them all."""
+        import subprocess
+        r = tmp_path / "repo"
+        r.mkdir()
+        for rel in certify_mod.SOURCE_PATHS:
+            target = r / rel
+            if rel.endswith(".toml"):
+                target.write_text("[project]\nname='x'\n")
+            else:
+                target.mkdir(parents=True)
+                (target / "mod.py").write_text("x = 1\n")
+        (r / "evidence").mkdir()
+        (r / "evidence" / "receipts.jsonl").write_text('{"a":1}\n')
+        for args in (("init", "--quiet"), ("config", "user.email", "t@e.com"),
+                     ("config", "user.name", "t"), ("add", "-A"),
+                     ("commit", "--quiet", "-m", "init")):
+            subprocess.run(["git", *args], cwd=r, capture_output=True, check=True)
+        return r
+
+    def test_evidence_changes_do_not_fail_the_gate(self, tmp_path, monkeypatch):
+        repo = self._repo(tmp_path)
+        head = certify_mod.git_state.inspect(repo).head
+        (repo / "evidence" / "receipts.jsonl").write_text('{"a":2}\n')
+        (repo / "evidence" / "frozen.json").write_text("{}\n")
+        monkeypatch.setattr(certify_mod, "ROOT", repo)
+
+        g, _snapshot = certify_mod.gate_source_lineage(
+            repo, {"git_commit": head}, None)
+        assert not any("dirty" in v for v in g.violations), g.violations
+        assert g.detail["evidence_change_count"] == 2
+
+    def test_source_changes_fail_the_gate(self, tmp_path, monkeypatch):
+        repo = self._repo(tmp_path)
+        head = certify_mod.git_state.inspect(repo).head
+        (repo / "scripts" / "mod.py").write_text("x = 2\n")
+        monkeypatch.setattr(certify_mod, "ROOT", repo)
+
+        g, _snapshot = certify_mod.gate_source_lineage(
+            repo, {"git_commit": head}, None)
+        assert not g.passed
+        assert any("source tree is dirty" in v for v in g.violations)
+
+    def test_commit_mismatch_fails_the_gate(self, tmp_path, monkeypatch):
+        repo = self._repo(tmp_path)
+        monkeypatch.setattr(certify_mod, "ROOT", repo)
+        g, _snapshot = certify_mod.gate_source_lineage(
+            repo, {"git_commit": "f" * 40}, None)
+        assert not g.passed
+        assert any("was produced at" in v for v in g.violations)
+
+    def test_missing_commit_fails_the_gate(self, tmp_path, monkeypatch):
+        repo = self._repo(tmp_path)
+        monkeypatch.setattr(certify_mod, "ROOT", repo)
+        g, _snapshot = certify_mod.gate_source_lineage(repo, {}, None)
+        assert not g.passed
+        assert any("git_commit is missing" in v for v in g.violations)
+
+    def test_non_repo_fails_the_gate(self, tmp_path, monkeypatch):
+        plain = tmp_path / "plain"
+        plain.mkdir()
+        for rel in certify_mod.SOURCE_PATHS:
+            target = plain / rel
+            if rel.endswith(".toml"):
+                target.write_text("[project]\nname='x'\n")
+            else:
+                target.mkdir(parents=True)
+                (target / "mod.py").write_text("x = 1\n")
+        monkeypatch.setattr(certify_mod, "ROOT", plain)
+        g, _snapshot = certify_mod.gate_source_lineage(
+            plain, {"git_commit": "a" * 40}, None)
+        assert not g.passed
+        assert any("not a git repository" in v for v in g.violations)
+
+    def test_clean_repo_passes(self, tmp_path, monkeypatch):
+        repo = self._repo(tmp_path)
+        head = certify_mod.git_state.inspect(repo).head
+        monkeypatch.setattr(certify_mod, "ROOT", repo)
+        g, snapshot = certify_mod.gate_source_lineage(
+            repo, {"git_commit": head}, None)
+        assert g.passed, g.violations
+        assert snapshot["source_tree_sha256"]
+
+    def test_source_sha_mismatch_fails(self, tmp_path, monkeypatch):
+        repo = self._repo(tmp_path)
+        head = certify_mod.git_state.inspect(repo).head
+        monkeypatch.setattr(certify_mod, "ROOT", repo)
+        g, _snapshot = certify_mod.gate_source_lineage(
+            repo, {"git_commit": head}, "0" * 64)
+        assert not g.passed
+        assert any("source tree sha mismatch" in v for v in g.violations)
+
+
 class TestValidRunConjunction:
     def test_one_failing_gate_makes_valid_run_false(self, bundle, monkeypatch):
         """VALID_RUN is a conjunction, not the protocol hash alone."""

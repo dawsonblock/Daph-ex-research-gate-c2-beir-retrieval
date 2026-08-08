@@ -1,14 +1,24 @@
 #!/usr/bin/env python3
 """C4 Requalification Run — Google Colab T4 GPU.
 
-One script. Paste into a Colab cell and run. That's it.
+Runs against the CURRENT WORKING TREE. It does not clone.
 
-    !git clone https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval.git
-    %cd Daph-ex-research-gate-c2-beir-retrieval
-    !python scripts/colab_c4_requalify.py
+    !git clone <repo> /content/repo
+    %cd /content/repo
+    !git checkout <SHA>
+    !python scripts/colab_c4_requalify.py --expected-commit <SHA>
+
+Cloning used to happen inside this script, which meant a session could hold two
+checkouts at once -- the one the operator prepared and the one the script
+fetched from the default branch -- and debugging would drift between them. A
+certification script must not silently replace its own source tree halfway
+through execution. The caller checks out an exact revision; this script verifies
+HEAD matches --expected-commit and refuses to run otherwise.
 
 Prerequisites:
     - Runtime -> Change runtime type -> T4 GPU + High-RAM
+    - A committed revision containing a CAPTURED environment lock (null pins
+      abort at step 3)
     - Expected time: ~30-40 minutes on T4
 
 FAIL-CLOSED. Every step that the protocol names as an abort condition aborts.
@@ -22,9 +32,9 @@ cannot be certified, so continuing only wastes GPU time.
 
 What it does (in order):
     1.  Verify GPU
-    2.  Clone/pull the repository
-    3.  Install dependencies from the environment lock
-    4.  Freeze/verify the environment lock
+    2.  Verify source revision + clean source tree   [ABORTS on mismatch/dirt]
+    3.  Install dependencies from the lock           [ABORTS on failure]
+    4.  Verify environment against the lock          [ABORTS on mismatch]
     5.  Validate the active protocol semantically (fail-closed)
     6.  Run the full test suite                          [ABORTS on failure]
     7.  Pre-HRM determinism qualification (multi-seed)   [ABORTS on failure]
@@ -40,6 +50,7 @@ What it does (in order):
     17. Certification -> CERTIFICATION.json               [decides VALID_RUN]
     18. Package for download (name reflects the verdict)
 """
+import argparse
 import os
 import sys
 import time
@@ -51,12 +62,13 @@ from pathlib import Path
 
 # -- Config -----------------------------------------------------------------
 
-REPO_URL = "https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval.git"
-REPO_DIR = "/content/Daph-ex-research-gate-c2-beir-retrieval"
 ARMS = ["C4_0", "C4_1", "C4_2", "C4_3", "C4_4", "C4_5", "C4_6"]
 DIAGNOSTIC_ARMS = ["C4_3o", "C4_4m"]
 DETERMINISM_SEEDS = "0,42,12345"
 TOTAL_STEPS = 18
+
+# Set from --expected-commit. The run refuses to proceed unless HEAD matches.
+EXPECTED_COMMIT = ""
 
 
 # -- Helpers ----------------------------------------------------------------
@@ -119,9 +131,24 @@ def step(n, text):
 
 # -- Main pipeline ----------------------------------------------------------
 
-def main():
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(
+        description="C4 v2_1 certifying run over the current working tree")
+    parser.add_argument(
+        "--expected-commit", required=True,
+        help="Full or abbreviated (>=7 char) SHA of the revision to certify. "
+             "Required: a certifying run must name the revision it certifies, "
+             "and HEAD must match it.")
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    global EXPECTED_COMMIT
+    args = parse_args(argv)
+    EXPECTED_COMMIT = args.expected_commit.strip()
+
     banner("C4 Requalification Run — T4 GPU (fail-closed)")
-    print(f"Repository: {REPO_URL}")
+    print(f"Revision:   {EXPECTED_COMMIT}")
     print("Protocol:   C4 v2_1 (deterministic, reproducible, single ordering spec)")
     print(f"Steps:      {TOTAL_STEPS}")
     print("Expected:   ~30-40 minutes on T4 GPU")
@@ -143,28 +170,55 @@ def main():
     except ImportError:
         abort("Step 1", "PyTorch is not installed")
 
-    # -- Step 2: Clone repository ------------------------------------------
-    step(2, "Cloning repository...")
+    # -- Step 2: Verify the source revision --------------------------------
+    step(2, "Verifying source revision...")
 
-    if os.path.exists(REPO_DIR):
-        print("  Repository exists, pulling latest...")
-        subprocess.run(["git", "-C", REPO_DIR, "pull", "--rebase"],
-                       capture_output=True, check=False)
-    else:
-        subprocess.run(["git", "clone", REPO_URL, REPO_DIR], check=True)
+    # This script does NOT clone. It certifies the working tree it is run from.
+    #
+    # It used to clone REPO_URL into its own directory, which meant a session
+    # could hold two checkouts at once -- the one the operator prepared and the
+    # one this script fetched -- and debugging would drift between them. A
+    # certification script must not silently replace its own source tree
+    # halfway through execution. The caller clones and checks out; we verify.
+    sys.path.insert(0, os.getcwd())
+    try:
+        from hrm_adaptive_memory.c4 import git_state
+    except ImportError as exc:
+        abort("Step 2",
+              f"cannot import hrm_adaptive_memory from {os.getcwd()}: {exc}\n"
+              f"  Run this script from the repository root of the revision you "
+              f"intend to certify.")
 
-    os.chdir(REPO_DIR)
-    commit = subprocess.check_output(["git", "rev-parse", "HEAD"]).decode().strip()
-    dirty = subprocess.check_output(["git", "status", "--porcelain"]).decode().strip()
-    print(f"  Commit: {commit[:12]}")
+    state = git_state.inspect(Path.cwd())
     print(f"  Working dir: {os.getcwd()}")
-    if dirty:
-        # D8_clean_release requires a clean tree; certification will fail on it,
-        # so say so now rather than after the GPU run.
-        print("  WARNING: working tree is dirty. Certification gate "
-              "'source_lineage' will FAIL:")
-        for line in dirty.splitlines()[:10]:
-            print(f"    {line}")
+    if not state.is_repo:
+        abort("Step 2", f"{state.error}\n"
+                        f"  A certifying run must be tied to a commit. Clone "
+                        f"the repository and check out the exact revision.")
+    print(f"  HEAD:        {state.head}")
+    print(f"  Expected:    {EXPECTED_COMMIT}")
+
+    if not git_state.revision_matches(state.head, EXPECTED_COMMIT):
+        abort("Step 2",
+              f"HEAD is {state.head} but --expected-commit is "
+              f"{EXPECTED_COMMIT}.\n"
+              f"  Check out the revision you intend to certify:\n"
+              f"    git checkout {EXPECTED_COMMIT}")
+
+    # Source dirt is fatal (D8_clean_release). Evidence dirt is this run's own
+    # output and is expected -- steps 7-11 rewrite tracked files under
+    # evidence/, so a run cannot be required to leave them untouched.
+    if state.source_changes or state.other_changes:
+        detail = "\n".join(f"    {line}" for line in
+                           (state.source_changes + state.other_changes)[:15])
+        abort("Step 2",
+              f"working tree does not match {EXPECTED_COMMIT[:12]}:\n{detail}\n"
+              f"  Certification gate 'source_lineage' would FAIL, so the run "
+              f"stops here rather than after the GPU work.\n"
+              f"  Do not edit files in this checkout. Change them upstream, "
+              f"commit, push, and re-clone.")
+    print(f"  Source tree: clean ({len(state.output_changes)} pre-existing "
+          f"evidence change(s), which are expected)")
 
     # -- Step 3: Install dependencies from the lock ------------------------
     step(3, "Installing dependencies from the environment lock...")
@@ -172,14 +226,16 @@ def main():
     lock_path = Path("configs/c4_requirements.lock")
     if not lock_path.is_file():
         abort("Step 3", f"{lock_path} is missing. The environment cannot be "
-                        f"reproduced without a lock.")
+                        f"reproduced without a lock. Freeze one first:\n"
+                        f"    python scripts/c4_freeze_environment.py")
 
-    sys.path.insert(0, os.getcwd())
     from hrm_adaptive_memory.c4.environment_lock import (
-        capture_environment, load_lock, pip_requirements, verify_environment)
+        load_lock, pip_requirements, verify_environment)
 
     lock = load_lock(lock_path)
     requirements = Path("/content/c4_requirements.txt")
+    if not requirements.parent.is_dir():
+        requirements = Path.cwd() / ".c4_requirements.txt"
     requirements.write_text(pip_requirements(lock))
     print(f"  Lock pins: python=={lock.get('python')}")
     for name, version in sorted((lock.get("packages") or {}).items()):
@@ -187,16 +243,21 @@ def main():
 
     unrecorded = [n for n, v in (lock.get("packages") or {}).items() if v is None]
     if unrecorded:
-        print(f"\n  NOTE: {unrecorded} are unrecorded in the lock.")
-        print("  Certification will FAIL on them (MUST_RECORD). If this is the")
-        print("  environment you intend to certify, regenerate the lock with:")
-        print("    python scripts/c4_freeze_environment.py --note 'colab T4'")
-        print("  then commit it and re-run.")
+        # MUST_RECORD: an unrecorded version is a failure, not a wildcard, so
+        # there is no point running 35 minutes of GPU work behind it.
+        abort("Step 3",
+              f"the lock leaves {unrecorded} unrecorded (MUST_RECORD).\n"
+              f"  Certification cannot pass with null pins. Freeze the lock in "
+              f"this runtime, commit it, and run that revision:\n"
+              f"    python scripts/c4_freeze_environment.py --note 'colab T4'")
 
+    # check=True: 'dependency version mismatch' is a declared abort condition.
+    # A run whose dependencies could not be installed from the lock is not
+    # certifiable, so failing here costs seconds instead of half an hour.
     run(["pip", "install", "-q", "-r", str(requirements)],
-        "Install locked dependencies", timeout=1200, check=False)
+        "Install locked dependencies", timeout=1200, check=True)
     run(["pip", "install", "-q", "-e", "."], "Install repository (editable)",
-        timeout=900)
+        timeout=900, check=True)
 
     # -- Step 4: Verify the environment against the lock -------------------
     step(4, "Verifying environment against the lock...")
@@ -207,15 +268,16 @@ def main():
         print(f"  {name}: {version}")
     print(f"  accelerator: cuda={observed['accelerator']['cuda']} "
           f"gpu={observed['accelerator']['gpu_name']}")
-    if ok:
-        print("\n  Environment matches the lock.")
-    else:
-        print(f"\n  {len(violations)} environment violation(s):")
-        for v in violations:
-            print(f"    - {v}")
-        print("\n  Continuing (the run is still useful as a measurement), but")
-        print("  certification WILL report VALID_RUN=false until the lock and")
-        print("  the environment agree.")
+    if not ok:
+        detail = "\n".join(f"    - {v}" for v in violations)
+        abort("Step 4",
+              f"{len(violations)} environment violation(s):\n{detail}\n"
+              f"  'dependency version mismatch' is a declared abort condition. "
+              f"A mismatched environment cannot produce a certifiable run, so "
+              f"the GPU work is not started.\n"
+              f"  Either run the revision whose lock matches this runtime, or "
+              f"re-freeze the lock here, commit it, and run that revision.")
+    print("\n  Environment matches the lock.")
 
     # -- Step 5: Validate the active protocol ------------------------------
     step(5, "Validating the active protocol (semantic, fail-closed)...")
