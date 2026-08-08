@@ -169,6 +169,58 @@
     },
     "note": "This certifies the QUALIFICATION split only, run exactly against development's frozen, certified v2.1 configuration (development_lineage gate PASS: protocol_sha256 equality plus commit-ancestry verified). Per the pre-registered rule, this result was NOT used to choose between C4_4 and C4_4m -- that decision was already made on development data alone, before this run. Gate D promotion decision remains pending OOD."
   },
+  "c4_v2_1_disposition": {
+    "development": "MECHANISM_SUCCESS_CERTIFIED",
+    "qualification": "NOT_CERTIFIED",
+    "failure_mode": {
+      "retrieval_generalization": "dominant (55.6% of qualification failures) -- but see sprint_a_retrieval_diagnosis: the cause is candidate-budget scaling, NOT retrieval representation",
+      "selector_generalization": "secondary (21.0%), concentrated on EXACT-identity tasks",
+      "reader_generalization": "minor (10.0%); reader ceiling essentially unchanged"
+    },
+    "qualification_split_is_now_CONSUMED": {
+      "status": "NO_LONGER_AN_UNTOUCHED_HOLDOUT",
+      "why": "The 500-task qualification split has been used for failure decomposition, retrieval probing, and mechanism-design decisions. It has therefore informed the design of the next version and can no longer serve as that version's final test. Reusing it would be selection on the test set with extra steps, regardless of how disciplined the intervening work is.",
+      "consequence": "vNext needs a FRESH holdout. Recommended hierarchy: development (mechanism construction) -> calibration (thresholds and non-final policy decisions) -> confirmation (one-shot frozen test) -> ood (later external structural stress). Do not call the old qualification split 'qualification' for vNext; it is diagnostic historical data.",
+      "immutability": "The failed v2.1 qualification bundle stays byte-immutable: threshold +0.15 unchanged, D5 verdict unchanged, BUNDLE.sha256 preserved and verified by test, diagnosis artifacts written OUTSIDE the bundle. Never rerun that same split after tuning."
+    }
+  },
+  "sprint_a_retrieval_diagnosis": {
+    "status": "COMPLETE__REVISES_THE_REPAIR_PLAN",
+    "produced_by": "scripts/diagnose_c4_retrieval.py (CPU-only, no HRM, no mechanism change)",
+    "artifacts": ["evidence/gate_c4/diagnosis/development_retrieval.json",
+                  "evidence/gate_c4/diagnosis/qualification_retrieval.json"],
+    "method": "Frozen receipts truncate bm25_ranked/bge_ranked/fusion_ranked at the candidate budget (50), so a required record at true rank 73 is indistinguishable from one at rank 2000 -- both merely absent. This re-runs the SAME frozen retrieval (query construction via run_query_stage, backends via get_cached_backend, fusion via retrieval_stage._rrf, corpus loading imported from run_gate_c4 rather than reimplemented) at full-corpus probe depth and records where required evidence actually ranks. Observation window widens; mechanism unchanged.",
+    "headline_finding": "The retrieval 'availability collapse' is NOT a representation failure. On BOTH splits, 100% of missing required records are ranked by the frozen retrievers and merely fall below the candidate cutoff -- development 29/29, qualification 370/370. Zero unranked. CES reaches 100% at sufficient depth on both splits.",
+    "the_generalization_artifact": {
+      "corpus_records": {"development": 534, "qualification": 2216, "ratio": 4.15},
+      "budget_coverage": {"development": "9.36% of corpus", "qualification": "2.26% of corpus"},
+      "ces_at_equal_absolute_budget": {"k10": {"dev": 0.383, "qual": 0.252}, "k20": {"dev": 0.567, "qual": 0.328}, "k50": {"dev": 0.758, "qual": 0.442}, "k100": {"dev": 0.842, "qual": 0.616}},
+      "ces_at_equal_corpus_fraction": {"1.9pct": {"dev": 0.383, "qual": 0.416}, "3.8pct": {"dev": 0.567, "qual": 0.584}, "9.4pct": {"dev": 0.758, "qual": 0.778}, "19pct": {"dev": 0.842, "qual": 0.824}, "37.5pct": {"dev": 0.892, "qual": 0.878}},
+      "interpretation": "At equal ABSOLUTE budget the dev->qual gap is -13% to -32%. At equal corpus FRACTION the gap is +3.3% to -1.8%, i.e. indistinguishable. Retrieval's ranking quality generalizes essentially perfectly; the measured collapse is an artifact of holding a fixed absolute candidate budget (50) while the corpus grew 4.15x. This substantially revises the assumed repair: the retrieval lane is primarily a budget/pool-sizing question, not a query-reformulation or representation-learning question."
+    },
+    "two_separable_repairs": {
+      "1_fusion_displacement_budget_neutral": {
+        "finding": "RRF discards required evidence that a single retriever already had INSIDE the budget: 88/370 qualification misses (23.8%), 7/29 development misses (24.1%). Of the qualification cases BM25 had 61 inside budget (median rank 37) and BGE had 27 (median rank 42).",
+        "counterfactual_gain_at_unchanged_k50": {"development": "+5.8% CES (75.8% -> 81.7%)", "qualification": "+10.8% CES (44.2% -> 55.0%)"},
+        "why_it_matters": "This is recoverable WITHOUT enlarging the candidate pool, so it does not change what the selector must cope with. Cheapest available retrieval win and the one to test first."
+      },
+      "2_budget_scaling_needs_a_protocol_version": {
+        "finding": "The remaining 76% of misses are genuinely below the cutoff and need a larger (or corpus-relative) budget.",
+        "open_design_question": "Whether the candidate budget should be corpus-relative rather than a fixed absolute constant. A fraction generalizes across these two corpora but will not scale to natural corpora where a fixed fraction of millions of documents is meaningless. Needs an explicit design decision, frozen in the new protocol, not a tuned constant.",
+        "critical_unmeasured_interaction": "Raising k is NOT established as a net win. A larger pool means more distractors for a selector already shown to drop 48% of AVAILABLE evidence (and to over-expand specifically on EXACT-identity tasks). Availability and final quality can move in opposite directions here. This interaction must be MEASURED on development before any budget change is frozen -- do not assume bigger k improves Q."
+      }
+    },
+    "role_recall_at_frozen_budget": {
+      "development": {"IDENTITY": 1.0, "TERMINAL_ANSWER": 0.979, "TEMPORAL_CURRENT": 0.833, "BRIDGE": 0.651},
+      "qualification": {"IDENTITY": 0.992, "TERMINAL_ANSWER": 0.608, "TEMPORAL_CURRENT": 0.43, "BRIDGE": 0.446},
+      "interpretation": "Identity retrieval is solved on both splits (>=99%). The roles that starve under a tight budget are BRIDGE and TEMPORAL_CURRENT -- exactly the multi-hop roles, which rank lower and so are cut first. Consistent with budget starvation rather than representation failure, since all of them are ranked somewhere."
+    },
+    "temporal_chain_reframed": {
+      "previous_reading": "temporal_chain candidate CES 0.060 looked like a representation failure needing temporal embeddings / graph machinery.",
+      "corrected_reading": "temporal_chain reaches 100% CES at sufficient depth and is 94.0% budget-recoverable. Its required records ARE retrieved and ranked, just deepest. Phase 7's temporal sub-experiment should therefore start by asking why temporal records rank low under a tight budget, not by adding temporal representation machinery."
+    },
+    "plan_phases_this_affects": "Phases 4-7 of the repair plan (structured query builder, role-aware retrieval passes, terminal-answer retrieval optimization, temporal query handling) were premised on required evidence being absent from retrieval. It is not absent -- it is ranked and truncated. Those phases may still be worth doing to raise evidence RANK (so it survives a tight budget), which is a different and more precisely stated objective than raising recall. Recommend re-scoping them around rank improvement plus the two separable repairs above, before building new retrieval mechanisms."
+  },
   "qualification_failure_decomposition": {
     "status": "DIAGNOSTIC_ONLY__NOT_A_GATE",
     "produced_by": "scripts/diagnose_c4_generalization.py (no GPU; reads frozen receipts)",
