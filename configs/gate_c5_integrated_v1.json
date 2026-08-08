@@ -54,6 +54,56 @@
     "status": "FROZEN BEFORE THE RERUN",
     "the_two_ci_criteria_are_not_waived": "They were missed by a runner defect, not by a decision. One clean rerun closes them. No threshold is being relaxed and neither criterion is dropped."
   },
+  "J_ladder_results_2026_08_08": {
+    "artifacts": [
+      "evidence/gate_c4/diagnosis/development_c5_Jladder_hrm.json",
+      "evidence/gate_c4/diagnosis/development_c5_Jladder_hrm.receipts.jsonl (120 per-task receipts)"
+    ],
+    "canonical_failure_mode_repaired": "canonical Q 0.5042 vs a 0.1958 no-mechanism baseline. On the failed v2.1 qualification run canonical C4_4 (0.081) had fallen BELOW C4_0 (0.190). That specific collapse is repaired, not masked by an aggregate gain.",
+    "correct": {
+      "J0": 0.2917,
+      "J1": 0.4917,
+      "J1r": 0.4833,
+      "J2": 0.8583,
+      "J3": 0.9083
+    },
+    "gates": {
+      "bridge_retention": "+0.0435: PASS",
+      "canonical_vs_baseline": "0.5042 vs 0.1958: PASS",
+      "cluster_lcb": "+0.0792 > 0: PASS",
+      "crossover_parity": "0 violations: PASS",
+      "exact_bridged_retention": "0.6757 vs 0.60 floor: PASS",
+      "family_lcb": "+0.1250 > 0: PASS",
+      "identity_retention": "+0.0000: PASS",
+      "packet_budget": "max 6: PASS",
+      "primary": "+0.1750 vs +0.15: PASS",
+      "prompt_binding_failures": "0: PASS",
+      "worst_family_q": "distractor_heavy +0.0416: PASS",
+      "worst_regime_q": "abbreviation +0.0417: PASS"
+    },
+    "next": "Build the fresh confirmation split per fresh_confirmation_split_requirements, then run once against these same frozen criteria.",
+    "no_subgroup_regressed": "The worst family delta (+0.0416) and worst entity_regime delta (+0.0417) are both POSITIVE. Nothing regressed on either monitored axis, so the subgroup gates pass with margin rather than narrowly.",
+    "primary": {
+      "family_grouped_lcb": 0.125,
+      "metric": "Q(J1) - Q(J0)",
+      "note": "Both previously-uncomputed REQUIRED statistical criteria are now CLOSED and both are strictly positive. They were never waived.",
+      "source_cluster_grouped_lcb": 0.0792,
+      "threshold": 0.15,
+      "value": 0.175
+    },
+    "q": {
+      "J0_baseline": 0.3521,
+      "J1_primary": 0.5271,
+      "J1r_diagnostic_R1_plus_S2": 0.525,
+      "J2_selector_ceiling": 0.7667,
+      "J3_reader_ceiling": 0.9542
+    },
+    "r1_confirmed_unnecessary": "Diagnostic J1r (R1 + S2) reaches 0.5250 vs J1's 0.5271, so Q(J1r)-Q(J1) = -0.0021 with a family-grouped LCB of -0.0250 on the J1r-vs-J1 contrast. Adding R1 back independently reproduces the I-ladder finding. J1r was excluded from the promotion decision by protocol and did not influence it.",
+    "remaining_headroom": "J2 selector ceiling 0.7667 and J3 reader ceiling 0.9542 vs J1's 0.5271. Substantial selection headroom remains (+0.2396 to the achievable-selection ceiling) and is deliberately not pursued here.",
+    "run": "Lightning A100-SXM4-80GB, commit e0cc4a3, 5 arms x 120 development tasks = 600 generations",
+    "status": "ALL 12 FROZEN CRITERIA MET on development. J1 is the candidate integrated mechanism, pending confirmation on a FRESH split.",
+    "what_is_NOT_claimed": "This is a DEVELOPMENT result only. It is not a certified bundle, not a generalization claim, and not evidence that the mechanism survives corpus scaling. The old qualification split remains CONSUMED and was not used. Confirmation requires a FRESH untouched split of at least 500 tasks, built and frozen before any results are seen, run exactly once."
+  },
   "amendment_2026_08_08_drop_R1": {
     "architectural_implication": "The selector repair is doing almost all of the useful work, which makes the system SIMPLER rather than more complex: old retrieval -> information state -> S2 bridge-aware connected selector -> HRM. Fewer moving parts at equal or better Q is the better outcome, and complexity that does not earn its keep is removed rather than retained out of sunk cost.",
     "b1_is_not_erased": "Sprint B1's result stands as a valid NEGATIVE INTEGRATION result, recorded rather than discarded: R1 improves candidate CES by +2.5pp under fixed k=50 (75.8% -> 78.3%, Pareto-safe, 3 tasks gained 0 lost), and that retrieval gain is real and reproducible -- but it does not translate into downstream Q once S2 is present. A retrieval-side improvement that does not survive integration is a finding, not a failure to be hidden.",
@@ -342,7 +392,7 @@
       "disconnected packet rate"
     ]
   },
-  "status": "AMENDED__PRIMARY_IS_NOW_S2_ONLY__J_LADDER_PENDING_RERUN",
+  "status": "J_LADDER_DEVELOPMENT_PASS__AWAITING_FRESH_CONFIRMATION_SPLIT",
   "subgroup_safety": {
     "abbreviation_q_must_not_materially_regress": "tolerance -0.05; the RESOLVED/abbreviation path was already healthy and the repair must not trade it away",
     "axes": [
