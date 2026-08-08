@@ -1,0 +1,177 @@
+{
+  "protocol_id": "c5_integrated_v1",
+  "status": "PREREGISTERED__FROZEN_BEFORE_ANY_INTEGRATED_ARM_RUNS",
+  "created_utc": "2026-08-08T21:00:00Z",
+  "objective": "Determine whether frozen R1 + S2 combine into a reproducible, subgroup-safe, generalizing memory mechanism. Not merely whether aggregate Q rises.",
+
+  "scope_exclusions": {
+    "no_budget_scaling": "Candidate budget stays 50. Sprint B3 is deferred until after integration, where it is interpretable because the selector pathology is repaired.",
+    "no_new_selector_mechanism": "S2 is taken as-is. No S5.",
+    "no_b1_or_b2_edits": "Both winners are immutable from this point. Any change reopens those protocols rather than being folded in here.",
+    "old_qualification_split_is_consumed": "It has already influenced retrieval diagnosis, selector diagnosis, failure decomposition and mechanism design. It is diagnostic historical data and must never be used to evaluate this mechanism."
+  },
+
+  "frozen_winners": {
+    "RETRIEVAL_VNEXT": {
+      "id": "R1_max_reciprocal",
+      "source_protocol": "c4_retrieval_fusion_v1",
+      "definition": "score = max_i 1/(k_rrf + rank_i) over [bm25, bge]; equivalently min-rank ordering with record_id tie-break",
+      "k_rrf": 10,
+      "candidate_budget": 50,
+      "development_effect": "CES 75.8% -> 78.3%, 3 tasks gained, 0 lost, no family or entity_regime regression"
+    },
+    "SELECTOR_VNEXT": {
+      "id": "S2",
+      "source_protocol": "c4_selector_v1",
+      "definition": "bridge-aware terminal-answer protection when identity is EXACT (relation match AND (canonical-subject anchor OR exactly-one-hop runtime-visible bridge anchor)), plus a connectivity constraint on remaining slots. RESOLVED untouched. Protection consumes one slot of the same fixed packet budget.",
+      "packet_budget": 6,
+      "development_effect": "EXACT_bridged answer retention 12.8% -> 66.7%; Q 0.3604 -> 0.5250; 11/11 frozen gates"
+    }
+  },
+
+  "provenance_to_record_per_run": [
+    "source commit", "protocol_sha256", "retrieval_config_hash",
+    "selector_config_hash", "packet_budget", "candidate_budget",
+    "hrm_model_id", "hrm_model_revision", "environment lock",
+    "task split", "seeds", "corpus hashes"
+  ],
+
+  "arms": {
+    "I0": {"retrieval": "frozen_rrf", "selector": "S0_frozen_s2c", "role": "BASELINE (reproduces C4 v2.1 behavior)", "promotable": false},
+    "I1": {"retrieval": "R1_max_reciprocal", "selector": "S0_frozen_s2c", "role": "retrieval effect alone"},
+    "I2": {"retrieval": "frozen_rrf", "selector": "S2", "role": "selector effect alone"},
+    "I3": {"retrieval": "R1_max_reciprocal", "selector": "S2", "role": "PRIMARY -- the integrated mechanism"},
+    "I4": {"retrieval": "R1_max_reciprocal", "selector": "oracle_over_pool", "role": "CEILING: best possible selection on R1 pools", "promotable": false},
+    "I5": {"retrieval": "n/a", "selector": "oracle_evidence", "role": "CEILING: reader ceiling given correct evidence", "promotable": false}
+  },
+  "arm_naming_note": "I0-I5 map to C5-0..C5-5 for continuity with the older naming scheme.",
+
+  "causal_decomposition": {
+    "E_retrieval": "Q(I1) - Q(I0)",
+    "E_selector": "Q(I2) - Q(I0)",
+    "E_combined": "Q(I3) - Q(I0)",
+    "E_interaction": "Q(I3) - Q(I2) - Q(I1) + Q(I0)",
+    "preregistered_expectation": "E_selector >> E_retrieval, based on B1 (+2.5pp CES, small) and B2 (+0.1646 Q, large). Recording the expectation so a surprise is visible as a surprise rather than rationalized afterwards.",
+    "why_the_2x2_matters": "It separates additive from redundant from synergistic. An integrated Q gain that is entirely E_selector would mean R1 is carrying no weight in the final mechanism and should be reconsidered on simplicity grounds."
+  },
+
+  "primary_criterion": {
+    "metric": "Q(I3) - Q(I0)",
+    "threshold": 0.15,
+    "threshold_rationale": "DELIBERATELY reusing v2.1's +0.15 for direct comparability with the earlier development gate, not by default. Stated explicitly per the instruction not to inherit it silently. The comparison of interest is whether the repaired mechanism clears the same bar the original one did on development (+0.200) and then generalizes, which a different threshold would obscure.",
+    "statistical": [
+      "family-grouped bootstrap CI lower bound > 0",
+      "source_cluster_id-grouped bootstrap CI lower bound > 0"
+    ]
+  },
+
+  "subgroup_safety": {
+    "axes": ["family", "entity_regime"],
+    "family_q_regression_tolerance": -0.05,
+    "entity_regime_q_regression_tolerance": -0.05,
+    "tolerance_rationale": "-0.05 on BOTH axes, tightened from v2.1's D5 (-0.10 on family only). The D5 axis limitation is the reason: on the failed qualification run the family axis passed at exactly -0.1000 while the real regression sat on entity_regime at -0.1090, an axis D5 explicitly declined to monitor. Monitoring one axis at a loose tolerance is what let a genuine subgroup collapse through. -0.05 also matches the tolerance already used in B2.",
+    "canonical_q_must_not_fall_below_baseline": "Hard requirement. On the failed qualification run canonical C4_4 Q (0.081) fell BELOW the no-mechanism C4_0 baseline (0.190). Any recurrence is disqualifying regardless of aggregate Q.",
+    "abbreviation_q_must_not_materially_regress": "tolerance -0.05; the RESOLVED/abbreviation path was already healthy and the repair must not trade it away"
+  },
+
+  "selector_regime_safety_gates": {
+    "purpose": "S2 must KEEP its repair once integrated with R1. An integrated Q gain that comes from losing the specific mechanism just fixed would be a false success.",
+    "tracked": [
+      "EXACT_bridged answer retention", "EXACT_unbridged answer retention",
+      "RESOLVED_bridged answer retention", "RESOLVED_unbridged answer retention",
+      "identity retention", "bridge retention", "selected CES",
+      "disconnected packet rate"
+    ],
+    "hard_requirement": "I3 EXACT_bridged answer retention must be >= 0.60, i.e. it must retain substantially all of the development repair (S2 achieved 0.667 from a 0.128 baseline). A large aggregate Q gain with EXACT_bridged retention back near baseline is a FAIL, not a pass.",
+    "identity_and_bridge": "I3 identity retention and bridge retention each >= I0 - 0.01"
+  },
+
+  "retrieval_diagnostics": {
+    "purpose": "verify R1 still behaves like the B1 result once inserted into the full pipeline",
+    "tracked": ["candidate CES@50", "required evidence recall", "bridge recall",
+                "temporal-current recall", "terminal-answer availability"],
+    "comparison": "old fusion vs R1 under IDENTICAL task inputs"
+  },
+
+  "fixed_budgets": {
+    "candidate_pool": 50,
+    "selected_packet": 6,
+    "invariant": "No increased context budget anywhere in this experiment. Attribution depends on it: a Q gain from a larger packet is not a mechanism gain."
+  },
+
+  "causal_parity": {
+    "requirement": "For every paired arm, only the intended intervention may differ: same task set, HRM, generation parameters, prompt template, candidate corpus, identity mechanism, verifier, packet budget.",
+    "crossover_pairs": {
+      "I0_vs_I1": "retrieval fusion only",
+      "I0_vs_I2": "selector only",
+      "I2_vs_I3": "retrieval fusion only",
+      "I1_vs_I3": "selector only"
+    },
+    "enforcement": "checked programmatically per task, not asserted in prose: the runner verifies that arms differing only in selector share an identical candidate_pool_hash, and arms differing only in fusion share an identical query_hash and identity state."
+  },
+
+  "receipt_hashes": {
+    "required_fields": ["candidate_pool_hash", "membership_hash", "order_hash",
+                        "packet_hash", "prompt_hash", "query_hash",
+                        "retrieval_config_hash", "selector_config_hash"],
+    "prompt_binding": "packet.prompt_hash must equal the hash of the prompt HRM actually consumed, fail-closed, reusing the v2.1 discipline. No regression on this infrastructure."
+  },
+
+  "determinism_precondition": {
+    "run_before_spending_gpu": true,
+    "seeds": [0, 42, 12345],
+    "subset": "representative subset of at least 20 tasks",
+    "fields_requiring_exact_equality": [
+      "candidate_ids", "candidate_pool_hash", "identity_status",
+      "identity_canonical", "selected_ids", "membership_hash", "order_hash",
+      "packet_hash", "prompt_hash"
+    ],
+    "on_failure": "STOP. Do not proceed to generation."
+  },
+
+  "dry_pass_precondition": {
+    "run_before_spending_gpu": true,
+    "checks": [
+      "R1 candidate CES matches the B1 development expectation",
+      "S2's EXACT_bridged repair is still present under integration",
+      "no forbidden-signal access",
+      "packet budget fixed at 6 for every arm",
+      "all six arms complete on all tasks",
+      "crossover parity holds per task"
+    ],
+    "rationale": "cheap, and catches wiring mistakes before 720 generations of GPU time"
+  },
+
+  "gpu_run": {
+    "arms": 6, "tasks": 120, "generations": 720,
+    "requirements": ["stdout to a log", "incremental receipts for resume safety"]
+  },
+
+  "on_development_pass": {
+    "freeze": ["RETRIEVAL = R1", "SELECTOR = S2", "INTEGRATED_C4_VNEXT"],
+    "artifacts": ["CERTIFICATION.json", "SOURCE_SNAPSHOT.json",
+                  "ENVIRONMENT.lock", "RESULTS.sha256", "BUNDLE.sha256",
+                  "RESEARCH_STATUS.json update"],
+    "then": "STOP TUNING. Build a fresh confirmation split; do not reuse the consumed qualification split."
+  },
+  "on_development_fail": {
+    "action": "freeze the negative result, diagnose only",
+    "forbidden": "lowering any threshold after seeing results"
+  },
+
+  "fresh_confirmation_split_requirements": {
+    "must_be_built_before_looking_at_confirmation_results": true,
+    "preserve": ["family proportions", "identity regimes",
+                 "bridged/unbridged structure", "corpus scaling challenge",
+                 "temporal cases"],
+    "minimum_tasks": 500,
+    "corpus_scale": "ideally close to the failed qualification environment so fixed-k behavior is stressed again -- that is the condition under which the original mechanism failed, so a confirmation that avoids it would not be a confirmation",
+    "criteria": "the SAME integrated criteria frozen here; inventing new thresholds after seeing confirmation is forbidden",
+    "runs": "exactly once, no tuning"
+  },
+
+  "deferred_until_after_integration": {
+    "sprint_b3_budget_scaling": "fixed k=50 vs corpus-scaled k, as a 2x2 against R1/S2. Interpretable only once the selector is strong enough that a larger pool's extra distractors are handled.",
+    "executive_gate": "ANSWER_NOW vs RETRIEVE_WITH_C4_VNEXT, requiring U_oracle_policy > max(U_always_answer, U_always_retrieve) with a positive lower bound and non-degenerate action use, before any learned executive is trained."
+  }
+}
