@@ -23,6 +23,36 @@
       "why": "The 500-task qualification split has been used for failure decomposition, retrieval probing, and mechanism-design decisions. It has therefore informed the design of the next version and can no longer serve as that version's final test. Reusing it would be selection on the test set with extra steps, regardless of how disciplined the intervening work is."
     }
   },
+  "c5_integrated_development_run": {
+    "artifact": "evidence/gate_c4/diagnosis/development_c5_integrated_hrm.json",
+    "baseline_reproduction_caveat": "I0 is a NEAR but not exact reproduction of certified v2.1 C4_4 development: correct matches exactly (0.2917) while Q is 0.3521 vs 0.3625 certified, roughly one task of the evidence_complete term, because this runner reconstructs the pipeline rather than invoking run_gate_c4's full path. Within-experiment deltas are internally consistent (all arms share that path); absolute numbers must not be compared to the v2.1 certificate without this caveat.",
+    "causal_decomposition": {
+      "E_combined": 0.1729,
+      "E_interaction": -0.0104,
+      "E_retrieval": 0.0083,
+      "E_selector": 0.175
+    },
+    "gates_passing": "primary Q(I3)-Q(I0) +0.1729 vs +0.15; worst family Q delta +0.0625; worst entity_regime Q delta +0.0167; canonical above baseline; EXACT_bridged >= 0.60; identity retention +0.0000; bridge retention +0.0074; packet budget max 6; prompt binding failures 0; crossover parity 0 violations",
+    "headline": "The preregistered expectation E_selector >> E_retrieval is confirmed at roughly 21x. But R1 DOES NOT EARN ITS PLACE: I2 (S2 on the OLD fusion) reaches Q 0.5271, slightly above the integrated I3 at 0.5250, with a -0.0104 interaction. R1's B1 candidate-CES win is real and still reproduces (75.8 -> 78.3) but does not convert into downstream quality once S2 is present.",
+    "not_done": "No fresh confirmation split has been built and no confirmation run has occurred. The old qualification split remains CONSUMED and must not be used to evaluate this mechanism.",
+    "open_owner_decisions": [
+      "Does R1 stay in the mechanism at all? On this evidence S2 alone is at least as good. Dropping R1 would also void the frozen B1 outcome, so it should be deliberate rather than by omission.",
+      "Which arms for the repeat run that closes the two CI criteria -- the same I0-I5, or restructured with S2-only as primary?"
+    ],
+    "outstanding_required_criteria": "family-grouped and source_cluster-grouped bootstrap LCB > 0 on the primary contrast were NOT COMPUTED. Cause was a defect in scripts/run_c5_integrated_ladder.py -- per-task Q was accumulated but never persisted, so the grouped bootstrap cannot be reconstructed post hoc; the protocol's incremental-receipt requirement was also unimplemented. Both are now fixed in the runner. Closing these needs one repeat GPU run. No threshold was waived and neither criterion was dropped from the protocol.",
+    "protocol": "configs/gate_c5_integrated_v1.json",
+    "q": {
+      "I0_old_fusion_old_selector": 0.3521,
+      "I1_R1_old_selector": 0.3604,
+      "I2_old_fusion_S2": 0.5271,
+      "I3_R1_S2_primary": 0.525,
+      "I4_oracle_selector": 0.7875,
+      "I5_oracle_evidence": 0.9542
+    },
+    "run": "Lightning A100-SXM4-80GB, commit 35b5bc4, 6 arms x 120 development tasks = 720 generations",
+    "status": "RUN COMPLETE. 10 of 12 frozen criteria pass. NOT CERTIFIED and NOT FROZEN -- two required statistical criteria outstanding, and one mechanism decision open.",
+    "what_is_clearly_repaired": "canonical Q 0.5250 vs a 0.1958 no-mechanism baseline. On the failed qualification run canonical C4_4 (0.081) had fallen BELOW C4_0 (0.190) -- that specific failure mode is fixed, not merely offset by an aggregate gain. I3 EXACT_bridged answer retention 0.6667 against the 0.60 floor."
+  },
   "canonical_package": "hrm_adaptive_memory",
   "capabilities": {
     "adaptive_recurrence": "BLOCKED",
