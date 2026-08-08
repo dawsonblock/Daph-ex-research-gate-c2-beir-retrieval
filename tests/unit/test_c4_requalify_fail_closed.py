@@ -12,6 +12,18 @@ continuing only spends ~35 minutes of GPU time to reach ``VALID_RUN: false``.
 branch into its own directory, so a session could hold two checkouts at once and
 debugging would drift between them. A certification script must not silently
 replace its own source tree halfway through execution.
+
+**Scratch files landing in the working tree.** On a non-Colab host (no
+``/content``), the requirements-file and archive-output paths fell back to
+``Path.cwd()`` -- the repository root, since this script always runs from
+there. That plants an untracked file that sits through the entire run and is
+only noticed when ``certify_c4_run.py``'s ``source_lineage`` gate re-checks
+cleanliness at step 17, failing certification after the GPU work is done
+rather than before it starts. Found running against a RunPod pod: step 2
+passed on a clean tree, step 3 wrote ``.c4_requirements.txt`` into the repo
+root before its pip install failed on an unrelated PEP 668 error, and the
+leftover file then made every later run's own step 2 abort on a tree it had
+polluted itself.
 """
 from __future__ import annotations
 
@@ -88,6 +100,49 @@ class TestNoSelfReplacingSource:
     def test_expected_commit_is_parsed(self, mod):
         args = mod.parse_args(["--expected-commit", "db0e9b3"])
         assert args.expected_commit == "db0e9b3"
+
+
+class TestScratchFilesStayOutOfTree:
+    """No scratch file may land in the working tree on a non-Colab host."""
+
+    def test_scratch_dir_is_never_cwd(self, mod, tmp_path, monkeypatch):
+        """The exact regression: on a host with no /content, the previous
+        fallback was Path.cwd() -- the repository root when this script runs,
+        which is exactly the tree step 2 (and later, certify_c4_run.py's
+        source_lineage gate) must find clean."""
+        monkeypatch.chdir(tmp_path)
+        result = mod.scratch_dir()
+        assert result != tmp_path
+        assert result != Path.cwd()
+
+    def test_scratch_dir_is_writable(self, mod):
+        result = mod.scratch_dir()
+        probe = result / "c4_scratch_dir_probe.tmp"
+        probe.write_text("x")
+        assert probe.read_text() == "x"
+        probe.unlink()
+
+    def test_scratch_dir_prefers_content_when_present(self, mod, tmp_path,
+                                                       monkeypatch):
+        """Real /content (Colab's convention) takes priority over tempdir."""
+        real_path = mod.Path
+        fake_content = tmp_path / "content"
+        fake_content.mkdir()
+
+        def fake_path_ctor(p="/content"):
+            return fake_content if str(p) == "/content" else real_path(p)
+
+        monkeypatch.setattr(mod, "Path", fake_path_ctor)
+        assert mod.scratch_dir() == fake_content
+
+    def test_no_raw_content_path_used_for_requirements_or_archive(self, body):
+        """Both write sites must go through scratch_dir(), not a literal path."""
+        assert 'Path("/content/c4_requirements.txt")' not in body
+        assert 'f"/content/{stem}"' not in body
+
+    def test_requirements_and_archive_use_scratch_dir(self, body):
+        assert "requirements = scratch_dir()" in body
+        assert "zip_base = str(scratch_dir()" in body
 
 
 class TestDependencyStepsFailClosed:

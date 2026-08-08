@@ -129,6 +129,25 @@ def step(n, text):
     print(f"\n[{n}/{TOTAL_STEPS}] {text}")
 
 
+def scratch_dir() -> Path:
+    """A writable directory OUTSIDE the working tree, for scratch files.
+
+    Prefers /content (Colab's convention) but falls back to a real OS temp
+    directory -- never to Path.cwd(). This script runs from the repository
+    root, and step 2 requires that tree to stay clean; the certifier's
+    source_lineage gate re-checks the same thing at step 17. A scratch file
+    written into cwd would sit there for the rest of the run and only surface
+    as a certification failure after the GPU work is done. This used to
+    default to Path.cwd() / ".c4_requirements.txt" on non-Colab hosts, which
+    is exactly that trap.
+    """
+    content = Path("/content")
+    if content.is_dir():
+        return content
+    import tempfile
+    return Path(tempfile.gettempdir())
+
+
 # -- Main pipeline ----------------------------------------------------------
 
 def parse_args(argv=None):
@@ -233,9 +252,7 @@ def main(argv=None):
         load_lock, pip_requirements, verify_environment)
 
     lock = load_lock(lock_path)
-    requirements = Path("/content/c4_requirements.txt")
-    if not requirements.parent.is_dir():
-        requirements = Path.cwd() / ".c4_requirements.txt"
+    requirements = scratch_dir() / "c4_requirements.txt"
     requirements.write_text(pip_requirements(lock))
     print(f"  Lock pins: python=={lock.get('python')}")
     for name, version in sorted((lock.get("packages") or {}).items()):
@@ -509,7 +526,7 @@ def main(argv=None):
     # named VALID_CONFORMANT_*: the name is the thing people cite later.
     stem = ("VALID_CONFORMANT_C4_V2_DEVELOPMENT_RESULT" if valid_run
             else "UNCERTIFIED_C4_V2_DEVELOPMENT_RESULT")
-    zip_base = f"/content/{stem}"
+    zip_base = str(scratch_dir() / stem)
     shutil.make_archive(zip_base, "zip", "evidence/gate_c4")
     zip_path = f"{zip_base}.zip"
     size_mb = os.path.getsize(zip_path) / 1e6

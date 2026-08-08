@@ -130,17 +130,31 @@ class TestLoad:
             load_lock(p)
 
     def test_shipped_lock_is_loadable(self):
-        """The repo's lock must parse even though it intentionally has nulls."""
+        """The repo's lock must parse."""
         lock = load_lock(ROOT / "configs/c4_requirements.lock")
         assert lock["schema_version"] == LOCK_SCHEMA_VERSION
-        assert lock["python"] == "3.12.13"
+        assert lock["python"]
 
-    def test_shipped_lock_has_unrecorded_pins_by_design(self):
-        """The transcribed Colab lock must not certify: nulls are deliberate."""
+    def test_shipped_lock_has_no_unrecorded_pins(self):
+        """The shipped lock is now CAPTURED (RunPod), not transcribed: no nulls.
+
+        A transcribed lock with null pins previously shipped here on purpose --
+        it could never certify, by design, until regenerated in a real run
+        environment. It has since been replaced by one frozen live via
+        scripts/c4_freeze_environment.py, so every package must be recorded.
+        """
         lock = load_lock(ROOT / "configs/c4_requirements.lock")
         nulls = [k for k, v in lock["packages"].items() if v is None]
-        assert nulls, "lock should record which versions were never captured"
-        ok, violations, _ = verify_environment(lock, _observed())
+        assert not nulls, f"shipped lock has unrecorded pins: {nulls}"
+        assert "CAPTURED" in lock.get("note", "")
+
+    def test_transcribed_lock_with_nulls_still_fails_must_record(self):
+        """The MUST_RECORD behavior itself stays covered, independent of
+        whatever the shipped lock currently looks like."""
+        transcribed = _lock(packages={"torch": "2.11.0+cu128",
+                                      "transformers": "5.13.1",
+                                      "numpy": None})
+        ok, violations, _ = verify_environment(transcribed, _observed())
         assert not ok
         assert any("MUST_RECORD" in v for v in violations)
 
