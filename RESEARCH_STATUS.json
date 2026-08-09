@@ -96,6 +96,64 @@
     "success_thresholds": "DEFERRED until after calibration exists; setting them now would be arbitrary or would smuggle in confirmation #1's numbers.",
     "why_narrow": "Confirmation #1 established S2 is not the defect: conditional on complete evidence its effect reproduces almost exactly across splits (+0.1750 development, +0.1772 confirmation). The failure is that fixed k=50 stops delivering that precondition as the corpus grows."
   },
+  "b3_retrieval_calibration": {
+    "CAVEAT_not_comparable_to_confirmation_1": "cal_2200 shows CES@50 = 0.633 whereas confirmation #1 at a nearly identical N=2224 showed 0.412. The gap is a design consequence, not a contradiction: calibration grows the corpus with FILLER drawn from unrelated tasks, so the number of same-task near-duplicates and dead-ends per task stays fixed, whereas a natively-generated corpus of that size carries proportionally more confusable distractors. The suite therefore isolates raw search-space size with confusability density held roughly constant -- the cleaner isolation for measuring k(N) -- but absolute CES values must NOT be read across to confirmation #1, and any coverage target set on calibration will be optimistic relative to a natively-scaled corpus.",
+    "FINDING_1_k_star_is_sub_linear": "N grew 4.29x (700 -> 3000) while MEDIAN k* grew only 1.25x (28 -> 35). k* is strongly SUB-LINEAR in N, far closer to constant than proportional. This directly challenges the linear k = ceil(rho*N) form the protocol permits: a fixed fraction would over-provision badly at large N.",
+    "FINDING_2_fraction_does_not_stabilise_coverage": "median k*/N FALLS monotonically with N (0.0400, 0.0305, 0.0227, 0.0146, 0.0117) rather than holding constant, and p90 k*/N is unstable across scales (0.267, 0.598, 0.283, 0.311, 0.372). Neither the median nor the tail supports a single frozen fraction. CES vs k/N does NOT collapse -- at k/N = 0.025 CES actually RISES with N (0.413 -> 0.667), the opposite of a collapse, because a fixed fraction buys far more absolute depth at large N than small.",
+    "FINDING_3_bridge_is_the_binding_role": "At k=50, identity is saturated (1.000 at every scale) and terminal is high and flat (0.917-0.958), while BRIDGE availability collapses monotonically with N: 0.659, 0.565, 0.518, 0.459, 0.365. temporal_current is flat (0.800-0.867). Bridge availability is what corpus growth destroys, and it should therefore set the eventual budget.",
+    "FINDING_4_depth_can_fix_it": "The missing-record taxonomy at k=50 shows ZERO UNRANKED records at every scale. Everything is CUT_OFF (32-53 per scale) or FUSION_DISPLACED (6-16). Nothing is beyond the retrievers' reach, so candidate-budget scaling CAN in principle solve the availability problem -- and 6-16 records per scale are recoverable at unchanged depth by a fusion rule alone.",
+    "artifact": "evidence/gate_b3/calibration/retrieval_scaling.json",
+    "headline_table": {
+      "cal_1000": {
+        "N": 1000,
+        "bridge_at_50": 0.565,
+        "ces_at_50": 0.68,
+        "median_k_star": 30.5,
+        "p90_k_star": 598,
+        "p90_rho_star": 0.598,
+        "terminal_at_50": 0.958
+      },
+      "cal_1500": {
+        "N": 1500,
+        "bridge_at_50": 0.518,
+        "ces_at_50": 0.653,
+        "median_k_star": 34.0,
+        "p90_k_star": 424,
+        "p90_rho_star": 0.2827,
+        "terminal_at_50": 0.933
+      },
+      "cal_2200": {
+        "N": 2200,
+        "bridge_at_50": 0.459,
+        "ces_at_50": 0.633,
+        "median_k_star": 32.0,
+        "p90_k_star": 684,
+        "p90_rho_star": 0.3109,
+        "terminal_at_50": 0.933
+      },
+      "cal_3000": {
+        "N": 3000,
+        "bridge_at_50": 0.365,
+        "ces_at_50": 0.593,
+        "median_k_star": 35.0,
+        "p90_k_star": 1116,
+        "p90_rho_star": 0.372,
+        "terminal_at_50": 0.917
+      },
+      "cal_700": {
+        "N": 700,
+        "bridge_at_50": 0.659,
+        "ces_at_50": 0.727,
+        "median_k_star": 28.0,
+        "p90_k_star": 187,
+        "p90_rho_star": 0.2671,
+        "terminal_at_50": 0.933
+      }
+    },
+    "method": "k* per task = deepest FUSION rank among its required records, measured at full corpus depth with the authoritative frozen_rrf. Every grid point is a threshold on those exact ranks, so curves are exact rather than sampled, and the shape of k(N) is MEASURED rather than assumed.",
+    "next": "Define prospective engineering targets (candidate CES, bridge availability, terminal availability) and select at most three rho candidates -- or a non-linear budget form, which findings 1 and 2 now suggest is better supported. Freeze those before any S2 evaluation.",
+    "status": "COMPLETE and FROZEN. Retrieval-only. rho NOT chosen, no engineering targets set, S2 not evaluated, no HRM."
+  },
   "b3b_stopgate_result": {
     "OUTCOME": "OUTCOME_A_POSITIVE",
     "a_complete": {
