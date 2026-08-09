@@ -154,6 +154,19 @@
     "next": "Define prospective engineering targets (candidate CES, bridge availability, terminal availability) and select at most three rho candidates -- or a non-linear budget form, which findings 1 and 2 now suggest is better supported. Freeze those before any S2 evaluation.",
     "status": "COMPLETE and FROZEN. Retrieval-only. rho NOT chosen, no engineering targets set, S2 not evaluated, no HRM."
   },
+  "b3_targets_and_candidates": {
+    "bridge_target_grounding": "cal_700 (nearest the development corpus where S2 worked) has bridge 0.659 at k=50; 0.70 at every scale restores availability to slightly better than that validated level.",
+    "graph_retrieval_recorded": "Recorded as the next architectural comparison AFTER B3, with the evaluator-graph vs runtime-memory-graph leakage separation written down. B3's flat-scaling baseline is what makes a graph result interpretable.",
+    "linear_form_not_used_bare": "Measurement rejected it: median k* grew 1.25x against N 4.29x, median k*/N fell monotonically, CES vs k/N did not collapse. Both survivors are CAPPED.",
+    "next": "Apply UNCHANGED S2 to C1 and C2 pools; measure P(role selected | role available), especially bridge against its -0.05 bound, before any HRM spend.",
+    "rejected": "uncapped 0.05 fraction (fails bridge at all five scales), constant 150 (fails at three), fitted power law N^0.72 (fails at two intermediate scales despite matching the endpoint exponent)",
+    "status": "FROZEN before any S2 evaluation.",
+    "surviving_candidates": {
+      "C1": "k = 300 (constant), total 1500",
+      "C2": "k = clip(ceil(0.15N), 100, 300), total 1080 -- PREFERRED, smallest sufficient"
+    },
+    "targets": "bridge availability >= 0.70, terminal >= 0.90, candidate CES >= 0.75, at EVERY scale"
+  },
   "b3b_stopgate_result": {
     "OUTCOME": "OUTCOME_A_POSITIVE",
     "a_complete": {
