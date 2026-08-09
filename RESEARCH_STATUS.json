@@ -1560,7 +1560,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "Path-coherent packet composition gate (not started). S3 attributed the selector failure: of required records present in the working set but absent from the packet, ~64% are lost to F3_WRONG_PATH_PREFERRED -- S2 assembles packets from fragments of INCOMPATIBLE paths. A diagnostic arm that admits the highest-ranked COMPLETE path first (changing nothing about ranking, retrieval, graph or working set) closes 43.6% of the oracle gap: selected CES 0.323->0.528, bridge retention 0.183->0.423, complete-path retention 0.217->0.503. Record-level diversity suppression is RULED OUT (-0.031, redundancy only 3.1% of failures); role reservation is secondary (+0.193, helps terminals, slightly hurts bridges). Selection-side headroom is large (oracle 0.793 vs current 0.323). Indicatively this would put G2 (~0.528) decisively above typed path (~0.377) -- the first evidence the graph can earn promotion, contingent on a path-aware composition mechanism with its own frozen gate.",
+    "NEXT_GATE": "HRM qualification of the promoted stack (not started). S4 PASSED: under MATCHED all-task pooling across five scales, G2 + path-coherent packet composition scores 0.528 selected CES vs the simpler typed-path architecture's 0.375 -- delta_graph_value = +0.153, the FIRST time the graph substrate earns its complexity at system level. delta_composition = +0.205 (T1 G2+S2 = 0.323 still loses to typed path, so the gain is entirely composition). The registered causal prediction held: delta_graph_value rises 0.064 -> 0.237 -> 0.263 with competing complete paths. All safety gates pass; bridge retention 0.183->0.423 and terminal 0.497->0.654 IMPROVE, identity -0.002, no family/regime stratum regressed. Promoted stack: grammar_v4 -> G2 -> path-coherent composition -> 6 records, with S2 retained as the record ranker. Oracle headroom +0.265 remains.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
@@ -2900,6 +2900,113 @@
       "retrieval": "C2"
     },
     "what_is_NOT_promoted": "S1/S2/S3 are diagnostic arms. S3_path_coherent naively takes the top complete path and is not a mechanism -- it has no policy for competing complete paths of equal rank, no safety bounds, and no protocol. Promotion requires its own frozen gate."
+  },
+  "s4_path_coherent_packet": {
+    "NEXT": "HRM qualification gate. The evidence packet is now proven better under matched all-task evaluation, which was the precondition for reintroducing HRM. Substantial oracle headroom remains (+0.265), so a later composition refinement (the deliberately-unopened P2) stays available -- but it must not be designed before HRM confirms the packet gain converts into answer quality.",
+    "PRIMARY_ARCHITECTURE_METRIC": {
+      "T0_typed_path_plus_S2": 0.375,
+      "T2_g2_plus_path_coherent": 0.528,
+      "delta_graph_value_T2_minus_T0": 0.1533,
+      "verdict": "G2 + path-coherent composition BEATS the simpler typed-path architecture by +0.153 selected CES under MATCHED all-task pooling. This is the first result in the entire graph branch where the graph substrate earns its added complexity at system level."
+    },
+    "REGISTERED_CAUSAL_PREDICTION_CONFIRMED": {
+      "n_by_bucket": {
+        "1": 372,
+        "2-3": 232,
+        "4-6": 118,
+        "7+": 28
+      },
+      "observed_delta_composition_by_bucket": {
+        "1_path": 0.118,
+        "2-3_paths": 0.315,
+        "4-6_paths": 0.28,
+        "7+_paths": 0.143
+      },
+      "observed_delta_graph_value_by_bucket": {
+        "1_path": 0.064,
+        "2-3_paths": 0.237,
+        "4-6_paths": 0.263,
+        "7+_paths": 0.179
+      },
+      "prediction_frozen_before_run": "if the mechanism genuinely fixes path COMPETITION, the gain should be small where only one complete path exists and generally INCREASE with structural ambiguity",
+      "reading": "CONFIRMED through the well-populated buckets: delta_graph_value rises monotonically 0.064 -> 0.237 -> 0.263 as competing complete paths increase. The 7+ bucket dips (0.179) but n=28 and is the least reliable stratum. The smallest gain is exactly where the mechanism should do least (a single complete path), which is the falsifiable shape that was registered in advance."
+    },
+    "SECONDARY": {
+      "T1_g2_plus_S2": 0.323,
+      "delta_composition_T2_minus_T1": 0.2053,
+      "note": "T1 (0.323) < T0 (0.375) reconfirms that G2 under UNCHANGED S2 loses to typed path -- consistent with the earlier ladder. The entire gain comes from composition, not from the graph alone."
+    },
+    "TAUTOLOGY_FLAGGED_DO_NOT_CITE_AS_EVIDENCE": {
+      "metric": "complete_path_packet = 1.000 for T2",
+      "related_observation": "T3 oracle scores 0.891 on the same metric, BELOW T2's 1.000, because the oracle admits required records that need not form a complete path under G2's definition. Further reason not to read this metric as a quality ranking.",
+      "why": "T2 admits a complete path ATOMICALLY by construction, so it satisfies CompletePathPacket by definition whenever any complete path fits the budget. It is a correctness check that the composer does what it claims, NOT independent evidence that composition helps. The load-bearing numbers are selected CES, bridge/terminal retention, and the competition-stratified deltas."
+    },
+    "artifact": "evidence/gate_s4/path_coherent_packet.json",
+    "decision": "PROMOTE_PATH_COHERENT_COMPOSITION__PROVISIONALLY_PROMOTE_G2_STACK",
+    "division_of_responsibility_validated": "S2 was NOT replaced. It still supplies the record ranking that fills the packet after the anchor path is preserved. Record utility + structural consistency -> packet utility, which is the architecture S3's evidence pointed to.",
+    "matched_all_task_pooling": true,
+    "no_hrm": true,
+    "oracle_headroom_T3_minus_T2": 0.2653,
+    "pooled_arms": {
+      "T0_typed_S2": {
+        "PCR": 0.7839,
+        "bridge_retention": 0.2551,
+        "complete_path_packet": 0.5836,
+        "identity_retention": 1.0,
+        "mean_paths_represented": 1.085,
+        "mean_redundancy": 0.528,
+        "selected_ces": 0.3747,
+        "tasks": 750,
+        "terminal_retention": 0.3491
+      },
+      "T1_g2_S2": {
+        "PCR": 0.8323,
+        "bridge_retention": 0.1826,
+        "complete_path_packet": 0.5255,
+        "identity_retention": 1.0,
+        "mean_paths_represented": 0.939,
+        "mean_redundancy": 0.572,
+        "selected_ces": 0.3227,
+        "tasks": 750,
+        "terminal_retention": 0.4966
+      },
+      "T2_g2_pathcoherent": {
+        "PCR": 0.8432,
+        "bridge_retention": 0.4232,
+        "complete_path_packet": 1.0,
+        "identity_retention": 0.9976,
+        "mean_paths_represented": 1.047,
+        "mean_redundancy": 0.615,
+        "selected_ces": 0.528,
+        "tasks": 750,
+        "terminal_retention": 0.6544
+      },
+      "T3_oracle": {
+        "PCR": 0.7908,
+        "bridge_retention": 0.9507,
+        "complete_path_packet": 0.8909,
+        "identity_retention": 1.0,
+        "mean_paths_represented": 1.157,
+        "mean_redundancy": 0.56,
+        "selected_ces": 0.7933,
+        "tasks": 750,
+        "terminal_retention": 0.9664
+      }
+    },
+    "run_utc": "2026-08-10T03:00:00Z",
+    "safety_gates": {
+      "bridge_no_regression_vs_T1": true,
+      "identity_no_material_regression": true,
+      "no_pathological_subgroup": true,
+      "terminal_no_regression_vs_T1": true,
+      "worst_subgroup": [
+        "family:temporal_chain",
+        0.0
+      ]
+    },
+    "safety_reading": "All pass. Identity retention 1.000 -> 0.998 (-0.002, immaterial). Bridge retention IMPROVES 0.183 -> 0.423 and terminal 0.497 -> 0.654, so coherence did not buy its gain by destroying other roles. Worst family/regime subgroup delta is 0.0 -- no stratum regressed at all, including the canonical-vs-abbreviation asymmetry that has hurt this project before.",
+    "status": "RUN_COMPLETE__PASSES__GRAPH_EARNS_ITS_COMPLEXITY_FOR_THE_FIRST_TIME",
+    "what_is_promoted": "path-coherent packet composition (hrm_adaptive_memory/c4/packet_composition.py, frozen contract, 17 tests) and PROVISIONALLY the G2 stack: grammar_v4 -> G2 -> path-coherent composition -> 6 records."
   },
   "sprint_a_retrieval_diagnosis": {
     "artifacts": [

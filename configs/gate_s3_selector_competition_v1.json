@@ -1,4 +1,5 @@
 {
+  "FROZEN_AS": "DIAGNOSTIC_ONLY -- S1/S2/S3 arms are attribution instruments, never promoted. Superseded for promotion purposes by gate_s4_path_coherent_packet_v1.",
   "NEW_HEADLINE_METRIC": "P(complete required path survives into the final packet | complete required path exists in the working set) -- individual bridge/terminal retention can look acceptable while the packet holds fragments of INCOMPATIBLE paths",
   "S3_RESULT": {
     "FINDING_1_dominant_failure_is_WRONG_PATH_PREFERRED": {
