@@ -94,6 +94,11 @@
     "provenance": "Candidate pools were re-captured on the scoring platform (A100, torch 2.8.0+cu128, CUDA) and reproduce the scored run 500/500 exactly; the gate read that frozen artifact rather than reconstructing pools, so it does not depend on cross-platform bit-reproducibility. Decision rule frozen in 977d785 before the data existed.",
     "status": "FROZEN, not provisional"
   },
+  "closure_2026_08_09": {
+    "not_a_retrieval_failure": "C1 and C2 met every retrieval target. The failure is large candidate pool + current S2 as a composition.",
+    "successor": "configs/gate_b4_candidate_compression_v1.json",
+    "verdict": "B3 retrieval scaling increases availability but fails selector-pressure safety. No candidate-budget policy is promotable with the current S2."
+  },
   "cost_is_descriptive_not_utility": {
     "note": "U = Q - lambda*C is a future direction. For B3, cost is descriptive and safety-relevant, NOT preregistered into the objective.",
     "record": [
@@ -391,7 +396,7 @@
     "gate_2_selector_only": "apply UNCHANGED S2 to the frozen pools. Require higher availability AND preserved selector retention -- especially bridge conditional retention above its boundary. If candidate CES rises while S2 retention collapses: STOP, address selector capacity before spending GPU.",
     "gate_3_hrm": "only then measure Q, primary contrast B3-1 vs B3-0."
   },
-  "status": "BLOCKED__SELECTOR_PRESSURE_GATE_FAILED__NO_BUDGET_POLICY_FROZEN",
+  "status": "CLOSED__RETRIEVAL_SUFFICIENT_BUT_COMPOSITION_UNSAFE__NO_POLICY_PROMOTED",
   "success_criteria_deferred": {
     "explicitly_not_set_now": "Setting them before calibration exists would either be arbitrary or smuggle in confirmation #1's numbers.",
     "must_include": [

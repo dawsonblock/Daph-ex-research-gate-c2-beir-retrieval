@@ -1,5 +1,13 @@
 {
   "architecture_principle": "Retrieval iteration must ACCUMULATE information state, never replace earlier context with the latest bridge. Pinned by tests/unit/test_information_state.py.",
+  "b3_CLOSED": {
+    "capacity_evidence": "cal_700 connected candidates 10.0 -> 53.2; cal_3000 at k=300 has 103.8 connected candidates and 23.6 plausible bridges per task against a fixed 6-record packet. A one-hop connectivity heuristic was never designed to discriminate among two dozen plausible bridge paths.",
+    "causal_sequence": "k=50 -> availability inadequate, S2 works well on what it sees. k up -> availability improves strongly, structurally plausible distractors explode, S2's local connectivity rule becomes under-specified, useful evidence is displaced, the 6-record packet gets worse.",
+    "framing_correction": "C1 and C2 are NOT failed retrieval policies -- they did their retrieval job. The failure is the COMPOSITION: large candidate pool + current S2. Recorded explicitly because it determines what gets built next.",
+    "next_gate": "B4 Structural Candidate Compression",
+    "sharpest_number": "cal_700 candidate CES 0.713 -> 0.940 while selected CES given availability 0.692 -> 0.234, a ~46pp fall in selection quality caused by retrieval doing exactly what was asked of it.",
+    "verdict": "B3 retrieval scaling successfully increases evidence availability but FAILS selector-pressure safety. No candidate-budget policy is promotable with the current S2 selector."
+  },
   "b3_calibration_suite": {
     "audits_fail_closed_on": [
       "inferability",
@@ -658,6 +666,17 @@
     }
   },
   "environment_note": "Installing FlagEmbedding downgraded transformers to 4.57.6, and the HRM adapter's pinned-version guard refused to load rather than silently using a different architecture. FlagEmbedding is removed; transformers restored to 5.14.1. The guard did exactly its job.",
+  "executive_taxonomy_correction": {
+    "corrected": {
+      "enough coherent evidence": "SELECT",
+      "not enough evidence": "acquire more",
+      "too much ambiguous evidence": "REFINE / GRAPH_EXPAND / FILTER",
+      "working packet sufficient": "ANSWER"
+    },
+    "old": "not enough evidence -> RETRIEVE_MORE",
+    "status": "recorded as an architectural correction; no executive is being built",
+    "why_incomplete": "B3 shows that acquiring more evidence can make the packet WORSE when the added evidence is structurally ambiguous. RETRIEVE_MORE is not the only remedy for insufficiency."
+  },
   "gate_lineage": {
     "gate_c2_i_identity_resolution": "Gate C2-I was the earlier placeholder identity-resolution gate. Gate C3 (gate_c3_surface_identity_resolution) is the formal execution gate with a frozen protocol; the two must not remain as apparently active parallel identity-resolution gates. C2-I is therefore marked SUPERSEDED_BY_GATE_C3. No C2-I implementation or measurement existed; the substantive work continues under C3."
   },
@@ -693,7 +712,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "selector capacity under candidate pressure (was: candidate availability). Retrieval scaling is confirmed to deliver availability; UNCHANGED S2 cannot use it -- selected CES given availability falls from ~0.90 at k=50 to ~0.20 at k=300.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "SELECTOR_CAPACITY (prefilter or runtime-graph expansion). B3 budget selection BLOCKED.",
+    "NEXT_GATE": "B4_STRUCTURAL_CANDIDATE_COMPRESSION (protocol frozen, M not chosen, not yet run)",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
@@ -745,6 +764,18 @@
   "known_instrument_limitations": {
     "oracle_bridge_arm": "RESOLVED for v4: hrm_adaptive_memory/experiments/oracle_ladder.py reads latent identity from the task proof graph and raises OracleMetadataMissing rather than falling back to surface derivation. R2 (bridge identity, current query style) and R3 (bridge + target relation) are separate arms, so bridge identification and query formulation no longer conflate. The v3 oracle_bridge arm remains invalid and its numbers stay voided.",
     "v3_corpus": "Evidence-level style contamination both directions; alias regime is prefix truncation; 0/120 description tasks answerable from evidence; oracle_bridge reuses the extractor under test."
+  },
+  "layer_status": {
+    "current_bottleneck": "candidate compression and discrimination",
+    "executive": "still later",
+    "expanded_retrieval": "successfully restores availability",
+    "fixed_k50": "inadequate at scale",
+    "hrm_use_of_good_evidence": "strong",
+    "identity": "strong",
+    "retrieval_reachability": "strong; zero unranked records at any scale",
+    "runtime_graph": "now empirically motivated, not yet started",
+    "s2_at_high_pressure": "FAILS -- capacity/ambiguity regime",
+    "s2_at_low_pressure": "strong"
   },
   "negative_results": {
     "adaptive_retrieval_trigger": "91 of 91 follow-ups positive, 0 negative; a fixed two-pass policy suffices and Gate D is expected to FAIL on this corpus",

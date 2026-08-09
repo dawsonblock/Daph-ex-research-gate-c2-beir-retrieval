@@ -1,0 +1,103 @@
+{
+  "b3_framing_correction": {
+    "right": "C1 and C2 did their retrieval job -- candidate CES rose at every scale and the availability targets were met. What failed is the COMPOSITION: large candidate pool + current S2. That distinction determines what gets built next, which is why it is recorded explicitly.",
+    "wrong": "C1 and C2 are failed retrieval policies."
+  },
+  "created_utc": "2026-08-09T09:00:00Z",
+  "decision_rule": {
+    "P2_far_below_P3_ceiling": "a runtime-safe compressor cannot approach what an oracle compressor achieves -> go to the runtime graph rather than piling heuristics into the prefilter",
+    "P2_holds_availability_but_efficiency_stays_low": "pressure is not the whole story; S2's discrimination is inadequate independent of set size -> selector-capacity work, not more compression",
+    "P2_restores_efficiency_and_holds_availability": "selector pressure WAS the mechanism -> freeze prefilter + C2, then run HRM",
+    "P2_restores_efficiency_only_by_discarding_the_bridge": "the prefilter is solving the wrong problem -> reject it"
+  },
+  "if_b4_fails": "Move directly to runtime-graph expansion rather than adding further heuristics to S2. The graph is then judged against the prefilter on: initial retrieval size, candidates reaching S2, bridge availability, plausible bridge count, selected CES, and cost.",
+  "ladder": {
+    "P0": {
+      "pipeline": "k=50 -> S2",
+      "promotable": false,
+      "role": "historical baseline"
+    },
+    "P1": {
+      "pipeline": "C2 expanded retrieval -> S2 directly",
+      "promotable": false,
+      "role": "the known overload control; reproduces the B3 failure"
+    },
+    "P2": {
+      "pipeline": "C2 expanded retrieval -> structural prefilter to M -> UNCHANGED S2",
+      "role": "PRIMARY"
+    },
+    "P3": {
+      "pipeline": "C2 expanded retrieval -> ORACLE prefilter to M -> S2",
+      "promotable": false,
+      "role": "PREFILTER CEILING: bounds what any compressor could achieve"
+    }
+  },
+  "new_metrics_frozen": {
+    "bridge_competition_ratio": "plausible bridge candidates / packet budget",
+    "measured_at_B3": {
+      "k300_cal3000": "103.8/6 = 17.3, with 23.6 plausible bridges",
+      "k300_cal700": "53.2/6 = 8.9",
+      "k50_cal700": "10.0/6 = 1.7"
+    },
+    "structural_competition_ratio": "plausible connected candidates / packet budget",
+    "why_frozen_now": "B3 gives direct evidence that selector performance deteriorates as structural competition explodes, so the ratio becomes a first-class metric rather than a post-hoc explanation."
+  },
+  "no_hrm_initially": true,
+  "only_new_mechanism": "the prefilter in P2. S2 is unchanged, retrieval is C2 as already measured, packet stays 6.",
+  "packet_budget": {
+    "status": "FIXED, must not be raised",
+    "value": 6,
+    "why": "Raising it might improve Q while erasing the scientific question -- one could no longer tell whether the fix was better selection or simply more working context."
+  },
+  "prefilter_runtime_safety": {
+    "enforcement": "same discipline as selector_v2: a test strips docstrings and comments and asserts no executable statement references a forbidden field.",
+    "forbidden": [
+      "required_evidence_ids",
+      "proof graph / proof_edges",
+      "record_kind",
+      "oracle bridge / latent_bridge",
+      "answer_node",
+      "any generator label"
+    ],
+    "permitted": [
+      "canonical entity from the identity stage",
+      "question target relation (parsed from the question)",
+      "candidate entities extracted from candidate text",
+      "candidate-to-canonical connectivity",
+      "visible one-hop relationships",
+      "retrieval score and rank",
+      "duplicate suppression",
+      "temporal metadata already visible at runtime"
+    ]
+  },
+  "primary_criteria": {
+    "bridge_conditional_retention": "P2 delta vs P0 >= -0.05 at EVERY scale, the same bound and the same per-scale requirement that exposed the B3 floor effect",
+    "competition": "structural and bridge competition ratios must fall materially versus P1",
+    "mechanical": [
+      "packet budget exactly 6",
+      "no forbidden signal accessed",
+      "deterministic",
+      "same corpora"
+    ],
+    "role_availability_after_prefilter": "bridge and terminal availability must not fall more than 0.05 below the pre-prefilter (C2) level -- compression must not undo the availability B3 bought",
+    "selected_ces_given_available": "P2 must materially exceed P1 and approach P0's efficiency (P0 sits at 0.82-0.97; P1 collapses to 0.17-0.25)"
+  },
+  "protocol_id": "b4_structural_candidate_compression_v1",
+  "question": "Can we preserve the evidence availability gained by expanded retrieval while reducing the structurally plausible candidate set enough that UNCHANGED S2 regains its development-level discrimination?",
+  "scored_on_two_opposing_quantities": {
+    "pressure_reduction": "the structurally plausible competition must actually fall",
+    "recall_into_prefiltered_set": "required evidence, and each ROLE, must survive compression -- a prefilter that discards the bridge has solved nothing",
+    "the_target_shape": "expanded pool 300 candidates / ~24 plausible bridges -> prefiltered 50 candidates / ~5 plausible bridges -> S2 selects 6. High role availability retained WHILE competition collapses is the missing middle layer."
+  },
+  "status": "PREREGISTERED__M_NOT_CHOSEN__NOT_YET_RUN",
+  "why_this_and_not_graph_retrieval_yet": "The graph direction is now empirically motivated, not speculative -- but a prefilter is the SMALLEST causal intervention that isolates the diagnosed cause. It answers 'is S2 failing merely because it is handed too many plausible records at once?' WITHOUT simultaneously changing the retrieval architecture. Changing both would leave the attribution ambiguous in exactly the way B3's 2x2 was built to avoid.",
+  "working_set_size_M": {
+    "candidates": [
+      25,
+      50,
+      75
+    ],
+    "rationale": "A small prospective set is enough to tell whether selector PRESSURE is the mechanism. A broad grid would convert a mechanism test into hyperparameter search.",
+    "status": "M NOT CHOSEN"
+  }
+}
