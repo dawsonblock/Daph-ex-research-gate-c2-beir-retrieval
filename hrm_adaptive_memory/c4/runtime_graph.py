@@ -203,18 +203,22 @@ def build_runtime_graph(*, record_ids: Sequence[str], texts: Mapping[str, str],
                 extraction_method="extract_v4_entities", source_span_hash=span))
 
         # Co-mention inside one record is the only link this version asserts.
+        # Emitted as TWO directed edges (A->B and B->A), not one undirected
+        # edge, so a PathCandidate's edge_ids can reproduce exactly which
+        # orientation a traversal used rather than leaving direction implicit.
         ordered = sorted(normalized)
         for i, left in enumerate(ordered):
             for right in ordered[i + 1:]:
                 graph.entity_links.setdefault(left, set()).add(right)
                 graph.entity_links.setdefault(right, set()).add(left)
-                graph.edges.append(GraphEdge(
-                    edge_id=_edge_id("ENTITY_LINKED_TO_ENTITY", left, right,
-                                     row.evidence_id),
-                    edge_type="ENTITY_LINKED_TO_ENTITY", source=left,
-                    target=right, source_record_id=row.evidence_id,
-                    extraction_method="co_mention_in_record",
-                    source_span_hash=span))
+                for source, target in ((left, right), (right, left)):
+                    graph.edges.append(GraphEdge(
+                        edge_id=_edge_id("ENTITY_LINKED_TO_ENTITY", source,
+                                         target, row.evidence_id),
+                        edge_type="ENTITY_LINKED_TO_ENTITY", source=source,
+                        target=target, source_record_id=row.evidence_id,
+                        extraction_method="co_mention_in_record",
+                        source_span_hash=span))
 
         if relation_norm and relation_norm in _norm(content):
             graph.relation_records.add(row.evidence_id)

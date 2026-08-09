@@ -849,6 +849,8 @@
     }
   },
   "g2_runtime_graph": {
+    "G2_V1_STATUS": "VALID_NEGATIVE_DIAGNOSIS",
+    "OUTCOME": "C_CONSTRUCTION_DEFICIENT",
     "arms_run": [
       "G0_k50",
       "G1_coarse_M{25,50,75}",
@@ -941,6 +943,7 @@
     },
     "run_utc": "2026-08-09",
     "s2_unchanged": true,
+    "scientific_interpretation_FROZEN": "G2-v1 failed because path construction/completion is too restrictive. Ranking has not yet been shown to be the bottleneck. Do NOT claim 'graph failed.'",
     "status": "RUN_COMPLETE__VERDICT_C__CANNOT_PRESERVE_BRIDGE_AVAILABILITY",
     "what_survives_from_this_sprint": [
       "runtime_graph.py node/edge provenance and leakage wall",
@@ -948,6 +951,44 @@
       "the deficiency is isolated to ONE signal (relation completeness at construction time), not the ranking or representation machinery"
     ],
     "why_no_tuning_this_sprint": "The user's own instruction (#27): run the frozen mechanism once, then classify -- do not tune after seeing results. This diagnosis names a specific, falsifiable construction defect (the relation-completeness signal) rather than proposing an immediate fix; a repair belongs in a new frozen G2-v2 construction sprint, not a patch inside this one."
+  },
+  "g2_v2_path_completion": {
+    "arms_run": [
+      "K0_M{25,50,75}",
+      "K1_M{25,50,75}",
+      "K3_M{25,50,75}"
+    ],
+    "artifact": "evidence/gate_g2_v2/construction_only.json",
+    "frozen_taxonomy_outcome": {
+      "condition_met": "K3 does not substantially beat K0 (headroom < 0.15 at every scale, actual 0.0-0.013)",
+      "letter": "D_topology_deficient",
+      "prescribed_action": "Endpoint semantics is not the primary problem. Reopen entity-link construction / relation attachment / path topology before touching ranking. Do not build a richer relation-semantics layer on top of this recognizer -- that was the wrong next step (Outcome C's action), and this run is what distinguishes C from D."
+    },
+    "headline_finding": {
+      "claim": "K3 (the oracle ceiling, restricted to records the SAME topology walk K0/K1 already reach) barely beats K0 at all.",
+      "headroom_K3_minus_K0_working_set_ces": {
+        "1000": 0.0067,
+        "1500": 0.0067,
+        "2200": 0.0,
+        "3000": 0.0133,
+        "700": 0.0
+      },
+      "meaning": "Even a PERFECT completion recognizer -- one that never mislabels a single record -- could not have closed more than 0.7-1.3 percentage points of working-set CES, because the records it would need to label correctly are usually not reachable by the graph's 1-2 hop co-mention walk in the first place. R_endpoint for K3 is 1.000 at every scale by construction (it always recognizes what it can reach); R_endpoint for K0/K1 is only 0.06-0.10. That gap looks large in isolation, but the DENOMINATOR it operates on (topology-reachable required records) is small and mostly overlaps with what K0's loose substring match already recovers through partial-tier admission -- G2 does not pad the working set, so partial (non-complete) records still enter it whenever total candidates are below M, which they almost always are here (working sets averaged 6-25 records against ceilings of 25-75)."
+    },
+    "hrm_run": false,
+    "next_diagnostic_question": "Why is the 1-2 hop co-mention topology so sparse relative to required evidence? Candidates: (a) the corpus's multi-hop chains route through bridges that are NOT co-mentioned with the subject in any single record (i.e. the true link is a chain of separate facts, not a shared record), (b) entity extraction (extract_v4_entities) fails to recognize the SAME entity across records due to surface-form variance, fragmenting what should be one node into several, or (c) the candidate pool depth (C2 expanded k) doesn't retrieve the specific bridge/endpoint records at all, independent of graph construction. This needs its own diagnostic pass over topology_reachable_records vs required_evidence_ids before any repair is attempted -- not assumed.",
+    "run_utc": "2026-08-09",
+    "s2_phase_run": false,
+    "status": "RUN_COMPLETE__STOP_GATE_FAILED__OUTCOME_D_TOPOLOGY_DEFICIENT",
+    "stop_gate": "FAILED at every scale -- no eligible M passed the frozen 0.50 construction-gap bound. decision_M=None (correctly, not 'least bad'), per the decision_at_M hard-gate fix applied in this sprint.",
+    "what_survives_from_this_sprint": [
+      "hrm_adaptive_memory/c4/relation_grammar.py: a working, tested entity-bound relation parser grounded in the actual generator grammar (11/13 real corpus samples bind correctly vs 0/4 for the pre-existing relational_state.py parser on similar samples) -- reusable when topology is eventually repaired",
+      "hrm_adaptive_memory/c4/endpoint_recognition.py: K0/K1/K2 with full provenance, 72 passing tests",
+      "hrm_adaptive_memory/c4/oracle_endpoint_ceiling.py: isolated K3 ceiling, import-boundary enforced",
+      "hrm_adaptive_memory/c4/decision_gate.py: fixes the decision_at_M hard-gate bug present in run_g1_typed_path.py and run_g2_graph_traversal.py (5 regression tests)",
+      "directed ENTITY_LINKED_TO_ENTITY edge pairs in runtime_graph.py (provenance repair)"
+    ],
+    "why_this_overturns_the_g2_v1_diagnosis": "G2-v1 attributed the failure to completion RECOGNITION (a record wasn't being labeled complete even though it should have been). This sprint's K3 arm falsifies that: recognition was never the binding constraint. The actual constraint is REACHABILITY -- required records frequently sit outside the 1-2 hop subject/bridge co-mention neighborhood the runtime graph walks at all, so no completion rule, however accurate, can recover them. K1's entity-bound recognizer IS more correct than K0 in isolation (see tests/unit/test_g2_endpoint_recognition.py -- it correctly rejects wrong-entity bindings K0 falsely accepts, and correctly recognizes value-shaped records the older relational_state.py parser missed entirely). Being more correct did not help end-to-end because the records it could have correctly labeled were mostly unreachable to begin with."
   },
   "gate_lineage": {
     "gate_c2_i_identity_resolution": "Gate C2-I was the earlier placeholder identity-resolution gate. Gate C3 (gate_c3_surface_identity_resolution) is the formal execution gate with a frozen protocol; the two must not remain as apparently active parallel identity-resolution gates. C2-I is therefore marked SUPERSEDED_BY_GATE_C3. No C2-I implementation or measurement existed; the substantive work continues under C3."
@@ -984,7 +1025,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "G2-v2 construction repair (not started): broaden path-completeness beyond literal relation-text substring match, which is the diagnosed cause of G2's terminal-availability collapse (0.37-0.49 vs typed's 0.95-0.98). G1_TYPED_PATH (PARTIAL, gap-closure 0.30-0.85 depending on M/scale) remains the best-performing non-oracle mechanism to date and is NOT superseded by this result.",
+    "NEXT_GATE": "G2-v3 topology diagnostic (not started): why is the 1-2 hop co-mention graph topology sparse relative to required evidence, independent of completion recognition -- K3's oracle ceiling headroom over K0 was only 0.0-0.013 working-set CES, so G2-v2's entity-bound recognizer (real fix, 72 tests, but the wrong layer) could not have repaired G2 even if perfect. G1_TYPED_PATH remains the best-performing non-oracle mechanism found across all of B4/G1/G2/G2-v2.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",

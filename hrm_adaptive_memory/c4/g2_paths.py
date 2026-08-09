@@ -40,10 +40,16 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, field
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 from ..retrieval.canonicalization import _norm
+from .endpoint_recognition import EndpointRecognition, k0_literal_completion
 from .runtime_graph import RuntimeGraph, build_runtime_graph
+
+#: (record_id, entity, relation, texts) -> EndpointRecognition. Defaults to
+#: k0_literal_completion so callers that don't pass one get exactly G2-v1's
+#: frozen historical behavior -- see configs/gate_g2_v2_path_completion.json.
+CompletionFn = Callable[..., EndpointRecognition]
 
 #: Structural tiers, frozen. Lower sorts first (higher priority).
 TIER_DIRECT_COMPLETE = 0     # subject record itself expresses the relation
@@ -118,25 +124,81 @@ def _edges_between(graph: RuntimeGraph, record_ids: Sequence[str],
     return tuple(sorted(set(out)))
 
 
+def bridges_for_subject(graph: RuntimeGraph, subject_norm: str) -> set[str]:
+    """Entities directly co-mentioned with the (already-normalized) subject in
+    some record. Factored out so K3's oracle topology and K0/K1/K2's traversal
+    are guaranteed byte-identical rather than two hand-written copies that
+    could silently drift apart."""
+    bridges: set[str] = set()
+    for record_id in graph.records_by_entity.get(subject_norm, set()):
+        for entity in graph.entities_by_record.get(record_id, frozenset()):
+            if entity and entity != subject_norm:
+                bridges.add(entity)
+    return bridges
+
+
+def topology_reachable_records(
+    graph: RuntimeGraph, canonical_subject: str | None,
+) -> frozenset[str]:
+    """Every record id the shared hop-0/hop-1 topology walk can reach from the
+    subject, regardless of completion -- subject records plus every bridge's
+    records. K3 restricts oracle labeling to this set so it can only relabel
+    completion for records the walk already discovers, never invent new
+    topology (configs/gate_g2_v2_path_completion.json, K3 definition)."""
+    subject = _norm(canonical_subject or "")
+    if not subject:
+        return frozenset()
+    subject_records = set(graph.records_by_entity.get(subject, set()))
+    bridges = bridges_for_subject(graph, subject)
+    for alias in graph.alias_links.get(subject, set()):
+        for record_id in graph.records_by_entity.get(alias, set()):
+            for entity in graph.entities_by_record.get(record_id, frozenset()):
+                if entity and entity != subject:
+                    bridges.add(entity)
+    reachable = set(subject_records)
+    for bridge in bridges:
+        reachable |= graph.records_by_entity.get(bridge, set())
+    return frozenset(reachable)
+
+
 def enumerate_paths(
     *, graph: RuntimeGraph, canonical_subject: str | None, relation: str,
+    texts: Mapping[str, str] | None = None,
     fusion_scores: Mapping[str, float] | None = None,
-) -> list[PathCandidate]:
+    completion_fn: CompletionFn | None = None,
+) -> tuple[list[PathCandidate], list[EndpointRecognition]]:
     """Enumerate every distinct subject-anchored path up to the 2-hop bound.
 
     Distinct bridge entities produce distinct paths -- they are NOT collapsed
     into one flat neighbourhood the way a coarse prefilter would. Instances
     sharing an (anchor, terminal, entity_chain) signature ARE merged, since
     those are the same structural hypothesis reached via different records.
+
+    ``completion_fn`` is the ONLY thing G2-v2's K0/K1/K2/K3 arms vary -- the
+    topology walk below (which records are subject records, which entities are
+    bridges, which records connect a bridge to the subject) is identical across
+    every arm, per configs/gate_g2_v2_path_completion.json's frozen-unchanged
+    list. Returns (paths, endpoint_recognitions) -- the second list is every
+    completion decision examined, kept for R_endpoint/R_path instrumentation
+    even for records that did NOT complete a path.
     """
     scores = fusion_scores or {}
+    texts = texts or {}
+    completion_fn = completion_fn or k0_literal_completion
     subject = _norm(canonical_subject or "")
     relation_norm = _norm(relation) if relation else ""
     if not subject:
-        return []
+        return [], []
 
     subject_records = sorted(graph.records_by_entity.get(subject, set()))
     by_signature: dict[tuple, PathCandidate] = {}
+    recognitions: list[EndpointRecognition] = []
+
+    def recognize(record_id: str, entity: str) -> EndpointRecognition:
+        recognition = completion_fn(record_id=record_id, entity=entity,
+                                    relation=relation, texts=texts)
+        recognitions.append(recognition)
+        return recognition
 
     def best_score(record_ids: Sequence[str]) -> float:
         return max((scores.get(rid) or 0.0 for rid in record_ids), default=0.0)
@@ -182,17 +244,13 @@ def enumerate_paths(
     # different relation-expressing subject records are themselves competing
     # alternatives, not the same path re-supported.
     for record_id in subject_records:
-        complete = record_id in graph.relation_records
+        complete = recognize(record_id, subject).completed
         upsert(subject, subject, (subject,), (record_id,), complete,
               hop=0, tier=TIER_DIRECT_COMPLETE if complete else TIER_DIRECT_PARTIAL,
               discriminator=record_id)
 
     # --- hop 1: entities visible alongside the subject ("bridges") ---------
-    bridges: set[str] = set()
-    for record_id in subject_records:
-        for entity in graph.entities_by_record.get(record_id, frozenset()):
-            if entity and entity != subject:
-                bridges.add(entity)
+    bridges = bridges_for_subject(graph, subject)
     for alias in graph.alias_links.get(subject, set()):
         for record_id in sorted(graph.records_by_entity.get(alias, set())):
             for entity in graph.entities_by_record.get(record_id, frozenset()):
@@ -209,15 +267,15 @@ def enumerate_paths(
         # both: the connection to the subject, and the relation it resolves to.
         link_records = [r for r in subject_records
                         if bridge in graph.entities_by_record.get(r, frozenset())]
-        endpoint_records = sorted(r for r in bridge_records
-                                  if r in graph.relation_records)
+        endpoint_records = sorted(
+            r for r in bridge_records if recognize(r, bridge).completed)
         complete = bool(endpoint_records)
         chosen = sorted(set(link_records) | set(endpoint_records)) if complete \
             else sorted(set(link_records) or bridge_records)
         upsert(subject, bridge, (subject, bridge), chosen, complete,
               hop=1, tier=TIER_BRIDGED_COMPLETE if complete else TIER_BRIDGED_PARTIAL)
 
-    return list(by_signature.values())
+    return list(by_signature.values()), recognitions
 
 
 @dataclass
@@ -228,6 +286,7 @@ class G2Result:
     input_size: int = 0
     retained_paths: list[PathCandidate] = field(default_factory=list)
     all_paths: list[PathCandidate] = field(default_factory=list)
+    endpoint_recognitions: list[EndpointRecognition] = field(default_factory=list)
     canonical_subject_found: bool = False
     target_relation_extracted: bool = False
     graph_stats: dict[str, int] = field(default_factory=dict)
@@ -255,6 +314,11 @@ class G2Result:
                                    if complete else 0.0),
             "working_set_size": self.working_set_size,
             "records_examined": self.input_size,
+            "endpoints_inspected": len(self.endpoint_recognitions),
+            "endpoints_entity_bound": sum(1 for r in self.endpoint_recognitions
+                                          if r.entity_bound),
+            "endpoints_recognized_complete": sum(1 for r in self.endpoint_recognitions
+                                                 if r.completed),
             **{f"graph_{k}": v for k, v in self.graph_stats.items()},
         }
 
@@ -300,21 +364,26 @@ def g2_prefilter(
     canonical_subject: str | None, relation: str, working_set_size: int,
     fusion_scores: Mapping[str, float] | None = None,
     graph: RuntimeGraph | None = None,
+    completion_fn: CompletionFn | None = None,
 ) -> G2Result:
     """Compress ``candidate_ids`` to at most ``working_set_size`` records.
 
     M is a CEILING, not a target: if fewer records are structurally justified,
     fewer are returned. No retrieval-rank filler is added to pad the set.
+
+    ``completion_fn`` selects the G2-v2 arm (K0/K1/K2/K3); defaults to K0,
+    G2-v1's frozen literal-match behavior, if omitted.
     """
     pool = list(candidate_ids)
     graph = graph or build_runtime_graph(
         record_ids=pool, texts=texts, relation=relation)
-    all_paths = enumerate_paths(
+    all_paths, recognitions = enumerate_paths(
         graph=graph, canonical_subject=canonical_subject, relation=relation,
-        fusion_scores=fusion_scores)
+        texts=texts, fusion_scores=fusion_scores, completion_fn=completion_fn)
     retained, working = rank_and_select_paths(all_paths, working_set_size)
     return G2Result(
         kept=working, working_set_size=len(working), input_size=len(pool),
         retained_paths=retained, all_paths=all_paths,
+        endpoint_recognitions=recognitions,
         canonical_subject_found=bool(canonical_subject),
         target_relation_extracted=bool(relation), graph_stats=graph.stats())

@@ -88,9 +88,10 @@ class TestPathEnumeration:
     def _paths(self):
         graph = build_runtime_graph(record_ids=list(TEXTS), texts=TEXTS,
                                     relation=RELATION)
-        return enumerate_paths(graph=graph, canonical_subject=SUBJECT,
-                               relation=RELATION,
-                               fusion_scores={k: 1.0 for k in TEXTS})
+        paths, _recognitions = enumerate_paths(
+            graph=graph, canonical_subject=SUBJECT, relation=RELATION,
+            texts=TEXTS, fusion_scores={k: 1.0 for k in TEXTS})
+        return paths
 
     def test_finds_the_direct_path(self):
         paths = self._paths()
@@ -142,8 +143,9 @@ class TestPathEnumeration:
     def test_returns_nothing_without_a_subject(self):
         graph = build_runtime_graph(record_ids=list(TEXTS), texts=TEXTS,
                                     relation=RELATION)
-        assert enumerate_paths(graph=graph, canonical_subject=None,
-                               relation=RELATION) == []
+        paths, recognitions = enumerate_paths(
+            graph=graph, canonical_subject=None, relation=RELATION, texts=TEXTS)
+        assert paths == [] and recognitions == []
 
     def test_is_deterministic(self):
         assert [p.path_id for p in self._paths()] == [p.path_id for p in self._paths()]
@@ -153,9 +155,10 @@ class TestRankingAndSelection:
     def _paths(self):
         graph = build_runtime_graph(record_ids=list(TEXTS), texts=TEXTS,
                                     relation=RELATION)
-        return enumerate_paths(graph=graph, canonical_subject=SUBJECT,
-                               relation=RELATION,
-                               fusion_scores={k: 1.0 for k in TEXTS})
+        paths, _recognitions = enumerate_paths(
+            graph=graph, canonical_subject=SUBJECT, relation=RELATION,
+            texts=TEXTS, fusion_scores={k: 1.0 for k in TEXTS})
+        return paths
 
     def test_direct_complete_path_outranks_bridged_paths(self):
         retained, working = rank_and_select_paths(self._paths(), working_set_size=1)
@@ -181,8 +184,8 @@ class TestRankingAndSelection:
     def test_redundant_path_contributes_no_new_records_and_is_not_retained(self):
         graph = build_runtime_graph(record_ids=list(TEXTS), texts=TEXTS,
                                     relation=RELATION)
-        paths = enumerate_paths(graph=graph, canonical_subject=SUBJECT,
-                                relation=RELATION)
+        paths, _recognitions = enumerate_paths(
+            graph=graph, canonical_subject=SUBJECT, relation=RELATION, texts=TEXTS)
         retained, working = rank_and_select_paths(paths, working_set_size=50)
         seen = set()
         for path in retained:
