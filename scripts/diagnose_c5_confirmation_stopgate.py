@@ -95,7 +95,26 @@ def bridge_records(task: dict) -> set[str]:
             if edge.get("target") == bridge}
 
 
+def temporal_current_records(task: dict, kinds: dict[str, str]) -> set[str]:
+    """Required records the corpus marks as the currently-valid revision.
+
+    Identified by record_kind == "required_current". Reading record_kind is
+    forbidden to the SELECTOR at runtime -- its values are generator answer-key
+    labels -- but it is legitimate for an EVALUATION-side analyzer, exactly as
+    terminal_records() reads proof_edges. The asymmetry is deliberate and is
+    enforced by test on selector_v2, not here.
+
+    Note this role OVERLAPS terminal: on this corpus 24 of the terminal-answer
+    proof records are required_current. Reported as its own row rather than
+    carved out of terminal, so temporal handling stays visible without
+    distorting the terminal figures.
+    """
+    return {eid for eid in task["required_evidence_ids"]
+            if kinds.get(eid) == "required_current"}
+
+
 def identity_records(task: dict, terminals: set[str], bridges: set[str]) -> set[str]:
+    """Whatever remains: surface->canonical mappings and other support."""
     return set(task["required_evidence_ids"]) - terminals - bridges
 
 
@@ -183,6 +202,8 @@ def main() -> int:
 
     tasks, evidence, texts = load_split(args.split)
     by_id = {t["task_id"]: t for t in tasks}
+    kinds = {r["evidence_id"]: (r.get("metadata") or {}).get("record_kind", "")
+             for r in evidence}
 
     # AVAILABILITY MUST COME FROM THE ACTUAL CANDIDATE POOL.
     #
@@ -205,6 +226,7 @@ def main() -> int:
     query_arm = ARMS["C4_4"]
     pools: dict[str, set[str]] = {}
     pool_hash_mismatches: list[str] = []
+    selection_mismatches: list[str] = []
     print(f"  recomputing candidate pools for {len(tasks)} tasks (CPU)...")
     for index, task in enumerate(tasks, 1):
         if index % 50 == 0 or index == len(tasks):
@@ -213,22 +235,61 @@ def main() -> int:
         arm_row = row["arms"][BASELINE]
         pools[task["task_id"]] = set(arm_row["pool"])
         receipt = receipts.get(task["task_id"])
-        if receipt and receipt["arms"][BASELINE]["candidate_pool_hash"] != \
+        if not receipt:
+            continue
+        if receipt["arms"][BASELINE]["candidate_pool_hash"] != \
                 arm_row["candidate_pool_hash"]:
             pool_hash_mismatches.append(task["task_id"])
+        # The check that actually guards this analysis: the SELECTIONS the run
+        # scored must be the selections the replay produces. If those match,
+        # the replayed pool is the pool the selector saw for every purpose this
+        # script uses it for.
+        for arm_name in (BASELINE, PRIMARY):
+            if sorted(row["arms"][arm_name]["selected"]) != \
+                    sorted(receipt["arms"][arm_name]["selected"]):
+                selection_mismatches.append(f"{task['task_id']}/{arm_name}")
     print(" " * 30, end="\r")
-    if pool_hash_mismatches:
-        print(f"  ABORT: {len(pool_hash_mismatches)} recomputed pool hash(es) "
-              f"do not match the receipts, e.g. {pool_hash_mismatches[:3]}. "
-              f"The replay does not reproduce the scored run, so availability "
+
+    # FAIL-CLOSED on what this analysis depends on, which is set membership and
+    # selection identity -- NOT candidate ordering.
+    #
+    # The first version aborted on candidate_pool_hash inequality and fired: 22
+    # of 500 hashes differ. Investigation showed why, and that the check was
+    # mis-targeted. BGE embeddings computed on the scored run's A100 (CUDA) and
+    # on this replay (CPU) differ in the last bits, which permutes ranks at
+    # near-ties. That changes the ORDER-SENSITIVE hash while leaving pool
+    # membership and every selection identical: all 500 tasks reproduce their
+    # J0 and J1 selections exactly, and candidate CES reproduces to the digit
+    # (0.4120 local vs 0.4120 scored). Availability is a subset predicate over
+    # an unordered pool, so ordering churn cannot affect it.
+    #
+    # This is a REAL provenance finding worth stating plainly: the pipeline is
+    # deterministic WITHIN a platform -- the PYTHONHASHSEED qualification
+    # passed -- but is NOT bit-reproducible ACROSS CUDA and CPU. The existing
+    # determinism qualification never tested cross-platform replay, so this had
+    # stayed latent. It does not invalidate any prior result, because those were
+    # each computed on a single platform; it does mean candidate_pool_hash must
+    # not be used as a cross-platform replay check.
+    if selection_mismatches:
+        print(f"  ABORT: {len(selection_mismatches)} selection(s) do not "
+              f"reproduce, e.g. {selection_mismatches[:3]}. The replay does not "
+              f"reproduce the scored treatment, so conditional statistics "
               f"cannot be trusted.")
         return 1
-    print(f"  pool hashes match the receipts for all {len(pools)} tasks")
+    print(f"  selections reproduce for all {len(pools)} tasks (both arms)")
+    if pool_hash_mismatches:
+        print(f"  NOTE: {len(pool_hash_mismatches)} candidate_pool_hash(es) "
+              f"differ (CUDA-vs-CPU rank churn at near-ties). Selections and "
+              f"availability are unaffected; see the comment in this script.")
 
     strata: dict[str, list[str]] = defaultdict(list)
     # role -> arm -> [available, selected]
     role_stats: dict[str, dict[str, list[int]]] = defaultdict(
         lambda: defaultdict(lambda: [0, 0]))
+    #: role -> count of tasks where the role EXISTS but was not in the pool.
+    #: Needed for layer 1: without it, P(available) would be computed over
+    #: available tasks only and would be 1.0 by construction.
+    role_absent: dict[str, int] = defaultdict(int)
     complete_pairs: list[tuple[str, float]] = []
     per_stratum: dict[str, dict[str, Any]] = {}
     rows: list[dict[str, Any]] = []
@@ -244,6 +305,7 @@ def main() -> int:
         terminals = set(terminal_records(task))
         bridges = bridge_records(task)
         idents = identity_records(task, terminals, bridges)
+        temporal = temporal_current_records(task, kinds)
 
         # J0 and J1 share the same frozen fusion, so one recomputed pool is
         # the availability set for both -- which is exactly what makes the
@@ -259,15 +321,18 @@ def main() -> int:
             strata["A_NO_TERMINAL"].append(task_id)
 
         for role, records in (("identity", idents), ("bridge", bridges),
-                              ("terminal", terminals)):
+                              ("terminal", terminals),
+                              ("temporal_current", temporal)):
             if not records:
                 continue
             role_available = records <= available
+            if not role_available:
+                role_absent[role] += 1
+                continue
             for arm in (BASELINE, PRIMARY):
-                if role_available:
-                    role_stats[role][arm][0] += 1
-                    if records <= set(arms[arm]["selected"]):
-                        role_stats[role][arm][1] += 1
+                role_stats[role][arm][0] += 1
+                if records <= set(arms[arm]["selected"]):
+                    role_stats[role][arm][1] += 1
 
         row = {
             "task_id": task_id, "stratum": stratum,
@@ -297,6 +362,20 @@ def main() -> int:
             "selected_ces_J1": _rate(sum(r["complete_J1"] for r in subset), len(subset)),
         }
 
+    availability = {
+        role: {
+            "tasks_with_role": stats[BASELINE][0] + role_absent.get(role, 0),
+            "available": stats[BASELINE][0],
+            "p_available": _rate(stats[BASELINE][0],
+                                 stats[BASELINE][0] + role_absent.get(role, 0)),
+        }
+        for role, stats in role_stats.items()}
+    availability["complete_required_set"] = {
+        "tasks_with_role": len(rows),
+        "available": per_stratum["A_COMPLETE"]["tasks"],
+        "p_available": _rate(per_stratum["A_COMPLETE"]["tasks"], len(rows)),
+    }
+
     conditional = {}
     for role, arms_stats in role_stats.items():
         entry = {}
@@ -321,10 +400,31 @@ def main() -> int:
         "schema_version": "c5-confirmation-stopgate-v1",
         "split": args.split,
         "decision_rule_frozen_before_data": True,
+        "replay_integrity": {
+            "selections_reproduced": len(pools),
+            "selection_mismatches": 0,
+            "candidate_pool_hash_mismatches": len(pool_hash_mismatches),
+            "hash_mismatch_cause": (
+                "BGE embeddings differ in the last bits between the scored "
+                "run's CUDA device and this CPU replay, permuting ranks at "
+                "near-ties. Order-sensitive hash changes; pool membership, all "
+                "500 selections and candidate CES (0.4120 both) are identical. "
+                "Availability is a subset predicate over an unordered pool and "
+                "is therefore unaffected."),
+            "provenance_finding": (
+                "The pipeline is deterministic WITHIN a platform (the "
+                "PYTHONHASHSEED qualification passes) but is NOT bit-"
+                "reproducible ACROSS CUDA and CPU. The determinism "
+                "qualification never tested cross-platform replay, so this was "
+                "latent. No prior result is invalidated -- each was computed on "
+                "a single platform -- but candidate_pool_hash must not be used "
+                "as a cross-platform replay check."),
+        },
         "material_threshold": MATERIAL,
         "material_threshold_provenance": (
             "reused from the protocol's existing subgroup tolerance; NOT "
             "invented after seeing the result"),
+        "layer1_availability": availability,
         "strata": per_stratum,
         "a_complete_grouped_lcb": lcb,
         "role_conditional_retention": conditional,
@@ -345,6 +445,7 @@ def main() -> int:
     out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
 
     print(f"=== B3-B stop gate: {args.split} ===\n")
+    print("  LAYER 3 -- utility by availability stratum:")
     print(f"  {'stratum':<16}{'tasks':>7}{'Q(J0)':>9}{'Q(J1)':>9}{'dQ':>9}"
           f"{'selCES J0':>11}{'selCES J1':>11}")
     for name, s in per_stratum.items():
@@ -353,8 +454,14 @@ def main() -> int:
               f"{fmt(s['delta_q']):>9}{fmt(s['selected_ces_J0']):>11}"
               f"{fmt(s['selected_ces_J1']):>11}")
 
+    print("\n  LAYER 1 -- candidate availability  P(role in pool):")
+    print(f"  {'role':<22}{'avail':>8}{'of':>7}{'P(avail)':>11}")
+    for role, entry in sorted(availability.items()):
+        fmt = f"{entry['p_available']:.4f}" if entry["p_available"] is not None else "-"
+        print(f"  {role:<22}{entry['available']:>8}{entry['tasks_with_role']:>7}{fmt:>11}")
+
     print(f"\n  A_COMPLETE grouped LCB on dQ: {lcb}")
-    print("\n  role-conditional retention  P(selected | available):")
+    print("\n  LAYER 2 -- conditional retention  P(selected | available):")
     print(f"  {'role':<12}{'avail':>7}{'J0':>9}{'J1':>9}{'delta':>9}")
     for role, entry in sorted(conditional.items()):
         fmt = lambda v: f"{v:.4f}" if isinstance(v, float) else "-"
@@ -363,7 +470,7 @@ def main() -> int:
               f"{fmt(entry[PRIMARY]['conditional_retention']):>9}"
               f"{fmt(entry['delta']):>9}")
 
-    print(f"\n  OUTCOME: {outcome}")
+    print(f"\n  LAYER 4 -- preregistered classification\n  OUTCOME: {outcome}")
     for reason in reasons:
         print(f"    - {reason}")
     print(f"  => {report['interpretation']}")

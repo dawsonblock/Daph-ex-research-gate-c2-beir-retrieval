@@ -1,5 +1,53 @@
 {
   "architecture_principle": "Retrieval iteration must ACCUMULATE information state, never replace earlier context with the latest bridge. Pinned by tests/unit/test_information_state.py.",
+  "b3b_stopgate_result": {
+    "OUTCOME": "OUTCOME_A_POSITIVE",
+    "a_complete": {
+      "delta_q": 0.1772,
+      "q_J0": 0.3956,
+      "q_J1": 0.5728,
+      "selected_ces_J0": 0.5485,
+      "selected_ces_J1": 0.7233,
+      "tasks": 206
+    },
+    "a_complete_grouped_lcb": 0.0977,
+    "analyzer_committed_before_data": "977d785",
+    "availability": {
+      "bridge": 0.3286,
+      "complete_required_set": 0.412,
+      "identity": 1.0,
+      "temporal_current": 0.45,
+      "terminal": 0.534
+    },
+    "conditional_retention": {
+      "bridge": {
+        "J0": 0.2957,
+        "J1": 0.2522,
+        "delta": -0.0435
+      },
+      "identity": {
+        "J0": 1.0,
+        "J1": 1.0,
+        "delta": 0.0
+      },
+      "temporal_current": {
+        "J0": 0.1778,
+        "J1": 0.5111,
+        "delta": 0.3333
+      },
+      "terminal": {
+        "J0": 0.2547,
+        "J1": 0.3895,
+        "delta": 0.1348
+      }
+    },
+    "decision_rule_frozen_before_data": true,
+    "finding": "S2 conditional on complete availability reproduces its development effect almost exactly: dQ +0.1772 (LCB +0.0977) here vs +0.1750 on development. The mechanism did not fail because the selector stopped working -- it failed because bridge evidence reaches the candidate pool only 32.9% of the time at this corpus scale. Identity availability is 100%, terminal 53.4%, temporal_current 45.0%, bridge 32.9%.",
+    "implication": "retrieval availability is the primary bottleneck; S2 stays frozen; B3 candidate-budget work is justified.",
+    "not_outcome_c": "S2 does not have an independent cross-distribution selector defect. OUTCOME_C would have stopped B3.",
+    "one_negative_signal": "bridge conditional retention -0.0435, inside the -0.05 material boundary but only just. It is the single role S2 degrades rather than improves, and it should be watched if candidate pools grow.",
+    "s2_improves_two_roles_conditionally": "terminal +0.1348 and temporal_current +0.3333 conditional retention. S2 is doing real work where evidence exists."
+  },
   "benchmark_lineage": {
     "controlled_gate_a_v1": "SUPERSEDED_answer_leaked_into_one_question",
     "controlled_gate_a_v2": "CANONICAL_for_gate_a0_and_gate_b",
@@ -24,6 +72,7 @@
     }
   },
   "c5_J_ladder_development_result": {
+    "SUPERSEDED_NOTE": "Development pass did NOT generalize: confirmation #1 FAILED. See c5_confirmation_1. Retained as the development-side evidence, not as a promotion.",
     "artifacts": [
       "evidence/gate_c4/diagnosis/development_c5_Jladder_hrm.json",
       "evidence/gate_c4/diagnosis/development_c5_Jladder_hrm.receipts.jsonl (120 per-task receipts)"
@@ -72,6 +121,65 @@
     "run": "Lightning A100-SXM4-80GB, commit e0cc4a3, 5 arms x 120 development tasks = 600 generations",
     "status": "ALL 12 FROZEN CRITERIA MET on development. J1 is the candidate integrated mechanism, pending confirmation on a FRESH split.",
     "what_is_NOT_claimed": "This is a DEVELOPMENT result only. It is not a certified bundle, not a generalization claim, and not evidence that the mechanism survives corpus scaling. The old qualification split remains CONSUMED and was not used. Confirmation requires a FRESH untouched split of at least 500 tasks, built and frozen before any results are seen, run exactly once."
+  },
+  "c5_confirmation_1": {
+    "RUN_VALID": true,
+    "SCIENTIFIC_PASS": false,
+    "VERDICT": "VALID_NEGATIVE_CONFIRMATION",
+    "artifacts": [
+      "evidence/gate_c4/diagnosis/confirmation_c5_Jladder_hrm.json",
+      "evidence/gate_c4/diagnosis/confirmation_c5_Jladder_hrm.receipts.jsonl (500 receipts)",
+      "evidence/gate_b3/diagnosis/confirmation_stopgate.json",
+      "CONFIRMATION_1_NEGATIVE_RESULT.md"
+    ],
+    "failed_hard_gates": {
+      "J1_EXACT_bridged_retention": "0.2364 vs >= 0.60 floor",
+      "J1_bridge_retention": "0.2522 vs J0 0.2957 = -0.0435, outside -0.01"
+    },
+    "not_to_be_described_as": [
+      "inconclusive",
+      "near-pass",
+      "infrastructure failure",
+      "selector failure alone"
+    ],
+    "permitted_use": [
+      "diagnosis",
+      "failure decomposition",
+      "hypothesis generation",
+      "retrospective analysis"
+    ],
+    "primary": {
+      "family_grouped_lcb": 0.028,
+      "metric": "Q(J1)-Q(J0)",
+      "note": "Both LCBs positive, so the effect is real -- it is simply insufficient against the pre-registered bar.",
+      "source_cluster_grouped_lcb": 0.0445,
+      "threshold": 0.15,
+      "value": 0.072,
+      "verdict": "FAIL"
+    },
+    "prohibited_use": [
+      "mechanism selection",
+      "threshold selection",
+      "future certification",
+      "future confirmation"
+    ],
+    "q": {
+      "J0": 0.1665,
+      "J1": 0.2385,
+      "J1r_diagnostic": 0.2415,
+      "J2_selector_ceiling": 0.4205,
+      "J3_reader_ceiling": 0.941
+    },
+    "run": "Lightning A100-SXM4-80GB, commit e302737, 5 arms x 500 confirmation tasks = 2500 generations",
+    "run_integrity": {
+      "crossover_parity": "0 violations",
+      "determinism_precondition": "PASS",
+      "packet_budget": "max 6",
+      "prompt_binding_failures": 0,
+      "receipts": 500
+    },
+    "split_status": "CONSUMED",
+    "verdict_predated_q": "Both hard gates failed in the SELECTION-ONLY dry pass and were committed as e302737 BEFORE generation started. Downstream Q was never available to rescue them. Threshold changes: none. Post-hoc rescue: none."
   },
   "c5_confirmation_split": {
     "additive_write_verified": "Only the new confirmation/ directory was created. Verified after writing: git shows no modification to any existing file, both certified bundles' task_corpus_sha256 and evidence_corpus_sha256 still MATCH, and both BUNDLE.sha256 still verify.",
@@ -297,6 +405,18 @@
     "gate_k_consolidation": "BLOCKED",
     "gate_l_latent_memory": "BLOCKED",
     "gate_n1_natural_external_memory": "PENDING"
+  },
+  "headline_status": {
+    "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
+    "CURRENT_BOTTLENECK": "candidate_availability_under_corpus_scaling",
+    "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
+    "NEXT_GATE": "B3_CANDIDATE_BUDGET_SCALING",
+    "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
+    "consumed_splits": [
+      "qualification_1",
+      "confirmation_1"
+    ],
+    "split_lineage": "development -> mechanism development; qualification_1 -> negative, consumed; confirmation_1 -> negative, consumed; future calibration -> B3 development; confirmation_2 -> future untouched one-shot"
   },
   "historical_development_signal": {
     "C4_4_reported_q": 0.3729,

@@ -1,0 +1,135 @@
+{
+  "OUTCOME": "OUTCOME_A_POSITIVE",
+  "a_complete_grouped_lcb": 0.0977,
+  "decision_rule_frozen_before_data": true,
+  "interpretation": "retrieval budget is the primary problem; S2 stays frozen; B3 justified",
+  "layer1_availability": {
+    "bridge": {
+      "available": 115,
+      "p_available": 0.3286,
+      "tasks_with_role": 350
+    },
+    "complete_required_set": {
+      "available": 206,
+      "p_available": 0.412,
+      "tasks_with_role": 500
+    },
+    "identity": {
+      "available": 254,
+      "p_available": 1.0,
+      "tasks_with_role": 254
+    },
+    "temporal_current": {
+      "available": 45,
+      "p_available": 0.45,
+      "tasks_with_role": 100
+    },
+    "terminal": {
+      "available": 267,
+      "p_available": 0.534,
+      "tasks_with_role": 500
+    }
+  },
+  "material_threshold": 0.05,
+  "material_threshold_provenance": "reused from the protocol's existing subgroup tolerance; NOT invented after seeing the result",
+  "reasons": [
+    "Q delta +0.1772 >= +0.05 with grouped LCB 0.0977"
+  ],
+  "replay_integrity": {
+    "candidate_pool_hash_mismatches": 22,
+    "hash_mismatch_cause": "BGE embeddings differ in the last bits between the scored run's CUDA device and this CPU replay, permuting ranks at near-ties. Order-sensitive hash changes; pool membership, all 500 selections and candidate CES (0.4120 both) are identical. Availability is a subset predicate over an unordered pool and is therefore unaffected.",
+    "provenance_finding": "The pipeline is deterministic WITHIN a platform (the PYTHONHASHSEED qualification passes) but is NOT bit-reproducible ACROSS CUDA and CPU. The determinism qualification never tested cross-platform replay, so this was latent. No prior result is invalidated -- each was computed on a single platform -- but candidate_pool_hash must not be used as a cross-platform replay check.",
+    "selection_mismatches": 0,
+    "selections_reproduced": 500
+  },
+  "role_conditional_retention": {
+    "bridge": {
+      "J0": {
+        "available": 115,
+        "conditional_retention": 0.2957,
+        "selected": 34
+      },
+      "J1": {
+        "available": 115,
+        "conditional_retention": 0.2522,
+        "selected": 29
+      },
+      "delta": -0.0435
+    },
+    "identity": {
+      "J0": {
+        "available": 254,
+        "conditional_retention": 1.0,
+        "selected": 254
+      },
+      "J1": {
+        "available": 254,
+        "conditional_retention": 1.0,
+        "selected": 254
+      },
+      "delta": 0.0
+    },
+    "temporal_current": {
+      "J0": {
+        "available": 45,
+        "conditional_retention": 0.1778,
+        "selected": 8
+      },
+      "J1": {
+        "available": 45,
+        "conditional_retention": 0.5111,
+        "selected": 23
+      },
+      "delta": 0.3333
+    },
+    "terminal": {
+      "J0": {
+        "available": 267,
+        "conditional_retention": 0.2547,
+        "selected": 68
+      },
+      "J1": {
+        "available": 267,
+        "conditional_retention": 0.3895,
+        "selected": 104
+      },
+      "delta": 0.1348
+    }
+  },
+  "schema_version": "c5-confirmation-stopgate-v1",
+  "split": "confirmation",
+  "strata": {
+    "A_COMPLETE": {
+      "delta_q": 0.1772,
+      "q_J0": 0.3956,
+      "q_J1": 0.5728,
+      "selected_ces_J0": 0.5485,
+      "selected_ces_J1": 0.7233,
+      "tasks": 206
+    },
+    "A_NO_BRIDGE": {
+      "delta_q": 0.0287,
+      "q_J0": 0.1649,
+      "q_J1": 0.1936,
+      "selected_ces_J0": 0.2255,
+      "selected_ces_J1": 0.2255,
+      "tasks": 235
+    },
+    "A_NO_TERMINAL": {
+      "delta_q": 0.0118,
+      "q_J0": 0.0515,
+      "q_J1": 0.0633,
+      "selected_ces_J0": 0.0687,
+      "selected_ces_J1": 0.0687,
+      "tasks": 233
+    },
+    "A_PARTIAL": {
+      "delta_q": -0.0017,
+      "q_J0": 0.006,
+      "q_J1": 0.0043,
+      "selected_ces_J0": 0.0,
+      "selected_ces_J1": 0.0,
+      "tasks": 294
+    }
+  }
+}
