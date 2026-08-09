@@ -1,0 +1,139 @@
+{
+  "arms": {
+    "J0": {
+      "answer_retention": {
+        "ALL": 0.2547,
+        "AMBIGUOUS": 0.5,
+        "AMBIGUOUS_bridged": 0.0,
+        "AMBIGUOUS_unbridged": 1.0,
+        "EXACT": 0.1756,
+        "EXACT_bridged": 0.0364,
+        "EXACT_unbridged": 0.2763,
+        "RESOLVED": 0.3284,
+        "RESOLVED_bridged": 0.0842,
+        "RESOLVED_unbridged": 0.9231
+      },
+      "bridge_retention": 0.2957,
+      "candidate_ces": 0.412,
+      "disconnected_in_packet": 0,
+      "fusion": "frozen_rrf",
+      "identity_retention": 1.0,
+      "max_packet_size": 6,
+      "selected_ces": 0.226,
+      "selector": "S0"
+    },
+    "J1": {
+      "answer_retention": {
+        "ALL": 0.3895,
+        "AMBIGUOUS": 0.5,
+        "AMBIGUOUS_bridged": 0.0,
+        "AMBIGUOUS_unbridged": 1.0,
+        "EXACT": 0.5038,
+        "EXACT_bridged": 0.2364,
+        "EXACT_unbridged": 0.6974,
+        "RESOLVED": 0.2761,
+        "RESOLVED_bridged": 0.0,
+        "RESOLVED_unbridged": 0.9487
+      },
+      "bridge_retention": 0.2522,
+      "candidate_ces": 0.412,
+      "disconnected_in_packet": 0,
+      "fusion": "frozen_rrf",
+      "identity_retention": 1.0,
+      "max_packet_size": 6,
+      "selected_ces": 0.298,
+      "selector": "S2"
+    },
+    "J1r": {
+      "answer_retention": {
+        "ALL": 0.3804,
+        "AMBIGUOUS": 0.5,
+        "AMBIGUOUS_bridged": 0.0,
+        "AMBIGUOUS_unbridged": 1.0,
+        "EXACT": 0.4897,
+        "EXACT_bridged": 0.2319,
+        "EXACT_unbridged": 0.7237,
+        "RESOLVED": 0.2558,
+        "RESOLVED_bridged": 0.0,
+        "RESOLVED_unbridged": 0.8919
+      },
+      "bridge_retention": 0.287,
+      "candidate_ces": 0.42,
+      "disconnected_in_packet": 0,
+      "fusion": "R1_max_reciprocal",
+      "identity_retention": 1.0,
+      "max_packet_size": 6,
+      "selected_ces": 0.294,
+      "selector": "S2"
+    },
+    "J2": {
+      "answer_retention": {
+        "ALL": 0.8614,
+        "AMBIGUOUS": 1.0,
+        "AMBIGUOUS_bridged": 1.0,
+        "AMBIGUOUS_unbridged": 1.0,
+        "EXACT": 1.0,
+        "EXACT_bridged": 1.0,
+        "EXACT_unbridged": 1.0,
+        "RESOLVED": 0.7239,
+        "RESOLVED_bridged": 0.6105,
+        "RESOLVED_unbridged": 1.0
+      },
+      "bridge_retention": 1.0,
+      "candidate_ces": 0.412,
+      "disconnected_in_packet": 0,
+      "fusion": "frozen_rrf",
+      "identity_retention": 1.0,
+      "max_packet_size": 2,
+      "selected_ces": 0.412,
+      "selector": "oracle"
+    },
+    "J3": {
+      "answer_retention": {
+        "ALL": 0.8614,
+        "AMBIGUOUS": 1.0,
+        "AMBIGUOUS_bridged": 1.0,
+        "AMBIGUOUS_unbridged": 1.0,
+        "EXACT": 1.0,
+        "EXACT_bridged": 1.0,
+        "EXACT_unbridged": 1.0,
+        "RESOLVED": 0.7239,
+        "RESOLVED_bridged": 0.6105,
+        "RESOLVED_unbridged": 1.0
+      },
+      "bridge_retention": 1.0,
+      "candidate_ces": 0.412,
+      "disconnected_in_packet": 0,
+      "fusion": "frozen_rrf",
+      "identity_retention": 1.0,
+      "max_packet_size": 3,
+      "selected_ces": 0.412,
+      "selector": "oracle_evidence"
+    }
+  },
+  "baseline_arm": "J0",
+  "candidate_budget": 50,
+  "crossover_parity": {
+    "passed": true,
+    "violation_count": 0,
+    "violations": []
+  },
+  "git_commit": "09e2e9b1872d4ce5cb0302a8ec75d2cac6985a6d",
+  "ladder": "J",
+  "non_promotable_arms": [
+    "J0",
+    "J1r",
+    "J2",
+    "J3"
+  ],
+  "packet_budget": 6,
+  "primary_arm": "J1",
+  "prompt_binding_failures": null,
+  "protocol_id": "c5_integrated_v1",
+  "retrieval_config_hash": "ddef908055b7de2b",
+  "schema_version": "c5-integrated-ladder-v1",
+  "selector_config_hash": "29bc817bc722943a",
+  "split": "confirmation",
+  "task_count": 500,
+  "with_hrm": false
+}
