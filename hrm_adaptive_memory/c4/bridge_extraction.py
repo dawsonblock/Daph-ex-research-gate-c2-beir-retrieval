@@ -62,8 +62,47 @@ _NON_ANSWER_NUMBER = re.compile(
 )
 
 
-def extract_v4_entities(text: str) -> tuple[str, ...]:
-    """Extract V4-style entity names from text."""
+#: G2-v4E entity-boundary grammar, transcribed from the generator's CLOSED
+#: entity grammar in generalization_dataset_v4.py:
+#:     canonical = f"{head} {role}"                 role is one of these SIX
+#:     alias     = f"{alias_head} {role.split()[0]}"  i.e. the role's first word
+#: Because that grammar is closed, no legitimate entity name extends past a
+#: completed role suffix -- so anything after one is a grammatical tail, not
+#: part of the name. That makes boundary repair a precise grammar rule rather
+#: than an ever-growing list of English verbs (which is what _STOP_LAST is,
+#: and why it kept missing "resolves"/"uses"/"set"/"value"/"as").
+_V4_ROLE_FULL = ("control module", "sensor array", "pressure assembly",
+                 "relay unit", "intake manifold", "drive cluster")
+_V4_ROLE_HEAD = tuple(dict.fromkeys(r.split()[0] for r in _V4_ROLE_FULL))
+
+
+def normalize_v4_entity_boundary(phrase: str) -> str:
+    """Truncate ``phrase`` at the first complete V4 role suffix.
+
+    Returns the phrase unchanged when no role suffix is present, so non-entity
+    text is never truncated. This is deliberately corpus-grammar-specific: it
+    is sound for the V4 controlled corpus because that grammar is closed, and
+    it is NOT a general-purpose English NER boundary rule.
+    """
+    tokens = phrase.split()
+    for i in range(len(tokens) - 1):
+        if f"{tokens[i]} {tokens[i + 1]}".lower() in _V4_ROLE_FULL:
+            return " ".join(tokens[:i + 2])
+    for i, token in enumerate(tokens):
+        if i > 0 and token.lower() in _V4_ROLE_HEAD:
+            return " ".join(tokens[:i + 1])
+    return phrase
+
+
+def extract_v4_entities(text: str, boundary_policy: str = "legacy") -> tuple[str, ...]:
+    """Extract V4-style entity names from text.
+
+    ``boundary_policy`` selects the G2-v4E treatment arm and defaults to
+    "legacy" so every existing caller and gate is byte-identical:
+
+        "legacy"     the historical _STOP_LAST trailing-token heuristic (arm E0)
+        "grammar_v4" additionally truncate at the closed role grammar (arm E1)
+    """
     candidates = _V4_ENTITY.findall(text)
     result: list[str] = []
     for c in candidates:
@@ -76,6 +115,10 @@ def extract_v4_entities(text: str) -> tuple[str, ...]:
                 result.append(trimmed)
             continue
         result.append(c)
+    if boundary_policy == "grammar_v4":
+        result = [normalize_v4_entity_boundary(r) for r in result]
+    elif boundary_policy != "legacy":
+        raise ValueError(f"unknown boundary_policy {boundary_policy!r}")
     return tuple(dict.fromkeys(result))
 
 

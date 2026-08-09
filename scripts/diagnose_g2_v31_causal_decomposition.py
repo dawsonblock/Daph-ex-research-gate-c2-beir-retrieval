@@ -166,6 +166,8 @@ def main() -> int:
     pooled_cells = Counter()          # 2x2 per-task Q counts
     pooled_tasks = 0
     pooled_overlap = Counter()
+    pooled_e_stage = Counter()
+    pooled_e_task = Counter()
 
     for scale in SCALES:
         tasks, evidence, texts = load_scale(scale)
@@ -178,6 +180,8 @@ def main() -> int:
         bridge_r0_cause = Counter()
         cells = Counter()
         overlap = Counter()
+        e_stage = Counter()
+        e_task = Counter()
 
         for index, task in enumerate(tasks, 1):
             if index % 25 == 0 or index == len(tasks):
@@ -235,6 +239,59 @@ def main() -> int:
             # ---------- the 2x2: identity x bridge-availability -------------
             missing_bridges = [r for r in bridges_req if r not in pool_set]
             pool_b = pool + [r for r in missing_bridges if r in texts]
+
+            # ---------- G2-v4E: entity-boundary arms ----------------------
+            # E0 legacy (control) / E1 grammar_v4 (primary) / E2 oracle boundary
+            # ceiling. Identical pool, identical everything else -- only the
+            # extractor boundary policy differs.
+            for e_arm, policy in (("E0", "legacy"), ("E1", "grammar_v4")):
+                ge = build_runtime_graph(record_ids=pool, texts=texts,
+                                        relation=relation, boundary_policy=policy)
+                adje, eore, keye = merged_adjacency(ge, {})
+                hopse = hops_from(adje, keye(_norm(probe.canonical or "")))
+                for rid in required:
+                    if rid not in pool_set:
+                        continue
+                    role_e = role_of(rid)
+                    if role_e not in ("bridge", "terminal"):
+                        continue
+                    conn = record_reachable(rid, eore, hopse, PRODUCTION_MAX_HOPS)
+                    e_stage[f"{e_arm}_{role_e}_connected"] += int(conn)
+                    e_stage[f"{e_arm}_{role_e}_total"] += 1
+                e_task[f"{e_arm}_all_required_reachable"] += int(
+                    bool(required) and all(
+                        rid in pool_set
+                        and record_reachable(rid, eore, hopse, PRODUCTION_MAX_HOPS)
+                        for rid in required))
+
+            # E2 oracle boundary ceiling: correct ONLY extraction boundaries,
+            # by truncating any extraction to an oracle-known surface it starts
+            # with. Supplies no identity, no edges, no proof path, no answer.
+            oracle_surfaces = {_norm(surfaces[k]) for k in ("subject", "canonical", "bridge")
+                               if surfaces.get(k)}
+            g2o = build_runtime_graph(record_ids=pool, texts=texts, relation=relation)
+            boundary_map = {}
+            for ent in list(g2o.records_by_entity):
+                for osurf in oracle_surfaces:
+                    if osurf and ent != osurf and ent.startswith(osurf):
+                        boundary_map[ent] = osurf
+                        break
+            adjo, eoro, keyo = merged_adjacency(g2o, boundary_map)
+            hopso = hops_from(adjo, keyo(_norm(probe.canonical or "")))
+            for rid in required:
+                if rid not in pool_set:
+                    continue
+                role_e = role_of(rid)
+                if role_e not in ("bridge", "terminal"):
+                    continue
+                e_stage[f"E2_{role_e}_connected"] += int(
+                    record_reachable(rid, eoro, hopso, PRODUCTION_MAX_HOPS))
+                e_stage[f"E2_{role_e}_total"] += 1
+            e_task["E2_all_required_reachable"] += int(
+                bool(required) and all(
+                    rid in pool_set
+                    and record_reachable(rid, eoro, hopso, PRODUCTION_MAX_HOPS)
+                    for rid in required))
 
             arms_2x2 = {
                 ("I0", "B0"): (pool, {}),
@@ -385,6 +442,8 @@ def main() -> int:
             "q_2x2_counts": dict(cells),
             "q_2x2_rates": {k: round(v / n, 4) for k, v in cells.items()},
             "overlap": dict(overlap),
+            "v4e_boundary_arms": dict(e_stage),
+            "v4e_task_reachability": dict(e_task),
         }
         for r, c in role_stage.items():
             pooled_role_stage[r].update(c)
@@ -392,6 +451,8 @@ def main() -> int:
         pooled_bridge_r0_cause.update(bridge_r0_cause)
         pooled_cells.update(cells)
         pooled_overlap.update(overlap)
+        pooled_e_stage.update(e_stage)
+        pooled_e_task.update(e_task)
         pooled_tasks += n
         print(f"  {scale}: N={corpus_size} k(C2)={depth}  tasks={n}")
 
@@ -427,8 +488,26 @@ def main() -> int:
                 "E_bridge": round(q01 - q00, 4),
                 "interaction": round(q11 - q10 - q01 + q00, 4)},
             "per_task_overlap": dict(pooled_overlap),
+            "v4e_boundary_arms": dict(pooled_e_stage),
+            "v4e_task_reachability": {
+                k: round(v / pooled_tasks, 4) for k, v in pooled_e_task.items()},
+            "v4e_gap_closure": {},
         },
     }
+    # boundary gap closure on terminal attachment (primary v4E metric)
+    def _rate2(arm, role):
+        t = pooled_e_stage.get(f"{arm}_{role}_total", 0)
+        return (pooled_e_stage.get(f"{arm}_{role}_connected", 0) / t) if t else None
+    for role in ("bridge", "terminal"):
+        r0, r1, r2 = _rate2("E0", role), _rate2("E1", role), _rate2("E2", role)
+        closure = (round((r1 - r0) / (r2 - r0), 4)
+                   if None not in (r0, r1, r2) and abs(r2 - r0) > 1e-9 else None)
+        report["pooled"]["v4e_gap_closure"][role] = {
+            "E0_connected_rate": round(r0, 4) if r0 is not None else None,
+            "E1_connected_rate": round(r1, 4) if r1 is not None else None,
+            "E2_oracle_ceiling_rate": round(r2, 4) if r2 is not None else None,
+            "delta_E1_minus_E0": round(r1 - r0, 4) if None not in (r0, r1) else None,
+            "BoundaryGapClosure": closure}
     out = Path(args.out) if args.out else (
         ROOT / "evidence/gate_g2_v3/v31_causal_decomposition.json")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -460,6 +539,15 @@ def main() -> int:
     print(f"    Q(I1,B0) identity only   {f['Q_I1_B0']:.4f}   E_identity = {f['E_identity']:+.4f}")
     print(f"    Q(I0,B1) bridge only     {f['Q_I0_B1']:.4f}   E_bridge   = {f['E_bridge']:+.4f}")
     print(f"    Q(I1,B1) both            {f['Q_I1_B1']:.4f}   interaction= {f['interaction']:+.4f}")
+    print("\n  G2-v4E BOUNDARY ARMS (record connected at h<=2, by role):")
+    for role, d in report["pooled"]["v4e_gap_closure"].items():
+        print(f"    {role}: E0={d['E0_connected_rate']}  E1={d['E1_connected_rate']}  "
+              f"E2(oracle)={d['E2_oracle_ceiling_rate']}  dE1={d['delta_E1_minus_E0']}  "
+              f"closure={d['BoundaryGapClosure']}")
+    print("  G2-v4E per-task ALL-required-reachable:")
+    for k, v in sorted(report["pooled"]["v4e_task_reachability"].items()):
+        print(f"    {k:34}{v:.4f}")
+
     print("\n  PER-TASK OVERLAP:")
     for k, v in sorted(pooled_overlap.items(), key=lambda x: -x[1]):
         print(f"    {k:26}{v/pooled_tasks:>7.1%}  (n={v})")

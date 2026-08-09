@@ -104,8 +104,16 @@ class TestLeakageWall:
             assert name in spec
 
     def test_builder_signature_accepts_no_task_object(self):
+        """The invariant is that the builder takes evidence text and a parsed
+        relation -- never a task or evaluator object. Stated as an allowlist so
+        that adding a runtime-safe knob (e.g. G2-v4E's boundary_policy) does not
+        require weakening the check, while any task/oracle parameter still fails.
+        """
         params = set(inspect.signature(build_runtime_graph).parameters)
-        assert params == {"record_ids", "texts", "relation"}
+        assert {"record_ids", "texts", "relation"} <= params
+        assert params <= {"record_ids", "texts", "relation", "boundary_policy"}
+        for forbidden in ("task", "evaluator", "oracle", "metadata", "required"):
+            assert not any(forbidden in p for p in params)
 
 
 class TestGraphConstruction:

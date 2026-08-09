@@ -115,6 +115,73 @@
     },
     "status": "RUN_COMPLETE__IDENTITY_HYPOTHESIS_FALSIFIED__NEW_DOMINANT_CAUSE_FOUND"
   },
+  "G2_V4E_RESULT": {
+    "E1_EXCEEDS_E2_AND_WHY_THAT_IS_NOT_A_CONTRADICTION": {
+      "explanation": "The E2 oracle arm was scoped to truncate ONLY extractions that begin with an oracle-known surface (subject/canonical/bridge). It therefore does not repair boundary errors on other entities -- distractors, decoys, unrelated records -- which nonetheless participate in graph connectivity as intermediate nodes. E1's grammar rule repairs every entity uniformly. So E2 is a NARROWER intervention than E1, not a true upper bound on boundary repair.",
+      "honest_reading": "Do not report this as 'beating the oracle'. It means the E2 ceiling was mis-scoped as an upper bound: a correctly-scoped boundary oracle would have to fix all entities, at which point it would equal or exceed E1. The comparison still validates E1 (closure >= 1.0 against the best available boundary reference), but the ceiling itself should be re-derived if it is ever needed as a hard bound.",
+      "observation": "terminal BoundaryGapClosure = 1.046 (E1 0.8671 > E2 0.8523)"
+    },
+    "NEXT_STEP_NOT_YET_RUN": "Propagate boundary_policy='grammar_v4' into the existing G2 path pipeline (G0 / G1_coarse / G1_TYPED_PATH / G2 / G3) and then UNCHANGED S2, to measure whether the +33.3pp reachability recovery converts into complete-path formation and working-set/selected CES. Reachability is necessary but not sufficient -- B4/G1/G2 all showed availability gains can fail to survive selection pressure. Until that run exists, no CES claim is made.",
+    "RESULTS": {
+      "headline": "A single grammar-aware boundary rule lifts per-task reachability from 51.1% to 84.4% (+33.3pp), with bridge-record connectivity going to 100% and terminal to 86.7%. This is far larger than the ~19pp estimated from the near-miss share alone, because boundary fragmentation was also silently breaking connectivity through non-required intermediate entities.",
+      "per_task_all_required_reachable": {
+        "E0_legacy": 0.5107,
+        "E1_grammar": 0.844,
+        "E2_oracle": 0.8307,
+        "delta_E1_minus_E0": 0.3333
+      },
+      "primary_metric_record_connected_at_h2_by_role": {
+        "bridge": {
+          "BoundaryGapClosure": 1.0,
+          "E0_legacy": 0.7316,
+          "E1_grammar": 1.0,
+          "E2_oracle": 1.0,
+          "delta_E1_minus_E0": 0.2684
+        },
+        "terminal": {
+          "BoundaryGapClosure": 1.046,
+          "E0_legacy": 0.5315,
+          "E1_grammar": 0.8671,
+          "E2_oracle": 0.8523,
+          "delta_E1_minus_E0": 0.3356
+        }
+      }
+    },
+    "after_that": "Re-run the anatomy to see whether bridge acquisition (now the largest remaining named defect at 26.4% of bridge records, 68% merely below budget) becomes the next bottleneck.",
+    "artifact": "evidence/gate_g2_v3/v4e_boundary_decomposition.json",
+    "frozen_boundary_corpus": {
+      "affected_extractions": 2676,
+      "artifact": "configs/g2_v4e_boundary_failures.json",
+      "boundary_failure_rate": 0.178,
+      "derived_before_editing": true,
+      "distinct_boundary_failures": 810,
+      "extractions_scanned": 15033,
+      "regression_net": "a test asserts E1 repairs EVERY entry in the frozen corpus, so a future extractor change cannot silently reopen it",
+      "top_trailing_tokens": {
+        "as": 399,
+        "resolves": 511,
+        "set": 540,
+        "uses": 524,
+        "value": 521
+      }
+    },
+    "no_hrm": true,
+    "no_s2": true,
+    "repair_is_a_grammar_rule_not_a_stopword_list": {
+      "corpus_grammar_specific": "Sound for the V4 controlled corpus because that grammar is closed; explicitly NOT a general-purpose NER boundary rule.",
+      "generator_grammar_is_CLOSED": "generalization_dataset_v4.py builds canonical = head + one of SIX two-word roles (control module / sensor array / pressure assembly / relay unit / intake manifold / drive cluster), and alias = head + that role's first word. No legitimate entity name extends past a completed role suffix.",
+      "rule": "normalize_v4_entity_boundary() truncates at the first complete role suffix; returns the phrase unchanged when no role suffix is present, so non-entity prose is never touched.",
+      "why_not_stopwords": "_STOP_LAST is an accumulating list of English verbs and had already missed 'resolves', 'uses', 'set', 'value', 'as' -- 93% of the observed failures. A closed grammar rule cannot drift the same way."
+    },
+    "run_utc": "2026-08-09T22:00:00Z",
+    "status": "RUN_COMPLETE__E1_PASSES_DECISIVELY",
+    "treatment_variable": "entity-extraction boundary policy ONLY (extract_v4_entities boundary_policy). Retrieval, candidate k, BM25/dense/RRF, identity links, alias links, graph edge types, hop bound, path ranking, endpoint recognizer, working-set policy, S2, packet size, HRM: all unchanged.",
+    "unchanged_findings_carried_forward": {
+      "bridge_acquisition": "E_bridge = +0.0667; 68.1% BELOW_BUDGET, 29.7% UNRANKED, 2.2% FUSION_DISPLACEMENT",
+      "hop_depth": "not the problem -- beyond-hop-bound 6.5% (terminal) / 7.8% (bridge)",
+      "identity": "still falsified -- E_identity = +0.0000, R_parse=R_link=R_connectivity=1.0"
+    }
+  },
   "IDENTITY_AUDIT_RATES_FROZEN": {
     "R_attachment": "P(graph entity nodes exist for BOTH surface and canonical | alias link emitted)",
     "R_connectivity": "P(canonical node reachable from question anchor via BFS | alias link emitted)",
@@ -178,7 +245,7 @@
   "objective": "Separate identity connectivity from bridge acquisition, measure each independently and their interaction, BEFORE modifying any production mechanism. No S2. No HRM. No mechanism changes.",
   "protocol_id": "gate_g2_v31_causal_decomposition_v1",
   "sprint": "G2-v3.1 -- Corrected Anatomy + Causal Decomposition",
-  "status": "RUN_COMPLETE__IDENTITY_FALSIFIED__EXTRACTOR_BOUNDARY_IS_NEXT",
+  "status": "V31_COMPLETE__V4E_BOUNDARY_REPAIR_PASSES",
   "stop_after": "ceilings + interaction. Do not proceed to S2 or HRM in this sprint.",
   "supersedes": "The original G2-v3 interpretation is VOID (oracle surface target bug). fc1e3b3's corrected numbers are authoritative.",
   "why_not_G2_v4_yet": "The corrected evidence shows two comparably-sized upstream defects, not one dominant lever. Building the full CanonicalEntityNode architecture now would be committing to one of two candidate root causes without knowing whether they are complementary or whether one is overwhelmingly causal. The original G2-v4 plan is WITHDRAWN pending this decomposition."

@@ -1251,6 +1251,73 @@
       "the mechanical decision rule was frozen before any number was seen, and fired cleanly on the first try -- R2 dominance, low R0/R3/R4, flat hop curve, and the identity ceiling all independently point the same direction"
     ]
   },
+  "g2_v4e_entity_boundary": {
+    "E1_EXCEEDS_E2_AND_WHY_THAT_IS_NOT_A_CONTRADICTION": {
+      "explanation": "The E2 oracle arm was scoped to truncate ONLY extractions that begin with an oracle-known surface (subject/canonical/bridge). It therefore does not repair boundary errors on other entities -- distractors, decoys, unrelated records -- which nonetheless participate in graph connectivity as intermediate nodes. E1's grammar rule repairs every entity uniformly. So E2 is a NARROWER intervention than E1, not a true upper bound on boundary repair.",
+      "honest_reading": "Do not report this as 'beating the oracle'. It means the E2 ceiling was mis-scoped as an upper bound: a correctly-scoped boundary oracle would have to fix all entities, at which point it would equal or exceed E1. The comparison still validates E1 (closure >= 1.0 against the best available boundary reference), but the ceiling itself should be re-derived if it is ever needed as a hard bound.",
+      "observation": "terminal BoundaryGapClosure = 1.046 (E1 0.8671 > E2 0.8523)"
+    },
+    "NEXT_STEP_NOT_YET_RUN": "Propagate boundary_policy='grammar_v4' into the existing G2 path pipeline (G0 / G1_coarse / G1_TYPED_PATH / G2 / G3) and then UNCHANGED S2, to measure whether the +33.3pp reachability recovery converts into complete-path formation and working-set/selected CES. Reachability is necessary but not sufficient -- B4/G1/G2 all showed availability gains can fail to survive selection pressure. Until that run exists, no CES claim is made.",
+    "RESULTS": {
+      "headline": "A single grammar-aware boundary rule lifts per-task reachability from 51.1% to 84.4% (+33.3pp), with bridge-record connectivity going to 100% and terminal to 86.7%. This is far larger than the ~19pp estimated from the near-miss share alone, because boundary fragmentation was also silently breaking connectivity through non-required intermediate entities.",
+      "per_task_all_required_reachable": {
+        "E0_legacy": 0.5107,
+        "E1_grammar": 0.844,
+        "E2_oracle": 0.8307,
+        "delta_E1_minus_E0": 0.3333
+      },
+      "primary_metric_record_connected_at_h2_by_role": {
+        "bridge": {
+          "BoundaryGapClosure": 1.0,
+          "E0_legacy": 0.7316,
+          "E1_grammar": 1.0,
+          "E2_oracle": 1.0,
+          "delta_E1_minus_E0": 0.2684
+        },
+        "terminal": {
+          "BoundaryGapClosure": 1.046,
+          "E0_legacy": 0.5315,
+          "E1_grammar": 0.8671,
+          "E2_oracle": 0.8523,
+          "delta_E1_minus_E0": 0.3356
+        }
+      }
+    },
+    "after_that": "Re-run the anatomy to see whether bridge acquisition (now the largest remaining named defect at 26.4% of bridge records, 68% merely below budget) becomes the next bottleneck.",
+    "artifact": "evidence/gate_g2_v3/v4e_boundary_decomposition.json",
+    "frozen_boundary_corpus": {
+      "affected_extractions": 2676,
+      "artifact": "configs/g2_v4e_boundary_failures.json",
+      "boundary_failure_rate": 0.178,
+      "derived_before_editing": true,
+      "distinct_boundary_failures": 810,
+      "extractions_scanned": 15033,
+      "regression_net": "a test asserts E1 repairs EVERY entry in the frozen corpus, so a future extractor change cannot silently reopen it",
+      "top_trailing_tokens": {
+        "as": 399,
+        "resolves": 511,
+        "set": 540,
+        "uses": 524,
+        "value": 521
+      }
+    },
+    "no_hrm": true,
+    "no_s2": true,
+    "repair_is_a_grammar_rule_not_a_stopword_list": {
+      "corpus_grammar_specific": "Sound for the V4 controlled corpus because that grammar is closed; explicitly NOT a general-purpose NER boundary rule.",
+      "generator_grammar_is_CLOSED": "generalization_dataset_v4.py builds canonical = head + one of SIX two-word roles (control module / sensor array / pressure assembly / relay unit / intake manifold / drive cluster), and alias = head + that role's first word. No legitimate entity name extends past a completed role suffix.",
+      "rule": "normalize_v4_entity_boundary() truncates at the first complete role suffix; returns the phrase unchanged when no role suffix is present, so non-entity prose is never touched.",
+      "why_not_stopwords": "_STOP_LAST is an accumulating list of English verbs and had already missed 'resolves', 'uses', 'set', 'value', 'as' -- 93% of the observed failures. A closed grammar rule cannot drift the same way."
+    },
+    "run_utc": "2026-08-09T22:00:00Z",
+    "status": "RUN_COMPLETE__E1_PASSES_DECISIVELY",
+    "treatment_variable": "entity-extraction boundary policy ONLY (extract_v4_entities boundary_policy). Retrieval, candidate k, BM25/dense/RRF, identity links, alias links, graph edge types, hop bound, path ranking, endpoint recognizer, working-set policy, S2, packet size, HRM: all unchanged.",
+    "unchanged_findings_carried_forward": {
+      "bridge_acquisition": "E_bridge = +0.0667; 68.1% BELOW_BUDGET, 29.7% UNRANKED, 2.2% FUSION_DISPLACEMENT",
+      "hop_depth": "not the problem -- beyond-hop-bound 6.5% (terminal) / 7.8% (bridge)",
+      "identity": "still falsified -- E_identity = +0.0000, R_parse=R_link=R_connectivity=1.0"
+    }
+  },
   "gate_lineage": {
     "gate_c2_i_identity_resolution": "Gate C2-I was the earlier placeholder identity-resolution gate. Gate C3 (gate_c3_surface_identity_resolution) is the formal execution gate with a frozen protocol; the two must not remain as apparently active parallel identity-resolution gates. C2-I is therefore marked SUPERSEDED_BY_GATE_C3. No C2-I implementation or measurement existed; the substantive work continues under C3."
   },
@@ -1286,7 +1353,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "G2-v4E entity-boundary normalisation micro-sprint (not started). G2-v3.1 FALSIFIED the identity hypothesis outright: the existing alias machinery is perfect on this corpus (R_parse=R_link=R_connectivity=1.0, 410/410) and a perfect ORACLE canonical merge yields E_identity=+0.0000 exactly -- do NOT build CanonicalEntityNode. Bridge acquisition is real but modest (E_bridge=+0.067; 68% of missing bridges are merely below the pool cutoff). The new dominant defect is disconnected topology (40% of terminal records), and ~half of THAT is an incomplete extract_v4_entities stop-word list emitting 'jacana control module resolves' as a separate node from 'jacana control module' -- roughly 19% of all terminal records lost to a one-line-scale bug. Fix that, then re-run this decomposition before considering typed relation edges.",
+    "NEXT_GATE": "Propagate boundary_policy='grammar_v4' through the existing G2 path pipeline + UNCHANGED S2 (not yet run). G2-v4E PASSED decisively: a single closed-grammar boundary rule (normalize_v4_entity_boundary, truncating at the generator's six known two-word role suffixes) lifts per-task all-required reachability 51.1% -> 84.4% (+33.3pp), bridge-record connectivity 73.2% -> 100%, terminal 53.2% -> 86.7%, with BoundaryGapClosure >= 1.0. 17.8% of ALL corpus extractions were boundary failures (810 distinct, frozen in configs/g2_v4e_boundary_failures.json with a regression net). E1 is default-OFF (boundary_policy='legacy') so every prior gate remains byte-identical. NO CES claim yet -- reachability is necessary but not sufficient, and B4/G1/G2 all showed availability gains can die under selection pressure.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",

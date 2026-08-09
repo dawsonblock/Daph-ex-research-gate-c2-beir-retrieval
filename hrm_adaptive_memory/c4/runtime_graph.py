@@ -159,7 +159,8 @@ class RuntimeGraph:
 
 
 def build_runtime_graph(*, record_ids: Sequence[str], texts: Mapping[str, str],
-                        relation: str = "") -> RuntimeGraph:
+                        relation: str = "",
+                        boundary_policy: str = "legacy") -> RuntimeGraph:
     """Build the graph for one candidate pool from visible text only.
 
     ``relation`` is the target relation parsed from the question, used to mark
@@ -178,7 +179,7 @@ def build_runtime_graph(*, record_ids: Sequence[str], texts: Mapping[str, str],
 
     for row in rows:
         content = row.content
-        entities = extract_v4_entities(content)
+        entities = extract_v4_entities(content, boundary_policy=boundary_policy)
         surface_by_norm = {_norm(e): e for e in entities if _norm(e)}
         normalized = set(surface_by_norm)
         graph.entities_by_record[row.evidence_id] = frozenset(normalized)
