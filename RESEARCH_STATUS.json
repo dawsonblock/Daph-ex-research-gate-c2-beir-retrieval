@@ -1560,7 +1560,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "S2 selection under pressure is now the binding constraint (not graph construction, reachability, identity, endpoint semantics, or hop depth). G2-v4E propagation: the boundary fix improves G2 at ALL five scales (+0.026..+0.094 end-to-end selected CES) confirming G2-v1 was partly hurt by malformed graph nodes -- but G2 STILL loses to G1_TYPED_PATH at every scale (gap -0.020..-0.093), so per the frozen rule graph traversal/ranking adds no value yet and TYPED PATH REMAINS THE MECHANISM. The four-stage decomposition shows why: availability rose hugely (bridge working-set survival 55.4%->100%, terminal 36.7%->74.7%) while S2 conditional retention FELL (bridge 0.056->0.015, terminal 0.509->0.268) -- the B3/B4 pressure-reintroduction pattern. Outcome class moved C -> D (paths exist, wrong ones ranked). Bridge acquisition is now LESS attractive than it looked: E1 already took bridge availability to 100%; bridge RETENTION is the problem.",
+    "NEXT_GATE": "Path-coherent packet composition gate (not started). S3 attributed the selector failure: of required records present in the working set but absent from the packet, ~64% are lost to F3_WRONG_PATH_PREFERRED -- S2 assembles packets from fragments of INCOMPATIBLE paths. A diagnostic arm that admits the highest-ranked COMPLETE path first (changing nothing about ranking, retrieval, graph or working set) closes 43.6% of the oracle gap: selected CES 0.323->0.528, bridge retention 0.183->0.423, complete-path retention 0.217->0.503. Record-level diversity suppression is RULED OUT (-0.031, redundancy only 3.1% of failures); role reservation is secondary (+0.193, helps terminals, slightly hurts bridges). Selection-side headroom is large (oracle 0.793 vs current 0.323). Indicatively this would put G2 (~0.528) decisively above typed path (~0.377) -- the first evidence the graph can earn promotion, contingent on a path-aware composition mechanism with its own frozen gate.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
@@ -2762,6 +2762,145 @@
     }
   },
   "result_schema_note": "run_valid / scientific_verdict / mechanism_status / failure_class / split_status are the shared GateResult fields (hrm_adaptive_memory/experiment_integrity/result_schema.py). They replace ad hoc VALID_RUN/PASS collapses -- Confirmation #1 (RUN_VALID=true, MECHANISM_PASS=false) and G2-v1 (RUN_VALID=true, OUTCOME_C) are the two historical cases that motivated keeping these axes independent rather than a single boolean.",
+  "s3_selector_competition": {
+    "FINDING_1_dominant_failure_is_WRONG_PATH_PREFERRED": {
+      "F3_WRONG_PATH_PREFERRED": 0.271,
+      "reading": "Of required records that ARE present in the working set but do not reach the packet, ~64% are lost because S2 prefers a COMPETING complete path. The selector is not failing to see the evidence and is not mis-scoring individual records -- it is assembling a packet from fragments of incompatible paths.",
+      "share_of_NON_selected_required_records": 0.638
+    },
+    "FINDING_2_path_coherent_composition_closes_43.6pct_of_the_oracle_gap": {
+      "S0_current": {
+        "bridge": 0.183,
+        "complete_path": 0.217,
+        "selCES": 0.323,
+        "terminal": 0.497
+      },
+      "S3_path_coherent": {
+        "bridge": 0.423,
+        "complete_path": 0.503,
+        "selCES": 0.528,
+        "terminal": 0.654
+      },
+      "S4_oracle": {
+        "bridge": 0.951,
+        "complete_path": 1.0,
+        "selCES": 0.793,
+        "terminal": 0.966
+      },
+      "oracle_gap_closure": 0.436,
+      "reading": "Admitting the highest-ranked COMPLETE path's records first -- changing nothing about ranking, retrieval, graph, or working set -- raises selected CES 0.323 -> 0.528, more than doubles bridge retention (0.183 -> 0.423) and more than doubles complete-path retention (0.217 -> 0.503). This is the single largest selection-side lever found."
+    },
+    "FINDING_3_redundancy_is_NOT_the_problem": {
+      "F2_REDUNDANCY_COLLISION": 0.031,
+      "S1_diversity": {
+        "mean_redundancy": 0.0,
+        "oracle_gap_closure": -0.031,
+        "selCES": 0.308
+      },
+      "reading": "Suppressing duplicate structural signatures eliminates redundancy entirely (0.57 -> 0.00) and makes selected CES slightly WORSE. Redundancy collision accounts for only 3.1% of failures. A diversity/dedup fix is ruled out."
+    },
+    "FINDING_4_role_reservation_helps_but_only_partially": {
+      "S2_role_reserved": {
+        "bridge": 0.168,
+        "oracle_gap_closure": 0.193,
+        "selCES": 0.413,
+        "terminal": 0.614
+      },
+      "reading": "Reserving one slot per runtime-inferred role recovers 19.3% of the gap, almost entirely through TERMINAL retention (0.497 -> 0.614). Bridge retention slightly DROPS (0.183 -> 0.168), because a reserved terminal slot can displace the bridge. Role balance is a real but secondary factor, and less than half as valuable as path coherence."
+    },
+    "FINDING_5_large_selection_side_headroom_exists": {
+      "S0_to_S4": 0.47,
+      "reading": "Perfect selection on the SAME G2/E1 working sets reaches 0.793 vs the current 0.323. The working sets already contain far more usable evidence than S2 extracts. Selection, not availability, is where the remaining value is."
+    },
+    "IMPLICATION_FOR_G2_VS_TYPED_PATH": {
+      "G2_E1_ladder_mean_M50": 0.312,
+      "S0_current_on_same_working_sets": 0.323,
+      "S3_path_coherent_on_same_working_sets": 0.528,
+      "caveat": "Approximate: the S3 diagnostic pools tasks with a non-empty working set and the ladder pools all tasks, so this is an indicative comparison, not a certified head-to-head. A promoted mechanism would need its own frozen gate and a like-for-like run.",
+      "reading": "The S3 baseline (0.323) closely matches the G2 ladder mean (0.312), so the arms are comparable. A path-coherent composition would put G2 at ~0.528, decisively ABOVE typed path's ~0.377. This is the first evidence that the graph substrate can overtake the simpler mechanism -- but ONLY once packet composition becomes path-aware.",
+      "typed_path_E1_ladder_mean_M50": 0.377
+    },
+    "artifact": "evidence/gate_s3/selector_competition.json",
+    "failure_shares": {
+      "F0_SELECTED": 0.5761,
+      "F1_DROPPED_BY_CAPACITY": 0.0318,
+      "F2_REDUNDANCY_COLLISION": 0.031,
+      "F3_WRONG_PATH_PREFERRED": 0.271,
+      "F5_ROLE_IMBALANCE": 0.0583,
+      "F6_TIE_OR_ORDER": 0.0318
+    },
+    "frozen_decision_rule_outcome": {
+      "branch_taken": "'if S1/S2_role_reserved/S3_path_coherent recovers a large share of the S4 gap -> the defect is packet composition, and a composition fix may finally let G2 overtake typed path'",
+      "verdict": "The defect IS packet composition, specifically PATH COHERENCE. Not record ranking, not redundancy, not capacity, not tie-breaking."
+    },
+    "no_hrm": true,
+    "pooled_arms": {
+      "S0_current": {
+        "bridge_retention": 0.1826,
+        "complete_path_retention": 0.2167,
+        "mean_redundancy": 0.572,
+        "mean_role_coverage": 2.296,
+        "oracle_gap_closure": 0.0,
+        "selected_ces": 0.3227,
+        "terminal_retention": 0.4966
+      },
+      "S1_diversity": {
+        "bridge_retention": 0.1826,
+        "complete_path_retention": 0.2533,
+        "mean_redundancy": 0.0,
+        "mean_role_coverage": 2.223,
+        "oracle_gap_closure": -0.0312,
+        "selected_ces": 0.308,
+        "terminal_retention": 0.4815
+      },
+      "S2_role_reserved": {
+        "bridge_retention": 0.1681,
+        "complete_path_retention": 0.2167,
+        "mean_redundancy": 0.547,
+        "mean_role_coverage": 2.469,
+        "oracle_gap_closure": 0.1925,
+        "selected_ces": 0.4133,
+        "terminal_retention": 0.6141
+      },
+      "S3_path_coherent": {
+        "bridge_retention": 0.4232,
+        "complete_path_retention": 0.5033,
+        "mean_redundancy": 0.615,
+        "mean_role_coverage": 2.417,
+        "oracle_gap_closure": 0.4363,
+        "selected_ces": 0.528,
+        "terminal_retention": 0.6544
+      },
+      "S4_oracle": {
+        "bridge_retention": 0.9507,
+        "complete_path_retention": 1.0,
+        "mean_redundancy": 0.56,
+        "mean_role_coverage": 2.437,
+        "oracle_gap_closure": 1.0,
+        "selected_ces": 0.7933,
+        "terminal_retention": 0.9664
+      }
+    },
+    "run_utc": "2026-08-10T01:00:00Z",
+    "status": "RUN_COMPLETE__PACKET_COMPOSITION_IS_THE_DEFECT__PATH_COHERENCE_IS_THE_MISSING_CAPABILITY",
+    "status_board": {
+      "G1_TYPED_PATH": "BEST NON-ORACLE as shipped",
+      "G2_graph_traversal": "IMPROVED; may overtake typed path IF composition becomes path-aware",
+      "bridge_acquisition": "NOT CURRENT BOTTLENECK",
+      "grammar_v4_extraction": "PROMOTABLE CANDIDATE",
+      "path_coherent_packet_composition": "STRONGEST CANDIDATE MECHANISM (diagnostic evidence only)",
+      "record_level_diversity_suppression": "RULED OUT",
+      "s2_packet_composition": "CURRENT BOTTLENECK, now attributed"
+    },
+    "upstream_pinned": {
+      "M": 50,
+      "compressor": "G2",
+      "extractor": "grammar_v4",
+      "packet": 6,
+      "retrieval": "C2"
+    },
+    "what_is_NOT_promoted": "S1/S2/S3 are diagnostic arms. S3_path_coherent naively takes the top complete path and is not a mechanism -- it has no policy for competing complete paths of equal rank, no safety bounds, and no protocol. Promotion requires its own frozen gate."
+  },
   "sprint_a_retrieval_diagnosis": {
     "artifacts": [
       "evidence/gate_c4/diagnosis/development_retrieval.json",
