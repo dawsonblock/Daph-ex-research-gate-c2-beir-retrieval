@@ -1004,6 +1004,75 @@
     ],
     "why_this_overturns_the_g2_v1_diagnosis": "G2-v1 attributed the failure to completion RECOGNITION (a record wasn't being labeled complete even though it should have been). This sprint's K3 arm falsifies that: recognition was never the binding constraint. The actual constraint is REACHABILITY -- required records frequently sit outside the 1-2 hop subject/bridge co-mention neighborhood the runtime graph walks at all, so no completion rule, however accurate, can recover them. K1's entity-bound recognizer IS more correct than K0 in isolation (see tests/unit/test_g2_endpoint_recognition.py -- it correctly rejects wrong-entity bindings K0 falsely accepts, and correctly recognizes value-shaped records the older relational_state.py parser missed entirely). Being more correct did not help end-to-end because the records it could have correctly labeled were mostly unreachable to begin with."
   },
+  "g2_v3_reachability_decomposition": {
+    "MECHANICAL_DECISION": {
+      "R0_share": 0.0726,
+      "R3_share_and_topology_ceiling": "5.7% share, and oracle relation topology only reaches 56.6% (well below the 87.1% identity-merge ceiling) -- richer edge types are NOT yet justified",
+      "R4_share_and_hop_curve": "4.2% share, and the hop curve is nearly flat past h=1 -- deeper traversal is NOT justified without further evidence",
+      "conclusion": "R0 (retrieval availability) is real but secondary (7.3%) -- graph-guided seed retrieval is NOT the next sprint",
+      "decision": "G2-v4 (next sprint, not started): repair entity canonicalization / graph-node merging. Specifically target identity-role alias resolution (100% genuine fragmentation, the runtime's own extract_identity_links/alias_links mechanism exists for exactly this and is under-performing) and terminal-role surface-form merging (68.4% genuine fragmentation).",
+      "rule_applied": "if R2 dominates: repair entity canonicalization / graph-node merging (frozen in configs/gate_g2_v3_reachability_v1.json BEFORE this ran)"
+    },
+    "artifact": "evidence/gate_g2_v3/reachability_decomposition.json",
+    "ceilings": {
+      "hop_ceiling": {
+        "h1": 0.2461,
+        "h2": 0.2593,
+        "h3": 0.2839,
+        "h4": 0.2965,
+        "meaning": "Nearly FLAT past h=1 (+1.3pp from h=1 to h=2, +5.5pp total from h=2 to unlimited). Confirms deeper traversal is NOT the answer: the topology is missing NODES (via fragmentation) far more than it is missing HOPS. Matches the user's own worked counterexample exactly.",
+        "unlimited": 0.3016
+      },
+      "identity_fragmentation_ceiling": {
+        "absolute_headroom": 0.5691,
+        "current_reachable_rate": 0.3016,
+        "meaning": "If entity canonicalization/graph-node merging were perfect, reachability would rise from 30.2% to 87.1% -- the single largest, cleanest lever identified across the entire B4/G1/G2/G2-v2/G2-v3 sequence.",
+        "perfect_canonical_merge_reachable_rate": 0.8707
+      },
+      "topology_ceiling": {
+        "current_pool_membership_rate": 0.8964,
+        "meaning": "Secondary lever. Even a perfect oracle relation-topology layer only reaches 56.6% chain-reachability -- well below the 87.1% identity-merge ceiling -- so typed relation edges (OWNED_BY/DEPENDS_ON/etc) are NOT yet justified as the next investment; canonicalization is the higher-leverage, cleaner target.",
+        "note_this_is_LOWER_than_pool_membership_not_a_bug": "Oracle topology requires the FULL proof chain's records to be jointly present in the pool, not just the specific record being checked -- so it is stricter than raw per-record pool membership, and correctly shows that even perfect relation-typed edges are capped by chain-completeness of retrieval, not just by edge-type richness.",
+        "oracle_relation_topology_chain_reachable_rate": 0.5658
+      }
+    },
+    "headline_finding": {
+      "dominant_stage": "R2_IDENTITY_FRAGMENTED",
+      "meaning": "Required evidence overwhelmingly fails to reach S2 not because it's unretrieved (R0=7.3%), not because it's structurally distant (R4 >2-hop=4.2%), not because ranking/completion mis-scores it once found (R6+R7=6.8%), but because the SAME real-world entity is represented as different, unmerged graph nodes depending on which surface form (canonical, abbreviation, alias) a given record happens to use.",
+      "share_of_all_required_records": 0.5691,
+      "share_of_non_complete_records": 0.704
+    },
+    "no_hrm": true,
+    "no_mechanism_run": true,
+    "pooled_stage_decomposition": {
+      "R0_NOT_IN_CANDIDATE_POOL": 0.0726,
+      "R1_ENTITY_EXTRACTION_MISSING": 0.0,
+      "R2_IDENTITY_FRAGMENTED": 0.5691,
+      "R3_DISCONNECTED_COMPONENT": 0.0568,
+      "R4_REQUIRES_GT2_HOPS": 0.0423,
+      "R6_REACHABLE_BUT_NOT_ENUMERATED": 0.0151,
+      "R7_ENUMERATED_NOT_COMPLETED": 0.0524,
+      "R8_COMPLETE": 0.1918,
+      "n_total_required_records": 1585
+    },
+    "r2_subclassification": {
+      "by_role": {
+        "bridge": 0.436,
+        "identity": 1.0,
+        "terminal": 0.684
+      },
+      "conclusion": "The dominant failure is real, not a diagnostic or extraction artifact. Identity-role records (surface->canonical mapping records, e.g. 'JPA-5 is the short code for X') are 100% genuine fragmentation by construction -- their entire purpose is to state a DIFFERENT surface form, and the runtime's own alias-resolution mechanism (extract_identity_links -> graph.alias_links) is failing to connect most of them into the subject's component despite existing for exactly this purpose.",
+      "extraction_boundary_near_miss": 0.183,
+      "genuine_fragmentation": 0.817,
+      "purpose": "Distinguish extraction-boundary noise (cheap fix: extract_v4_entities' greedy regex over/under-captures the SAME mention) from genuine cross-surface fragmentation (structural: alias/abbreviation with zero textual overlap, requires real canonicalization/node-merging work) -- added mid-sprint before freezing the conclusion, since a 60%+ R2 rate on terminal records could plausibly have been mostly the former."
+    },
+    "run_utc": "2026-08-09",
+    "status": "RUN_COMPLETE__R2_IDENTITY_FRAGMENTATION_DOMINANT",
+    "what_survives_from_this_sprint": [
+      "scripts/diagnose_g2_v3_reachability.py: the R0-R8 stage tracer, hop-ceiling curve, identity-fragmentation ceiling, and topology ceiling -- all evaluator-only diagnostics, reusable for validating whatever canonicalization repair comes next",
+      "the mechanical decision rule was frozen before any number was seen, and fired cleanly on the first try -- R2 dominance, low R0/R3/R4, flat hop curve, and the identity ceiling all independently point the same direction"
+    ]
+  },
   "gate_lineage": {
     "gate_c2_i_identity_resolution": "Gate C2-I was the earlier placeholder identity-resolution gate. Gate C3 (gate_c3_surface_identity_resolution) is the formal execution gate with a frozen protocol; the two must not remain as apparently active parallel identity-resolution gates. C2-I is therefore marked SUPERSEDED_BY_GATE_C3. No C2-I implementation or measurement existed; the substantive work continues under C3."
   },
@@ -1039,7 +1108,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "G2-v3 topology diagnostic (not started): why is the 1-2 hop co-mention graph topology sparse relative to required evidence, independent of completion recognition -- K3's oracle ceiling headroom over K0 was only 0.0-0.013 working-set CES, so G2-v2's entity-bound recognizer (real fix, 72 tests, but the wrong layer) could not have repaired G2 even if perfect. G1_TYPED_PATH remains the best-performing non-oracle mechanism found across all of B4/G1/G2/G2-v2.",
+    "NEXT_GATE": "G2-v4 entity canonicalization / graph-node merging repair (not started): G2-v3's reachability decomposition found identity fragmentation dominates required-record failures (56.9% of all required records, 70.4% of non-complete ones; 81.7% of that is genuine cross-surface fragmentation, not extraction noise). Perfect canonical merge would lift reachability from 30.2% to 87.1% -- the largest, cleanest lever found across B4/G1/G2/G2-v2/G2-v3. Retrieval availability (7.3%), disconnected topology even with correct entities (5.7%, oracle relation topology only reaches 56.6% -- below the identity ceiling), and >2-hop requirements (4.2%, hop curve nearly flat past h=1) are all real but secondary.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
