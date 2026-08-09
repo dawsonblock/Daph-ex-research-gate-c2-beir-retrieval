@@ -331,6 +331,80 @@
     },
     "s2_improves_two_roles_conditionally": "terminal +0.1348 and temporal_current +0.3333 conditional retention. S2 is doing real work where evidence exists."
   },
+  "b4_candidate_compression": {
+    "METRIC_TRAP_FOUND_AND_CORRECTED": {
+      "correction": "The honest end-to-end figure is prefilter_ces x selected_ces_given_working. Reported below as the primary comparison.",
+      "trap": "selected_ces_given_working is CONDITIONED on the prefilter's own coverage, so it RISES as the prefilter discards evidence. P2 at M=25 posts 0.785 on that metric at cal_3000 -- the best number in the whole table -- while having thrown away half the required evidence before S2 ever saw it.",
+      "why_it_matters": "Reading the conditional metric alone would have declared P2@M25 a triumph and promoted a compressor that merely matches the old k=50 baseline."
+    },
+    "M_trend_is_informative": "Smaller M is BETTER for P2 end-to-end (M25 > M50 > M75) purely because a smaller working set concentrates S2, while larger M readmits the competition. But P3 shows the same ordering, so the gain is about pressure, not about my filter improving with size. Both suggest the working set wants to be small AND well chosen -- P2 achieves only the first.",
+    "P2_RESULT_my_compressor_is_inadequate": {
+      "bridge_safety": "P2 fails the -0.05 bound at cal_700 (M75, -0.157) and cal_1500 (M50 -0.106, M75 -0.092).",
+      "but_coverage_collapsed": "prefilter CES falls from 0.833-0.860 (P1) to 0.433-0.540 at M=25 -- roughly half the availability B3 bought is destroyed in compression. Bridge availability after prefilter falls to 0.385-0.821 versus P3's 0.873-0.931 at the same M.",
+      "net_effect": "end-to-end selected CES at M=25 merely MATCHES P0 (0.340 vs 0.340 at cal_3000, 0.380 vs 0.387 at cal_1500). The expanded retrieval plus my compressor buys nothing over plain k=50.",
+      "pressure_reduction_worked": "structural competition ratio falls from 8.8 to 1.5 at cal_1500 and 17.3 to 1.5 at cal_3000; bridge competition 3.9 -> 1.1. Near-duplicate suppression collapses 20.7-26.8 records per task. So the mechanism DOES relieve the diagnosed pressure.",
+      "verdict": "FAIL. It reduces pressure successfully but pays for it by discarding required evidence."
+    },
+    "P3_RESULT_compression_is_viable": "The oracle compressor recovers strongly: end-to-end selected CES 0.620/0.540/0.507/0.513/0.473 at M=25, versus P1's 0.353/0.287/0.153/0.160/0.120 and P0's 0.493/0.393/0.387/0.320/0.340. So a perfect compressor lets UNCHANGED S2 both keep the availability B3 bought AND select from it -- roughly 1.4x the k=50 baseline at every scale, and 3-4x P1 at the large scales. Compression is the right shape of intervention, and S2 is not irreparably broken.",
+    "artifact": "evidence/gate_b3/calibration/b4_compression.json",
+    "criteria_frozen_before_running": "configs/gate_b4_candidate_compression_v1.json",
+    "diagnosis": "The two-opposing-quantities scoring did its job: it separated 'reduced pressure' from 'kept the evidence' and showed my compressor achieves the first by sacrificing the second. Structure-as-admissibility was too coarse a filter -- 'mentions the subject OR the relation OR a one-hop entity OR looks like an identity record' admits far more than M records at these pool sizes, so the retrieval-score ranking inside the admitted set decides what survives, and retrieval score is precisely the signal that already failed to rank the bridge highly. The compressor inherits the retriever's blind spot rather than correcting it.",
+    "end_to_end_selected_ces": {
+      "P0_k50": {
+        "1000": 0.393,
+        "1500": 0.387,
+        "2200": 0.32,
+        "3000": 0.34,
+        "700": 0.493
+      },
+      "P1_C2_direct": {
+        "1000": 0.287,
+        "1500": 0.153,
+        "2200": 0.16,
+        "3000": 0.12,
+        "700": 0.353
+      },
+      "P2_prefilter_M25": {
+        "1000": 0.36,
+        "1500": 0.38,
+        "2200": 0.327,
+        "3000": 0.34,
+        "700": 0.393
+      },
+      "P2_prefilter_M50": {
+        "1000": 0.313,
+        "1500": 0.267,
+        "2200": 0.22,
+        "3000": 0.207,
+        "700": 0.36
+      },
+      "P2_prefilter_M75": {
+        "1000": 0.28,
+        "1500": 0.173,
+        "2200": 0.167,
+        "3000": 0.133,
+        "700": 0.333
+      },
+      "P3_oracle_M25": {
+        "1000": 0.54,
+        "1500": 0.507,
+        "2200": 0.513,
+        "3000": 0.473,
+        "700": 0.62
+      },
+      "P3_oracle_M50": {
+        "1000": 0.473,
+        "1500": 0.44,
+        "2200": 0.46,
+        "3000": 0.413,
+        "700": 0.54
+      }
+    },
+    "next": "Either a better runtime-safe discriminator (relation-typed matching, subject-anchored path scoring, role-aware reservation) or the runtime graph. P3 gives the ceiling to beat and P2 gives the floor a new mechanism must clear.",
+    "per_frozen_decision_rule": "'P3 succeeds but P2 fails -> compression is viable; the runtime-safe compressor needs better discrimination.' Recorded as exactly that. Not a licence to widen M, weaken the bound, or raise the packet.",
+    "status": "P3 SUCCEEDS, P2 FAILS. Per the frozen decision rule: compression is VIABLE, but the runtime-safe compressor needs better discrimination. No arm promoted, no HRM run.",
+    "what_this_says_about_the_graph": "P3 proves a compressor that KNOWS which records matter unlocks S2. The runtime cannot know that from retrieval score plus coarse structural admissibility. A runtime graph is precisely a mechanism for identifying which records matter STRUCTURALLY rather than by score -- reaching the bridge by relation-aware traversal instead of hoping it ranks well. The P3-minus-P2 gap (0.473 vs 0.340 at cal_3000) is now a measured budget for what better discrimination is worth."
+  },
   "benchmark_lineage": {
     "controlled_gate_a_v1": "SUPERSEDED_answer_leaked_into_one_question",
     "controlled_gate_a_v2": "CANONICAL_for_gate_a0_and_gate_b",
@@ -710,9 +784,9 @@
   },
   "headline_status": {
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
-    "CURRENT_BOTTLENECK": "selector capacity under candidate pressure (was: candidate availability). Retrieval scaling is confirmed to deliver availability; UNCHANGED S2 cannot use it -- selected CES given availability falls from ~0.90 at k=50 to ~0.20 at k=300.",
+    "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "B4_STRUCTURAL_CANDIDATE_COMPRESSION (protocol frozen, M not chosen, not yet run)",
+    "NEXT_GATE": "better runtime-safe discriminator OR runtime-graph expansion; P3 is the measured ceiling, P2 the floor to beat",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
