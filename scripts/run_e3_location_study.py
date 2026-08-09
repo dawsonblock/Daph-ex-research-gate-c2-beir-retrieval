@@ -135,6 +135,10 @@ def main() -> None:
             commands[mode][str(training_seed)] = ["python", "scripts/run_e3_hardcase_ablation.py", *command[2:]]
             report_path = mode_output / "e3_hardcase_ablation_report.json"
             if not (args.resume and report_path.exists()):
+                # No timeout: this launches a full ablation training run that can
+                # legitimately take hours; an outer bound would kill a correct,
+                # slow-but-progressing run. Documented exemption, not an oversight
+                # -- see hrm_adaptive_memory/experiment_integrity/subprocess_safe.py.
                 subprocess.run(command, cwd=ROOT, check=True)
             reports[mode][training_seed] = json.loads(report_path.read_text())
 

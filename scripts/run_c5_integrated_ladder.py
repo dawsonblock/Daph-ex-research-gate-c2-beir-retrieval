@@ -523,7 +523,7 @@ def main() -> int:
         **config_hashes(),
         "git_commit": subprocess.run(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True,
-            text=True).stdout.strip(),
+            text=True, timeout=30).stdout.strip(),
         "crossover_parity": {
             "violations": parity_violations[:20],
             "violation_count": len(parity_violations),

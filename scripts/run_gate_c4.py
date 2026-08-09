@@ -601,7 +601,7 @@ def run_smoke(split: str = "development"):
         "arm_ids": arm_ids,
         "task_count": len(tasks),
         "git_commit": subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip(),
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, timeout=30).decode().strip(),
         "hrm_model_id": adapter.spec.model_id,
         "hrm_model_revision": adapter.spec.revision,
         "hrm_max_new_tokens": HRM_MAX_NEW_TOKENS,
@@ -795,7 +795,7 @@ def run_full(split: str = "development", arm_ids: list[str] | None = None):
     analyzer_cmd = [sys.executable, str(ROOT / "scripts/analyze_gate_c4.py"),
                     "--dir", str(out_dir),
                     "--output", str(out_dir / "analysis.json")]
-    analyzer_ret = subprocess.run(analyzer_cmd, capture_output=True, text=True)
+    analyzer_ret = subprocess.run(analyzer_cmd, capture_output=True, text=True, timeout=300)
     if analyzer_ret.stdout:
         print(analyzer_ret.stdout)
     if analyzer_ret.returncode != 0:

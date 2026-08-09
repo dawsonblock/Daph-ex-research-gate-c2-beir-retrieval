@@ -67,7 +67,7 @@ def check_git_clean(repo: Path) -> tuple[bool, str]:
 def check_git_revision(repo: Path, expected: str | None = None) -> tuple[bool, str]:
     """Verify git revision matches expected (if provided)."""
     actual = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
+        ["git", "rev-parse", "HEAD"], cwd=repo, text=True, timeout=30).strip()
     if expected and actual != expected:
         return False, f"Git revision mismatch: expected {expected}, got {actual}"
     return True, actual

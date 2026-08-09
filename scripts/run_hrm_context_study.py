@@ -248,6 +248,7 @@ async def _run(args: argparse.Namespace) -> None:
     try:
         commit = subprocess.run(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, capture_output=True, text=True,
+            timeout=30,
         ).stdout.strip()
     except (subprocess.CalledProcessError, FileNotFoundError):
         source_digest = hashlib.sha256()

@@ -113,9 +113,10 @@ def main() -> None:
     reproduced = None if reference is None else abs(measured - reference) <= args.tolerance
     import subprocess, torch, transformers
     spec = backend.embedding_spec
-    git = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    git = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True,
+                         timeout=30).stdout.strip()
     dirty = bool(subprocess.run(["git", "status", "--porcelain"], capture_output=True,
-                                text=True).stdout.strip())
+                                text=True, timeout=30).stdout.strip())
     d = root / args.split
     manifest = {
         "gate": "C2", "stage": "retrieval", "split": args.split, "backend": args.backend,

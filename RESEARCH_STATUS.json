@@ -905,6 +905,13 @@
       "prescribed_action_per_frozen_taxonomy": "graph extraction/path generation is deficient; improve construction, not ranking. Do NOT build a larger graph on top of this construction, and do not tune this run's parameters post hoc."
     },
     "packet_budget": 6,
+    "result_schema": {
+      "failure_class": "CONSTRUCTION_DEFICIENT",
+      "mechanism_status": "NOT_PROMOTED",
+      "run_valid": true,
+      "scientific_verdict": "NEGATIVE",
+      "split_status": "NOT_YET_RUN"
+    },
     "root_cause_diagnosed": {
       "bridge_availability_M50": {
         "g2": [
@@ -977,6 +984,13 @@
     },
     "hrm_run": false,
     "next_diagnostic_question": "Why is the 1-2 hop co-mention topology so sparse relative to required evidence? Candidates: (a) the corpus's multi-hop chains route through bridges that are NOT co-mentioned with the subject in any single record (i.e. the true link is a chain of separate facts, not a shared record), (b) entity extraction (extract_v4_entities) fails to recognize the SAME entity across records due to surface-form variance, fragmenting what should be one node into several, or (c) the candidate pool depth (C2 expanded k) doesn't retrieve the specific bridge/endpoint records at all, independent of graph construction. This needs its own diagnostic pass over topology_reachable_records vs required_evidence_ids before any repair is attempted -- not assumed.",
+    "result_schema": {
+      "failure_class": "TOPOLOGY_DEFICIENT",
+      "mechanism_status": "NOT_PROMOTED",
+      "run_valid": true,
+      "scientific_verdict": "NEGATIVE",
+      "split_status": "NOT_YET_RUN"
+    },
     "run_utc": "2026-08-09",
     "s2_phase_run": false,
     "status": "RUN_COMPLETE__STOP_GATE_FAILED__OUTCOME_D_TOPOLOGY_DEFICIENT",
@@ -2226,6 +2240,7 @@
       ]
     }
   },
+  "result_schema_note": "run_valid / scientific_verdict / mechanism_status / failure_class / split_status are the shared GateResult fields (hrm_adaptive_memory/experiment_integrity/result_schema.py). They replace ad hoc VALID_RUN/PASS collapses -- Confirmation #1 (RUN_VALID=true, MECHANISM_PASS=false) and G2-v1 (RUN_VALID=true, OUTCOME_C) are the two historical cases that motivated keeping these axes independent rather than a single boolean.",
   "sprint_a_retrieval_diagnosis": {
     "artifacts": [
       "evidence/gate_c4/diagnosis/development_retrieval.json",

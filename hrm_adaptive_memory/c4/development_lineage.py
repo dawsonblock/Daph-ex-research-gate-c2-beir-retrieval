@@ -74,12 +74,12 @@ def _check_ancestry(dev_commit: str, this_head: str | None,
 
     has_commit = subprocess.run(
         ["git", "cat-file", "-e", dev_commit],
-        cwd=repo, capture_output=True, text=True).returncode == 0
+        cwd=repo, capture_output=True, text=True, timeout=30).returncode == 0
 
     if not has_commit:
         shallow = subprocess.run(
             ["git", "rev-parse", "--is-shallow-repository"],
-            cwd=repo, capture_output=True, text=True).stdout.strip()
+            cwd=repo, capture_output=True, text=True, timeout=30).stdout.strip()
         if shallow == "true":
             return [
                 f"cannot verify commit ancestry: development's certified "
@@ -97,7 +97,7 @@ def _check_ancestry(dev_commit: str, this_head: str | None,
 
     ancestor_check = subprocess.run(
         ["git", "merge-base", "--is-ancestor", dev_commit, this_head],
-        cwd=repo, capture_output=True, text=True)
+        cwd=repo, capture_output=True, text=True, timeout=30)
     if ancestor_check.returncode != 0:
         return [
             f"development's certified commit {dev_commit[:12]} exists in "

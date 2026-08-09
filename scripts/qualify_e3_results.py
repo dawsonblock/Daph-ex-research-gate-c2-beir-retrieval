@@ -37,6 +37,7 @@ def _sha256(path: Path) -> str:
 def _git(*args: str) -> str:
     return subprocess.run(
         ["git", *args], cwd=ROOT, check=True, capture_output=True, text=True,
+        timeout=30,
     ).stdout.strip()
 
 

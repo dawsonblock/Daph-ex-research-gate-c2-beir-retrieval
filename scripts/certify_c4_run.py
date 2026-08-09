@@ -48,6 +48,8 @@ from hrm_adaptive_memory.c4 import git_state  # noqa: E402
 from hrm_adaptive_memory.c4.arms import PRIMARY_ORDER  # noqa: E402
 from hrm_adaptive_memory.c4.environment_lock import (  # noqa: E402
     load_lock, verify_environment)
+from hrm_adaptive_memory.experiment_integrity.metric_validation import (  # noqa: E402
+    MetricValidationError, require_finite_number)
 from hrm_adaptive_memory.c4.metrics import (  # noqa: E402
     compute_quality, evidence_complete, oracle_gap_capture, selector_gap_capture)
 from hrm_adaptive_memory.c4.packet_ordering import ORDERING_POLICY_ID  # noqa: E402
@@ -690,23 +692,33 @@ def gate_statistical(analysis: dict) -> Gate:
         g.fail("analysis.json has no primary_delta (C4_4 vs C4_0)")
         return g.finalize()
 
-    mean = delta.get("mean_delta")
-    g.detail["mean_delta"] = mean
+    raw_mean = delta.get("mean_delta")
+    g.detail["mean_delta"] = raw_mean
     g.detail["threshold"] = PRIMARY_DELTA_THRESHOLD
-    if mean is None:
-        g.fail("primary_delta.mean_delta missing")
-    elif mean < PRIMARY_DELTA_THRESHOLD:
-        g.fail(f"primary delta {mean:+.4f} is below the predeclared threshold "
-               f"{PRIMARY_DELTA_THRESHOLD:+.2f}")
+    try:
+        mean = require_finite_number(raw_mean, field="primary_delta.mean_delta")
+    except MetricValidationError as exc:
+        # Catches None, NaN, +/-Inf, bool, and non-numeric strings alike --
+        # a NaN or Inf mean_delta must never silently satisfy or fail the
+        # threshold comparison below by falling through Python's normal
+        # (and here, misleading) NaN comparison semantics.
+        g.fail(f"primary_delta.mean_delta: {exc}")
+    else:
+        if mean < PRIMARY_DELTA_THRESHOLD:
+            g.fail(f"primary delta {mean:+.4f} is below the predeclared threshold "
+                   f"{PRIMARY_DELTA_THRESHOLD:+.2f}")
 
     for label, key in (("family", "ci_lower"), ("cluster", "ci_lower_cluster"),
                        ("template", "ci_lower_template")):
-        lo = delta.get(key)
-        g.detail[f"ci_lower_{label}"] = lo
-        if lo is None:
-            g.fail(f"{label}-grouped CI lower bound is missing")
-        elif lo <= 0:
-            g.fail(f"{label}-grouped CI lower bound {lo:+.4f} does not exclude 0")
+        raw_lo = delta.get(key)
+        g.detail[f"ci_lower_{label}"] = raw_lo
+        try:
+            lo = require_finite_number(raw_lo, field=f"primary_delta.{key}")
+        except MetricValidationError as exc:
+            g.fail(f"{label}-grouped CI lower bound: {exc}")
+        else:
+            if lo <= 0:
+                g.fail(f"{label}-grouped CI lower bound {lo:+.4f} does not exclude 0")
 
     flips = delta.get("flips") or {}
     g.detail["flips"] = flips
@@ -756,8 +768,20 @@ def gate_family_regression(arms: dict[str, list[dict]], analysis: dict) -> Gate:
             if rep_detail is None:
                 g.fail(f"analysis.json is missing family {fam!r}")
                 continue
-            if abs(rep_detail.get("mean_delta", float("nan")) -
-                  r_detail["mean_delta"]) > 1e-9:
+            try:
+                rep_mean = require_finite_number(
+                    rep_detail.get("mean_delta"), field=f"family_regression.{fam}.mean_delta")
+                recomputed_mean = require_finite_number(
+                    r_detail["mean_delta"], field=f"recomputed.{fam}.mean_delta")
+            except MetricValidationError as exc:
+                # A NaN/missing mean_delta must hard-fail this cross-check, not
+                # silently pass it: abs(NaN - x) > 1e-9 is ALWAYS False in
+                # Python (NaN comparisons never return True), so the original
+                # `> 1e-9` guard let a NaN reported delta slip through as if it
+                # matched the recomputed value.
+                g.fail(f"family {fam}: {exc}")
+                continue
+            if abs(rep_mean - recomputed_mean) > 1e-9:
                 g.fail(f"family {fam}: analysis reports delta "
                        f"{rep_detail.get('mean_delta')}, receipts give "
                        f"{r_detail['mean_delta']}")

@@ -42,7 +42,7 @@ def main(fast: bool = False) -> int:
     if not fast:
         print("[1] test suite")
         proc = subprocess.run([sys.executable, "-m", "pytest", "-q"], cwd=ROOT,
-                              capture_output=True, text=True)
+                              capture_output=True, text=True, timeout=900)
         tail = proc.stdout.strip().splitlines()[-1] if proc.stdout.strip() else ""
         results.append(check("pytest", proc.returncode == 0, tail))
 

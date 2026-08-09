@@ -570,6 +570,35 @@ class TestStatisticalGate:
         assert not g.passed
         assert any("cluster-grouped" in v for v in g.violations)
 
+    # --- mutation tests: strict finite-numeric validation -------------------
+    # Corrupted-artifact mutation testing per the integrity review: take a
+    # known-good analysis dict and mutate ONE numeric field at a time to a
+    # non-finite value. Every mutation must force the gate to fail, not pass
+    # or silently coerce. json.loads happily round-trips NaN/Infinity by
+    # default, and bool is an int subclass in Python, so both are real
+    # corruption shapes a report file could actually contain.
+
+    @pytest.mark.parametrize("bad_mean", [float("nan"), float("inf"), float("-inf"), True])
+    def test_non_finite_mean_delta_fails_closed(self, bad_mean):
+        g = certify_mod.gate_statistical(
+            {"primary_delta": self._delta(mean_delta=bad_mean)})
+        assert not g.passed
+        assert any("mean_delta" in v for v in g.violations)
+
+    @pytest.mark.parametrize("field", ["ci_lower", "ci_lower_cluster", "ci_lower_template"])
+    @pytest.mark.parametrize("bad_value", [float("nan"), float("inf"), float("-inf")])
+    def test_non_finite_ci_lower_fails_closed(self, field, bad_value):
+        g = certify_mod.gate_statistical(
+            {"primary_delta": self._delta(**{field: bad_value})})
+        assert not g.passed
+
+    def test_string_mean_delta_fails_closed(self):
+        """A string that LOOKS numeric (e.g. from a schema-drifted writer)
+        must not silently satisfy the numeric threshold comparison."""
+        g = certify_mod.gate_statistical(
+            {"primary_delta": self._delta(mean_delta="0.21")})
+        assert not g.passed
+
 
 class TestFamilyRegressionGate:
     """D5: no task-structure family may regress worse than -0.10 Q, checked
@@ -635,6 +664,34 @@ class TestFamilyRegressionGate:
         g = certify_mod.gate_family_regression(arms, analysis)
         assert not g.passed
         assert any("analysis reports delta" in v for v in g.violations)
+
+    def test_nan_reported_mean_delta_fails_not_silently_passes(self):
+        """Mutation test for the exact bug this integrity pass fixed: the
+        cross-check used ``abs(reported - recomputed) > 1e-9`` with a NaN
+        sentinel default for a missing value. abs(NaN - x) is NaN, and
+        ``NaN > 1e-9`` is ALWAYS False in Python -- so a NaN or missing
+        reported mean_delta used to slip through this check as if it matched
+        the recomputed value exactly. It must now hard-fail instead."""
+        arms = self._arms_with_families({"fam_a": (0.2, 0.4)})
+        analysis = self._analysis_for(arms)
+        analysis["family_regression"]["per_family"]["fam_a"]["mean_delta"] = float("nan")
+        g = certify_mod.gate_family_regression(arms, analysis)
+        assert not g.passed
+        assert any("fam_a" in v for v in g.violations)
+
+    def test_missing_reported_mean_delta_key_fails(self):
+        arms = self._arms_with_families({"fam_a": (0.2, 0.4)})
+        analysis = self._analysis_for(arms)
+        del analysis["family_regression"]["per_family"]["fam_a"]["mean_delta"]
+        g = certify_mod.gate_family_regression(arms, analysis)
+        assert not g.passed
+
+    def test_inf_reported_mean_delta_fails(self):
+        arms = self._arms_with_families({"fam_a": (0.2, 0.4)})
+        analysis = self._analysis_for(arms)
+        analysis["family_regression"]["per_family"]["fam_a"]["mean_delta"] = float("inf")
+        g = certify_mod.gate_family_regression(arms, analysis)
+        assert not g.passed
 
     def test_multiple_regressed_families_all_named(self):
         arms = self._arms_with_families(

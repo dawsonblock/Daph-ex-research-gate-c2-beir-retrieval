@@ -23,7 +23,7 @@ def _file_sha256(path: Path) -> str:
 
 
 def _git_commit() -> str:
-    return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip()
+    return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, timeout=30).decode().strip()
 
 
 def _protocol_hash() -> str:

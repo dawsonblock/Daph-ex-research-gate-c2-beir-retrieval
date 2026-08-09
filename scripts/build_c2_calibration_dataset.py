@@ -85,7 +85,7 @@ def main() -> None:
 
     print("[3/6] pytest")
     r = subprocess.run([sys.executable, "-m", "pytest", "-q"], cwd=ROOT,
-                       capture_output=True, text=True)
+                       capture_output=True, text=True, timeout=900)
     if r.returncode:
         print(r.stdout[-1500:]); raise SystemExit("pytest failed; nothing written")
     print(f"      {r.stdout.strip().splitlines()[-1]}")
