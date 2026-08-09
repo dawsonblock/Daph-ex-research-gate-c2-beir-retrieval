@@ -1005,6 +1005,49 @@
     "why_this_overturns_the_g2_v1_diagnosis": "G2-v1 attributed the failure to completion RECOGNITION (a record wasn't being labeled complete even though it should have been). This sprint's K3 arm falsifies that: recognition was never the binding constraint. The actual constraint is REACHABILITY -- required records frequently sit outside the 1-2 hop subject/bridge co-mention neighborhood the runtime graph walks at all, so no completion rule, however accurate, can recover them. K1's entity-bound recognizer IS more correct than K0 in isolation (see tests/unit/test_g2_endpoint_recognition.py -- it correctly rejects wrong-entity bindings K0 falsely accepts, and correctly recognizes value-shaped records the older relational_state.py parser missed entirely). Being more correct did not help end-to-end because the records it could have correctly labeled were mostly unreachable to begin with."
   },
   "g2_v3_reachability_decomposition": {
+    "CORRECTION": {
+      "bug_found": {
+        "description": "oracle_targets in scripts/diagnose_g2_v3_reachability.py was built from task._oracle_metadata.surfaces['subject'] and ['bridge'] only, omitting ['canonical']. For abbreviation-regime tasks (entity_regime='abbreviation'), surfaces['subject'] is the QUESTION's own surface form (e.g. 'BCM-3'), not the canonical form most evidence records actually use ('Bittern control module', in surfaces['canonical']). Every record correctly written using the canonical form was therefore misclassified as R2_IDENTITY_FRAGMENTED against a target it was never trying to match.",
+        "fix": "oracle_targets now includes surfaces['canonical'] alongside ['subject'] and ['bridge'].",
+        "how_found": "Before starting G2-v4 implementation, audited whether the existing extract_identity_links/alias_links mechanism (which already exists and already does bidirectional surface<->canonical merging) was really failing, rather than assuming the diagnosis was correct and building on top of it. Inspected real abbreviation-regime tasks directly and found the surfaces dict structure contradicted the prior script's assumption."
+      },
+      "corrected_identity_ceiling": {
+        "absolute_headroom": 0.197,
+        "current_reachable_rate": 0.6738,
+        "note": "This metric was LESS contaminated by the bug than the raw R2 percentage, because its 'currently_reachable' definition already included R7 (reachable-but-not-relation-complete is still 'reachable' for this purpose). Headroom is real but +19.7pp, not the originally reported +56.9pp -- roughly a third the size.",
+        "perfect_merge_reachable_rate": 0.8707
+      },
+      "corrected_pooled_decomposition": {
+        "R0_NOT_IN_CANDIDATE_POOL": 0.0726,
+        "R1_ENTITY_EXTRACTION_MISSING": 0.0,
+        "R2_IDENTITY_FRAGMENTED": 0.1968,
+        "R3_DISCONNECTED_COMPONENT": 0.0568,
+        "R4_REQUIRES_GT2_HOPS": 0.0423,
+        "R6_REACHABLE_BUT_NOT_ENUMERATED": 0.0151,
+        "R7_ENUMERATED_NOT_COMPLETED": 0.3388,
+        "R8_COMPLETE": 0.2776,
+        "note": "R2 dropped from 56.9% to 19.7% pooled; R7 rose from 5.2% to 33.9% pooled -- but R7's rise is ALSO substantially a taxonomy artifact, see below."
+      },
+      "revised_assessment": "Identity fragmentation (R2, 26.6% among relation-bearing roles) remains the SINGLE LARGEST individual non-R8 factor, and the ceiling ordering is unchanged (canonicalization > topology-edges > hop-depth). But it is no longer an overwhelming, order-of-magnitude-larger factor: R7 (10.8%, largely a taxonomy artifact needing its own fix -- separating identity/support records from relation-bearing records in the taxonomy, not a graph fix) and bridge-specific R0 (25.9%, a NEW finding, retrieval-side) are now comparably sized. The clean single-lever story does not survive the correction; a three-factor picture does.",
+      "run_utc": "2026-08-09T18:00:00Z",
+      "second_finding_R7_is_role_contaminated": {
+        "corrected_decomposition_bridge_plus_terminal_only_n_1175": {
+          "R0_NOT_IN_CANDIDATE_POOL": 0.098,
+          "R2_IDENTITY_FRAGMENTED": 0.266,
+          "R3_DISCONNECTED_COMPONENT": 0.077,
+          "R4_REQUIRES_GT2_HOPS": 0.057,
+          "R6_REACHABLE_BUT_NOT_ENUMERATED": 0.02,
+          "R7_ENUMERATED_NOT_COMPLETED": 0.108,
+          "R8_COMPLETE": 0.374
+        },
+        "description": "100% of identity-role required records (n=410) are R7. This is NOT a mechanism defect: identity/alias records (e.g. 'BCM-3 is the short code for Bittern control module') structurally never assert the target relation, so they can never satisfy a 'completes the relation' check under K1 -- that is not their semantic job. The R0-R8 taxonomy conflated 'this record completes the answer relation' with 'this record is structurally required', which are different things for support/identity evidence vs relation-bearing evidence."
+      },
+      "status": "CORRECTED__SUPERSEDES_PRIOR_RESULT",
+      "third_finding_new_bridge_specific_retrieval_gap": {
+        "description": "Bridge-role (LINK) records have a 25.9% R0 rate (not even in the C2 candidate pool) versus 0.7% for terminal-role records -- a 37x difference, invisible in pooled numbers. This is a genuinely new signal this correction surfaced: retrieval specifically struggles to surface the record connecting subject to bridge, not the answer-bearing record itself.",
+        "magnitude": "comparable in size to R2 among relation-bearing roles (9.8% pooled R0 vs 26.6% pooled R2, but 25.9% bridge-specific R0 vs 26.6% pooled R2 -- nearly tied when compared at matching granularity)"
+      }
+    },
     "MECHANICAL_DECISION": {
       "R0_share": 0.0726,
       "R3_share_and_topology_ceiling": "5.7% share, and oracle relation topology only reaches 56.6% (well below the 87.1% identity-merge ceiling) -- richer edge types are NOT yet justified",
@@ -1108,7 +1151,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "G2-v4 entity canonicalization / graph-node merging repair (not started): G2-v3's reachability decomposition found identity fragmentation dominates required-record failures (56.9% of all required records, 70.4% of non-complete ones; 81.7% of that is genuine cross-surface fragmentation, not extraction noise). Perfect canonical merge would lift reachability from 30.2% to 87.1% -- the largest, cleanest lever found across B4/G1/G2/G2-v2/G2-v3. Retrieval availability (7.3%), disconnected topology even with correct entities (5.7%, oracle relation topology only reaches 56.6% -- below the identity ceiling), and >2-hop requirements (4.2%, hop curve nearly flat past h=1) are all real but secondary.",
+    "NEXT_GATE": "G2-v4 scope pending user direction (not started): G2-v3's original diagnosis (identity fragmentation dominant, 56.9%, +56.9pp ceiling) contained a real bug in oracle_targets (omitted surfaces['canonical']) and has been corrected. Corrected: identity fragmentation ceiling is +19.7pp (67.4%->87.1%), still the single largest individual factor among relation-bearing roles (26.6%) but no longer overwhelming -- enumerated-not-completed (10.8%, largely a taxonomy artifact: identity/support records structurally cannot 'complete a relation') and a newly-surfaced bridge-specific retrieval gap (25.9% of LINK records not in the candidate pool, vs 0.7% for terminal records) are now comparably sized. Presented to user for direction on G2-v4 scope given the changed magnitude and the new three-factor picture.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",

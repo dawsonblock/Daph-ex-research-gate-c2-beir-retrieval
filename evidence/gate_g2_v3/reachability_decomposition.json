@@ -5,63 +5,59 @@
     "cal_1000": {
       "corpus_size": 1000,
       "hop_ceiling": {
-        "1": 0.2785,
-        "2": 0.2816,
-        "3": 0.2943,
-        "4": 0.3133,
-        "unlimited": 0.3228
+        "1": 0.6551,
+        "2": 0.6582,
+        "3": 0.6709,
+        "4": 0.6899,
+        "unlimited": 0.6994
       },
       "identity_fragmentation_ceiling": {
-        "current_reachable_rate": 0.3228,
+        "current_reachable_rate": 0.6994,
         "perfect_merge_reachable_rate": 0.8703,
         "total": 316
       },
       "r2_subtype_by_role": {
         "bridge": {
-          "extraction_boundary_near_miss": 2,
-          "genuine_fragmentation": 1
-        },
-        "identity": {
-          "genuine_fragmentation": 81
+          "extraction_boundary_near_miss": 2
         },
         "terminal": {
-          "extraction_boundary_near_miss": 26,
-          "genuine_fragmentation": 63
+          "extraction_boundary_near_miss": 37,
+          "genuine_fragmentation": 15
         }
       },
       "r2_subtype_counts": {
-        "extraction_boundary_near_miss": 28,
-        "genuine_fragmentation": 145
+        "extraction_boundary_near_miss": 39,
+        "genuine_fragmentation": 15
       },
       "role_stage_counts": {
         "bridge": {
           "R0_NOT_IN_CANDIDATE_POOL": 23,
-          "R2_IDENTITY_FRAGMENTED": 3,
+          "R2_IDENTITY_FRAGMENTED": 2,
           "R3_DISCONNECTED_COMPONENT": 6,
           "R4_REQUIRES_GT2_HOPS": 6,
           "R6_REACHABLE_BUT_NOT_ENUMERATED": 2,
-          "R7_ENUMERATED_NOT_COMPLETED": 15,
+          "R7_ENUMERATED_NOT_COMPLETED": 16,
           "R8_COMPLETE": 30
         },
         "identity": {
-          "R2_IDENTITY_FRAGMENTED": 81
+          "R7_ENUMERATED_NOT_COMPLETED": 81
         },
         "terminal": {
-          "R2_IDENTITY_FRAGMENTED": 89,
+          "R2_IDENTITY_FRAGMENTED": 52,
           "R3_DISCONNECTED_COMPONENT": 12,
           "R4_REQUIRES_GT2_HOPS": 7,
-          "R7_ENUMERATED_NOT_COMPLETED": 3,
-          "R8_COMPLETE": 39
+          "R7_ENUMERATED_NOT_COMPLETED": 13,
+          "R8_COMPLETE": 66
         }
       },
       "stage_counts": {
         "R0_NOT_IN_CANDIDATE_POOL": 23,
-        "R2_IDENTITY_FRAGMENTED": 173,
+        "R2_IDENTITY_FRAGMENTED": 54,
         "R3_DISCONNECTED_COMPONENT": 18,
         "R4_REQUIRES_GT2_HOPS": 13,
         "R6_REACHABLE_BUT_NOT_ENUMERATED": 2,
-        "R7_ENUMERATED_NOT_COMPLETED": 18,
-        "R8_COMPLETE": 69
+        "R7_ENUMERATED_NOT_COMPLETED": 110,
+        "R8_COMPLETE": 96
       },
       "tasks": 150,
       "topology_ceiling": {
@@ -73,64 +69,60 @@
     "cal_1500": {
       "corpus_size": 1500,
       "hop_ceiling": {
-        "1": 0.2816,
-        "2": 0.2975,
-        "3": 0.3133,
-        "4": 0.3165,
-        "unlimited": 0.3196
+        "1": 0.6329,
+        "2": 0.6487,
+        "3": 0.6646,
+        "4": 0.6677,
+        "unlimited": 0.6709
       },
       "identity_fragmentation_ceiling": {
-        "current_reachable_rate": 0.3196,
+        "current_reachable_rate": 0.6709,
         "perfect_merge_reachable_rate": 0.8892,
         "total": 316
       },
       "r2_subtype_by_role": {
         "bridge": {
-          "extraction_boundary_near_miss": 7,
-          "genuine_fragmentation": 3
-        },
-        "identity": {
-          "genuine_fragmentation": 81
+          "extraction_boundary_near_miss": 9
         },
         "terminal": {
-          "extraction_boundary_near_miss": 26,
-          "genuine_fragmentation": 63
+          "extraction_boundary_near_miss": 45,
+          "genuine_fragmentation": 15
         }
       },
       "r2_subtype_counts": {
-        "extraction_boundary_near_miss": 33,
-        "genuine_fragmentation": 147
+        "extraction_boundary_near_miss": 54,
+        "genuine_fragmentation": 15
       },
       "role_stage_counts": {
         "bridge": {
           "R0_NOT_IN_CANDIDATE_POOL": 21,
-          "R2_IDENTITY_FRAGMENTED": 10,
+          "R2_IDENTITY_FRAGMENTED": 9,
           "R3_DISCONNECTED_COMPONENT": 4,
           "R4_REQUIRES_GT2_HOPS": 3,
           "R6_REACHABLE_BUT_NOT_ENUMERATED": 1,
-          "R7_ENUMERATED_NOT_COMPLETED": 16,
+          "R7_ENUMERATED_NOT_COMPLETED": 17,
           "R8_COMPLETE": 30
         },
         "identity": {
-          "R2_IDENTITY_FRAGMENTED": 81
+          "R7_ENUMERATED_NOT_COMPLETED": 81
         },
         "terminal": {
-          "R2_IDENTITY_FRAGMENTED": 89,
+          "R2_IDENTITY_FRAGMENTED": 60,
           "R3_DISCONNECTED_COMPONENT": 10,
           "R4_REQUIRES_GT2_HOPS": 4,
           "R6_REACHABLE_BUT_NOT_ENUMERATED": 4,
-          "R7_ENUMERATED_NOT_COMPLETED": 2,
-          "R8_COMPLETE": 41
+          "R7_ENUMERATED_NOT_COMPLETED": 6,
+          "R8_COMPLETE": 66
         }
       },
       "stage_counts": {
         "R0_NOT_IN_CANDIDATE_POOL": 21,
-        "R2_IDENTITY_FRAGMENTED": 180,
+        "R2_IDENTITY_FRAGMENTED": 69,
         "R3_DISCONNECTED_COMPONENT": 14,
         "R4_REQUIRES_GT2_HOPS": 7,
         "R6_REACHABLE_BUT_NOT_ENUMERATED": 5,
-        "R7_ENUMERATED_NOT_COMPLETED": 18,
-        "R8_COMPLETE": 71
+        "R7_ENUMERATED_NOT_COMPLETED": 104,
+        "R8_COMPLETE": 96
       },
       "tasks": 150,
       "topology_ceiling": {
@@ -142,64 +134,60 @@
     "cal_2200": {
       "corpus_size": 2200,
       "hop_ceiling": {
-        "1": 0.2358,
-        "2": 0.239,
-        "3": 0.2862,
-        "4": 0.3019,
-        "unlimited": 0.3113
+        "1": 0.6069,
+        "2": 0.6101,
+        "3": 0.6572,
+        "4": 0.673,
+        "unlimited": 0.6824
       },
       "identity_fragmentation_ceiling": {
-        "current_reachable_rate": 0.3113,
+        "current_reachable_rate": 0.6824,
         "perfect_merge_reachable_rate": 0.8931,
         "total": 318
       },
       "r2_subtype_by_role": {
         "bridge": {
-          "extraction_boundary_near_miss": 4,
-          "genuine_fragmentation": 7
-        },
-        "identity": {
-          "genuine_fragmentation": 83
+          "extraction_boundary_near_miss": 7
         },
         "terminal": {
-          "extraction_boundary_near_miss": 31,
-          "genuine_fragmentation": 60
+          "extraction_boundary_near_miss": 45,
+          "genuine_fragmentation": 15
         }
       },
       "r2_subtype_counts": {
-        "extraction_boundary_near_miss": 35,
-        "genuine_fragmentation": 150
+        "extraction_boundary_near_miss": 52,
+        "genuine_fragmentation": 15
       },
       "role_stage_counts": {
         "bridge": {
           "R0_NOT_IN_CANDIDATE_POOL": 18,
-          "R2_IDENTITY_FRAGMENTED": 11,
+          "R2_IDENTITY_FRAGMENTED": 7,
           "R3_DISCONNECTED_COMPONENT": 4,
           "R4_REQUIRES_GT2_HOPS": 11,
-          "R7_ENUMERATED_NOT_COMPLETED": 16,
+          "R7_ENUMERATED_NOT_COMPLETED": 20,
           "R8_COMPLETE": 25
         },
         "identity": {
-          "R2_IDENTITY_FRAGMENTED": 83
+          "R7_ENUMERATED_NOT_COMPLETED": 83
         },
         "terminal": {
           "R0_NOT_IN_CANDIDATE_POOL": 3,
-          "R2_IDENTITY_FRAGMENTED": 91,
+          "R2_IDENTITY_FRAGMENTED": 60,
           "R3_DISCONNECTED_COMPONENT": 9,
           "R4_REQUIRES_GT2_HOPS": 12,
           "R6_REACHABLE_BUT_NOT_ENUMERATED": 1,
-          "R7_ENUMERATED_NOT_COMPLETED": 3,
-          "R8_COMPLETE": 31
+          "R7_ENUMERATED_NOT_COMPLETED": 11,
+          "R8_COMPLETE": 54
         }
       },
       "stage_counts": {
         "R0_NOT_IN_CANDIDATE_POOL": 21,
-        "R2_IDENTITY_FRAGMENTED": 185,
+        "R2_IDENTITY_FRAGMENTED": 67,
         "R3_DISCONNECTED_COMPONENT": 13,
         "R4_REQUIRES_GT2_HOPS": 23,
         "R6_REACHABLE_BUT_NOT_ENUMERATED": 1,
-        "R7_ENUMERATED_NOT_COMPLETED": 19,
-        "R8_COMPLETE": 56
+        "R7_ENUMERATED_NOT_COMPLETED": 114,
+        "R8_COMPLETE": 79
       },
       "tasks": 150,
       "topology_ceiling": {
@@ -211,64 +199,60 @@
     "cal_3000": {
       "corpus_size": 3000,
       "hop_ceiling": {
-        "1": 0.2031,
-        "2": 0.2469,
-        "3": 0.2906,
-        "4": 0.3031,
-        "unlimited": 0.3063
+        "1": 0.5813,
+        "2": 0.625,
+        "3": 0.6687,
+        "4": 0.6813,
+        "unlimited": 0.6844
       },
       "identity_fragmentation_ceiling": {
-        "current_reachable_rate": 0.3063,
+        "current_reachable_rate": 0.6844,
         "perfect_merge_reachable_rate": 0.9031,
         "total": 320
       },
       "r2_subtype_by_role": {
         "bridge": {
-          "extraction_boundary_near_miss": 5,
-          "genuine_fragmentation": 3
-        },
-        "identity": {
-          "genuine_fragmentation": 85
+          "extraction_boundary_near_miss": 7
         },
         "terminal": {
-          "extraction_boundary_near_miss": 34,
-          "genuine_fragmentation": 64
+          "extraction_boundary_near_miss": 48,
+          "genuine_fragmentation": 15
         }
       },
       "r2_subtype_counts": {
-        "extraction_boundary_near_miss": 39,
-        "genuine_fragmentation": 152
+        "extraction_boundary_near_miss": 55,
+        "genuine_fragmentation": 15
       },
       "role_stage_counts": {
         "bridge": {
           "R0_NOT_IN_CANDIDATE_POOL": 25,
-          "R2_IDENTITY_FRAGMENTED": 8,
+          "R2_IDENTITY_FRAGMENTED": 7,
           "R3_DISCONNECTED_COMPONENT": 2,
           "R4_REQUIRES_GT2_HOPS": 8,
           "R6_REACHABLE_BUT_NOT_ENUMERATED": 9,
-          "R7_ENUMERATED_NOT_COMPLETED": 13,
+          "R7_ENUMERATED_NOT_COMPLETED": 14,
           "R8_COMPLETE": 20
         },
         "identity": {
-          "R2_IDENTITY_FRAGMENTED": 85
+          "R7_ENUMERATED_NOT_COMPLETED": 85
         },
         "terminal": {
-          "R2_IDENTITY_FRAGMENTED": 98,
+          "R2_IDENTITY_FRAGMENTED": 63,
           "R3_DISCONNECTED_COMPONENT": 4,
           "R4_REQUIRES_GT2_HOPS": 11,
           "R6_REACHABLE_BUT_NOT_ENUMERATED": 7,
-          "R7_ENUMERATED_NOT_COMPLETED": 1,
-          "R8_COMPLETE": 29
+          "R7_ENUMERATED_NOT_COMPLETED": 6,
+          "R8_COMPLETE": 59
         }
       },
       "stage_counts": {
         "R0_NOT_IN_CANDIDATE_POOL": 25,
-        "R2_IDENTITY_FRAGMENTED": 191,
+        "R2_IDENTITY_FRAGMENTED": 70,
         "R3_DISCONNECTED_COMPONENT": 6,
         "R4_REQUIRES_GT2_HOPS": 19,
         "R6_REACHABLE_BUT_NOT_ENUMERATED": 16,
-        "R7_ENUMERATED_NOT_COMPLETED": 14,
-        "R8_COMPLETE": 49
+        "R7_ENUMERATED_NOT_COMPLETED": 105,
+        "R8_COMPLETE": 79
       },
       "tasks": 150,
       "topology_ceiling": {
@@ -280,62 +264,58 @@
     "cal_700": {
       "corpus_size": 700,
       "hop_ceiling": {
-        "1": 0.2317,
-        "2": 0.2317,
-        "3": 0.2349,
-        "4": 0.2476,
-        "unlimited": 0.2476
+        "1": 0.6159,
+        "2": 0.6159,
+        "3": 0.619,
+        "4": 0.6317,
+        "unlimited": 0.6317
       },
       "identity_fragmentation_ceiling": {
-        "current_reachable_rate": 0.2476,
+        "current_reachable_rate": 0.6317,
         "perfect_merge_reachable_rate": 0.7968,
         "total": 315
       },
       "r2_subtype_by_role": {
         "bridge": {
-          "extraction_boundary_near_miss": 4,
-          "genuine_fragmentation": 3
-        },
-        "identity": {
-          "genuine_fragmentation": 80
+          "extraction_boundary_near_miss": 5
         },
         "terminal": {
-          "extraction_boundary_near_miss": 26,
-          "genuine_fragmentation": 60
+          "extraction_boundary_near_miss": 34,
+          "genuine_fragmentation": 13
         }
       },
       "r2_subtype_counts": {
-        "extraction_boundary_near_miss": 30,
-        "genuine_fragmentation": 143
+        "extraction_boundary_near_miss": 39,
+        "genuine_fragmentation": 13
       },
       "role_stage_counts": {
         "bridge": {
           "R0_NOT_IN_CANDIDATE_POOL": 23,
-          "R2_IDENTITY_FRAGMENTED": 7,
+          "R2_IDENTITY_FRAGMENTED": 5,
           "R3_DISCONNECTED_COMPONENT": 14,
           "R4_REQUIRES_GT2_HOPS": 3,
-          "R7_ENUMERATED_NOT_COMPLETED": 12,
+          "R7_ENUMERATED_NOT_COMPLETED": 14,
           "R8_COMPLETE": 26
         },
         "identity": {
-          "R2_IDENTITY_FRAGMENTED": 80
+          "R7_ENUMERATED_NOT_COMPLETED": 80
         },
         "terminal": {
           "R0_NOT_IN_CANDIDATE_POOL": 2,
-          "R2_IDENTITY_FRAGMENTED": 86,
+          "R2_IDENTITY_FRAGMENTED": 47,
           "R3_DISCONNECTED_COMPONENT": 25,
           "R4_REQUIRES_GT2_HOPS": 2,
-          "R7_ENUMERATED_NOT_COMPLETED": 2,
-          "R8_COMPLETE": 33
+          "R7_ENUMERATED_NOT_COMPLETED": 10,
+          "R8_COMPLETE": 64
         }
       },
       "stage_counts": {
         "R0_NOT_IN_CANDIDATE_POOL": 25,
-        "R2_IDENTITY_FRAGMENTED": 173,
+        "R2_IDENTITY_FRAGMENTED": 52,
         "R3_DISCONNECTED_COMPONENT": 39,
         "R4_REQUIRES_GT2_HOPS": 5,
-        "R7_ENUMERATED_NOT_COMPLETED": 14,
-        "R8_COMPLETE": 59
+        "R7_ENUMERATED_NOT_COMPLETED": 104,
+        "R8_COMPLETE": 90
       },
       "tasks": 150,
       "topology_ceiling": {
@@ -346,77 +326,73 @@
     }
   },
   "pooled": {
-    "dominant_non_r8_stage": "R2_IDENTITY_FRAGMENTED",
-    "dominant_share_of_non_r8": 0.7041,
+    "dominant_non_r8_stage": "R7_ENUMERATED_NOT_COMPLETED",
+    "dominant_share_of_non_r8": 0.469,
     "hop_ceiling": {
-      "1": 0.2461,
-      "2": 0.2593,
-      "3": 0.2839,
-      "4": 0.2965,
-      "unlimited": 0.3016
+      "1": 0.6183,
+      "2": 0.6315,
+      "3": 0.6562,
+      "4": 0.6688,
+      "unlimited": 0.6738
     },
     "identity_fragmentation_ceiling": {
-      "current_reachable_rate": 0.3016,
+      "current_reachable_rate": 0.6738,
       "perfect_merge_reachable_rate": 0.8707
     },
     "r2_subtype_by_role": {
       "bridge": {
-        "extraction_boundary_near_miss": 22,
-        "genuine_fragmentation": 17
-      },
-      "identity": {
-        "genuine_fragmentation": 410
+        "extraction_boundary_near_miss": 30
       },
       "terminal": {
-        "extraction_boundary_near_miss": 143,
-        "genuine_fragmentation": 310
+        "extraction_boundary_near_miss": 209,
+        "genuine_fragmentation": 73
       }
     },
     "r2_subtype_counts": {
-      "extraction_boundary_near_miss": 165,
-      "genuine_fragmentation": 737
+      "extraction_boundary_near_miss": 239,
+      "genuine_fragmentation": 73
     },
     "role_stage_counts": {
       "bridge": {
         "R0_NOT_IN_CANDIDATE_POOL": 110,
-        "R2_IDENTITY_FRAGMENTED": 39,
+        "R2_IDENTITY_FRAGMENTED": 30,
         "R3_DISCONNECTED_COMPONENT": 30,
         "R4_REQUIRES_GT2_HOPS": 31,
         "R6_REACHABLE_BUT_NOT_ENUMERATED": 12,
-        "R7_ENUMERATED_NOT_COMPLETED": 72,
+        "R7_ENUMERATED_NOT_COMPLETED": 81,
         "R8_COMPLETE": 131
       },
       "identity": {
-        "R2_IDENTITY_FRAGMENTED": 410
+        "R7_ENUMERATED_NOT_COMPLETED": 410
       },
       "terminal": {
         "R0_NOT_IN_CANDIDATE_POOL": 5,
-        "R2_IDENTITY_FRAGMENTED": 453,
+        "R2_IDENTITY_FRAGMENTED": 282,
         "R3_DISCONNECTED_COMPONENT": 60,
         "R4_REQUIRES_GT2_HOPS": 36,
         "R6_REACHABLE_BUT_NOT_ENUMERATED": 12,
-        "R7_ENUMERATED_NOT_COMPLETED": 11,
-        "R8_COMPLETE": 173
+        "R7_ENUMERATED_NOT_COMPLETED": 46,
+        "R8_COMPLETE": 309
       }
     },
     "stage_counts": {
       "R0_NOT_IN_CANDIDATE_POOL": 115,
-      "R2_IDENTITY_FRAGMENTED": 902,
+      "R2_IDENTITY_FRAGMENTED": 312,
       "R3_DISCONNECTED_COMPONENT": 90,
       "R4_REQUIRES_GT2_HOPS": 67,
       "R6_REACHABLE_BUT_NOT_ENUMERATED": 24,
-      "R7_ENUMERATED_NOT_COMPLETED": 83,
-      "R8_COMPLETE": 304
+      "R7_ENUMERATED_NOT_COMPLETED": 537,
+      "R8_COMPLETE": 440
     },
     "stage_percentages": {
       "R0_NOT_IN_CANDIDATE_POOL": 0.0726,
       "R1_ENTITY_EXTRACTION_MISSING": 0.0,
-      "R2_IDENTITY_FRAGMENTED": 0.5691,
+      "R2_IDENTITY_FRAGMENTED": 0.1968,
       "R3_DISCONNECTED_COMPONENT": 0.0568,
       "R4_REQUIRES_GT2_HOPS": 0.0423,
       "R6_REACHABLE_BUT_NOT_ENUMERATED": 0.0151,
-      "R7_ENUMERATED_NOT_COMPLETED": 0.0524,
-      "R8_COMPLETE": 0.1918
+      "R7_ENUMERATED_NOT_COMPLETED": 0.3388,
+      "R8_COMPLETE": 0.2776
     },
     "topology_ceiling": {
       "current_reachable_rate": 0.8964,

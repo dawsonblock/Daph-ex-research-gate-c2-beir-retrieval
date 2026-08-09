@@ -208,7 +208,15 @@ def main() -> int:
 
             oracle = task.get("_oracle_metadata") or {}
             surfaces = oracle.get("surfaces") or {}
-            oracle_targets = {_norm(surfaces[k]) for k in ("subject", "bridge")
+            # BUG FIX vs the first G2-v3 run: surfaces["subject"] is the surface
+            # form the QUESTION used (which is the abbreviation itself when
+            # entity_regime=abbreviation, e.g. "BCM-3"), not necessarily the true
+            # canonical form most evidence records actually use
+            # (surfaces["canonical"], e.g. "Bittern control module"). The first
+            # run's oracle_targets omitted "canonical" entirely, so every record
+            # correctly written using the canonical form was misclassified as
+            # R2_IDENTITY_FRAGMENTED against a target it was never trying to match.
+            oracle_targets = {_norm(surfaces[k]) for k in ("subject", "bridge", "canonical")
                               if surfaces.get(k)}
             proof_edges = oracle.get("proof_edges") or []
             latent_subject = oracle.get("latent_subject")
