@@ -1,5 +1,55 @@
 {
   "architecture_principle": "Retrieval iteration must ACCUMULATE information state, never replace earlier context with the latest bridge. Pinned by tests/unit/test_information_state.py.",
+  "b3_candidate_budget": {
+    "frozen_untouched": [
+      "S2 selector",
+      "packet budget 6",
+      "authoritative retrieval/fusion paths",
+      "identity stage",
+      "query construction",
+      "HRM model+revision"
+    ],
+    "next_steps": [
+      "build multi-scale calibration corpora (~500/1000/1500/2200/3000 records, independent content, frozen before evaluation)",
+      "freeze rho on calibration",
+      "retrieval-only gate",
+      "selector-only gate",
+      "then HRM"
+    ],
+    "out_of_scope_v1": [
+      "staged expansion / RETRIEVE_MORE",
+      "learned executive",
+      "candidate compression prefilter",
+      "any packet-size increase"
+    ],
+    "prerequisite_satisfied": {
+      "consequence": "every later failure decomposition is artifact analysis, not model or retrieval replay",
+      "persisted_per_task_per_arm": [
+        "candidate_ids_ordered",
+        "candidate_ranked (record_id, fusion_rank, fusion_score)",
+        "candidate_order_hash",
+        "candidate_membership_hash",
+        "retrieval_config_hash",
+        "selector_config_hash",
+        "environment_fingerprint"
+      ],
+      "requirement": "the runner must emit candidate pools DURING the run rather than reconstruct them later",
+      "status": "DONE in scripts/run_c5_integrated_ladder.py",
+      "verified": "development dry pass regenerated with the new runner; every arm's candidate_ces, selected_ces and EXACT_bridged retention identical to the previous artifact, so the change is purely additive persistence with no behavioural drift."
+    },
+    "primary_safety_metric": "bridge conditional retention P(bridge selected | bridge available) = -0.0435 against a -0.05 boundary. B3 raises k, which increases distractor competition, so this is the value most likely to be pushed past its bound by the intervention itself. B3 is 'increase availability WITHOUT sacrificing bridge structure', not merely 'get more evidence into the pool'.",
+    "protocol": "configs/gate_b3_candidate_budget_v1.json",
+    "research_question": "Can a corpus-aware candidate-budget policy keep S2's evidence precondition satisfied as external memory grows, WITHOUT S2 increasingly sacrificing bridge structure?",
+    "rho_status": "NOT CHOSEN. Deliberately absent from the protocol. Will be selected on NEW multi-scale calibration data, never on confirmation #1 or the consumed qualification split; at most three candidates derived from rank-distribution diagnostics, preferring the smallest that clears coverage.",
+    "staged_gates_before_gpu": [
+      "retrieval-only: availability must improve across scales or STOP",
+      "selector-only: unchanged S2 on frozen pools must preserve retention, especially bridge, or STOP",
+      "only then HRM"
+    ],
+    "status": "PREREGISTERED. Prerequisite satisfied; no rho chosen; no calibration data yet.",
+    "success_thresholds": "DEFERRED until after calibration exists; setting them now would be arbitrary or would smuggle in confirmation #1's numbers.",
+    "why_narrow": "Confirmation #1 established S2 is not the defect: conditional on complete evidence its effect reproduces almost exactly across splits (+0.1750 development, +0.1772 confirmation). The failure is that fixed k=50 stops delivering that precondition as the corpus grows."
+  },
   "b3b_stopgate_result": {
     "OUTCOME": "OUTCOME_A_POSITIVE",
     "a_complete": {
@@ -437,7 +487,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate_availability_under_corpus_scaling",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "B3_CANDIDATE_BUDGET_SCALING",
+    "NEXT_GATE": "B3_CANDIDATE_BUDGET_SCALING (protocol frozen, rho NOT chosen, calibration not yet built)",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",

@@ -103,7 +103,20 @@
     "violation_count": 0,
     "violations": []
   },
-  "git_commit": "efc9f26eb60efa53a1d7656e6599573d3b17b5d6",
+  "determinism_contract": {
+    "consequence": "Reproduce this run on the recorded platform, or read the persisted candidate_ids_ordered / candidate_membership_hash instead of replaying retrieval.",
+    "cross_platform_bit_reproducibility": "NOT_GUARANTEED",
+    "within_environment_determinism": "PASS (see determinism precondition)"
+  },
+  "environment_fingerprint": {
+    "cuda_available": false,
+    "device_name": "cpu",
+    "machine": "arm64",
+    "platform": "macOS-26.2-arm64-arm-64bit",
+    "python": "3.12.0",
+    "torch": "2.10.0"
+  },
+  "git_commit": "05b997f66688fb7e4ad3324e0cd8e53f42b35b59",
   "ladder": "J",
   "non_promotable_arms": [
     "J0",

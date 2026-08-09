@@ -50,6 +50,8 @@ from hrm_adaptive_memory.c4.contracts import (  # noqa: E402
     C4_CANDIDATE_BUDGET, C4_PRIMARY_PACKET_BUDGET, C4_RRF_K, RetrievalResult,
     SelectionResult)
 from hrm_adaptive_memory.c4.fusion import frozen_rrf, max_reciprocal  # noqa: E402
+from hrm_adaptive_memory.c4.packet_ordering import (  # noqa: E402
+    canonical_candidate_membership_hash, canonical_candidate_pool_hash)
 from hrm_adaptive_memory.c4.identity_stage import run_identity_stage  # noqa: E402
 from hrm_adaptive_memory.c4.packet_stage import run_packet_stage  # noqa: E402
 from hrm_adaptive_memory.c4.query_stage import run_query_stage  # noqa: E402
@@ -100,6 +102,32 @@ def use_ladder(name: str) -> None:
     global ARM_ORDER, ARM_SPEC
     ARM_SPEC = dict(LADDERS[name])
     ARM_ORDER = tuple(ARM_SPEC)
+
+
+def environment_fingerprint() -> dict[str, Any]:
+    """Platform identity, recorded with every run.
+
+    A replay contract is platform-scoped: the pipeline is deterministic WITHIN
+    an environment but is NOT bit-reproducible across CUDA and CPU, because
+    dense embeddings differ in the last bits and permute ranks at numerical
+    ties. Recording the fingerprint is what lets a later diagnostic know
+    whether it can reproduce a run or must read the frozen artifact.
+    """
+    import platform
+    fingerprint: dict[str, Any] = {
+        "python": platform.python_version(),
+        "platform": platform.platform(),
+        "machine": platform.machine(),
+    }
+    try:
+        import torch
+        fingerprint["torch"] = torch.__version__
+        fingerprint["cuda_available"] = torch.cuda.is_available()
+        fingerprint["device_name"] = (
+            torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu")
+    except Exception as exc:  # noqa: BLE001
+        fingerprint["torch_error"] = str(exc)
+    return fingerprint
 
 
 def _sha(text: str) -> str:
@@ -183,6 +211,18 @@ def evaluate_task(task: dict, arm, records, texts, depth: int) -> dict[str, Any]
         out["arms"][arm_id] = {
             "fusion": fusion_name, "selector": selector_name,
             "pool": pool, "selected": selected, "prompt": prompt,
+            # Both hashes, never collapsed: the order hash answers "did
+            # retrieval rank the pool identically", the membership hash answers
+            # "was record X in the pool at all". Availability analysis depends
+            # only on membership, and conflating them once already let benign
+            # cross-platform ordering churn masquerade as a validity failure.
+            "candidate_order_hash": canonical_candidate_pool_hash(pool),
+            "candidate_membership_hash":
+                canonical_candidate_membership_hash(pool),
+            "candidate_ranked": [
+                {"record_id": eid, "fusion_rank": rank,
+                 "fusion_score": scores.get(eid)}
+                for rank, eid in enumerate(pool, 1)],
             "identity_status": identity.status,
             "identity_canonical": identity.canonical,
             "candidate_pool_hash": packet.candidate_pool_hash,
@@ -342,6 +382,7 @@ def main() -> int:
     arm = ARMS[args.arm_for_queries]
     packet_budget = C4_PRIMARY_PACKET_BUDGET
 
+    fingerprint = environment_fingerprint()
     adapter = condition = None
     if args.with_hrm:
         from scripts.run_gate_c4 import _load_hrm
@@ -435,10 +476,19 @@ def main() -> int:
             "task_id": task_id, **meta[task_id],
             "query_hash": row["query_hash"],
             **config_hashes(),
+            "environment_fingerprint": fingerprint,
             "arms": {a: {
                 "fusion": row["arms"][a]["fusion"],
                 "selector": row["arms"][a]["selector"],
                 "selected": row["arms"][a]["selected"],
+                # MANDATORY from here on: the pool is persisted with the run, so
+                # every later failure decomposition is artifact analysis rather
+                # than model or retrieval replay.
+                "candidate_ids_ordered": row["arms"][a]["pool"],
+                "candidate_ranked": row["arms"][a]["candidate_ranked"],
+                "candidate_order_hash": row["arms"][a]["candidate_order_hash"],
+                "candidate_membership_hash":
+                    row["arms"][a]["candidate_membership_hash"],
                 "candidate_pool_hash": row["arms"][a]["candidate_pool_hash"],
                 "membership_hash": row["arms"][a]["membership_hash"],
                 "order_hash": row["arms"][a]["order_hash"],
@@ -458,6 +508,15 @@ def main() -> int:
         "schema_version": "c5-integrated-ladder-v1",
         "protocol_id": protocol["protocol_id"], "split": args.split,
         "ladder": args.ladder, "primary_arm": primary, "baseline_arm": baseline,
+        "environment_fingerprint": fingerprint,
+        "determinism_contract": {
+            "within_environment_determinism": "PASS (see determinism precondition)",
+            "cross_platform_bit_reproducibility": "NOT_GUARANTEED",
+            "consequence": (
+                "Reproduce this run on the recorded platform, or read the "
+                "persisted candidate_ids_ordered / candidate_membership_hash "
+                "instead of replaying retrieval."),
+        },
         "non_promotable_arms": sorted(a for a in ARM_ORDER if a in NON_PROMOTABLE),
         "task_count": n, "with_hrm": args.with_hrm,
         "candidate_budget": C4_CANDIDATE_BUDGET, "packet_budget": packet_budget,
