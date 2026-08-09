@@ -84,6 +84,31 @@ def _edge_id(edge_type: str, source: str, target: str, record_id: str) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
+def _node_id(node_type: str, canonical_value: str) -> str:
+    payload = f"{node_type}|{canonical_value}"
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
+
+
+@dataclass(frozen=True)
+class GraphNode:
+    """A node with enough provenance to explain where it came from."""
+    node_id: str
+    node_type: str
+    canonical_value: str
+    surface_value: str
+    source_record_ids: frozenset[str]
+    parser_version: str = PARSER_VERSION
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "node_id": self.node_id, "node_type": self.node_type,
+            "canonical_value": self.canonical_value,
+            "surface_value": self.surface_value,
+            "source_record_ids": sorted(self.source_record_ids),
+            "parser_version": self.parser_version,
+        }
+
+
 class _Row:
     """Shim so a record can feed the qualified canonicalization parser."""
 
@@ -96,6 +121,7 @@ class _Row:
 class RuntimeGraph:
     """Ephemeral per-query graph. Rebuilt each run; nothing persists yet."""
     edges: list[GraphEdge] = field(default_factory=list)
+    nodes: dict[str, GraphNode] = field(default_factory=dict)
     entities_by_record: dict[str, frozenset[str]] = field(default_factory=dict)
     records_by_entity: dict[str, set[str]] = field(default_factory=dict)
     relation_records: set[str] = field(default_factory=set)
@@ -107,13 +133,21 @@ class RuntimeGraph:
         by_type: dict[str, int] = {}
         for edge in self.edges:
             by_type[edge.edge_type] = by_type.get(edge.edge_type, 0) + 1
+        node_by_type: dict[str, int] = {}
+        for node in self.nodes.values():
+            node_by_type[node.node_type] = node_by_type.get(node.node_type, 0) + 1
         return {
             "record_nodes": len(self.entities_by_record),
             "entity_nodes": len(self.records_by_entity),
+            "nodes_total": len(self.nodes),
             "edges_total": len(self.edges),
             "relation_bearing_records": len(self.relation_records),
             **{f"edges_{name.lower()}": count for name, count in sorted(by_type.items())},
+            **{f"nodes_{name.lower()}": count for name, count in sorted(node_by_type.items())},
         }
+
+    def node_for_entity(self, entity: str) -> GraphNode | None:
+        return self.nodes.get(_node_id("ENTITY", _norm(entity)))
 
     def neighbours(self, entity: str) -> frozenset[str]:
         """One hop over ENTITY_LINKED_TO_ENTITY plus alias identity."""
@@ -136,15 +170,31 @@ def build_runtime_graph(*, record_ids: Sequence[str], texts: Mapping[str, str],
     relation_norm = _norm(relation) if relation else ""
     rows = [_Row(rid, texts.get(rid, "")) for rid in record_ids]
 
+    for record_id in record_ids:
+        node_id = _node_id("RECORD", record_id)
+        graph.nodes[node_id] = GraphNode(
+            node_id=node_id, node_type="RECORD", canonical_value=record_id,
+            surface_value=record_id, source_record_ids=frozenset({record_id}))
+
     for row in rows:
         content = row.content
         entities = extract_v4_entities(content)
-        normalized = {_norm(e) for e in entities if _norm(e)}
+        surface_by_norm = {_norm(e): e for e in entities if _norm(e)}
+        normalized = set(surface_by_norm)
         graph.entities_by_record[row.evidence_id] = frozenset(normalized)
         span = _span_hash(content)
 
         for entity in sorted(normalized):
             graph.records_by_entity.setdefault(entity, set()).add(row.evidence_id)
+            node_id = _node_id("ENTITY", entity)
+            existing = graph.nodes.get(node_id)
+            sources = (existing.source_record_ids | {row.evidence_id}
+                      if existing else frozenset({row.evidence_id}))
+            graph.nodes[node_id] = GraphNode(
+                node_id=node_id, node_type="ENTITY", canonical_value=entity,
+                surface_value=(existing.surface_value if existing
+                              else surface_by_norm[entity]),
+                source_record_ids=sources)
             graph.edges.append(GraphEdge(
                 edge_id=_edge_id("RECORD_MENTIONS_ENTITY", row.evidence_id,
                                  entity, row.evidence_id),
@@ -168,6 +218,14 @@ def build_runtime_graph(*, record_ids: Sequence[str], texts: Mapping[str, str],
 
         if relation_norm and relation_norm in _norm(content):
             graph.relation_records.add(row.evidence_id)
+            rel_node_id = _node_id("RELATION", relation_norm)
+            existing = graph.nodes.get(rel_node_id)
+            sources = (existing.source_record_ids | {row.evidence_id}
+                      if existing else frozenset({row.evidence_id}))
+            graph.nodes[rel_node_id] = GraphNode(
+                node_id=rel_node_id, node_type="RELATION",
+                canonical_value=relation_norm, surface_value=relation,
+                source_record_ids=sources)
             graph.edges.append(GraphEdge(
                 edge_id=_edge_id("RECORD_EXPRESSES_RELATION", row.evidence_id,
                                  relation_norm, row.evidence_id),
