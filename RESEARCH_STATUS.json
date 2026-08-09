@@ -1,7 +1,7 @@
 {
   "architecture_principle": "Retrieval iteration must ACCUMULATE information state, never replace earlier context with the latest bridge. Pinned by tests/unit/test_information_state.py.",
   "b3b_stopgate_result": {
-    "OUTCOME": "OUTCOME_A_POSITIVE__PROVISIONAL",
+    "OUTCOME": "OUTCOME_A_POSITIVE",
     "a_complete": {
       "delta_q": 0.1772,
       "q_J0": 0.3956,
@@ -18,6 +18,12 @@
       "identity": 1.0,
       "temporal_current": 0.45,
       "terminal": 0.534
+    },
+    "bridge_is_a_b3_safety_monitor": {
+      "b3_requirement": "As candidate pools grow (k up), P(bridge selected | bridge available) must be measured continuously. Candidate expansion could push -0.0435 past -0.05, which is precisely the interaction B3 must test.",
+      "material_boundary": -0.05,
+      "reading": "S2 retains strong overall conditional utility and substantially improves terminal (+0.1348) and temporal_current (+0.3333) retention, but bridge preservation is a known WEAK dimension, passing its boundary only marginally. S2 is NOT fully exonerated.",
+      "value": -0.0435
     },
     "conditional_retention": {
       "bridge": {
@@ -47,7 +53,18 @@
     "implication": "retrieval availability is the primary bottleneck; S2 stays frozen; B3 candidate-budget work is justified.",
     "not_outcome_c": "S2 does not have an independent cross-distribution selector defect. OUTCOME_C would have stopped B3.",
     "one_negative_signal": "bridge conditional retention -0.0435, inside the -0.05 material boundary but only just. It is the single role S2 degrades rather than improves, and it should be watched if candidate pools grow.",
-    "provisional_because": "Availability was reconstructed by a CPU replay of a CUDA-scored run, and 22 of 500 order-sensitive candidate_pool_hash values differed. Two arguments were offered that the replay was faithful and BOTH are insufficient: selection equality does not imply pool equality (two pools differing in low-ranked members can yield identical top-6 selections), and an aggregate candidate-CES match (0.4120 = 0.4120) only means the COUNT of complete tasks agreed, so two tasks could swap completeness and cancel. The correct invariant is per-task unordered candidate-MEMBERSHIP identity, which the CPU replay cannot establish. Pending same-platform pool replay.",
+    "provenance_resolved": {
+      "artifact": "evidence/gate_b3/pools/confirmation_candidate_pools.json",
+      "confirms": "The 22 mismatches seen locally were purely CPU-vs-CUDA rank churn at numerical ties. Every stop-gate number reproduced unchanged on the verified pools.",
+      "how": "Candidate pools were re-captured on the SCORING PLATFORM (NVIDIA A100-SXM4-80GB, torch 2.8.0+cu128, CUDA) by scripts/replay_c5_candidate_pools.py and verified against the scored receipts: 500/500 order-sensitive candidate_pool_hash values reproduce EXACTLY, 0 mismatches. Membership hashes are self-consistent for all 500. The stop gate then read that frozen artifact rather than reconstructing pools, so the result no longer depends on cross-platform bit-reproducibility at all.",
+      "invariant_enforced": "per-task unordered candidate-MEMBERSHIP identity",
+      "no_hrm_rerun": "Only retrieval/selection was replayed. The 2500 generations were not repeated and no threshold, arm or mechanism was altered.",
+      "rejected_weaker_arguments": [
+        "selection equality does not imply pool equality: two pools differing in low-ranked members can yield identical top-6 selections",
+        "aggregate candidate-CES equality (0.4120 = 0.4120) only means the COUNT of complete tasks agreed; two tasks could swap completeness and cancel"
+      ],
+      "status": "FROZEN, no longer provisional"
+    },
     "s2_improves_two_roles_conditionally": "terminal +0.1348 and temporal_current +0.3333 conditional retention. S2 is doing real work where evidence exists."
   },
   "benchmark_lineage": {
@@ -323,6 +340,14 @@
     "selector_gap_capture": 0.259,
     "status": "VALID_RUN_TRUE",
     "verdict": "VALID_CONFORMANT_C4_V2_RESULT"
+  },
+  "cross_platform_determinism_finding": {
+    "cause": "Dense (BGE) embeddings differ in the last bits between CUDA and CPU, permuting ranks at numerical ties and changing order-sensitive hashes without changing pool membership.",
+    "certification_language_change": "Do not record a generic DETERMINISTIC=true. Record within_environment_determinism and cross_platform_bit_reproducibility separately, with an environment fingerprint in every replay contract.",
+    "cross_platform_bit_reproducibility": "NOT_GUARANTEED",
+    "forward_fix": "Persist candidate pools in receipts (IDs, ranks, fusion scores, candidate_order_hash, candidate_membership_hash) so diagnostics operate from frozen artifacts and never re-run retrieval. scripts/replay_c5_candidate_pools.py does this today; the ladder should emit it inline for future runs.",
+    "invalidates_nothing_historical": "Every prior result was computed on a single platform, so none is affected.",
+    "within_environment_determinism": "PASS (PYTHONHASHSEED qualification, all hashed fields byte-identical)"
   },
   "d5_axis_limitation_observed_after_qualification": {
     "carry_forward": "The NEXT protocol version's promotion gates should monitor BOTH axes (task-structure family AND entity_regime), decided and frozen before that version's qualification run. That is a forward-looking design change for a new protocol, not a retroactive amendment to this one.",
