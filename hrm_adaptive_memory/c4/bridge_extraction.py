@@ -94,15 +94,55 @@ def normalize_v4_entity_boundary(phrase: str) -> str:
     return phrase
 
 
-def extract_v4_entities(text: str, boundary_policy: str = "legacy") -> tuple[str, ...]:
+BOUNDARY_POLICIES = ("legacy", "grammar_v4")
+
+#: Process-level default. Entity-boundary parsing has been MEASURED to move graph
+#: reachability by tens of percentage points (G2-v4E: 51.1% -> 84.4% per-task),
+#: so it is a scientific treatment variable applied to a whole pipeline run, not
+#: preprocessing hygiene -- and entity extraction happens in several modules
+#: (runtime_graph, prefilter/structural_signature, typed_path, selector_v2), so a
+#: run must set it ONCE rather than thread it through every call site and risk
+#: an inconsistent mixture. Defaults to "legacy" so nothing changes unless a
+#: runner explicitly opts in, and every receipt must record the active policy.
+_DEFAULT_BOUNDARY_POLICY = "legacy"
+
+
+def set_default_boundary_policy(policy: str) -> None:
+    if policy not in BOUNDARY_POLICIES:
+        raise ValueError(f"unknown boundary_policy {policy!r}; "
+                         f"expected one of {BOUNDARY_POLICIES}")
+    global _DEFAULT_BOUNDARY_POLICY
+    _DEFAULT_BOUNDARY_POLICY = policy
+
+
+def get_default_boundary_policy() -> str:
+    return _DEFAULT_BOUNDARY_POLICY
+
+
+def entity_extractor_config_hash() -> str:
+    """Hash of everything that determines extracted entity boundaries: the
+    active policy plus the grammar/stopword tables it consults. Belongs in every
+    graph receipt, for the same reason retrieval and selector config hashes do."""
+    import hashlib
+    payload = "|".join((
+        _DEFAULT_BOUNDARY_POLICY,
+        ",".join(sorted(_V4_ROLE_FULL)), ",".join(sorted(_V4_ROLE_HEAD)),
+        ",".join(sorted(_STOP_FIRST)), ",".join(sorted(_STOP_LAST)),
+        _V4_ENTITY.pattern))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
+
+
+def extract_v4_entities(text: str, boundary_policy: str | None = None) -> tuple[str, ...]:
     """Extract V4-style entity names from text.
 
-    ``boundary_policy`` selects the G2-v4E treatment arm and defaults to
-    "legacy" so every existing caller and gate is byte-identical:
+    ``boundary_policy`` selects the G2-v4E treatment arm; None means "use the
+    process-level default" (itself "legacy" unless a runner opted in):
 
         "legacy"     the historical _STOP_LAST trailing-token heuristic (arm E0)
         "grammar_v4" additionally truncate at the closed role grammar (arm E1)
     """
+    if boundary_policy is None:
+        boundary_policy = _DEFAULT_BOUNDARY_POLICY
     candidates = _V4_ENTITY.findall(text)
     result: list[str] = []
     for c in candidates:

@@ -40,6 +40,9 @@ import hrm_adaptive_memory.evaluation  # noqa: E402,F401  (cycle-breaker)
 
 from hrm_adaptive_memory.backends import CanonicalRetrievalMode  # noqa: E402
 from hrm_adaptive_memory.c4.arms import ARMS  # noqa: E402
+from hrm_adaptive_memory.c4.bridge_extraction import (  # noqa: E402
+    entity_extractor_config_hash, get_default_boundary_policy,
+    set_default_boundary_policy)
 from hrm_adaptive_memory.c4.contracts import (  # noqa: E402
     C4_PRIMARY_PACKET_BUDGET, C4_RRF_K, RetrievalResult)
 from hrm_adaptive_memory.c4.fusion import frozen_rrf  # noqa: E402
@@ -119,7 +122,19 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="G2 runtime graph vs typed path vs oracle")
     parser.add_argument("--arm-for-queries", default="C4_4")
     parser.add_argument("--out", default=None)
+    parser.add_argument("--boundary-policy", default="legacy",
+                        choices=("legacy", "grammar_v4"),
+                        help="G2-v4E entity-boundary treatment arm. The ONLY "
+                             "production change between E0 and E1 runs.")
     args = parser.parse_args()
+
+    # Set ONCE for the whole run: entity extraction happens in runtime_graph,
+    # prefilter/structural_signature, typed_path and selector_v2, so threading
+    # it per-call would risk an inconsistent mixture across arms.
+    set_default_boundary_policy(args.boundary_policy)
+    extractor_hash = entity_extractor_config_hash()
+    print(f"  entity_extractor_policy={get_default_boundary_policy()} "
+          f"config_hash={extractor_hash}")
 
     arm = ARMS[args.arm_for_queries]
     packet_budget = C4_PRIMARY_PACKET_BUDGET
@@ -144,6 +159,7 @@ def main() -> int:
                       "avail": defaultdict(lambda: [0, 0]),
                       "competition": defaultdict(list),
                       "path": defaultdict(list),
+                      "graph_reach": defaultdict(lambda: [0, 0]),
                       "latency_ms": []}
                for name in arms}
 
@@ -202,6 +218,27 @@ def main() -> int:
                         graph=graph)
                     working = tp.kept
                 elif spec["compressor"] == "g2":
+                    # stage 2 of 4: h<=2 graph reachability, measured on the very
+                    # graph this arm will compress, before any selection
+                    _g = build_runtime_graph(record_ids=pool, texts=texts,
+                                             relation=relation)
+                    _anchor = _norm(probe.canonical or "")
+                    _seen = {_anchor} if _anchor else set()
+                    _frontier = set(_seen)
+                    for _ in range(2):
+                        _nxt = set()
+                        for _e in _frontier:
+                            for _n in _g.neighbours(_e):
+                                if _n not in _seen:
+                                    _seen.add(_n); _nxt.add(_n)
+                        _frontier = _nxt
+                    for _role, _recs in role_map.items():
+                        if _recs and _recs <= pool_set:
+                            entry["graph_reach"][_role][0] += 1
+                            if all(any(_x in _seen for _x in
+                                       _g.entities_by_record.get(_r, frozenset()))
+                                   for _r in _recs):
+                                entry["graph_reach"][_role][1] += 1
                     g2r = g2_prefilter(
                         candidate_ids=pool, texts=texts,
                         canonical_subject=probe.canonical, relation=relation,
@@ -271,6 +308,10 @@ def main() -> int:
                 "candidate_ces": _rate(e["cand_ces"], n),
                 "working_set_ces": _rate(e["pre_ces"], n),
                 "selected_ces_end_to_end": _rate(e["e2e"], n),
+                "candidate_pool_availability": {role: _rate(*reversed(e["avail"][role]))
+                                 for role in ROLES if e["avail"][role][0]},
+                "graph_reachability_h2": {role: _rate(*reversed(e["graph_reach"][role]))
+                                 for role in ROLES if e["graph_reach"][role][0]},
                 "availability": {role: _rate(*reversed(e["avail"][role]))
                                  for role in ROLES if e["avail"][role][0]},
                 "conditional_retention": {role: _rate(*reversed(e["role"][role]))
@@ -404,6 +445,8 @@ def main() -> int:
             "terminal_bound_vs_typed": TERMINAL_BOUND_VS_TYPED,
             "frozen_before_run": True},
         "REPORTING_RULE": "selected_ces_end_to_end is primary everywhere",
+        "entity_extractor_policy": get_default_boundary_policy(),
+        "entity_extractor_config_hash": extractor_hash,
         "scales": results, "verdict_by_M": verdict,
         "decision": verdict[f"M{best}"]["outcome"], "decision_at_M": best,
     }

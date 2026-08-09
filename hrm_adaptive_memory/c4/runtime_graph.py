@@ -160,7 +160,7 @@ class RuntimeGraph:
 
 def build_runtime_graph(*, record_ids: Sequence[str], texts: Mapping[str, str],
                         relation: str = "",
-                        boundary_policy: str = "legacy") -> RuntimeGraph:
+                        boundary_policy: str | None = None) -> RuntimeGraph:
     """Build the graph for one candidate pool from visible text only.
 
     ``relation`` is the target relation parsed from the question, used to mark

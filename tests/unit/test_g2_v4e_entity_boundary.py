@@ -152,6 +152,72 @@ class TestGraphIntegration:
         assert [e.as_dict() for e in a.edges] == [e.as_dict() for e in b.edges]
 
 
+class TestProcessLevelPolicy:
+    """Entity boundary parsing is a pipeline-wide treatment variable (it moves
+    reachability by tens of points), and extraction happens in several modules,
+    so a run sets it ONCE. These tests pin that it defaults to legacy, that it
+    actually takes effect, and that it is always restored."""
+
+    def test_default_is_legacy(self):
+        from hrm_adaptive_memory.c4.bridge_extraction import get_default_boundary_policy
+        assert get_default_boundary_policy() == "legacy"
+
+    def test_setting_the_default_changes_extraction_without_an_explicit_arg(self):
+        from hrm_adaptive_memory.c4.bridge_extraction import (
+            get_default_boundary_policy, set_default_boundary_policy)
+        text = "Changelog: assigned category for Dunlin pressure assembly set to GAMMA-BLUE."
+        original = get_default_boundary_policy()
+        try:
+            assert any(e.endswith(" set") for e in extract_v4_entities(text))
+            set_default_boundary_policy("grammar_v4")
+            assert not any(e.endswith(" set") for e in extract_v4_entities(text))
+        finally:
+            set_default_boundary_policy(original)
+        assert get_default_boundary_policy() == "legacy"
+
+    def test_explicit_argument_overrides_the_default(self):
+        from hrm_adaptive_memory.c4.bridge_extraction import set_default_boundary_policy
+        text = "Changelog: assigned category for Dunlin pressure assembly set to GAMMA-BLUE."
+        try:
+            set_default_boundary_policy("grammar_v4")
+            assert any(e.endswith(" set")
+                       for e in extract_v4_entities(text, boundary_policy="legacy"))
+        finally:
+            set_default_boundary_policy("legacy")
+
+    def test_unknown_default_policy_fails_closed(self):
+        from hrm_adaptive_memory.c4.bridge_extraction import set_default_boundary_policy
+        with pytest.raises(ValueError, match="boundary_policy"):
+            set_default_boundary_policy("made_up")
+
+    def test_config_hash_changes_with_policy(self):
+        """The hash must distinguish arms, or receipts cannot prove which
+        extractor produced a given graph."""
+        from hrm_adaptive_memory.c4.bridge_extraction import (
+            entity_extractor_config_hash, set_default_boundary_policy)
+        try:
+            set_default_boundary_policy("legacy")
+            legacy_hash = entity_extractor_config_hash()
+            set_default_boundary_policy("grammar_v4")
+            grammar_hash = entity_extractor_config_hash()
+        finally:
+            set_default_boundary_policy("legacy")
+        assert legacy_hash != grammar_hash
+        assert len(legacy_hash) == 16 and len(grammar_hash) == 16
+
+    def test_graph_builder_follows_the_process_default(self):
+        from hrm_adaptive_memory.c4.bridge_extraction import set_default_boundary_policy
+        texts = {"value": "Note: the service tier for Finch relay unit resolves to platinum."}
+        try:
+            set_default_boundary_policy("grammar_v4")
+            graph = build_runtime_graph(record_ids=list(texts), texts=texts,
+                                        relation="service tier")
+            assert "finch relay unit" in graph.records_by_entity
+            assert "finch relay unit resolves" not in graph.records_by_entity
+        finally:
+            set_default_boundary_policy("legacy")
+
+
 class TestFrozenBoundaryCorpus:
     def test_corpus_artifact_exists_and_is_grounded(self):
         data = json.loads(BOUNDARY_CORPUS.read_text())

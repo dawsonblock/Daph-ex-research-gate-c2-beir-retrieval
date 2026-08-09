@@ -17,6 +17,11 @@
     "identity_integration_dominates": "-> G2-v4I, and if the audit shows information exists but is not propagated, the treatment may be as small as 'attach records mentioning aliases to their resolved canonical node' -- implement THAT, not a new entity architecture",
     "neither_ceiling_large": "-> the decomposition is still missing something; do not build either"
   },
+  "E2_RECLASSIFIED": {
+    "new_name": "E2_partial_oracle_required_surface_repair",
+    "old_name": "E2 oracle boundary ceiling",
+    "reason": "It truncated only extractions beginning with an oracle-KNOWN surface, leaving distractors and intermediate entities unrepaired, so it is NOT an upper bound on global boundary normalization -- E1 legitimately exceeded it (terminal 0.8671 vs 0.8523). Retained as a diagnostic arm only. A true ceiling would apply perfect boundary normalization to every extracted entity; given the grammar is closed and E1 repairs all 810 frozen failures, that ceiling would be near-identical to E1, so it is not worth building unless certification requires it."
+  },
   "G2_V31_RESULT": {
     "FACTORIAL_2x2": {
       "E_bridge": 0.0667,
@@ -114,6 +119,212 @@
       "how_caught": "The 46.5% figure contradicted the independently-measured hop-ceiling curve, so it was reconciled with a separate direct hop-distribution probe BEFORE reporting rather than published and corrected later."
     },
     "status": "RUN_COMPLETE__IDENTITY_HYPOTHESIS_FALSIFIED__NEW_DOMINANT_CAUSE_FOUND"
+  },
+  "G2_V4E_LADDER_PROPAGATION": {
+    "FINDING_1_G2_improves_at_every_scale": {
+      "conclusion": "G2-v1's poor showing WAS partly caused by malformed graph nodes rather than the graph concept itself. Every scale improves, monotonically in the same direction. This vindicates the boundary hypothesis as a real graph-connectivity defect.",
+      "deltas": [
+        0.094,
+        0.08,
+        0.033,
+        0.04,
+        0.026
+      ]
+    },
+    "FINDING_2_but_G2_STILL_LOSES_TO_TYPED_PATH_AT_EVERY_SCALE": {
+      "G2_E1": [
+        0.487,
+        0.393,
+        0.26,
+        0.207,
+        0.213
+      ],
+      "conclusion": "Graph traversal + lexicographic path ranking still adds NO value over one frozen typed template. Keep G1_TYPED_PATH as the mechanism.",
+      "frozen_rule_fires": "'If G2 still loses to typed-path after E1: graph ranking/traversal adds no value yet -- keep typed-path as the simpler mechanism.'",
+      "gap": [
+        -0.02,
+        -0.067,
+        -0.093,
+        -0.08,
+        -0.067
+      ],
+      "typed_E1": [
+        0.507,
+        0.46,
+        0.353,
+        0.287,
+        0.28
+      ]
+    },
+    "FINDING_3_typed_path_is_essentially_FLAT_under_E1": {
+      "deltas": [
+        -0.006,
+        0.013,
+        0.0,
+        -0.006,
+        0.0
+      ],
+      "why": "G1_TYPED_PATH pads its working set to M with retrieval-rank filler, so it was ALREADY recovering the boundary-fragmented records passively. The boundary fix removes a defect that typed path was masking by brute force -- which is also why G2, which deliberately refuses to pad, was the arm hurt most by it."
+    },
+    "FINDING_4_coarse_prefilter_gets_WORSE_under_E1": {
+      "deltas": [
+        -0.033,
+        -0.053,
+        -0.074,
+        -0.06,
+        -0.047
+      ],
+      "why": "Better entity extraction means MORE records correctly match the coarse structural signature, which raises competition inside a fixed M. Consistent with B4's original diagnosis that coarse admits too much. Not a blocker (coarse is an already-rejected mechanism) but a clean demonstration that a correctness fix upstream can hurt a mechanism that was benefiting from the defect."
+    },
+    "FINDING_5_FOUR_STAGE_DECOMPOSITION_the_selector_is_now_the_binding_constraint": {
+      "at_cal_3000_M50_G2_arm": {
+        "graph_reachability_h2": {
+          "bridge": [
+            0.7538,
+            1.0
+          ],
+          "terminal": [
+            0.4467,
+            0.7933
+          ]
+        },
+        "s2_conditional_retention": {
+          "bridge": [
+            0.0556,
+            0.0154
+          ],
+          "terminal": [
+            0.5091,
+            0.2679
+          ]
+        },
+        "working_set_survival": {
+          "bridge": [
+            0.5538,
+            1.0
+          ],
+          "terminal": [
+            0.3667,
+            0.7467
+          ]
+        }
+      },
+      "reading": "Availability rose enormously at every upstream stage -- bridge working-set survival 55.4% -> 100%, terminal 36.7% -> 74.7%, graph reachability 75.4% -> 100% and 44.7% -> 79.3%. But S2 CONDITIONAL RETENTION FELL: bridge 0.056 -> 0.015, terminal 0.509 -> 0.268. This is precisely the B3/B4 pressure-reintroduction pattern: more records survive to the working set, so S2 faces more competition and keeps a smaller FRACTION of them. End-to-end still improved because the availability gain outweighed the retention loss, but the binding constraint has now moved decisively into S2 selection.",
+      "second_frozen_rule_also_fires": "'If reachability rises but selected CES does not [sufficiently]: selector/path-pressure problem remains.'"
+    },
+    "NEXT": "The binding constraint is S2 selection under pressure, not graph construction, not reachability, not identity, not endpoint semantics, not hop depth. G1_TYPED_PATH remains the best mechanism. The residual bridge-acquisition defect (26.4% of bridge records, 68% merely below budget) is now LESS attractive than it looked, because E1 already took bridge working-set survival to 100% at cal_3000 -- bridge availability is no longer the problem; bridge RETENTION (0.015) is.",
+    "artifacts": {
+      "E0_control": "evidence/gate_g2_v4e/ladder_E0_legacy.json",
+      "E1_treatment": "evidence/gate_g2_v4e/ladder_E1_grammar.json"
+    },
+    "boundary_normalization_promotion_status": {
+      "currently": "default-OFF (boundary_policy='legacy'); every prior gate remains byte-identical. Receipts now carry entity_extractor_policy and entity_extractor_config_hash.",
+      "recommendation": "Promote as a CORRECTNESS fix (it repairs a genuine parser defect, lifts reachability 51.1%->84.4%, and improves the primary graph arm at every scale), but note it is mechanism-dependent end-to-end: +0.026..+0.094 for G2, ~0 for typed path, -0.033..-0.074 for the already-rejected coarse prefilter. It does NOT change which mechanism wins."
+    },
+    "comparison_validity_verified": "Candidate pools are BYTE-IDENTICAL across arms (checked empirically, 40/40 tasks at cal_3000). Query rendering uses regex patterns over the question, not entity extraction, so retrieval is provably unchanged and the extractor is genuinely the only treatment variable. Role definitions (bridge_records/terminal_records) are purely oracle-derived and also invariant.",
+    "end_to_end_selected_CES_M50": {
+      "G0_k50": {
+        "E0": [
+          0.493,
+          0.393,
+          0.387,
+          0.32,
+          0.34
+        ],
+        "E1": [
+          0.493,
+          0.393,
+          0.387,
+          0.32,
+          0.34
+        ]
+      },
+      "G1_TYPED_PATH": {
+        "E0": [
+          0.513,
+          0.447,
+          0.353,
+          0.293,
+          0.28
+        ],
+        "E1": [
+          0.507,
+          0.46,
+          0.353,
+          0.287,
+          0.28
+        ]
+      },
+      "G1_coarse": {
+        "E0": [
+          0.36,
+          0.313,
+          0.267,
+          0.22,
+          0.207
+        ],
+        "E1": [
+          0.327,
+          0.26,
+          0.193,
+          0.16,
+          0.16
+        ]
+      },
+      "G2": {
+        "E0": [
+          0.393,
+          0.313,
+          0.227,
+          0.167,
+          0.187
+        ],
+        "E1": [
+          0.487,
+          0.393,
+          0.26,
+          0.207,
+          0.213
+        ]
+      },
+      "G3_oracle": {
+        "E0": [
+          0.54,
+          0.473,
+          0.44,
+          0.46,
+          0.413
+        ],
+        "E1": [
+          0.533,
+          0.467,
+          0.44,
+          0.46,
+          0.413
+        ]
+      },
+      "scale_order": "700,1000,1500,2200,3000"
+    },
+    "entity_extractor_config_hash": {
+      "E0_legacy": "432e228b0adb569c",
+      "E1_grammar_v4": "1c156a7ed8a487bd"
+    },
+    "instrumentation_bug_in_my_own_reporting": {
+      "bug": "I added a 'candidate_pool_availability' field to the runner that reuses the same counter as 'availability', so it reports working-set-survival-given-pool, NOT stage-1 candidate-pool availability. The two fields are therefore identical duplicates and the field name over-promises.",
+      "impact": "Of the four requested stages, three are correctly measured (h<=2 graph reachability -- new and separate; working-set survival; S2 selected survival). Stage 1 is NOT correctly instrumented.",
+      "mitigation_this_time": "Stage 1 is provably invariant across arms by construction -- candidate pools are byte-identical (verified 40/40) because retrieval and query rendering do not touch entity extraction -- so no stage-1 comparison is lost. But the field must be renamed or correctly computed before it is cited.",
+      "not_silently_left": true
+    },
+    "no_hrm": true,
+    "outcome_class_changed": {
+      "E0": "C_CANNOT_PRESERVE_BRIDGE_AVAILABILITY",
+      "E1": "D_PATHS_EXIST_BUT_WRONG_ONES_RANKED",
+      "meaning": "The mechanical classifier moved from 'cannot preserve availability' to 'paths exist but the wrong ones are ranked' -- the boundary fix removed the availability failure and exposed the ranking/selection failure underneath it. That is a real change in what the system's problem IS, not a score change."
+    },
+    "packet_budget": 6,
+    "run_utc": "2026-08-09T23:30:00Z",
+    "s2_unchanged": true,
+    "status": "RUN_COMPLETE__BOUNDARY_FIX_HELPS_G2_BUT_TYPED_PATH_STILL_WINS"
   },
   "G2_V4E_RESULT": {
     "E1_EXCEEDS_E2_AND_WHY_THAT_IS_NOT_A_CONTRADICTION": {
