@@ -3,6 +3,13 @@
     "right": "C1 and C2 did their retrieval job -- candidate CES rose at every scale and the availability targets were met. What failed is the COMPOSITION: large candidate pool + current S2. That distinction determines what gets built next, which is why it is recorded explicitly.",
     "wrong": "C1 and C2 are failed retrieval policies."
   },
+  "closure_2026_08_09": {
+    "no_further_flat_heuristics": "Rejected on principle rather than performance: weighted variants would be hand-tuned graph reasoning disguised as scoring.",
+    "successor": "configs/gate_g1_runtime_graph_v1.json",
+    "verdict": "SUCCESSFUL DIAGNOSIS, NO COMPRESSOR PROMOTED. P3 is preserved as the structural-compression ceiling.",
+    "what_was_learned": "The architecture works if the middle layer can discriminate: expanded retrieval + good compression + UNCHANGED S2 succeeds (P3 end-to-end 0.473-0.620 vs P0 0.320-0.493). The remaining opportunity is +0.133 selected CES at cal_3000, with HRM, S2 and the 6-record packet all untouched.",
+    "why_p2_failed_diagnostically": "Its rule reduced the pool while preserving the retriever's original mistake -- it trusted retrieval rank, and bridge rank is the known weak signal."
+  },
   "created_utc": "2026-08-09T09:00:00Z",
   "decision_rule": {
     "P2_far_below_P3_ceiling": "a runtime-safe compressor cannot approach what an oracle compressor achieves -> go to the runtime graph rather than piling heuristics into the prefilter",
@@ -163,7 +170,7 @@
     "recall_into_prefiltered_set": "required evidence, and each ROLE, must survive compression -- a prefilter that discards the bridge has solved nothing",
     "the_target_shape": "expanded pool 300 candidates / ~24 plausible bridges -> prefiltered 50 candidates / ~5 plausible bridges -> S2 selects 6. High role availability retained WHILE competition collapses is the missing middle layer."
   },
-  "status": "RUN__P3_PASSES__P2_FAILS__NO_ARM_PROMOTED",
+  "status": "CLOSED__SUCCESSFUL_DIAGNOSIS__NO_COMPRESSOR_PROMOTED__P3_PRESERVED_AS_CEILING",
   "why_this_and_not_graph_retrieval_yet": "The graph direction is now empirically motivated, not speculative -- but a prefilter is the SMALLEST causal intervention that isolates the diagnosed cause. It answers 'is S2 failing merely because it is handed too many plausible records at once?' WITHOUT simultaneously changing the retrieval architecture. Changing both would leave the attribution ambiguous in exactly the way B3's 2x2 was built to avoid.",
   "working_set_size_M": {
     "candidates": [

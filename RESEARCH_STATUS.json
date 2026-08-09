@@ -1,4 +1,10 @@
 {
+  "PERMANENT_REPORTING_RULE": {
+    "form": "CES_end_to_end = P(required evidence survives the compressor) x P(S2 succeeds | it survived)",
+    "rule": "For ANY compression mechanism, never report conditional selector performance alone. Always pair coverage after compression with conditional performance, and report the end-to-end composition.",
+    "scope": "applies to G1_TYPED_PATH, G2, and every future compression or traversal mechanism",
+    "why": "B4 proved conditional metrics can lie. P2 at M=25 posted 0.785 selected-CES-given-working at cal_3000 -- the best single number in the table -- while having discarded half the required evidence before S2 ever saw it. End-to-end it merely matched plain k=50. The conditional metric RISES as a compressor throws evidence away, so reporting it alone rewards exactly the failure it should expose."
+  },
   "architecture_principle": "Retrieval iteration must ACCUMULATE information state, never replace earlier context with the latest bridge. Pinned by tests/unit/test_information_state.py.",
   "b3_CLOSED": {
     "capacity_evidence": "cal_700 connected candidates 10.0 -> 53.2; cal_3000 at k=300 has 103.8 connected candidates and 23.6 plausible bridges per task against a fixed 6-record packet. A one-hop connectivity heuristic was never designed to discriminate among two dozen plausible bridge paths.",
@@ -330,6 +336,13 @@
       "status": "FROZEN, no longer provisional"
     },
     "s2_improves_two_roles_conditionally": "terminal +0.1348 and temporal_current +0.3333 conditional retention. S2 is doing real work where evidence exists."
+  },
+  "b4_CLOSED": {
+    "no_further_flat_heuristics": "Rejected on principle rather than performance: weighted variants would be hand-tuned graph reasoning disguised as scoring.",
+    "successor": "configs/gate_g1_runtime_graph_v1.json",
+    "verdict": "SUCCESSFUL DIAGNOSIS, NO COMPRESSOR PROMOTED. P3 is preserved as the structural-compression ceiling.",
+    "what_was_learned": "The architecture works if the middle layer can discriminate: expanded retrieval + good compression + UNCHANGED S2 succeeds (P3 end-to-end 0.473-0.620 vs P0 0.320-0.493). The remaining opportunity is +0.133 selected CES at cal_3000, with HRM, S2 and the 6-record packet all untouched.",
+    "why_p2_failed_diagnostically": "Its rule reduced the pool while preserving the retriever's original mistake -- it trusted retrieval rank, and bridge rank is the known weak signal."
   },
   "b4_candidate_compression": {
     "METRIC_TRAP_FOUND_AND_CORRECTED": {
@@ -786,7 +799,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "better runtime-safe discriminator OR runtime-graph expansion; P3 is the measured ceiling, P2 the floor to beat",
+    "NEXT_GATE": "G1_RUNTIME_EVIDENCE_GRAPH (protocol frozen; typed-path diagnostic runs first and may obviate the graph substrate)",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",

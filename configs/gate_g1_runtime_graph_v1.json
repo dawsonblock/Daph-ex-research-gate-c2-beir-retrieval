@@ -1,0 +1,132 @@
+{
+  "PERMANENT_REPORTING_RULE": {
+    "form": "CES_end_to_end = P(required evidence survives the compressor) x P(S2 succeeds | it survived)",
+    "rule": "For ANY compression mechanism, never report conditional selector performance alone. Always pair coverage after compression with conditional performance, and report the end-to-end composition.",
+    "scope": "applies to G1_TYPED_PATH, G2, and every future compression or traversal mechanism",
+    "why": "B4 proved conditional metrics can lie. P2 at M=25 posted 0.785 selected-CES-given-working at cal_3000 -- the best single number in the table -- while having discarded half the required evidence before S2 ever saw it. End-to-end it merely matched plain k=50. The conditional metric RISES as a compressor throws evidence away, so reporting it alone rewards exactly the failure it should expose."
+  },
+  "architecture": "Question -> identity resolution -> SMALL global seed retrieval -> runtime evidence graph -> bounded relation-aware expansion -> working candidate set -> UNCHANGED S2 -> 6 records -> (HRM later)",
+  "created_utc": "2026-08-09T10:00:00Z",
+  "edge_construction_rule": "every edge must be derivable from visible evidence text or an existing runtime parser",
+  "efficiency_metrics_required": [
+    "seed records retrieved",
+    "graph nodes visited",
+    "edges traversed",
+    "working-set size",
+    "unique entities reached",
+    "plausible bridges reaching S2",
+    "duplicate structural signatures"
+  ],
+  "eventual_division_of_labour": "dense/BM25 gets into the right neighbourhood; the graph moves through it; S2 decides what enters working memory; HRM reasons over the six records; an executive later decides whether another traversal is worth performing.",
+  "forbidden_absolutely": [
+    "required_evidence_ids",
+    "proof_edges",
+    "record_kind",
+    "latent_bridge",
+    "answer_node",
+    "oracle bridge labels",
+    "generator-only metadata",
+    "the evaluator proof graph in any form"
+  ],
+  "graph_scope_deliberately_small": {
+    "construction": "record -> entity extraction -> entities -> relation extraction -> typed edges, all from visible text via runtime parsers.",
+    "ephemeral_not_persistent": "Build the graph from the current corpus/evidence representation per run. No persistent memory substrate yet.",
+    "hop_limit": "1-2 hops in G1. No arbitrary graph walks."
+  },
+  "ladder": {
+    "G0": {
+      "pipeline": "k=50 -> S2",
+      "promotable": false,
+      "role": "low-pressure baseline"
+    },
+    "G1_TYPED_PATH": {
+      "pipeline": "C2 expanded -> relation-typed path scorer -> bounded set -> S2",
+      "role": "CHEAP DIAGNOSTIC, run BEFORE declaring graph necessity",
+      "rule": "rank candidates by whether they form subject -> bridge -> target relation using only observable content: canonical subject, parsed target relation, runtime-visible one-hop entity",
+      "why_it_matters": "If this trivial deterministic path representation closes most of P3 - P2, then a graph substrate is not yet needed. If it does not, the graph earns its complexity. One frozen arm, NOT a tuning sprint."
+    },
+    "G1_coarse": {
+      "pipeline": "C2 expanded -> P2 coarse compressor -> S2",
+      "promotable": false,
+      "role": "failed-compressor baseline, the floor to beat"
+    },
+    "G2_graph": {
+      "pipeline": "seed retrieval -> runtime graph expansion -> bounded set -> S2",
+      "role": "PRIMARY"
+    },
+    "G3_oracle": {
+      "pipeline": "C2 expanded -> oracle compressor -> S2",
+      "promotable": false,
+      "role": "P3 CEILING, carried forward unchanged"
+    },
+    "G4_oracle_evidence": {
+      "pipeline": "oracle evidence",
+      "promotable": false,
+      "role": "system ceiling"
+    }
+  },
+  "leakage_enforcement": "an executable test of the same kind used around selector_v2: strip docstrings and comments, then assert no executable statement references any forbidden field. The evaluator graph and the runtime graph must remain completely separate objects.",
+  "measured_opportunity": {
+    "P2_end_to_end_selected_ces_cal3000": 0.34,
+    "P3_end_to_end_selected_ces_cal3000": 0.473,
+    "gap": 0.133,
+    "meaning": "That gap is what better structural discrimination is worth, with HRM, S2 and the six-record packet all unchanged. It is the budget any new middle layer must earn."
+  },
+  "no_heuristic_grid": "The comparison is coarse P2 vs typed-path vs graph traversal vs oracle P3. No weight sweeps.",
+  "no_hrm_initially": true,
+  "objective": "Recover the structural discrimination P3 demonstrated, using ONLY runtime-observable relationships, while keeping the candidate set presented to S2 bounded.",
+  "permitted_edge_types": [
+    "MENTIONS",
+    "ALIASES",
+    "RESOLVES_TO",
+    "LINKS_TO",
+    "HAS_RELATION",
+    "HAS_ATTRIBUTE",
+    "UPDATED_BY",
+    "DEPENDS_ON",
+    "LOCATED_AT",
+    "OWNED_BY"
+  ],
+  "permitted_node_types": [
+    "ENTITY",
+    "RECORD",
+    "RELATION",
+    "ATTRIBUTE",
+    "TIMESTAMP",
+    "DOCUMENT"
+  ],
+  "primary_metrics": [
+    "candidate CES",
+    "bridge availability",
+    "terminal availability",
+    "selected CES",
+    "P(bridge selected | bridge available)",
+    "structural competition ratio"
+  ],
+  "protocol_id": "g1_runtime_evidence_graph_v1",
+  "stack_assessment": {
+    "candidate_availability_at_scale": "solvable with expansion",
+    "flat_runtime_safe_compressor": "insufficient",
+    "next_missing_capability": "RELATION-AWARE STRUCTURAL DISCRIMINATION",
+    "oracle_compression": "strong ceiling",
+    "retriever_reachability": "solved enough for now; zero unranked records at any scale",
+    "s2_under_extreme_pressure": "fails",
+    "s2_under_moderate_pressure": "works"
+  },
+  "status": "PREREGISTERED__NOT_IMPLEMENTED__NOT_RUN",
+  "success_condition": "G2 must obtain the best of both failed regimes: P1's availability WITH P2's low pressure. Anything less is one of the two known failures wearing a new mechanism.",
+  "target_regime": {
+    "note": "A graph that returns 250 candidates has not solved the problem. Efficiency is part of the hypothesis, not a footnote.",
+    "packet": 6,
+    "seed_records": "20-50",
+    "working_set_into_S2": "25-75"
+  },
+  "the_question_the_graph_answers": "Given where I am in memory, which structurally relevant neighbourhood should I inspect next?",
+  "three_regimes_isolated_by_b4": {
+    "P1_expanded_direct": "availability good, pressure terrible -> FAIL",
+    "P2_expanded_coarse_compressor": "pressure fixed, availability destroyed -> FAIL",
+    "P3_expanded_oracle_compressor": "both preserved -> STRONG SUCCESS",
+    "conclusion": "The architecture works IF the middle layer can distinguish structurally useful evidence. That is a discrimination problem, not a retrieval or selector problem."
+  },
+  "why_not_another_flat_heuristic": "P2's rule was 'keep what looks structurally plausible, then trust retrieval rank' -- and bridge retrieval rank is the known weak signal, so it reduced the pool while preserving the retriever's original mistake. Adding weights (subject +2, relation +3, one-hop +4, score x0.7) would be hand-tuned graph reasoning disguised as a scoring heuristic. Rejected on that basis, not on performance."
+}
