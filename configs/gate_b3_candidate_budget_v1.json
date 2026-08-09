@@ -248,6 +248,48 @@
     "definition": "selected_CES / candidate_CES",
     "watch_for": "candidate CES rising while selected CES falls -- candidate expansion overwhelming the selector"
   },
+  "selector_pressure_criteria_frozen_2026_08_09": {
+    "PRIMARY_SAFETY": {
+      "bound": -0.05,
+      "metric": "delta P(bridge selected | bridge available) vs the k=50+S2 baseline",
+      "must_hold": "at EVERY scale independently, NOT pooled",
+      "why_bridge": "Confirmation #1 measured bridge conditional retention at -0.0435 against this same -0.05 bound. Bridge is the one role S2 degrades rather than improves, and candidate expansion is the intervention most likely to push it over.",
+      "why_per_scale": "A strong small-corpus result could otherwise hide selector overload at N=3000, which is precisely the regime the policy exists to serve."
+    },
+    "also_measured_per_scale_and_policy": [
+      "candidate CES",
+      "selected CES",
+      "P(role selected | role available) for identity / bridge / terminal / temporal_current",
+      "EXACT+bridged answer retention",
+      "disconnected packet rate",
+      "packet size"
+    ],
+    "baseline": "k=50 + S2 at the SAME scale (so the contrast isolates pool size, not selector version)",
+    "competition_diagnostics": {
+      "per_task": [
+        "candidate_count",
+        "connected_candidate_count",
+        "bridge_candidate_count",
+        "target_relation_candidate_count",
+        "protection_eligible_count"
+      ],
+      "purpose": "Explain any bridge degradation rather than merely observing it. If k=50 offers 2 plausible bridge records and k=300 offers 17, S2's local structural rule becomes under-specified and it starts choosing poorly. That is far more informative than a falling number."
+    },
+    "decision_rule": {
+      "C1_materially_better_than_C2": "small-scale over-provisioning is buying useful context; the cost tradeoff becomes real and must be weighed explicitly",
+      "C2_preserves_and_C1_merely_equal": "freeze C2 -- same retrieval adequacy at ~28% less aggregate depth",
+      "both_gain_availability_but_bridge_falls_below_-0.05": "STOP before HRM. B3 retrieval scaling works but S2 becomes the bottleneck under candidate pressure; open a selector-capacity or prefiltering sprint.",
+      "both_preserve_selector_quality": "proceed to HRM and test whether the retrieval gain converts to downstream Q"
+    },
+    "frozen_before_running": true,
+    "no_hrm_until_this_passes": true,
+    "question": "Not 'can the retriever surface enough evidence' -- that is answered and both candidates passed. Now: can UNCHANGED S2 still compress these larger candidate pools safely?",
+    "s2_unchanged": "S2 is applied exactly as frozen. No retuning, no adaptation to larger pools -- that would confound the pressure test with a selector change.",
+    "treatments": [
+      "C1 = k 300 + S2",
+      "C2 = clip(ceil(0.15N),100,300) + S2"
+    ]
+  },
   "split_lineage": {
     "calibration_multi_scale": "to be built; B3 mechanism development",
     "confirmation_1": "negative result, CONSUMED, diagnostics only",
