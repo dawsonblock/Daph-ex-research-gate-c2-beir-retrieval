@@ -244,7 +244,12 @@ def build_runtime_graph(*, record_ids: Sequence[str], texts: Mapping[str, str],
             continue
         graph.alias_links.setdefault(left, set()).add(right)
         graph.alias_links.setdefault(right, set()).add(left)
-        record_id = getattr(link, "evidence_id", "") or ""
+        # IdentityLink declares `record_id`, not `evidence_id` -- reading the
+        # wrong attribute silently emitted empty provenance on exactly the edge
+        # type identity diagnosis depends on. Kept as a getattr chain so an
+        # alternate link type carrying `evidence_id` still resolves.
+        record_id = (getattr(link, "record_id", "")
+                     or getattr(link, "evidence_id", "") or "")
         span = _span_hash(texts.get(record_id, "") or f"{left}->{right}")
         for edge_type in ("ENTITY_ALIASES_ENTITY", "ENTITY_RESOLVES_TO_ENTITY"):
             graph.edges.append(GraphEdge(

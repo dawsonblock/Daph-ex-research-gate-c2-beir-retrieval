@@ -1,0 +1,185 @@
+{
+  "BRIDGE_R0_DECOMPOSITION_FROZEN": {
+    "classes": {
+      "BELOW_BUDGET": "fusion ranked it, just past the pool cutoff (B4)",
+      "BOTH_RETRIEVERS_MISS": "both ranked it but beyond the single-retriever miss threshold",
+      "DENSE_MISS": "BM25 had it, dense did not",
+      "FUSION_DISPLACEMENT": "within budget for BM25 or dense alone, but RRF pushed it out (B3)",
+      "LEXICAL_MISS": "dense had it, BM25 did not (B1/B2 asymmetric)",
+      "UNRANKED": "outside probe depth entirely (B0)"
+    },
+    "decision_use": "BELOW_BUDGET/FUSION_DISPLACEMENT -> budget or fusion repair (cheap). UNRANKED/BOTH_RETRIEVERS_MISS -> query formulation / graph-guided acquisition (architectural).",
+    "reuses": "scripts/diagnose_c4_retrieval.py:cause_of() -- already implements exactly this classification; NOT reimplemented"
+  },
+  "DECISION_RULE_FROZEN_BEFORE_RUN": {
+    "both_independently_large": "-> develop each separately, then combine in a preregistered 2x2",
+    "bridge_acquisition_dominates": "-> G2-v4B, with architecture chosen by the R0 class distribution (adaptive budget vs bridge-preserving fusion vs graph-guided follow-up retrieval)",
+    "identity_integration_dominates": "-> G2-v4I, and if the audit shows information exists but is not propagated, the treatment may be as small as 'attach records mentioning aliases to their resolved canonical node' -- implement THAT, not a new entity architecture",
+    "neither_ceiling_large": "-> the decomposition is still missing something; do not build either"
+  },
+  "G2_V31_RESULT": {
+    "FACTORIAL_2x2": {
+      "E_bridge": 0.0667,
+      "E_identity": 0.0,
+      "Q_I0_B0": 0.5107,
+      "Q_I0_B1": 0.5773,
+      "Q_I1_B0": 0.5107,
+      "Q_I1_B1": 0.5773,
+      "interaction": 0.0,
+      "per_task_overlap": {
+        "already_reachable": 0.511,
+        "bridge_only": 0.067,
+        "neither_suffices": 0.423
+      },
+      "reading": "Identity contributes literally nothing; bridge injection helps 6.7% of tasks; there is no interaction. 42.3% of tasks are fixed by NEITHER repair -- consistent with disconnection (Finding 3/4) being the real dominant cause, which neither arm of this 2x2 addresses."
+    },
+    "FINDING_1_IDENTITY_HYPOTHESIS_FALSIFIED": {
+      "E_identity_oracle_ceiling": 0.0,
+      "R_attachment_0.0_explained": "The abbreviation-surface node (e.g. 'jpa 5') has no records in records_by_entity because extract_v4_entities does not recognise hyphenated short codes as entities. This is cosmetic, NOT a connectivity defect: alias_links is keyed independently of records_by_entity, so connectivity is unaffected (R_connectivity=1.0).",
+      "conclusion": "The existing extract_identity_links/alias_links machinery works PERFECTLY on this corpus: every identity record is in the pool, parsed correctly, emits a bidirectional alias edge, and successfully connects the canonical entity to the question anchor. A PERFECT ORACLE canonical merge (the I1 arm here is an oracle ceiling, not a runtime repair) produces EXACTLY ZERO improvement in per-task reachability. G2-v4I is not merely deprioritized -- it is falsified. Do not build the CanonicalEntityNode architecture.",
+      "identity_audit": {
+        "R_connectivity": 1.0,
+        "R_link": 1.0,
+        "R_parse": 1.0,
+        "counts": {
+          "canonical_reachable_from_anchor": 410,
+          "in_pool": 410,
+          "link_emitted_bidirectional": 410,
+          "parse_correct": 410,
+          "parser_fired": 410
+        }
+      },
+      "role_stage": "100% of identity-role records reach S5_identity_connected (410/410)"
+    },
+    "FINDING_2_BRIDGE_ACQUISITION_REAL_BUT_MODEST": {
+      "E_bridge": 0.0667,
+      "R0_cause_decomposition": {
+        "BELOW_BUDGET": 0.681,
+        "FUSION_DISPLACEMENT": 0.022,
+        "UNRANKED": 0.297
+      },
+      "bridge_role_S0_not_in_pool": 0.264,
+      "conclusion": "68.1% of missing bridge records are merely just past the pool cutoff -- a budget/acquisition-policy problem, the cheap end of the spectrum. Only 29.7% are genuinely unranked (the architectural, graph-guided-retrieval case). Fusion displacement is negligible (2.2%), so bridge-preserving fusion is NOT warranted."
+    },
+    "FINDING_3_NEW_DOMINANT_CAUSE_DISCONNECTED_TOPOLOGY": {
+      "bridge_S2_disconnected": 0.12,
+      "bridge_S3_beyond_hop_bound": 0.078,
+      "conclusion": "40% of terminal records are in the pool, extract entities fine, but sit in a DIFFERENT connected component from the anchor. Deeper traversal does not fix this (beyond-hop-bound is only 6.5%, and the verified hop curve gains just +2.4pp/+7.5pp past h=2). This is now the largest single defect.",
+      "hop_curve_independently_verified": {
+        "cal_3000": {
+          "h<=2": 0.725,
+          "unlimited": 0.8
+        },
+        "cal_700": {
+          "h<=2": 0.686,
+          "unlimited": 0.71
+        }
+      },
+      "terminal_S2_disconnected": 0.4,
+      "terminal_S3_beyond_hop_bound": 0.065
+    },
+    "FINDING_4_THE_DISCONNECTION_DECOMPOSES_FURTHER": {
+      "boundary_near_miss_of_reached_entity": 0.486,
+      "no_overlap_with_any_reached_entity": 0.514,
+      "probe": "For every disconnected in-pool terminal record, asked whether any of its extracted entities is a NEAR-MISS (substring either direction) of an entity the BFS actually reached.",
+      "root_cause_of_the_near_misses": "extract_v4_entities' _STOP_LAST trailing-token list is incomplete. It strips 'is/was/has/registered/assigned/paired/applies/...' but NOT 'resolves', 'uses', 'set', 'value', 'maps', 'requires'. The extractor therefore emits 'jacana control module resolves' as a DISTINCT entity node from 'jacana control module', fragmenting the graph -- not because of any alias/abbreviation problem, but because of a stop-word gap.",
+      "significance": "~19.4% of ALL terminal records (40% disconnected x 48.6% near-miss) are disconnected purely because of an incomplete stop-word list. That is a one-line-scale fix with a large expected effect, and it is entity-boundary normalisation, NOT the typed-relation-edge work that the prior (buggy) topology reading would have motivated.",
+      "worked_examples": [
+        "'jacana control module resolves' vs reached 'jacana control module'",
+        "'osprey intake manifold uses' vs reached 'osprey intake manifold'",
+        "'gannet relay unit set' vs reached 'gannet relay unit'",
+        "'vireo pressure assembly value' vs reached 'vireo pressure assembly'"
+      ]
+    },
+    "MECHANICAL_DECISION_per_frozen_rule": {
+      "and_what_was_missing_was_found": "entity-boundary fragmentation from an incomplete extractor stop-word list, which no arm of the frozen 2x2 could have surfaced because both arms shared the same extractor.",
+      "explicitly_NOT_recommended": [
+        "G2-v4I CanonicalEntityNode architecture (falsified, E_identity=0)",
+        "deeper traversal (beyond-hop-bound only 6.5%, hop curve verified flat)",
+        "bridge-preserving fusion (displacement only 2.2%)",
+        "typed relation edges (premature: half the disconnection is a stop-word artifact; re-measure after fixing that)"
+      ],
+      "recommended_next": "A minimal G2-v4E micro-sprint: extend _STOP_LAST (or replace the trailing-token heuristic with a principled boundary rule), then re-run this exact decomposition to measure the reachability delta. Expected to recover a large share of the 19.4% of terminals currently lost to boundary fragmentation. Cheap, high-leverage, and independently verifiable with the diagnostic that already exists.",
+      "rule_branch_taken": "neither_ceiling_large -> 'the decomposition is still missing something; do not build either'"
+    },
+    "artifact": "evidence/gate_g2_v3/v31_causal_decomposition.json",
+    "no_hrm": true,
+    "no_mechanism_change": true,
+    "no_s2": true,
+    "run_utc": "2026-08-09T20:00:00Z",
+    "self_inflicted_bug_found_and_fixed_before_reporting": {
+      "bug": "record_reachable(..., bound=10**9) used as 'unlimited' -- but hops.get(e, 10**9) <= 10**9 is True for entities BFS never reached, so S2_disconnected_from_anchor could never fire and every disconnected record was misreported as merely S3_beyond_hop_bound (46.5% of terminals).",
+      "corrected_split": "terminal: S2_disconnected 40.0%, S3_beyond_hop_bound 6.5% (was 0% / 46.5%)",
+      "fix": "bound=None means unlimited, implemented as membership in hops.",
+      "how_caught": "The 46.5% figure contradicted the independently-measured hop-ceiling curve, so it was reconciled with a separate direct hop-distribution probe BEFORE reporting rather than published and corrected later."
+    },
+    "status": "RUN_COMPLETE__IDENTITY_HYPOTHESIS_FALSIFIED__NEW_DOMINANT_CAUSE_FOUND"
+  },
+  "IDENTITY_AUDIT_RATES_FROZEN": {
+    "R_attachment": "P(graph entity nodes exist for BOTH surface and canonical | alias link emitted)",
+    "R_connectivity": "P(canonical node reachable from question anchor via BFS | alias link emitted)",
+    "R_link": "P(alias edge present in graph.alias_links, both directions | parse correct)",
+    "R_parse": "P(identity parser fired AND extracted surface+canonical correctly | identity record in pool)",
+    "decision_use": "If R_parse is high (>0.85) and R_connectivity is much lower, the defect is graph INTEGRATION, not identity resolution -- repair is small. If R_parse is low, the repair belongs upstream in the parser and is a different, larger job."
+  },
+  "INTERACTION_ANALYSIS_FROZEN": {
+    "E_B": "Q(I0,B1) - Q(I0,B0)",
+    "E_I": "Q(I1,B0) - Q(I0,B0)",
+    "interaction": "Q(I1,B1) - Q(I1,B0) - Q(I0,B1) + Q(I0,B0)",
+    "precedent": "the same factorial decomposition used in the packet-ordering work"
+  },
+  "ROLE_SPECIFIC_TAXONOMY_FROZEN": {
+    "bridge_record_stages": [
+      "in_candidate_pool",
+      "bridge_entities_extracted",
+      "identity_canonicalized",
+      "attached_to_anchor_component",
+      "reachable_within_hop_bound",
+      "enumerated_as_link"
+    ],
+    "identity_record_stages": [
+      "in_candidate_pool",
+      "identity_relation_parsed",
+      "surface_resolved_correctly",
+      "canonical_resolved_correctly",
+      "alias_edge_emitted",
+      "edge_attached_to_graph",
+      "connectivity_actually_improved"
+    ],
+    "rationale": "A single R0-R8 progression conflated 'completes the requested relation' with 'is structurally required'. An identity/alias record is not defective for failing to assert the target relation -- that was never its job. 100% of identity-role records landed in R7 under the universal taxonomy, which is a taxonomy artifact, not a mechanism defect.",
+    "terminal_record_stages": [
+      "in_candidate_pool",
+      "terminal_entity_extracted",
+      "canonicalized",
+      "reachable_within_hop_bound",
+      "enumerated",
+      "recognized_as_completion"
+    ]
+  },
+  "THREE_ORACLE_CEILINGS_FROZEN": {
+    "C_B_bridge_only": "required bridge records that exist in corpus but are absent from the pool are injected into the pool; identity remains fully runtime",
+    "C_IB_combined": "both repairs simultaneously -- required to measure interaction, since marginal counts cannot reveal whether the two failures co-occur on the same tasks",
+    "C_I_identity_only": "perfect canonical identity merging (entity node keyed by oracle latent id where the extracted surface matches an oracle surface), candidate pools UNCHANGED",
+    "outcome_measure": "per-task Q = all required records reachable from the anchor within the production hop bound (h<=2). Pre-S2, pre-HRM."
+  },
+  "frozen_unchanged": [
+    "retrieval implementation",
+    "candidate pools (except the explicitly-labelled bridge-availability ORACLE arm)",
+    "identity resolution mechanism",
+    "runtime graph node/edge types",
+    "MAX_HOPS",
+    "path ranking",
+    "endpoint recognition",
+    "S2 (NOT RUN)",
+    "HRM (NOT RUN)",
+    "no mechanism promoted or rejected"
+  ],
+  "frozen_utc": "2026-08-09T19:00:00Z",
+  "objective": "Separate identity connectivity from bridge acquisition, measure each independently and their interaction, BEFORE modifying any production mechanism. No S2. No HRM. No mechanism changes.",
+  "protocol_id": "gate_g2_v31_causal_decomposition_v1",
+  "sprint": "G2-v3.1 -- Corrected Anatomy + Causal Decomposition",
+  "status": "RUN_COMPLETE__IDENTITY_FALSIFIED__EXTRACTOR_BOUNDARY_IS_NEXT",
+  "stop_after": "ceilings + interaction. Do not proceed to S2 or HRM in this sprint.",
+  "supersedes": "The original G2-v3 interpretation is VOID (oracle surface target bug). fc1e3b3's corrected numbers are authoritative.",
+  "why_not_G2_v4_yet": "The corrected evidence shows two comparably-sized upstream defects, not one dominant lever. Building the full CanonicalEntityNode architecture now would be committing to one of two candidate root causes without knowing whether they are complementary or whether one is overwhelmingly causal. The original G2-v4 plan is WITHDRAWN pending this decomposition."
+}

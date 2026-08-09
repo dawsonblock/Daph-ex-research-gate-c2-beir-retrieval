@@ -121,6 +121,38 @@ class TestGraphConstruction:
                 assert data[field_name], f"{field_name} missing on {edge.edge_type}"
             assert edge.edge_type in EDGE_TYPES
 
+    def test_alias_edges_carry_real_record_provenance(self):
+        """Non-vacuous provenance test for alias edges specifically.
+
+        TestGraphConstruction's other provenance test uses a fixture with NO
+        identity records, so it passed vacuously for ENTITY_ALIASES_ENTITY /
+        ENTITY_RESOLVES_TO_ENTITY -- which is how a real bug survived: the
+        builder read link.evidence_id while IdentityLink declares .record_id,
+        emitting source_record_id='' on every alias edge.
+        """
+        texts = {
+            "ident": "JPA-5 is the short code for Jacana pressure assembly.",
+            "fact": "Changelog: assigned category for Jacana pressure assembly set to GAMMA-BLUE.",
+        }
+        graph = build_runtime_graph(record_ids=list(texts), texts=texts,
+                                    relation="assigned category")
+        alias_edges = [e for e in graph.edges
+                       if e.edge_type in ("ENTITY_ALIASES_ENTITY",
+                                          "ENTITY_RESOLVES_TO_ENTITY")]
+        assert alias_edges, "fixture must actually produce alias edges"
+        for edge in alias_edges:
+            assert edge.source_record_id == "ident", (
+                f"alias edge provenance lost: {edge.as_dict()}")
+
+    def test_alias_links_connect_both_directions(self):
+        """Connectivity (as distinct from provenance) must work: the identity
+        record is the evidence that creates the alias<->canonical connection,
+        so it must not require the alias to already be connected."""
+        texts = {"ident": "JPA-5 is the short code for Jacana pressure assembly."}
+        graph = build_runtime_graph(record_ids=list(texts), texts=texts, relation="")
+        assert "jacana pressure assembly" in graph.neighbours("JPA-5")
+        assert "jpa 5" in graph.neighbours("Jacana pressure assembly")
+
     def test_only_permitted_edge_types_are_emitted(self):
         graph = build_runtime_graph(record_ids=list(TEXTS), texts=TEXTS,
                                     relation=RELATION)
