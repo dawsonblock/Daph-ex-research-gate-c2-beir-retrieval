@@ -1,7 +1,7 @@
 {
   "architecture_principle": "Retrieval iteration must ACCUMULATE information state, never replace earlier context with the latest bridge. Pinned by tests/unit/test_information_state.py.",
   "b3b_stopgate_result": {
-    "OUTCOME": "OUTCOME_A_POSITIVE",
+    "OUTCOME": "OUTCOME_A_POSITIVE__PROVISIONAL",
     "a_complete": {
       "delta_q": 0.1772,
       "q_J0": 0.3956,
@@ -42,10 +42,12 @@
       }
     },
     "decision_rule_frozen_before_data": true,
+    "does_not_affect": "Confirmation #1's VALID_NEGATIVE_CONFIRMATION verdict is unaffected -- it was fixed by the selection-only dry pass before any Q existed. Only the strength of the B3-B causal decomposition is in question.",
     "finding": "S2 conditional on complete availability reproduces its development effect almost exactly: dQ +0.1772 (LCB +0.0977) here vs +0.1750 on development. The mechanism did not fail because the selector stopped working -- it failed because bridge evidence reaches the candidate pool only 32.9% of the time at this corpus scale. Identity availability is 100%, terminal 53.4%, temporal_current 45.0%, bridge 32.9%.",
     "implication": "retrieval availability is the primary bottleneck; S2 stays frozen; B3 candidate-budget work is justified.",
     "not_outcome_c": "S2 does not have an independent cross-distribution selector defect. OUTCOME_C would have stopped B3.",
     "one_negative_signal": "bridge conditional retention -0.0435, inside the -0.05 material boundary but only just. It is the single role S2 degrades rather than improves, and it should be watched if candidate pools grow.",
+    "provisional_because": "Availability was reconstructed by a CPU replay of a CUDA-scored run, and 22 of 500 order-sensitive candidate_pool_hash values differed. Two arguments were offered that the replay was faithful and BOTH are insufficient: selection equality does not imply pool equality (two pools differing in low-ranked members can yield identical top-6 selections), and an aggregate candidate-CES match (0.4120 = 0.4120) only means the COUNT of complete tasks agreed, so two tasks could swap completeness and cancel. The correct invariant is per-task unordered candidate-MEMBERSHIP identity, which the CPU replay cannot establish. Pending same-platform pool replay.",
     "s2_improves_two_roles_conditionally": "terminal +0.1348 and temporal_current +0.3333 conditional retention. S2 is doing real work where evidence exists."
   },
   "benchmark_lineage": {

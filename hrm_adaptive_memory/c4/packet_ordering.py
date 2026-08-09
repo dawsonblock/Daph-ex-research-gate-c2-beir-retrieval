@@ -99,6 +99,29 @@ def canonical_order_hash(ordered_ids: Sequence[str]) -> str:
     return hashlib.sha256(canonical.encode()).hexdigest()
 
 
+def canonical_candidate_membership_hash(candidate_ids: Sequence[str]) -> str:
+    """Hash of candidate-pool MEMBERSHIP (lexically sorted, order-independent).
+
+    Distinct from :func:`canonical_candidate_pool_hash`, which is
+    order-sensitive, because the two answer different questions and conflating
+    them produced a real provenance gap:
+
+      order hash       did retrieval rank the pool identically?
+      membership hash  was record X in the pool at all?
+
+    Availability predicates -- "was the required bridge in the pool?" -- depend
+    only on membership. A cross-platform replay can permute ranks at numerical
+    ties (CUDA vs CPU embeddings differ in the last bits) and so change the
+    order hash while leaving membership untouched. Using the order hash to
+    validate such a replay conflates a benign ordering difference with a real
+    membership difference, and selection equality does NOT close the gap: two
+    pools differing in low-ranked members can still yield identical top-k
+    selections.
+    """
+    canonical = json.dumps(sorted(candidate_ids), separators=(",", ":"))
+    return hashlib.sha256(canonical.encode()).hexdigest()
+
+
 def canonical_candidate_pool_hash(candidate_ids: Sequence[str]) -> str:
     """Hash of the retrieval candidate pool (order-sensitive).
 

@@ -73,6 +73,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from hrm_adaptive_memory.c4.packet_ordering import (  # noqa: E402
+    canonical_candidate_membership_hash)
 from scripts.diagnose_c4_selector_eligibility import (  # noqa: E402
     task_shape, terminal_records)
 from scripts.run_c5_integrated_ladder import (  # noqa: E402
@@ -184,6 +186,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="B3-B A_COMPLETE stop gate")
     parser.add_argument("--split", default="confirmation")
     parser.add_argument("--receipts", default=None)
+    parser.add_argument("--pools", default=None,
+                        help="frozen candidate-pool artifact from "
+                             "replay_c5_candidate_pools.py, captured on the "
+                             "platform that scored the run. PREFERRED: reading "
+                             "it removes any dependence on cross-platform "
+                             "bit-reproducibility.")
+    parser.add_argument("--allow-local-replay", action="store_true",
+                        help="reconstruct pools locally instead. Availability "
+                             "is then only as trustworthy as cross-platform "
+                             "reproducibility, which is NOT guaranteed.")
     parser.add_argument("--out", default=None)
     args = parser.parse_args()
 
@@ -205,82 +217,70 @@ def main() -> int:
     kinds = {r["evidence_id"]: (r.get("metadata") or {}).get("record_kind", "")
              for r in evidence}
 
-    # AVAILABILITY MUST COME FROM THE ACTUAL CANDIDATE POOL.
+    # AVAILABILITY MUST COME FROM THE POOL THE SCORED RUN ACTUALLY USED.
     #
-    # The receipts store `selected`, not the pool, so availability cannot be
-    # read from them. A first version of this script proxied it from the union
-    # of selections plus the oracle arm J2 -- that was wrong: J2's
-    # oracle-over-pool selection is capped at the PACKET budget (6) and so can
-    # never represent a 50-candidate pool. It would have understated
-    # availability and inflated apparent selector failure, biasing the stop
-    # gate toward OUTCOME_C.
+    # Preferred path: read a frozen pool artifact captured by
+    # replay_c5_candidate_pools.py ON THE SCORING PLATFORM. Then no analysis
+    # depends on cross-platform bit-reproducibility at all.
     #
-    # The pools are instead RECOMPUTED here on CPU through the same
-    # evaluate_task path the run used. That is exact rather than approximate:
-    # the determinism precondition PASSED on this split (20 tasks x 3 seeds,
-    # byte-identical on candidate_ids and candidate_pool_hash), so a replay
-    # reproduces the same pools the scored run saw. Recomputed pool hashes are
-    # cross-checked against the receipts below, fail-closed.
+    # The invariant enforced here is unordered candidate-MEMBERSHIP identity.
+    # Two weaker arguments were tried and are recorded as insufficient:
+    #   * selection equality does NOT imply pool equality -- two pools differing
+    #     in low-ranked members can yield identical top-6 selections;
+    #   * an aggregate candidate-CES match only means the COUNT of complete
+    #     tasks agreed, so two tasks could swap completeness and cancel out.
+    # Availability predicates are per-task set membership, so membership is the
+    # invariant the conclusion rests on.
     use_ladder("J")
-    records = to_index_records(evidence)
-    query_arm = ARMS["C4_4"]
     pools: dict[str, set[str]] = {}
-    pool_hash_mismatches: list[str] = []
-    selection_mismatches: list[str] = []
-    print(f"  recomputing candidate pools for {len(tasks)} tasks (CPU)...")
-    for index, task in enumerate(tasks, 1):
-        if index % 50 == 0 or index == len(tasks):
-            print(f"    {index}/{len(tasks)}", end="\r", flush=True)
-        row = evaluate_task(task, query_arm, records, texts, len(records))
-        arm_row = row["arms"][BASELINE]
-        pools[task["task_id"]] = set(arm_row["pool"])
-        receipt = receipts.get(task["task_id"])
-        if not receipt:
-            continue
-        if receipt["arms"][BASELINE]["candidate_pool_hash"] != \
-                arm_row["candidate_pool_hash"]:
-            pool_hash_mismatches.append(task["task_id"])
-        # The check that actually guards this analysis: the SELECTIONS the run
-        # scored must be the selections the replay produces. If those match,
-        # the replayed pool is the pool the selector saw for every purpose this
-        # script uses it for.
-        for arm_name in (BASELINE, PRIMARY):
-            if sorted(row["arms"][arm_name]["selected"]) != \
-                    sorted(receipt["arms"][arm_name]["selected"]):
-                selection_mismatches.append(f"{task['task_id']}/{arm_name}")
-    print(" " * 30, end="\r")
+    membership_mismatches: list[str] = []
+    pools_path = Path(args.pools) if args.pools else (
+        ROOT / f"evidence/gate_b3/pools/{args.split}_candidate_pools.json")
 
-    # FAIL-CLOSED on what this analysis depends on, which is set membership and
-    # selection identity -- NOT candidate ordering.
-    #
-    # The first version aborted on candidate_pool_hash inequality and fired: 22
-    # of 500 hashes differ. Investigation showed why, and that the check was
-    # mis-targeted. BGE embeddings computed on the scored run's A100 (CUDA) and
-    # on this replay (CPU) differ in the last bits, which permutes ranks at
-    # near-ties. That changes the ORDER-SENSITIVE hash while leaving pool
-    # membership and every selection identical: all 500 tasks reproduce their
-    # J0 and J1 selections exactly, and candidate CES reproduces to the digit
-    # (0.4120 local vs 0.4120 scored). Availability is a subset predicate over
-    # an unordered pool, so ordering churn cannot affect it.
-    #
-    # This is a REAL provenance finding worth stating plainly: the pipeline is
-    # deterministic WITHIN a platform -- the PYTHONHASHSEED qualification
-    # passed -- but is NOT bit-reproducible ACROSS CUDA and CPU. The existing
-    # determinism qualification never tested cross-platform replay, so this had
-    # stayed latent. It does not invalidate any prior result, because those were
-    # each computed on a single platform; it does mean candidate_pool_hash must
-    # not be used as a cross-platform replay check.
-    if selection_mismatches:
-        print(f"  ABORT: {len(selection_mismatches)} selection(s) do not "
-              f"reproduce, e.g. {selection_mismatches[:3]}. The replay does not "
-              f"reproduce the scored treatment, so conditional statistics "
-              f"cannot be trusted.")
+    if pools_path.is_file():
+        frozen = json.loads(pools_path.read_text())
+        env = frozen.get("environment_fingerprint", {})
+        print(f"  frozen pools: {pools_path.name}")
+        print(f"    captured on: {env.get('device_name')} torch={env.get('torch')}")
+        print(f"    reproduces scored run exactly: "
+              f"{frozen.get('reproduces_scored_run_exactly')}")
+        if not frozen.get("reproduces_scored_run_exactly"):
+            print(f"  ABORT: the frozen pool artifact does not reproduce the "
+                  f"scored run ({frozen.get('order_hash_mismatch_count')} "
+                  f"order-hash mismatches). Capture it on the scoring platform "
+                  f"before running this gate.")
+            return 1
+        for entry in frozen["pools"]:
+            pools[entry["task_id"]] = set(entry["candidate_ids"])
+            # Membership must also be internally consistent with its own hash.
+            if canonical_candidate_membership_hash(entry["candidate_ids"]) != \
+                    entry["candidate_membership_hash"]:
+                membership_mismatches.append(entry["task_id"])
+        if membership_mismatches:
+            print(f"  ABORT: {len(membership_mismatches)} membership hash(es) in "
+                  f"the artifact do not match their own candidate_ids.")
+            return 1
+        print(f"    membership hashes self-consistent for {len(pools)} tasks")
+    elif args.allow_local_replay:
+        print(f"  WARNING: no frozen pools at {pools_path}; reconstructing "
+              f"locally. Availability is only as trustworthy as cross-platform "
+              f"bit-reproducibility, which is NOT guaranteed -- treat any "
+              f"outcome as PROVISIONAL.")
+        records = to_index_records(evidence)
+        query_arm = ARMS["C4_4"]
+        for index, task in enumerate(tasks, 1):
+            if index % 50 == 0 or index == len(tasks):
+                print(f"    {index}/{len(tasks)}", end="\r", flush=True)
+            row = evaluate_task(task, query_arm, records, texts, len(records))
+            pools[task["task_id"]] = set(row["arms"][BASELINE]["pool"])
+        print(" " * 30, end="\r")
+    else:
+        print(f"  ABORT: no frozen candidate-pool artifact at {pools_path}.\n"
+              f"  Capture it on the platform that scored the run:\n"
+              f"    python3 scripts/replay_c5_candidate_pools.py "
+              f"--split {args.split}\n"
+              f"  or pass --allow-local-replay to accept a PROVISIONAL result.")
         return 1
-    print(f"  selections reproduce for all {len(pools)} tasks (both arms)")
-    if pool_hash_mismatches:
-        print(f"  NOTE: {len(pool_hash_mismatches)} candidate_pool_hash(es) "
-              f"differ (CUDA-vs-CPU rank churn at near-ties). Selections and "
-              f"availability are unaffected; see the comment in this script.")
 
     strata: dict[str, list[str]] = defaultdict(list)
     # role -> arm -> [available, selected]
@@ -400,11 +400,18 @@ def main() -> int:
         "schema_version": "c5-confirmation-stopgate-v1",
         "split": args.split,
         "decision_rule_frozen_before_data": True,
-        "replay_integrity": {
-            "selections_reproduced": len(pools),
-            "selection_mismatches": 0,
-            "candidate_pool_hash_mismatches": len(pool_hash_mismatches),
-            "hash_mismatch_cause": (
+        "pool_provenance": {
+            "source": ("frozen artifact captured on the scoring platform"
+                       if pools_path.is_file() else "LOCAL REPLAY (provisional)"),
+            "artifact": str(pools_path.name),
+            "tasks": len(pools),
+            "membership_hash_self_consistent": not membership_mismatches,
+            "invariant_enforced": "unordered candidate-membership identity",
+            "insufficient_alternatives_recorded": [
+                "selection equality does not imply pool equality",
+                "aggregate candidate-CES equality does not imply per-task equality",
+            ],
+            "cross_platform_note": (
                 "BGE embeddings differ in the last bits between the scored "
                 "run's CUDA device and this CPU replay, permuting ranks at "
                 "near-ties. Order-sensitive hash changes; pool membership, all "
