@@ -308,12 +308,25 @@ def main() -> int:
                 "candidate_ces": _rate(e["cand_ces"], n),
                 "working_set_ces": _rate(e["pre_ces"], n),
                 "selected_ces_end_to_end": _rate(e["e2e"], n),
-                "candidate_pool_availability": {role: _rate(*reversed(e["avail"][role]))
-                                 for role in ROLES if e["avail"][role][0]},
-                "graph_reachability_h2": {role: _rate(*reversed(e["graph_reach"][role]))
+                # Explicit stage names. The earlier "candidate_pool_availability"
+                # field was a mislabeled duplicate of working-role survival (it
+                # reused the same counter); it is REMOVED here rather than left
+                # as a known semantic bug. True stage-1 candidate availability is
+                # emitted separately below, over task count rather than over the
+                # pool-available subset.
+                "candidate_role_availability": {
+                    role: _rate(e["avail"][role][0], len(tasks))
+                    for role in ROLES if e["avail"][role][0]},
+                "graph_role_reachability": {role: _rate(*reversed(e["graph_reach"][role]))
                                  for role in ROLES if e["graph_reach"][role][0]},
-                "availability": {role: _rate(*reversed(e["avail"][role]))
+                "working_role_survival": {role: _rate(*reversed(e["avail"][role]))
                                  for role in ROLES if e["avail"][role][0]},
+                "s2_role_retention_given_working": {
+                    role: _rate(*reversed(e["role"][role]))
+                    for role in ROLES if e["role"][role][0]},
+                "availability__DEPRECATED_use_working_role_survival": {
+                    role: _rate(*reversed(e["avail"][role]))
+                    for role in ROLES if e["avail"][role][0]},
                 "conditional_retention": {role: _rate(*reversed(e["role"][role]))
                                           for role in ROLES if e["role"][role][0]},
                 "structural_competition_ratio": round(

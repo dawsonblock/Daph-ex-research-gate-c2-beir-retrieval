@@ -1,0 +1,75 @@
+{
+  "NEW_HEADLINE_METRIC": "P(complete required path survives into the final packet | complete required path exists in the working set) -- individual bridge/terminal retention can look acceptable while the packet holds fragments of INCOMPATIBLE paths",
+  "decision_rule_frozen": {
+    "even_oracle_barely_helps": "if S4 barely improves on the same working sets -> G2's extra complexity still is not paying for itself; keep G1_TYPED_PATH as the architecture",
+    "simple_fix_recovers_most": "if S1/S2_role_reserved/S3_path_coherent recovers a large share of the S4 gap -> the defect is packet composition, and a composition fix may finally let G2 overtake typed path"
+  },
+  "failure_taxonomy_frozen": [
+    "F0_SELECTED",
+    "F1_DROPPED_BY_CAPACITY",
+    "F2_REDUNDANCY_COLLISION",
+    "F3_WRONG_PATH_PREFERRED",
+    "F4_CONNECTIVITY_BIAS",
+    "F5_ROLE_IMBALANCE",
+    "F6_TIE_OR_ORDER",
+    "F7_OTHER"
+  ],
+  "frozen_unchanged": [
+    "retrieval",
+    "candidate k",
+    "entity extractor (pinned to grammar_v4)",
+    "graph topology / path enumeration",
+    "working-set policy (G2, M=50)",
+    "packet budget 6",
+    "HRM NOT RUN"
+  ],
+  "frozen_utc": "2026-08-10T00:00:00Z",
+  "key_separation": "record RANKING is separated from packet COMPOSITION: S2 may be assigning reasonable per-record scores while composing a poor packet.",
+  "ladder": {
+    "S0_current": {
+      "role": "baseline",
+      "selector": "unchanged select_s2"
+    },
+    "S1_diversity": {
+      "role": "redundancy diagnostic",
+      "selector": "suppress near-duplicate structural signatures, then unchanged S2"
+    },
+    "S2_role_reserved": {
+      "promotable": false,
+      "role": "packet-balance diagnostic",
+      "selector": "reserve 1 identity + 1 bridge + 1 terminal by RUNTIME-inferred role, fill remaining 3 with unchanged S2"
+    },
+    "S3_path_coherent": {
+      "promotable": false,
+      "role": "structural-composition diagnostic",
+      "selector": "admit all records supporting the highest-ranked COMPLETE path first, then fill"
+    },
+    "S4_oracle": {
+      "promotable": false,
+      "role": "ceiling",
+      "selector": "required records first"
+    }
+  },
+  "only_treatment_variable": "the selector that turns a working set into the six-record packet",
+  "primary_metrics": [
+    "bridge_conditional_retention",
+    "terminal_conditional_retention",
+    "complete_path_retention",
+    "selected_ces",
+    "role_coverage_in_packet",
+    "unique_path_count_in_packet",
+    "redundancy_ratio"
+  ],
+  "protocol_id": "gate_s3_selector_competition_v1",
+  "question": "Given a working set in which the required bridge and terminal evidence are ALREADY present, why does S2 select the wrong six records?",
+  "sprint": "S3 -- Structural Competition Selector Gate",
+  "status": "FROZEN__NOT_YET_RUN",
+  "status_board": {
+    "G1_TYPED_PATH": "BEST NON-ORACLE",
+    "G2_graph_traversal": "IMPROVED, NOT PROMOTED",
+    "bridge_acquisition": "NOT CURRENT BOTTLENECK",
+    "grammar_v4_extraction": "PROMOTABLE CANDIDATE",
+    "s2_high_pressure_discrimination": "CURRENT BOTTLENECK"
+  },
+  "why_now": "G2-v4E's grammar_v4 removed the availability bottleneck strongly enough to expose the next one. At cal_3000/M50, bridge working-set survival is 1.000 while P(bridge selected | in working set) is 0.015; terminal survival 0.747 with retention 0.268. Bridge acquisition therefore comes OFF the critical path -- the evidence is reaching the working set and dying in selection."
+}
