@@ -1,0 +1,782 @@
+{
+  "VERDICT": "BRIDGE_SAFETY_FAIL",
+  "bridge_safety_failures": [
+    {
+      "policy": "C1_constant_300",
+      "scale": "cal_700"
+    },
+    {
+      "policy": "C2_capped_fraction",
+      "scale": "cal_700"
+    },
+    {
+      "policy": "C1_constant_300",
+      "scale": "cal_1500"
+    },
+    {
+      "policy": "C2_capped_fraction",
+      "scale": "cal_1500"
+    }
+  ],
+  "no_hrm": true,
+  "packet_budget": 6,
+  "primary_safety": {
+    "bound": -0.05,
+    "metric": "delta P(bridge selected | bridge available) vs k=50+S2",
+    "required": "at EVERY scale, not pooled"
+  },
+  "s2_unchanged": true,
+  "scales": {
+    "cal_1000": {
+      "corpus_size": 1000,
+      "k": {
+        "C1_constant_300": 300,
+        "C2_capped_fraction": 150,
+        "k50_baseline": 50
+      },
+      "policies": {
+        "C1_constant_300": {
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.0261,
+            "passed": true
+          },
+          "candidate_ces": 0.8867,
+          "competition_mean": {
+            "bridge_candidate_count": 9.61,
+            "candidate_count": 300.0,
+            "connected_candidate_count": 64.37,
+            "protection_eligible_count": 0.46,
+            "target_relation_candidate_count": 36.3
+          },
+          "delta_vs_baseline": {
+            "candidate_ces": 0.2067,
+            "role_conditional_retention": {
+              "bridge": -0.0261,
+              "identity": -0.0617,
+              "temporal_current": -0.4084,
+              "terminal": -0.1485
+            }
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.2885,
+          "k": 300,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 79,
+              "retention": 0.1139,
+              "selected": 9
+            },
+            "identity": {
+              "available": 81,
+              "retention": 0.9383,
+              "selected": 76
+            },
+            "temporal_current": {
+              "available": 30,
+              "retention": 0.1333,
+              "selected": 4
+            },
+            "terminal": {
+              "available": 150,
+              "retention": 0.24,
+              "selected": 36
+            }
+          },
+          "selected_ces_given_available": 0.1955
+        },
+        "C2_capped_fraction": {
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0854,
+            "passed": true
+          },
+          "candidate_ces": 0.8467,
+          "competition_mean": {
+            "bridge_candidate_count": 8.06,
+            "candidate_count": 150.0,
+            "connected_candidate_count": 31.93,
+            "protection_eligible_count": 0.46,
+            "target_relation_candidate_count": 35.17
+          },
+          "delta_vs_baseline": {
+            "candidate_ces": 0.1667,
+            "role_conditional_retention": {
+              "bridge": 0.0854,
+              "identity": -0.0123,
+              "temporal_current": -0.2417,
+              "terminal": -0.0885
+            }
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.2885,
+          "k": 150,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 71,
+              "retention": 0.2254,
+              "selected": 16
+            },
+            "identity": {
+              "available": 81,
+              "retention": 0.9877,
+              "selected": 80
+            },
+            "temporal_current": {
+              "available": 30,
+              "retention": 0.3,
+              "selected": 9
+            },
+            "terminal": {
+              "available": 150,
+              "retention": 0.3,
+              "selected": 45
+            }
+          },
+          "selected_ces_given_available": 0.3465
+        },
+        "k50_baseline": {
+          "candidate_ces": 0.68,
+          "competition_mean": {
+            "bridge_candidate_count": 6.24,
+            "candidate_count": 50.0,
+            "connected_candidate_count": 11.73,
+            "protection_eligible_count": 0.45,
+            "target_relation_candidate_count": 26.61
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.3409,
+          "k": 50,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 50,
+              "retention": 0.14,
+              "selected": 7
+            },
+            "identity": {
+              "available": 81,
+              "retention": 1.0,
+              "selected": 81
+            },
+            "temporal_current": {
+              "available": 24,
+              "retention": 0.5417,
+              "selected": 13
+            },
+            "terminal": {
+              "available": 139,
+              "retention": 0.3885,
+              "selected": 54
+            }
+          },
+          "selected_ces_given_available": 0.5784
+        }
+      },
+      "tasks": 150
+    },
+    "cal_1500": {
+      "corpus_size": 1500,
+      "k": {
+        "C1_constant_300": 300,
+        "C2_capped_fraction": 225,
+        "k50_baseline": 50
+      },
+      "policies": {
+        "C1_constant_300": {
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.0925,
+            "passed": false
+          },
+          "candidate_ces": 0.8733,
+          "competition_mean": {
+            "bridge_candidate_count": 14.05,
+            "candidate_count": 300.0,
+            "connected_candidate_count": 73.65,
+            "protection_eligible_count": 0.46,
+            "target_relation_candidate_count": 36.2
+          },
+          "delta_vs_baseline": {
+            "candidate_ces": 0.2266,
+            "role_conditional_retention": {
+              "bridge": -0.0925,
+              "identity": -0.0494,
+              "temporal_current": -0.45,
+              "terminal": -0.1474
+            }
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.1731,
+          "k": 300,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 72,
+              "retention": 0.0139,
+              "selected": 1
+            },
+            "identity": {
+              "available": 81,
+              "retention": 0.9506,
+              "selected": 77
+            },
+            "temporal_current": {
+              "available": 30,
+              "retention": 0.1333,
+              "selected": 4
+            },
+            "terminal": {
+              "available": 150,
+              "retention": 0.1933,
+              "selected": 29
+            }
+          },
+          "selected_ces_given_available": 0.1603
+        },
+        "C2_capped_fraction": {
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.1064,
+            "passed": false
+          },
+          "candidate_ces": 0.86,
+          "competition_mean": {
+            "bridge_candidate_count": 13.21,
+            "candidate_count": 225.0,
+            "connected_candidate_count": 52.98,
+            "protection_eligible_count": 0.46,
+            "target_relation_candidate_count": 36.02
+          },
+          "delta_vs_baseline": {
+            "candidate_ces": 0.2133,
+            "role_conditional_retention": {
+              "bridge": -0.1064,
+              "identity": -0.037,
+              "temporal_current": -0.45,
+              "terminal": -0.1407
+            }
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.1731,
+          "k": 225,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 70,
+              "retention": 0.0,
+              "selected": 0
+            },
+            "identity": {
+              "available": 81,
+              "retention": 0.963,
+              "selected": 78
+            },
+            "temporal_current": {
+              "available": 30,
+              "retention": 0.1333,
+              "selected": 4
+            },
+            "terminal": {
+              "available": 150,
+              "retention": 0.2,
+              "selected": 30
+            }
+          },
+          "selected_ces_given_available": 0.186
+        },
+        "k50_baseline": {
+          "candidate_ces": 0.6467,
+          "competition_mean": {
+            "bridge_candidate_count": 8.37,
+            "candidate_count": 50.0,
+            "connected_candidate_count": 13.01,
+            "protection_eligible_count": 0.44,
+            "target_relation_candidate_count": 26.27
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.1951,
+          "k": 50,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 47,
+              "retention": 0.1064,
+              "selected": 5
+            },
+            "identity": {
+              "available": 81,
+              "retention": 1.0,
+              "selected": 81
+            },
+            "temporal_current": {
+              "available": 24,
+              "retention": 0.5833,
+              "selected": 14
+            },
+            "terminal": {
+              "available": 135,
+              "retention": 0.3407,
+              "selected": 46
+            }
+          },
+          "selected_ces_given_available": 0.5979
+        }
+      },
+      "tasks": 150
+    },
+    "cal_2200": {
+      "corpus_size": 2200,
+      "k": {
+        "C1_constant_300": 300,
+        "C2_capped_fraction": 300,
+        "k50_baseline": 50
+      },
+      "policies": {
+        "C1_constant_300": {
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0694,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "competition_mean": {
+            "bridge_candidate_count": 14.61,
+            "candidate_count": 300.0,
+            "connected_candidate_count": 74.46,
+            "protection_eligible_count": 0.45,
+            "target_relation_candidate_count": 52.46
+          },
+          "delta_vs_baseline": {
+            "candidate_ces": 0.2333,
+            "role_conditional_retention": {
+              "bridge": 0.0694,
+              "identity": -0.0602,
+              "temporal_current": -0.3615,
+              "terminal": -0.1075
+            }
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.34,
+          "k": 300,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 72,
+              "retention": 0.0694,
+              "selected": 5
+            },
+            "identity": {
+              "available": 83,
+              "retention": 0.9398,
+              "selected": 78
+            },
+            "temporal_current": {
+              "available": 30,
+              "retention": 0.1,
+              "selected": 3
+            },
+            "terminal": {
+              "available": 147,
+              "retention": 0.2381,
+              "selected": 35
+            }
+          },
+          "selected_ces_given_available": 0.186
+        },
+        "C2_capped_fraction": {
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0694,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "competition_mean": {
+            "bridge_candidate_count": 14.61,
+            "candidate_count": 300.0,
+            "connected_candidate_count": 74.46,
+            "protection_eligible_count": 0.45,
+            "target_relation_candidate_count": 52.46
+          },
+          "delta_vs_baseline": {
+            "candidate_ces": 0.2333,
+            "role_conditional_retention": {
+              "bridge": 0.0694,
+              "identity": -0.0602,
+              "temporal_current": -0.3615,
+              "terminal": -0.1075
+            }
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.34,
+          "k": 300,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 72,
+              "retention": 0.0694,
+              "selected": 5
+            },
+            "identity": {
+              "available": 83,
+              "retention": 0.9398,
+              "selected": 78
+            },
+            "temporal_current": {
+              "available": 30,
+              "retention": 0.1,
+              "selected": 3
+            },
+            "terminal": {
+              "available": 147,
+              "retention": 0.2381,
+              "selected": 35
+            }
+          },
+          "selected_ces_given_available": 0.186
+        },
+        "k50_baseline": {
+          "candidate_ces": 0.6267,
+          "competition_mean": {
+            "bridge_candidate_count": 7.99,
+            "candidate_count": 50.0,
+            "connected_candidate_count": 14.21,
+            "protection_eligible_count": 0.43,
+            "target_relation_candidate_count": 26.73
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.3409,
+          "k": 50,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 41,
+              "retention": 0.0,
+              "selected": 0
+            },
+            "identity": {
+              "available": 83,
+              "retention": 1.0,
+              "selected": 83
+            },
+            "temporal_current": {
+              "available": 26,
+              "retention": 0.4615,
+              "selected": 12
+            },
+            "terminal": {
+              "available": 136,
+              "retention": 0.3456,
+              "selected": 47
+            }
+          },
+          "selected_ces_given_available": 0.5106
+        }
+      },
+      "tasks": 150
+    },
+    "cal_3000": {
+      "corpus_size": 3000,
+      "k": {
+        "C1_constant_300": 300,
+        "C2_capped_fraction": 300,
+        "k50_baseline": 50
+      },
+      "policies": {
+        "C1_constant_300": {
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.0149,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "competition_mean": {
+            "bridge_candidate_count": 23.65,
+            "candidate_count": 300.0,
+            "connected_candidate_count": 103.83,
+            "protection_eligible_count": 0.43,
+            "target_relation_candidate_count": 37.7
+          },
+          "delta_vs_baseline": {
+            "candidate_ces": 0.24,
+            "role_conditional_retention": {
+              "bridge": -0.0149,
+              "identity": -0.0588,
+              "temporal_current": -0.38,
+              "terminal": -0.1644
+            }
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.1633,
+          "k": 300,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 65,
+              "retention": 0.0154,
+              "selected": 1
+            },
+            "identity": {
+              "available": 85,
+              "retention": 0.9412,
+              "selected": 80
+            },
+            "temporal_current": {
+              "available": 30,
+              "retention": 0.1,
+              "selected": 3
+            },
+            "terminal": {
+              "available": 150,
+              "retention": 0.1467,
+              "selected": 22
+            }
+          },
+          "selected_ces_given_available": 0.144
+        },
+        "C2_capped_fraction": {
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.0149,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "competition_mean": {
+            "bridge_candidate_count": 23.65,
+            "candidate_count": 300.0,
+            "connected_candidate_count": 103.83,
+            "protection_eligible_count": 0.43,
+            "target_relation_candidate_count": 37.7
+          },
+          "delta_vs_baseline": {
+            "candidate_ces": 0.24,
+            "role_conditional_retention": {
+              "bridge": -0.0149,
+              "identity": -0.0588,
+              "temporal_current": -0.38,
+              "terminal": -0.1644
+            }
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.1633,
+          "k": 300,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 65,
+              "retention": 0.0154,
+              "selected": 1
+            },
+            "identity": {
+              "available": 85,
+              "retention": 0.9412,
+              "selected": 80
+            },
+            "temporal_current": {
+              "available": 30,
+              "retention": 0.1,
+              "selected": 3
+            },
+            "terminal": {
+              "available": 150,
+              "retention": 0.1467,
+              "selected": 22
+            }
+          },
+          "selected_ces_given_available": 0.144
+        },
+        "k50_baseline": {
+          "candidate_ces": 0.5933,
+          "competition_mean": {
+            "bridge_candidate_count": 9.49,
+            "candidate_count": 50.0,
+            "connected_candidate_count": 14.95,
+            "protection_eligible_count": 0.43,
+            "target_relation_candidate_count": 26.61
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.2,
+          "k": 50,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 33,
+              "retention": 0.0303,
+              "selected": 1
+            },
+            "identity": {
+              "available": 85,
+              "retention": 1.0,
+              "selected": 85
+            },
+            "temporal_current": {
+              "available": 25,
+              "retention": 0.48,
+              "selected": 12
+            },
+            "terminal": {
+              "available": 135,
+              "retention": 0.3111,
+              "selected": 42
+            }
+          },
+          "selected_ces_given_available": 0.573
+        }
+      },
+      "tasks": 150
+    },
+    "cal_700": {
+      "corpus_size": 700,
+      "k": {
+        "C1_constant_300": 300,
+        "C2_capped_fraction": 105,
+        "k50_baseline": 50
+      },
+      "policies": {
+        "C1_constant_300": {
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.2865,
+            "passed": false
+          },
+          "candidate_ces": 0.94,
+          "competition_mean": {
+            "bridge_candidate_count": 7.09,
+            "candidate_count": 300.0,
+            "connected_candidate_count": 53.22,
+            "protection_eligible_count": 0.45,
+            "target_relation_candidate_count": 36.4
+          },
+          "delta_vs_baseline": {
+            "candidate_ces": 0.2267,
+            "role_conditional_retention": {
+              "bridge": -0.2865,
+              "identity": -0.175,
+              "temporal_current": -0.3583,
+              "terminal": -0.1619
+            }
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.3269,
+          "k": 300,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 89,
+              "retention": 0.2135,
+              "selected": 19
+            },
+            "identity": {
+              "available": 80,
+              "retention": 0.825,
+              "selected": 66
+            },
+            "temporal_current": {
+              "available": 30,
+              "retention": 0.2667,
+              "selected": 8
+            },
+            "terminal": {
+              "available": 150,
+              "retention": 0.2933,
+              "selected": 44
+            }
+          },
+          "selected_ces_given_available": 0.234
+        },
+        "C2_capped_fraction": {
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.1667,
+            "passed": false
+          },
+          "candidate_ces": 0.8267,
+          "competition_mean": {
+            "bridge_candidate_count": 5.61,
+            "candidate_count": 105.0,
+            "connected_candidate_count": 20.12,
+            "protection_eligible_count": 0.44,
+            "target_relation_candidate_count": 34.36
+          },
+          "delta_vs_baseline": {
+            "candidate_ces": 0.1134,
+            "role_conditional_retention": {
+              "bridge": -0.1667,
+              "identity": 0.0,
+              "temporal_current": -0.2321,
+              "terminal": -0.0971
+            }
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.34,
+          "k": 105,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 66,
+              "retention": 0.3333,
+              "selected": 22
+            },
+            "identity": {
+              "available": 80,
+              "retention": 1.0,
+              "selected": 80
+            },
+            "temporal_current": {
+              "available": 28,
+              "retention": 0.3929,
+              "selected": 11
+            },
+            "terminal": {
+              "available": 148,
+              "retention": 0.3581,
+              "selected": 53
+            }
+          },
+          "selected_ces_given_available": 0.4355
+        },
+        "k50_baseline": {
+          "candidate_ces": 0.7133,
+          "competition_mean": {
+            "bridge_candidate_count": 4.76,
+            "candidate_count": 50.0,
+            "connected_candidate_count": 10.02,
+            "protection_eligible_count": 0.41,
+            "target_relation_candidate_count": 26.7
+          },
+          "disconnected_in_packet": 0,
+          "exact_bridged_retention": 0.3947,
+          "k": 50,
+          "max_packet_size": 6,
+          "role_conditional_retention": {
+            "bridge": {
+              "available": 58,
+              "retention": 0.5,
+              "selected": 29
+            },
+            "identity": {
+              "available": 80,
+              "retention": 1.0,
+              "selected": 80
+            },
+            "temporal_current": {
+              "available": 24,
+              "retention": 0.625,
+              "selected": 15
+            },
+            "terminal": {
+              "available": 134,
+              "retention": 0.4552,
+              "selected": 61
+            }
+          },
+          "selected_ces_given_available": 0.6916
+        }
+      },
+      "tasks": 150
+    }
+  },
+  "schema_version": "b3-selector-pressure-v1"
+}

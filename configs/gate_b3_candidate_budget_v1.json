@@ -290,6 +290,95 @@
       "C2 = clip(ceil(0.15N),100,300) + S2"
     ]
   },
+  "selector_pressure_result_2026_08_09": {
+    "WHY_the_competition_diagnostics_explain_it": {
+      "cal_3000_k300": {
+        "bridge_candidates": 23.6,
+        "connected_candidates": 103.8
+      },
+      "cal_700_k50_to_k300": {
+        "bridge_candidates": "4.8 -> 7.1 (x1.5)",
+        "connected_candidates": "10.0 -> 53.2 (x5.3)",
+        "target_relation_matches": "26.7 -> 36.4 (x1.4)"
+      },
+      "candidate_pressure": "k/packet rises from 8.3x at k=50 to 50x at k=300",
+      "mechanism": "S2's structural rule is LOCAL and under-specified once many candidates satisfy it. Connected candidates grow ~5x faster than the packet budget (which is fixed at 6), so the number of records that look structurally plausible explodes while the number S2 may keep does not. Protection eligibility barely moves (0.41 -> 0.45), meaning S2 still finds something to protect -- it simply cannot discriminate among many plausible bridges. This is candidate-pressure overload, not a coding defect.",
+      "purpose_served": "These counts were added specifically so a bridge drop could be explained rather than merely observed, and they do explain it."
+    },
+    "artifact": "evidence/gate_b3/calibration/selector_pressure.json",
+    "bridge_safety": {
+      "bound": -0.05,
+      "cal_1000": {
+        "C1": -0.0261,
+        "C2": 0.0854,
+        "verdict": "pass"
+      },
+      "cal_1500": {
+        "C1": -0.0925,
+        "C2": -0.1064,
+        "verdict": "FAIL"
+      },
+      "cal_2200": {
+        "C1": 0.0694,
+        "C2": 0.0694,
+        "verdict": "pass"
+      },
+      "cal_3000": {
+        "C1": -0.0149,
+        "C2": -0.0149,
+        "verdict": "pass"
+      },
+      "cal_700": {
+        "C1": -0.2865,
+        "C2": -0.1667,
+        "verdict": "FAIL"
+      },
+      "required": "at EVERY scale, not pooled",
+      "terminal_also_degrades": "terminal conditional retention falls at every scale too, e.g. cal_700 0.455 -> 0.293, cal_3000 0.311 -> 0.147. The damage is not bridge-specific.",
+      "the_passes_are_a_FLOOR_EFFECT_not_safety": "Where the delta passes, the k=50 BASELINE bridge retention is already near zero (0.140 at cal_1000, 0.000 at cal_2200, 0.030 at cal_3000), so there is almost nothing left to lose. Reading those as safety would be wrong. The per-scale requirement is what exposed this: a pooled average would have looked survivable."
+    },
+    "criteria_frozen_before_running": "configs/gate_b3_candidate_budget_v1.json selector_pressure_criteria_frozen_2026_08_09 (committed 110c73a)",
+    "decision_per_frozen_rule": "Outcome 3 of the preregistered decision rule: 'both improve candidate CES but bridge conditional retention falls beyond -0.05 -> STOP before HRM and open a selector-capacity or prefiltering sprint.' Neither C1 nor C2 may be frozen as a budget policy on this evidence.",
+    "headline": "Retrieval scaling works and S2 cannot use it. Candidate CES rises substantially at every scale (e.g. cal_700 0.713 -> 0.940, cal_3000 0.593 -> 0.833) while SELECTED CES given availability COLLAPSES (cal_700 0.692 -> 0.234, cal_3000 0.573 -> 0.144). This is precisely the 'candidate CES up / selected CES down' signature that was preregistered as the stop condition.",
+    "interpretation": "B3's retrieval hypothesis is CONFIRMED: bigger pools do carry the missing evidence, and availability targets were met. The blocking problem has MOVED downstream. S2 was validated on 50-candidate pools and does not survive 300-candidate pools; more availability without more discrimination makes the packet worse, not better.",
+    "next": "Open a selector-capacity sprint: either a cheap structural prefilter (large pool -> bounded working set -> S2 -> 6-record packet) or the runtime-graph expansion, both of which decouple availability from candidate pressure. B3 budget selection is BLOCKED until S2 can tolerate larger pools.",
+    "retention_efficiency_selected_over_candidate": {
+      "cal_1000": {
+        "C1": 0.22,
+        "C2": 0.409,
+        "k50": 0.851
+      },
+      "cal_1500": {
+        "C1": 0.184,
+        "C2": 0.216,
+        "k50": 0.925
+      },
+      "cal_2200": {
+        "C1": 0.216,
+        "C2": 0.216,
+        "k50": 0.815
+      },
+      "cal_3000": {
+        "C1": 0.173,
+        "C2": 0.173,
+        "k50": 0.966
+      },
+      "cal_700": {
+        "C1": 0.249,
+        "C2": 0.527,
+        "k50": 0.97
+      }
+    },
+    "status": "BRIDGE_SAFETY_FAIL. This is the preregistered STOP case. No HRM was run and none should be until selector capacity is addressed.",
+    "strongly_motivates": "Candidate compression / prefiltering between retrieval and S2, and the runtime-graph direction already recorded. A graph that reaches the bridge through relation-aware expansion would deliver availability WITHOUT handing S2 a 300-candidate pool -- which is now measured to be the harmful part, not a hypothetical.",
+    "what_must_NOT_be_done": [
+      "do not run HRM on these pools",
+      "do not weaken the -0.05 bound",
+      "do not raise the packet budget to relieve the strain (it would destroy attribution and was preregistered as forbidden)",
+      "do not pick C2 merely because it fails less"
+    ],
+    "what_was_tested": "UNCHANGED S2 applied to pools built by k=50 (baseline), C1 (k=300) and C2 (clip(ceil(0.15N),100,300)) at all five calibration scales. Packet budget fixed at 6. No HRM."
+  },
   "split_lineage": {
     "calibration_multi_scale": "to be built; B3 mechanism development",
     "confirmation_1": "negative result, CONSUMED, diagnostics only",
@@ -302,7 +391,7 @@
     "gate_2_selector_only": "apply UNCHANGED S2 to the frozen pools. Require higher availability AND preserved selector retention -- especially bridge conditional retention above its boundary. If candidate CES rises while S2 retention collapses: STOP, address selector capacity before spending GPU.",
     "gate_3_hrm": "only then measure Q, primary contrast B3-1 vs B3-0."
   },
-  "status": "TARGETS_AND_BUDGET_CANDIDATES_FROZEN__S2_NOT_YET_EVALUATED",
+  "status": "BLOCKED__SELECTOR_PRESSURE_GATE_FAILED__NO_BUDGET_POLICY_FROZEN",
   "success_criteria_deferred": {
     "explicitly_not_set_now": "Setting them before calibration exists would either be arbitrary or smuggle in confirmation #1's numbers.",
     "must_include": [

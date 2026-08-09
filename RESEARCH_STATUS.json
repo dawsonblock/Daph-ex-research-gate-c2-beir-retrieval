@@ -154,6 +154,95 @@
     "next": "Define prospective engineering targets (candidate CES, bridge availability, terminal availability) and select at most three rho candidates -- or a non-linear budget form, which findings 1 and 2 now suggest is better supported. Freeze those before any S2 evaluation.",
     "status": "COMPLETE and FROZEN. Retrieval-only. rho NOT chosen, no engineering targets set, S2 not evaluated, no HRM."
   },
+  "b3_selector_pressure_gate": {
+    "WHY_the_competition_diagnostics_explain_it": {
+      "cal_3000_k300": {
+        "bridge_candidates": 23.6,
+        "connected_candidates": 103.8
+      },
+      "cal_700_k50_to_k300": {
+        "bridge_candidates": "4.8 -> 7.1 (x1.5)",
+        "connected_candidates": "10.0 -> 53.2 (x5.3)",
+        "target_relation_matches": "26.7 -> 36.4 (x1.4)"
+      },
+      "candidate_pressure": "k/packet rises from 8.3x at k=50 to 50x at k=300",
+      "mechanism": "S2's structural rule is LOCAL and under-specified once many candidates satisfy it. Connected candidates grow ~5x faster than the packet budget (which is fixed at 6), so the number of records that look structurally plausible explodes while the number S2 may keep does not. Protection eligibility barely moves (0.41 -> 0.45), meaning S2 still finds something to protect -- it simply cannot discriminate among many plausible bridges. This is candidate-pressure overload, not a coding defect.",
+      "purpose_served": "These counts were added specifically so a bridge drop could be explained rather than merely observed, and they do explain it."
+    },
+    "artifact": "evidence/gate_b3/calibration/selector_pressure.json",
+    "bridge_safety": {
+      "bound": -0.05,
+      "cal_1000": {
+        "C1": -0.0261,
+        "C2": 0.0854,
+        "verdict": "pass"
+      },
+      "cal_1500": {
+        "C1": -0.0925,
+        "C2": -0.1064,
+        "verdict": "FAIL"
+      },
+      "cal_2200": {
+        "C1": 0.0694,
+        "C2": 0.0694,
+        "verdict": "pass"
+      },
+      "cal_3000": {
+        "C1": -0.0149,
+        "C2": -0.0149,
+        "verdict": "pass"
+      },
+      "cal_700": {
+        "C1": -0.2865,
+        "C2": -0.1667,
+        "verdict": "FAIL"
+      },
+      "required": "at EVERY scale, not pooled",
+      "terminal_also_degrades": "terminal conditional retention falls at every scale too, e.g. cal_700 0.455 -> 0.293, cal_3000 0.311 -> 0.147. The damage is not bridge-specific.",
+      "the_passes_are_a_FLOOR_EFFECT_not_safety": "Where the delta passes, the k=50 BASELINE bridge retention is already near zero (0.140 at cal_1000, 0.000 at cal_2200, 0.030 at cal_3000), so there is almost nothing left to lose. Reading those as safety would be wrong. The per-scale requirement is what exposed this: a pooled average would have looked survivable."
+    },
+    "criteria_frozen_before_running": "configs/gate_b3_candidate_budget_v1.json selector_pressure_criteria_frozen_2026_08_09 (committed 110c73a)",
+    "decision_per_frozen_rule": "Outcome 3 of the preregistered decision rule: 'both improve candidate CES but bridge conditional retention falls beyond -0.05 -> STOP before HRM and open a selector-capacity or prefiltering sprint.' Neither C1 nor C2 may be frozen as a budget policy on this evidence.",
+    "headline": "Retrieval scaling works and S2 cannot use it. Candidate CES rises substantially at every scale (e.g. cal_700 0.713 -> 0.940, cal_3000 0.593 -> 0.833) while SELECTED CES given availability COLLAPSES (cal_700 0.692 -> 0.234, cal_3000 0.573 -> 0.144). This is precisely the 'candidate CES up / selected CES down' signature that was preregistered as the stop condition.",
+    "interpretation": "B3's retrieval hypothesis is CONFIRMED: bigger pools do carry the missing evidence, and availability targets were met. The blocking problem has MOVED downstream. S2 was validated on 50-candidate pools and does not survive 300-candidate pools; more availability without more discrimination makes the packet worse, not better.",
+    "next": "Open a selector-capacity sprint: either a cheap structural prefilter (large pool -> bounded working set -> S2 -> 6-record packet) or the runtime-graph expansion, both of which decouple availability from candidate pressure. B3 budget selection is BLOCKED until S2 can tolerate larger pools.",
+    "retention_efficiency_selected_over_candidate": {
+      "cal_1000": {
+        "C1": 0.22,
+        "C2": 0.409,
+        "k50": 0.851
+      },
+      "cal_1500": {
+        "C1": 0.184,
+        "C2": 0.216,
+        "k50": 0.925
+      },
+      "cal_2200": {
+        "C1": 0.216,
+        "C2": 0.216,
+        "k50": 0.815
+      },
+      "cal_3000": {
+        "C1": 0.173,
+        "C2": 0.173,
+        "k50": 0.966
+      },
+      "cal_700": {
+        "C1": 0.249,
+        "C2": 0.527,
+        "k50": 0.97
+      }
+    },
+    "status": "BRIDGE_SAFETY_FAIL. This is the preregistered STOP case. No HRM was run and none should be until selector capacity is addressed.",
+    "strongly_motivates": "Candidate compression / prefiltering between retrieval and S2, and the runtime-graph direction already recorded. A graph that reaches the bridge through relation-aware expansion would deliver availability WITHOUT handing S2 a 300-candidate pool -- which is now measured to be the harmful part, not a hypothetical.",
+    "what_must_NOT_be_done": [
+      "do not run HRM on these pools",
+      "do not weaken the -0.05 bound",
+      "do not raise the packet budget to relieve the strain (it would destroy attribution and was preregistered as forbidden)",
+      "do not pick C2 merely because it fails less"
+    ],
+    "what_was_tested": "UNCHANGED S2 applied to pools built by k=50 (baseline), C1 (k=300) and C2 (clip(ceil(0.15N),100,300)) at all five calibration scales. Packet budget fixed at 6. No HRM."
+  },
   "b3_targets_and_candidates": {
     "bridge_target_grounding": "cal_700 (nearest the development corpus where S2 worked) has bridge 0.659 at k=50; 0.70 at every scale restores availability to slightly better than that validated level.",
     "graph_retrieval_recorded": "Recorded as the next architectural comparison AFTER B3, with the evaluator-graph vs runtime-memory-graph leakage separation written down. B3's flat-scaling baseline is what makes a graph result interpretable.",
@@ -602,9 +691,9 @@
   },
   "headline_status": {
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
-    "CURRENT_BOTTLENECK": "candidate_availability_under_corpus_scaling",
+    "CURRENT_BOTTLENECK": "selector capacity under candidate pressure (was: candidate availability). Retrieval scaling is confirmed to deliver availability; UNCHANGED S2 cannot use it -- selected CES given availability falls from ~0.90 at k=50 to ~0.20 at k=300.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "B3_CANDIDATE_BUDGET_SCALING (protocol frozen, rho NOT chosen, calibration not yet built)",
+    "NEXT_GATE": "SELECTOR_CAPACITY (prefilter or runtime-graph expansion). B3 budget selection BLOCKED.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
