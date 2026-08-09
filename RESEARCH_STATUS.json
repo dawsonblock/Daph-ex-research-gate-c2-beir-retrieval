@@ -764,6 +764,90 @@
     "status": "recorded as an architectural correction; no executive is being built",
     "why_incomplete": "B3 shows that acquiring more evidence can make the packet WORSE when the added evidence is structurally ambiguous. RETRIEVE_MORE is not the only remedy for insufficiency."
   },
+  "g1_typed_path": {
+    "WHY_it_degrades__the_diagnostic_that_matters": {
+      "filler_dominance": "At M50 only 3.9-9.2 of 50 slots are path participants; the other ~41-46 are retrieval-rank filler. That is how pressure re-enters the working set, and it is a concrete design constraint for G2.",
+      "path_pattern_absent": "RULED OUT. canonical subject found 1.00, relation extracted 1.00, typed path completed 0.86-0.94 at every scale.",
+      "preregistered_reading": "This is the second failure mode named in the protocol, and it SUPPORTS G2: the problem is no longer 'find a path' but 'choose among competing graph paths'.",
+      "too_many_competing_paths": "CONFIRMED. typed_paths_found 2.9 -> 5.7 and closing bridge entities 1.0 -> 2.7 as the corpus grows 700 -> 3000."
+    },
+    "arms_run": [
+      "G0_k50",
+      "G1_coarse_M{25,50,75}",
+      "G1_TYPED_PATH_M{25,50,75}",
+      "G3_oracle_M{25,50,75}"
+    ],
+    "artifact": "evidence/gate_g1/typed_path.json",
+    "decision_at_M_label_is_an_artifact": {
+      "artifact_left_unmodified": true,
+      "note": "The runner ranked M by worst-scale gap closure alone and printed M75. M75 typed BREACHES bridge safety at cal_700 (-0.091), so M50 is the operationally preferred configuration.",
+      "verdict_unchanged": "PARTIAL -> BUILD G2 either way; only the M label differs"
+    },
+    "g2_run": false,
+    "hrm_run": false,
+    "metric_trap_confirmed_in_REVERSE": {
+      "observation": "At cal_3000/M25 coarse posts conditional 0.785 on working-set CES 0.433, while typed posts conditional 0.495 on working-set CES 0.660. End-to-end they tie (0.340 vs 0.327).",
+      "why_it_matters": "Here the conditional metric PENALISES the mechanism with far better coverage. The permanent rule is load-bearing in both directions, not just against evidence-discarding compressors."
+    },
+    "next": "G2 runtime traversal is now earned rather than assumed. Typed path is retained as G2's seed template, not discarded.",
+    "packet_budget": 6,
+    "run_utc": "2026-08-09",
+    "s2_unchanged": true,
+    "status": "RUN_COMPLETE__VERDICT_PARTIAL__BUILD_G2",
+    "what_it_did_NOT_fix": {
+      "frozen_rule_outcome": {
+        "M25": "TYPED_PATH_INSUFFICIENT__BUILD_G2",
+        "M50": "PARTIAL__BUILD_G2__TYPED_PATH_RETAINED_AS_SEED_TEMPLATE",
+        "M75": "PARTIAL__BUILD_G2__TYPED_PATH_RETAINED_AS_SEED_TEMPLATE"
+      },
+      "gap_closure_per_scale": {
+        "M25": {
+          "cal_1000": 0.7778,
+          "cal_1500": 0.3157,
+          "cal_2200": -0.0359,
+          "cal_3000": -0.0998,
+          "cal_700": 0.8236
+        },
+        "M50": {
+          "cal_1000": 0.8337,
+          "cal_1500": 0.4997,
+          "cal_2200": 0.3054,
+          "cal_3000": 0.3548,
+          "cal_700": 0.8517
+        },
+        "M75": {
+          "cal_1000": 0.7692,
+          "cal_1500": 0.5675,
+          "cal_2200": 0.4241,
+          "cal_3000": 0.5314,
+          "cal_700": 0.7392
+        }
+      },
+      "pattern": "0.74-0.85 at cal_700/cal_1000, degrading to -0.10..0.53 at cal_2200/cal_3000. Scale-dependent, which is the exact property B3 identified as the problem."
+    },
+    "what_the_typed_path_FIXED": {
+      "bridge_safety": "typed passes the -0.05 bound at EVERY scale for M25 and M50; coarse breached it at cal_700 (M50,M75) and cal_1500 (M50,M75)",
+      "claim": "The closing-bridge constraint is a real repair of B4's P2 coverage collapse.",
+      "cost": "cheap -- 84-171 entity nodes, 13-101 edges traversed per task",
+      "working_set_ces_M25": {
+        "coarse": [
+          0.54,
+          0.52,
+          0.48,
+          0.507,
+          0.433
+        ],
+        "order": "cal_700,1000,1500,2200,3000",
+        "typed": [
+          0.747,
+          0.74,
+          0.7,
+          0.72,
+          0.66
+        ]
+      }
+    }
+  },
   "gate_lineage": {
     "gate_c2_i_identity_resolution": "Gate C2-I was the earlier placeholder identity-resolution gate. Gate C3 (gate_c3_surface_identity_resolution) is the formal execution gate with a frozen protocol; the two must not remain as apparently active parallel identity-resolution gates. C2-I is therefore marked SUPERSEDED_BY_GATE_C3. No C2-I implementation or measurement existed; the substantive work continues under C3."
   },
@@ -799,7 +883,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "G1_RUNTIME_EVIDENCE_GRAPH (protocol frozen; typed-path diagnostic runs first and may obviate the graph substrate)",
+    "NEXT_GATE": "G2 runtime graph traversal (earned by G1_TYPED_PATH: paths are found 0.86-0.94 of the time but 2.9-5.7 compete, so the open problem is choosing among paths)",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",

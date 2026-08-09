@@ -1,0 +1,2276 @@
+{
+  "REPORTING_RULE": "selected_ces_end_to_end is primary; the conditional term is never reported alone",
+  "decision": "PARTIAL__BUILD_G2__TYPED_PATH_RETAINED_AS_SEED_TEMPLATE",
+  "decision_at_M": 75,
+  "frozen_bounds": {
+    "bridge_bound": -0.05,
+    "frozen_before_run": true,
+    "gap_closure_partial_floor": 0.3,
+    "gap_closure_pass": 0.6
+  },
+  "g2_run": false,
+  "m_values": [
+    25,
+    50,
+    75
+  ],
+  "no_hrm": true,
+  "packet_budget": 6,
+  "s2_unchanged": true,
+  "scales": {
+    "cal_1000": {
+      "arms": {
+        "G0_k50": {
+          "M": null,
+          "availability": {
+            "bridge": 1.0,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "candidate_ces": 0.68,
+          "compressor": null,
+          "conditional_retention": {
+            "bridge": 0.1373,
+            "identity": 1.0,
+            "temporal_current": 0.5417,
+            "terminal": 0.3913
+          },
+          "k": 50,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.3933,
+          "selected_ces_given_working__NEVER_ALONE": 0.5784,
+          "structural_competition_ratio": 1.97,
+          "working_set_ces": 0.68,
+          "working_set_size_mean": 50.0
+        },
+        "G1_TYPED_PATH_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.8169,
+            "identity": 1.0,
+            "temporal_current": 0.8667,
+            "terminal": 0.88
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.2593,
+            "passed": true
+          },
+          "candidate_ces": 0.8467,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.3966,
+            "identity": 1.0,
+            "temporal_current": 0.6154,
+            "terminal": 0.5152
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.2593,
+            "identity": 0.0,
+            "temporal_current": 0.0737,
+            "terminal": 0.1239
+          },
+          "k": 150,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 1.167,
+            "filler_count": 20.3,
+            "graph_edges_entity_aliases_entity": 9.242,
+            "graph_edges_entity_linked_to_entity": 91.573,
+            "graph_edges_entity_resolves_to_entity": 9.242,
+            "graph_edges_record_expresses_relation": 35.72,
+            "graph_edges_record_mentions_entity": 233.62,
+            "graph_edges_total": 379.273,
+            "graph_entity_nodes": 109.647,
+            "graph_record_nodes": 150.0,
+            "graph_relation_bearing_records": 35.72,
+            "one_hop_bridge_candidates": 8.067,
+            "path_participant_count": 4.7,
+            "records_examined": 150.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 23.56,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 17.827,
+            "typed_path_completed": 0.88,
+            "typed_paths_found": 3.413,
+            "working_set_size": 25.0
+          },
+          "selected_ces_end_to_end": 0.5,
+          "selected_ces_given_working__NEVER_ALONE": 0.6757,
+          "structural_competition_ratio": 1.47,
+          "working_set_ces": 0.74,
+          "working_set_size_mean": 25.0
+        },
+        "G1_TYPED_PATH_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.9296,
+            "identity": 1.0,
+            "temporal_current": 0.9333,
+            "terminal": 0.98
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.09,
+            "passed": true
+          },
+          "candidate_ces": 0.8467,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.2273,
+            "identity": 1.0,
+            "temporal_current": 0.5714,
+            "terminal": 0.4286
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.09,
+            "identity": 0.0,
+            "temporal_current": 0.0297,
+            "terminal": 0.0373
+          },
+          "k": 150,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 1.167,
+            "filler_count": 45.3,
+            "graph_edges_entity_aliases_entity": 9.242,
+            "graph_edges_entity_linked_to_entity": 91.573,
+            "graph_edges_entity_resolves_to_entity": 9.242,
+            "graph_edges_record_expresses_relation": 35.72,
+            "graph_edges_record_mentions_entity": 233.62,
+            "graph_edges_total": 379.273,
+            "graph_entity_nodes": 109.647,
+            "graph_record_nodes": 150.0,
+            "graph_relation_bearing_records": 35.72,
+            "one_hop_bridge_candidates": 8.067,
+            "path_participant_count": 4.7,
+            "records_examined": 150.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 23.56,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 17.827,
+            "typed_path_completed": 0.88,
+            "typed_paths_found": 3.413,
+            "working_set_size": 50.0
+          },
+          "selected_ces_end_to_end": 0.4467,
+          "selected_ces_given_working__NEVER_ALONE": 0.5492,
+          "structural_competition_ratio": 2.2,
+          "working_set_ces": 0.8133,
+          "working_set_size_mean": 50.0
+        },
+        "G1_TYPED_PATH_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.9577,
+            "identity": 1.0,
+            "temporal_current": 0.9667,
+            "terminal": 0.9933
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0833,
+            "passed": true
+          },
+          "candidate_ces": 0.8467,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.2206,
+            "identity": 1.0,
+            "temporal_current": 0.5517,
+            "terminal": 0.4094
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0833,
+            "identity": 0.0,
+            "temporal_current": 0.01,
+            "terminal": 0.0181
+          },
+          "k": 150,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 1.167,
+            "filler_count": 70.3,
+            "graph_edges_entity_aliases_entity": 9.242,
+            "graph_edges_entity_linked_to_entity": 91.573,
+            "graph_edges_entity_resolves_to_entity": 9.242,
+            "graph_edges_record_expresses_relation": 35.72,
+            "graph_edges_record_mentions_entity": 233.62,
+            "graph_edges_total": 379.273,
+            "graph_entity_nodes": 109.647,
+            "graph_record_nodes": 150.0,
+            "graph_relation_bearing_records": 35.72,
+            "one_hop_bridge_candidates": 8.067,
+            "path_participant_count": 4.7,
+            "records_examined": 150.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 23.56,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 17.827,
+            "typed_path_completed": 0.88,
+            "typed_paths_found": 3.413,
+            "working_set_size": 75.0
+          },
+          "selected_ces_end_to_end": 0.4133,
+          "selected_ces_given_working__NEVER_ALONE": 0.496,
+          "structural_competition_ratio": 2.89,
+          "working_set_ces": 0.8333,
+          "working_set_size_mean": 75.0
+        },
+        "G1_coarse_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.5915,
+            "identity": 0.9877,
+            "temporal_current": 0.5,
+            "terminal": 0.7733
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0294,
+            "passed": true
+          },
+          "candidate_ces": 0.8467,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.1667,
+            "identity": 1.0,
+            "temporal_current": 0.6667,
+            "terminal": 0.3879
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0294,
+            "identity": 0.0,
+            "temporal_current": 0.125,
+            "terminal": -0.0034
+          },
+          "k": 150,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.36,
+          "selected_ces_given_working__NEVER_ALONE": 0.6923,
+          "structural_competition_ratio": 1.45,
+          "working_set_ces": 0.52,
+          "working_set_size_mean": 25.0
+        },
+        "G1_coarse_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.9437,
+            "identity": 0.9877,
+            "temporal_current": 0.7,
+            "terminal": 0.9
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.1015,
+            "passed": true
+          },
+          "candidate_ces": 0.8467,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.2388,
+            "identity": 1.0,
+            "temporal_current": 0.4762,
+            "terminal": 0.363
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.1015,
+            "identity": 0.0,
+            "temporal_current": -0.0655,
+            "terminal": -0.0283
+          },
+          "k": 150,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.3133,
+          "selected_ces_given_working__NEVER_ALONE": 0.4196,
+          "structural_competition_ratio": 3.71,
+          "working_set_ces": 0.7467,
+          "working_set_size_mean": 50.0
+        },
+        "G1_coarse_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.9718,
+            "identity": 0.9877,
+            "temporal_current": 0.7333,
+            "terminal": 0.9067
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.1091,
+            "passed": true
+          },
+          "candidate_ces": 0.8467,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.2464,
+            "identity": 1.0,
+            "temporal_current": 0.3182,
+            "terminal": 0.3235
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.1091,
+            "identity": 0.0,
+            "temporal_current": -0.2235,
+            "terminal": -0.0678
+          },
+          "k": 150,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.28,
+          "selected_ces_given_working__NEVER_ALONE": 0.3684,
+          "structural_competition_ratio": 4.69,
+          "working_set_ces": 0.76,
+          "working_set_size_mean": 75.0
+        },
+        "G3_oracle_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.8732,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 0.9867
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.2498,
+            "passed": true
+          },
+          "candidate_ces": 0.8467,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.3871,
+            "identity": 1.0,
+            "temporal_current": 0.6333,
+            "terminal": 0.5338
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.2498,
+            "identity": 0.0,
+            "temporal_current": 0.0916,
+            "terminal": 0.1425
+          },
+          "k": 150,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.54,
+          "selected_ces_given_working__NEVER_ALONE": 0.6378,
+          "structural_competition_ratio": 1.17,
+          "working_set_ces": 0.8467,
+          "working_set_size_mean": 25.0
+        },
+        "G3_oracle_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.9014,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.1439,
+            "passed": true
+          },
+          "candidate_ces": 0.8467,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.2812,
+            "identity": 1.0,
+            "temporal_current": 0.6,
+            "terminal": 0.4467
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.1439,
+            "identity": 0.0,
+            "temporal_current": 0.0583,
+            "terminal": 0.0554
+          },
+          "k": 150,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.4733,
+          "selected_ces_given_working__NEVER_ALONE": 0.5591,
+          "structural_competition_ratio": 2.0,
+          "working_set_ces": 0.8467,
+          "working_set_size_mean": 50.0
+        },
+        "G3_oracle_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.9296,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.1657,
+            "passed": true
+          },
+          "candidate_ces": 0.8467,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.303,
+            "identity": 1.0,
+            "temporal_current": 0.5667,
+            "terminal": 0.4333
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.1657,
+            "identity": 0.0,
+            "temporal_current": 0.025,
+            "terminal": 0.042
+          },
+          "k": 150,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.4533,
+          "selected_ces_given_working__NEVER_ALONE": 0.5354,
+          "structural_competition_ratio": 2.75,
+          "working_set_ces": 0.8467,
+          "working_set_size_mean": 75.0
+        }
+      },
+      "corpus_size": 1000,
+      "gap_closure": {
+        "M25": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.36,
+          "ces_oracle_P3": 0.54,
+          "ces_typed": 0.5,
+          "gap_closure": 0.7778,
+          "headroom": 0.18,
+          "meets_frozen_bound": true
+        },
+        "M50": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.3133,
+          "ces_oracle_P3": 0.4733,
+          "ces_typed": 0.4467,
+          "gap_closure": 0.8337,
+          "headroom": 0.16,
+          "meets_frozen_bound": true
+        },
+        "M75": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.28,
+          "ces_oracle_P3": 0.4533,
+          "ces_typed": 0.4133,
+          "gap_closure": 0.7692,
+          "headroom": 0.1733,
+          "meets_frozen_bound": true
+        }
+      },
+      "tasks": 150
+    },
+    "cal_1500": {
+      "arms": {
+        "G0_k50": {
+          "M": null,
+          "availability": {
+            "bridge": 1.0,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "candidate_ces": 0.6467,
+          "compressor": null,
+          "conditional_retention": {
+            "bridge": 0.1064,
+            "identity": 1.0,
+            "temporal_current": 0.5833,
+            "terminal": 0.3333
+          },
+          "k": 50,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.3867,
+          "selected_ces_given_working__NEVER_ALONE": 0.5979,
+          "structural_competition_ratio": 2.17,
+          "working_set_ces": 0.6467,
+          "working_set_size_mean": 50.0
+        },
+        "G1_TYPED_PATH_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.8429,
+            "identity": 0.9877,
+            "temporal_current": 0.9,
+            "terminal": 0.8267
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.1478,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.2542,
+            "identity": 1.0,
+            "temporal_current": 0.5556,
+            "terminal": 0.4677
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.1478,
+            "identity": 0.0,
+            "temporal_current": -0.0277,
+            "terminal": 0.1344
+          },
+          "k": 225,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 1.893,
+            "filler_count": 18.713,
+            "graph_edges_entity_aliases_entity": 10.369,
+            "graph_edges_entity_linked_to_entity": 170.513,
+            "graph_edges_entity_resolves_to_entity": 10.369,
+            "graph_edges_record_expresses_relation": 36.2,
+            "graph_edges_record_mentions_entity": 382.353,
+            "graph_edges_total": 609.667,
+            "graph_entity_nodes": 151.073,
+            "graph_record_nodes": 225.0,
+            "graph_relation_bearing_records": 36.2,
+            "one_hop_bridge_candidates": 13.213,
+            "path_participant_count": 6.287,
+            "records_examined": 225.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 45.127,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 27.24,
+            "typed_path_completed": 0.92,
+            "typed_paths_found": 4.08,
+            "working_set_size": 25.0
+          },
+          "selected_ces_end_to_end": 0.42,
+          "selected_ces_given_working__NEVER_ALONE": 0.6,
+          "structural_competition_ratio": 1.67,
+          "working_set_ces": 0.7,
+          "working_set_size_mean": 25.0
+        },
+        "G1_TYPED_PATH_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.9429,
+            "identity": 1.0,
+            "temporal_current": 0.9333,
+            "terminal": 0.98
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0603,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.1667,
+            "identity": 1.0,
+            "temporal_current": 0.5,
+            "terminal": 0.3197
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0603,
+            "identity": 0.0,
+            "temporal_current": -0.0833,
+            "terminal": -0.0136
+          },
+          "k": 225,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 1.893,
+            "filler_count": 43.713,
+            "graph_edges_entity_aliases_entity": 10.369,
+            "graph_edges_entity_linked_to_entity": 170.513,
+            "graph_edges_entity_resolves_to_entity": 10.369,
+            "graph_edges_record_expresses_relation": 36.2,
+            "graph_edges_record_mentions_entity": 382.353,
+            "graph_edges_total": 609.667,
+            "graph_entity_nodes": 151.073,
+            "graph_record_nodes": 225.0,
+            "graph_relation_bearing_records": 36.2,
+            "one_hop_bridge_candidates": 13.213,
+            "path_participant_count": 6.287,
+            "records_examined": 225.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 45.127,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 27.24,
+            "typed_path_completed": 0.92,
+            "typed_paths_found": 4.08,
+            "working_set_size": 50.0
+          },
+          "selected_ces_end_to_end": 0.3533,
+          "selected_ces_given_working__NEVER_ALONE": 0.4274,
+          "structural_competition_ratio": 2.63,
+          "working_set_ces": 0.8267,
+          "working_set_size_mean": 50.0
+        },
+        "G1_TYPED_PATH_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.9714,
+            "identity": 1.0,
+            "temporal_current": 0.9667,
+            "terminal": 0.9933
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0112,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.1176,
+            "identity": 1.0,
+            "temporal_current": 0.3793,
+            "terminal": 0.2752
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0112,
+            "identity": 0.0,
+            "temporal_current": -0.204,
+            "terminal": -0.0581
+          },
+          "k": 225,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 1.893,
+            "filler_count": 68.713,
+            "graph_edges_entity_aliases_entity": 10.369,
+            "graph_edges_entity_linked_to_entity": 170.513,
+            "graph_edges_entity_resolves_to_entity": 10.369,
+            "graph_edges_record_expresses_relation": 36.2,
+            "graph_edges_record_mentions_entity": 382.353,
+            "graph_edges_total": 609.667,
+            "graph_entity_nodes": 151.073,
+            "graph_record_nodes": 225.0,
+            "graph_relation_bearing_records": 36.2,
+            "one_hop_bridge_candidates": 13.213,
+            "path_participant_count": 6.287,
+            "records_examined": 225.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 45.127,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 27.24,
+            "typed_path_completed": 0.92,
+            "typed_paths_found": 4.08,
+            "working_set_size": 75.0
+          },
+          "selected_ces_end_to_end": 0.3133,
+          "selected_ces_given_working__NEVER_ALONE": 0.3701,
+          "structural_competition_ratio": 3.42,
+          "working_set_ces": 0.8467,
+          "working_set_size_mean": 75.0
+        },
+        "G1_coarse_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.5286,
+            "identity": 1.0,
+            "temporal_current": 0.6667,
+            "terminal": 0.7267
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0287,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.1351,
+            "identity": 1.0,
+            "temporal_current": 0.6,
+            "terminal": 0.3853
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0287,
+            "identity": 0.0,
+            "temporal_current": 0.0167,
+            "terminal": 0.052
+          },
+          "k": 225,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.38,
+          "selected_ces_given_working__NEVER_ALONE": 0.7917,
+          "structural_competition_ratio": 1.5,
+          "working_set_ces": 0.48,
+          "working_set_size_mean": 25.0
+        },
+        "G1_coarse_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.8857,
+            "identity": 1.0,
+            "temporal_current": 0.8333,
+            "terminal": 0.9
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.1064,
+            "passed": false
+          },
+          "candidate_ces": 0.86,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.0,
+            "identity": 1.0,
+            "temporal_current": 0.56,
+            "terminal": 0.3111
+          },
+          "delta_vs_baseline": {
+            "bridge": -0.1064,
+            "identity": 0.0,
+            "temporal_current": -0.0233,
+            "terminal": -0.0222
+          },
+          "k": 225,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.2667,
+          "selected_ces_given_working__NEVER_ALONE": 0.3636,
+          "structural_competition_ratio": 4.02,
+          "working_set_ces": 0.7333,
+          "working_set_size_mean": 50.0
+        },
+        "G1_coarse_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.9857,
+            "identity": 1.0,
+            "temporal_current": 0.9,
+            "terminal": 0.9133
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.0919,
+            "passed": false
+          },
+          "candidate_ces": 0.86,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.0145,
+            "identity": 0.9506,
+            "temporal_current": 0.2222,
+            "terminal": 0.219
+          },
+          "delta_vs_baseline": {
+            "bridge": -0.0919,
+            "identity": -0.0494,
+            "temporal_current": -0.3611,
+            "terminal": -0.1143
+          },
+          "k": 225,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.1733,
+          "selected_ces_given_working__NEVER_ALONE": 0.2203,
+          "structural_competition_ratio": 6.88,
+          "working_set_ces": 0.7867,
+          "working_set_size_mean": 75.0
+        },
+        "G3_oracle_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.9286,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 0.98
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.2013,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.3077,
+            "identity": 1.0,
+            "temporal_current": 0.6,
+            "terminal": 0.5034
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.2013,
+            "identity": 0.0,
+            "temporal_current": 0.0167,
+            "terminal": 0.1701
+          },
+          "k": 225,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.5067,
+          "selected_ces_given_working__NEVER_ALONE": 0.5891,
+          "structural_competition_ratio": 1.2,
+          "working_set_ces": 0.86,
+          "working_set_size_mean": 25.0
+        },
+        "G3_oracle_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.9571,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.1175,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.2239,
+            "identity": 1.0,
+            "temporal_current": 0.6,
+            "terminal": 0.3733
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.1175,
+            "identity": 0.0,
+            "temporal_current": 0.0167,
+            "terminal": 0.04
+          },
+          "k": 225,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.44,
+          "selected_ces_given_working__NEVER_ALONE": 0.5116,
+          "structural_competition_ratio": 2.23,
+          "working_set_ces": 0.86,
+          "working_set_size_mean": 50.0
+        },
+        "G3_oracle_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.9571,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.1026,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.209,
+            "identity": 1.0,
+            "temporal_current": 0.6,
+            "terminal": 0.3533
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.1026,
+            "identity": 0.0,
+            "temporal_current": 0.0167,
+            "terminal": 0.02
+          },
+          "k": 225,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.42,
+          "selected_ces_given_working__NEVER_ALONE": 0.4884,
+          "structural_competition_ratio": 3.08,
+          "working_set_ces": 0.86,
+          "working_set_size_mean": 75.0
+        }
+      },
+      "corpus_size": 1500,
+      "gap_closure": {
+        "M25": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.38,
+          "ces_oracle_P3": 0.5067,
+          "ces_typed": 0.42,
+          "gap_closure": 0.3157,
+          "headroom": 0.1267,
+          "meets_frozen_bound": false
+        },
+        "M50": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.2667,
+          "ces_oracle_P3": 0.44,
+          "ces_typed": 0.3533,
+          "gap_closure": 0.4997,
+          "headroom": 0.1733,
+          "meets_frozen_bound": false
+        },
+        "M75": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.1733,
+          "ces_oracle_P3": 0.42,
+          "ces_typed": 0.3133,
+          "gap_closure": 0.5675,
+          "headroom": 0.2467,
+          "meets_frozen_bound": false
+        }
+      },
+      "tasks": 150
+    },
+    "cal_2200": {
+      "arms": {
+        "G0_k50": {
+          "M": null,
+          "availability": {
+            "bridge": 1.0,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "candidate_ces": 0.6267,
+          "compressor": null,
+          "conditional_retention": {
+            "bridge": 0.0,
+            "identity": 1.0,
+            "temporal_current": 0.4615,
+            "terminal": 0.3456
+          },
+          "k": 50,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.32,
+          "selected_ces_given_working__NEVER_ALONE": 0.5106,
+          "structural_competition_ratio": 2.37,
+          "working_set_ces": 0.6267,
+          "working_set_size_mean": 50.0
+        },
+        "G1_TYPED_PATH_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.875,
+            "identity": 0.9759,
+            "temporal_current": 0.7667,
+            "terminal": 0.8776
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.3016,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.3016,
+            "identity": 1.0,
+            "temporal_current": 0.2609,
+            "terminal": 0.3721
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.3016,
+            "identity": 0.0,
+            "temporal_current": -0.2006,
+            "terminal": 0.0265
+          },
+          "k": 300,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 1.96,
+            "filler_count": 17.847,
+            "graph_edges_entity_aliases_entity": 12.207,
+            "graph_edges_entity_linked_to_entity": 206.613,
+            "graph_edges_entity_resolves_to_entity": 12.207,
+            "graph_edges_record_expresses_relation": 52.46,
+            "graph_edges_record_mentions_entity": 485.887,
+            "graph_edges_total": 769.373,
+            "graph_entity_nodes": 171.14,
+            "graph_record_nodes": 300.0,
+            "graph_relation_bearing_records": 52.46,
+            "one_hop_bridge_candidates": 14.613,
+            "path_participant_count": 7.153,
+            "records_examined": 300.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 64.12,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 32.06,
+            "typed_path_completed": 0.907,
+            "typed_paths_found": 5.173,
+            "working_set_size": 25.0
+          },
+          "selected_ces_end_to_end": 0.32,
+          "selected_ces_given_working__NEVER_ALONE": 0.4444,
+          "structural_competition_ratio": 1.8,
+          "working_set_ces": 0.72,
+          "working_set_size_mean": 25.0
+        },
+        "G1_TYPED_PATH_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.9306,
+            "identity": 1.0,
+            "temporal_current": 0.9,
+            "terminal": 0.9728
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.209,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.209,
+            "identity": 1.0,
+            "temporal_current": 0.2222,
+            "terminal": 0.3287
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.209,
+            "identity": 0.0,
+            "temporal_current": -0.2393,
+            "terminal": -0.0169
+          },
+          "k": 300,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 1.96,
+            "filler_count": 42.48,
+            "graph_edges_entity_aliases_entity": 12.207,
+            "graph_edges_entity_linked_to_entity": 206.613,
+            "graph_edges_entity_resolves_to_entity": 12.207,
+            "graph_edges_record_expresses_relation": 52.46,
+            "graph_edges_record_mentions_entity": 485.887,
+            "graph_edges_total": 769.373,
+            "graph_entity_nodes": 171.14,
+            "graph_record_nodes": 300.0,
+            "graph_relation_bearing_records": 52.46,
+            "one_hop_bridge_candidates": 14.613,
+            "path_participant_count": 7.52,
+            "records_examined": 300.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 64.12,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 32.06,
+            "typed_path_completed": 0.907,
+            "typed_paths_found": 5.173,
+            "working_set_size": 50.0
+          },
+          "selected_ces_end_to_end": 0.2933,
+          "selected_ces_given_working__NEVER_ALONE": 0.3548,
+          "structural_competition_ratio": 3.04,
+          "working_set_ces": 0.8267,
+          "working_set_size_mean": 50.0
+        },
+        "G1_TYPED_PATH_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.9583,
+            "identity": 1.0,
+            "temporal_current": 0.9667,
+            "terminal": 0.9932
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.1594,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.1594,
+            "identity": 1.0,
+            "temporal_current": 0.2414,
+            "terminal": 0.3082
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.1594,
+            "identity": 0.0,
+            "temporal_current": -0.2201,
+            "terminal": -0.0374
+          },
+          "k": 300,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 1.96,
+            "filler_count": 67.48,
+            "graph_edges_entity_aliases_entity": 12.207,
+            "graph_edges_entity_linked_to_entity": 206.613,
+            "graph_edges_entity_resolves_to_entity": 12.207,
+            "graph_edges_record_expresses_relation": 52.46,
+            "graph_edges_record_mentions_entity": 485.887,
+            "graph_edges_total": 769.373,
+            "graph_entity_nodes": 171.14,
+            "graph_record_nodes": 300.0,
+            "graph_relation_bearing_records": 52.46,
+            "one_hop_bridge_candidates": 14.613,
+            "path_participant_count": 7.52,
+            "records_examined": 300.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 64.12,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 32.06,
+            "typed_path_completed": 0.907,
+            "typed_paths_found": 5.173,
+            "working_set_size": 75.0
+          },
+          "selected_ces_end_to_end": 0.26,
+          "selected_ces_given_working__NEVER_ALONE": 0.3071,
+          "structural_competition_ratio": 3.99,
+          "working_set_ces": 0.8467,
+          "working_set_size_mean": 75.0
+        },
+        "G1_coarse_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.4583,
+            "identity": 0.988,
+            "temporal_current": 0.4667,
+            "terminal": 0.7347
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0606,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.0606,
+            "identity": 1.0,
+            "temporal_current": 0.7143,
+            "terminal": 0.3981
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0606,
+            "identity": 0.0,
+            "temporal_current": 0.2528,
+            "terminal": 0.0525
+          },
+          "k": 300,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.3267,
+          "selected_ces_given_working__NEVER_ALONE": 0.6447,
+          "structural_competition_ratio": 1.49,
+          "working_set_ces": 0.5067,
+          "working_set_size_mean": 25.0
+        },
+        "G1_coarse_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.6667,
+            "identity": 0.988,
+            "temporal_current": 0.7667,
+            "terminal": 0.8912
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0417,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.0417,
+            "identity": 0.9878,
+            "temporal_current": 0.5652,
+            "terminal": 0.313
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0417,
+            "identity": -0.0122,
+            "temporal_current": 0.1037,
+            "terminal": -0.0326
+          },
+          "k": 300,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.22,
+          "selected_ces_given_working__NEVER_ALONE": 0.3367,
+          "structural_competition_ratio": 3.81,
+          "working_set_ces": 0.6533,
+          "working_set_size_mean": 50.0
+        },
+        "G1_coarse_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.9028,
+            "identity": 0.988,
+            "temporal_current": 0.7667,
+            "terminal": 0.8912
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0769,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.0769,
+            "identity": 0.9756,
+            "temporal_current": 0.2609,
+            "terminal": 0.2672
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0769,
+            "identity": -0.0244,
+            "temporal_current": -0.2006,
+            "terminal": -0.0784
+          },
+          "k": 300,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.1667,
+          "selected_ces_given_working__NEVER_ALONE": 0.2273,
+          "structural_competition_ratio": 6.67,
+          "working_set_ces": 0.7333,
+          "working_set_size_mean": 75.0
+        },
+        "G3_oracle_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.9306,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 0.9932
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.2836,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.2836,
+            "identity": 1.0,
+            "temporal_current": 0.6667,
+            "terminal": 0.5274
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.2836,
+            "identity": 0.0,
+            "temporal_current": 0.2052,
+            "terminal": 0.1818
+          },
+          "k": 300,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.5133,
+          "selected_ces_given_working__NEVER_ALONE": 0.5969,
+          "structural_competition_ratio": 1.38,
+          "working_set_ces": 0.86,
+          "working_set_size_mean": 25.0
+        },
+        "G3_oracle_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.9444,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.2647,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.2647,
+            "identity": 1.0,
+            "temporal_current": 0.6333,
+            "terminal": 0.483
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.2647,
+            "identity": 0.0,
+            "temporal_current": 0.1718,
+            "terminal": 0.1374
+          },
+          "k": 300,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.46,
+          "selected_ces_given_working__NEVER_ALONE": 0.5349,
+          "structural_competition_ratio": 2.46,
+          "working_set_ces": 0.86,
+          "working_set_size_mean": 50.0
+        },
+        "G3_oracle_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.9444,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.2647,
+            "passed": true
+          },
+          "candidate_ces": 0.86,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.2647,
+            "identity": 1.0,
+            "temporal_current": 0.6,
+            "terminal": 0.4218
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.2647,
+            "identity": 0.0,
+            "temporal_current": 0.1385,
+            "terminal": 0.0762
+          },
+          "k": 300,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.3867,
+          "selected_ces_given_working__NEVER_ALONE": 0.4496,
+          "structural_competition_ratio": 3.43,
+          "working_set_ces": 0.86,
+          "working_set_size_mean": 75.0
+        }
+      },
+      "corpus_size": 2200,
+      "gap_closure": {
+        "M25": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.3267,
+          "ces_oracle_P3": 0.5133,
+          "ces_typed": 0.32,
+          "gap_closure": -0.0359,
+          "headroom": 0.1866,
+          "meets_frozen_bound": false
+        },
+        "M50": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.22,
+          "ces_oracle_P3": 0.46,
+          "ces_typed": 0.2933,
+          "gap_closure": 0.3054,
+          "headroom": 0.24,
+          "meets_frozen_bound": false
+        },
+        "M75": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.1667,
+          "ces_oracle_P3": 0.3867,
+          "ces_typed": 0.26,
+          "gap_closure": 0.4241,
+          "headroom": 0.22,
+          "meets_frozen_bound": false
+        }
+      },
+      "tasks": 150
+    },
+    "cal_3000": {
+      "arms": {
+        "G0_k50": {
+          "M": null,
+          "availability": {
+            "bridge": 1.0,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "candidate_ces": 0.5933,
+          "compressor": null,
+          "conditional_retention": {
+            "bridge": 0.0303,
+            "identity": 1.0,
+            "temporal_current": 0.48,
+            "terminal": 0.3111
+          },
+          "k": 50,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.34,
+          "selected_ces_given_working__NEVER_ALONE": 0.573,
+          "structural_competition_ratio": 2.49,
+          "working_set_ces": 0.5933,
+          "working_set_size_mean": 50.0
+        },
+        "G1_TYPED_PATH_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.7538,
+            "identity": 0.9882,
+            "temporal_current": 0.8333,
+            "terminal": 0.82
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0921,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.1224,
+            "identity": 1.0,
+            "temporal_current": 0.36,
+            "terminal": 0.3577
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0921,
+            "identity": 0.0,
+            "temporal_current": -0.12,
+            "terminal": 0.0466
+          },
+          "k": 300,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 2.687,
+            "filler_count": 16.08,
+            "graph_edges_entity_aliases_entity": 10.647,
+            "graph_edges_entity_linked_to_entity": 274.713,
+            "graph_edges_entity_resolves_to_entity": 10.647,
+            "graph_edges_record_expresses_relation": 37.7,
+            "graph_edges_record_mentions_entity": 547.327,
+            "graph_edges_total": 881.033,
+            "graph_entity_nodes": 168.84,
+            "graph_record_nodes": 300.0,
+            "graph_relation_bearing_records": 37.7,
+            "one_hop_bridge_candidates": 23.653,
+            "path_participant_count": 8.92,
+            "records_examined": 300.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 101.027,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 48.967,
+            "typed_path_completed": 0.94,
+            "typed_paths_found": 5.74,
+            "working_set_size": 25.0
+          },
+          "selected_ces_end_to_end": 0.3267,
+          "selected_ces_given_working__NEVER_ALONE": 0.4949,
+          "structural_competition_ratio": 1.99,
+          "working_set_ces": 0.66,
+          "working_set_size_mean": 25.0
+        },
+        "G1_TYPED_PATH_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.8,
+            "identity": 1.0,
+            "temporal_current": 0.9333,
+            "terminal": 0.9533
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0659,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.0962,
+            "identity": 1.0,
+            "temporal_current": 0.2857,
+            "terminal": 0.2517
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0659,
+            "identity": 0.0,
+            "temporal_current": -0.1943,
+            "terminal": -0.0594
+          },
+          "k": 300,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 2.687,
+            "filler_count": 40.813,
+            "graph_edges_entity_aliases_entity": 10.647,
+            "graph_edges_entity_linked_to_entity": 274.713,
+            "graph_edges_entity_resolves_to_entity": 10.647,
+            "graph_edges_record_expresses_relation": 37.7,
+            "graph_edges_record_mentions_entity": 547.327,
+            "graph_edges_total": 881.033,
+            "graph_entity_nodes": 168.84,
+            "graph_record_nodes": 300.0,
+            "graph_relation_bearing_records": 37.7,
+            "one_hop_bridge_candidates": 23.653,
+            "path_participant_count": 9.187,
+            "records_examined": 300.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 101.027,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 48.967,
+            "typed_path_completed": 0.94,
+            "typed_paths_found": 5.74,
+            "working_set_size": 50.0
+          },
+          "selected_ces_end_to_end": 0.28,
+          "selected_ces_given_working__NEVER_ALONE": 0.3818,
+          "structural_competition_ratio": 3.28,
+          "working_set_ces": 0.7333,
+          "working_set_size_mean": 50.0
+        },
+        "G1_TYPED_PATH_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.8615,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0233,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.0536,
+            "identity": 1.0,
+            "temporal_current": 0.1667,
+            "terminal": 0.22
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0233,
+            "identity": 0.0,
+            "temporal_current": -0.3133,
+            "terminal": -0.0911
+          },
+          "k": 300,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 2.687,
+            "filler_count": 65.813,
+            "graph_edges_entity_aliases_entity": 10.647,
+            "graph_edges_entity_linked_to_entity": 274.713,
+            "graph_edges_entity_resolves_to_entity": 10.647,
+            "graph_edges_record_expresses_relation": 37.7,
+            "graph_edges_record_mentions_entity": 547.327,
+            "graph_edges_total": 881.033,
+            "graph_entity_nodes": 168.84,
+            "graph_record_nodes": 300.0,
+            "graph_relation_bearing_records": 37.7,
+            "one_hop_bridge_candidates": 23.653,
+            "path_participant_count": 9.187,
+            "records_examined": 300.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 101.027,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 48.967,
+            "typed_path_completed": 0.94,
+            "typed_paths_found": 5.74,
+            "working_set_size": 75.0
+          },
+          "selected_ces_end_to_end": 0.2467,
+          "selected_ces_given_working__NEVER_ALONE": 0.319,
+          "structural_competition_ratio": 4.5,
+          "working_set_ces": 0.7733,
+          "working_set_size_mean": 75.0
+        },
+        "G1_coarse_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.3846,
+            "identity": 0.9647,
+            "temporal_current": 0.6667,
+            "terminal": 0.7267
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0497,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.08,
+            "identity": 1.0,
+            "temporal_current": 0.5,
+            "terminal": 0.367
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0497,
+            "identity": 0.0,
+            "temporal_current": 0.02,
+            "terminal": 0.0559
+          },
+          "k": 300,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.34,
+          "selected_ces_given_working__NEVER_ALONE": 0.7846,
+          "structural_competition_ratio": 1.49,
+          "working_set_ces": 0.4333,
+          "working_set_size_mean": 25.0
+        },
+        "G1_coarse_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.6154,
+            "identity": 0.9647,
+            "temporal_current": 0.8,
+            "terminal": 0.88
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0197,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.05,
+            "identity": 1.0,
+            "temporal_current": 0.4583,
+            "terminal": 0.25
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0197,
+            "identity": 0.0,
+            "temporal_current": -0.0217,
+            "terminal": -0.0611
+          },
+          "k": 300,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.2067,
+          "selected_ces_given_working__NEVER_ALONE": 0.3523,
+          "structural_competition_ratio": 4.02,
+          "working_set_ces": 0.5867,
+          "working_set_size_mean": 50.0
+        },
+        "G1_coarse_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.8,
+            "identity": 0.9647,
+            "temporal_current": 0.8,
+            "terminal": 0.8867
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.0303,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.0,
+            "identity": 0.9756,
+            "temporal_current": 0.1667,
+            "terminal": 0.1805
+          },
+          "delta_vs_baseline": {
+            "bridge": -0.0303,
+            "identity": -0.0244,
+            "temporal_current": -0.3133,
+            "terminal": -0.1306
+          },
+          "k": 300,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.1333,
+          "selected_ces_given_working__NEVER_ALONE": 0.2041,
+          "structural_competition_ratio": 7.55,
+          "working_set_ces": 0.6533,
+          "working_set_size_mean": 75.0
+        },
+        "G3_oracle_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.9231,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 0.98
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.153,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.1833,
+            "identity": 1.0,
+            "temporal_current": 0.6,
+            "terminal": 0.4626
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.153,
+            "identity": 0.0,
+            "temporal_current": 0.12,
+            "terminal": 0.1515
+          },
+          "k": 300,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.4733,
+          "selected_ces_given_working__NEVER_ALONE": 0.568,
+          "structural_competition_ratio": 1.27,
+          "working_set_ces": 0.8333,
+          "working_set_size_mean": 25.0
+        },
+        "G3_oracle_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.9538,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.1632,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.1935,
+            "identity": 1.0,
+            "temporal_current": 0.5667,
+            "terminal": 0.36
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.1632,
+            "identity": 0.0,
+            "temporal_current": 0.0867,
+            "terminal": 0.0489
+          },
+          "k": 300,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.4133,
+          "selected_ces_given_working__NEVER_ALONE": 0.496,
+          "structural_competition_ratio": 2.55,
+          "working_set_ces": 0.8333,
+          "working_set_size_mean": 50.0
+        },
+        "G3_oracle_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.9538,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0987,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.129,
+            "identity": 1.0,
+            "temporal_current": 0.4667,
+            "terminal": 0.3133
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0987,
+            "identity": 0.0,
+            "temporal_current": -0.0133,
+            "terminal": 0.0022
+          },
+          "k": 300,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.3467,
+          "selected_ces_given_working__NEVER_ALONE": 0.416,
+          "structural_competition_ratio": 3.83,
+          "working_set_ces": 0.8333,
+          "working_set_size_mean": 75.0
+        }
+      },
+      "corpus_size": 3000,
+      "gap_closure": {
+        "M25": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.34,
+          "ces_oracle_P3": 0.4733,
+          "ces_typed": 0.3267,
+          "gap_closure": -0.0998,
+          "headroom": 0.1333,
+          "meets_frozen_bound": false
+        },
+        "M50": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.2067,
+          "ces_oracle_P3": 0.4133,
+          "ces_typed": 0.28,
+          "gap_closure": 0.3548,
+          "headroom": 0.2066,
+          "meets_frozen_bound": false
+        },
+        "M75": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.1333,
+          "ces_oracle_P3": 0.3467,
+          "ces_typed": 0.2467,
+          "gap_closure": 0.5314,
+          "headroom": 0.2134,
+          "meets_frozen_bound": false
+        }
+      },
+      "tasks": 150
+    },
+    "cal_700": {
+      "arms": {
+        "G0_k50": {
+          "M": null,
+          "availability": {
+            "bridge": 1.0,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "candidate_ces": 0.7,
+          "compressor": null,
+          "conditional_retention": {
+            "bridge": 0.5,
+            "identity": 1.0,
+            "temporal_current": 0.64,
+            "terminal": 0.4697
+          },
+          "k": 50,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.4933,
+          "selected_ces_given_working__NEVER_ALONE": 0.7048,
+          "structural_competition_ratio": 1.69,
+          "working_set_ces": 0.7,
+          "working_set_size_mean": 50.0
+        },
+        "G1_TYPED_PATH_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.9403,
+            "identity": 1.0,
+            "temporal_current": 0.8571,
+            "terminal": 0.8716
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.119,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.619,
+            "identity": 1.0,
+            "temporal_current": 0.6667,
+            "terminal": 0.5581
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.119,
+            "identity": 0.0,
+            "temporal_current": 0.0267,
+            "terminal": 0.0884
+          },
+          "k": 105,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 1.047,
+            "filler_count": 21.073,
+            "graph_edges_entity_aliases_entity": 8.114,
+            "graph_edges_entity_linked_to_entity": 47.367,
+            "graph_edges_entity_resolves_to_entity": 8.114,
+            "graph_edges_record_expresses_relation": 34.507,
+            "graph_edges_record_mentions_entity": 148.833,
+            "graph_edges_total": 246.827,
+            "graph_entity_nodes": 84.02,
+            "graph_record_nodes": 105.0,
+            "graph_relation_bearing_records": 34.507,
+            "one_hop_bridge_candidates": 5.673,
+            "path_participant_count": 3.927,
+            "records_examined": 105.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 13.087,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 12.933,
+            "typed_path_completed": 0.86,
+            "typed_paths_found": 2.887,
+            "working_set_size": 25.0
+          },
+          "selected_ces_end_to_end": 0.58,
+          "selected_ces_given_working__NEVER_ALONE": 0.7768,
+          "structural_competition_ratio": 1.29,
+          "working_set_ces": 0.7467,
+          "working_set_size_mean": 25.0
+        },
+        "G1_TYPED_PATH_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.9851,
+            "identity": 1.0,
+            "temporal_current": 0.9643,
+            "terminal": 0.9662
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0152,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.5152,
+            "identity": 1.0,
+            "temporal_current": 0.6296,
+            "terminal": 0.4825
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0152,
+            "identity": 0.0,
+            "temporal_current": -0.0104,
+            "terminal": 0.0128
+          },
+          "k": 105,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 1.047,
+            "filler_count": 46.073,
+            "graph_edges_entity_aliases_entity": 8.114,
+            "graph_edges_entity_linked_to_entity": 47.367,
+            "graph_edges_entity_resolves_to_entity": 8.114,
+            "graph_edges_record_expresses_relation": 34.507,
+            "graph_edges_record_mentions_entity": 148.833,
+            "graph_edges_total": 246.827,
+            "graph_entity_nodes": 84.02,
+            "graph_record_nodes": 105.0,
+            "graph_relation_bearing_records": 34.507,
+            "one_hop_bridge_candidates": 5.673,
+            "path_participant_count": 3.927,
+            "records_examined": 105.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 13.087,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 12.933,
+            "typed_path_completed": 0.86,
+            "typed_paths_found": 2.887,
+            "working_set_size": 50.0
+          },
+          "selected_ces_end_to_end": 0.5133,
+          "selected_ces_given_working__NEVER_ALONE": 0.6364,
+          "structural_competition_ratio": 1.88,
+          "working_set_ces": 0.8067,
+          "working_set_size_mean": 50.0
+        },
+        "G1_TYPED_PATH_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.9851,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.0909,
+            "passed": false
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "typed_path",
+          "conditional_retention": {
+            "bridge": 0.4091,
+            "identity": 1.0,
+            "temporal_current": 0.5,
+            "terminal": 0.4189
+          },
+          "delta_vs_baseline": {
+            "bridge": -0.0909,
+            "identity": 0.0,
+            "temporal_current": -0.14,
+            "terminal": -0.0508
+          },
+          "k": 105,
+          "path_diagnostics_mean": {
+            "canonical_subject_found": 1.0,
+            "closing_bridge_entities": 1.047,
+            "filler_count": 71.073,
+            "graph_edges_entity_aliases_entity": 8.114,
+            "graph_edges_entity_linked_to_entity": 47.367,
+            "graph_edges_entity_resolves_to_entity": 8.114,
+            "graph_edges_record_expresses_relation": 34.507,
+            "graph_edges_record_mentions_entity": 148.833,
+            "graph_edges_total": 246.827,
+            "graph_entity_nodes": 84.02,
+            "graph_record_nodes": 105.0,
+            "graph_relation_bearing_records": 34.507,
+            "one_hop_bridge_candidates": 5.673,
+            "path_participant_count": 3.927,
+            "records_examined": 105.0,
+            "target_relation_extracted": 1.0,
+            "traversal_edges_traversed": 13.087,
+            "traversal_hops": 2.0,
+            "traversal_nodes_visited": 12.933,
+            "typed_path_completed": 0.86,
+            "typed_paths_found": 2.887,
+            "working_set_size": 75.0
+          },
+          "selected_ces_end_to_end": 0.4467,
+          "selected_ces_given_working__NEVER_ALONE": 0.536,
+          "structural_competition_ratio": 2.54,
+          "working_set_ces": 0.8333,
+          "working_set_size_mean": 75.0
+        },
+        "G1_coarse_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.8209,
+            "identity": 0.95,
+            "temporal_current": 0.5357,
+            "terminal": 0.723
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0818,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.5818,
+            "identity": 1.0,
+            "temporal_current": 0.5333,
+            "terminal": 0.4579
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0818,
+            "identity": 0.0,
+            "temporal_current": -0.1067,
+            "terminal": -0.0118
+          },
+          "k": 105,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.3933,
+          "selected_ces_given_working__NEVER_ALONE": 0.7284,
+          "structural_competition_ratio": 1.22,
+          "working_set_ces": 0.54,
+          "working_set_size_mean": 25.0
+        },
+        "G1_coarse_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.9552,
+            "identity": 0.95,
+            "temporal_current": 0.7857,
+            "terminal": 0.8851
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.1719,
+            "passed": false
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.3281,
+            "identity": 1.0,
+            "temporal_current": 0.5909,
+            "terminal": 0.4046
+          },
+          "delta_vs_baseline": {
+            "bridge": -0.1719,
+            "identity": 0.0,
+            "temporal_current": -0.0491,
+            "terminal": -0.0651
+          },
+          "k": 105,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.36,
+          "selected_ces_given_working__NEVER_ALONE": 0.5,
+          "structural_competition_ratio": 2.67,
+          "working_set_ces": 0.72,
+          "working_set_size_mean": 50.0
+        },
+        "G1_coarse_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 1.0,
+            "identity": 0.95,
+            "temporal_current": 0.8214,
+            "terminal": 0.8919
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.1567,
+            "passed": false
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "coarse",
+          "conditional_retention": {
+            "bridge": 0.3433,
+            "identity": 1.0,
+            "temporal_current": 0.4348,
+            "terminal": 0.3712
+          },
+          "delta_vs_baseline": {
+            "bridge": -0.1567,
+            "identity": 0.0,
+            "temporal_current": -0.2052,
+            "terminal": -0.0985
+          },
+          "k": 105,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.3333,
+          "selected_ces_given_working__NEVER_ALONE": 0.4505,
+          "structural_competition_ratio": 2.92,
+          "working_set_ces": 0.74,
+          "working_set_size_mean": 74.8
+        },
+        "G3_oracle_M25": {
+          "M": 25,
+          "availability": {
+            "bridge": 0.9254,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 0.9865
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0806,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.5806,
+            "identity": 1.0,
+            "temporal_current": 0.6786,
+            "terminal": 0.5548
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0806,
+            "identity": 0.0,
+            "temporal_current": 0.0386,
+            "terminal": 0.0851
+          },
+          "k": 105,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.62,
+          "selected_ces_given_working__NEVER_ALONE": 0.744,
+          "structural_competition_ratio": 1.06,
+          "working_set_ces": 0.8333,
+          "working_set_size_mean": 25.0
+        },
+        "G3_oracle_M50": {
+          "M": 50,
+          "availability": {
+            "bridge": 0.9552,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": 0.0781,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.5781,
+            "identity": 1.0,
+            "temporal_current": 0.6429,
+            "terminal": 0.4662
+          },
+          "delta_vs_baseline": {
+            "bridge": 0.0781,
+            "identity": 0.0,
+            "temporal_current": 0.0029,
+            "terminal": -0.0035
+          },
+          "k": 105,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.54,
+          "selected_ces_given_working__NEVER_ALONE": 0.648,
+          "structural_competition_ratio": 1.71,
+          "working_set_ces": 0.8333,
+          "working_set_size_mean": 50.0
+        },
+        "G3_oracle_M75": {
+          "M": 75,
+          "availability": {
+            "bridge": 0.9552,
+            "identity": 1.0,
+            "temporal_current": 1.0,
+            "terminal": 1.0
+          },
+          "bridge_safety": {
+            "bound": -0.05,
+            "delta": -0.0469,
+            "passed": true
+          },
+          "candidate_ces": 0.8333,
+          "compressor": "oracle",
+          "conditional_retention": {
+            "bridge": 0.4531,
+            "identity": 1.0,
+            "temporal_current": 0.6429,
+            "terminal": 0.4392
+          },
+          "delta_vs_baseline": {
+            "bridge": -0.0469,
+            "identity": 0.0,
+            "temporal_current": 0.0029,
+            "terminal": -0.0305
+          },
+          "k": 105,
+          "path_diagnostics_mean": {},
+          "selected_ces_end_to_end": 0.4867,
+          "selected_ces_given_working__NEVER_ALONE": 0.584,
+          "structural_competition_ratio": 2.41,
+          "working_set_ces": 0.8333,
+          "working_set_size_mean": 75.0
+        }
+      },
+      "corpus_size": 700,
+      "gap_closure": {
+        "M25": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.3933,
+          "ces_oracle_P3": 0.62,
+          "ces_typed": 0.58,
+          "gap_closure": 0.8236,
+          "headroom": 0.2267,
+          "meets_frozen_bound": true
+        },
+        "M50": {
+          "bridge_safety_passed": true,
+          "ces_coarse_P2": 0.36,
+          "ces_oracle_P3": 0.54,
+          "ces_typed": 0.5133,
+          "gap_closure": 0.8517,
+          "headroom": 0.18,
+          "meets_frozen_bound": true
+        },
+        "M75": {
+          "bridge_safety_passed": false,
+          "ces_coarse_P2": 0.3333,
+          "ces_oracle_P3": 0.4867,
+          "ces_typed": 0.4467,
+          "gap_closure": 0.7392,
+          "headroom": 0.1534,
+          "meets_frozen_bound": false
+        }
+      },
+      "tasks": 150
+    }
+  },
+  "schema_version": "g1-typed-path-v1",
+  "verdict_by_M": {
+    "M25": {
+      "all_scales_pass": false,
+      "gap_closure_per_scale": {
+        "cal_1000": 0.7778,
+        "cal_1500": 0.3157,
+        "cal_2200": -0.0359,
+        "cal_3000": -0.0998,
+        "cal_700": 0.8236
+      },
+      "outcome": "TYPED_PATH_INSUFFICIENT__BUILD_G2",
+      "worst_scale": -0.0998
+    },
+    "M50": {
+      "all_scales_pass": false,
+      "gap_closure_per_scale": {
+        "cal_1000": 0.8337,
+        "cal_1500": 0.4997,
+        "cal_2200": 0.3054,
+        "cal_3000": 0.3548,
+        "cal_700": 0.8517
+      },
+      "outcome": "PARTIAL__BUILD_G2__TYPED_PATH_RETAINED_AS_SEED_TEMPLATE",
+      "worst_scale": 0.3054
+    },
+    "M75": {
+      "all_scales_pass": false,
+      "gap_closure_per_scale": {
+        "cal_1000": 0.7692,
+        "cal_1500": 0.5675,
+        "cal_2200": 0.4241,
+        "cal_3000": 0.5314,
+        "cal_700": 0.7392
+      },
+      "outcome": "PARTIAL__BUILD_G2__TYPED_PATH_RETAINED_AS_SEED_TEMPLATE",
+      "worst_scale": 0.4241
+    }
+  }
+}
