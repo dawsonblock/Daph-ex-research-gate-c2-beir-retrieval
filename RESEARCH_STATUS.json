@@ -1,5 +1,51 @@
 {
   "architecture_principle": "Retrieval iteration must ACCUMULATE information state, never replace earlier context with the latest bridge. Pinned by tests/unit/test_information_state.py.",
+  "b3_calibration_suite": {
+    "audits_fail_closed_on": [
+      "inferability",
+      "retrievability",
+      "oracle isolation",
+      "answer leakage (including foreign filler leaking a scale's answers)",
+      "duplicate tasks",
+      "duplicate question+answer pairs",
+      "duplicate evidence ids",
+      "missing required evidence",
+      "cross-scale content overlap",
+      "overlap with every consumed split",
+      "family balance",
+      "entity-regime balance",
+      "requested corpus scale",
+      "structural comparability across scales"
+    ],
+    "budget_metadata": "retriever_search_depth UNSET, candidate_pool_budget UNSET, packet_budget 6, rho/k_min/k_max null -- recorded so later analysis cannot conflate corpus generation with the B3 intervention.",
+    "builder": "scripts/build_b3_calibration_suite.py (fail-closed; refuses to overwrite)",
+    "design": "Corpus size is the ONLY treatment variable. Every scale holds a FIXED 150 tasks (15 per family x 10 families) and reaches its target corpus size by adding independent NON-REQUIRED evidence, so the experiment is 'same logical task difficulty + increasing retrieval search space' rather than confounding size with harder tasks or deeper proofs.",
+    "deviation_from_request": "The requested 500-record scale became 700. The generator couples evidence volume to task count at ~4.41 records/task, so a fixed 150-task structure has a floor near 661 records; reaching 500 would have required ~110 tasks, breaking the fixed-task-count design and giving the least stable retrieval curves at the smallest scale. Holding task structure fixed was judged the more important property.",
+    "frozen_artifacts": "per scale: oracle_tasks.jsonl, evidence.jsonl, dataset_manifest.json, CALIBRATION_AUDIT.json; plus suite-level SUITE_MANIFEST.json and CALIBRATION.sha256 covering 20 files, all verifying.",
+    "hazards_the_audit_caught_during_construction": [
+      "filler records colliding with base evidence IDs (132 duplicates) because the generator's id namespace ignores the split -- fixed by re-namespacing filler ids",
+      "foreign filler leaking a scale's own answers (5 distractor leaks) -- fixed by screening filler against each scale's answer set",
+      "task questions colliding with consumed splits -- fixed by over-generating 100/family and filtering",
+      "a monotonic filler cursor permanently discarding records that were merely scale-specific rejects -- fixed by skip-used scanning",
+      "task filter screening only REQUIRED evidence, letting dead-end content collide across splits -- fixed by screening all of a task's own evidence",
+      "questions added to the ledger only after a whole scale was selected, allowing an intra-scale duplicate pair -- fixed by dedup on acceptance",
+      "structural drift from non-uniform collision filtering -- fixed by stratified selection, NOT by loosening the comparability bound"
+    ],
+    "isolation": "ZERO content overlap: no shared questions, question+answer pairs or evidence text with development, qualification_1, ood or confirmation_1, and none between any pair of scales.",
+    "next": "B3 retrieval-only evaluation: replay authoritative retrieval at several candidate depths across all five scales, derive CES and role-recall curves vs N and k, then choose at most three prospective rho candidates. P(role available) and P(role selected | role available) for identity/bridge/terminal/temporal-current become mandatory at every corpus size.",
+    "path": "data/hrm/b3_calibration_v1/",
+    "scale_conformance": "every scale hits its target exactly, ratio 1.000, against a prospectively frozen +/-5% tolerance",
+    "scales": {
+      "cal_1000": 1000,
+      "cal_1500": 1500,
+      "cal_2200": 2200,
+      "cal_3000": 3000,
+      "cal_700": 700
+    },
+    "status": "FROZEN, UNEVALUATED. rho NOT chosen; no retrieval, S2 or HRM run has touched this data.",
+    "structural_comparability": "worst per-category residual vs the reference scale is 0.0200 (proof depth at cal_3000) against a frozen 0.05 tolerance; family counts identical at 0.0000. Achieved by STRATIFIED survivor selection matching the reference scale's per-family composition, not by widening the tolerance.",
+    "task_structure_identical_across_scales": "150 tasks, 10 families x 15, 105 of 150 bridged at every scale"
+  },
   "b3_candidate_budget": {
     "frozen_untouched": [
       "S2 selector",

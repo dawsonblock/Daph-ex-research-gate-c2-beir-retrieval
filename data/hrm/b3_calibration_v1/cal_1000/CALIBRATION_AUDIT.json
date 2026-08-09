@@ -1,0 +1,105 @@
+{
+  "audit": {
+    "composition_residuals": {
+      "answer_kind_counts": 0.0067,
+      "family_counts": 0.0,
+      "proof_depth_counts": 0.0067,
+      "required_set_size_counts": 0.0067
+    },
+    "composition_tolerance": 0.05,
+    "cross_scale_overlap": {
+      "cal_1500": {
+        "evidence_content": 0,
+        "questions": 0
+      },
+      "cal_2200": {
+        "evidence_content": 0,
+        "questions": 0
+      },
+      "cal_3000": {
+        "evidence_content": 0,
+        "questions": 0
+      },
+      "cal_700": {
+        "evidence_content": 0,
+        "questions": 0
+      }
+    },
+    "duplicates": {
+      "evidence_ids": 0,
+      "question_answer_pairs": 0,
+      "task_ids": 0
+    },
+    "inferability": {
+      "not_inferable": 0
+    },
+    "leakage": {
+      "distractor_leaks": 0,
+      "question_leaks": 0
+    },
+    "oracle_isolation": {
+      "every_task_has_proof_graph": true,
+      "latent_ids_in_evidence": 0,
+      "latent_ids_in_questions": 0
+    },
+    "overlap_with_consumed": {
+      "evidence_content": 0,
+      "question_answer_pairs": 0,
+      "questions": 0
+    },
+    "retrievability": {
+      "subject_not_findable": 0
+    },
+    "scale_conformance": {
+      "actual": 1000,
+      "ratio": 1.0,
+      "target": 1000,
+      "tolerance": 0.05
+    },
+    "structural_profile": {
+      "answer_kind_counts": {
+        "boolean": 6,
+        "enum": 31,
+        "json_field": 34,
+        "numeric": 40,
+        "symbolic": 39
+      },
+      "bridged_counts": {
+        "bridged": 105,
+        "unbridged": 45
+      },
+      "entity_regime_counts": {
+        "abbreviation": 81,
+        "canonical": 69
+      },
+      "family_counts": {
+        "configuration_chain": 15,
+        "dependency_chain": 15,
+        "distractor_heavy": 15,
+        "entity_attribute": 15,
+        "location_chain": 15,
+        "numeric_chain": 15,
+        "ownership_chain": 15,
+        "procedural_chain": 15,
+        "temporal_chain": 15,
+        "temporal_update": 15
+      },
+      "proof_depth_counts": {
+        "1": 17,
+        "2": 80,
+        "3": 33,
+        "4": 20
+      },
+      "required_set_size_counts": {
+        "1": 17,
+        "2": 100,
+        "3": 33
+      },
+      "source_cluster_counts": 23,
+      "task_count": 150
+    }
+  },
+  "frozen_before_evaluation": true,
+  "policy_independence": "No rho, k_min or k_max was used to build this data. Budget fields are recorded UNSET. Calibration data creation must not depend on the policy it will later evaluate.",
+  "split_id": "cal_1000"
+}
