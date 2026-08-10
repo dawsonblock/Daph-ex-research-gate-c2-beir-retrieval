@@ -6,10 +6,12 @@
   "PRIMARY_METRIC": "delta_HRM_graph_value = Q(H2) - Q(H0). NOT H2-H1. H1 remains diagnostic only, exactly as in qualification, even though composition (H2-H1=+0.0813) now looks like the strongest internal signal -- the primary confirmation claim is about the graph+composition stack beating typed path, not about internal attribution.",
 
   "SOURCE_LINEAGE": {
-    "source_commit": "b83886b6c2a4bbb2f4d720608bdd6dc468600abe",
-    "remote_verified": "origin/c4-v2_1-prompt-order-conformance == b83886b6c2a4bbb2f4d720608bdd6dc468600abe (confirmed via git rev-parse against both refs before this file was written)",
-    "working_tree": "clean at time of freeze except this new confirmation-2 suite and its own builder script (additive only, does not modify any file qualification depended on)",
-    "requirement": "the H0-H4 execution for confirmation-2 MUST run from this exact commit (or a fast-forward of it with zero changes to any file under hrm_adaptive_memory/, scripts/run_hrm_qualification.py, scripts/run_gate_c4.py, or configs/gate_hrm_qualification_v1.json), not from local-only uncommitted state."
+    "source_commit": "b5798f13cbbf9a29be91ebe9d3b0f8d3e0a1f8f0",
+    "anchor_lineage": "b83886b (qualification result, pushed) -> 4d80441 (this protocol + confirmation-2 split, additive-only) -> b5798f1 (run_hrm_qualification.py: real source_commit instead of hardcoded 'pending' + inert --scale-root suite override)",
+    "remote_verified": "origin/c4-v2_1-prompt-order-conformance == b5798f13cbbf9a29be91ebe9d3b0f8d3e0a1f8f0 (confirmed via git rev-parse against both refs after push)",
+    "amendment_note": "the original freeze pinned b83886b and required zero changes to run_hrm_qualification.py; that file was subsequently touched to satisfy this SAME protocol's own DATA_LINEAGE/HASH_CHAIN requirement that source_commit be real, not a 'pending' placeholder. The change is provenance-only: source_commit resolution (git rev-parse HEAD, fail-open to a source-digest per the existing run_hrm_context_study.py pattern) and a --scale-root argument that is a no-op unless explicitly passed. No retrieval, selector, graph-construction, path-ranking, packet-composition, prompt-template, or generation-parameter code changed. Verified via matched --dry-run smoke runs before and after (b3_calibration_v1 default path byte-identical in structure; only the two new provenance fields and the previously-stubbed source_commit value differ).",
+    "working_tree": "clean at time of this amendment except the confirmation-2 suite, its builder script, and this protocol file itself (all additive)",
+    "requirement": "the H0-H4 execution for confirmation-2 MUST run from this exact commit (or a fast-forward of it with zero further changes to any file under hrm_adaptive_memory/, scripts/run_hrm_qualification.py, scripts/run_gate_c4.py, or configs/gate_hrm_qualification_v1.json), not from local-only uncommitted state."
   },
 
   "STACK_IDENTITY_FROZEN_UNCHANGED_FROM_QUALIFICATION": {
@@ -76,7 +78,7 @@
     "full hash-chain present and internally consistent in every receipt",
     "binding assertion held for every task/arm (no prompt/packet mismatch)",
     "entity_extractor_config_hash in every receipt equals 1c156a7ed8a487bd",
-    "source commit for the run equals b83886b6c2a4bbb2f4d720608bdd6dc468600abe (or a zero-diff fast-forward of it)"
+    "source commit for the run equals b5798f13cbbf9a29be91ebe9d3b0f8d3e0a1f8f0 (or a zero-diff fast-forward of it)"
   ],
 
   "PROCESSING_ORDER_AFTER_RUN": [
