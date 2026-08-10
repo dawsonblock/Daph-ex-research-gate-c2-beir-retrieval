@@ -1,0 +1,66 @@
+{
+  "answer_kind_counts": {
+    "boolean": 7,
+    "enum": 38,
+    "json_field": 27,
+    "numeric": 44,
+    "symbolic": 34
+  },
+  "bridged_counts": {
+    "bridged": 105,
+    "unbridged": 45
+  },
+  "budget_metadata": {
+    "candidate_pool_budget": null,
+    "k_max": null,
+    "k_min": null,
+    "note": "Budget concepts are recorded UNSET. Calibration data creation must not depend on the policy it will later evaluate.",
+    "packet_budget": 6,
+    "retriever_search_depth": null,
+    "rho": null
+  },
+  "entity_regime_counts": {
+    "abbreviation": 83,
+    "canonical": 67
+  },
+  "evidence_count": 2200,
+  "evidence_sha256": "8e23ee0319f66af094a14364766eab43f2223ec890bf425a316cadf64013e690",
+  "family_counts": {
+    "configuration_chain": 15,
+    "dependency_chain": 15,
+    "distractor_heavy": 15,
+    "entity_attribute": 15,
+    "location_chain": 15,
+    "numeric_chain": 15,
+    "ownership_chain": 15,
+    "procedural_chain": 15,
+    "temporal_chain": 15,
+    "temporal_update": 15
+  },
+  "generation_seed": 9304,
+  "generator_config_hash": "e6e4255fd758b23e",
+  "generator_revision": "controlled-gate-a-v4",
+  "proof_depth_counts": {
+    "1": 16,
+    "2": 80,
+    "3": 36,
+    "4": 18
+  },
+  "required_set_size_counts": {
+    "1": 16,
+    "2": 98,
+    "3": 36
+  },
+  "scale_conformance": {
+    "actual": 2200,
+    "ratio": 1.0,
+    "target": 2200,
+    "tolerance": 0.05
+  },
+  "source_cluster_counts": 24,
+  "split_id": "confirm2_2200",
+  "target_evidence_count": 2200,
+  "task_count": 150,
+  "task_sha256": "7d531606b8c1aa6cbc71462bf6d678ffd195708c99c33ddb0e28acbaa963bac6",
+  "tasks_per_family": 15
+}
