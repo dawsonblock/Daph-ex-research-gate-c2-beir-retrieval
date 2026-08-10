@@ -20,6 +20,84 @@
     "H2_improves_packet_CES_but_not_HRM_Q": "diagnose reader utilization / prompt interaction; do NOT optimize the selector further yet",
     "H2_strongly_beats_H0": "graph substrate is genuinely promoted"
   },
+  "HRM_QUALIFICATION_RESULT": {
+    "NEXT": "Build and run a genuinely fresh confirmation split (never touched by any B3/B4/G1/G2/S3/S4/HRM-qualification decision), exactly once, no threshold changes, before any final promotion claim.",
+    "PRIMARY_RESULT": {
+      "both_conditions_met": true,
+      "delta_HRM_graph_value_H2_minus_H0": 0.0746,
+      "frozen_promotion_margin": {
+        "lcb_must_exceed": 0.0,
+        "material_point_margin": 0.03
+      },
+      "lcb_2p5_grouped_by_family": 0.0253,
+      "reading": "The evidence packet S4 proved better at the selector level (+0.1533 CES) ALSO improves HRM answer quality (+0.0746 Q), and the improvement is statistically distinguishable from zero under bootstrap resampling by family (LCB=+0.0253 > 0), not just a favorable point estimate."
+    },
+    "REGISTERED_CAUSAL_PREDICTION_REPLICATED_AT_THE_HRM_LEVEL": {
+      "n_by_bucket": {
+        "1": 372,
+        "2-3": 232,
+        "4-6": 118,
+        "7+": 28
+      },
+      "observed_delta_Q_by_bucket": {
+        "1_path": 0.0215,
+        "2-3_paths": 0.1466,
+        "4-6_paths": 0.1102,
+        "7+_paths": 0.0357
+      },
+      "prediction": "if path-coherent composition fixes the intended mechanism (not an abstract retrieval metric), HRM-level gains should show the same rising-with-ambiguity shape S4 showed at the packet level",
+      "reading": "CONFIRMED, independently, at a different measurement level. Near-zero where the mechanism should matter least (1 complete path), peaks at 2-3 and 4-6 competing paths, smaller at the sparse 7+ tail (n=28, least reliable). The SHAPE matches S4's packet-level curve; the MAGNITUDE is smaller throughout, consistent with the ~49% conversion efficiency -- this is exactly the pattern expected if the mechanism is real and HRM only partially exploits the better evidence.",
+      "s4_packet_level_delta_for_comparison": {
+        "1_path": 0.064,
+        "2-3_paths": 0.237,
+        "4-6_paths": 0.263,
+        "7+_paths": 0.179
+      }
+    },
+    "artifact": "evidence/gate_hrm/qualification_execute.json",
+    "compute": {
+      "credentials": "in-session env vars only, never persisted",
+      "dtype": "float16",
+      "model": "sapientinc/HRM-Text-1B @ 9f082d68b8cd0ebc56e33f1c88c45609174c272c",
+      "platform": "Lightning AI, studio 'gg', A100-SXM4-80GB",
+      "studio_stopped_immediately_after": true
+    },
+    "conversion_efficiency_diagnostic": 0.4866,
+    "conversion_efficiency_reading": "About 48.7% of S4's selector-level gain converted into HRM answer-quality gain -- substantial, not full 1:1 (expected: HRM can fail to use even a correct, coherent packet), and not negligible either. Diagnostic only, not a promotion criterion.",
+    "decision": "FREEZE_GRAPH_PLUS_COMPOSITION_STACK__PROCEED_TOWARD_FRESH_CONFIRMATION",
+    "delta_composition_H2_minus_H1": 0.0813,
+    "not_confirmation": "This is a development/qualification gate on calibration data that already informed B3/B4/G1/G2/S3/S4 architecture decisions. A fresh, untouched confirmation split is still required before any final scientific promotion claim.",
+    "pooled_quality": {
+      "H0_typed_path": 0.2747,
+      "H1_g2_S2": 0.268,
+      "H2_g2_pathcoherent": 0.3493,
+      "H3_oracle_selector": 0.4867,
+      "H4_oracle_evidence": 0.8613
+    },
+    "receipts": "evidence/gate_hrm/qualification_execute.receipts.jsonl",
+    "receipts_written": 3750,
+    "run_utc": "2026-08-10T05:30:00Z",
+    "safety_gates": {
+      "bound": -0.1,
+      "note": "Within the frozen -0.10 bound with margin. One other family (configuration_chain) also regressed slightly (-0.0267), also within bound. 8 of 10 families improve, 2 of those strongly (numeric_chain +0.267, distractor_heavy +0.133). Both entity_regime strata (abbreviation +0.068, canonical +0.082) improve with no asymmetry -- notable given this project's history of canonical-vs-abbreviation pathology (G2-v3's original bug, since corrected).",
+      "subgroup_safety_passed": true,
+      "worst_subgroup_vs_H0": [
+        "family:temporal_chain",
+        -0.0534
+      ]
+    },
+    "scales_run": [
+      "cal_700",
+      "cal_1000",
+      "cal_1500",
+      "cal_2200",
+      "cal_3000"
+    ],
+    "status": "RUN_COMPLETE__PASSES__PROCEED_TOWARD_FRESH_CONFIRMATION",
+    "tasks_total": 750,
+    "what_is_NOT_yet_claimed": "Final scientific promotion. This result is development/qualification evidence on calibration-informed data, matching the same discipline applied to every C4/C5 gate before it -- strong, prospectively-scored, safety-gated, but not a substitute for an untouched confirmation split.",
+    "what_is_promoted": "The stack grammar_v4 -> C2 retrieval -> G2 runtime graph -> frozen path ranking -> path-coherent packet composition -> 6 ordered records -> HRM, PROVISIONALLY, pending fresh confirmation."
+  },
   "MECHANISTIC_ANALYSIS_path_competition_bucket": {
     "buckets": [
       "1",
@@ -100,5 +178,5 @@
   "question": "Does the S4-promoted evidence packet actually improve HRM answer quality, not just selector CES?",
   "resume_key": "ExecutionIdentity (hrm_adaptive_memory/experiment_integrity/execution_identity.py) over task_id, arm_id=H0..H4, prompt_hash, retrieval_config_hash=C2, selector_config_hash=S2+composer contract version, graph_compressor_config_hash=entity_extractor_config_hash, model_revision, pipeline_version, source_commit, extra_config_hashes={graph_hash, path_set_hash, composed_packet_hash}",
   "sprint": "HRM Qualification -- does the better packet improve HRM answer quality?",
-  "status": "FROZEN__NOT_YET_RUN"
+  "status": "RUN_COMPLETE__PASSED"
 }

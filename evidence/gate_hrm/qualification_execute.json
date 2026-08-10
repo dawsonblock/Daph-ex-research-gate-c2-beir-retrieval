@@ -1,0 +1,418 @@
+{
+  "binding_assertion_failures": "all (fail-closed: a violation raises, not counts)",
+  "conversion_efficiency_diagnostic": 0.4866,
+  "decision": "FREEZE_GRAPH_PLUS_COMPOSITION_STACK__PROCEED_TOWARD_FRESH_CONFIRMATION",
+  "delta_HRM_graph_value": 0.0746,
+  "delta_HRM_graph_value_lcb_2p5": 0.0253,
+  "delta_composition": 0.0813,
+  "entity_extractor_config_hash": "1c156a7ed8a487bd",
+  "frozen_promotion_margin": {
+    "lcb_must_exceed": 0.0,
+    "material_point_margin": 0.03,
+    "rationale": "point margin set below C4's PRIMARY_DELTA_THRESHOLD=0.15 because this gate tests DOWNSTREAM CONVERSION of an already-established +0.1533 selector-level gain (S4), not a new mechanism from scratch; the LCB>0 requirement is the same statistical-significance bar C4/C5 certification already uses, applied here via grouped_lcb resampled by family so within-family correlation cannot inflate confidence."
+  },
+  "mode": "execute",
+  "pooled": {
+    "H0_typed_path": {
+      "mean_completion_tokens": 4.57,
+      "mean_latency_s": 0.692,
+      "quality": 0.2747
+    },
+    "H1_g2_S2": {
+      "mean_completion_tokens": 4.65,
+      "mean_latency_s": 0.702,
+      "quality": 0.268
+    },
+    "H2_g2_pathcoherent": {
+      "mean_completion_tokens": 4.81,
+      "mean_latency_s": 0.724,
+      "quality": 0.3493
+    },
+    "H3_oracle_selector": {
+      "mean_completion_tokens": 4.81,
+      "mean_latency_s": 0.724,
+      "quality": 0.4867
+    },
+    "H4_oracle_evidence": {
+      "mean_completion_tokens": 4.78,
+      "mean_latency_s": 0.714,
+      "quality": 0.8613
+    }
+  },
+  "receipts_written": 3750,
+  "s4_packet_delta_for_reference": 0.1533,
+  "scales_run": [
+    "cal_700",
+    "cal_1000",
+    "cal_1500",
+    "cal_2200",
+    "cal_3000"
+  ],
+  "schema_version": "hrm-qualification-v1",
+  "strata": {
+    "bucket": {
+      "1": {
+        "H0_typed_path": {
+          "n": 372,
+          "quality": 0.3414
+        },
+        "H1_g2_S2": {
+          "n": 372,
+          "quality": 0.328
+        },
+        "H2_g2_pathcoherent": {
+          "n": 372,
+          "quality": 0.3629
+        },
+        "H3_oracle_selector": {
+          "n": 372,
+          "quality": 0.4274
+        },
+        "H4_oracle_evidence": {
+          "n": 372,
+          "quality": 0.871
+        }
+      },
+      "2-3": {
+        "H0_typed_path": {
+          "n": 232,
+          "quality": 0.2543
+        },
+        "H1_g2_S2": {
+          "n": 232,
+          "quality": 0.2457
+        },
+        "H2_g2_pathcoherent": {
+          "n": 232,
+          "quality": 0.4009
+        },
+        "H3_oracle_selector": {
+          "n": 232,
+          "quality": 0.5603
+        },
+        "H4_oracle_evidence": {
+          "n": 232,
+          "quality": 0.8621
+        }
+      },
+      "4-6": {
+        "H0_typed_path": {
+          "n": 118,
+          "quality": 0.161
+        },
+        "H1_g2_S2": {
+          "n": 118,
+          "quality": 0.1695
+        },
+        "H2_g2_pathcoherent": {
+          "n": 118,
+          "quality": 0.2712
+        },
+        "H3_oracle_selector": {
+          "n": 118,
+          "quality": 0.5339
+        },
+        "H4_oracle_evidence": {
+          "n": 118,
+          "quality": 0.8305
+        }
+      },
+      "7+": {
+        "H0_typed_path": {
+          "n": 28,
+          "quality": 0.0357
+        },
+        "H1_g2_S2": {
+          "n": 28,
+          "quality": 0.0714
+        },
+        "H2_g2_pathcoherent": {
+          "n": 28,
+          "quality": 0.0714
+        },
+        "H3_oracle_selector": {
+          "n": 28,
+          "quality": 0.4643
+        },
+        "H4_oracle_evidence": {
+          "n": 28,
+          "quality": 0.8571
+        }
+      }
+    },
+    "family": {
+      "configuration_chain": {
+        "H0_typed_path": {
+          "n": 75,
+          "quality": 0.32
+        },
+        "H1_g2_S2": {
+          "n": 75,
+          "quality": 0.2267
+        },
+        "H2_g2_pathcoherent": {
+          "n": 75,
+          "quality": 0.2933
+        },
+        "H3_oracle_selector": {
+          "n": 75,
+          "quality": 0.48
+        },
+        "H4_oracle_evidence": {
+          "n": 75,
+          "quality": 0.9333
+        }
+      },
+      "dependency_chain": {
+        "H0_typed_path": {
+          "n": 75,
+          "quality": 0.24
+        },
+        "H1_g2_S2": {
+          "n": 75,
+          "quality": 0.2533
+        },
+        "H2_g2_pathcoherent": {
+          "n": 75,
+          "quality": 0.36
+        },
+        "H3_oracle_selector": {
+          "n": 75,
+          "quality": 0.56
+        },
+        "H4_oracle_evidence": {
+          "n": 75,
+          "quality": 0.9067
+        }
+      },
+      "distractor_heavy": {
+        "H0_typed_path": {
+          "n": 75,
+          "quality": 0.3733
+        },
+        "H1_g2_S2": {
+          "n": 75,
+          "quality": 0.36
+        },
+        "H2_g2_pathcoherent": {
+          "n": 75,
+          "quality": 0.5067
+        },
+        "H3_oracle_selector": {
+          "n": 75,
+          "quality": 0.5333
+        },
+        "H4_oracle_evidence": {
+          "n": 75,
+          "quality": 0.92
+        }
+      },
+      "entity_attribute": {
+        "H0_typed_path": {
+          "n": 75,
+          "quality": 0.36
+        },
+        "H1_g2_S2": {
+          "n": 75,
+          "quality": 0.3733
+        },
+        "H2_g2_pathcoherent": {
+          "n": 75,
+          "quality": 0.44
+        },
+        "H3_oracle_selector": {
+          "n": 75,
+          "quality": 0.4533
+        },
+        "H4_oracle_evidence": {
+          "n": 75,
+          "quality": 0.9333
+        }
+      },
+      "location_chain": {
+        "H0_typed_path": {
+          "n": 75,
+          "quality": 0.2267
+        },
+        "H1_g2_S2": {
+          "n": 75,
+          "quality": 0.1867
+        },
+        "H2_g2_pathcoherent": {
+          "n": 75,
+          "quality": 0.32
+        },
+        "H3_oracle_selector": {
+          "n": 75,
+          "quality": 0.56
+        },
+        "H4_oracle_evidence": {
+          "n": 75,
+          "quality": 0.84
+        }
+      },
+      "numeric_chain": {
+        "H0_typed_path": {
+          "n": 75,
+          "quality": 0.2267
+        },
+        "H1_g2_S2": {
+          "n": 75,
+          "quality": 0.2933
+        },
+        "H2_g2_pathcoherent": {
+          "n": 75,
+          "quality": 0.4933
+        },
+        "H3_oracle_selector": {
+          "n": 75,
+          "quality": 0.6
+        },
+        "H4_oracle_evidence": {
+          "n": 75,
+          "quality": 0.8533
+        }
+      },
+      "ownership_chain": {
+        "H0_typed_path": {
+          "n": 75,
+          "quality": 0.28
+        },
+        "H1_g2_S2": {
+          "n": 75,
+          "quality": 0.2667
+        },
+        "H2_g2_pathcoherent": {
+          "n": 75,
+          "quality": 0.3467
+        },
+        "H3_oracle_selector": {
+          "n": 75,
+          "quality": 0.5467
+        },
+        "H4_oracle_evidence": {
+          "n": 75,
+          "quality": 0.88
+        }
+      },
+      "procedural_chain": {
+        "H0_typed_path": {
+          "n": 75,
+          "quality": 0.16
+        },
+        "H1_g2_S2": {
+          "n": 75,
+          "quality": 0.16
+        },
+        "H2_g2_pathcoherent": {
+          "n": 75,
+          "quality": 0.1733
+        },
+        "H3_oracle_selector": {
+          "n": 75,
+          "quality": 0.28
+        },
+        "H4_oracle_evidence": {
+          "n": 75,
+          "quality": 0.5867
+        }
+      },
+      "temporal_chain": {
+        "H0_typed_path": {
+          "n": 75,
+          "quality": 0.0667
+        },
+        "H1_g2_S2": {
+          "n": 75,
+          "quality": 0.0133
+        },
+        "H2_g2_pathcoherent": {
+          "n": 75,
+          "quality": 0.0133
+        },
+        "H3_oracle_selector": {
+          "n": 75,
+          "quality": 0.0
+        },
+        "H4_oracle_evidence": {
+          "n": 75,
+          "quality": 0.8533
+        }
+      },
+      "temporal_update": {
+        "H0_typed_path": {
+          "n": 75,
+          "quality": 0.4933
+        },
+        "H1_g2_S2": {
+          "n": 75,
+          "quality": 0.5467
+        },
+        "H2_g2_pathcoherent": {
+          "n": 75,
+          "quality": 0.5467
+        },
+        "H3_oracle_selector": {
+          "n": 75,
+          "quality": 0.8533
+        },
+        "H4_oracle_evidence": {
+          "n": 75,
+          "quality": 0.9067
+        }
+      }
+    },
+    "regime": {
+      "abbreviation": {
+        "H0_typed_path": {
+          "n": 410,
+          "quality": 0.3268
+        },
+        "H1_g2_S2": {
+          "n": 410,
+          "quality": 0.2805
+        },
+        "H2_g2_pathcoherent": {
+          "n": 410,
+          "quality": 0.3951
+        },
+        "H3_oracle_selector": {
+          "n": 410,
+          "quality": 0.4732
+        },
+        "H4_oracle_evidence": {
+          "n": 410,
+          "quality": 0.8927
+        }
+      },
+      "canonical": {
+        "H0_typed_path": {
+          "n": 340,
+          "quality": 0.2118
+        },
+        "H1_g2_S2": {
+          "n": 340,
+          "quality": 0.2529
+        },
+        "H2_g2_pathcoherent": {
+          "n": 340,
+          "quality": 0.2941
+        },
+        "H3_oracle_selector": {
+          "n": 340,
+          "quality": 0.5029
+        },
+        "H4_oracle_evidence": {
+          "n": 340,
+          "quality": 0.8235
+        }
+      }
+    }
+  },
+  "subgroup_safety_passed": true,
+  "tasks_total": 750,
+  "worst_subgroup_vs_H0": [
+    "family:temporal_chain",
+    -0.0534
+  ]
+}
