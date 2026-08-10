@@ -73,11 +73,47 @@ SUITE_ROOT = ROOT / "data/hrm/exec_training_v2"
 FAMILIES = ("ANSWER_NOW_viable", "MEMORY_required")
 
 
-def load_family(family: str) -> tuple[list[dict], list[dict], dict[str, str]]:
+#: MEMORY_required scales, matching data/hrm/exec_training_v2/SUITE_MANIFEST.json.
+#: Retrieval MUST be scoped to one scale's own evidence pool at a time -- the
+#: same convention run_hrm_qualification.py uses ("for scale in scales",
+#: fresh records/backends per scale). The flattened, scale-namespaced
+#: MEMORY_required/oracle_tasks.jsonl + evidence.jsonl (pooling all 5 scales'
+#: ~8400 combined evidence records into ONE shared retrieval candidate pool)
+#: is for bookkeeping/task-id consistency ONLY -- retrieving against it
+#: directly would test CERTIFIED_MEMORY_V1 against a materially different,
+#: much-larger, filler-dominated candidate pool than it was ever qualified
+#: or confirmed on, which is exactly the defect a real run caught: 8400-record
+#: pooled retrieval crushed required_in_packet from V1's 73.6% down to 31.3%.
+MEMORY_REQUIRED_SCALES = ("exec2_700", "exec2_1000", "exec2_1500", "exec2_2200", "exec2_3000")
+
+
+def load_groups(family: str) -> list[tuple[str, list[dict], list[dict], dict[str, str]]]:
+    """Returns [(group_label, tasks, evidence, texts), ...] -- one group for
+    ANSWER_NOW_viable (zero evidence, pool doesn't matter), one group PER
+    SCALE for MEMORY_required (retrieval must stay scale-isolated).
+
+    Tasks/evidence/texts within each group use their RAW, scale-local IDs
+    unchanged (exactly as stored in the per-scale directory) -- retrieval
+    correctness depends on evidence_id/required_evidence_ids/texts all
+    agreeing on the same ID space, which raw IDs guarantee trivially since
+    each group is processed in isolation. The "scale:orig_id" namespacing
+    used by the frozen POOLED suite file is applied only to the task_id
+    written into receipts (see main loop), for downstream (suite_family,
+    task_id) join consistency -- it never touches evidence/retrieval IDs.
+    """
+    if family == "MEMORY_required":
+        groups = []
+        for scale in MEMORY_REQUIRED_SCALES:
+            base = SUITE_ROOT / family / scale
+            tasks = [json.loads(l) for l in (base / "oracle_tasks.jsonl").read_text().splitlines() if l.strip()]
+            evidence = [json.loads(l) for l in (base / "evidence.jsonl").read_text().splitlines() if l.strip()]
+            texts = {r["evidence_id"]: r["content"] for r in evidence}
+            groups.append((scale, tasks, evidence, texts))
+        return groups
     base = SUITE_ROOT / family
     tasks = [json.loads(l) for l in (base / "oracle_tasks.jsonl").read_text().splitlines() if l.strip()]
     evidence = [json.loads(l) for l in (base / "evidence.jsonl").read_text().splitlines() if l.strip()]
-    return tasks, evidence, {r["evidence_id"]: r["content"] for r in evidence}
+    return [(family, tasks, evidence, {r["evidence_id"]: r["content"] for r in evidence})]
 
 
 def c2(n: int) -> int:
@@ -129,23 +165,34 @@ def main() -> int:
     receipts: list[dict[str, Any]] = []
 
     for family in families:
-        tasks, evidence, texts = load_family(family)
+      for group_label, tasks, evidence, texts in load_groups(family):
         if args.limit_tasks:
             tasks = tasks[:args.limit_tasks]
+        # Fresh per GROUP (per scale, for MEMORY_required) -- retrieval must
+        # never see evidence from a different scale's corpus. This is the
+        # exact fix for the real defect a full run caught: pooling all 5
+        # scales' ~8400 combined evidence records into one shared candidate
+        # pool crushed required_in_packet from 73.6% (V1, scale-isolated) to
+        # 31.3% (first V2 attempt, incorrectly pooled).
         records = to_index_records(evidence)
         depth = c2(len(records))
+        display_prefix = f"{group_label}: " if family == "MEMORY_required" else ""
 
         for i, task in enumerate(tasks, 1):
             if i % 10 == 0 or i == len(tasks):
-                print(f"  {family}: {i}/{len(tasks)}", end="\r", flush=True)
+                print(f"  {display_prefix}{i}/{len(tasks)}", end="\r", flush=True)
             q = task["question"]
             fam = task.get("family", family)
             required = set(task.get("required_evidence_ids", []))
+            # Namespaced ONLY for the receipt's task_id field, to match the
+            # already-frozen pooled suite file's IDs -- never touches the
+            # evidence/retrieval ID space above, which stays scale-local raw.
+            receipt_task_id = f"{group_label}:{task['task_id']}" if family == "MEMORY_required" else task["task_id"]
 
             # --- A0: ANSWER_NOW, with confidence -----------------------------
             a0_prompt = f"[OBJECTIVE]\n{q}\n[EVIDENCE]\n[NO EXTERNAL EVIDENCE]\n[RESPONSE REQUIREMENT]\nAnswer directly, concisely."
             a0_identity = ExecutionIdentity(
-                task_id=task["task_id"], arm_id="A0_ANSWER_NOW",
+                task_id=receipt_task_id, arm_id="A0_ANSWER_NOW",
                 prompt_hash=hashlib.sha256(a0_prompt.encode()).hexdigest(),
                 retrieval_config_hash="NONE", selector_config_hash="NONE",
                 graph_compressor_config_hash=extractor_hash,
@@ -153,7 +200,7 @@ def main() -> int:
                 pipeline_version=PIPELINE_VERSION, source_commit=source_commit,
                 extra_config_hashes={})
             a0_receipt: dict[str, Any] = {
-                "task_id": task["task_id"], "action": "A0_ANSWER_NOW", "family": fam,
+                "task_id": receipt_task_id, "action": "A0_ANSWER_NOW", "family": fam,
                 "suite_family": family, "prompt_hash": a0_identity.prompt_hash,
                 "execution_identity_sha256": a0_identity.canonical_sha256(),
             }
@@ -253,7 +300,7 @@ def main() -> int:
             prompt, packet = run_packet_stage(arm, q, selection, texts, retrieval)
 
             a1_identity = ExecutionIdentity(
-                task_id=task["task_id"], arm_id="A1_USE_CERTIFIED_MEMORY",
+                task_id=receipt_task_id, arm_id="A1_USE_CERTIFIED_MEMORY",
                 prompt_hash=packet.prompt_hash, retrieval_config_hash="C2",
                 selector_config_hash="s2_v2+s4_composer_v1",
                 graph_compressor_config_hash=extractor_hash,
@@ -264,7 +311,7 @@ def main() -> int:
                     "composed_packet_hash": composed_packet_hash(tuple(a1_packet_ids))})
 
             a1_receipt: dict[str, Any] = {
-                "task_id": task["task_id"], "action": "A1_USE_CERTIFIED_MEMORY", "family": fam,
+                "task_id": receipt_task_id, "action": "A1_USE_CERTIFIED_MEMORY", "family": fam,
                 "suite_family": family,
                 "packet_ids": list(packet.packet_ids),
                 "candidate_pool_hash": packet.candidate_pool_hash,
@@ -281,7 +328,7 @@ def main() -> int:
 
                 class _Pre:
                     pass
-                pre = _Pre(); pre.task_id = task["task_id"]; pre.arm_id = "A1_USE_CERTIFIED_MEMORY"; pre.packet = packet
+                pre = _Pre(); pre.task_id = receipt_task_id; pre.arm_id = "A1_USE_CERTIFIED_MEMORY"; pre.packet = packet
                 _assert_prompt_binding(pre, hrm_result)
                 correct = task.get("answer", "").strip().lower() in hrm_result.output.strip().lower()
                 a1_receipt.update({
@@ -295,7 +342,7 @@ def main() -> int:
             receipts.append(a1_receipt)
 
         print(" " * 44, end="\r")
-        print(f"  {family}: done  tasks={len(tasks)}")
+        print(f"  {display_prefix}done  tasks={len(tasks)}  evidence_pool={len(evidence)}")
 
     out = Path(args.out) if args.out else (
         ROOT / f"evidence/gate_executive/exec_training_v2_{'dry_run' if args.dry_run else 'collection'}.receipts.jsonl")
