@@ -88,7 +88,14 @@
   },
   "no_p2": "The +0.265 selector oracle headroom found in S4 is NOT designed against in this gate.",
   "not_confirmation": "Calibration data has already informed architecture decisions (B3/B4/G1/G2/S3/S4). This is a development/qualification gate, NOT untouched confirmation. A fresh confirmation split remains required before any final scientific promotion claim.",
-  "promotion_margin_TBD_before_scoring": "an explicit numeric Q margin (analogous to C4's PRIMARY_DELTA_THRESHOLD) must be set before H0-H4 are scored on GPU -- placeholder, to be frozen in this same file the moment compute access is confirmed, never adjusted after seeing results",
+  "promotion_margin_TBD_before_scoring": {
+    "FROZEN": true,
+    "frozen_utc": "2026-08-10T05:00:00Z",
+    "lcb_requirement": "grouped_lcb(paired H2-H0 per-task deltas, resampled by FAMILY, 2000 iterations, seed=12345) > 0.0 -- reuses scripts/diagnose_c5_confirmation_stopgate.grouped_lcb verbatim, the same bootstrap convention already used for C4/C5 certification",
+    "material_point_margin": 0.03,
+    "promoted_iff": "delta_HRM_graph_value >= 0.03 AND LCB_2.5 > 0.0 AND subgroup_safety_passed",
+    "rationale": "0.03 is set below C4's PRIMARY_DELTA_THRESHOLD=0.15 because this gate tests DOWNSTREAM CONVERSION of an already-established +0.1533 selector-level gain (S4), not a new mechanism evaluated from scratch. The LCB>0 requirement is the same statistical-significance bar C4/C5 certification already uses. Frozen before any GPU generation was scored."
+  },
   "protocol_id": "gate_hrm_qualification_v1",
   "question": "Does the S4-promoted evidence packet actually improve HRM answer quality, not just selector CES?",
   "resume_key": "ExecutionIdentity (hrm_adaptive_memory/experiment_integrity/execution_identity.py) over task_id, arm_id=H0..H4, prompt_hash, retrieval_config_hash=C2, selector_config_hash=S2+composer contract version, graph_compressor_config_hash=entity_extractor_config_hash, model_revision, pipeline_version, source_commit, extra_config_hashes={graph_hash, path_set_hash, composed_packet_hash}",

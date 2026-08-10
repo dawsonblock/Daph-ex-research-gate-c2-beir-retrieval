@@ -66,7 +66,8 @@ from hrm_adaptive_memory.retrieval_bench.selectors import s0_raw  # noqa: E402
 from hrm_adaptive_memory.retrieval_bench.selectors.chain import (  # noqa: E402
     s2c_chain_plus_relation)
 from hrm_adaptive_memory.c4.typed_path import typed_path_prefilter  # noqa: E402
-from scripts.diagnose_c5_confirmation_stopgate import bridge_records  # noqa: E402
+from scripts.diagnose_c5_confirmation_stopgate import (  # noqa: E402
+    bridge_records, grouped_lcb)
 from scripts.diagnose_c4_selector_eligibility import terminal_records  # noqa: E402
 from scripts.run_b3_retrieval_calibration import SCALES, load_scale  # noqa: E402
 from scripts.run_gate_c4 import (  # noqa: E402
@@ -126,6 +127,7 @@ def main() -> int:
     pooled_strata: dict = defaultdict(lambda: [0, 0])
     pooled_tasks = 0
     receipts: list[dict[str, Any]] = []
+    paired_h0_h2: list[tuple[str, float]] = []  # (family, H2-H0 per-task delta), for grouped_lcb
 
     for scale in scales:
         tasks, evidence, texts = load_scale(scale)
@@ -218,6 +220,7 @@ def main() -> int:
             g2_graph = build_runtime_graph(record_ids=pool, texts=texts, relation=relation)
             ghash = graph_hash(g2_graph)
             pshash = path_set_hash(complete_paths)
+            correct_by_arm: dict[str, int] = {}
 
             for name, selected_ids in selected_ids_by_arm.items():
                 ws_for_arm = typed_ws if name == "H0_typed_path" else g2_ws
@@ -272,6 +275,7 @@ def main() -> int:
                         "prompt_tokens": hrm_result.prompt_tokens,
                         "completion_tokens": hrm_result.completion_tokens,
                         "latency_seconds": hrm_result.latency_seconds})
+                    correct_by_arm[name] = int(correct)
                     c = sel[name]
                     c["tasks"] += 1
                     c["quality"] += int(correct)
@@ -286,6 +290,10 @@ def main() -> int:
                 else:
                     receipt["output"] = None  # dry run: no generation performed
                 receipts.append(receipt)
+
+            if args.execute and "H0_typed_path" in correct_by_arm and "H2_g2_pathcoherent" in correct_by_arm:
+                paired_h0_h2.append(
+                    (fam, correct_by_arm["H2_g2_pathcoherent"] - correct_by_arm["H0_typed_path"]))
 
         print(" " * 44, end="\r")
         if args.execute:
@@ -339,6 +347,51 @@ def main() -> int:
         report["conversion_efficiency_diagnostic"] = (
             round(report["delta_HRM_graph_value"] / denom, 4) if abs(denom) > 1e-9 else None)
 
+        # --- FROZEN promotion margin (configs/gate_hrm_qualification_v1.json) ---
+        # Reuses this project's established bootstrap-LCB convention (the same
+        # grouped_lcb used by C4/C5 certification) rather than a bare point
+        # margin: promotion requires the H2-H0 delta to be statistically
+        # distinguishable from zero, not merely positive. Resampled by FAMILY,
+        # not by task, so within-family correlation doesn't inflate confidence.
+        lcb = grouped_lcb(paired_h0_h2)
+        report["delta_HRM_graph_value_lcb_2p5"] = lcb
+        MATERIAL_POINT_MARGIN = 0.03
+        report["frozen_promotion_margin"] = {
+            "material_point_margin": MATERIAL_POINT_MARGIN,
+            "lcb_must_exceed": 0.0,
+            "rationale": "point margin set below C4's PRIMARY_DELTA_THRESHOLD=0.15 because "
+                         "this gate tests DOWNSTREAM CONVERSION of an already-established "
+                         "+0.1533 selector-level gain (S4), not a new mechanism from scratch; "
+                         "the LCB>0 requirement is the same statistical-significance bar C4/C5 "
+                         "certification already uses, applied here via grouped_lcb resampled "
+                         "by family so within-family correlation cannot inflate confidence."}
+        promoted = (report["delta_HRM_graph_value"] >= MATERIAL_POINT_MARGIN
+                   and lcb is not None and lcb > 0.0)
+        worst_sub = None
+        for kind in ("family", "regime"):
+            for key, arms_ in strat_out.get(kind, {}).items():
+                a2 = arms_.get("H2_g2_pathcoherent", {}).get("quality")
+                a0 = arms_.get("H0_typed_path", {}).get("quality")
+                if a2 is not None and a0 is not None:
+                    d = a2 - a0
+                    if worst_sub is None or d < worst_sub[1]:
+                        worst_sub = (f"{kind}:{key}", round(d, 4))
+        subgroup_safe = worst_sub is None or worst_sub[1] >= -0.10
+        report["worst_subgroup_vs_H0"] = worst_sub
+        report["subgroup_safety_passed"] = subgroup_safe
+
+        if report["delta_composition"] <= 0:
+            decision = "REJECT_COMPOSITION_DOWNSTREAM"
+        elif not promoted:
+            decision = ("H2_IMPROVES_PACKET_NOT_HRM_Q"
+                       if report["delta_HRM_graph_value"] <= 0
+                       else "MARGIN_OR_LCB_NOT_MET__KEEP_TYPED_PATH")
+        elif not subgroup_safe:
+            decision = "DO_NOT_PROMOTE__SUBGROUP_SAFETY_FAILED"
+        else:
+            decision = "FREEZE_GRAPH_PLUS_COMPOSITION_STACK__PROCEED_TOWARD_FRESH_CONFIRMATION"
+        report["decision"] = decision
+
     receipts_path = out.with_suffix(".receipts.jsonl")
     receipts_path.write_text("\n".join(json.dumps(r, sort_keys=True) for r in receipts) + "\n")
     out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
@@ -348,9 +401,12 @@ def main() -> int:
         for a in H_ARMS:
             p_ = pr[a]
             print(f"  {a:<22}{p_['quality']:>9.3f}{p_['mean_latency_s']:>9.2f}{p_['mean_completion_tokens']:>7.1f}")
-        print(f"\n  delta_HRM_graph_value (H2-H0) = {report['delta_HRM_graph_value']:+.4f}")
+        print(f"\n  delta_HRM_graph_value (H2-H0) = {report['delta_HRM_graph_value']:+.4f}"
+              f"   LCB2.5={report['delta_HRM_graph_value_lcb_2p5']}")
         print(f"  delta_composition     (H2-H1) = {report['delta_composition']:+.4f}")
         print(f"  conversion_efficiency (diag)  = {report['conversion_efficiency_diagnostic']}")
+        print(f"  worst subgroup vs H0          = {report['worst_subgroup_vs_H0']}")
+        print(f"\n  DECISION: {report['decision']}")
     else:
         print(f"\n  DRY RUN complete: {len(receipts)} receipts built "
               "(no generation performed, no prompt-binding check exercised).")
