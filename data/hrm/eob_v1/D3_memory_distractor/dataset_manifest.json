@@ -1,9 +1,9 @@
 {
   "evidence_count": 100,
-  "evidence_sha256": "8c00275a514a4511d55d7573c53ac290356e1b836bdc3c56621caae765f47da6",
+  "evidence_sha256": "099a19fc3d3a43c322a4549e365d2f8f66bf3d60b963740f335c77ca48c24aea",
   "generator": "hrm_adaptive_memory.experiments.eob_v1_dataset",
   "regime": "D3_memory_distractor",
   "seed": 9503,
   "task_count": 100,
-  "task_sha256": "0cbd91d7da3cd65ca89d23f8c54327f250395916d9cca9732e5c726d13c1e219"
+  "task_sha256": "7dd2a968fd52f8b12606eb155513717fbd07aeb0bea8d928c2987e47aa7f6d87"
 }

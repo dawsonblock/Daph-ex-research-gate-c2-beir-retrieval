@@ -31,6 +31,31 @@ _ENTITY_NAMES = (
     "Thistlewood", "Umbral", "Vellichor", "Wrenfield", "Xylan", "Yarrow",
 )
 
+#: Distinct from _ENTITY_NAMES (which comparison-family questions already use
+#: as visible answer content) -- these back the LOCATOR every D0 task gets,
+#: shaped to match bridge_extraction._V4_ENTITY
+#: (r"\b([A-Z][a-z]+(?:\s+[a-z]+){1,3})\b": one capitalized head word plus 1-3
+#: lowercase words) so grammar_v4 can actually extract it as an entity from
+#: D2/D3 evidence content. Without a shape grammar_v4 recognizes, G2 cannot
+#: build a graph edge for the confirming/distractor record regardless of
+#: whether C2 retrieval finds it -- this was a real gap caught by dry-run
+#: (empty A1 packets on D2/D3 even with the record correctly retrieved).
+_LOCATOR_HEADS = (
+    "Solberg", "Kessington", "Marrowgate", "Fenwick", "Tarnowski", "Whitlock",
+    "Ashgrove", "Barrowfield", "Crestholm", "Dunmore",
+)
+_LOCATOR_ROLES = (
+    "result registry", "output ledger", "value archive", "record index",
+)
+_RELATION_WORD_BY_FAMILY = {
+    "arithmetic": "computed result", "comparison": "ranking outcome",
+    "transform": "transformed value", "restatement": "provisioned value",
+}
+
+
+def _make_locator(rng: random.Random) -> str:
+    return f"{rng.choice(_LOCATOR_HEADS)} {rng.choice(_LOCATOR_ROLES)}"
+
 
 @dataclass
 class EobTask:
@@ -105,10 +130,12 @@ def reference_solve(question: str) -> str:
 def _build_arithmetic(rng: random.Random, task_id: str) -> EobTask:
     a, b = rng.randint(2, 97), rng.randint(2, 97)
     op = rng.choice(["plus", "minus", "times"])
-    question = f"If you compute {a} {op} {b}, what is the result?"
+    locator = _make_locator(rng)
+    question = f"Reference: {locator}. If you compute {a} {op} {b}, what is the result?"
     answer = {"plus": str(a + b), "minus": str(a - b), "times": str(a * b)}[op]
     return EobTask(task_id, "D0_direct_sufficient", "arithmetic", question, answer,
-                   metadata={"a": a, "b": b, "op": op})
+                   metadata={"a": a, "b": b, "op": op, "locator": locator,
+                            "relation_word": _RELATION_WORD_BY_FAMILY["arithmetic"]})
 
 
 def _build_comparison(rng: random.Random, task_id: str) -> EobTask:
@@ -116,13 +143,15 @@ def _build_comparison(rng: random.Random, task_id: str) -> EobTask:
     attr = rng.choice(["height", "weight", "score"])
     values = rng.sample(range(10, 990), 3)
     direction = rng.choice(["highest", "lowest"])
-    question = (f"{names[0]} has {attr} {values[0]}. {names[1]} has {attr} {values[1]}. "
+    locator = _make_locator(rng)
+    question = (f"Reference: {locator}. {names[0]} has {attr} {values[0]}. {names[1]} has {attr} {values[1]}. "
                f"{names[2]} has {attr} {values[2]}. Which entity has the {direction} {attr}?")
     pairs = list(zip(names, values))
     answer = (max(pairs, key=lambda p: p[1]) if direction == "highest"
              else min(pairs, key=lambda p: p[1]))[0]
     return EobTask(task_id, "D0_direct_sufficient", "comparison", question, answer,
-                   metadata={"names": names, "attr": attr, "values": values, "direction": direction})
+                   metadata={"names": names, "attr": attr, "values": values, "direction": direction,
+                            "locator": locator, "relation_word": _RELATION_WORD_BY_FAMILY["comparison"]})
 
 
 def _random_token(rng: random.Random, length: int = 5) -> str:
@@ -131,28 +160,33 @@ def _random_token(rng: random.Random, length: int = 5) -> str:
 
 def _build_transform(rng: random.Random, task_id: str) -> EobTask:
     kind = rng.choice(["reverse", "upper", "concat"])
+    locator = _make_locator(rng)
+    prefix = f"Reference: {locator}. "
     if kind == "reverse":
         tok = _random_token(rng)
-        question = f"Reverse the letters in '{tok}'."
+        question = f"{prefix}Reverse the letters in '{tok}'."
         answer = tok[::-1]
     elif kind == "upper":
         tok = _random_token(rng)
-        question = f"Convert '{tok}' to uppercase."
+        question = f"{prefix}Convert '{tok}' to uppercase."
         answer = tok.upper()
     else:
         t1, t2 = _random_token(rng, 4), _random_token(rng, 4)
-        question = f"Concatenate '{t1}' and '{t2}', in that order."
+        question = f"{prefix}Concatenate '{t1}' and '{t2}', in that order."
         answer = t1 + t2
     return EobTask(task_id, "D0_direct_sufficient", "transform", question, answer,
-                   metadata={"kind": kind})
+                   metadata={"kind": kind, "locator": locator,
+                            "relation_word": _RELATION_WORD_BY_FAMILY["transform"]})
 
 
 def _build_restatement(rng: random.Random, task_id: str) -> EobTask:
     var = rng.choice(["X", "Y", "Z", "N", "K"])
     value = str(rng.randint(1, 999))
-    question = f"Assume {var} is set to {value}. What is the value of {var}?"
+    locator = _make_locator(rng)
+    question = f"Reference: {locator}. Assume {var} is set to {value}. What is the value of {var}?"
     return EobTask(task_id, "D0_direct_sufficient", "restatement", question, value,
-                   metadata={"var": var, "value": value})
+                   metadata={"var": var, "value": value, "locator": locator,
+                            "relation_word": _RELATION_WORD_BY_FAMILY["restatement"]})
 
 
 _D0_BUILDERS = {
@@ -187,56 +221,67 @@ def build_d0_tasks(seed: int, tasks_per_family: int) -> list[EobTask]:
 
 # --- D2 (confirming evidence) / D3 (distractor evidence) -------------------
 
+def _confirming_or_distractor_value(task: EobTask, rng: random.Random, *, correct: bool) -> str:
+    """The value asserted for this task's locator -- the correct answer if
+    correct=True (D2), a verified-different value otherwise (D3)."""
+    fam = task.family
+    if fam in ("arithmetic", "restatement"):
+        if correct:
+            return task.answer
+        base = int(task.answer)
+        offsets = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]
+        return str(base + rng.choice(offsets))
+    if fam == "comparison":
+        if correct:
+            return task.answer
+        return rng.choice([n for n in task.metadata["names"] if n != task.answer])
+    if fam == "transform":
+        if correct:
+            return task.answer
+        original_last = task.answer[-1]
+        replacement = rng.choice([c for c in "abcdefghijklmnopqrstuvwxyz" if c != original_last])
+        return task.answer[:-1] + replacement
+    raise ValueError(f"unknown family {fam!r}")
+
+
+def _b3_style_fact_sentence(locator: str, relation_word: str, value: str) -> str:
+    """Deliberately matches the b3 corpus's own formal_registry rendering
+    style (hrm_adaptive_memory/experiments/generalization_dataset_v4.py:_render)
+    -- 'The {relation} registry records that {subject} is assigned {obj}.' --
+    since that is the literal sentence shape grammar_v4/G2 are proven to
+    parse into a graph edge for the b3/D1 corpus. locator is entity-shaped
+    (matches bridge_extraction._V4_ENTITY) and relation_word is passed
+    directly as the graph's `relation` parameter by the runner (NOT extracted
+    via extract_target_relation, which is tuned to a different question
+    phrasing) -- so RECORD_EXPRESSES_RELATION fires because relation_word is
+    guaranteed to be a literal substring of this sentence, by construction."""
+    return f"The {relation_word} registry records that {locator} is assigned {value}."
+
+
 def _paraphrase_confirmation(task: EobTask, rng: random.Random) -> str:
     """A prose restatement of the SAME fact, not a verbatim copy of the
     question -- required by configs/gate_eob_v1_design.json VERIFICATION_
     REQUIRED_BEFORE_FREEZE."""
-    fam = task.family
-    if fam == "arithmetic":
-        a, b, op = task.metadata["a"], task.metadata["b"], task.metadata["op"]
-        word = {"plus": "added to", "minus": "subtracted from", "times": "multiplied by"}[op]
-        return f"Records confirm: {b} {word} {a} yields {task.answer}."
-    if fam == "comparison":
-        names, attr, values = task.metadata["names"], task.metadata["attr"], task.metadata["values"]
-        pairs = sorted(zip(names, values), key=lambda p: p[1])
-        ranking = ", ".join(f"{n} ({v})" for n, v in pairs)
-        return f"Registry note on {attr}, ascending order: {ranking}."
-    if fam == "transform":
-        kind = task.metadata["kind"]
-        if kind == "concat":
-            return f"Log entry: the joined token is confirmed as '{task.answer}'."
-        return f"Log entry: the transformed token is confirmed as '{task.answer}'."
-    if fam == "restatement":
-        var, value = task.metadata["var"], task.metadata["value"]
-        return f"Configuration audit: variable {var} is currently provisioned as {value}."
-    raise ValueError(f"unknown family {fam!r}")
+    value = _confirming_or_distractor_value(task, rng, correct=True)
+    return _b3_style_fact_sentence(task.metadata["locator"], task.metadata["relation_word"], value)
 
 
 def _near_miss_distractor(task: EobTask, rng: random.Random) -> str:
     """Same template, a DIFFERENT value than the correct answer for THIS
     question -- verified not-equal-to-answer below."""
-    fam = task.family
-    if fam == "arithmetic":
-        a, b, op = task.metadata["a"], task.metadata["b"], task.metadata["op"]
-        wrong = str(int(task.answer) + rng.choice([-3, -2, -1, 1, 2, 3]))
-        word = {"plus": "added to", "minus": "subtracted from", "times": "multiplied by"}[op]
-        return f"Records confirm: {b} {word} {a} yields {wrong}."
-    if fam == "comparison":
-        names, attr = task.metadata["names"], task.metadata["attr"]
-        wrong_entity = rng.choice([n for n in names if n != task.answer])
-        return f"Registry note: {wrong_entity} holds the {task.metadata['direction']} recorded {attr}."
-    if fam == "transform":
-        kind = task.metadata["kind"]
-        original_last = task.answer[-1]
-        replacement = rng.choice([c for c in "abcdefghijklmnopqrstuvwxyz" if c != original_last])
-        wrong = task.answer[:-1] + replacement
-        label = "joined token" if kind == "concat" else "transformed token"
-        return f"Log entry: the {label} is confirmed as '{wrong}'."
-    if fam == "restatement":
-        var = task.metadata["var"]
-        wrong = str(int(task.metadata["value"]) + rng.choice([-5, -4, -3, 3, 4, 5]))
-        return f"Configuration audit: variable {var} is currently provisioned as {wrong}."
-    raise ValueError(f"unknown family {fam!r}")
+    value = _confirming_or_distractor_value(task, rng, correct=False)
+    return _b3_style_fact_sentence(task.metadata["locator"], task.metadata["relation_word"], value)
+
+
+def _index_record(evidence_id: str, content: str, record_kind: str) -> dict:
+    """Full IndexRecord-compatible schema (scripts/run_gate_c4.py:_to_index_records
+    requires evidence_id/source_id/content/source_type/metadata) -- EOB-v1's
+    evidence records must satisfy the same contract every other corpus in
+    this project does, not a stripped-down {evidence_id, content} shape."""
+    return {
+        "evidence_id": evidence_id, "source_id": evidence_id, "content": content,
+        "source_type": "eob_v1_synthetic", "metadata": {"record_kind": record_kind},
+    }
 
 
 def build_d2_tasks(d0_tasks: list[EobTask], seed: int) -> list[EobTask]:
@@ -248,7 +293,7 @@ def build_d2_tasks(d0_tasks: list[EobTask], seed: int) -> list[EobTask]:
         task = EobTask(
             task_id=d0.task_id.replace("d0-", "d2-"), regime="D2_both_sufficient",
             family=d0.family, question=d0.question, answer=d0.answer,
-            evidence=[{"evidence_id": ev_id, "content": content}],
+            evidence=[_index_record(ev_id, content, "confirming")],
             required_evidence_ids=[ev_id],
             metadata={**d0.metadata, "d0_source": d0.task_id})
         out.append(task)
@@ -256,16 +301,13 @@ def build_d2_tasks(d0_tasks: list[EobTask], seed: int) -> list[EobTask]:
 
 
 def _distractor_value(family: str, content: str) -> str:
-    """Extract the (wrong) value the distractor asserts, per family template,
-    so it can be checked against the correct answer precisely -- substring
-    checks are unreliable here (e.g. '42' is a substring of '142')."""
-    if family in ("arithmetic", "restatement"):
-        return content.rstrip(".").rsplit(" ", 1)[-1]
-    if family == "comparison":
-        return content.split(":")[1].strip().split(" holds")[0].strip()
-    if family == "transform":
-        return content.split("'")[1]
-    raise ValueError(f"unknown family {family!r}")
+    """Extract the value a _b3_style_fact_sentence asserts ('... is assigned
+    {value}.'), so it can be checked against the correct answer precisely --
+    substring checks are unreliable here (e.g. '42' is a substring of '142').
+    Family-agnostic now: every family shares the same sentence template."""
+    if " is assigned " not in content:
+        raise ValueError(f"content does not match the expected fact-sentence template: {content!r}")
+    return content.rsplit(" is assigned ", 1)[-1].rstrip(".")
 
 
 def build_d3_tasks(d0_tasks: list[EobTask], seed: int) -> list[EobTask]:
@@ -282,7 +324,7 @@ def build_d3_tasks(d0_tasks: list[EobTask], seed: int) -> list[EobTask]:
         task = EobTask(
             task_id=d0.task_id.replace("d0-", "d3-"), regime="D3_memory_distractor",
             family=d0.family, question=d0.question, answer=d0.answer,
-            evidence=[{"evidence_id": ev_id, "content": content}],
+            evidence=[_index_record(ev_id, content, "distractor")],
             required_evidence_ids=[],  # the distractor is NOT required -- the answer never depended on it
             metadata={**d0.metadata, "d0_source": d0.task_id})
         out.append(task)
