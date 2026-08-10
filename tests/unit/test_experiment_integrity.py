@@ -414,6 +414,24 @@ class TestExecutiveFeatureAvailability:
               if s.availability_stage == AvailabilityStage.PRE_DECISION]
         assert len(pre) >= 1
 
+    def test_post_answer_now_pre_memory_is_admissible(self):
+        """Executive v0's amendment: ANSWER_NOW's own confidence is a
+        legitimate signal for deciding whether to invoke MEMORY, since
+        ANSWER_NOW is the cheap action by definition."""
+        require_admissible_for_answer_vs_memory(
+            KNOWN_FEATURES["answer_now_mean_token_confidence"])  # no raise
+        require_admissible_for_answer_vs_memory(
+            KNOWN_FEATURES["answer_now_min_token_confidence"])  # no raise
+
+    def test_post_generation_remains_excluded_despite_the_amendment(self):
+        """POST_GENERATION is deliberately left ambiguous (could mean either
+        action's generation) and excluded -- only the explicitly-scoped
+        POST_ANSWER_NOW_PRE_MEMORY stage is admissible."""
+        from hrm_adaptive_memory.experiment_integrity.executive_features import FeatureSpec
+        spec = FeatureSpec("hypothetical", AvailabilityStage.POST_GENERATION, "n/a", True)
+        with pytest.raises(FeatureAvailabilityError):
+            require_admissible_for_answer_vs_memory(spec)
+
 
 class TestGateResult:
     def test_valid_negative_result_like_confirmation_1(self):

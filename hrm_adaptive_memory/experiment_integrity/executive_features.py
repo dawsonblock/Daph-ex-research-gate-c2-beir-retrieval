@@ -21,24 +21,41 @@ from enum import Enum
 
 
 class AvailabilityStage(str, Enum):
-    #: Computable from the question text alone, before either ANSWER_NOW or
-    #: MEMORY has done any work -- the only stage admissible for the first
-    #: ANSWER_NOW-vs-MEMORY controller.
+    #: Computable from the question text alone, before EITHER action has
+    #: done any work.
     PRE_DECISION = "PRE_DECISION"
+    #: AMENDMENT (Executive v0 design, after the EOB-v1/v2 template-overlap
+    #: finding showed PRE_DECISION alone carries near-zero signal between
+    #: this project's two training families): computable after ANSWER_NOW
+    #: has run -- which is legitimate for an ANSWER_NOW-vs-MEMORY gate
+    #: because ANSWER_NOW is, by definition, the cheap action; using its own
+    #: output/confidence to decide whether to ALSO pay for MEMORY is
+    #: "uncertainty-gated routing", not circular in the way POST_RETRIEVAL/
+    #: POST_GRAPH would be (those require part of MEMORY -- the EXPENSIVE
+    #: action -- to have already run). Executive v0 is admissible at this
+    #: stage AND PRE_DECISION; still inadmissible at POST_RETRIEVAL/
+    #: POST_GRAPH, which remain reserved for a later RETRIEVE_MORE/
+    #: GRAPH_REFINE/VERIFY/STOP controller where memory work has already
+    #: been committed.
+    POST_ANSWER_NOW_PRE_MEMORY = "POST_ANSWER_NOW_PRE_MEMORY"
     #: Requires C2 retrieval (BM25+BGE+fusion) to have already run.
     POST_RETRIEVAL = "POST_RETRIEVAL"
     #: Requires G2 graph construction and/or path enumeration to have
     #: already run -- this is most of the cost of the MEMORY action itself.
     POST_GRAPH = "POST_GRAPH"
-    #: Only observable after HRM generation has already happened.
+    #: Only observable after HRM generation has already happened -- either
+    #: ANSWER_NOW's (see POST_ANSWER_NOW_PRE_MEMORY, now the intended path
+    #: for that) or MEMORY's own (still inadmissible for the ANSWER_NOW-vs-
+    #: MEMORY gate).
     POST_GENERATION = "POST_GENERATION"
 
 
 #: Stages a controller choosing only between ANSWER_NOW and MEMORY (no
 #: intermediate actions like RETRIEVE_MORE/GRAPH_REFINE) may legitimately
-#: condition on. Everything past PRE_DECISION already assumes part or all of
-#: MEMORY has executed.
-STAGES_ADMISSIBLE_FOR_ANSWER_VS_MEMORY = frozenset({AvailabilityStage.PRE_DECISION})
+#: condition on. POST_RETRIEVAL/POST_GRAPH remain excluded -- both require
+#: part of MEMORY, the expensive action, to have already run.
+STAGES_ADMISSIBLE_FOR_ANSWER_VS_MEMORY = frozenset(
+    {AvailabilityStage.PRE_DECISION, AvailabilityStage.POST_ANSWER_NOW_PRE_MEMORY})
 
 
 class FeatureAvailabilityError(RuntimeError):
@@ -130,18 +147,35 @@ KNOWN_FEATURES: dict[str, FeatureSpec] = {
         "A0's own actual latency/tokens -- only known after A0 has already "
         "run to completion",
         runtime_safe=False),
-    #: PRE_DECISION features -- the only ones admissible for the first
-    #: ANSWER_NOW-vs-MEMORY controller. Populated as EOB-v1's runner adds
-    #: question-derived features; declared here in advance so the intent
-    #: (some features MUST exist at this stage for a controller to be
-    #: buildable at all) is explicit before that runner is written.
+    #: PRE_DECISION features -- admissible, but EMPIRICALLY WEAK for
+    #: Executive v0's actual training split (data/hrm/exec_training_v1):
+    #: both families ("What is the {relation} for {subject}?") share the
+    #: same b3-native template shape, so length/digit-presence carry
+    #: near-zero discriminative signal between them. Kept declared for
+    #: completeness/honesty about what was considered, not because they are
+    #: expected to matter here.
     "question_length_tokens": FeatureSpec(
         "question_length_tokens", AvailabilityStage.PRE_DECISION,
         "whitespace token count of the raw question string",
         runtime_safe=True),
     "question_has_explicit_numeric_literal": FeatureSpec(
         "question_has_explicit_numeric_literal", AvailabilityStage.PRE_DECISION,
-        "regex check for a numeric literal in the question -- a candidate "
-        "cheap signal for D0-style self-contained arithmetic tasks",
+        "regex check for a numeric literal in the question -- was a "
+        "candidate signal for the original arithmetic-flavored D0 family, "
+        "which Executive v0's training split does not include",
+        runtime_safe=True),
+    #: POST_ANSWER_NOW_PRE_MEMORY features -- Executive v0's actual signal.
+    #: hrm_adaptive_memory.executive.confidence.generate_with_confidence()
+    #: computes these from ANSWER_NOW's own greedy generation.
+    "answer_now_mean_token_confidence": FeatureSpec(
+        "answer_now_mean_token_confidence", AvailabilityStage.POST_ANSWER_NOW_PRE_MEMORY,
+        "mean per-step softmax probability of ANSWER_NOW's own greedily-"
+        "chosen tokens -- requires ANSWER_NOW's generation to have run "
+        "(cheap: no retrieval/graph/composition), not MEMORY's",
+        runtime_safe=True),
+    "answer_now_min_token_confidence": FeatureSpec(
+        "answer_now_min_token_confidence", AvailabilityStage.POST_ANSWER_NOW_PRE_MEMORY,
+        "the single lowest per-step confidence during ANSWER_NOW's "
+        "generation -- same cost as the mean variant",
         runtime_safe=True),
 }
