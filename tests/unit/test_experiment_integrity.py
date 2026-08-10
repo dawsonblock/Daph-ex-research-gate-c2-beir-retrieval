@@ -16,6 +16,8 @@ from hrm_adaptive_memory.experiment_integrity.certified_memory import (
     pin_certified_memory_v1_boundary_policy)
 from hrm_adaptive_memory.experiment_integrity.execution_identity import (
     ExecutionIdentity, resume_is_valid)
+from hrm_adaptive_memory.experiment_integrity.executive_bootstrap import (
+    grouped_lcb_executive_opportunity)
 from hrm_adaptive_memory.experiment_integrity.metric_validation import (
     NOT_COMPUTABLE, MetricValidationError, require_finite_number,
     require_hash_format, require_nonempty_rate, require_nonneg_int,
@@ -260,8 +262,21 @@ class TestCertifiedMemoryV1:
     Each test pins boundary_policy explicitly at its own start rather than
     relying on module-load-time state or other tests' side effects -- this
     process-global is exactly the kind of shared mutable state that produces
-    order-dependent test failures if left implicit.
+    order-dependent test failures if left implicit. The autouse fixture below
+    snapshots and restores it around every test in this class: an earlier
+    version of these tests mutated it without restoring, which silently
+    polluted test_g2_v4e_entity_boundary.py's default-policy assumptions
+    whenever the two files ran in the same pytest session -- exactly the
+    failure mode this fixture exists to prevent.
     """
+
+    @pytest.fixture(autouse=True)
+    def _restore_boundary_policy(self):
+        from hrm_adaptive_memory.c4.bridge_extraction import (
+            get_default_boundary_policy, set_default_boundary_policy)
+        original = get_default_boundary_policy()
+        yield
+        set_default_boundary_policy(original)
 
     def test_current_code_state_matches_the_frozen_identity(self):
         """The stack as it stands today (post confirmation-2), WITH the
@@ -284,9 +299,14 @@ class TestCertifiedMemoryV1:
     def test_drift_in_any_single_field_is_rejected(self):
         """Mutation-style: flip ONE field of the frozen identity at a time and
         confirm the resulting hash no longer matches -- proves the hash is
-        actually sensitive to each component, not silently ignoring one."""
+        actually sensitive to each component, not silently ignoring one.
+        Pins boundary_policy explicitly first so `base` has a known starting
+        value -- otherwise the boundary_policy->"legacy" mutation below could
+        silently become a no-op if the ambient state already happened to be
+        "legacy"."""
         from hrm_adaptive_memory.experiment_integrity.certified_memory import (
             CertifiedMemoryV1Identity)
+        pin_certified_memory_v1_boundary_policy()
         base = current_certified_memory_v1_identity()
         base_hash = base.canonical_sha256()
         for field, bad_value in [
@@ -306,18 +326,61 @@ class TestCertifiedMemoryV1:
         """The exact failure mode this module exists to catch: a caller that
         forgets to pin boundary_policy=grammar_v4 before invoking the memory
         operation must be rejected, not silently scored against the wrong
-        (legacy, unconfirmed) entity-boundary treatment."""
+        (legacy, unconfirmed) entity-boundary treatment. Restoration to the
+        true pre-test state is handled by the _restore_boundary_policy fixture,
+        not by this test."""
         from hrm_adaptive_memory.c4.bridge_extraction import set_default_boundary_policy
         set_default_boundary_policy("legacy")
-        try:
-            with pytest.raises(CertifiedMemoryDriftError):
-                assert_certified_memory_v1_unchanged()
-        finally:
-            set_default_boundary_policy("grammar_v4")  # restore for other tests
+        with pytest.raises(CertifiedMemoryDriftError):
+            assert_certified_memory_v1_unchanged()
 
     def test_config_hash_is_stable_across_repeated_calls(self):
         assert (current_certified_memory_v1_identity().canonical_sha256()
                == current_certified_memory_v1_identity().canonical_sha256())
+
+
+class TestGroupedLcbExecutiveOpportunity:
+    """LCB of ExecutiveOpportunity = mean(max(q0,q1)) - max(mean(q0),mean(q1)),
+    which grouped_lcb's single-value-per-task interface cannot express because
+    of the max() term -- these pin the generalization against hand-computable
+    cases."""
+
+    def test_no_heterogeneity_gives_zero_opportunity(self):
+        """Q_E0 == Q_E1 for every task -> true opportunity is exactly 0, and
+        every bootstrap replicate reproduces the same degenerate case."""
+        triples = [("fam_a", 1.0, 1.0)] * 20 + [("fam_b", 0.0, 0.0)] * 20
+        assert grouped_lcb_executive_opportunity(triples) == 0.0
+
+    def test_perfect_50_50_heterogeneity_gives_large_positive_lcb(self):
+        """Half the tasks strictly favor E0, half strictly favor E1 -- oracle
+        wins every task (mean 1.0), each fixed policy wins only half (mean
+        0.5) -> true opportunity = 0.5."""
+        triples = ([("fam_a", 1.0, 0.0)] * 25 + [("fam_a", 0.0, 1.0)] * 25 +
+                  [("fam_b", 1.0, 0.0)] * 25 + [("fam_b", 0.0, 1.0)] * 25)
+        lcb = grouped_lcb_executive_opportunity(triples)
+        assert lcb is not None and lcb > 0.3
+
+    def test_single_group_lcb_equals_the_point_estimate(self):
+        """With only one group, every bootstrap replicate resamples that same
+        group every time -- no resampling diversity is possible, so the LCB
+        must equal the point estimate exactly."""
+        triples = [("only_fam", 1.0, 0.0)] * 10 + [("only_fam", 0.0, 1.0)] * 10
+        q0 = [t[1] for t in triples]
+        q1 = [t[2] for t in triples]
+        point_estimate = (sum(max(a, b) for a, b in zip(q0, q1)) / len(triples)
+                          - max(sum(q0) / len(q0), sum(q1) / len(q1)))
+        assert grouped_lcb_executive_opportunity(triples) == round(point_estimate, 4)
+
+    def test_empty_input_returns_none(self):
+        assert grouped_lcb_executive_opportunity([]) is None
+
+    def test_one_action_strictly_dominates_gives_zero_or_negative_opportunity(self):
+        """E1 always at least as good as E0, everywhere -- oracle just mirrors
+        E1, so max(mean(E0),mean(E1)) already equals U(E3): true opportunity
+        is exactly 0, nothing for an executive to capture."""
+        triples = [("fam_a", 0.0, 1.0)] * 30 + [("fam_b", 0.3, 0.8)] * 30
+        lcb = grouped_lcb_executive_opportunity(triples)
+        assert lcb is not None and lcb <= 0.0001
 
 
 class TestGateResult:
