@@ -1,0 +1,69 @@
+{
+  "ARTIFACT": "CERTIFIED_MEMORY_V1",
+  "DEFINITION": "grammar_v4 entity extraction + frozen C2 retrieval + G2 query-local runtime graph + frozen path ranking + path-coherent packet composer + packet budget 6 + HRM-Text-1B",
+  "STATUS": "FROZEN -- do not modify retrieval, graph, path ranking, composer, packet budget, or model revision under this name. A behavioral change requires freezing CERTIFIED_MEMORY_V2 and re-earning confirmation before any executive/controller experiment may treat it as certified.",
+
+  "MEMORY_V1_PROTOCOL_SHA": "2f8c46bc4e6b049293ca97c15a2d967ff8af2afb3be513b2d63f41b6b5840aa8",
+  "MEMORY_V1_PROTOCOL_SHA_BASIS": "sha256(json.dumps(configs/gate_hrm_confirmation_2_v1.json['STACK_IDENTITY_FROZEN_UNCHANGED_FROM_QUALIFICATION'], sort_keys=True))",
+  "MEMORY_V1_SOURCE_COMMIT": "c8672be80f122fba238e04407feede43804e38c0",
+  "MEMORY_V1_MODEL_REVISION": "sapientinc/HRM-Text-1B @ 9f082d68b8cd0ebc56e33f1c88c45609174c272c",
+  "MEMORY_V1_CONFIG_HASH": "97b3b49cb95fa33b",
+  "MEMORY_V1_CONFIRMATION_CERTIFICATE": "evidence/gate_hrm/confirmation_2_execute.json",
+
+  "MACHINE_CHECKABLE_IDENTITY": {
+    "module": "hrm_adaptive_memory.experiment_integrity.certified_memory",
+    "constant": "MEMORY_V1_CONFIG_HASH",
+    "assertion_function": "assert_certified_memory_v1_unchanged()",
+    "requirement": "Any executive/controller experiment that invokes the memory operation as a black box MUST call assert_certified_memory_v1_unchanged() before every use. It recomputes the identity hash live from bridge_extraction.entity_extractor_config_hash() and the pinned boundary policy, and raises CertifiedMemoryDriftError (fail-closed) if it no longer matches MEMORY_V1_CONFIG_HASH.",
+    "components_hashed": [
+      "retrieval_config_hash = 'C2'",
+      "selector_config_hash = 's2_v2+s4_composer_v1'",
+      "graph_compressor_config_hash = entity_extractor_config_hash() (live, pinned to boundary_policy=grammar_v4)",
+      "model_revision = 'sapientinc/HRM-Text-1B@9f082d68'",
+      "pipeline_version = 'hrm_qualification_v1'",
+      "packet_budget = 6",
+      "boundary_policy = 'grammar_v4'"
+    ]
+  },
+
+  "EVIDENCE_CHAIN": {
+    "qualification": {
+      "artifact": "evidence/gate_hrm/qualification_execute.json",
+      "decision": "FREEZE_GRAPH_PLUS_COMPOSITION_STACK__PROCEED_TOWARD_FRESH_CONFIRMATION",
+      "delta_HRM_graph_value": 0.0746,
+      "lcb_2p5": 0.0253
+    },
+    "confirmation_2": {
+      "artifact": "evidence/gate_hrm/confirmation_2_execute.json",
+      "protocol": "configs/gate_hrm_confirmation_2_v1.json",
+      "decision": "CONFIRMED_GRAPH_PLUS_PATH_COMPOSITION",
+      "delta_HRM_graph_value": 0.0720,
+      "lcb_2p5": 0.0147,
+      "split": "data/hrm/g2_confirmation_2/ (untouched, zero overlap, now consumed)",
+      "run_valid": true,
+      "subgroup_safety_passed": true
+    },
+    "replication_reading": "Effect reproduced almost exactly across two independent evaluations: +0.0746 (calibration-informed) vs +0.0720 (genuinely fresh), both with LCB>0. This is the evidentiary basis for freezing the stack as CERTIFIED rather than merely development-qualified."
+  },
+
+  "BOUNDED_CLAIM": "grammar_v4 -> G2 runtime graph -> path-coherent packet composition -> HRM-Text-1B improves external-memory answer quality over the typed-path baseline, on the evaluated synthetic multi-hop benchmark family (10 task families, canonical/abbreviation entity regimes), for this specific model. NOT a claim about natural documents, open-domain RAG, other models, or universal generalization.",
+
+  "WHAT_THIS_FREEZE_PROHIBITS": [
+    "changing entity extraction / boundary policy / grammar tables under the name CERTIFIED_MEMORY_V1",
+    "changing retrieval depth, fusion, or backend selection (C2)",
+    "changing graph construction (G2) or path ranking",
+    "changing the path-coherent composer's atomic-admission contract",
+    "changing packet_budget away from 6",
+    "changing the HRM model revision",
+    "any of the above happening silently as a side effect of executive/controller development"
+  ],
+
+  "WHAT_THIS_FREEZE_PERMITS": [
+    "calling the frozen stack as a black-box action (USE_CERTIFIED_MEMORY / A1) from executive-opportunity or executive-controller experiments",
+    "measuring the frozen stack's utility against alternative actions (e.g. ANSWER_NOW) on new task distributions",
+    "diagnostic inspection of confirmation_2 receipts (diagnosis_only, per data/hrm/g2_confirmation_2/SPLIT_LINEAGE.json)"
+  ],
+
+  "next_gate": "Executive Opportunity Study (configs/gate_executive_opportunity_v1.json) -- does observable runtime state predict when invoking CERTIFIED_MEMORY_V1 beats answering directly? Prove the opportunity exists (oracle ceiling, grouped LCB>0, meaningful action diversity) before training any controller.",
+  "frozen_utc": "2026-08-10T07:00:00Z"
+}

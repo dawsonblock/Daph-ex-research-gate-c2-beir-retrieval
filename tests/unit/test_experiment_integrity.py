@@ -10,6 +10,10 @@ import subprocess
 
 import pytest
 
+from hrm_adaptive_memory.experiment_integrity.certified_memory import (
+    MEMORY_V1_CONFIG_HASH, CertifiedMemoryDriftError,
+    assert_certified_memory_v1_unchanged, current_certified_memory_v1_identity,
+    pin_certified_memory_v1_boundary_policy)
 from hrm_adaptive_memory.experiment_integrity.execution_identity import (
     ExecutionIdentity, resume_is_valid)
 from hrm_adaptive_memory.experiment_integrity.metric_validation import (
@@ -247,6 +251,73 @@ class TestSplitLineage:
         m = parse_split_manifest(raw)
         with pytest.raises(SplitLineageError):
             require_permitted_use(m, PermittedUse.MECHANISM_SELECTION)
+
+
+class TestCertifiedMemoryV1:
+    """The hard boundary an executive/controller experiment must assert
+    against before invoking the confirmed memory operation as a black box.
+
+    Each test pins boundary_policy explicitly at its own start rather than
+    relying on module-load-time state or other tests' side effects -- this
+    process-global is exactly the kind of shared mutable state that produces
+    order-dependent test failures if left implicit.
+    """
+
+    def test_current_code_state_matches_the_frozen_identity(self):
+        """The stack as it stands today (post confirmation-2), WITH the
+        deliberate pin applied, must match the hash frozen in
+        configs/certified_memory_v1.json -- if this fails, the certificate is
+        stale relative to the code, not the other way round."""
+        pin_certified_memory_v1_boundary_policy()
+        identity = assert_certified_memory_v1_unchanged()
+        assert identity.canonical_sha256() == MEMORY_V1_CONFIG_HASH
+
+    def test_identity_pins_the_grammar_v4_boundary_policy(self):
+        pin_certified_memory_v1_boundary_policy()
+        identity = current_certified_memory_v1_identity()
+        assert identity.boundary_policy == "grammar_v4"
+
+    def test_identity_pins_packet_budget_six(self):
+        identity = current_certified_memory_v1_identity()
+        assert identity.packet_budget == 6
+
+    def test_drift_in_any_single_field_is_rejected(self):
+        """Mutation-style: flip ONE field of the frozen identity at a time and
+        confirm the resulting hash no longer matches -- proves the hash is
+        actually sensitive to each component, not silently ignoring one."""
+        from hrm_adaptive_memory.experiment_integrity.certified_memory import (
+            CertifiedMemoryV1Identity)
+        base = current_certified_memory_v1_identity()
+        base_hash = base.canonical_sha256()
+        for field, bad_value in [
+            ("retrieval_config_hash", "C3"),
+            ("selector_config_hash", "s2_v1"),
+            ("graph_compressor_config_hash", "0000000000000000"),
+            ("model_revision", "sapientinc/HRM-Text-1B@deadbeef"),
+            ("pipeline_version", "hrm_qualification_v2"),
+            ("packet_budget", 8),
+            ("boundary_policy", "legacy"),
+        ]:
+            kwargs = {**base.__dict__, field: bad_value}
+            mutated = CertifiedMemoryV1Identity(**kwargs)
+            assert mutated.canonical_sha256() != base_hash, f"hash insensitive to {field}"
+
+    def test_boundary_policy_left_as_legacy_is_detected_as_drift(self):
+        """The exact failure mode this module exists to catch: a caller that
+        forgets to pin boundary_policy=grammar_v4 before invoking the memory
+        operation must be rejected, not silently scored against the wrong
+        (legacy, unconfirmed) entity-boundary treatment."""
+        from hrm_adaptive_memory.c4.bridge_extraction import set_default_boundary_policy
+        set_default_boundary_policy("legacy")
+        try:
+            with pytest.raises(CertifiedMemoryDriftError):
+                assert_certified_memory_v1_unchanged()
+        finally:
+            set_default_boundary_policy("grammar_v4")  # restore for other tests
+
+    def test_config_hash_is_stable_across_repeated_calls(self):
+        assert (current_certified_memory_v1_identity().canonical_sha256()
+               == current_certified_memory_v1_identity().canonical_sha256())
 
 
 class TestGateResult:
