@@ -1,0 +1,47 @@
+{
+  "design": "configs/gate_answer_probe_v2_design.json",
+  "families": [
+    "ANSWER_NOW_viable",
+    "MEMORY_required"
+  ],
+  "filler_seed": 9398,
+  "frozen_before_evaluation": true,
+  "memory_required_scales": {
+    "exec2_1000": {
+      "generation_seed": 9402,
+      "target_evidence": 1000
+    },
+    "exec2_1500": {
+      "generation_seed": 9403,
+      "target_evidence": 1500
+    },
+    "exec2_2200": {
+      "generation_seed": 9404,
+      "target_evidence": 2200
+    },
+    "exec2_3000": {
+      "generation_seed": 9405,
+      "target_evidence": 3000
+    },
+    "exec2_700": {
+      "generation_seed": 9401,
+      "target_evidence": 700
+    }
+  },
+  "purpose": "Training data for ANSWER_PROBE_GATE_V2 -- fresh, outcome-stratified follow-up to ANSWER_PROBE_GATE_V1 (NOT_PROMOTED). Zero privileged-parsing bypass. Zero reuse of exec_training_v1's consumed 144 tasks.",
+  "role": "development/training -- NOT a confirmation split. A separate, later, untouched executive-confirmation split is required before promotion.",
+  "screened_against": [
+    "data/hrm/b3_calibration_v1/{cal_700,cal_1000,cal_1500,cal_2200,cal_3000}",
+    "data/hrm/g2_confirmation_2/{confirm2_700,confirm2_1000,confirm2_1500,confirm2_2200,confirm2_3000}",
+    "data/hrm/eob_v1/{D0_direct_sufficient,D1_memory_required,D2_both_sufficient,D3_memory_distractor}",
+    "data/hrm/eob_v2/{D0_direct_sufficient,D1_memory_required,D2_both_sufficient,D3_memory_distractor}",
+    "data/hrm/exec_training_v1/{ANSWER_NOW_viable,MEMORY_required}",
+    "data/hrm/controlled_gate_a_v4/{development,qualification,ood,confirmation}"
+  ],
+  "suite_id": "exec_training_v2",
+  "tasks_per_family": {
+    "ANSWER_NOW_viable": 265,
+    "MEMORY_required": 750
+  },
+  "total_tasks": 1015
+}

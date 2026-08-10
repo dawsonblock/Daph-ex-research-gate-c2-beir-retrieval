@@ -1,0 +1,17 @@
+{
+  "evidence_count": 8400,
+  "evidence_sha256": "e51542717c34e804898c64b9d5317c76002fe08985f6d9408e7fc1e27474e3e7",
+  "family": "MEMORY_required",
+  "generator": "5 fresh scales (exec2_700..exec2_3000), scale-namespaced and pooled",
+  "native_parser_verified": false,
+  "note": "task_id/evidence_id are scale-namespaced (f'{scale}:{orig_id}') before pooling; verified globally unique via a hard assertion at build time.",
+  "scales": [
+    "exec2_700",
+    "exec2_1000",
+    "exec2_1500",
+    "exec2_2200",
+    "exec2_3000"
+  ],
+  "task_count": 750,
+  "task_sha256": "53b9e6ac6406066d5d0dda0ed1337575edea457f893e37ca06f5a7da13477902"
+}
