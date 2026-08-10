@@ -451,6 +451,18 @@ class TestGateResult:
         assert d["failure_class"] == "BENCHMARK_HAS_NO_ACTION_HETEROGENEITY"
         assert d["scientific_verdict"] == "NEGATIVE"
 
+    def test_diversity_floor_not_cleared_in_pooled_mix_like_eob_v1(self):
+        """EOB-v1's actual result: real per-regime heterogeneity (D1 memory-
+        necessary, D3 memory-harmed) but the pooled diversity metric falls
+        just under its floor because the frozen equal-regime mix dilutes it
+        -- distinct from BENCHMARK_HAS_NO_ACTION_HETEROGENEITY, which means
+        no heterogeneity exists anywhere."""
+        r = GateResult(run_valid=True, scientific_verdict=ScientificVerdict.NEGATIVE,
+                       mechanism_status=MechanismStatus.NOT_PROMOTED,
+                       failure_class=FailureClass.DIVERSITY_FLOOR_NOT_CLEARED_IN_POOLED_MIX,
+                       split_status=SplitStatus.CONSUMED)
+        assert r.as_dict()["failure_class"] == "DIVERSITY_FLOOR_NOT_CLEARED_IN_POOLED_MIX"
+
     def test_positive_not_promoted_requires_a_reason(self):
         with pytest.raises(ValueError):
             GateResult(run_valid=True, scientific_verdict=ScientificVerdict.POSITIVE,

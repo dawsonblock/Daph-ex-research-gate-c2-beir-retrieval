@@ -51,6 +51,16 @@ class FailureClass(str, Enum):
     #: bad the action-selection mechanism is. Distinct from every other
     #: FailureClass here, which all describe a deficiency IN the mechanism.
     BENCHMARK_HAS_NO_ACTION_HETEROGENEITY = "BENCHMARK_HAS_NO_ACTION_HETEROGENEITY"
+    #: The opposite failure mode from BENCHMARK_HAS_NO_ACTION_HETEROGENEITY:
+    #: real, strong heterogeneity exists WITHIN individual regimes/strata
+    #: (e.g. EOB-v1's D1 shows 48/100 strict memory wins, D3 shows 64/100
+    #: strict answer-now wins), but the frozen benchmark's regime/stratum MIX
+    #: proportions dilute the POOLED diversity metric below its floor (e.g.
+    #: D0's 100/100 ties pull memory's aggregate strict-win share to 14.75%,
+    #: just under a 15% floor, even though memory clearly matters within D1).
+    #: Not a mechanism deficiency and not "no heterogeneity" -- a mix-design
+    #: property of THIS specific frozen task composition.
+    DIVERSITY_FLOOR_NOT_CLEARED_IN_POOLED_MIX = "DIVERSITY_FLOOR_NOT_CLEARED_IN_POOLED_MIX"
     NOT_APPLICABLE = "NOT_APPLICABLE"
 
 

@@ -753,6 +753,95 @@
     }
   },
   "environment_note": "Installing FlagEmbedding downgraded transformers to 4.57.6, and the HRM adapter's pinned-version guard refused to load rather than silently using a different architecture. FlagEmbedding is removed; transformers restored to 5.14.1. The guard did exactly its job.",
+  "eob_v1_opportunity_study": {
+    "PRIMARY_RESULT_quality_only": {
+      "ExecutiveOpportunity": 0.1475,
+      "ExecutiveOpportunity_lcb_2p5": 0.0264,
+      "U_E0_always_answer_now": 0.57,
+      "U_E1_always_memory": 0.4475,
+      "U_E3_oracle": 0.7175,
+      "frozen_margin": 0.05,
+      "independently_recomputed_from_raw_receipts": true,
+      "lcb_met": true,
+      "margin_met": true,
+      "reading": "The quality-only margin and LCB conditions BOTH pass -- if diversity were the only remaining question, this would look promotable. It is the corrected diversity metric (P(delta_U) directly, not an oracle tie-break share -- the exact correction made after the v1 study) that catches the real problem: pooled across the frozen 25/25/25/25 regime mix, MEMORY's strict-win share is 14.75%, just under the 15% floor."
+    },
+    "RUN_VALID": true,
+    "artifact": "evidence/gate_executive/eob_v1_execute.json",
+    "certified_memory_operation": "configs/certified_memory_v1.json (identity hash 97b3b49cb95fa33b, verified live before every task, UNCHANGED throughout this study)",
+    "dataset": "data/hrm/eob_v1/ (400 tasks: D0/D1/D2/D3 x 100, purpose-built with controlled ANSWER_NOW-vs-MEMORY heterogeneity, after the v1 study on b3_calibration_v1 found ExecutiveOpportunity=0.0 by construction)",
+    "decision": "EXPANSION_NOT_WARRANTED",
+    "design": "configs/gate_eob_v1_design.json",
+    "formal_gate_result": {
+      "failure_class": "DIVERSITY_FLOOR_NOT_CLEARED_IN_POOLED_MIX",
+      "mechanism_status": "NOT_PROMOTED",
+      "note": "Distinct from the v1 study's BENCHMARK_HAS_NO_ACTION_HETEROGENEITY: this time real, strong heterogeneity exists WITHIN individual regimes (D1: 48/100 strict memory wins; D3: 64/100 strict answer-now wins) -- the pooled/aggregate diversity metric falls just under its floor because the frozen equal-regime mix lets D0's 100/100 ties dilute it. A mix-design property of this specific frozen task composition, not evidence that heterogeneity doesn't exist.",
+      "run_valid": true,
+      "schema": "hrm_adaptive_memory.experiment_integrity.result_schema.GateResult",
+      "scientific_verdict": "NEGATIVE",
+      "split_status": "FRESH"
+    },
+    "next": "Per frozen protocol VERDICT_NAMING.if_low_diversity: treat as NO_EXECUTIVE_OPPORTUNITY-equivalent. Do not train Executive v1 on this benchmark as-is. If a further opportunity study is warranted, it requires a regime mix that doesn't let D0-style ties dilute the pooled diversity metric below its floor -- e.g. a smaller D0 share, or reporting diversity per-regime rather than pooled as the primary gate. The D2/D3 robustness finding is a separate, standalone signal worth investigating on its own (diagnosis_only, not an executive-opportunity question) before or alongside any further executive work.",
+    "pareto_dominance_diagnostic": {
+      "A0_dominates": 197,
+      "A1_dominates": 43,
+      "non_dominated_tradeoff": 160,
+      "reading": "Even accounting for cost (tokens, latency), ANSWER_NOW point-dominates on roughly half the 400 tasks (49.25%) vs MEMORY's 10.75% -- consistent with the quality-only finding, not just an artifact of ignoring cost."
+    },
+    "per_regime_breakdown_diagnostic": {
+      "D0_direct_sufficient": {
+        "Q_A0": 0.76,
+        "Q_A1": 0.76,
+        "n": 100,
+        "reading": "Exact tie on every single task -- MEMORY adds nothing when there is nothing to add, as designed. Token/latency cost also near-identical (93.2 tokens both arms), confirming the empty-evidence pipeline overhead is negligible here rather than merely equal-quality-different-cost.",
+        "strict_A0_wins": 0,
+        "strict_A1_wins": 0,
+        "ties": 100
+      },
+      "D1_memory_required": {
+        "Q_A0": 0.0,
+        "Q_A1": 0.48,
+        "n": 100,
+        "reading": "Reproduces the v1 study's core finding (ANSWER_NOW cannot succeed without evidence) on a fresh, smaller b3-style sample. MEMORY costs roughly 2.3x the tokens of ANSWER_NOW here (172.7 vs 75.1) but that cost is clearly justified by the quality gain.",
+        "strict_A0_wins": 0,
+        "strict_A1_wins": 48,
+        "ties": 52
+      },
+      "D2_both_sufficient": {
+        "Q_A0": 0.76,
+        "Q_A1": 0.43,
+        "n": 100,
+        "reading": "MEMORY is WORSE than ANSWER_NOW when evidence is merely redundant, not just costlier -- a stronger and more concerning finding than the design doc anticipated ('memory unnecessary but not harmful'). Consistent with the composer often padding the packet with OTHER tasks' confirming records (packet_budget=6, retrieval not perfectly precise at n=100 candidates per task), which appears to genuinely mislead generation rather than merely wasting tokens (150.9 vs 93.2 tokens).",
+        "strict_A0_wins": 44,
+        "strict_A1_wins": 11,
+        "ties": 45
+      },
+      "D3_memory_distractor": {
+        "Q_A0": 0.76,
+        "Q_A1": 0.12,
+        "n": 100,
+        "reading": "The largest, cleanest effect in the whole study: memory is severely harmed by a single near-miss distractor record, zero strict memory wins anywhere. This is a genuine, actionable robustness finding about CERTIFIED_MEMORY_V1's retrieval/composition pipeline -- it does not currently protect against a plausible-but-wrong single distractor, distinct from the executive-opportunity question itself.",
+        "strict_A0_wins": 64,
+        "strict_A1_wins": 0,
+        "ties": 36
+      },
+      "note": "Permitted post-verdict diagnostic per research-lead directive -- does not alter the frozen verdict above, which was computed and matched independently BEFORE this breakdown was inspected."
+    },
+    "receipts": "evidence/gate_executive/eob_v1_execute.receipts.jsonl",
+    "receipts_written": 800,
+    "robustness_finding_beyond_the_opportunity_question": "D2/D3 reveal that CERTIFIED_MEMORY_V1's retrieval+composition pipeline is NOT robust to redundant or distractor evidence at packet_budget=6 with imprecise retrieval over a 100-record pool -- this is a finding about the confirmed memory operation's boundary conditions, surfaced by EOB-v1 but out of scope for this executive-opportunity gate to act on (CERTIFIED_MEMORY_V1 was not modified, per the standing 'do not touch certified memory' constraint on this entire study).",
+    "run_valid_checks": "15/15 structural/provenance checks passed, incl. identical task populations across actions, identical candidate_pool_hash/graph_hash/path_set_hash per task between A0 and A1, zero non-empty A0 packets, D0's trivially-empty candidate pool confirmed",
+    "status": "RUN_COMPLETE__EXPANSION_NOT_WARRANTED",
+    "strict_win_tie_distribution_pooled": {
+      "answer_now_strict_wins": "108/400 = 27.00%",
+      "diversity_floor": 0.15,
+      "diversity_ok": false,
+      "memory_strict_wins": "59/400 = 14.75%",
+      "near_miss": "MEMORY's share (14.75%) misses the 15% floor by 0.25 percentage points -- not rounded up despite the closeness, per the frozen, non-negotiable threshold.",
+      "ties": "233/400 = 58.25%"
+    },
+    "tasks_total": 400
+  },
   "executive_opportunity_study": {
     "PRIMARY_RESULT": {
       "ExecutiveOpportunity": 0.0,
@@ -1624,7 +1713,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "Executive Opportunity Study ran and produced a clean NO_EXECUTIVE_OPPORTUNITY verdict (2026-08-10): ExecutiveOpportunity=0.0 exactly (not merely below the 0.05 margin), LCB2.5=0.0. ANSWER_NOW scored exactly 0/750 -- never once beat or tied a correct MEMORY answer -- because b3_calibration_v1's tasks are procedurally synthesized per corpus build (verified from the generator source, not inferred from the result) and cannot be known without evidence by construction. Per frozen protocol: do not train a controller; promote CERTIFIED_MEMORY_V1 (always-use) as the default policy. A future opportunity study needs a benchmark mixing evidence-required and parametric-knowledge-answerable tasks to test genuine heterogeneity. See executive_opportunity_study / qualified_claims.gate_executive_opportunity.",
+    "NEXT_GATE": "EOB-v1 Executive Opportunity Study ran (2026-08-10): purpose-built 400-task benchmark (D0/D1/D2/D3 controlled heterogeneity) found ExecutiveOpportunity(quality-only)=+0.1475 (>=0.05 margin, met) with LCB2.5=+0.0264 (>0, met), but the corrected diversity metric (P(delta_U), not an oracle tie-break share) shows MEMORY's strict-win share is 14.75%, just under the frozen 15% floor -- decision=EXPANSION_NOT_WARRANTED, not tightened or rounded up. Real per-regime heterogeneity DOES exist (D1: memory necessary, 48/100 strict wins; D3: memory severely harmed by a distractor, 64/100 strict answer-now wins) but the frozen equal regime mix lets D0's 100/100 ties dilute the pooled signal below the floor. Separately, D2/D3 reveal CERTIFIED_MEMORY_V1's retrieval/composition is not robust to redundant or distractor evidence -- a standalone robustness finding, not an executive-opportunity result. Do not train an executive on this benchmark as-is. See eob_v1_opportunity_study / qualified_claims.gate_eob_v1_opportunity.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
@@ -2969,6 +3058,21 @@
         "canonical EXACT identity handling is now corrected",
         "subject + bridge + relation is a qualified query formulation GIVEN a correct bridge"
       ]
+    },
+    "gate_eob_v1_opportunity": {
+      "ExecutiveOpportunity_quality_only": 0.1475,
+      "claim": "On EOB-v1 (a benchmark purpose-built for controlled ANSWER_NOW-vs-MEMORY heterogeneity), the quality-only opportunity margin and LCB both pass, but the pooled action-diversity floor is not cleared (MEMORY's strict-win share 14.75% vs a 15% floor) -- real per-regime heterogeneity exists but is diluted by the frozen equal regime mix.",
+      "diversity_floor": 0.15,
+      "diversity_memory_strict_win_share": 0.1475,
+      "grouped_bootstrap_lcb_2p5": 0.0264,
+      "not_a_claim_about": [
+        "whether ANSWER_NOW-vs-MEMORY heterogeneity exists in general (it clearly does, within D1 and D3)",
+        "a different regime mix (e.g. less D0 weight) would also fail the pooled diversity floor",
+        "CERTIFIED_MEMORY_V1 being broken or requiring changes (out of scope for this gate; the robustness gap is a separate, standalone finding)"
+      ],
+      "report": "evidence/gate_executive/eob_v1_execute.json",
+      "secondary_finding": "CERTIFIED_MEMORY_V1's retrieval/composition is not robust to redundant (D2) or distractor (D3) evidence at packet_budget=6 -- Q(MEMORY) drops from 0.76 to 0.43 (D2) and 0.12 (D3) even though the correct answer never depended on the retrieved evidence.",
+      "verdict": "EXPANSION_NOT_WARRANTED"
     },
     "gate_executive_opportunity": {
       "ExecutiveOpportunity": 0.0,
