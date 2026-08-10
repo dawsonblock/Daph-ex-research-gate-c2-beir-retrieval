@@ -1,0 +1,62 @@
+{
+  "ARTIFACT": "ANSWER_PROBE_GATE_V1",
+  "SUPERSEDES_NAMING": "Not 'Executive v0 (PRE_DECISION only)' -- that framing assumed a zero-compute routing decision made from question-text features alone. The actual architecture that emerged is a different control problem: CHEAP_ANSWER_PROBE -> {ACCEPT, ESCALATE_TO_MEMORY}. ANSWER_NOW always runs first (it is the cheap action by definition); the gate decides whether to ALSO invoke CERTIFIED_MEMORY_V1 based on that probe's own output/confidence. hrm_adaptive_memory/experiment_integrity/executive_features.py's POST_ANSWER_NOW_PRE_MEMORY stage already reflects this; this document names the artifact itself accurately.",
+
+  "DATA_UNCHANGED": "data/hrm/exec_training_v1/ (144 tasks: 72 ANSWER_NOW_viable + 72 MEMORY_required) is NOT regenerated or redesigned for this protocol -- per explicit instruction, do not touch it before seeing the collection result. scripts/run_exec_training_v1_collection.py was extended (before any GPU run occurred against it) to capture the full feature set below; this is preparation, not redesign of frozen data.",
+
+  "FEATURES_COLLECTED": [
+    "answer_now_mean_token_confidence", "answer_now_min_token_confidence",
+    "answer_now_sequence_confidence (geometric mean, length-normalized joint confidence)",
+    "answer_now_mean_entropy (full-distribution Shannon entropy, not just top-1)",
+    "answer_now_answer_length"
+  ],
+  "TARGET": "Delta_U_i = Q_memory_i - Q_direct_i (per task, from actual measured action value -- NOT a family label). The gate must predict whether escalation improves utility, not which synthetic family a task came from.",
+
+  "PROCESSING_ORDER": [
+    "1. Run the (already-built, unmodified) 144-task collection exactly once. Freeze raw receipts.",
+    "2. STOP-GATE: inspect whether confidence features separate MEMORY-strict-win / ANSWER-strict-win / TIE groups (see SEPARATION_CRITERION). If no feature clears the frozen threshold, STOP -- do not train. A controller cannot learn useful routing from a signal with no action-value information; this is a valid, useful negative result, not a failure requiring feature engineering after the fact.",
+    "3. Only if separation exists: split into train/eval (see SPLIT), train the smallest possible policy (see MODEL_LADDER), evaluate on the held-out split.",
+    "4. If the trained gate passes (see PROMOTION_CRITERIA): generate a fresh, untouched executive-confirmation split and run the frozen gate exactly once, per the qualification-then-confirmation discipline already used for CERTIFIED_MEMORY_V1 itself."
+  ],
+
+  "SEPARATION_CRITERION": {
+    "groups": ["MEMORY_strict_win (Delta_U_i > 0)", "ANSWER_strict_win (Delta_U_i < 0)", "TIE (Delta_U_i == 0)"],
+    "rule": "For at least one of the 5 collected features, EITHER |Cohen's d| >= 0.3 between MEMORY_strict_win and ANSWER_strict_win, OR the grouped bootstrap 95% CI (resampled by family, reusing hrm_adaptive_memory.experiment_integrity.executive_bootstrap's resampling convention) of the mean difference between those two groups excludes zero.",
+    "rationale": "0.3 is a conventional 'small-to-medium' Cohen's d threshold -- deliberately not a strict/high bar, since even a modest separation is enough to be worth attempting the smallest possible model on; a genuinely near-zero effect (d<0.1, CI straddling zero) is the actual stop condition.",
+    "frozen_before_any_data_exists": true
+  },
+
+  "SPLIT": {
+    "method": "stratified 70/30 by suite_family (ANSWER_NOW_viable / MEMORY_required), fixed seed 9801, decided now before any collection result exists",
+    "train_share": 0.7,
+    "eval_share": 0.3
+  },
+
+  "MODEL_LADDER": {
+    "rule": "Start with the smallest possible model. Logistic regression (or, if separation is driven by a single feature, a single fitted threshold) over the 5 features above. Do NOT start with a neural controller -- only escalate model complexity if logistic regression demonstrably fails to capture available separation, and only as an explicitly separate, later experiment.",
+    "fitting_library": "no new heavy ML dependency -- implement logistic regression directly (gradient descent or closed-form via a small numpy routine) to keep this artifact as dependency-light as the rest of this project's tooling"
+  },
+
+  "EVALUATION_HIERARCHY": [
+    "E0_always_accept_direct", "E1_always_escalate_to_memory",
+    "E2_fixed_confidence_threshold (single scalar cutoff, fit on TRAIN split only)",
+    "E3_logistic_value_predictor (the trained gate)",
+    "E4_oracle_escalation (per-task argmax, tie->ACCEPT_DIRECT, same tie-break convention as EOB-v1/v2)"
+  ],
+  "PRIMARY_METRIC": "Delta_U_gate = U(E3) - max(U(E0), U(E1)) -- utility improvement over the best FIXED policy. NOT routing accuracy: a gate that predicts action labels well but produces no utility gain over the better fixed policy has not demonstrated anything useful.",
+  "SECONDARY_METRIC": "policy regret R_gate = U(E4_oracle) - U(E3)",
+
+  "ASYMMETRIC_ERROR_METRICS_REQUIRED": {
+    "P_accept_direct_given_memory_would_improve": "the dangerous failure mode -- the system confidently stops while missing needed external information. Must be reported explicitly, never folded into aggregate accuracy.",
+    "P_escalate_given_direct_was_already_sufficient": "wasted memory calls, and the D2/D3-style risk (already observed in EOB-v1/v2) that invoking memory can actively harm an already-correct answer."
+  },
+
+  "PROMOTION_CRITERIA": {
+    "on_eval_split": "Delta_U_gate > 0 with a positive grouped-bootstrap LCB (same convention as EOB-v1/v2 and HRM qualification -- resampled by family, not by task)",
+    "if_not_met": "do not build an executive-confirmation split; report the negative result with the same rigor as every other negative result in this project (RUN_VALID, formal GateResult, no post-hoc threshold tuning)."
+  },
+
+  "WHAT_IS_NOT_TOUCHED": "CERTIFIED_MEMORY_V1, the graph, the composer, retrieval, HRM, or any benchmark threshold. This entire protocol is scoped to a new, separate escalation-gate artifact built on top of the frozen, unchanged memory operation.",
+
+  "frozen_utc": "2026-08-10T09:30:00Z"
+}

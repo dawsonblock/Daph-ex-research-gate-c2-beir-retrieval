@@ -164,6 +164,9 @@ def main() -> int:
                     "prompt_tokens": conf.prompt_tokens, "completion_tokens": conf.completion_tokens,
                     "mean_token_confidence": conf.mean_token_confidence,
                     "min_token_confidence": conf.min_token_confidence,
+                    "sequence_confidence": conf.sequence_confidence,
+                    "mean_entropy": conf.mean_entropy,
+                    "answer_length": conf.answer_length,
                 })
             else:
                 a0_receipt["output"] = None

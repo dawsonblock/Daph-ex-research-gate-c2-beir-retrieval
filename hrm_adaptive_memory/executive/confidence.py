@@ -36,6 +36,27 @@ class ConfidenceResult:
     #: hesitation during generation, often more informative than the mean
     #: for detecting "the model is guessing" on at least one token.
     min_token_confidence: float
+    #: Geometric mean of per-step confidence (exp(mean(log p_i))), i.e. the
+    #: sequence's JOINT confidence normalized by length. Distinct from the
+    #: arithmetic mean: one low-confidence step pulls this down much harder
+    #: (a single p=0.01 step among nine p=0.99 steps drags the geometric mean
+    #: far more than the arithmetic mean), closer in spirit to "would the
+    #: whole answer survive if any one token had been sampled instead of
+    #: argmax'd" than the plain average is.
+    sequence_confidence: float
+    #: Mean, over generated steps, of the full-distribution Shannon entropy
+    #: (in nats) -(sum p_i log p_i) over the ENTIRE vocabulary at that step --
+    #: not just the top-1 token. A genuinely different signal from
+    #: confidence: a distribution can have high top-1 probability (confident
+    #: in one answer) while still having moderate entropy if there's a
+    #: long tail, or the reverse (low top-1 prob spread over just 2-3
+    #: plausible tokens -> lower entropy than the confidence score alone
+    #: would suggest). Lower entropy = more peaked = more certain.
+    mean_entropy: float
+    #: Alias for completion_tokens, named to match the research-lead's
+    #: explicit feature list ("answer length") without requiring a caller to
+    #: know it's the same value as completion_tokens.
+    answer_length: int
 
 
 def generate_with_confidence(adapter, condition, prompt: str,
@@ -65,21 +86,32 @@ def generate_with_confidence(adapter, condition, prompt: str,
     # token, each shape (batch=1, vocab). Greedy decoding means the chosen
     # token IS the argmax at each step, so its own softmax probability is
     # exactly the model's confidence in the choice it actually made.
+    import math
     step_confidences: list[float] = []
+    step_entropies: list[float] = []
+    _EPS = 1e-12  # guards log(0) for a near-degenerate (prob=1.0) distribution
     for step_logits in out.scores:
         probs = torch.softmax(step_logits[0].float(), dim=-1)
         step_confidences.append(float(probs.max().item()))
+        entropy = float(-(probs * torch.log(probs + _EPS)).sum().item())
+        step_entropies.append(entropy)
 
     if not step_confidences:
         # Zero-length completion (e.g. immediate EOS) -- NOT_COMPUTABLE in
         # spirit, but this signal is used as a real-valued feature, not a
-        # rate, so 0.0 (minimum possible confidence) is the defensible
-        # fail-safe rather than a sentinel that would break arithmetic.
-        mean_conf, min_conf = 0.0, 0.0
+        # rate, so 0.0/0.0 (minimum confidence, minimum entropy) is the
+        # defensible fail-safe rather than a sentinel that would break
+        # downstream arithmetic.
+        mean_conf, min_conf, seq_conf, mean_ent = 0.0, 0.0, 0.0, 0.0
     else:
         mean_conf = sum(step_confidences) / len(step_confidences)
         min_conf = min(step_confidences)
+        log_probs = [math.log(max(p, _EPS)) for p in step_confidences]
+        seq_conf = math.exp(sum(log_probs) / len(log_probs))
+        mean_ent = sum(step_entropies) / len(step_entropies)
 
     return ConfidenceResult(
         text=text, prompt_tokens=prompt_length, completion_tokens=len(completion_ids),
-        mean_token_confidence=round(mean_conf, 6), min_token_confidence=round(min_conf, 6))
+        mean_token_confidence=round(mean_conf, 6), min_token_confidence=round(min_conf, 6),
+        sequence_confidence=round(seq_conf, 6), mean_entropy=round(mean_ent, 6),
+        answer_length=len(completion_ids))

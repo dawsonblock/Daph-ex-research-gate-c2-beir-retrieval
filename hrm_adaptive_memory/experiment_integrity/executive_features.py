@@ -178,4 +178,22 @@ KNOWN_FEATURES: dict[str, FeatureSpec] = {
         "the single lowest per-step confidence during ANSWER_NOW's "
         "generation -- same cost as the mean variant",
         runtime_safe=True),
+    "answer_now_sequence_confidence": FeatureSpec(
+        "answer_now_sequence_confidence", AvailabilityStage.POST_ANSWER_NOW_PRE_MEMORY,
+        "geometric mean of per-step confidence (exp(mean(log p))) -- the "
+        "sequence's joint confidence normalized by length; a single "
+        "low-confidence step pulls this down far more than the arithmetic "
+        "mean does",
+        runtime_safe=True),
+    "answer_now_mean_entropy": FeatureSpec(
+        "answer_now_mean_entropy", AvailabilityStage.POST_ANSWER_NOW_PRE_MEMORY,
+        "mean per-step Shannon entropy (nats) over the FULL vocabulary "
+        "distribution, not just the top-1 token -- a genuinely different "
+        "signal from confidence (captures how peaked vs spread the whole "
+        "distribution is, not just the winning token's probability)",
+        runtime_safe=True),
+    "answer_now_answer_length": FeatureSpec(
+        "answer_now_answer_length", AvailabilityStage.POST_ANSWER_NOW_PRE_MEMORY,
+        "ANSWER_NOW's own completion token count",
+        runtime_safe=True),
 }

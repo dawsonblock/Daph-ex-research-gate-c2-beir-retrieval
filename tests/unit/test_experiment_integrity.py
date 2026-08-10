@@ -432,6 +432,18 @@ class TestExecutiveFeatureAvailability:
         with pytest.raises(FeatureAvailabilityError):
             require_admissible_for_answer_vs_memory(spec)
 
+    @pytest.mark.parametrize("name", [
+        "answer_now_mean_token_confidence", "answer_now_min_token_confidence",
+        "answer_now_sequence_confidence", "answer_now_mean_entropy",
+        "answer_now_answer_length",
+    ])
+    def test_answer_probe_gate_v1_features_are_admissible(self, name):
+        """The full ANSWER_PROBE_GATE_V1 feature set (configs/
+        gate_answer_probe_v1_design.json FEATURES_COLLECTED) must all be
+        admissible for the ANSWER_NOW-vs-MEMORY decision."""
+        require_admissible_for_answer_vs_memory(KNOWN_FEATURES[name])  # no raise
+        assert KNOWN_FEATURES[name].availability_stage == AvailabilityStage.POST_ANSWER_NOW_PRE_MEMORY
+
 
 class TestGateResult:
     def test_valid_negative_result_like_confirmation_1(self):
