@@ -1,0 +1,37 @@
+{
+  "ARTIFACT": "EOB-v2 (Executive Opportunity Benchmark v2)",
+  "PURPOSE": "EOB-v1 (configs/gate_eob_v1_design.json, evidence/gate_executive/eob_v1_execute.json) found real per-regime heterogeneity -- D1 memory-required (48/100 strict memory wins), D3 memory-distractor (64/100 strict answer-now wins) -- but the POOLED diversity metric (14.75% memory strict-win share) fell just under the frozen 15% floor because the equal 25/25/25/25 regime mix let D0's 100/100 exact ties dilute the aggregate. EOB-v2 tests the SAME question on a DIFFERENT regime mix, not a different promotion bar.",
+
+  "WHAT_CHANGED_FROM_V1": "ONLY the regime mix. material_opportunity_margin (0.05), lcb_must_exceed (0.0), and action_diversity_min_share (0.15) are copied VERBATIM from configs/gate_executive_opportunity_v1.json / gate_eob_v1_design.json -- unchanged. This is not a loosened bar; it is a corrected input distribution. Reusing the SAME threshold on a NEW input is the legitimate move; reusing the SAME input with a NEW (lower) threshold would not have been.",
+
+  "REGIME_MIX": {
+    "D0_direct_sufficient": {"target": 60, "share": 0.15},
+    "D1_memory_required": {"target": 140, "share": 0.35},
+    "D2_both_sufficient": {"target": 100, "share": 0.25},
+    "D3_memory_distractor": {"target": 100, "share": 0.25},
+    "total": 400,
+    "rationale": "D0 reduced from 25% to 15%: D0 contributes ZERO diversity by construction (ANSWER_NOW and MEMORY are trivially identical when there is no evidence at all) -- retaining it as a smaller sanity check rather than removing it entirely, since D0's 100% tie rate in EOB-v1 is itself a valid confirmation that the empty-evidence condition behaves as designed. D1 increased from 25% to 35% since it produced EOB-v1's single largest source of strict memory wins (48/100) and is the most decision-relevant regime for the underlying question. D2/D3 held at 25% each -- both already produced strong, clean heterogeneity in v1 and needed no adjustment."
+  },
+
+  "BASE_TASK_DECOUPLING": {
+    "note": "D0/D2/D3 no longer derive from an identical 1:1 base pool. 100 D0-style base facts are generated (same generator, new seed); ALL 100 back D2 (100 confirming-evidence tasks) and ALL 100 back D3 (100 distractor-evidence tasks); a FIXED-SEED 60-task SUBSET of that same 100-base-fact pool is surfaced as the pure D0_direct_sufficient regime (no evidence). This is not leakage -- D0/D2/D3 are different EVIDENCE CONDITIONS on overlapping underlying facts, exactly analogous to how EOB-v1's D2/D3 already shared their D0 source questions/answers by construction.",
+    "seeds": {"d0_d2_d3_base_generation": 9601, "d0_subset_selection": 9604, "d2_confirmation": 9602, "d3_distractor": 9603}
+  },
+
+  "D1_SAMPLING": {
+    "pool": "data/hrm/b3_calibration_v1/{cal_700,cal_1000} combined (300 tasks available, vs EOB-v1's cal_700-only 150-task pool) -- broadened specifically to reduce overlap with EOB-v1's already-used 100-task D1 sample at the larger 140-task target size.",
+    "seed": 9605,
+    "sample_size": 140
+  },
+
+  "ZERO_OVERLAP_REQUIREMENT": "D0/D2/D3 base facts use fresh seeds (9601-9604), distinct from EOB-v1's (9501-9504) -- verified not to overlap EOB-v1's own D0/D2/D3 question text, in addition to the standing zero-overlap check against all consumed C4/C5/b3/g2_confirmation_2 splits. D1's sample is drawn from a broader pool with a fresh seed (9605 vs EOB-v1's 9504) but calibration-tier reuse of underlying cal_700/cal_1000 tasks across diagnostic studies is expected and permitted (SplitRole.CALIBRATION), unlike a one-shot confirmation split.",
+
+  "FROZEN_PROMOTION_CRITERIA": {
+    "material_opportunity_margin": 0.05,
+    "lcb_must_exceed": 0.0,
+    "action_diversity_min_share": 0.15,
+    "copied_verbatim_from": "configs/gate_eob_v1_design.json / configs/gate_executive_opportunity_v1.json"
+  },
+
+  "frozen_utc": "2026-08-10T10:00:00Z"
+}

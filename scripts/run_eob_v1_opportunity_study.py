@@ -85,8 +85,8 @@ REGIMES = ("D0_direct_sufficient", "D1_memory_required",
 EOB_ROOT = ROOT / "data/hrm/eob_v1"
 
 
-def load_regime(regime: str) -> tuple[list[dict], list[dict], dict[str, str]]:
-    base = EOB_ROOT / regime
+def load_regime(regime: str, suite_root: Path) -> tuple[list[dict], list[dict], dict[str, str]]:
+    base = suite_root / regime
     tasks = [json.loads(l) for l in (base / "oracle_tasks.jsonl").read_text().splitlines() if l.strip()]
     evidence = [json.loads(l) for l in (base / "evidence.jsonl").read_text().splitlines() if l.strip()]
     return tasks, evidence, {r["evidence_id"]: r["content"] for r in evidence}
@@ -101,6 +101,9 @@ def main() -> int:
     ap.add_argument("--arm-for-queries", default="C4_4")
     ap.add_argument("--out", default=None)
     ap.add_argument("--regimes", nargs="*", default=None)
+    ap.add_argument("--suite-root", default=None,
+                    help="override the suite root directory (default: data/hrm/eob_v1); "
+                         "pass e.g. data/hrm/eob_v2 for the rebalanced-mix study")
     ap.add_argument("--limit-tasks", type=int, default=None)
     mode = ap.add_mutually_exclusive_group(required=True)
     mode.add_argument("--dry-run", action="store_true")
@@ -116,6 +119,11 @@ def main() -> int:
     extractor_hash = certified_identity.graph_compressor_config_hash
     arm = ARMS[args.arm_for_queries]
     regimes = args.regimes or list(REGIMES)
+    if args.suite_root:
+        given = Path(args.suite_root)
+        suite_root = given if given.is_absolute() else ROOT / given
+    else:
+        suite_root = EOB_ROOT
 
     try:
         source_commit = subprocess.run(
@@ -131,7 +139,8 @@ def main() -> int:
             source_digest.update(path.read_bytes())
         source_commit = f"non-git-tree:{source_digest.hexdigest()}"
 
-    print(f"=== EOB-v1 Executive Opportunity Study: A0 vs A1 ({'DRY RUN' if args.dry_run else 'EXECUTE'}) ===")
+    print(f"=== {suite_root.name} Executive Opportunity Study: A0 vs A1 ({'DRY RUN' if args.dry_run else 'EXECUTE'}) ===")
+    print(f"  suite_root={suite_root.relative_to(ROOT)}")
     print(f"  CERTIFIED_MEMORY_V1 identity OK  extractor_hash={extractor_hash}  M={M}  packet={PACKET}\n")
 
     adapter, condition = (None, None)
@@ -144,7 +153,7 @@ def main() -> int:
     task_records: list[dict[str, Any]] = []
 
     for regime in regimes:
-        tasks, evidence, texts = load_regime(regime)
+        tasks, evidence, texts = load_regime(regime, suite_root)
         if args.limit_tasks:
             tasks = tasks[:args.limit_tasks]
         records = to_index_records(evidence)
@@ -348,12 +357,14 @@ def main() -> int:
         print(f"  {regime}: done  tasks={len(tasks)}")
 
     binding_checks_passed = "all (fail-closed: a violation raises, not counts)"
+    suite_name = suite_root.name  # "eob_v1" or "eob_v2"
     out = Path(args.out) if args.out else (
-        ROOT / f"evidence/gate_executive/eob_v1_{'dry_run' if args.dry_run else 'execute'}.json")
+        ROOT / f"evidence/gate_executive/{suite_name}_{'dry_run' if args.dry_run else 'execute'}.json")
     out.parent.mkdir(parents=True, exist_ok=True)
 
     report: dict[str, Any] = {
-        "schema_version": "eob-v1-opportunity-v1", "mode": "dry_run" if args.dry_run else "execute",
+        "schema_version": "eob-opportunity-v1", "mode": "dry_run" if args.dry_run else "execute",
+        "suite_root": str(suite_root.relative_to(ROOT)),
         "certified_memory_v1_identity_hash": certified_identity.canonical_sha256(),
         "source_commit": source_commit,
         "regimes_run": regimes, "tasks_total": sum(1 for _ in task_records) if args.execute else None,

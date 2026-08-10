@@ -14,7 +14,7 @@ import pytest
 
 from hrm_adaptive_memory.experiments.eob_v1_dataset import (
     ReferenceSolverMismatch, _distractor_value, build_d0_tasks, build_d2_tasks,
-    build_d3_tasks, reference_solve)
+    build_d3_tasks, reference_solve, select_d0_subset)
 
 
 class TestReferenceSolver:
@@ -120,3 +120,33 @@ class TestBuildD3Tasks:
         for d0_t, d3_t in zip(d0, d3):
             assert d3_t.question == d0_t.question
             assert d3_t.answer == d0_t.answer
+
+
+class TestSelectD0Subset:
+    def test_returns_exactly_n_tasks(self):
+        d0 = build_d0_tasks(seed=1, tasks_per_family=25)  # 100 tasks
+        subset = select_d0_subset(d0, seed=10, n=60)
+        assert len(subset) == 60
+
+    def test_subset_is_drawn_from_the_original_pool(self):
+        d0 = build_d0_tasks(seed=1, tasks_per_family=25)
+        subset = select_d0_subset(d0, seed=10, n=60)
+        pool_ids = {t.task_id for t in d0}
+        assert all(t.task_id in pool_ids for t in subset)
+
+    def test_no_duplicates_in_the_subset(self):
+        d0 = build_d0_tasks(seed=1, tasks_per_family=25)
+        subset = select_d0_subset(d0, seed=10, n=60)
+        ids = [t.task_id for t in subset]
+        assert len(ids) == len(set(ids))
+
+    def test_deterministic_given_same_seed(self):
+        d0 = build_d0_tasks(seed=1, tasks_per_family=25)
+        a = select_d0_subset(d0, seed=10, n=60)
+        b = select_d0_subset(d0, seed=10, n=60)
+        assert [t.task_id for t in a] == [t.task_id for t in b]
+
+    def test_requesting_more_than_the_pool_raises(self):
+        d0 = build_d0_tasks(seed=1, tasks_per_family=25)
+        with pytest.raises(ValueError):
+            select_d0_subset(d0, seed=10, n=101)

@@ -329,3 +329,18 @@ def build_d3_tasks(d0_tasks: list[EobTask], seed: int) -> list[EobTask]:
             metadata={**d0.metadata, "d0_source": d0.task_id})
         out.append(task)
     return out
+
+
+def select_d0_subset(d0_tasks: list[EobTask], seed: int, n: int) -> list[EobTask]:
+    """A fixed-seed subset of the base D0 pool, surfaced as the pure
+    D0_direct_sufficient regime (no evidence). Per configs/gate_eob_v2_design.json
+    BASE_TASK_DECOUPLING: D0/D2/D3 no longer need identical 1:1 sizing --
+    ALL base facts back D2/D3 (one confirming/distractor task each), while
+    only a SUBSET is surfaced as pure D0. Not leakage: D0/D2/D3 are different
+    evidence CONDITIONS on overlapping underlying facts, exactly as EOB-v1's
+    D2/D3 already shared their D0 source question/answer by construction --
+    this just decouples how many facts exist from how many appear bare."""
+    if n > len(d0_tasks):
+        raise ValueError(f"cannot select {n} tasks from a pool of {len(d0_tasks)}")
+    rng = random.Random(seed)
+    return rng.sample(d0_tasks, n)
