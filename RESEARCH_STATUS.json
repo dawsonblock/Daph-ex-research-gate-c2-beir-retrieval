@@ -766,6 +766,18 @@
       "margin_met": true,
       "reading": "The quality-only margin and LCB conditions BOTH pass -- if diversity were the only remaining question, this would look promotable. It is the corrected diversity metric (P(delta_U) directly, not an oracle tie-break share -- the exact correction made after the v1 study) that catches the real problem: pooled across the frozen 25/25/25/25 regime mix, MEMORY's strict-win share is 14.75%, just under the 15% floor."
     },
+    "PRIVILEGED_PARSING_SCOPE_CAVEAT": {
+      "claim": "D0/D2/D3's identity resolution (canonical subject, target relation) was supplied DIRECTLY from generator ground truth (task metadata), NOT extracted via the certified pipeline's own extract_subject/extract_target_relation/run_identity_stage.",
+      "implication_for_executive_training": "Per research-lead directive: do not let this ambiguity leak into Executive v0's training data. The executive-training split (not yet built) must use ONLY b3-native-parseable task phrasing -- verified against the real, unmodified extract_subject/extract_target_relation -- with zero bypass, for every task family including any new ANSWER_NOW-viable family.",
+      "not_retracted": "Both D2/D3 findings remain valid answers to the question they actually asked (downstream mechanism robustness given correct identity) -- this is a scoping correction, not a retraction. The ExecutiveOpportunity primary result itself is diluted, not invalidated, by this caveat, since D1 (the largest and cleanest source of memory-favoring signal) is fully unaffected.",
+      "scope_of_what_was_actually_tested": {
+        "D0_direct_sufficient": "The bypass is provably inert for this regime specifically -- D0 has zero evidence records, so g2_prefilter's working set is empty regardless of whether canonical_subject resolves or not. The D0 finding (exact Q_A0=Q_A1 ties) holds regardless of identity-resolution method.",
+        "D1_memory_required": "UNAFFECTED -- genuine b3-style questions, real extract_subject/extract_target_relation/run_identity_stage throughout, zero bypass. This regime's finding (memory necessary, ANSWER_NOW=0.0) is a clean test of the FULL CERTIFIED_MEMORY_V1 black box, unchanged.",
+        "D2_both_sufficient": "AFFECTED -- tested whether G2 graph + path-coherent composition helps or hurts GIVEN a correctly resolved identity, not whether the full black box (including its own subject/relation extraction) would have resolved that identity on this phrasing in the first place. The 'memory is worse, not just costlier' finding is scientifically valid as a downstream-mechanism question, but is a narrower claim than 'the full CERTIFIED_MEMORY_V1 black box underperforms on D2-style natural questions.'",
+        "D3_memory_distractor": "Same scope caveat as D2 -- the severe memory-harm finding (Q drops to 0.12-0.13) describes the downstream graph/composition mechanism's vulnerability to a distractor it was HANDED via correct identity resolution, not necessarily what happens if the full black box's own (possibly failing) identity resolution is exercised on this phrasing."
+      },
+      "why": "These functions' regex patterns (hrm_adaptive_memory/c4/query_stage.py _SUBJECT_PATTERNS/_RELATION_PATTERNS) are tuned exclusively for b3/C4's 'what is X's Y' lookup-question shape. Empirically verified (not merely assumed): relation extraction requires the raw question to literally START with which/what/for/identify (extract_target_relation uses .match(), anchored at position 0) and its capture group is restricted to [a-z]+ (no digits) -- so no self-contained, digit-bearing question can precede or embed its computation within that span. Content placed after 'for {subject}' and before the final '?' gets swept into the subject capture, contaminating exact-entity matching against evidence. All three insertion points were tested directly against the real functions and each is blocked by a different regex constraint -- this is a structural incompatibility, not a phrasing oversight."
+    },
     "RUN_VALID": true,
     "artifact": "evidence/gate_executive/eob_v1_execute.json",
     "certified_memory_operation": "configs/certified_memory_v1.json (identity hash 97b3b49cb95fa33b, verified live before every task, UNCHANGED throughout this study)",
@@ -853,6 +865,18 @@
       "independently_recomputed_from_raw_receipts": true,
       "lcb_met": true,
       "margin_met": true
+    },
+    "PRIVILEGED_PARSING_SCOPE_CAVEAT": {
+      "claim": "D0/D2/D3's identity resolution (canonical subject, target relation) was supplied DIRECTLY from generator ground truth (task metadata), NOT extracted via the certified pipeline's own extract_subject/extract_target_relation/run_identity_stage.",
+      "implication_for_executive_training": "Per research-lead directive: do not let this ambiguity leak into Executive v0's training data. The executive-training split (not yet built) must use ONLY b3-native-parseable task phrasing -- verified against the real, unmodified extract_subject/extract_target_relation -- with zero bypass, for every task family including any new ANSWER_NOW-viable family.",
+      "not_retracted": "Both D2/D3 findings remain valid answers to the question they actually asked (downstream mechanism robustness given correct identity) -- this is a scoping correction, not a retraction. The ExecutiveOpportunity primary result itself is diluted, not invalidated, by this caveat, since D1 (the largest and cleanest source of memory-favoring signal) is fully unaffected.",
+      "scope_of_what_was_actually_tested": {
+        "D0_direct_sufficient": "The bypass is provably inert for this regime specifically -- D0 has zero evidence records, so g2_prefilter's working set is empty regardless of whether canonical_subject resolves or not. The D0 finding (exact Q_A0=Q_A1 ties) holds regardless of identity-resolution method.",
+        "D1_memory_required": "UNAFFECTED -- genuine b3-style questions, real extract_subject/extract_target_relation/run_identity_stage throughout, zero bypass. This regime's finding (memory necessary, ANSWER_NOW=0.0) is a clean test of the FULL CERTIFIED_MEMORY_V1 black box, unchanged.",
+        "D2_both_sufficient": "AFFECTED -- tested whether G2 graph + path-coherent composition helps or hurts GIVEN a correctly resolved identity, not whether the full black box (including its own subject/relation extraction) would have resolved that identity on this phrasing in the first place. The 'memory is worse, not just costlier' finding is scientifically valid as a downstream-mechanism question, but is a narrower claim than 'the full CERTIFIED_MEMORY_V1 black box underperforms on D2-style natural questions.'",
+        "D3_memory_distractor": "Same scope caveat as D2 -- the severe memory-harm finding (Q drops to 0.12-0.13) describes the downstream graph/composition mechanism's vulnerability to a distractor it was HANDED via correct identity resolution, not necessarily what happens if the full black box's own (possibly failing) identity resolution is exercised on this phrasing."
+      },
+      "why": "These functions' regex patterns (hrm_adaptive_memory/c4/query_stage.py _SUBJECT_PATTERNS/_RELATION_PATTERNS) are tuned exclusively for b3/C4's 'what is X's Y' lookup-question shape. Empirically verified (not merely assumed): relation extraction requires the raw question to literally START with which/what/for/identify (extract_target_relation uses .match(), anchored at position 0) and its capture group is restricted to [a-z]+ (no digits) -- so no self-contained, digit-bearing question can precede or embed its computation within that span. Content placed after 'for {subject}' and before the final '?' gets swept into the subject capture, contaminating exact-entity matching against evidence. All three insertion points were tested directly against the real functions and each is blocked by a different regex constraint -- this is a structural incompatibility, not a phrasing oversight."
     },
     "RUN_VALID": true,
     "artifact": "evidence/gate_executive/eob_v2_execute.json",
@@ -3156,7 +3180,8 @@
       "not_a_claim_about": [
         "whether ANSWER_NOW-vs-MEMORY heterogeneity exists in general (it clearly does, within D1 and D3)",
         "a different regime mix (e.g. less D0 weight) would also fail the pooled diversity floor",
-        "CERTIFIED_MEMORY_V1 being broken or requiring changes (out of scope for this gate; the robustness gap is a separate, standalone finding)"
+        "CERTIFIED_MEMORY_V1 being broken or requiring changes (out of scope for this gate; the robustness gap is a separate, standalone finding)",
+        "D2/D3's identity resolution was supplied from generator ground truth, not the certified parser's own extract_subject/extract_target_relation -- see PRIVILEGED_PARSING_SCOPE_CAVEAT in eob_v1_opportunity_study. D1 is unaffected."
       ],
       "report": "evidence/gate_executive/eob_v1_execute.json",
       "secondary_finding": "CERTIFIED_MEMORY_V1's retrieval/composition is not robust to redundant (D2) or distractor (D3) evidence at packet_budget=6 -- Q(MEMORY) drops from 0.76 to 0.43 (D2) and 0.12 (D3) even though the correct answer never depended on the retrieved evidence.",
@@ -3172,7 +3197,8 @@
       "not_a_claim_about": [
         "Executive v0/v1 being trained or confirmed yet -- this is the opportunity study only, PENDING_FURTHER_EVIDENCE not PROMOTED",
         "CERTIFIED_MEMORY_V1 requiring changes (the D2/D3 robustness gap is a separate, standalone finding, out of scope here)",
-        "generalization beyond this specific benchmark mix (D0/D1/D2/D3 as defined in configs/gate_eob_v2_design.json)"
+        "generalization beyond this specific benchmark mix (D0/D1/D2/D3 as defined in configs/gate_eob_v2_design.json)",
+        "D2/D3's identity resolution was supplied from generator ground truth, not the certified parser's own extract_subject/extract_target_relation -- see PRIVILEGED_PARSING_SCOPE_CAVEAT in eob_v2_opportunity_study. D1 is unaffected."
       ],
       "report": "evidence/gate_executive/eob_v2_execute.json",
       "verdict": "EXECUTIVE_OPPORTUNITY_CONFIRMED"
