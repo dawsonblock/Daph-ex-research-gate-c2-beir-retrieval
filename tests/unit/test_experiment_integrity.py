@@ -18,6 +18,9 @@ from hrm_adaptive_memory.experiment_integrity.execution_identity import (
     ExecutionIdentity, resume_is_valid)
 from hrm_adaptive_memory.experiment_integrity.executive_bootstrap import (
     grouped_lcb_executive_opportunity)
+from hrm_adaptive_memory.experiment_integrity.executive_features import (
+    KNOWN_FEATURES, AvailabilityStage, FeatureAvailabilityError, FeatureSpec,
+    require_admissible_for_answer_vs_memory)
 from hrm_adaptive_memory.experiment_integrity.metric_validation import (
     NOT_COMPUTABLE, MetricValidationError, require_finite_number,
     require_hash_format, require_nonempty_rate, require_nonneg_int,
@@ -381,6 +384,35 @@ class TestGroupedLcbExecutiveOpportunity:
         triples = [("fam_a", 0.0, 1.0)] * 30 + [("fam_b", 0.3, 0.8)] * 30
         lcb = grouped_lcb_executive_opportunity(triples)
         assert lcb is not None and lcb <= 0.0001
+
+
+class TestExecutiveFeatureAvailability:
+    """The mechanical guard against giving a controller a feature that costs
+    as much to observe as the action it's supposed to gate."""
+
+    def test_pre_decision_feature_is_admissible(self):
+        require_admissible_for_answer_vs_memory(KNOWN_FEATURES["question_length_tokens"])  # no raise
+
+    @pytest.mark.parametrize("name", [
+        "identity_status", "retrieval_score_margin", "graph_reachability",
+        "working_set_size", "n_complete_paths", "structural_competition_ratio",
+        "packet_coherence", "cost_already_spent",
+    ])
+    def test_post_decision_features_are_all_rejected(self, name):
+        with pytest.raises(FeatureAvailabilityError):
+            require_admissible_for_answer_vs_memory(KNOWN_FEATURES[name])
+
+    def test_every_known_feature_has_a_declared_stage(self):
+        for name, spec in KNOWN_FEATURES.items():
+            assert isinstance(spec.availability_stage, AvailabilityStage)
+            assert spec.name == name
+
+    def test_at_least_one_pre_decision_feature_exists(self):
+        """A controller with zero admissible features is not buildable --
+        this pins that EOB-v1's schema must supply at least one."""
+        pre = [s for s in KNOWN_FEATURES.values()
+              if s.availability_stage == AvailabilityStage.PRE_DECISION]
+        assert len(pre) >= 1
 
 
 class TestGateResult:

@@ -1,0 +1,73 @@
+{
+  "ARTIFACT": "EOB-v1 (Executive Opportunity Benchmark v1)",
+  "PURPOSE": "The Executive Opportunity Study (configs/gate_executive_opportunity_v1.json, evidence/gate_executive/opportunity_execute.json) found ExecutiveOpportunity=0.0 exactly because ANSWER_NOW scored 0/750 -- b3_calibration_v1's facts are procedurally synthesized and cannot exist in any pretrained model's weights, so that benchmark structurally cannot produce ANSWER_NOW-vs-MEMORY heterogeneity. EOB-v1 is purpose-built to contain controlled heterogeneity instead of accidentally lacking it.",
+
+  "DO_NOT_TOUCH": "CERTIFIED_MEMORY_V1 (configs/certified_memory_v1.json) is not modified by this work. EOB-v1 is new DATA and a new RUNNER only -- retrieval, graph construction, path ranking, the composer, and packet_budget=6 are reused unmodified, gated by assert_certified_memory_v1_unchanged() exactly as the v1 study did.",
+
+  "REGIMES": {
+    "D0_direct_sufficient": {
+      "definition": "All information needed to answer is contained in the question text itself. No external evidence exists or is needed.",
+      "families": [
+        "arithmetic (a+b, a-b, a*b for small integers stated in the question)",
+        "comparison (three named entities with an explicit stated ordering attribute; question asks who ranks highest/lowest)",
+        "transform (reverse / uppercase / concatenate a short token stated in the question)",
+        "restatement (X is explicitly assigned a value in the question; question asks for X's value)"
+      ],
+      "answer_source": "pure function of the question string -- verified by an independent reference solver at generation time, not merely asserted",
+      "evidence_corpus": "empty (matches ANSWER_NOW's own empty-packet condition) -- D0 exists to test whether MEMORY invocation is WASTED, not harmful, when there is nothing memory could contribute",
+      "expected_pattern": "Q(ANSWER_NOW) should be high (near ceiling, given a correctly verified reference solver); Q(MEMORY) should be no better (no evidence exists to help) and costs strictly more (retrieval+graph+compose+larger prompt)"
+    },
+    "D1_memory_required": {
+      "definition": "Answer depends on synthetic facts that exist only in external memory -- reuses the EXISTING, already-audited b3_calibration_v1 generator and corpus rather than regenerating it; that job is already solved and frozen (G2-v4E, S4, HRM qualification, confirmation-2 all validate this generator's correctness).",
+      "source": "sampled from data/hrm/b3_calibration_v1/cal_700 (already frozen, already audited, already CALIBRATION-role -- reuse is legitimate, no new generation)",
+      "expected_pattern": "Q(ANSWER_NOW) at or near 0 (matches the v1 study's finding exactly, for the same construct-validity reason); Q(MEMORY) substantially higher"
+    },
+    "D2_both_sufficient": {
+      "definition": "A D0-style self-contained question, PLUS a redundant CONFIRMING evidence record stating the same fact in prose. Memory is unnecessary but not harmful if invoked.",
+      "construction": "take a D0 task; add exactly one evidence record whose content restates the same fact/answer in a different surface form (not a verbatim copy of the question)",
+      "expected_pattern": "Q(ANSWER_NOW) and Q(MEMORY) should both be high and roughly EQUAL -- this is the case the research-lead directive specifically flagged as requiring cost-awareness: quality alone cannot distinguish the actions here, only cost can. The primary utility-v1 study (quality only) is expected to show ExecutiveOpportunity=0 WITHIN this regime specifically, which is the correct, informative outcome for D2, not a benchmark defect."
+    },
+    "D3_memory_distractor": {
+      "definition": "A D0-style self-contained question, PLUS a plausible-looking but WRONG or irrelevant evidence record (a similarly-shaped fact about a different quantity). Memory is unnecessary and potentially actively harmful if invoked.",
+      "construction": "take a D0 task; add exactly one evidence record with the SAME surface template but a DIFFERENT (wrong, for this question) value -- a near-miss distractor, not random noise, so it has a genuine chance of misleading a model that over-relies on retrieved context over its own direct computation",
+      "expected_pattern": "Q(ANSWER_NOW) should match D0's ceiling; Q(MEMORY) may be LOWER than D0's memory condition would be if it existed, if the distractor genuinely misleads generation -- this is the regime most likely to produce cases where Delta_U < 0 (ANSWER_NOW strictly better), which the v1 study found ZERO instances of anywhere."
+    }
+  },
+
+  "TASK_COUNTS": {
+    "tasks_per_regime": 100,
+    "total_tasks": 400,
+    "rationale": "Smaller than the 750-task v1 study by design -- EOB-v1 is a first, exploratory benchmark testing whether controlled heterogeneity CAN be manufactured at all; regime is the treatment variable here, not corpus scale, so multiple scales per regime are not needed the way b3_calibration_v1 needed them for retrieval-pressure calibration."
+  },
+
+  "VERIFICATION_REQUIRED_BEFORE_FREEZE": [
+    "D0/D2/D3 answers independently re-derived by a reference solver separate from the generator's own internal state (mirrors the existing 'inferability_verified' audit pattern used for the b3/C4 corpora) -- a task is REJECTED, not merely flagged, if the reference solver disagrees with the generator's recorded answer",
+    "D2's confirming record does not leak the exact question string verbatim (paraphrased restatement, not a copy)",
+    "D3's distractor record is a near-miss (same template, different value) not a random unrelated fact -- verified by checking the distractor's value is explicitly NOT equal to the correct answer",
+    "zero content overlap with any consumed split (old C4/C5, b3_calibration_v1 scales other than the cal_700 sample D1 draws from, g2_confirmation_2)"
+  ],
+
+  "UTILITY_AND_METRICS_CORRECTIONS_FROM_V1": {
+    "vector_preserved_not_scalar": "(Q, prompt_tokens, completion_tokens, latency_seconds, compute_proxy) captured for BOTH actions on every task -- utility is NOT collapsed to a scalar U=Q at generation time. A Pareto analysis (which action point-dominates on quality AND cost) is reported BEFORE any scalar U=Q-C(a) is frozen, per research-lead directive: only tasks where quality alone cannot separate the actions (i.e. within D2 specifically) need an explicit cost coefficient; D0/D1/D3 are expected to be resolvable on quality or near-zero-cost grounds alone.",
+    "diversity_metric_corrected": "Report P(delta_U>0) [MEMORY strictly better], P(delta_U<0) [ANSWER_NOW strictly better], P(delta_U=0) [tie] directly -- NOT an oracle-tie-break action share, which the v1 study showed can manufacture apparent diversity (65% 'A0 chosen') out of pure ties (0% actual A0 wins)."
+  },
+
+  "FEATURE_AVAILABILITY_SCHEMA": {
+    "purpose": "Every candidate executive feature must declare WHEN it becomes available relative to the ANSWER_NOW/MEMORY decision, so a future Executive v1 cannot be accidentally given a feature that costs as much to compute as the action it is supposed to gate.",
+    "stages": [
+      "PRE_DECISION -- computable before either action runs (question text alone, cheap query-structure features)",
+      "POST_RETRIEVAL -- requires C2 retrieval to have run (identity_status, retrieval_score_margin)",
+      "POST_GRAPH -- requires G2 graph construction (graph_reachability, working_set_size, n_complete_paths, structural_competition_ratio, bridge/terminal availability)",
+      "POST_GENERATION -- requires HRM to have already run (packet_coherence as observed post-hoc, actual latency/tokens spent)"
+    ],
+    "hard_rule": "The first ANSWER_NOW-vs-MEMORY controller (Executive v0/v1) may use ONLY PRE_DECISION features. POST_RETRIEVAL and POST_GRAPH features remain valid for a LATER controller choosing among a larger action space (RETRIEVE_MORE, GRAPH_REFINE, VERIFY, STOP) where some memory work has already been committed.",
+    "implementation": "hrm_adaptive_memory/experiment_integrity/executive_features.py (FeatureSpec dataclass: name, availability_stage, cost_to_observe, runtime_safe)"
+  },
+
+  "SPLIT_DISCIPLINE": {
+    "this_run": "EOB-v1 is a qualification-tier study (like the v1 opportunity study, like HRM qualification) -- used to decide WHETHER an executive is worth building, not to train one.",
+    "if_opportunity_confirmed": "EOB-v1 itself becomes consumed for that decision, exactly as the research-lead directive specifies. A SEPARATE executive-training split and a later, fresh executive-confirmation split are required before training or confirming any controller -- neither exists yet and neither is built by this work."
+  },
+
+  "frozen_utc": "2026-08-10T09:00:00Z"
+}
