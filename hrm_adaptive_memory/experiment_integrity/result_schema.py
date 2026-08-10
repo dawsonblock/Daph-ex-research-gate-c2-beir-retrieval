@@ -78,6 +78,23 @@ class FailureClass(str, Enum):
     #: exist, most plausibly due to sample size / class imbalance rather than
     #: the signal being valueless.
     LEARNED_POLICY_UNDERPERFORMS_FIXED_BASELINE = "LEARNED_POLICY_UNDERPERFORMS_FIXED_BASELINE"
+    #: The promotion TEST itself lacked statistical power -- not that the
+    #: policy failed. First needed for ANSWER_PROBE_GATE_V2 (evidence/
+    #: gate_executive/exec_training_v2_execute.receipts.gate_result.json):
+    #: after fixing a real retrieval-scope defect (see
+    #: exec_training_v2_execute_ATTEMPT1_INVALID.md) that had crushed
+    #: MEMORY_strict_win representation, the corrected run cleared that
+    #: floor comfortably (53 in eval vs 40 required) but ANSWER_strict_win
+    #: remained at only 5 in eval (10 required) -- the exact "honest
+    #: limitation" flagged in configs/gate_answer_probe_v2_design.json
+    #: PHASE_1 before any V2 data existed: ANSWER_strict_win's natural
+    #: incidence is bottlenecked by hand-verified-fact curation, not
+    #: compute, and further scaling that specific class was known in
+    #: advance to be hard. Distinct from every other FailureClass here: no
+    #: model was fit, no promotion/non-promotion claim is made, and this is
+    #: NOT a second negative result -- per configs/gate_answer_probe_v2_
+    #: design.json PHASE_5, a floor miss stops the pipeline before fitting.
+    MINIMUM_CLASS_FLOOR_NOT_MET = "MINIMUM_CLASS_FLOOR_NOT_MET"
     NOT_APPLICABLE = "NOT_APPLICABLE"
 
 

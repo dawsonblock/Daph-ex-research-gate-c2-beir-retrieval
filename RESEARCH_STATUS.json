@@ -65,6 +65,61 @@
     "status": "RUN_COMPLETE__NOT_PROMOTED",
     "why_this_happened": "Severe class imbalance in the delta_u>0 label (escalation-helps) within the 100-row TRAIN partition, combined with a very small n, let the 5-feature logistic model fit a decision boundary that trades away recall on the minority (memory-needed) class -- exactly the dangerous asymmetric failure mode the protocol required reporting explicitly (ASYMMETRIC_ERROR_METRICS_REQUIRED), and exactly why accuracy/routing-correctness was deliberately NOT the primary metric. The underlying signal is real (separation stop-gate cleared, 4/5 features) but this particular small-sample fit does not yet turn it into a policy that beats the trivial always-escalate baseline."
   },
+  "answer_probe_gate_v2": {
+    "MINIMUM_CLASS_FLOOR_CHECK": {
+      "ANSWER_strict_win_floor": "NOT MET (5 < 10) -- the exact 'honest limitation' flagged in configs/gate_answer_probe_v2_design.json PHASE_1 BEFORE any V2 data existed: ANSWER_strict_win's natural incidence is bottlenecked by hand-verified-GK-fact curation (only ANSWER_NOW_viable produces this class, at ~13/265 = 4.9% within-family incidence), not by compute or by this run's retrieval fix. Pool-wide ANSWER_strict_win (13) barely changed from attempt 1 (13) since that family's collection was unaffected by the MEMORY_required retrieval-scope bug.",
+      "MEMORY_strict_win_floor": "MET (53 >= 40) -- confirms the attempt-1-to-attempt-2 retrieval-scope fix actually worked, not just a cosmetic change",
+      "actual_in_eval": {
+        "ANSWER_strict_win": 5,
+        "MEMORY_strict_win": 53
+      },
+      "reading": "Per configs/gate_answer_probe_v2_design.json PHASE_5, EITHER floor being unmet stops the pipeline BEFORE any model is fit. No V0-V5/VR1 fitting occurred. This is a statement that the promotion TEST lacked power for the ANSWER_strict_win class specifically, not a claim about whether the escalation gate works.",
+      "required": {
+        "ANSWER_strict_win": 10,
+        "MEMORY_strict_win": 40
+      }
+    },
+    "OUTCOME_STRATIFIED_SPLIT": {
+      "eval_strata": {
+        "ANSWER_strict_win": 5,
+        "MEMORY_strict_win": 53,
+        "TIE": 147
+      },
+      "n_calibration": 204,
+      "n_eval": 205,
+      "n_train": 606,
+      "seed": 9901,
+      "strata_whole_pool": {
+        "ANSWER_strict_win": 13,
+        "MEMORY_strict_win": 268,
+        "TIE": 734
+      }
+    },
+    "RUN_VALID": true,
+    "artifact": "ANSWER_PROBE_GATE_V2",
+    "attempt_history": {
+      "attempt_1": "RUN_VALID=FALSE (construction defect, not a scored result). MEMORY_required retrieval was run against a pooled ~8400-record candidate pool spanning all 5 fresh scales, instead of one scale's own evidence pool at a time (the convention every other consumer in this project, including run_hrm_qualification.py, uses). Caught by comparing required_in_packet rates: 73.6% (V1, scale-isolated) vs 31.3% (attempt 1, pooled). Kept in history, marked invalid: evidence/gate_executive/exec_training_v2_execute_ATTEMPT1_INVALID.md / *_ATTEMPT1_INVALID.receipts.jsonl.",
+      "attempt_2": "Fixed scripts/run_exec_training_v2_collection.py to process MEMORY_required scale-by-scale (fresh retrieval candidate pool per scale, mirroring run_hrm_qualification.py exactly). required_in_packet recovered to 52.0% (390/750) for MEMORY_required. This is the trusted, frozen run."
+    },
+    "dataset": "data/hrm/exec_training_v2/ (1015 tasks: 265 ANSWER_NOW_viable across 5 new hand-verified GK categories + 750 MEMORY_required across 5 fresh b3-style scales, commit ec5f0c4, zero overlap with exec_training_v1 or any other consumed split, independently re-verified)",
+    "decision": "INCONCLUSIVE",
+    "design": "configs/gate_answer_probe_v2_design.json",
+    "formal_gate_result": {
+      "failure_class": "MINIMUM_CLASS_FLOOR_NOT_MET",
+      "mechanism_status": "PENDING_FURTHER_EVIDENCE",
+      "run_valid": true,
+      "schema": "hrm_adaptive_memory.experiment_integrity.result_schema.GateResult",
+      "scientific_verdict": "NOT_COMPUTABLE",
+      "split_status": "CONSUMED"
+    },
+    "gate_result": "evidence/gate_executive/exec_training_v2_execute.receipts.gate_result.json",
+    "not_yet_ruled_out": "Whether ANSWER_PROBE_GATE_V2's V3 (cost-sensitive logistic)/VR1 (value regression) hypotheses would promote if the ANSWER_strict_win class had adequate eval representation -- this run never reached the fitting stage, so nothing about those specific hypotheses' viability is known one way or the other. The MEMORY_strict_win side (the class V1's own diagnosis identified as most under-powered) IS now adequately represented (53 in eval, 8x+ V1's ~9), so a future attempt narrowly targeting ANSWER_strict_win volume (which would require either a fundamentally larger hand-verified GK fact catalog, or a deliberate, newly-and-explicitly-frozen relaxation of the eval floor for that class) is the only lever left, per the design's own escape-hatch note.",
+    "per_protocol_consequence": "Per configs/gate_answer_probe_v2_design.json PHASE_5's minimum_class_floor_for_a_trustworthy_eval rule: do not fit anything, do not reshuffle the split, report INCONCLUSIVE rather than a second negative result. CERTIFIED_MEMORY_V1 itself is untouched and unaffected throughout both attempts.",
+    "receipts": "evidence/gate_executive/exec_training_v2_execute.receipts.jsonl",
+    "receipts_written": 2030,
+    "split_consumed": "data/hrm/exec_training_v2/SPLIT_LINEAGE.json (split_role=training_consumed, mechanically enforced) -- may not be reused for mechanism/threshold selection, training, or confirming a controller.",
+    "status": "RUN_COMPLETE__INCONCLUSIVE_INSUFFICIENT_EVAL_CLASS_SUPPORT"
+  },
   "architecture_principle": "Retrieval iteration must ACCUMULATE information state, never replace earlier context with the latest bridge. Pinned by tests/unit/test_information_state.py.",
   "b3_CLOSED": {
     "capacity_evidence": "cal_700 connected candidates 10.0 -> 53.2; cal_3000 at k=300 has 103.8 connected candidates and 23.6 plausible bridges per task against a fixed 6-record packet. A one-hop connectivity heuristic was never designed to discriminate among two dozen plausible bridge paths.",
@@ -1885,15 +1940,16 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "ANSWER_PROBE_GATE_V1 NOT_PROMOTED (2026-08-10): the cheap ANSWER_NOW probe's confidence signal DOES separate MEMORY-needed from ANSWER-sufficient tasks (4/5 features clear the frozen Cohen's-d/CI stop-gate; MEMORY_strict_win=37, ANSWER_strict_win=5, TIE=102 out of 144), so training proceeded per protocol -- but the trained logistic escalation gate (100 train / 44 eval, stratified seed=9801) underperformed BOTH trivial fixed policies on held-out eval (Delta_U_gate=-0.1364, LCB2.5=-0.3182, both required positive) and showed a dangerous asymmetric failure (P(ACCEPT|MEMORY would improve)=0.7778 -- confidently withholds escalation on most cases that actually needed it). Per configs/gate_answer_probe_v1_design.json, this is a formal negative result: no executive-confirmation split was built, exec_training_v1 is now consumed (data/hrm/exec_training_v1/SPLIT_LINEAGE.json). CERTIFIED_MEMORY_V1 is untouched. See answer_probe_gate_v1 / qualified_claims.gate_answer_probe_v1.",
+    "NEXT_GATE": "ANSWER_PROBE_GATE_V2 INCONCLUSIVE_INSUFFICIENT_EVAL_CLASS_SUPPORT (2026-08-10): two GPU attempts against the frozen exec_training_v2 suite (1015 tasks). Attempt 1 had a real RUN_VALID defect (MEMORY_required retrieval pooled across all 5 fresh scales instead of scale-isolated, crushing required_in_packet from 73.6% to 31.3%) -- kept in history as invalid, not scored. Attempt 2 (scale-isolated retrieval fix) is trusted: outcome-stratified split (seed 9901) cleared the MEMORY_strict_win eval floor comfortably (53 vs 40 required, confirming the fix worked) but missed the ANSWER_strict_win floor (5 vs 10 required) -- the exact limitation flagged in configs/gate_answer_probe_v2_design.json PHASE_1 before any V2 data existed (that class's incidence is bottlenecked by hand-verified-fact curation, not compute). Per protocol, no model was fit and this is reported as INCONCLUSIVE, not a second negative result. exec_training_v2 is now consumed (data/hrm/exec_training_v2/SPLIT_LINEAGE.json). See answer_probe_gate_v2 / qualified_claims.gate_answer_probe_v2.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
       "confirmation_1",
       "g2_confirmation_2",
-      "exec_training_v1"
+      "exec_training_v1",
+      "exec_training_v2"
     ],
-    "split_lineage": "development -> mechanism development; qualification_1 -> negative, consumed; confirmation_1 -> negative, consumed; b3_calibration_v1 -> calibration/development (informed G1/G2/S3/S4/HRM-qualification); g2_confirmation_2 -> CONFIRMED PASS (2026-08-10), now consumed, diagnosis-only from here forward.; eob_v2 -> EXECUTIVE_OPPORTUNITY_CONFIRMED (2026-08-10), consumed; exec_training_v1 -> ANSWER_PROBE_GATE_V1 NOT_PROMOTED (2026-08-10), consumed, diagnosis-only from here forward."
+    "split_lineage": "development -> mechanism development; qualification_1 -> negative, consumed; confirmation_1 -> negative, consumed; b3_calibration_v1 -> calibration/development (informed G1/G2/S3/S4/HRM-qualification); g2_confirmation_2 -> CONFIRMED PASS (2026-08-10), now consumed, diagnosis-only from here forward.; eob_v2 -> EXECUTIVE_OPPORTUNITY_CONFIRMED (2026-08-10), consumed; exec_training_v1 -> ANSWER_PROBE_GATE_V1 NOT_PROMOTED (2026-08-10), consumed, diagnosis-only from here forward.; exec_training_v2 -> ANSWER_PROBE_GATE_V2 INCONCLUSIVE_INSUFFICIENT_EVAL_CLASS_SUPPORT (2026-08-10), consumed, diagnosis-only from here forward."
   },
   "historical_development_signal": {
     "C4_4_reported_q": 0.3729,
@@ -2353,6 +2409,24 @@
       ],
       "promotion_criteria": "Delta_U_gate > 0 with positive grouped-bootstrap LCB -- NOT met",
       "report": "evidence/gate_executive/exec_training_v1_execute.receipts.gate_result.json"
+    },
+    "gate_answer_probe_v2": {
+      "claim": "A larger, outcome-stratified training pool (1015 tasks vs V1's 144) fixed V1's specific weakness on the MEMORY_strict_win class (eval representation went from ~9 to 53, clearing the frozen floor comfortably) -- but the ANSWER_strict_win class remains too thin (5 in eval vs 10 required) to run a trustworthy promotion test, because that class's natural incidence is bottlenecked by hand-verified-GK-fact curation, not by pool size or retrieval correctness.",
+      "eval_strata": {
+        "ANSWER_strict_win": 5,
+        "MEMORY_strict_win": 53,
+        "TIE": 147
+      },
+      "min_eval_floor": {
+        "ANSWER_strict_win": 10,
+        "MEMORY_strict_win": 40
+      },
+      "not_a_claim_about": [
+        "whether V3 (cost-sensitive logistic) or VR1 (value regression) would promote -- no model was fit, the eval-class-floor stop-gate fired first",
+        "CERTIFIED_MEMORY_V1 itself, which is untouched and unaffected by either GPU attempt",
+        "whether the underlying escalation-gate approach works -- this is an inconclusive statistical-power finding, not a negative result"
+      ],
+      "report": "evidence/gate_executive/exec_training_v2_execute.receipts.gate_result.json"
     },
     "gate_b": {
       "best_arm": "bm25",
