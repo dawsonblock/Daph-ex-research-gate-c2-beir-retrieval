@@ -753,6 +753,55 @@
     }
   },
   "environment_note": "Installing FlagEmbedding downgraded transformers to 4.57.6, and the HRM adapter's pinned-version guard refused to load rather than silently using a different architecture. FlagEmbedding is removed; transformers restored to 5.14.1. The guard did exactly its job.",
+  "executive_opportunity_study": {
+    "PRIMARY_RESULT": {
+      "ExecutiveOpportunity": 0.0,
+      "ExecutiveOpportunity_lcb_2p5": 0.0,
+      "frozen_material_opportunity_margin": 0.05,
+      "independently_recomputed_from_raw_receipts": true,
+      "lcb_met": false,
+      "margin_met": false,
+      "reading": "ANSWER_NOW scored EXACTLY 0/750 -- not near-zero, exactly zero. Because it never once beats or ties a correct MEMORY answer, the oracle policy collapses to mirroring E1 whenever E1 is correct (262/750) and ties E1's failure otherwise (488/750): U(E3) == U(E1) == 0.3493 exactly, so ExecutiveOpportunity = U(E3) - max(U(E0),U(E1)) = 0 exactly, not merely below the 0.05 margin."
+    },
+    "RUN_VALID": true,
+    "artifact": "evidence/gate_executive/opportunity_execute.json",
+    "certified_memory_operation": "configs/certified_memory_v1.json (identity hash 97b3b49cb95fa33b, verified live before every task ran)",
+    "construct_validity_finding": {
+      "claim": "The b3_calibration_v1 corpus generator (hrm_adaptive_memory/experiments/generalization_dataset_v4.py:_make_entity) procedurally synthesizes entity names, abbreviations, and relation values from a random vocabulary fresh on every corpus build -- these facts cannot exist in any pretrained model's training data by construction.",
+      "implication": "This benchmark family cannot produce genuine ANSWER_NOW-vs-MEMORY heterogeneity by design: it was built specifically to make evidence-free answering impossible, which is exactly what makes it a good MEMORY confirmation benchmark (grammar_v4/G2/S4/HRM-qualification/confirmation-2) and exactly what makes it an UNINFORMATIVE benchmark for an opportunity study that needs SOME tasks where direct answering is viable. A future opportunity study needs a benchmark mixing evidence-required tasks with tasks answerable from general/parametric knowledge.",
+      "not_a_reason_to_alter_this_verdict": "This is a methodological limitation of the CHOSEN DATASET for THIS study, identified for future study design -- it does not change ExecutiveOpportunity=0.0 on the data actually run, and the frozen NO_EXECUTIVE_OPPORTUNITY verdict stands as scored.",
+      "verified_independent_of_the_result": "Confirmed by reading the generator source (rng.sample(_HEADS,2), rng.choice(_ROLES), rng.randrange for abbreviation suffixes) BEFORE attributing the 0.0 score to this cause -- not inferred backward from the result, which would be circular."
+    },
+    "dataset": "data/hrm/b3_calibration_v1/ (calibration-tier, NOT g2_confirmation_2 -- correctly reused since this is a development/qualification-tier question, matching the tier HRM qualification itself used this suite for)",
+    "decision": "NO_EXECUTIVE_OPPORTUNITY",
+    "decision_per_frozen_protocol": "Per configs/gate_executive_opportunity_v1.json VERDICT_NAMING.if_not_promoted: do not train a controller. E1 (always USE_CERTIFIED_MEMORY) clearly dominates E0 (always ANSWER_NOW) on this benchmark -- promote E1 as the default policy. This is itself a valid, useful finding, not a failure requiring further threshold tuning.",
+    "delta_U_distribution": {
+      "answer_now_strictly_better": "0/750",
+      "memory_strictly_better": "262/750",
+      "reading": "Zero tasks anywhere in the 750-task suite favor ANSWER_NOW. This is not a marginal or noisy negative -- there is no task-level evidence of heterogeneity to point to.",
+      "tie": "488/750"
+    },
+    "next": "Per research-lead directive: do not build Executive v1. If a future opportunity study is warranted, it requires a new benchmark mix (not b3_calibration_v1 alone) so ANSWER_NOW has a genuine chance to win on some tasks, plus a separate executive-training split and later executive-confirmation split, distinct from both b3_calibration_v1 and g2_confirmation_2.",
+    "oracle_action_shares": {
+      "A0_ANSWER_NOW": 0.6507,
+      "A1_USE_CERTIFIED_MEMORY": 0.3493,
+      "diversity_ok": true,
+      "note": "Diversity looks satisfied (65%/35% split) but this is an artifact of the frozen A0-wins-ties tie-break, not genuine A0 superiority anywhere -- the 65% 'A0' share is entirely tasks where BOTH actions failed (488/750), not tasks where ANSWER_NOW succeeded. Diversity passing did not matter here since margin and LCB both failed first."
+    },
+    "pooled_quality": {
+      "E0_always_answer_now": 0.0,
+      "E1_always_use_certified_memory": 0.3493,
+      "E2_simple_heuristic": 0.2933,
+      "E3_oracle": 0.3493
+    },
+    "protocol": "configs/gate_executive_opportunity_v1.json",
+    "receipts": "evidence/gate_executive/opportunity_execute.receipts.jsonl",
+    "receipts_written": 1500,
+    "run_valid_checks": "17/17 structural/provenance checks passed, incl. identical task populations across actions, identical candidate_pool_hash/graph_hash/path_set_hash per task between A0 and A1 (no retrieval-difference confound), zero non-empty A0 packets (no evaluator/context leak into the cheap action), single shared model_revision/pipeline_version constant across both actions, answer string referenced only inside the post-generation scoring block",
+    "status": "RUN_COMPLETE__NO_EXECUTIVE_OPPORTUNITY",
+    "tasks_total": 750,
+    "what_is_NOT_claimed": "That ANSWER_NOW vs MEMORY heterogeneity does not exist in general -- only that it was not observed (and could not have been observed, given the construct-validity finding above) on this specific benchmark. A future opportunity study on a benchmark with a genuine mix of evidence-required and parametric-knowledge-answerable tasks is a prerequisite before concluding heterogeneity does not exist."
+  },
   "executive_taxonomy_correction": {
     "corrected": {
       "enough coherent evidence": "SELECT",
@@ -1560,7 +1609,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "Fresh Confirmation #2 PASSED (2026-08-10): delta_HRM_graph_value (H2-H0) = +0.0720, LCB2.5=+0.0147 (>0, frozen margin 0.03 both met, independently recomputed from raw receipts), subgroup safety passed (worst family:temporal_chain -0.0933, within -0.10 bound). RUN_VALID=true, including cryptographic source-commit binding to b5478e2. Status: CONFIRMED_GRAPH_PLUS_PATH_COMPOSITION (bounded to this benchmark family and model, see hrm_confirmation_2 / qualified_claims.gate_hrm_confirmation_2). Next: executive opportunity gate (ANSWER_NOW vs USE_CERTIFIED_MEMORY), not further graph development.",
+    "NEXT_GATE": "Executive Opportunity Study ran and produced a clean NO_EXECUTIVE_OPPORTUNITY verdict (2026-08-10): ExecutiveOpportunity=0.0 exactly (not merely below the 0.05 margin), LCB2.5=0.0. ANSWER_NOW scored exactly 0/750 -- never once beat or tied a correct MEMORY answer -- because b3_calibration_v1's tasks are procedurally synthesized per corpus build (verified from the generator source, not inferred from the result) and cannot be known without evidence by construction. Per frozen protocol: do not train a controller; promote CERTIFIED_MEMORY_V1 (always-use) as the default policy. A future opportunity study needs a benchmark mixing evidence-required and parametric-knowledge-answerable tasks to test genuine heterogeneity. See executive_opportunity_study / qualified_claims.gate_executive_opportunity.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
@@ -2905,6 +2954,20 @@
         "canonical EXACT identity handling is now corrected",
         "subject + bridge + relation is a qualified query formulation GIVEN a correct bridge"
       ]
+    },
+    "gate_executive_opportunity": {
+      "ExecutiveOpportunity": 0.0,
+      "ExecutiveOpportunity_lcb_2p5": 0.0,
+      "claim": "On the b3_calibration_v1 benchmark family, there is no state-dependent value in choosing between ANSWER_NOW and CERTIFIED_MEMORY_V1 -- MEMORY unconditionally dominates because ANSWER_NOW cannot succeed on this benchmark by construction (procedurally synthesized facts).",
+      "frozen_margin": 0.05,
+      "not_a_claim_about": [
+        "ANSWER_NOW vs MEMORY heterogeneity in general (only on this specific, evidence-mandatory benchmark)",
+        "any benchmark mixing parametric-knowledge-answerable tasks with evidence-required tasks (not tested)",
+        "whether a future, better-designed opportunity study would find heterogeneity",
+        "the value of an executive over a larger action space (ANSWER/RETRIEVE/GRAPH_REFINE/VERIFY/STOP) -- only the two-action ANSWER_NOW-vs-MEMORY question was tested"
+      ],
+      "report": "evidence/gate_executive/opportunity_execute.json",
+      "verdict": "NO_EXECUTIVE_OPPORTUNITY"
     },
     "gate_hrm_confirmation_2": {
       "claim": "A frozen runtime graph plus path-coherent packet composer improves HRM external-memory reasoning over the simpler typed-path baseline on an untouched confirmation distribution under preregistered criteria.",
