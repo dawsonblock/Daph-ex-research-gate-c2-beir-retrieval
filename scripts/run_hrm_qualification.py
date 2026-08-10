@@ -27,8 +27,10 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import hashlib
 import json
 import math
+import subprocess
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -79,6 +81,21 @@ PACKET = C4_PRIMARY_PACKET_BUDGET
 H_ARMS = ("H0_typed_path", "H1_g2_S2", "H2_g2_pathcoherent",
           "H3_oracle_selector", "H4_oracle_evidence")
 PIPELINE_VERSION = "hrm_qualification_v1"
+#: Fresh Confirmation #2 (configs/gate_hrm_confirmation_2_v1.json) -- same
+#: ladder, same thresholds, different (non-overlapping) split.
+CONFIRM2_SCALES = ("confirm2_700", "confirm2_1000", "confirm2_1500",
+                   "confirm2_2200", "confirm2_3000")
+
+
+def _make_scale_loader(scale_root: Path):
+    """Same shape as run_b3_retrieval_calibration.load_scale, pointed at an
+    arbitrary suite root instead of the hardcoded b3_calibration_v1 SUITE."""
+    def _load(scale: str) -> tuple[list[dict], list[dict], dict[str, str]]:
+        base = scale_root / scale
+        tasks = [json.loads(l) for l in (base / "oracle_tasks.jsonl").read_text().splitlines() if l.strip()]
+        evidence = [json.loads(l) for l in (base / "evidence.jsonl").read_text().splitlines() if l.strip()]
+        return tasks, evidence, {r["evidence_id"]: r["content"] for r in evidence}
+    return _load
 
 
 def c2(n: int) -> int:
@@ -101,6 +118,10 @@ def main() -> int:
     ap.add_argument("--out", default=None)
     ap.add_argument("--scales", nargs="*", default=None,
                     help="subset of SCALES, for a bounded smoke run")
+    ap.add_argument("--scale-root", default=None,
+                    help="override the suite root directory (default: "
+                         "data/hrm/b3_calibration_v1, per run_b3_retrieval_calibration.SUITE); "
+                         "pass e.g. data/hrm/g2_confirmation_2 for confirmation runs")
     ap.add_argument("--limit-tasks", type=int, default=None,
                     help="cap tasks per scale, for a bounded smoke run")
     mode = ap.add_mutually_exclusive_group(required=True)
@@ -113,7 +134,29 @@ def main() -> int:
     set_default_boundary_policy("grammar_v4")  # pinned, per protocol
     extractor_hash = entity_extractor_config_hash()
     arm = ARMS[args.arm_for_queries]
-    scales = args.scales or list(SCALES)
+    if args.scale_root:
+        scale_root = Path(args.scale_root)
+        load_scale_fn = _make_scale_loader(scale_root)
+        default_scales = (CONFIRM2_SCALES if scale_root.name == "g2_confirmation_2"
+                          else tuple(sorted(p.name for p in scale_root.iterdir() if p.is_dir())))
+    else:
+        load_scale_fn = load_scale
+        default_scales = SCALES
+    scales = args.scales or list(default_scales)
+
+    try:
+        source_commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True,
+            capture_output=True, text=True, timeout=30,
+        ).stdout.strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        source_digest = hashlib.sha256()
+        for path in sorted(ROOT.rglob("*.py")):
+            if any(part in {"evidence", "__pycache__", ".pytest_cache"} for part in path.parts):
+                continue
+            source_digest.update(str(path.relative_to(ROOT)).encode())
+            source_digest.update(path.read_bytes())
+        source_commit = f"non-git-tree:{source_digest.hexdigest()}"
 
     print(f"=== HRM qualification: H0-H4 ({'DRY RUN, no GPU' if args.dry_run else 'EXECUTE'}) ===")
     print(f"  entity_extractor_config_hash={extractor_hash}  M={M}  packet={PACKET}\n")
@@ -130,7 +173,7 @@ def main() -> int:
     paired_h0_h2: list[tuple[str, float]] = []  # (family, H2-H0 per-task delta), for grouped_lcb
 
     for scale in scales:
-        tasks, evidence, texts = load_scale(scale)
+        tasks, evidence, texts = load_scale_fn(scale)
         if args.limit_tasks:
             tasks = tasks[:args.limit_tasks]
         records = to_index_records(evidence)
@@ -241,7 +284,7 @@ def main() -> int:
                     graph_compressor_config_hash=extractor_hash,
                     model_revision="sapientinc/HRM-Text-1B@9f082d68",
                     pipeline_version=PIPELINE_VERSION,
-                    source_commit="pending",
+                    source_commit=source_commit,
                     extra_config_hashes={
                         "graph_hash": ghash, "path_set_hash": pshash,
                         "composed_packet_hash": composed_packet_hash(tuple(selected_ids))})
@@ -322,6 +365,8 @@ def main() -> int:
     report: dict[str, Any] = {
         "schema_version": "hrm-qualification-v1", "mode": "dry_run" if args.dry_run else "execute",
         "entity_extractor_config_hash": extractor_hash,
+        "source_commit": source_commit,
+        "scale_root": str(args.scale_root) if args.scale_root else "data/hrm/b3_calibration_v1",
         "scales_run": scales, "tasks_total": pooled_tasks,
         "receipts_written": len(receipts),
         "binding_assertion_failures": binding_checks_passed,
