@@ -1560,13 +1560,14 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "Fresh confirmation split (not started). HRM qualification PASSED on A100 GPU (Lightning studio 'gg', stopped immediately after): delta_HRM_graph_value (H2-H0) = +0.0746, LCB2.5=+0.0253 (>0, frozen margin 0.03 both met), subgroup safety passed (worst family:temporal_chain -0.0534, within -0.10 bound). The registered causal prediction replicated independently at the HRM level: Q-gain rises with path-competition bucket (0.022/0.147/0.110/0.036 for 1/2-3/4-6/7+ paths), mirroring S4's packet-level shape (0.064/0.237/0.263/0.179) at ~49% conversion efficiency. This is qualification on calibration-informed data, NOT confirmation -- a fresh, untouched split is required before any final scientific promotion claim. Provisional stack: grammar_v4 -> G2 -> path-coherent composition -> HRM.",
+    "NEXT_GATE": "Fresh Confirmation #2 PASSED (2026-08-10): delta_HRM_graph_value (H2-H0) = +0.0720, LCB2.5=+0.0147 (>0, frozen margin 0.03 both met, independently recomputed from raw receipts), subgroup safety passed (worst family:temporal_chain -0.0933, within -0.10 bound). RUN_VALID=true, including cryptographic source-commit binding to b5478e2. Status: CONFIRMED_GRAPH_PLUS_PATH_COMPOSITION (bounded to this benchmark family and model, see hrm_confirmation_2 / qualified_claims.gate_hrm_confirmation_2). Next: executive opportunity gate (ANSWER_NOW vs USE_CERTIFIED_MEMORY), not further graph development.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
-      "confirmation_1"
+      "confirmation_1",
+      "g2_confirmation_2"
     ],
-    "split_lineage": "development -> mechanism development; qualification_1 -> negative, consumed; confirmation_1 -> negative, consumed; future calibration -> B3 development; confirmation_2 -> future untouched one-shot"
+    "split_lineage": "development -> mechanism development; qualification_1 -> negative, consumed; confirmation_1 -> negative, consumed; b3_calibration_v1 -> calibration/development (informed G1/G2/S3/S4/HRM-qualification); g2_confirmation_2 -> CONFIRMED PASS (2026-08-10), now consumed, diagnosis-only from here forward."
   },
   "historical_development_signal": {
     "C4_4_reported_q": 0.3729,
@@ -1597,6 +1598,73 @@
     "status": "VALID_HISTORICAL_MECHANISM_SIGNAL__NOT_C4_V2_FINAL",
     "what_it_does_not_support": "It is not evidence for deterministic packet ordering, and it is not the C4-v2 final result for C4_4. The C4_4 cell under the intended prompt-order intervention has never been measured.",
     "what_it_does_support": "The C4_3 -> C4_4_historical delta of +0.1604 (0.2125 -> 0.3729) is evidence for S2c structural MEMBERSHIP selection alone, measured with query, retrieval and identity held fixed. Because the ordering policy never reached HRM, the delta is not diluted by an ordering contribution, which makes it a cleaner membership result than originally reported."
+  },
+  "hrm_confirmation_2": {
+    "PRIMARY_RESULT": {
+      "both_conditions_met": true,
+      "delta_HRM_graph_value_H2_minus_H0": 0.072,
+      "frozen_promotion_margin": {
+        "lcb_must_exceed": 0.0,
+        "material_point_margin": 0.03
+      },
+      "independently_recomputed_from_raw_receipts": true,
+      "lcb_2p5_grouped_by_family": 0.0147,
+      "reading": "The graph + path-coherent composition stack (H2) beats the typed-path baseline (H0) by +0.0720 Q on data that never informed any architecture, threshold, alias, or grammar decision -- above the frozen 0.03 point margin, and the bootstrap LCB (grouped by family, matching qualification's method exactly) is +0.0147, distinguishable from zero."
+    },
+    "RUN_VALID": true,
+    "artifact": "evidence/gate_hrm/confirmation_2_execute.json",
+    "comparison_to_qualification": {
+      "confirmation_2_delta_HRM_graph_value": 0.072,
+      "confirmation_2_lcb": 0.0147,
+      "qualification_delta_HRM_graph_value": 0.0746,
+      "qualification_lcb": 0.0253,
+      "reading": "The effect replicates on genuinely fresh data at essentially the same magnitude (+0.0720 vs +0.0746), with a smaller but still-positive LCB (+0.0147 vs +0.0253) -- consistent with a real effect measured on a fresh sample, not an artifact of calibration-informed data."
+    },
+    "compute": {
+      "credentials": "in-session env vars only, never persisted",
+      "dtype": "float16",
+      "model": "sapientinc/HRM-Text-1B @ 9f082d68b8cd0ebc56e33f1c88c45609174c272c",
+      "platform": "Lightning AI, studio 'gg', A100-SXM4-80GB",
+      "studio_stopped_immediately_after": true
+    },
+    "decision": "CONFIRMED_GRAPH_PLUS_PATH_COMPOSITION",
+    "delta_composition_H2_minus_H1": 0.0747,
+    "next": "Freeze this memory operation. Per research-lead directive, move up one level to the executive opportunity gate (ANSWER_NOW vs USE_CERTIFIED_MEMORY) and test whether the value of invoking memory is state-dependent. Do not open another graph-improvement cycle on this result.",
+    "pooled_quality": {
+      "H0_typed_path": 0.2827,
+      "H1_g2_S2": 0.28,
+      "H2_g2_pathcoherent": 0.3547,
+      "H3_oracle_selector": 0.48,
+      "H4_oracle_evidence": 0.852
+    },
+    "protocol": "configs/gate_hrm_confirmation_2_v1.json",
+    "receipts": "evidence/gate_hrm/confirmation_2_execute.receipts.jsonl",
+    "receipts_written": 3750,
+    "safety_gates": {
+      "bound": -0.1,
+      "n_strata_regressed": "2/12 (temporal_chain -0.0933, temporal_update -0.0533), both within the -0.10 bound",
+      "note": "Independently recomputed from raw receipts across both frozen axes (family, entity_regime); no new axis added post-hoc.",
+      "subgroup_safety_passed": true,
+      "worst_subgroup_vs_H0": [
+        "family:temporal_chain",
+        -0.0933
+      ]
+    },
+    "scales_run": [
+      "confirm2_700",
+      "confirm2_1000",
+      "confirm2_1500",
+      "confirm2_2200",
+      "confirm2_3000"
+    ],
+    "source_commit": "b5478e2d30627ae501fd3ce0e5a5b17c3f351e04",
+    "source_commit_verification": "cryptographically confirmed, not trusted from a plaintext field -- recomputed execution_identity_sha256 for a 75-receipt sample under 3 candidate commits (b5478e2/b5798f1/b83886b); all 75 matched ONLY b5478e2, zero matches under the other two",
+    "split": "data/hrm/g2_confirmation_2/ (confirm2_700..confirm2_3000, 750 tasks, seeds 9301-9305/filler 9298 -- zero overlap, independently verified, with every prior consumed split)",
+    "split_now_consumed": "data/hrm/g2_confirmation_2/SPLIT_LINEAGE.json (split_role=confirmation_consumed, mechanically enforced via hrm_adaptive_memory.experiment_integrity.split_lineage)",
+    "status": "RUN_COMPLETE__PASSES__CONFIRMED",
+    "tasks_total": 750,
+    "what_is_NOT_claimed": "General memory solved. This is bounded to the evaluated distribution (b3-calibration-style synthetic multi-hop benchmark family, 10 families, canonical/abbreviation entity regimes) and model (HRM-Text-1B). Not a claim about natural documents, open-domain RAG, other models, or persistent/long-horizon memory.",
+    "what_is_promoted": "The stack grammar_v4 -> C2 retrieval -> G2 runtime graph -> frozen path ranking -> path-coherent packet composition -> 6 ordered records -> HRM-Text-1B is CONFIRMED (not merely development-qualified) on this benchmark family and this model."
   },
   "hrm_qualification": {
     "NEXT": "Build and run a genuinely fresh confirmation split (never touched by any B3/B4/G1/G2/S3/S4/HRM-qualification decision), exactly once, no threshold changes, before any final promotion claim.",
@@ -2837,6 +2905,23 @@
         "canonical EXACT identity handling is now corrected",
         "subject + bridge + relation is a qualified query formulation GIVEN a correct bridge"
       ]
+    },
+    "gate_hrm_confirmation_2": {
+      "claim": "A frozen runtime graph plus path-coherent packet composer improves HRM external-memory reasoning over the simpler typed-path baseline on an untouched confirmation distribution under preregistered criteria.",
+      "delta_HRM_graph_value_H2_minus_H0": 0.072,
+      "frozen_margin": 0.03,
+      "grouped_bootstrap_lcb_2p5": 0.0147,
+      "not_a_claim_about": [
+        "general memory solved",
+        "natural-document memory",
+        "open-domain RAG",
+        "any model other than HRM-Text-1B @ 9f082d68",
+        "persistent or long-horizon memory",
+        "benchmark families outside the 10 evaluated (entity_attribute, ownership_chain, configuration_chain, dependency_chain, location_chain, temporal_chain, numeric_chain, procedural_chain, temporal_update, distractor_heavy)"
+      ],
+      "report": "evidence/gate_hrm/confirmation_2_execute.json",
+      "subgroup_safety_passed": true,
+      "verdict": "CONFIRMED_GRAPH_PLUS_PATH_COMPOSITION"
     }
   },
   "result_schema_note": "run_valid / scientific_verdict / mechanism_status / failure_class / split_status are the shared GateResult fields (hrm_adaptive_memory/experiment_integrity/result_schema.py). They replace ad hoc VALID_RUN/PASS collapses -- Confirmation #1 (RUN_VALID=true, MECHANISM_PASS=false) and G2-v1 (RUN_VALID=true, OUTCOME_C) are the two historical cases that motivated keeping these axes independent rather than a single boolean.",
