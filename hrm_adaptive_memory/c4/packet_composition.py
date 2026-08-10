@@ -151,3 +151,44 @@ def complete_paths_represented(packet: Sequence[str],
                                complete_paths: Sequence[Any]) -> int:
     chosen = set(packet)
     return sum(1 for p in complete_paths if chosen & set(p.record_ids))
+
+
+#: --- HRM qualification hash-chain links (configs/gate_hrm_qualification_v1.json) --
+#: candidate_pool_hash / membership_hash / order_hash / prompt_hash already
+#: exist in packet_ordering.py and are reused verbatim, not duplicated here.
+
+def graph_hash(graph) -> str:
+    """Sha256 over every edge's (type, source, target, source_record_id),
+    sorted for order-independence. Localizes graph-construction drift
+    independent of which paths were later selected from it."""
+    import hashlib
+    rows = sorted(
+        f"{e.edge_type}|{e.source}|{e.target}|{e.source_record_id}"
+        for e in graph.edges)
+    return hashlib.sha256("\n".join(rows).encode("utf-8")).hexdigest()[:16]
+
+
+def path_set_hash(paths: Sequence[Any]) -> str:
+    """Sha256 over the sorted path_id set of the (typically complete) paths
+    considered for composition -- localizes path-enumeration drift separately
+    from graph-construction drift."""
+    import hashlib
+    ids = sorted(p.path_id for p in paths)
+    return hashlib.sha256("\n".join(ids).encode("utf-8")).hexdigest()[:16]
+
+
+def composed_packet_hash(selected_ids: Sequence[str]) -> str:
+    """Sha256 over the H-arm's selected ids, ORDER-SENSITIVE, taken BEFORE the
+    C4_4 deterministic ordering policy is applied in run_packet_stage. Lets a
+    receipt distinguish 'the composer chose different records/order' from 'the
+    downstream ordering policy reordered the same records' -- the latter would
+    show up as a differing order_hash with an UNCHANGED composed_packet_hash
+    membership, which is the intended, harmless case."""
+    import hashlib
+    return hashlib.sha256("|".join(selected_ids).encode("utf-8")).hexdigest()[:16]
+
+
+def generation_hash(output_text: str) -> str:
+    """Sha256 of the HRM output text, for reproducibility auditing."""
+    import hashlib
+    return hashlib.sha256(output_text.encode("utf-8")).hexdigest()[:16]

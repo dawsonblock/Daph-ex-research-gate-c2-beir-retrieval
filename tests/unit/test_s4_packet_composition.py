@@ -143,3 +143,55 @@ class TestCoherenceMetrics:
         paths = [FakePath("pA", ("a1",)), FakePath("pB", ("b1",))]
         assert complete_paths_represented(["a1", "b1"], paths) == 2
         assert complete_paths_represented(["a1"], paths) == 1
+
+
+class TestHRMHashChainLinks:
+    def test_graph_hash_changes_with_edges(self):
+        from hrm_adaptive_memory.c4.packet_composition import graph_hash
+        from hrm_adaptive_memory.c4.runtime_graph import build_runtime_graph
+        texts_a = {"r1": "Registry entry: Sparrow control module — registered asset — Finch relay unit."}
+        texts_b = {"r1": "Registry entry: Sparrow control module — registered asset — Osprey relay unit."}
+        ga = build_runtime_graph(record_ids=["r1"], texts=texts_a, relation="")
+        gb = build_runtime_graph(record_ids=["r1"], texts=texts_b, relation="")
+        assert graph_hash(ga) != graph_hash(gb)
+
+    def test_graph_hash_deterministic(self):
+        from hrm_adaptive_memory.c4.packet_composition import graph_hash
+        from hrm_adaptive_memory.c4.runtime_graph import build_runtime_graph
+        texts = {"r1": "Registry entry: Sparrow control module — registered asset — Finch relay unit."}
+        g1 = build_runtime_graph(record_ids=["r1"], texts=texts, relation="")
+        g2 = build_runtime_graph(record_ids=["r1"], texts=texts, relation="")
+        assert graph_hash(g1) == graph_hash(g2)
+
+    def test_path_set_hash_order_independent(self):
+        from hrm_adaptive_memory.c4.packet_composition import path_set_hash
+        a = FakePath("p1", ("r1",))
+        b = FakePath("p2", ("r2",))
+        assert path_set_hash([a, b]) == path_set_hash([b, a])
+
+    def test_path_set_hash_changes_with_membership(self):
+        from hrm_adaptive_memory.c4.packet_composition import path_set_hash
+        a = FakePath("p1", ("r1",))
+        b = FakePath("p2", ("r2",))
+        assert path_set_hash([a]) != path_set_hash([a, b])
+
+    def test_composed_packet_hash_is_order_sensitive(self):
+        from hrm_adaptive_memory.c4.packet_composition import composed_packet_hash
+        assert (composed_packet_hash(["a", "b"])
+                != composed_packet_hash(["b", "a"]))
+
+    def test_composed_packet_hash_deterministic(self):
+        from hrm_adaptive_memory.c4.packet_composition import composed_packet_hash
+        assert composed_packet_hash(["a", "b"]) == composed_packet_hash(["a", "b"])
+
+    def test_generation_hash_distinguishes_outputs(self):
+        from hrm_adaptive_memory.c4.packet_composition import generation_hash
+        assert generation_hash("gold") != generation_hash("silver")
+
+    def test_all_hashes_are_16_char_hex(self):
+        from hrm_adaptive_memory.c4.packet_composition import (
+            composed_packet_hash, generation_hash, path_set_hash)
+        import re
+        for h in (composed_packet_hash(["a"]), path_set_hash([FakePath("p", ("r",))]),
+                  generation_hash("x")):
+            assert re.fullmatch(r"[0-9a-f]{16}", h)
