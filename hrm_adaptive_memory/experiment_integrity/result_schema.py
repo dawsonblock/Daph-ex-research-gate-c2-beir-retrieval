@@ -61,6 +61,23 @@ class FailureClass(str, Enum):
     #: Not a mechanism deficiency and not "no heterogeneity" -- a mix-design
     #: property of THIS specific frozen task composition.
     DIVERSITY_FLOOR_NOT_CLEARED_IN_POOLED_MIX = "DIVERSITY_FLOOR_NOT_CLEARED_IN_POOLED_MIX"
+    #: The probe signal DID separate MEMORY-strict-win from ANSWER-strict-win
+    #: tasks (the frozen Cohen's d / bootstrap-CI stop-gate cleared, so
+    #: training was not skipped) -- but the resulting fitted policy still
+    #: failed to beat the better of the two trivial fixed policies
+    #: (always-accept / always-escalate) on held-out eval. First needed for
+    #: ANSWER_PROBE_GATE_V1 (evidence/gate_executive/exec_training_v1_execute.
+    #: gate_result.json): Delta_U_gate=-0.1364, LCB=-0.3182, driven by severe
+    #: label imbalance (escalation-helps was the minority class in a 100-row
+    #: train split) that let the small logistic model learn a decision
+    #: boundary worse than the trivial "always escalate" baseline. Distinct
+    #: from BENCHMARK_HAS_NO_ACTION_HETEROGENEITY (no signal exists at all)
+    #: and from every mechanism-deficiency class above (nothing about
+    #: CERTIFIED_MEMORY_V1 itself is implicated) -- this describes the
+    #: escalation POLICY specifically failing to exploit a signal that does
+    #: exist, most plausibly due to sample size / class imbalance rather than
+    #: the signal being valueless.
+    LEARNED_POLICY_UNDERPERFORMS_FIXED_BASELINE = "LEARNED_POLICY_UNDERPERFORMS_FIXED_BASELINE"
     NOT_APPLICABLE = "NOT_APPLICABLE"
 
 

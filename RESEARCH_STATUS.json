@@ -5,6 +5,66 @@
     "scope": "applies to G1_TYPED_PATH, G2, and every future compression or traversal mechanism",
     "why": "B4 proved conditional metrics can lie. P2 at M=25 posted 0.785 selected-CES-given-working at cal_3000 -- the best single number in the table -- while having discarded half the required evidence before S2 ever saw it. End-to-end it merely matched plain k=50. The conditional metric RISES as a compressor throws evidence away, so reporting it alone rewards exactly the failure it should expose."
   },
+  "answer_probe_gate_v1": {
+    "PROMOTION_CRITERIA_met": false,
+    "RUN_VALID": true,
+    "SEPARATION_STOPGATE_RESULT": {
+      "feature_not_clearing": "mean_entropy (Cohen's d=0.1416, CI includes 0)",
+      "features_clearing_frozen_threshold": [
+        "mean_token_confidence (Cohen's d=-0.3576, CI excludes 0)",
+        "min_token_confidence (Cohen's d=0.3927)",
+        "sequence_confidence (Cohen's d=-0.1151, CI excludes 0)",
+        "answer_length (Cohen's d=-0.2686, CI excludes 0)"
+      ],
+      "groups": {
+        "ANSWER_strict_win": 5,
+        "MEMORY_strict_win": 37,
+        "TIE": 102
+      },
+      "outcome": "SEPARATION_EXISTS",
+      "reading": "The cheap ANSWER_NOW probe's own confidence DOES carry real action-value information -- MEMORY-needed tasks are answered with measurably lower confidence than ANSWER-sufficient tasks. Per protocol, training proceeded (was not skipped)."
+    },
+    "TRAINED_GATE_RESULT": {
+      "P_accept_given_memory_would_improve": 0.7778,
+      "P_escalate_given_direct_sufficient": 0.1143,
+      "delta_u_gate": -0.1364,
+      "delta_u_gate_lcb_2p5": -0.3182,
+      "eval_utilities": {
+        "E0_always_accept_direct": 0.3864,
+        "E1_always_escalate_to_memory": 0.5682,
+        "E2_fixed_confidence_threshold": 0.5682,
+        "E3_logistic_value_predictor": 0.4318,
+        "E4_oracle_escalation": 0.5909
+      },
+      "n_eval": 44,
+      "n_total": 144,
+      "n_train": 100,
+      "policy_regret_E4_minus_E3": 0.1591,
+      "reading": "E3 (the trained logistic gate) underperforms BOTH E1 (always escalate) and E2 (a single fixed confidence threshold) on held-out eval, and its LCB is deeply negative. The dangerous asymmetric error is severe: P(ACCEPT | MEMORY would improve)=0.7778 -- the trained gate confidently withholds escalation on 7/9 held-out cases where memory was actually needed, worse than the trivial always-escalate policy would have done on those same cases by construction.",
+      "split": "stratified 70/30 by suite_family, seed=9801"
+    },
+    "artifact": "ANSWER_PROBE_GATE_V1",
+    "dataset": "data/hrm/exec_training_v1/ (144 tasks: 72 ANSWER_NOW_viable hand-verified GK facts + 72 MEMORY_required b3-native tasks, zero privileged-parsing bypass)",
+    "decision": "NOT_PROMOTED",
+    "design": "configs/gate_answer_probe_v1_design.json",
+    "formal_gate_result": {
+      "failure_class": "LEARNED_POLICY_UNDERPERFORMS_FIXED_BASELINE",
+      "mechanism_status": "NOT_PROMOTED",
+      "run_valid": true,
+      "schema": "hrm_adaptive_memory.experiment_integrity.result_schema.GateResult",
+      "scientific_verdict": "NEGATIVE",
+      "split_status": "CONSUMED"
+    },
+    "gate_result": "evidence/gate_executive/exec_training_v1_execute.receipts.gate_result.json",
+    "not_yet_ruled_out": "Whether a differently-regularized fit, a larger training split, or a simpler single-threshold-only model (E2, which already ties E1 here) could beat the fixed baselines. This result rules out THIS specific 144-task/100-train-row fit of a 5-feature logistic model, not the general proposition that confidence-gated escalation can work -- but per the frozen protocol, escalating model complexity or re-fitting after seeing this result would be exactly the post-hoc tuning the protocol exists to prevent, and is out of scope without a new, explicitly frozen follow-up protocol.",
+    "per_protocol_consequence": "Per configs/gate_answer_probe_v1_design.json PROMOTION_CRITERIA.if_not_met: do NOT build an executive-confirmation split. CERTIFIED_MEMORY_V1 itself is untouched and unaffected -- this result is entirely about whether a small logistic policy fit on this specific 144-task training split can beat trivial fixed policies, not about the underlying memory mechanism.",
+    "receipts": "evidence/gate_executive/exec_training_v1_execute.receipts.jsonl",
+    "receipts_written": 288,
+    "run_valid_checks": "288/288 receipts written (144 tasks x 2 actions), receipts_written field matches line count, source_commit=f2a70affdcbe70de43e0f96fdbccaaf07b3c3d64 matches local HEAD exactly, certified_memory_v1_identity_hash=97b3b49cb95fa33b verified live before every task (unchanged throughout), zero collection errors across both families.",
+    "split_consumed": "data/hrm/exec_training_v1/SPLIT_LINEAGE.json (split_role=training_consumed, mechanically enforced) -- may not be reused for mechanism/threshold selection, training, or confirming a controller.",
+    "status": "RUN_COMPLETE__NOT_PROMOTED",
+    "why_this_happened": "Severe class imbalance in the delta_u>0 label (escalation-helps) within the 100-row TRAIN partition, combined with a very small n, let the 5-feature logistic model fit a decision boundary that trades away recall on the minority (memory-needed) class -- exactly the dangerous asymmetric failure mode the protocol required reporting explicitly (ASYMMETRIC_ERROR_METRICS_REQUIRED), and exactly why accuracy/routing-correctness was deliberately NOT the primary metric. The underlying signal is real (separation stop-gate cleared, 4/5 features) but this particular small-sample fit does not yet turn it into a policy that beats the trivial always-escalate baseline."
+  },
   "architecture_principle": "Retrieval iteration must ACCUMULATE information state, never replace earlier context with the latest bridge. Pinned by tests/unit/test_information_state.py.",
   "b3_CLOSED": {
     "capacity_evidence": "cal_700 connected candidates 10.0 -> 53.2; cal_3000 at k=300 has 103.8 connected candidates and 23.6 plausible bridges per task against a fixed 6-record packet. A one-hop connectivity heuristic was never designed to discriminate among two dozen plausible bridge paths.",
@@ -1825,14 +1885,15 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "EOB-v2 Executive Opportunity Study PASSED (2026-08-10): rebalanced regime mix (D0=60/D1=140/D2=100/D3=100, vs EOB-v1's equal 25/25/25/25 that missed the diversity floor by 0.25pp) -- ExecutiveOpportunity(quality-only)=+0.1775 (>=0.05), LCB2.5=+0.0333 (>0), MEMORY strict-win share 17.75% and ANSWER_NOW 27.75% (both clear the 15% floor comfortably). Decision=EXECUTIVE_OPPORTUNITY_CONFIRMED. Per-regime effects replicate cleanly across EOB-v1 and EOB-v2 (D1 memory-necessary ~43-48% both runs; D3 memory-severely-harmed 64% both runs exactly), evidence this is real structure, not noise. First real GPU run of EOB-v2 caught and fixed a genuine RUN_VALID failure (task_id collision from pooling two b3_calibration_v1 scales without namespacing) before any interpretation. EOB-v2 is now consumed (data/hrm/eob_v2/SPLIT_LINEAGE.json). Next: build a SEPARATE executive-training split and design Executive v0 (ANSWER_NOW/USE_CERTIFIED_MEMORY, PRE_DECISION features only). See eob_v2_opportunity_study / qualified_claims.gate_eob_v2_opportunity.",
+    "NEXT_GATE": "ANSWER_PROBE_GATE_V1 NOT_PROMOTED (2026-08-10): the cheap ANSWER_NOW probe's confidence signal DOES separate MEMORY-needed from ANSWER-sufficient tasks (4/5 features clear the frozen Cohen's-d/CI stop-gate; MEMORY_strict_win=37, ANSWER_strict_win=5, TIE=102 out of 144), so training proceeded per protocol -- but the trained logistic escalation gate (100 train / 44 eval, stratified seed=9801) underperformed BOTH trivial fixed policies on held-out eval (Delta_U_gate=-0.1364, LCB2.5=-0.3182, both required positive) and showed a dangerous asymmetric failure (P(ACCEPT|MEMORY would improve)=0.7778 -- confidently withholds escalation on most cases that actually needed it). Per configs/gate_answer_probe_v1_design.json, this is a formal negative result: no executive-confirmation split was built, exec_training_v1 is now consumed (data/hrm/exec_training_v1/SPLIT_LINEAGE.json). CERTIFIED_MEMORY_V1 is untouched. See answer_probe_gate_v1 / qualified_claims.gate_answer_probe_v1.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
       "confirmation_1",
-      "g2_confirmation_2"
+      "g2_confirmation_2",
+      "exec_training_v1"
     ],
-    "split_lineage": "development -> mechanism development; qualification_1 -> negative, consumed; confirmation_1 -> negative, consumed; b3_calibration_v1 -> calibration/development (informed G1/G2/S3/S4/HRM-qualification); g2_confirmation_2 -> CONFIRMED PASS (2026-08-10), now consumed, diagnosis-only from here forward."
+    "split_lineage": "development -> mechanism development; qualification_1 -> negative, consumed; confirmation_1 -> negative, consumed; b3_calibration_v1 -> calibration/development (informed G1/G2/S3/S4/HRM-qualification); g2_confirmation_2 -> CONFIRMED PASS (2026-08-10), now consumed, diagnosis-only from here forward.; eob_v2 -> EXECUTIVE_OPPORTUNITY_CONFIRMED (2026-08-10), consumed; exec_training_v1 -> ANSWER_PROBE_GATE_V1 NOT_PROMOTED (2026-08-10), consumed, diagnosis-only from here forward."
   },
   "historical_development_signal": {
     "C4_4_reported_q": 0.3729,
@@ -2280,6 +2341,18 @@
         "persistent cognition"
       ],
       "report": "evidence/gate_a/qualified_run_002/gate_a_report_v2r1.json"
+    },
+    "gate_answer_probe_v1": {
+      "claim": "A cheap confidence probe computed from ANSWER_NOW's own generation (mean/min/sequence token confidence, mean entropy, answer length) carries real action-value information -- it measurably separates tasks where escalating to CERTIFIED_MEMORY_V1 helps from tasks where it doesn't -- but a small logistic-regression policy fit on a 144-task/100-train-row split does not yet turn that signal into a controller that beats trivial fixed policies (always-accept or always-escalate) on held-out data.",
+      "delta_u_gate": -0.1364,
+      "delta_u_gate_lcb_2p5": -0.3182,
+      "not_a_claim_about": [
+        "CERTIFIED_MEMORY_V1 itself, which is untouched",
+        "whether confidence-gated escalation can EVER work -- only that this specific small fit on this specific split does not",
+        "the general viability of logistic regression as a model class -- sample size/class-imbalance is the implicated cause, not model capacity"
+      ],
+      "promotion_criteria": "Delta_U_gate > 0 with positive grouped-bootstrap LCB -- NOT met",
+      "report": "evidence/gate_executive/exec_training_v1_execute.receipts.gate_result.json"
     },
     "gate_b": {
       "best_arm": "bm25",

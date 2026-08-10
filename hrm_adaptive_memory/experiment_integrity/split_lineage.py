@@ -22,6 +22,13 @@ class SplitRole(str, Enum):
     CALIBRATION = "calibration"
     QUALIFICATION_CONSUMED = "qualification_consumed"
     CONFIRMATION_CONSUMED = "confirmation_consumed"
+    #: A split built specifically to train/threshold-fit a controller (e.g.
+    #: exec_training_v1 for ANSWER_PROBE_GATE_V1's logistic escalation
+    #: policy), now used for that purpose. Distinct from
+    #: QUALIFICATION_CONSUMED/CONFIRMATION_CONSUMED, which describe gate
+    #: RUNS against a frozen mechanism -- this describes a split consumed to
+    #: FIT a policy's parameters/threshold, not to evaluate a frozen one.
+    TRAINING_CONSUMED = "training_consumed"
     FUTURE_CONFIRMATION = "future_confirmation"
 
 
@@ -52,6 +59,7 @@ _ROLE_DEFAULT_PERMITTED_USES: dict[SplitRole, frozenset[PermittedUse]] = {
          PermittedUse.DIAGNOSIS_ONLY, PermittedUse.HYPOTHESIS_GENERATION_ONLY}),
     SplitRole.QUALIFICATION_CONSUMED: CONSUMED_SPLIT_ALLOWED_USES,
     SplitRole.CONFIRMATION_CONSUMED: CONSUMED_SPLIT_ALLOWED_USES,
+    SplitRole.TRAINING_CONSUMED: CONSUMED_SPLIT_ALLOWED_USES,
     SplitRole.FUTURE_CONFIRMATION: frozenset({PermittedUse.CONFIRMATION}),
 }
 
@@ -96,7 +104,8 @@ def parse_split_manifest(raw: dict) -> SplitManifest:
     if not isinstance(consumed, bool):
         raise SplitLineageError(f"consumed_status must be a bool, got {consumed!r}")
     role_implies_consumed = role in (SplitRole.QUALIFICATION_CONSUMED,
-                                     SplitRole.CONFIRMATION_CONSUMED)
+                                     SplitRole.CONFIRMATION_CONSUMED,
+                                     SplitRole.TRAINING_CONSUMED)
     if role_implies_consumed and not consumed:
         raise SplitLineageError(
             f"split_role={role.value} implies consumed_status=True, got False -- "
