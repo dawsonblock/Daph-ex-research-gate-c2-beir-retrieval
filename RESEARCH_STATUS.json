@@ -781,6 +781,15 @@
       "reading": "Zero tasks anywhere in the 750-task suite favor ANSWER_NOW. This is not a marginal or noisy negative -- there is no task-level evidence of heterogeneity to point to.",
       "tie": "488/750"
     },
+    "formal_gate_result": {
+      "failure_class": "BENCHMARK_HAS_NO_ACTION_HETEROGENEITY",
+      "mechanism_status": "NOT_PROMOTED",
+      "note": "No executive mechanism was tested -- mechanism_status=NOT_PROMOTED describes 'nothing was promoted', not 'an executive failed'. failure_class names the DATASET as the limitation, distinct from every other FailureClass value, all of which describe a deficiency in the mechanism under test.",
+      "run_valid": true,
+      "schema": "hrm_adaptive_memory.experiment_integrity.result_schema.GateResult",
+      "scientific_verdict": "NEGATIVE",
+      "split_status": "CONSUMED"
+    },
     "next": "Per research-lead directive: do not build Executive v1. If a future opportunity study is warranted, it requires a new benchmark mix (not b3_calibration_v1 alone) so ANSWER_NOW has a genuine chance to win on some tasks, plus a separate executive-training split and later executive-confirmation split, distinct from both b3_calibration_v1 and g2_confirmation_2.",
     "oracle_action_shares": {
       "A0_ANSWER_NOW": 0.6507,
@@ -799,6 +808,12 @@
     "receipts_written": 1500,
     "run_valid_checks": "17/17 structural/provenance checks passed, incl. identical task populations across actions, identical candidate_pool_hash/graph_hash/path_set_hash per task between A0 and A1 (no retrieval-difference confound), zero non-empty A0 packets (no evaluator/context leak into the cheap action), single shared model_revision/pipeline_version constant across both actions, answer string referenced only inside the post-generation scoring block",
     "status": "RUN_COMPLETE__NO_EXECUTIVE_OPPORTUNITY",
+    "strict_win_tie_distribution": {
+      "answer_now_strict_wins": "0/750 = 0.0%",
+      "correction": "The previously reported oracle_action_shares (A0=0.6507, A1=0.3493) is TECHNICALLY correct but misleading as a 'diversity' signal: it is an artifact of the frozen A0-wins-ties tie-break, not evidence of genuine A0 superiority anywhere. ANSWER_NOW's true share of STRICT wins is 0.0%, not 65%. Future opportunity studies must report P(delta_U>0) / P(delta_U<0) / P(delta_U=0) as the primary diversity metric instead of inferring diversity from whichever action an oracle happens to pick on ties.",
+      "memory_strict_wins": "262/750 = 34.9%",
+      "ties": "488/750 = 65.1%"
+    },
     "tasks_total": 750,
     "what_is_NOT_claimed": "That ANSWER_NOW vs MEMORY heterogeneity does not exist in general -- only that it was not observed (and could not have been observed, given the construct-validity finding above) on this specific benchmark. A future opportunity study on a benchmark with a genuine mix of evidence-required and parametric-knowledge-answerable tasks is a prerequisite before concluding heterogeneity does not exist."
   },

@@ -41,6 +41,16 @@ class FailureClass(str, Enum):
     SELECTOR_LIMITED = "SELECTOR_LIMITED"
     RETRIEVAL_LIMITED = "RETRIEVAL_LIMITED"
     SAFETY_BOUND_VIOLATED = "SAFETY_BOUND_VIOLATED"
+    #: The mechanism under test is not at fault -- the DATASET cannot express
+    #: the question being asked of it. First needed for the Executive
+    #: Opportunity Study (evidence/gate_executive/opportunity_execute.json):
+    #: ANSWER_NOW scored exactly 0/750 because b3_calibration_v1's facts are
+    #: procedurally synthesized per corpus build and cannot exist in any
+    #: pretrained model's weights, so the benchmark structurally cannot
+    #: produce ANSWER_NOW-vs-MEMORY heterogeneity regardless of how good or
+    #: bad the action-selection mechanism is. Distinct from every other
+    #: FailureClass here, which all describe a deficiency IN the mechanism.
+    BENCHMARK_HAS_NO_ACTION_HETEROGENEITY = "BENCHMARK_HAS_NO_ACTION_HETEROGENEITY"
     NOT_APPLICABLE = "NOT_APPLICABLE"
 
 

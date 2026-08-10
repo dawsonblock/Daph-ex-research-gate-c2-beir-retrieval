@@ -406,6 +406,19 @@ class TestGateResult:
                       mechanism_status=MechanismStatus.PROMOTED,
                       failure_class=FailureClass.NONE, split_status=SplitStatus.FRESH)
 
+    def test_benchmark_has_no_action_heterogeneity_like_executive_opportunity_v1(self):
+        """The Executive Opportunity Study's actual result: a valid run, a
+        negative verdict, and a failure class that names the DATASET as the
+        limitation rather than the mechanism -- no executive was tested, so
+        it cannot be an executive failure."""
+        r = GateResult(run_valid=True, scientific_verdict=ScientificVerdict.NEGATIVE,
+                       mechanism_status=MechanismStatus.NOT_PROMOTED,
+                       failure_class=FailureClass.BENCHMARK_HAS_NO_ACTION_HETEROGENEITY,
+                       split_status=SplitStatus.CONSUMED)
+        d = r.as_dict()
+        assert d["failure_class"] == "BENCHMARK_HAS_NO_ACTION_HETEROGENEITY"
+        assert d["scientific_verdict"] == "NEGATIVE"
+
     def test_positive_not_promoted_requires_a_reason(self):
         with pytest.raises(ValueError):
             GateResult(run_valid=True, scientific_verdict=ScientificVerdict.POSITIVE,
