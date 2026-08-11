@@ -2054,7 +2054,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "CONFIDENCE_ONLY_GATE_NOT_ADVANCED_TO_CONFIRMATION (2026-08-10). Branch closed on a measured frontier rather than a failed test: no prospective confirmation was ever run, and no GPU was spent on PHASE_4/5. Direct-generation confidence carries real information about escalation value (4/5 features clear the frozen separation threshold, |d| up to 0.56), but at ZERO quality loss a confidence-only gate reduces token cost by only ~1.4% against an oracle's ~40% on the same tasks. The best operating point consumed 98.5% of the 0.02 quality budget to buy 10.9%, leaving no generalization headroom, so even a passing confirmation would have licensed only a narrow, fragile claim. Formal result: run_valid=true, scientific_verdict=PARTIAL, mechanism_status=NOT_PROMOTED, failure_class=OBSERVABILITY_LIMITED (new). The bottleneck has moved from training-data quantity to what the controller can OBSERVE -- confidence cannot see whether relevant external evidence exists. NEXT: ANSWER + RETRIEVAL_PROBE -> FULL_CERTIFIED_MEMORY_V1, per configs/gate_retrieval_probe_v1_design.json. See answer_probe_cost_gate_v1.FROZEN_CONCLUSION / qualified_claims.gate_answer_probe_cost_v1.",
+    "NEXT_GATE": "RETRIEVAL_PROBE_GATE_V1 PHASE_0/0.5/1/2 complete; PHASE_2 PASSED (2026-08-11). PHASE_0's five hard gates are all machine-checked with no GPU, including an equivalence regression proving probe->forced-ESCALATE reproduces the pre-refactor packet and prompt exactly -- sensing was added, the certified reasoning mechanism was not altered. PHASE_1 was run GPU-FREE by recognizing the probe performs no model generation: all 1015 probe-feature rows were extracted on CPU and joined to the existing A100-collected quality labels with 0 unmatched rows. PHASE_2's frozen stop condition (Delta_AUC >= 0.02 AND LCB > 0, WITHIN MEMORY_required, out-of-fold) PASSED: Delta_AUC=+0.0566, LCB=+0.0120. The pooled figure (+0.0981) is ~1.7x larger and was correctly discarded as the empty-pool artifact predicted in advance. Magnitude is modest though -- confidence alone is near chance within MEMORY_required (AUC 0.5436), probe+confidence reaches 0.6003. BLOCKED: Lightning returned 'Insufficient balance' on the A100 switch, so PHASE_5 promotion cannot proceed; PHASE_3 fitting remains CPU-feasible. See retrieval_probe_gate_v1.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
@@ -3512,6 +3512,76 @@
     }
   },
   "result_schema_note": "run_valid / scientific_verdict / mechanism_status / failure_class / split_status are the shared GateResult fields (hrm_adaptive_memory/experiment_integrity/result_schema.py). They replace ad hoc VALID_RUN/PASS collapses -- Confirmation #1 (RUN_VALID=true, MECHANISM_PASS=false) and G2-v1 (RUN_VALID=true, OUTCOME_C) are the two historical cases that motivated keeping these axes independent rather than a single boolean.",
+  "retrieval_probe_gate_v1": {
+    "artifact": "RETRIEVAL_PROBE_GATE_V1",
+    "blocked_on": "GPU. The Lightning account returned 'Insufficient balance to start the cloud space' when switching to A100 (2026-08-11). The studio was stopped immediately. PHASE_3 fitting is CPU-feasible; PHASE_5 promotion requires a fresh evaluation split and a GPU collection, so it cannot proceed until balance is restored.",
+    "design": "configs/gate_retrieval_probe_v1_design.json (frozen dce265f)",
+    "phase_0": {
+      "commit": "5798551",
+      "gates_all_machine_checked_no_gpu": [
+        "probe reuse exact -- handoff_hash over ids/scores/ORDER/policy/budget/rrf_k/query; escalation records the hash it consumed; hash proven sensitive to each component",
+        "no duplicate retrieval -- backend call counter shows escalation issues ZERO extra calls, and the split path issues exactly as many as legacy",
+        "probe runs no escalation work -- monkeypatching g2_prefilter/compose/build_runtime_graph/run_packet_stage to raise leaves the probe passing",
+        "availability taxonomy -- new POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY admissible; POST_RETRIEVAL/POST_GRAPH/POST_GENERATION still inadmissible; declared vs emitted probe-feature sets must match in BOTH directions",
+        "EQUIVALENCE REGRESSION -- probe->forced-ESCALATE reproduces the pre-refactor (a697cf5) packet_ids, prompt, prompt/membership/order/composed/graph/path_set hashes and identity_status exactly, verified non-vacuous on packets of 1-6 records from 105-candidate pools across EXACT and RESOLVED binding"
+      ]
+    },
+    "phase_0_5": {
+      "commit": "e536f80",
+      "derived_not_timed": [
+        "C_accept = T_A0+T_probe",
+        "C_escalate = C_accept+C_avoided",
+        "C_avoided = T_G2+T_composition+T_A1_generation",
+        "C_noprobe_answer_only",
+        "C_noprobe_full_memory"
+      ],
+      "instrumentation_is_not_a_treatment": "Regression gate asserts probe and escalation outputs are identical with and without a timer attached; only timing/provenance fields may differ.",
+      "measured_atomic_stages": [
+        "T_A0_generation",
+        "T_probe_retrieval",
+        "T_probe_identity_binding",
+        "T_G2",
+        "T_composition",
+        "T_A1_generation"
+      ],
+      "rationale": "The executive no longer decides whether to pay for the probe -- by decision time it is spent. Only the marginal full-memory work is under its control. True no-probe baselines are retained so policy efficiency and deployment efficiency stay separable."
+    },
+    "phase_1_gpu_free_variant": {
+      "result": "All 1015 probe-feature rows extracted locally, ZERO GPU spend (evidence/gate_executive/retrieval_probe_v1_features.jsonl), joined to the existing receipts with 0 unmatched rows.",
+      "what": "The cheap probe performs NO model generation -- it is C2 retrieval plus regex/parser identity binding -- so its features are computable on CPU. Quality labels (Q_direct, Q_memory) and confidence features already exist in the frozen exec_training_v2 receipts collected on A100 at a697cf5.",
+      "what_is_deferred": "The latency decomposition. T_A0_generation/T_A1_generation are meaningless without the real GPU generations, so latency was DEFERRED rather than faked. It is a PHASE_3+ cost-of-promotion input, not an input to the PHASE_2 stop condition."
+    },
+    "phase_2_incremental_information": {
+      "frozen_stop_condition": "Declared in the script before its first run: within MEMORY_required, Delta_AUC >= 0.02 AND grouped-bootstrap 2.5% LCB > 0. AUC measured OUT-OF-FOLD (stratified 5-fold, seed 9903) so the richer feature set cannot win in-sample by construction.",
+      "honest_magnitude_caveat": "The PASS is real but the absolute discrimination is MODEST. Within MEMORY_required confidence alone is barely above chance (AUC 0.5436); adding the probe reaches 0.6003. Notably the probe features alone (0.5871) out-discriminate confidence alone there. Whether AUC ~0.60 converts into a materially better POLICY is the PHASE_3 question, and the closed confidence-only branch is a caution: modest discrimination there captured only 1.4% of a 40% opportunity.",
+      "results_by_stratum": {
+        "MEMORY_required_ONLY__PRIMARY_n750": {
+          "auc_both": 0.6003,
+          "auc_confidence": 0.5436,
+          "auc_probe_only": 0.5871,
+          "delta_auc": 0.0566,
+          "lcb": 0.012
+        },
+        "MEMORY_required_bound_only_n744": {
+          "auc_both": 0.6118,
+          "auc_confidence": 0.5499,
+          "auc_probe_only": 0.5896,
+          "delta_auc": 0.0618,
+          "lcb": 0.0148
+        },
+        "POOLED_all_tasks_n1015": {
+          "auc_both": 0.7302,
+          "auc_confidence": 0.6321,
+          "auc_probe_only": 0.7047,
+          "delta_auc": 0.0981,
+          "lcb": 0.0288
+        }
+      },
+      "verdict": "PASS -- PROCEED_TO_FITTING",
+      "why_the_pooled_number_is_not_the_result": "Pooled Delta_AUC (+0.0981) is ~1.7x the within-MEMORY_required value (+0.0566), and probe-only AUC pooled is 0.7047 vs 0.5871 within-family. That inflation is exactly the empty-pool artifact predicted in advance: ANSWER_NOW_viable tasks carry zero evidence so they can never retrieve or bind. Only the within-family number is evidence for a useful retrieval executive, and it is the one the frozen condition was applied to."
+    },
+    "status": "PHASE_0_0.5_1_2_COMPLETE__PHASE_2_PASSED__PHASE_3+_BLOCKED_ON_GPU_BALANCE"
+  },
   "s3_selector_competition": {
     "FINDING_1_dominant_failure_is_WRONG_PATH_PREFERRED": {
       "F3_WRONG_PATH_PREFERRED": 0.271,
