@@ -139,6 +139,17 @@ class ClaimStore:
             self._events = self._load_events(self.log_path)
         self._records: dict[str, ClaimRecord] = {}
         self._index = ConsolidationIndex()
+        #: Raw (entity, relation) -> ACTIVE record ids. Ingest-time conflict
+        #: detection is LOCAL and cheap by design, so it must not scan the
+        #: whole corpus: without this index every ingest was O(n), making
+        #: bulk ingestion O(n^2) (measured: per-event cost doubled with each
+        #: doubling of n, 5.8ms/event at only 4k events).
+        self._active_by_claim_key: dict[tuple[str, str], set[str]] = {}
+        #: Running hash of the canonical log. Recomputing it per append meant
+        #: re-reading and re-hashing the entire file on every event -- the
+        #: second of three O(n)-per-event costs found by the scaling probe.
+        self._log_hasher = hashlib.sha256(
+            self.log_path.read_bytes() if self.log_path.is_file() else b"")
         self._replay()
         # Per the frozen C11 recovery rule: a snapshot is only ever an
         # accelerator. If it is missing, torn, or describes a different log,
@@ -177,6 +188,7 @@ class ClaimStore:
                    "contradicting_record_ids": tuple(r.get("contradicting_record_ids", ()))})
             self._records[rec.record_id] = rec
             self._index.apply_ingest(rec, len(self._events))
+            self._index_claim_key(rec)
         elif kind == "STATE_CHANGE":
             rid = ev["record_id"]
             cur = self._records[rid]
@@ -190,10 +202,24 @@ class ClaimStore:
                 superseded_by=ev.get("superseded_by", cur.superseded_by))
             self._records[rid] = rec
             self._index.apply_state_change(rec, len(self._events))
+            self._index_claim_key(rec)
+
+    def _index_claim_key(self, rec: ClaimRecord) -> None:
+        """Keep the raw-claim-key index in step with a record's activity.
+        Mirrors NON_RETRIEVABLE_STATES exactly, so it can never disagree with
+        retrievable() about which records are active."""
+        bucket = self._active_by_claim_key.setdefault(rec.claim_key, set())
+        if rec.verification_state in NON_RETRIEVABLE_STATES:
+            bucket.discard(rec.record_id)
+            if not bucket:
+                del self._active_by_claim_key[rec.claim_key]
+        else:
+            bucket.add(rec.record_id)
 
     def _replay(self) -> None:
         self._records = {}
         self._index = ConsolidationIndex()
+        self._active_by_claim_key = {}
         for ev in self._events:
             self._apply_event(ev)
 
@@ -243,14 +269,15 @@ class ClaimStore:
         against the log it claims to describe, and is discarded on mismatch.
         """
         self._events.append(event)
+        line = json.dumps(event, sort_keys=True) + "\n"
         with self.log_path.open("a") as fh:          # 1
-            fh.write(json.dumps(event, sort_keys=True) + "\n")
+            fh.write(line)
             fh.flush()
             os.fsync(fh.fileno())                    # 2
-        self._apply_event(event)                     # 3 -- O(1)-ish, not a full replay
-        self._write_manifest()
+        self._log_hasher.update(line.encode())
+        self._apply_event(event)                     # 3 -- O(1), not a full replay
         if self.auto_snapshot:
-            self.publish_snapshot()                  # 4
+            self.publish_snapshot()                  # 4 (also refreshes the manifest)
 
     def _atomic_write(self, path: Path, text: str) -> None:
         """Write via temp + fsync + os.replace, which is atomic on POSIX, so
@@ -264,8 +291,8 @@ class ClaimStore:
         os.replace(tmp, path)
 
     def log_sha256(self) -> str:
-        return (hashlib.sha256(self.log_path.read_bytes()).hexdigest()
-                if self.log_path.is_file() else "")
+        """O(1): maintained incrementally as events are appended."""
+        return self._log_hasher.hexdigest()
 
     def consolidated_state(self):
         """Derived state from the INCREMENTAL index."""
@@ -282,6 +309,7 @@ class ClaimStore:
             "state_hash": state.state_hash(),
             "state": state.to_json(),
         }, indent=2, sort_keys=True) + "\n")
+        self._write_manifest()
         return self.snapshot_path
 
     def snapshot_is_valid(self) -> bool:
@@ -330,7 +358,7 @@ class ClaimStore:
                                 note="identical content, source and observation time")
 
         key = (canonical_entity.strip().lower(), relation.strip().lower())
-        existing = [r for r in self.retrievable() if r.claim_key == key]
+        existing = [self._records[rid] for rid in sorted(self._active_by_claim_key.get(key, ()))]
         same_value = [r for r in existing if r.value.strip().lower() == value.strip().lower()]
         diff_value = [r for r in existing if r.value.strip().lower() != value.strip().lower()]
 
