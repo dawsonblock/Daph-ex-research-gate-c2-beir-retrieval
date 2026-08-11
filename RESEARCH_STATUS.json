@@ -52,7 +52,33 @@
     },
     "phase_4_5_status": "NOT STARTED. Deliberately halted before spending GPU on a fresh evaluation split, because the frozen promotion criterion is now demonstrably near-vacuous and PHASE_5 would almost certainly return a null driven by the utility parameterization rather than by the controller.",
     "recommended_resolution_pending_research_lead": "Operationalize the SAME frozen preference ordering ('maximize quality; among quality-tied policies prefer cheaper') as a two-part NON-INFERIORITY test rather than one compressed scalar: (1) quality non-inferior to the best fixed policy within a prospectively frozen margin, AND (2) strictly lower mean compute with a positive grouped-bootstrap LCB on the compute saving. This requires no exchange rate between quality and compute -- the thing lexicographic was chosen to avoid -- while producing an effect size a bootstrap can actually resolve (the oracle's 40% token reduction). It is a faithful restatement of the already-frozen preference ordering, not a new one, but it IS a protocol revision made after seeing PHASE_3 and must therefore be frozen and then tested once on a fresh split.",
-    "status": "PHASE_1-3_COMPLETE__PHASE_4_5_NOT_STARTED__DESIGN_FLAW_IN_FROZEN_UTILITY_IDENTIFIED"
+    "status": "PHASE_1-3_COMPLETE__PHASE_4_5_NOT_STARTED__DESIGN_FLAW_IN_FROZEN_UTILITY_IDENTIFIED",
+    "v1_1_revision": {
+      "attainability_frontier_dev_holdout": {
+        "reading": "The quality/compute frontier is STEEP and the gate captures only a small share of the oracle's headroom. At zero quality loss the gate saves just 1.4% of tokens (tau<=0.40); reaching 10% costs ~1.5 quality points; 32% costs ~8.9. The ORACLE by contrast reaches 40% at ZERO quality loss. So the probe has real signal (PHASE_2, |d| up to 0.56) but not enough precision to identify the memory-won't-help tasks cleanly -- that gap between 1.4% and 40% at zero loss is the honest measure of how far confidence-only gating falls short of the information an oracle has."
+      },
+      "change": "Replaced the compressed lexicographic scalar with a two-part non-inferiority test operationalizing the SAME preference ordering: ESCALATE iff P_hat(memory improves quality) >= TAU, promotion requiring quality non-inferiority within 0.02 AND >=10% relative token reduction AND positive grouped-bootstrap LCB on the saving AND the carried-over safety bound AND the carried-over class floors.",
+      "design": "configs/gate_answer_probe_cost_v1_1_design.json (frozen f846938)",
+      "design_time_estimate_after_fix": {
+        "HONEST_MARGINALITY": "C1 passes at 0.0197 against a 0.02 margin -- 98.5% of the quality budget consumed -- and C2 at 10.87% against a 10% floor. The estimate clears every bar but sits essentially ON the C1 boundary, so a fresh evaluation split is close to a coin flip on C1 rather than a comfortable pass. Stated plainly so the GPU-spend decision is made on a realistic outlook.",
+        "P_accept_given_memory_better": 0.0741,
+        "all_five_criteria": "MET",
+        "caveat": "DESIGN USE ONLY, dev holdout, consumed split -- NOT a promotion claim.",
+        "quality_best_fixed": 0.3941,
+        "quality_candidate": 0.3744,
+        "quality_loss": 0.0197,
+        "relative_token_reduction": 0.1087,
+        "token_saving_lcb_2p5": 6.93,
+        "tokens_best_fixed": 154.9,
+        "tokens_candidate": 138.1
+      },
+      "parameter_choice_discipline": "All new parameters chosen after PHASE_3 was seen, so each was set STRICTER than precedent: the 0.02 margin is tighter than this project's existing 0.03 and 0.05 margins; the 10% reduction floor is harder than 'any positive saving' (P3's realized 1.8% fails it) and far below the oracle's demonstrated 40%.",
+      "second_revision_tau_selection_buffer": {
+        "defect": "The first TAU rule selected the argmax exactly AT the calibration constraint boundary -- a zero-headroom point estimate that violates the constraint out-of-sample roughly half the time. Observed: calibration loss <= 0.02 by construction, dev-holdout loss 0.0345, failing C1.",
+        "fix": "TAU now targets a calibration quality loss of 0.01 (half the margin), reserving the remainder as generalization headroom. Makes the policy MORE conservative and C2 HARDER to pass; loosens no promotion criterion.",
+        "legitimacy": "exec_training_v2 is diagnosis_only/hypothesis_generation_only -- improving a controller and its operating-point estimator on development data is what development data is for. The promotion criteria did not move and the decisive test is still one-shot on an untouched split. Recorded explicitly as the SECOND post-hoc revision in this study."
+      }
+    }
   },
   "answer_probe_gate_v1": {
     "PROMOTION_CRITERIA_met": false,

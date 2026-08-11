@@ -11,7 +11,15 @@
   "PHASE_0_PRIME_OPERATIONALIZATION": {
     "decision_rule": "ESCALATE if P_hat(memory improves quality) >= TAU, else ACCEPT. A single learned score with one operating point -- the same model class as V1.0's P3, not a more complex one.",
     "why_this_is_the_same_preference_ordering": "'Prefer the cheaper action among quality-tied policies' is exactly a constrained optimization: maximize compute saved subject to quality being preserved. Expressing it as a constraint rather than folding it into one scalar is what removes the need for an exchange rate, and it is what makes the effect size (compute saved) large enough for a bootstrap to resolve.",
-    "TAU_selection_rule": "TAU is chosen on the CALIBRATION partition ONLY, as the value that MAXIMIZES mean compute saved SUBJECT TO calibration quality loss vs always-escalate being <= QUALITY_NONINFERIORITY_MARGIN. Frozen as a rule here; its realized numeric value is a deterministic function of calibration data. Never chosen on TRAIN (overfits) or EVAL (invalidates the one-shot test)."
+    "TAU_selection_rule": "TAU is chosen on the CALIBRATION partition ONLY, as the value that MAXIMIZES mean compute saved SUBJECT TO calibration quality loss vs always-escalate being <= TAU_SELECTION_BUDGET. Never chosen on TRAIN (overfits) or EVAL (invalidates the one-shot test).",
+    "TAU_SELECTION_BUDGET": 0.01,
+    "AMENDMENT_2026-08-10T23:55Z_tau_selection_buffer": {
+      "what_changed": "TAU selection now targets a calibration quality loss of 0.01 (= QUALITY_NONINFERIORITY_MARGIN / 2) instead of the full 0.02 margin.",
+      "why": "Selecting the argmax exactly AT a constraint boundary estimated from finite calibration data is a maximum-likelihood point estimate with zero headroom, so it violates that constraint out-of-sample roughly half the time. That is a textbook property of boundary selection, derivable without reference to any observed number, and it is what the first development run exhibited (calibration loss <= 0.02 by construction, holdout loss 0.0345). Reserving half the margin as generalization headroom is the standard remedy.",
+      "direction_of_effect": "This makes the selected policy MORE conservative -- fewer ACCEPTs, less compute saved -- so it makes C2_material_compute_reduction HARDER to pass. It does not loosen any promotion criterion.",
+      "what_did_NOT_change": "All five PHASE_5' promotion criteria are untouched: margin 0.02, minimum relative reduction 0.10, positive LCB, safety bound 0.30, class floors 40/40. Only the development-side estimator that picks an operating point was corrected.",
+      "why_this_is_legitimate_iteration": "exec_training_v2 is explicitly marked diagnosis_only / hypothesis_generation_only in its SPLIT_LINEAGE.json. Improving a controller and its operating-point estimator using development data is exactly what development data is for. What must not move -- and has not -- are the promotion criteria and the requirement that the decisive test run exactly once against a split that has never been touched. This is nonetheless the SECOND post-hoc revision in this study and is recorded as such rather than folded in silently."
+    }
   },
 
   "PHASE_5_PRIME_PROMOTION_CRITERIA": {
