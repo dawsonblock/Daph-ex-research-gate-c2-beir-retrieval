@@ -655,6 +655,75 @@
     "controlled_gate_c2_calibration_v1": "CANONICAL_for_gate_c2_component_selection_does_not_replace_v4",
     "controlled_gate_c3_v1": "CANONICAL_VALID_C3_lighthouse_vocabulary_frozen_before_measurement"
   },
+  "bounded_memory_runtime_v1": {
+    "A3_method": "State hashes were captured from the PRE-change implementation first (evidence/memory_write/pre_change_state_hashes.json) and compared byte-for-byte afterwards -- f2a8ff099cd5e854 / bea65499af438085 / a1b15359e56131fd at 100k/500k/1M, all identical after the change. Comparing the new implementation against itself would have proven nothing. All five group counts were compared too, so a semantic regression cannot hide behind a coincidental hash match.",
+    "acceptance_conditions": {
+      "A10_rss_remeasured_not_estimated": true,
+      "A1_events_removed": true,
+      "A2_corpus_version_correct_without_history": true,
+      "A3_genesis_replay_state_hash_identical_to_pre_change": true,
+      "A4_incremental_equals_independent_full_consolidation": true,
+      "A5_retraction_contradiction_supersession_semantics_identical": true,
+      "A6_log_bytes_unchanged_in_meaning_and_authoritative": true,
+      "A7_ingestion_approximately_O1_per_event": true,
+      "A8_retrieval_results_identical": true,
+      "A9_C1_C12_still_pass": true
+    },
+    "artifact": "BOUNDED_MEMORY_RUNTIME_V1",
+    "change": "History lives on DISK. The resident event list was removed; _replay() now STREAMS the canonical log and RAM retains only a corpus_version counter alongside current materialized state.",
+    "checkpointed_fast_start": "DEFERRED FURTHER. Cold replay at 1M is now 11.16s (was 18.28s), so the case for complicating the recovery model is weaker than before this milestone, not stronger.",
+    "design": "configs/bounded_memory_runtime_v1_design.json",
+    "implementation_note": "_stream_events uses explicit readline() rather than iterating the file object, because the torn-tail check needs a one-line lookahead and mixing readline() with `for line in fh` interacts with the iterator's internal buffering. Semantics preserved: a torn line can only be the FINAL one (an append that never committed), so it is dropped with truncated_tail set; anything else is genuine mid-log corruption and still raises.",
+    "measured_before_assuming": {
+      "attribution_at_100k": {
+        "_events_marginal_mb": 168.8,
+        "accounted_mb": 293,
+        "artifact": "evidence/memory_write/memory_attribution_100000.json",
+        "process_rss_mb": 467,
+        "share_of_accounted": "57.7%",
+        "unaccounted_mb": 174
+      },
+      "instruction": "Do not assume removing _events halves RSS -- measure it.",
+      "non_obvious_finding": "_records showed independent=71.3 MB but marginal=5.3 MB -- the ClaimRecord objects are shared with consolidation._active and the indexes, so deleting _records ALONE would reclaim almost nothing. Any future record-residency work must address all holders together or it will measure as a no-op."
+    },
+    "measured_result": {
+      "artifact": "evidence/memory_write/bounded_memory_runtime_v1.json",
+      "method": "A10 -- each scale in its OWN subprocess, because ru_maxrss is a process PEAK and a single process would report the 1M peak for all three scales.",
+      "rows": {
+        "100k": {
+          "reduction_pct": 46.5,
+          "replay_s": 0.97,
+          "rss_mb": 261,
+          "was_mb": 488,
+          "was_replay_s": 1.34
+        },
+        "1M": {
+          "reduction_pct": 53.5,
+          "replay_s": 11.16,
+          "rss_mb": 1811,
+          "was_mb": 3895,
+          "was_replay_s": 18.28
+        },
+        "500k": {
+          "reduction_pct": 46.3,
+          "replay_s": 5.53,
+          "rss_mb": 1198,
+          "was_mb": 2229,
+          "was_replay_s": 7.94
+        }
+      }
+    },
+    "next": "BACKGROUND_VERIFICATION_V1",
+    "prediction_vs_outcome": "I projected a 'large but sub-half' RSS reduction from the 57.7%-of-accounted figure, reasoning that 174 MB of unaccounted allocator/interpreter overhead would not move. Realized: 46.5% / 46.3% / 53.5%. The projection was right at 100k and 500k and slightly UNDERSTATED at 1M, where the reduction exceeded half. Recording the miss rather than the direction alone.",
+    "replay_superlinearity_improved_as_predicted": {
+      "after": "5.53s -> 11.16s = 2.02x time for 2x events",
+      "before": "7.94s -> 18.28s = 2.30x time for 2x events",
+      "research_lead_hypothesis": "Removing historical events from RAM may reduce GC/allocation pressure enough that the 500k->1M replay superlinearity improves as a side effect.",
+      "verdict": "CONFIRMED. Replay is now essentially linear, and absolute cold replay at 1M fell 39% (18.28s -> 11.16s) despite no change to the replay algorithm itself."
+    },
+    "snapshot_capability_gap_unchanged": "Valid snapshots still provide integrity/recovery state but NO startup acceleration -- ClaimStore always replays. A capability gap, not a scalability failure.",
+    "status": "COMPLETE__ALL_ACCEPTANCE_CONDITIONS_A1_A10_MET"
+  },
   "c4_v2_1_disposition": {
     "development": "MECHANISM_SUCCESS_CERTIFIED",
     "failure_mode": {
@@ -2083,7 +2152,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "VERIFIED_MEMORY_CONSOLIDATION_V1 correctness COMPLETE -- C1-C12 all pass (2026-08-11). Derived state is provably a pure function of the append-only log: the headline invariant (incremental == full replay) is asserted after EVERY event against two genuinely independent implementations, including the retraction-dissolves-groups case that is the most likely consolidation bug. C11 crash recovery implements append -> fsync -> derive -> atomic publish, with snapshots validated against the log they claim to describe and discarded+rebuilt on mismatch; a half-implemented 'rebuild' step was found and fixed during implementation. Consolidation never resolves a contradiction, picks a winner, or infers supersession -- aliases cluster from EXPLICIT alias_of claims only. 43 write+consolidation tests; full suite 1337 passed. CPU-only. NEXT: pressure test at 100k-1M synthetic events, reported as measurements with no frozen threshold. See verified_memory_consolidation_v1.",
+    "NEXT_GATE": "BOUNDED_MEMORY_RUNTIME_V1 COMPLETE -- A1-A10 all met (2026-08-11). History moved to disk; RAM holds only current materialized state plus a counter. Measured BEFORE assuming, as instructed: the resident event list was 57.7% of accounted python-object memory at 100k, but 174 MB of RSS was unaccounted allocator/interpreter overhead. Realized RSS reduction 46.5% / 46.3% / 53.5% at 100k/500k/1M (1811 MB at 1M, was 3895 MB). Cold replay ALSO fell 39% at 1M (18.28s -> 11.16s) and the 500k->1M superlinearity improved from 2.30x to 2.02x -- confirming the research-lead hypothesis that removing historical events would relieve GC pressure as a side effect. A3 verified against hashes captured from the PRE-change implementation, with all five group counts compared so a semantic regression cannot hide behind a coincidental hash match. Checkpointed fast-start deferred FURTHER; the snapshot still provides no startup acceleration (capability gap, not failure). NEXT: BACKGROUND_VERIFICATION_V1. See bounded_memory_runtime_v1.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
@@ -2529,6 +2598,16 @@
     "verdict": "NOT_CERTIFIED"
   },
   "qualified_claims": {
+    "bounded_memory_runtime_v1": {
+      "acceptance_tests": "evidence/memory_write/bounded_memory_runtime_v1.json (A1-A10)",
+      "claim": "The verified-memory runtime holds only current materialized state in RAM; complete history remains on disk, fully auditable by streaming. At 1M events this reduced RSS 53.5% (3895 -> 1811 MB) and cold replay 39% (18.28 -> 11.16s) while producing byte-identical consolidated-state hashes to the pre-change implementation at 100k, 500k and 1M.",
+      "not_a_claim_about": [
+        "answer quality -- no quality gate was run",
+        "behaviour beyond 1M events, which was not measured",
+        "startup acceleration, which the snapshot still does not provide"
+      ],
+      "report": "configs/bounded_memory_runtime_v1_design.json"
+    },
     "gate_a0": {
       "claim": "HRM-Text-1B can use correctly supplied external evidence on the controlled synthetic Gate A benchmark.",
       "grouped_bootstrap_lcb95": 0.994,

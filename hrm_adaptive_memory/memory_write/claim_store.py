@@ -134,9 +134,12 @@ class ClaimStore:
         #: DISCARDED -- an incomplete event was never committed -- and
         #: replay proceeds from the intact prefix.
         self.truncated_tail = False
-        self._events: list[dict] = []
-        if self.log_path.is_file():
-            self._events = self._load_events(self.log_path)
+        #: BOUNDED_MEMORY_RUNTIME_V1: history lives on DISK. Only a counter is
+        #: retained, never the events themselves. Measured at 100k events, the
+        #: resident event list was 57.7% of all accounted python-object memory
+        #: (168.8 MB of 293 MB) -- by far the largest single structure, and
+        #: pure duplication of bytes already durable in the log.
+        self._corpus_version = 0
         self._records: dict[str, ClaimRecord] = {}
         self._index = ConsolidationIndex()
         #: Raw (entity, relation) -> ACTIVE record ids. Ingest-time conflict
@@ -155,24 +158,35 @@ class ClaimStore:
         # accelerator. If it is missing, torn, or describes a different log,
         # it is DISCARDED and REBUILT from the canonical log -- which is the
         # authoritative state we just replayed.
-        if self.auto_snapshot and self._events and not self.snapshot_is_valid():
+        if self.auto_snapshot and self._corpus_version and not self.snapshot_is_valid():
             self.publish_snapshot()
 
-    def _load_events(self, path: Path) -> list[dict]:
-        events: list[dict] = []
-        lines = path.read_text().splitlines()
-        for i, line in enumerate(lines):
-            if not line.strip():
-                continue
-            try:
-                events.append(json.loads(line))
-            except json.JSONDecodeError:
-                if i == len(lines) - 1:
-                    # torn final append: never committed, safe to drop
-                    self.truncated_tail = True
-                    break
-                raise
-        return events
+    def _stream_events(self):
+        """Yield events from the canonical log one at a time.
+
+        Explicit readline() rather than iterating the file object, so the
+        one-line lookahead used to classify a decode failure cannot interact
+        with the iterator's internal buffering. A torn line can ONLY be the
+        final one -- an append that never committed -- so if nothing follows
+        it, drop it and record truncated_tail; anything else is genuine
+        mid-log corruption and must not be silently tolerated.
+        """
+        if not self.log_path.is_file():
+            return
+        with self.log_path.open() as fh:
+            while True:
+                line = fh.readline()
+                if line == "":
+                    return
+                if not line.strip():
+                    continue
+                try:
+                    yield json.loads(line)
+                except json.JSONDecodeError:
+                    if fh.readline() == "":
+                        self.truncated_tail = True
+                        return
+                    raise
 
     # --- derived state ---------------------------------------------------
     def _apply_event(self, ev: dict) -> None:
@@ -187,7 +201,7 @@ class ClaimStore:
                    "corroborating_record_ids": tuple(r.get("corroborating_record_ids", ())),
                    "contradicting_record_ids": tuple(r.get("contradicting_record_ids", ()))})
             self._records[rec.record_id] = rec
-            self._index.apply_ingest(rec, len(self._events))
+            self._index.apply_ingest(rec, self._corpus_version)
             self._index_claim_key(rec)
         elif kind == "STATE_CHANGE":
             rid = ev["record_id"]
@@ -201,7 +215,7 @@ class ClaimStore:
                                                       cur.contradicting_record_ids)),
                 superseded_by=ev.get("superseded_by", cur.superseded_by))
             self._records[rid] = rec
-            self._index.apply_state_change(rec, len(self._events))
+            self._index.apply_state_change(rec, self._corpus_version)
             self._index_claim_key(rec)
 
     def _index_claim_key(self, rec: ClaimRecord) -> None:
@@ -217,10 +231,14 @@ class ClaimStore:
             bucket.add(rec.record_id)
 
     def _replay(self) -> None:
+        """Rebuild all in-RAM state by STREAMING the canonical log. Peak
+        memory is now O(current state), not O(history)."""
         self._records = {}
         self._index = ConsolidationIndex()
         self._active_by_claim_key = {}
-        for ev in self._events:
+        self._corpus_version = 0
+        for ev in self._stream_events():
+            self._corpus_version += 1
             self._apply_event(ev)
 
     @property
@@ -228,7 +246,7 @@ class ClaimStore:
         """Monotonic; every appended event increments it. The reader's
         backend cache must be keyed on this (or on a quantity that provably
         changes with it, as record_id does)."""
-        return len(self._events)
+        return self._corpus_version
 
     def all_records(self) -> list[ClaimRecord]:
         """Every record ever written, including retracted and superseded --
@@ -268,13 +286,13 @@ class ClaimStore:
         for recovery: the snapshot is only ever an accelerator, is validated
         against the log it claims to describe, and is discarded on mismatch.
         """
-        self._events.append(event)
         line = json.dumps(event, sort_keys=True) + "\n"
         with self.log_path.open("a") as fh:          # 1
             fh.write(line)
             fh.flush()
             os.fsync(fh.fileno())                    # 2
         self._log_hasher.update(line.encode())
+        self._corpus_version += 1
         self._apply_event(event)                     # 3 -- O(1), not a full replay
         if self.auto_snapshot:
             self.publish_snapshot()                  # 4 (also refreshes the manifest)

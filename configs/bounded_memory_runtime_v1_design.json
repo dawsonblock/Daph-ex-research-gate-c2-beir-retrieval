@@ -1,0 +1,55 @@
+{
+  "ARTIFACT": "BOUNDED_MEMORY_RUNTIME_V1",
+  "ONE_LINE": "History lives on disk; RAM holds only current materialized state.",
+
+  "TARGET_SHAPE": {
+    "disk": ["the complete immutable event log -- authoritative, fully auditable by streaming"],
+    "ram": ["current materialized records", "claim-key index", "alias/conflict/supersession indexes",
+            "retrieval state", "corpus_version counter", "a small bounded recent-event buffer if needed"],
+    "removed_from_ram": "every historical event, indefinitely retained as Python objects"
+  },
+
+  "MEASUREMENT_BEFORE_ASSUMPTION": {
+    "instruction_followed": "Do not assume removing _events halves RSS -- measure it first.",
+    "baseline_at_100k_events": {
+      "process_rss_mb": 467,
+      "union_of_accounted_structures_mb": 293,
+      "marginal_mb": {"_events": 168.8, "_active_by_claim_key": 27.6, "consolidation._by_content": 16.6,
+                      "consolidation._entities": 5.4, "_records": 5.3, "consolidation._active": 1.9,
+                      "consolidation._alias_edges": 1.0},
+      "events_share_of_accounted": "57.7%"
+    },
+    "what_the_measurement_actually_says": "Removing _events reclaims ~58% of ACCOUNTED python-object memory, not a guaranteed halving of RSS: 174 MB of the 467 MB RSS is unaccounted (CPython allocator overhead and interpreter baseline) and will not move. The honest projection is a large but sub-half reduction in RSS, to be REMEASURED rather than predicted.",
+    "the_non_obvious_finding": "_records shows independent=71.3 MB but marginal=5.3 MB. The ClaimRecord objects are shared with consolidation._active and the indexes, so deleting _records alone would reclaim almost nothing. Any future attempt to shrink record residency must address ALL holders together, or it will measure as a no-op.",
+    "artifact": "evidence/memory_write/memory_attribution_100000.json"
+  },
+
+  "ACCEPTANCE_CONDITIONS": {
+    "frozen_before_changing_anything": true,
+    "A1": "_events is removed or strictly bounded.",
+    "A2": "corpus_version remains correct without counting an in-memory history.",
+    "A3": "Full genesis replay produces exactly the same state hash as before the change.",
+    "A4": "Incremental state still equals independent full consolidation after every tested transition (C9 unchanged).",
+    "A5": "Retraction, contradiction and supersession semantics remain identical.",
+    "A6": "Append-only log bytes remain unchanged in meaning and remain authoritative.",
+    "A7": "Ingestion stays approximately O(1) per event.",
+    "A8": "Retrieval results are identical before/after the optimization.",
+    "A9": "Restart/recovery tests C1-C12 continue passing.",
+    "A10": "RSS is REMEASURED at 100k, 500k and 1M rather than estimated."
+  },
+
+  "A3_METHOD": "State hashes for the pre-change implementation are captured from the existing 1M log at 100k/500k/1M BEFORE the change, and compared byte-for-byte afterwards. Comparing the new implementation only against itself would prove nothing.",
+
+  "SNAPSHOT_CAPABILITY_GAP_DOCUMENTED": "Valid snapshots currently provide integrity and recovery state but NO startup acceleration -- measured: cold, snapshot-validated and snapshot-invalidated startup are equal within noise (9.6% max gap at 100k/500k/1M), because ClaimStore always replays the full log. This is a CAPABILITY GAP, not presently a scalability failure: 1M restarts in ~18s. Recorded so it is not mistaken for either a bug or a solved problem.",
+
+  "CHECKPOINTED_FAST_START_DEFERRED": {
+    "reason": "1M -> 17.8s cold replay is not yet painful enough to justify complicating the recovery model.",
+    "revisit_after": "Removing historical events from RAM may reduce GC/allocation pressure enough that the observed 500k->1M replay superlinearity (2.74x time for 2x events) improves as a side effect. Restart MUST therefore be re-benchmarked after this milestone, before deciding when checkpointing becomes necessary."
+  },
+
+  "NEXT_AFTER_THIS": "BACKGROUND_VERIFICATION_V1 -- with the same event-sourcing rule applied to verification itself: never silently mutate a claim from UNVERIFIED to SUPPORTED. Append a verification event carrying who/what checked it, evidence ids, method/version, timestamp and result; replay derives current status.",
+
+  "NOT_A_QUALITY_CLAIM": "CAPABILITY and CORRECTNESS milestone, like its predecessors. No quality gate is run.",
+
+  "frozen_utc": "2026-08-11T04:00:00Z"
+}
