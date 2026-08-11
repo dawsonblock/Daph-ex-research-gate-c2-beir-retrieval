@@ -38,7 +38,32 @@ class AvailabilityStage(str, Enum):
     #: GRAPH_REFINE/VERIFY/STOP controller where memory work has already
     #: been committed.
     POST_ANSWER_NOW_PRE_MEMORY = "POST_ANSWER_NOW_PRE_MEMORY"
-    #: Requires C2 retrieval (BM25+BGE+fusion) to have already run.
+    #: AMENDMENT (RETRIEVAL_PROBE_GATE_V1, configs/gate_retrieval_probe_v1_
+    #: design.json): computable after a CHEAP RETRIEVAL PROBE -- C2
+    #: retrieval plus the identity/binding stage -- and strictly BEFORE G2,
+    #: path enumeration, composition, or the second generation.
+    #:
+    #: This is admissible where POST_RETRIEVAL is not, and the difference is
+    #: architectural rather than cosmetic. POST_RETRIEVAL names retrieval
+    #: performed as the first step INSIDE the memory action, so conditioning
+    #: on it to decide whether to invoke memory was circular. Here retrieval
+    #: is deliberately HOISTED in front of the decision and is paid by every
+    #: policy including always-accept, and -- critically -- escalation
+    #: CONSUMES the probe's retrieval rather than recomputing it (see
+    #: hrm_adaptive_memory.executive.retrieval_probe, and the handoff-hash
+    #: test that enforces it). The decision therefore does not secretly
+    #: depend on work only the expensive action would have done; it depends
+    #: on work the system now always does.
+    #:
+    #: The escalation-only remainder -- G2, paths, composition, second
+    #: generation -- stays inadmissible via POST_GRAPH/POST_GENERATION.
+    POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY = "POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY"
+    #: Requires C2 retrieval (BM25+BGE+fusion) to have already run AS PART OF
+    #: THE MEMORY ACTION. Distinct from
+    #: POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY above, which is the same
+    #: computation hoisted in front of the decision and charged to every
+    #: policy. Retained, and still inadmissible, so historical features
+    #: classified under it keep their original meaning.
     POST_RETRIEVAL = "POST_RETRIEVAL"
     #: Requires G2 graph construction and/or path enumeration to have
     #: already run -- this is most of the cost of the MEMORY action itself.
@@ -55,7 +80,9 @@ class AvailabilityStage(str, Enum):
 #: condition on. POST_RETRIEVAL/POST_GRAPH remain excluded -- both require
 #: part of MEMORY, the expensive action, to have already run.
 STAGES_ADMISSIBLE_FOR_ANSWER_VS_MEMORY = frozenset(
-    {AvailabilityStage.PRE_DECISION, AvailabilityStage.POST_ANSWER_NOW_PRE_MEMORY})
+    {AvailabilityStage.PRE_DECISION,
+     AvailabilityStage.POST_ANSWER_NOW_PRE_MEMORY,
+     AvailabilityStage.POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY})
 
 
 class FeatureAvailabilityError(RuntimeError):
@@ -195,5 +222,51 @@ KNOWN_FEATURES: dict[str, FeatureSpec] = {
     "answer_now_answer_length": FeatureSpec(
         "answer_now_answer_length", AvailabilityStage.POST_ANSWER_NOW_PRE_MEMORY,
         "ANSWER_NOW's own completion token count",
+        runtime_safe=True),
+    #: POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY features -- RETRIEVAL_PROBE_GATE_V1's
+    #: new decision state. Emitted by
+    #: hrm_adaptive_memory.executive.retrieval_probe.retrieval_probe_features().
+    #: Each costs the cheap probe (C2 retrieval + identity binding) and
+    #: NOTHING beyond it: no G2, no path enumeration, no composition, no
+    #: second generation. Deliberately named with a `probe_` prefix and kept
+    #: SEPARATE from the identically-computed but architecturally different
+    #: POST_RETRIEVAL entries above, so reclassifying the new architecture
+    #: never silently changes what a historical feature meant.
+    "probe_top1_retrieval_score": FeatureSpec(
+        "probe_top1_retrieval_score", AvailabilityStage.POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY,
+        "top-1 fused (frozen RRF) retrieval score from the cheap probe -- "
+        "how strong is the single best candidate the corpus offers",
+        runtime_safe=True),
+    "probe_topk_mean_retrieval_score": FeatureSpec(
+        "probe_topk_mean_retrieval_score", AvailabilityStage.POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY,
+        "mean fused score over the top-k probe candidates -- broad support "
+        "rather than a single strong hit; same probe cost",
+        runtime_safe=True),
+    "probe_retrieval_score_margin": FeatureSpec(
+        "probe_retrieval_score_margin", AvailabilityStage.POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY,
+        "top1 minus top2 fused score -- is there a decisive best candidate, "
+        "or is the corpus's response flat/ambiguous; same probe cost",
+        runtime_safe=True),
+    "probe_candidate_count": FeatureSpec(
+        "probe_candidate_count", AvailabilityStage.POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY,
+        "number of fused candidates returned -- zero means the store has "
+        "nothing to offer for this query at all; same probe cost",
+        runtime_safe=True),
+    "probe_identity_binding_status_code": FeatureSpec(
+        "probe_identity_binding_status_code", AvailabilityStage.POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY,
+        "ordinal encoding of run_identity_stage's status "
+        "(UNRESOLVED=0, AMBIGUOUS=1, RESOLVED=2, EXACT=3) -- can the query's "
+        "subject be bound to anything in the corpus. NOTE: on the current "
+        "two-family instrument this is near-oracle for the WRONG reason "
+        "(ANSWER_NOW_viable tasks carry zero evidence, so binding can never "
+        "succeed); see KNOWN_LIMITATION_binding_status_may_be_too_good_on_"
+        "this_instrument in configs/gate_retrieval_probe_v1_design.json, and "
+        "the mandatory within-MEMORY_required decomposition",
+        runtime_safe=True),
+    "probe_relation_extracted": FeatureSpec(
+        "probe_relation_extracted", AvailabilityStage.POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY,
+        "whether the real extract_target_relation returned a relation for "
+        "this question at all -- strictly question-text derived, so cheaper "
+        "still than the retrieval it accompanies",
         runtime_safe=True),
 }
