@@ -4120,8 +4120,130 @@
     },
     "next": "Pressure test at 100k-1M synthetic events (new claims, duplicates, aliases, conflicts, supersessions, retractions), measuring replay time, incremental latency, active count, index size, memory, retrieval correctness, drift at checkpoints, and cache invalidation. Reported as measurements with NO frozen performance threshold -- inventing one after seeing the numbers would be post-hoc. O(n) full replay is expected to dominate as the log grows; if it does, that is the finding motivating a later checkpoint/compaction design.",
     "not_a_quality_claim": "CAPABILITY and CORRECTNESS milestone. No quality gate was run and none is implied.",
+    "pre_pressure_test_fix": {
+      "finding": "A scaling probe run BEFORE the ladder found the write path was O(n^2): per-event cost doubled with every doubling of n (1.03ms at 500 events -> 5.79ms at 4k), extrapolating to roughly 16 DAYS for 1M events.",
+      "fixes": "raw-claim-key index of active records; running log hash updated per appended line; manifest writing moved to travel with snapshot publication rather than firing per event.",
+      "result": "flat ~74us/event, ratio ~1.00x across 500..8000 -- genuinely O(n). 77x faster at 4k, widening with scale.",
+      "three_separate_causes": [
+        "ingest scanned retrievable() to find conflicting claims -- O(n) per event",
+        "log_sha256() re-read and re-hashed the ENTIRE log on every append -- O(n) bytes per event",
+        "_write_manifest() recomputed state_counts and a full consolidated snapshot on every append"
+      ],
+      "why_this_was_safe": "All 43 write+consolidation tests still pass, and C9 (incremental == full replay) is what makes 'semantics unchanged' a checkable claim rather than an assertion. Correctness before performance is what allowed the optimization at all."
+    },
+    "pressure_test_result": {
+      "against_the_frozen_criterion": "1M events rebuild in ~19s -- 'tens of seconds' -- so checkpoint compaction is NOT yet required for replay TIME. Memory footprint and the absence of any fast-start path are the real constraints.",
+      "artifact": "evidence/memory_write/pressure_test_v1.json",
+      "fsync_caveat": "os.fsync on darwin does not force a physical device flush (F_FULLFSYNC would), so durability numbers are optimistic relative to Linux.",
+      "harness_defect_found_and_corrected": {
+        "consequence": "Those three rows are ONE measurement repeated, not a scale sweep, and must not be read as evidence that restart cost is scale-independent.",
+        "correction": "scripts/measure_restart_recovery.py measures it properly by truncating a copy of the canonical log to each scale, which is valid precisely because C12 established the log is append-only and prefix-stable.",
+        "defect": "The recovery sweep inside pressure_test_verified_memory.py reopened the SAME store after the ladder had already grown to 1M, so all three rows measured a 1M cold replay while being labelled 100k/500k/1M (22.87s / 22.99s / 21.29s -- near-identical, which is the tell)."
+      },
+      "headline": "INTEGRITY (incremental == full replay) held TRUE at EVERY rung including 1M. Ingestion is FLAT at 67-79 us/event across three orders of magnitude (~13,600 events/sec sustained), i.e. genuinely O(n) overall.",
+      "ladder": {
+        "100k": {
+          "integrity": true,
+          "log_mb": 56.1,
+          "replay_s": 1.29,
+          "rss_mb": 761,
+          "us_per_event": 79.4,
+          "wa": 0.1
+        },
+        "10k": {
+          "integrity": true,
+          "log_mb": 5.6,
+          "replay_s": 0.09,
+          "rss_mb": 105,
+          "us_per_event": 67.5,
+          "wa": 0.07
+        },
+        "1M": {
+          "integrity": true,
+          "log_mb": 561.6,
+          "replay_s": 19.03,
+          "rss_mb": 5140,
+          "us_per_event": 73.6,
+          "wa": 0.12
+        },
+        "1k": {
+          "integrity": true,
+          "log_mb": 0.5,
+          "replay_s": 0.01,
+          "rss_mb": 33,
+          "us_per_event": 69.9,
+          "wa": 0.06
+        },
+        "250k": {
+          "integrity": true,
+          "log_mb": 140.3,
+          "replay_s": 3.16,
+          "rss_mb": 1779,
+          "us_per_event": 70.6,
+          "wa": 0.1
+        },
+        "500k": {
+          "integrity": true,
+          "log_mb": 280.6,
+          "replay_s": 6.95,
+          "rss_mb": 3262,
+          "us_per_event": 74.8,
+          "wa": 0.11
+        },
+        "50k": {
+          "integrity": true,
+          "log_mb": 28.0,
+          "replay_s": 0.63,
+          "rss_mb": 371,
+          "us_per_event": 68.5,
+          "wa": 0.07
+        }
+      },
+      "memory_is_the_binding_constraint": "RSS grows linearly at ~5.1 MB per 1k events, reaching 5.14 GB at 1M. This is a SEPARATE defect from the O(n^2) one fixed above: ClaimStore retains BOTH _events (every raw event dict) and _records in RAM, roughly doubling the footprint for no benefit since the log is already on disk. Named explicitly rather than folded into a general 'memory is high'.",
+      "replay_scaling_caveat": "Full replay is broadly linear but shows mild superlinearity at the top: 6.95s at 500k -> 19.03s at 1M is 2.74x for a 2x increase. Most plausibly allocation/GC pressure at ~5 GB RSS rather than an algorithmic term; not investigated further, and reported as observed rather than explained away.",
+      "restart_recovery_corrected": {
+        "PRIMARY_FINDING": "The snapshot does NOT accelerate startup. All three startup paths -- no snapshot, valid snapshot, invalidated snapshot -- take the same time (max relative gap 9.6%, i.e. noise), because ClaimStore.__init__ ALWAYS replays the full log and uses snapshot_is_valid() only to decide whether to republish. Restart cost is therefore unavoidably O(n), and the snapshot machinery is currently pure overhead for startup.",
+        "all_three_paths_agree_on_state_hash": true,
+        "artifact": "evidence/memory_write/restart_recovery_v1.json",
+        "method": "truncate a copy of the canonical log to each scale and replay it -- valid precisely because C12 established the log is append-only and prefix-stable",
+        "rows": {
+          "100k": {
+            "active_records": 68080,
+            "cold_s": 1.2,
+            "snapshot_invalidated_s": 1.25,
+            "snapshot_validated_s": 1.21
+          },
+          "1M": {
+            "active_records": 678642,
+            "cold_s": 17.78,
+            "snapshot_invalidated_s": 15.67,
+            "snapshot_validated_s": 16.08
+          },
+          "500k": {
+            "active_records": 338925,
+            "cold_s": 7.43,
+            "snapshot_invalidated_s": 7.63,
+            "snapshot_validated_s": 7.43
+          }
+        },
+        "scaling": "Roughly linear with the same mild superlinearity seen in the ladder (500k->1M is 2.4x time for 2x events).",
+        "this_supersedes": "the recovery block in pressure_test_v1.json, whose 22.87/22.99/21.29s rows were one 1M measurement repeated three times. The true sweep is linear: 1.20s -> 7.43s -> 17.78s."
+      },
+      "source_commit": "8f04d797d63a80665abab5fe21deb6f382080c8c (local==origin at run time)",
+      "status": "MEASUREMENT, no frozen thresholds",
+      "what_this_answers": {
+        "answer": "Checkpointed replay is NOT yet required on TIME grounds -- 1M restarts in ~18s, which is operationally fine. Two other things are more pressing, and neither is background verification: (1) RSS of 5.14 GB at 1M, driven by retaining _events in RAM alongside _records when the log is already on disk -- a cheap fix that should roughly halve the footprint; (2) the snapshot currently accelerates nothing, so the fast-start path the design anticipated does not exist yet. Extrapolating, 10M events would mean ~3 minutes of replay and ~50 GB RSS, so MEMORY fails before time does.",
+        "question": "Is the next milestone merely background verification, or is checkpointed replay/compaction needed first?",
+        "recommendation": "Fix the in-memory event retention first (cheap, large win, no design change). Checkpointed replay becomes worthwhile around 10M events, or sooner if restart latency becomes user-visible. Background verification remains a separate axis and is not blocked by either."
+      },
+      "write_amplification": {
+        "per_event_publish_naive_mode": "6.5x at 200 events, 12.1x at 400, 22.3x at 800 -- DOUBLING with n",
+        "periodic_publish_used_by_the_ladder": "0.06 -> 0.12 across 1k..1M -- negligible",
+        "reading": "The metric discriminates between the two designs rather than merely describing one. Per-event snapshot publishing is the 'looks fast while rewriting huge snapshots' failure mode, confirmed empirically."
+      }
+    },
     "scope": "Consolidation REORGANIZES memory; it does not decide truth. The append-only event log remains the only authoritative state; duplicate clusters, alias clusters, support/contradiction groups, the current-state projection and the retrieval index are all DERIVED and rebuildable.",
-    "status": "CORRECTNESS_COMPLETE__C1_C12_ALL_PASS__PRESSURE_TEST_NEXT",
+    "status": "CORRECTNESS_COMPLETE__PRESSURE_TEST_COMPLETE_TO_1M",
     "tests": "tests/unit/test_verified_memory_consolidation.py -- 26 tests covering C1-C12, all passing. Combined write+consolidation: 43 tests. Full suite 1337 passed, 3 skipped."
   },
   "verified_memory_write_v1": {

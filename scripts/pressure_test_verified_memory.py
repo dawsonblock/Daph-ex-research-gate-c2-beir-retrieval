@@ -60,11 +60,19 @@ RELATIONS = ("operating tier", "thermal rating", "assigned category")
 
 
 def entity(i: int) -> str:
-    """Grammar-valid b3 entity: capitalized alpha head + lowercase role
-    words. Digits are rejected by the certified extractor, so synthetic names
-    must respect the same grammar real records do."""
-    return (f"{_L[i % 26].upper()}{_L[(i // 26) % 26]}{_L[(i // 676) % 26]}"
-            f"{_L[(i // 17576) % 26]} {_ROLES[i % 3]}")
+    r"""Grammar-valid b3 entity: capitalized alpha head + lowercase role words.
+
+    Two constraints the certified extractor actually enforces, both learned
+    the hard way when its fail-closed guard rejected earlier generators:
+      * NO DIGITS -- _V4_ENTITY is [A-Z][a-z]+(\s+[a-z]+){1,3}
+      * the head must not be a _STOP_FIRST word. A plain base-26 head
+        eventually spells real English ("This control module" was refused at
+        ~500k events), so heads are prefixed with "Zq", which cannot form an
+        English stopword. 26^4 heads x 3 roles = 1.37M unique entities.
+    """
+    j = i // 3
+    return (f"Zq{_L[j % 26]}{_L[(j // 26) % 26]}{_L[(j // 676) % 26]}"
+            f"{_L[(j // 17576) % 26]} {_ROLES[i % 3]}")
 
 
 def rss_bytes() -> int:
