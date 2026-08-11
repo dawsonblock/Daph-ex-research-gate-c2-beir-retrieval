@@ -252,17 +252,17 @@ class TestStageTiming:
 
     def test_stage_timer_totals_and_reports_cuda_flag(self):
         t = StageTimer()
-        with t.stage("T_retrieval_probe"):
+        with t.stage("T_probe_retrieval"):
             sum(range(1000))
         with t.stage("T_G2"):
             sum(range(1000))
         d = t.as_dict()
-        assert d["T_total"] == pytest.approx(d["T_retrieval_probe"] + d["T_G2"])
+        assert d["T_total"] == pytest.approx(d["T_probe_retrieval"] + d["T_G2"])
         assert "cuda_synchronized" in d
 
     def test_required_stage_names_are_declared(self):
-        for name in ("T_answer_probe", "T_retrieval_probe", "T_G2",
-                     "T_composition", "T_memory_generation"):
+        for name in ("T_A0_generation", "T_probe_retrieval", "T_probe_identity_binding",
+                     "T_G2", "T_composition", "T_A1_generation"):
             assert name in StageTimer.REQUIRED_STAGES
 
     def test_probe_and_escalation_populate_their_own_stages(self):
@@ -271,6 +271,78 @@ class TestStageTiming:
         timer = StageTimer()
         probe = run_retrieval_probe(tasks[0]["question"], arm, records, texts, DEPTH, timer=timer)
         run_full_memory_from_probe(probe, arm, texts, M, PACKET, timer=timer)
-        assert timer.stages["T_retrieval_probe"] > 0.0
+        assert timer.stages["T_probe_retrieval"] > 0.0
+        assert timer.stages["T_probe_identity_binding"] >= 0.0
         assert timer.stages["T_G2"] >= 0.0
         assert timer.stages["T_composition"] >= 0.0
+
+    def test_derived_costs_are_consistent_with_atomic_stages(self):
+        t = StageTimer()
+        t.stages.update({
+            "T_A0_generation": 1.0, "T_probe_retrieval": 2.0,
+            "T_probe_identity_binding": 0.5, "T_G2": 4.0,
+            "T_composition": 8.0, "T_A1_generation": 16.0,
+        })
+        d = t.derived_costs()
+        assert d["T_probe_total"] == pytest.approx(2.5)
+        assert d["C_accept"] == pytest.approx(3.5)
+        assert d["C_avoided"] == pytest.approx(28.0)
+        assert d["C_escalate"] == pytest.approx(31.5)
+        # the decision only controls the marginal escalation work
+        assert d["C_escalate"] - d["C_accept"] == pytest.approx(d["C_avoided"])
+        # true no-probe deployment baselines
+        assert d["C_noprobe_answer_only"] == pytest.approx(1.0)
+        assert d["C_noprobe_full_memory"] == pytest.approx(30.5)
+        # the probe architecture's inherent overhead vs going straight to memory
+        assert d["C_escalate"] - d["C_noprobe_full_memory"] == pytest.approx(1.0)
+
+
+class TestInstrumentationIsNotATreatment:
+    """Gate: adding timing must not change ANY output. Only timing and
+    provenance fields may differ between the instrumented and uninstrumented
+    paths."""
+
+    def test_probe_identical_with_and_without_timer(self):
+        tasks, records, texts = _load_corpus(limit_tasks=3)
+        arm = ARMS["C4_4"]
+        for task in tasks:
+            bare = run_retrieval_probe(task["question"], arm, records, texts, DEPTH)
+            timed_ = run_retrieval_probe(task["question"], arm, records, texts, DEPTH,
+                                         timer=StageTimer())
+            assert bare.handoff_hash() == timed_.handoff_hash()
+            assert bare.pool == timed_.pool
+            assert bare.identity_status == timed_.identity_status
+            assert bare.canonical_subject == timed_.canonical_subject
+            assert bare.relation == timed_.relation
+            assert bare.retrieval.fusion_ranked == timed_.retrieval.fusion_ranked
+
+    def test_escalation_identical_with_and_without_timer(self):
+        tasks, records, texts = _load_corpus(limit_tasks=3)
+        arm = ARMS["C4_4"]
+        for task in tasks:
+            probe = run_retrieval_probe(task["question"], arm, records, texts, DEPTH)
+            bare = run_full_memory_from_probe(probe, arm, texts, M, PACKET)
+            timed_ = run_full_memory_from_probe(probe, arm, texts, M, PACKET,
+                                                timer=StageTimer())
+            assert bare.packet_ids == timed_.packet_ids
+            assert bare.packet.prompt_hash == timed_.packet.prompt_hash
+            assert bare.packet.membership_hash == timed_.packet.membership_hash
+            assert bare.packet.order_hash == timed_.packet.order_hash
+            assert bare.composed_packet_hash == timed_.composed_packet_hash
+            assert bare.graph_hash == timed_.graph_hash
+            assert bare.path_set_hash == timed_.path_set_hash
+            assert bare.prompt == timed_.prompt
+
+    def test_timing_wrapper_returns_inner_result_unchanged(self):
+        """The A0 generation timer wraps a call; it must pass the result
+        through untouched. Verified with a stub so no model is required."""
+        sentinel = object()
+        timer = StageTimer()
+
+        def inner():
+            return sentinel
+
+        with timer.stage("T_A0_generation"):
+            got = inner()
+        assert got is sentinel
+        assert timer.stages["T_A0_generation"] >= 0.0

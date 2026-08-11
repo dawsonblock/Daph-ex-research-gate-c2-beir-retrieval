@@ -131,22 +131,31 @@ def _retrieve(question: str, arm, records, texts, depth: int):
 def run_retrieval_probe(question: str, arm, records, texts: Mapping[str, str],
                         depth: int, timer: StageTimer | None = None) -> RetrievalProbeResult:
     """The CHEAP stage: retrieval + identity binding. Runs NO G2, NO path
-    enumeration, NO composition, NO generation."""
-    def _body():
+    enumeration, NO composition, NO generation.
+
+    When a timer is supplied the two sub-stages are recorded SEPARATELY
+    (T_probe_retrieval, T_probe_identity_binding) so the probe's own cost can
+    be attributed rather than reported as one opaque number. Timing is
+    strictly observational: the timed and untimed paths execute the same
+    calls in the same order and return equal results (asserted by
+    tests/unit/test_retrieval_probe.py::TestInstrumentationIsNotATreatment).
+    """
+    if timer is None:
         rendered_query, relation, fused, pool, scores, retrieval = _retrieve(
             question, arm, records, texts, depth)
         ident = run_identity_stage(question, arm, retrieval, texts)
-        return RetrievalProbeResult(
-            question=question, rendered_query=rendered_query, relation=relation,
-            fused=tuple(fused[:depth]), pool=tuple(pool), scores=scores,
-            retrieval=retrieval, identity_status=ident.status,
-            canonical_subject=ident.canonical, surface=ident.surface, depth=depth)
+    else:
+        with timer.stage("T_probe_retrieval"):
+            rendered_query, relation, fused, pool, scores, retrieval = _retrieve(
+                question, arm, records, texts, depth)
+        with timer.stage("T_probe_identity_binding"):
+            ident = run_identity_stage(question, arm, retrieval, texts)
 
-    if timer is None:
-        return _body()
-    with timer.stage("T_retrieval_probe"):
-        result = _body()
-    return result
+    return RetrievalProbeResult(
+        question=question, rendered_query=rendered_query, relation=relation,
+        fused=tuple(fused[:depth]), pool=tuple(pool), scores=scores,
+        retrieval=retrieval, identity_status=ident.status,
+        canonical_subject=ident.canonical, surface=ident.surface, depth=depth)
 
 
 def _s2_order(working_set, question, scores, arm, texts):

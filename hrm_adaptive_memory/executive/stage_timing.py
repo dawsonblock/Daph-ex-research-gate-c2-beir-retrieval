@@ -77,15 +77,26 @@ class StageTimer:
     """Accumulates named stage durations plus a total, and records whether
     the timings were taken with CUDA synchronization in force."""
 
-    #: The stages configs/gate_retrieval_probe_v1_design.json requires be
-    #: recorded separately.
+    #: The atomic stages that are DIRECTLY MEASURED. Every policy-relevant
+    #: cost is DERIVED from these by summation (see derived_costs) rather
+    #: than timed separately, so the decomposition can never disagree with
+    #: its own totals.
     REQUIRED_STAGES = (
-        "T_answer_probe",
-        "T_retrieval_probe",
+        "T_A0_generation",
+        "T_probe_retrieval",
+        "T_probe_identity_binding",
         "T_G2",
         "T_composition",
-        "T_memory_generation",
+        "T_A1_generation",
     )
+
+    #: Stages an ACCEPT still pays for: the answer probe and the cheap
+    #: retrieval probe. The executive is NOT deciding whether to pay these --
+    #: by the time it decides, they are already spent.
+    ACCEPT_STAGES = ("T_A0_generation", "T_probe_retrieval", "T_probe_identity_binding")
+    #: The marginal full-memory work an ACCEPT avoids -- the only cost the
+    #: executive's decision actually controls.
+    ESCALATION_ONLY_STAGES = ("T_G2", "T_composition", "T_A1_generation")
 
     def __init__(self):
         self.stages: dict[str, float] = {}
@@ -98,8 +109,43 @@ class StageTimer:
         if self.cuda_synchronized is None:
             self.cuda_synchronized = cuda_synchronize()
 
+    def _sum(self, keys) -> float:
+        return float(sum(self.stages.get(k, 0.0) for k in keys))
+
+    def derived_costs(self) -> dict[str, float]:
+        """Policy-relevant costs, DERIVED from the measured atomic stages.
+
+        C_accept    = T_A0 + T_probe
+        C_escalate  = T_A0 + T_probe + T_G2 + T_composition + T_A1_generation
+        C_avoided   = T_G2 + T_composition + T_A1_generation
+
+        Also reports the true NO-PROBE deployment baselines, reconstructed
+        from the same atomic stages (valid because the stages are
+        independent sequential operations, so omitting one simply removes
+        its duration):
+          C_noprobe_answer_only = T_A0
+          C_noprobe_full_memory = T_probe + T_G2 + T_composition + T_A1_gen
+                                  (goes straight to memory; never runs A0)
+        Keeping both lets policy efficiency (gate vs probe+always-escalate)
+        be distinguished from deployment efficiency (the complete gated
+        system vs the old no-probe fixed policies) -- different questions,
+        both of which matter.
+        """
+        t_probe = self._sum(("T_probe_retrieval", "T_probe_identity_binding"))
+        t_a0 = self.stages.get("T_A0_generation", 0.0)
+        avoided = self._sum(self.ESCALATION_ONLY_STAGES)
+        return {
+            "T_probe_total": t_probe,
+            "C_accept": t_a0 + t_probe,
+            "C_escalate": t_a0 + t_probe + avoided,
+            "C_avoided": avoided,
+            "C_noprobe_answer_only": t_a0,
+            "C_noprobe_full_memory": t_probe + avoided,
+        }
+
     def as_dict(self) -> dict[str, float | bool | None]:
         out: dict[str, float | bool | None] = dict(self.stages)
+        out.update(self.derived_costs())
         out["T_total"] = float(sum(self.stages.values()))
         out["cuda_synchronized"] = self.cuda_synchronized
         return out
