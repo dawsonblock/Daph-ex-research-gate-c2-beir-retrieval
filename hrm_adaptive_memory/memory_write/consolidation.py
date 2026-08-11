@@ -30,7 +30,7 @@ import json
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Iterable, Mapping
 
-from .states import NON_RETRIEVABLE_STATES, VerificationState  # noqa: F401
+from .states import NON_RETRIEVABLE_STATES, LifecycleState  # noqa: F401
 
 if TYPE_CHECKING:  # pragma: no cover
     from .claim_store import ClaimRecord
@@ -135,7 +135,7 @@ def _build_alias_parent(records: "Iterable[ClaimRecord]") -> dict[str, str]:
 
 
 def _active(records: "Iterable[ClaimRecord]") -> "list[ClaimRecord]":
-    return [r for r in records if r.verification_state not in NON_RETRIEVABLE_STATES]
+    return [r for r in records if r.lifecycle_state not in NON_RETRIEVABLE_STATES]
 
 
 # --- IMPLEMENTATION A: from-scratch full scan -----------------------------
@@ -203,13 +203,13 @@ class ConsolidationIndex:
     # -- incremental mutations ------------------------------------------
     def apply_ingest(self, record: "ClaimRecord", corpus_version: int) -> None:
         self._corpus_version = corpus_version
-        if record.verification_state in NON_RETRIEVABLE_STATES:
+        if record.lifecycle_state in NON_RETRIEVABLE_STATES:
             return
         self._add(record)
 
     def apply_state_change(self, record: "ClaimRecord", corpus_version: int) -> None:
         self._corpus_version = corpus_version
-        if record.verification_state in NON_RETRIEVABLE_STATES:
+        if record.lifecycle_state in NON_RETRIEVABLE_STATES:
             self._remove(record.record_id)
         else:
             # state may have changed (e.g. UNVERIFIED -> SUPPORTED) without

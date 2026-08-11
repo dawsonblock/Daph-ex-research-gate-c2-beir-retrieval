@@ -24,7 +24,7 @@ from hrm_adaptive_memory.backends import CanonicalRetrievalMode  # noqa: E402
 from hrm_adaptive_memory.c4.retrieval_stage import get_cached_backend  # noqa: E402
 from hrm_adaptive_memory.experiment_integrity.certified_memory import (  # noqa: E402
     assert_certified_memory_v1_unchanged, pin_certified_memory_v1_boundary_policy)
-from hrm_adaptive_memory.memory_write import ClaimStore, ConflictOutcome, VerificationState  # noqa: E402
+from hrm_adaptive_memory.memory_write import ClaimStore, ConflictOutcome, LifecycleState  # noqa: E402
 from hrm_adaptive_memory.memory_write.consolidation import (  # noqa: E402
     ALIAS_RELATION, consolidate_from_scratch)
 
@@ -156,7 +156,7 @@ class TestC6RetractionsRemovedFromActiveRetrieval:
         state = store.consolidated_state()
         assert ids["g"] not in state.active_record_ids
         assert ids["g"] not in {r.evidence_id for r in store.retrievable_index_records()}
-        assert store.get(ids["g"]).verification_state is VerificationState.RETRACTED
+        assert store.get(ids["g"]).lifecycle_state is LifecycleState.RETRACTED
         assert ids["g"] in store.log_path.read_text()
 
     def test_superseded_also_absent_from_projection(self, tmp_path):
@@ -338,7 +338,7 @@ class TestC12EventOrderReplayInvariants:
         i_f = ingests.index(ids["f"])
         sc = [i for i, e in enumerate(events)
               if e["event"] == "STATE_CHANGE" and e["record_id"] == ids["e"]
-              and e["verification_state"] == "SUPERSEDED"]
+              and e["lifecycle_state"] == "SUPERSEDED"]
         i_ingest_f = [i for i, e in enumerate(events)
                       if e["event"] == "INGEST" and e["record"]["record_id"] == ids["f"]][0]
         assert sc and sc[0] > i_ingest_f and i_f >= 0

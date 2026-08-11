@@ -31,7 +31,7 @@ from hrm_adaptive_memory.contracts import IndexRecord  # noqa: E402
 from hrm_adaptive_memory.experiment_integrity.certified_memory import (  # noqa: E402
     assert_certified_memory_v1_unchanged, pin_certified_memory_v1_boundary_policy)
 from hrm_adaptive_memory.memory_write import (  # noqa: E402
-    ClaimStore, ConflictOutcome, NotNativelyParseableError, VerificationState)
+    ClaimStore, ConflictOutcome, LifecycleState, NotNativelyParseableError)
 
 SUBJECT = "Wren pressure assembly"
 RELATION = "operating tier"
@@ -65,7 +65,9 @@ class TestT1WriteBecomesRetrievable:
         r = store.ingest(subject=SUBJECT, relation=RELATION, value="Tier 4",
                          source_id="src-A")
         assert r.outcome is ConflictOutcome.NOVEL
-        assert r.record.verification_state is VerificationState.UNVERIFIED
+        # V1: ingest records a LIFECYCLE state only. Verification status is
+        # derived from verification events and defaults to UNVERIFIED.
+        assert r.record.lifecycle_state is LifecycleState.ACTIVE
 
         got = _retrieve_ids(store, query)
         assert r.record.record_id in got, "written record must be retrievable"
@@ -97,7 +99,7 @@ class TestT2RetractionRemovesReachability:
 
         kept = store.get(rid)
         assert kept is not None, "history must survive retraction"
-        assert kept.verification_state is VerificationState.RETRACTED
+        assert kept.lifecycle_state is LifecycleState.RETRACTED
         assert kept.content  # bytes intact
 
 
@@ -117,7 +119,7 @@ class TestT3SupersessionReturnsTheNewValue:
         assert new.record.record_id in ids
         assert old.record_id not in ids
 
-        assert store.get(old.record_id).verification_state is VerificationState.SUPERSEDED
+        assert store.get(old.record_id).lifecycle_state is LifecycleState.SUPERSEDED
         assert store.get(old.record_id).superseded_by == new.record.record_id
         assert store.get(new.record.record_id).supersedes == old.record_id
 
@@ -134,9 +136,12 @@ class TestT4ConflictIsRepresentedNotResolved:
         a = store.ingest(subject=SUBJECT, relation=RELATION, value="Tier 4", source_id="src-A")
         b = store.ingest(subject=SUBJECT, relation=RELATION, value="Tier 7", source_id="src-B")
         assert b.outcome is ConflictOutcome.CONFLICT
-
+        # CHANGED BY BACKGROUND_VERIFICATION_V1 (V1/V6): ingest OBSERVES the
+        # conflict but no longer writes a verification opinion. Both records
+        # stay lifecycle ACTIVE; deriving CONTRADICTED is the verification
+        # layer's job, tested in test_background_verification.py::TestV3.
         for rid in (a.record.record_id, b.record.record_id):
-            assert store.get(rid).verification_state is VerificationState.CONTRADICTED
+            assert store.get(rid).lifecycle_state is LifecycleState.ACTIVE
 
         ids = _retrieve_ids(store, f"What is the {RELATION} for {SUBJECT}?")
         assert a.record.record_id in ids and b.record.record_id in ids, \
@@ -161,8 +166,11 @@ class TestT4ConflictIsRepresentedNotResolved:
         a = store.ingest(subject=SUBJECT, relation=RELATION, value="Tier 4", source_id="src-A")
         b = store.ingest(subject=SUBJECT, relation=RELATION, value="Tier 4", source_id="src-B")
         assert b.outcome is ConflictOutcome.SUPPORT
-        assert store.get(a.record.record_id).verification_state is VerificationState.SUPPORTED
-        assert store.get(b.record.record_id).verification_state is VerificationState.SUPPORTED
+        # CHANGED BY BACKGROUND_VERIFICATION_V1 (V1): the SUPPORT observation
+        # no longer promotes either record's status. See
+        # test_background_verification.py::TestV2 for the derived SUPPORTED.
+        assert store.get(a.record.record_id).lifecycle_state is LifecycleState.ACTIVE
+        assert store.get(b.record.record_id).lifecycle_state is LifecycleState.ACTIVE
 
     def test_identical_reingest_is_duplicate_and_adds_nothing(self, tmp_path):
         store = _store(tmp_path)
@@ -246,7 +254,7 @@ class TestPersistenceIsAppendOnly:
 
         reloaded = ClaimStore(tmp_path / "store")
         assert reloaded.corpus_version == v
-        assert reloaded.get(a.record.record_id).verification_state is VerificationState.RETRACTED
+        assert reloaded.get(a.record.record_id).lifecycle_state is LifecycleState.RETRACTED
         assert reloaded.retrievable() == []
 
     def test_corpus_version_is_monotonic(self, tmp_path):

@@ -44,7 +44,11 @@ from typing import Iterable
 from ..contracts import IndexRecord
 from .consolidation import ConsolidationIndex
 from .states import (  # noqa: F401
-    NON_RETRIEVABLE_STATES, ConflictOutcome, VerificationState)
+    NON_RETRIEVABLE_STATES, ConflictOutcome, LifecycleState, VerificationStatus,
+    lifecycle_from_event)
+from .verification import (  # noqa: F401
+    EvidenceResolutionError, VerificationEvent, VerificationResult, derive_status,
+    retired_ids, verification_event_id)
 
 #: The write template. Chosen because it is a real b3 content shape and
 #: round-trips through the certified extract_v4_entities unchanged --
@@ -72,7 +76,7 @@ class ClaimRecord:
     ingested_at_utc: str
     observed_at_utc: str
     extraction_method: str
-    verification_state: VerificationState
+    lifecycle_state: LifecycleState
     corpus_version: int
     corroborating_record_ids: tuple[str, ...] = ()
     contradicting_record_ids: tuple[str, ...] = ()
@@ -85,7 +89,7 @@ class ClaimRecord:
 
     def to_json(self) -> dict:
         d = asdict(self)
-        d["verification_state"] = self.verification_state.value
+        d["lifecycle_state"] = self.lifecycle_state.value
         d["corroborating_record_ids"] = list(self.corroborating_record_ids)
         d["contradicting_record_ids"] = list(self.contradicting_record_ids)
         return d
@@ -148,6 +152,10 @@ class ClaimStore:
         #: bulk ingestion O(n^2) (measured: per-event cost doubled with each
         #: doubling of n, 5.8ms/event at only 4k events).
         self._active_by_claim_key: dict[tuple[str, str], set[str]] = {}
+        #: claim_record_id -> verification events citing it, in log order.
+        self._verifications: dict[str, list[VerificationEvent]] = {}
+        #: every verification_event_id ever seen, for V11 idempotency
+        self._verification_ids: set[str] = set()
         #: Running hash of the canonical log. Recomputing it per append meant
         #: re-reading and re-hashing the entire file on every event -- the
         #: second of three O(n)-per-event costs found by the scaling probe.
@@ -196,10 +204,14 @@ class ClaimStore:
         kind = ev["event"]
         if kind == "INGEST":
             r = ev["record"]
-            rec = ClaimRecord(
-                **{**r, "verification_state": VerificationState(r["verification_state"]),
-                   "corroborating_record_ids": tuple(r.get("corroborating_record_ids", ())),
-                   "contradicting_record_ids": tuple(r.get("contradicting_record_ids", ()))})
+            raw = dict(r)
+            # accept both the current encoding and pre-split logs (A6)
+            legacy = raw.pop("verification_state", None)
+            raw["lifecycle_state"] = lifecycle_from_event(
+                raw.get("lifecycle_state", legacy) or LifecycleState.ACTIVE.value)
+            raw["corroborating_record_ids"] = tuple(raw.get("corroborating_record_ids", ()))
+            raw["contradicting_record_ids"] = tuple(raw.get("contradicting_record_ids", ()))
+            rec = ClaimRecord(**raw)
             self._records[rec.record_id] = rec
             self._index.apply_ingest(rec, self._corpus_version)
             self._index_claim_key(rec)
@@ -208,7 +220,8 @@ class ClaimStore:
             cur = self._records[rid]
             rec = replace(
                 cur,
-                verification_state=VerificationState(ev["verification_state"]),
+                lifecycle_state=lifecycle_from_event(
+                    ev.get("lifecycle_state", ev.get("verification_state"))),
                 corroborating_record_ids=tuple(ev.get("corroborating_record_ids",
                                                       cur.corroborating_record_ids)),
                 contradicting_record_ids=tuple(ev.get("contradicting_record_ids",
@@ -217,13 +230,30 @@ class ClaimStore:
             self._records[rid] = rec
             self._index.apply_state_change(rec, self._corpus_version)
             self._index_claim_key(rec)
+        elif kind == "VERIFICATION":
+            v = ev["verification"]
+            evt = VerificationEvent(
+                verification_event_id=v["verification_event_id"],
+                claim_record_id=v["claim_record_id"], checker_id=v["checker_id"],
+                checker_type=v["checker_type"], method=v["method"],
+                method_version=v["method_version"],
+                evidence_ids=tuple(v.get("evidence_ids", ())),
+                observed_at_utc=v["observed_at_utc"],
+                result=VerificationResult(v["result"]), confidence=float(v["confidence"]),
+                notes=v.get("notes", ""),
+                supersedes_verification=v.get("supersedes_verification"))
+            # V11: identical determinations are idempotent, not second opinions
+            if evt.verification_event_id in self._verification_ids:
+                return
+            self._verification_ids.add(evt.verification_event_id)
+            self._verifications.setdefault(evt.claim_record_id, []).append(evt)
 
     def _index_claim_key(self, rec: ClaimRecord) -> None:
         """Keep the raw-claim-key index in step with a record's activity.
         Mirrors NON_RETRIEVABLE_STATES exactly, so it can never disagree with
         retrievable() about which records are active."""
         bucket = self._active_by_claim_key.setdefault(rec.claim_key, set())
-        if rec.verification_state in NON_RETRIEVABLE_STATES:
+        if rec.lifecycle_state in NON_RETRIEVABLE_STATES:
             bucket.discard(rec.record_id)
             if not bucket:
                 del self._active_by_claim_key[rec.claim_key]
@@ -236,6 +266,8 @@ class ClaimStore:
         self._records = {}
         self._index = ConsolidationIndex()
         self._active_by_claim_key = {}
+        self._verifications = {}
+        self._verification_ids = set()
         self._corpus_version = 0
         for ev in self._stream_events():
             self._corpus_version += 1
@@ -258,21 +290,27 @@ class ClaimStore:
 
     def retrievable(self) -> list[ClaimRecord]:
         return [r for r in self._records.values()
-                if r.verification_state not in NON_RETRIEVABLE_STATES]
+                if r.lifecycle_state not in NON_RETRIEVABLE_STATES]
 
-    def retrievable_index_records(self) -> list[IndexRecord]:
+    def retrievable_index_records(self, verification_filter=None) -> list[IndexRecord]:
         """What the CERTIFIED reader indexes. Excludes retracted and
         superseded records, so a retraction/supersession necessarily changes
         the evidence-id set the reader sees."""
+        records = self.retrievable()
+        if verification_filter is not None:
+            # V10: OPT-IN only. Default behaviour is unchanged so
+            # CERTIFIED_MEMORY_V1's identity and inputs are untouched (V12).
+            allowed = frozenset(verification_filter)
+            records = [r for r in records if self.verification_status(r.record_id) in allowed]
         return [IndexRecord(
             evidence_id=r.record_id, source_id=r.source_id, content=r.content,
             token_count=max(1, len(r.content.split())),
             source_type="verified_memory_write_v1",
-            metadata={"verification_state": r.verification_state.value,
+            metadata={"lifecycle_state": r.lifecycle_state.value,
                       "canonical_entity": r.canonical_entity,
                       "canonical_relation": r.canonical_relation,
                       "observed_at_utc": r.observed_at_utc},
-        ) for r in self.retrievable()]
+        ) for r in records]
 
     # --- persistence -----------------------------------------------------
     def _append(self, event: dict) -> None:
@@ -352,14 +390,14 @@ class ClaimStore:
             "event_log_sha256": digest,
             "n_records_total": len(self._records),
             "n_retrievable": len(self.retrievable()),
-            "state_counts": {s.value: sum(1 for r in self._records.values()
-                                          if r.verification_state == s) for s in VerificationState},
+            "lifecycle_counts": {s.value: sum(1 for r in self._records.values()
+                                              if r.lifecycle_state == s) for s in LifecycleState},
             "consolidated_state_hash": self.consolidated_state().state_hash(),
         }, indent=2, sort_keys=True) + "\n")
 
-    def _state_change(self, record_id: str, state: VerificationState, **extra) -> None:
+    def _state_change(self, record_id: str, state: LifecycleState, **extra) -> None:
         self._append({"event": "STATE_CHANGE", "record_id": record_id,
-                      "verification_state": state.value, "at": _now(), **extra})
+                      "lifecycle_state": state.value, "at": _now(), **extra})
 
     # --- the write path --------------------------------------------------
     def ingest(self, *, subject: str, relation: str, value: str, source_id: str,
@@ -380,26 +418,28 @@ class ClaimStore:
         same_value = [r for r in existing if r.value.strip().lower() == value.strip().lower()]
         diff_value = [r for r in existing if r.value.strip().lower() != value.strip().lower()]
 
-        # step 5: assign state
+        # V1: ingest OBSERVES a relationship but records NO verification
+        # opinion. Every ingested claim is lifecycle ACTIVE and, in
+        # verification terms, UNVERIFIED until a verification event says
+        # otherwise. Classifying support/conflict is the first verification
+        # worker's job, not ingest's.
         if supersedes is not None:
-            target = self._records.get(supersedes)
-            if target is None:
+            if self._records.get(supersedes) is None:
                 raise KeyError(f"supersedes references unknown record_id {supersedes!r}")
-            outcome, state = ConflictOutcome.SUPERSESSION, VerificationState.UNVERIFIED
+            outcome = ConflictOutcome.SUPERSESSION
         elif same_value:
             outcome = ConflictOutcome.SUPPORT
-            state = VerificationState.SUPPORTED
         elif diff_value:
             # frozen policy: a later timestamp alone is NOT supersession
-            outcome, state = ConflictOutcome.CONFLICT, VerificationState.CONTRADICTED
+            outcome = ConflictOutcome.CONFLICT
         else:
-            outcome, state = ConflictOutcome.NOVEL, VerificationState.UNVERIFIED
+            outcome = ConflictOutcome.NOVEL
 
         record = ClaimRecord(
             record_id=record_id, content=content, canonical_entity=canonical_entity,
             canonical_relation=relation.strip(), value=value.strip(), source_id=source_id,
             ingested_at_utc=_now(), observed_at_utc=observed,
-            extraction_method=EXTRACTION_METHOD, verification_state=state,
+            extraction_method=EXTRACTION_METHOD, lifecycle_state=LifecycleState.ACTIVE,
             corpus_version=self.corpus_version + 1,
             corroborating_record_ids=tuple(r.record_id for r in same_value),
             contradicting_record_ids=tuple(r.record_id for r in diff_value),
@@ -407,21 +447,15 @@ class ClaimStore:
         self._append({"event": "INGEST", "at": record.ingested_at_utc,
                       "record": record.to_json()})
 
+        # Only SUPERSESSION touches lifecycle. SUPPORT/CONFLICT used to emit
+        # back-reference STATE_CHANGEs setting SUPPORTED/CONTRADICTED; that was
+        # ingest writing a verification opinion, which V1 forbids. The
+        # structural relation survives on the new record's
+        # corroborating_/contradicting_record_ids, and consolidation derives
+        # support/contradiction groups from claim VALUES regardless.
         affected = []
-        if outcome is ConflictOutcome.SUPPORT:
-            for r in same_value:
-                self._state_change(
-                    r.record_id, VerificationState.SUPPORTED,
-                    corroborating_record_ids=list(r.corroborating_record_ids) + [record_id])
-                affected.append(r.record_id)
-        elif outcome is ConflictOutcome.CONFLICT:
-            for r in diff_value:
-                self._state_change(
-                    r.record_id, VerificationState.CONTRADICTED,
-                    contradicting_record_ids=list(r.contradicting_record_ids) + [record_id])
-                affected.append(r.record_id)
-        elif outcome is ConflictOutcome.SUPERSESSION:
-            self._state_change(supersedes, VerificationState.SUPERSEDED, superseded_by=record_id)
+        if outcome is ConflictOutcome.SUPERSESSION:
+            self._state_change(supersedes, LifecycleState.SUPERSEDED, superseded_by=record_id)
             affected.append(supersedes)
 
         return IngestResult(outcome, self._records[record_id], tuple(affected))
@@ -429,8 +463,70 @@ class ClaimStore:
     def retract(self, record_id: str, reason: str) -> ClaimRecord:
         if record_id not in self._records:
             raise KeyError(f"unknown record_id {record_id!r}")
-        self._state_change(record_id, VerificationState.RETRACTED, reason=reason)
+        self._state_change(record_id, LifecycleState.RETRACTED, reason=reason)
         return self._records[record_id]
+
+    def append_verification(self, *, claim_record_id: str, checker_id: str,
+                           checker_type: str, method: str, method_version: str,
+                           evidence_ids, result: VerificationResult,
+                           confidence: float, notes: str = "",
+                           observed_at_utc: str | None = None,
+                           supersedes_verification: str | None = None) -> VerificationEvent:
+        """Append a verification event. NEVER touches the claim record.
+
+        V8 fails closed twice: the claim itself and every cited evidence id
+        must resolve to a real record. A dangling pointer would make the
+        determination unauditable, which defeats the point of recording
+        evidence at all.
+        """
+        if claim_record_id not in self._records:
+            raise EvidenceResolutionError(
+                f"verification targets unknown claim record {claim_record_id!r}")
+        evidence = tuple(evidence_ids)
+        unknown = [e for e in evidence if e not in self._records]
+        if unknown:
+            raise EvidenceResolutionError(
+                f"verification cites unresolvable evidence ids {unknown!r}; refusing to "
+                "store a dangling pointer")
+        if supersedes_verification is not None and supersedes_verification not in self._verification_ids:
+            raise EvidenceResolutionError(
+                f"supersedes_verification references unknown verification event "
+                f"{supersedes_verification!r}")
+        observed = observed_at_utc or _now()
+        vid = verification_event_id(
+            claim_record_id=claim_record_id, checker_id=checker_id, method=method,
+            method_version=method_version, evidence_ids=evidence,
+            result=result.value, observed_at_utc=observed)
+        evt = VerificationEvent(
+            verification_event_id=vid, claim_record_id=claim_record_id,
+            checker_id=checker_id, checker_type=checker_type, method=method,
+            method_version=method_version, evidence_ids=evidence,
+            observed_at_utc=observed, result=result, confidence=float(confidence),
+            notes=notes, supersedes_verification=supersedes_verification)
+        self._append({"event": "VERIFICATION", "at": _now(), "verification": evt.to_json()})
+        return evt
+
+    def verification_events(self, record_id: str) -> list[VerificationEvent]:
+        """Full verification history for a claim, in log order. V4: later
+        events never erase earlier ones."""
+        return list(self._verifications.get(record_id, ()))
+
+    def verification_status(self, record_id: str) -> VerificationStatus:
+        """DERIVED, never stored. See verification.derive_status for the
+        frozen rule."""
+        events = self._verifications.get(record_id, ())
+        return derive_status(events, retired_ids(events))
+
+    def verification_disagreements(self) -> list[tuple[str, list[VerificationEvent]]]:
+        """V7: claims whose live verification events disagree. Reported
+        explicitly rather than averaged into a single verdict."""
+        out = []
+        for rid, events in sorted(self._verifications.items()):
+            retired = retired_ids(events)
+            live = [e for e in events if e.verification_event_id not in retired]
+            if len({e.result for e in live}) > 1:
+                out.append((rid, live))
+        return out
 
     def disagreements(self) -> list[tuple[tuple[str, str], list[ClaimRecord]]]:
         """Claims where retrievable records assert conflicting values. The

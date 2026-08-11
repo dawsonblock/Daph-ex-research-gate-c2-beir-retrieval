@@ -648,8 +648,15 @@
     "what_this_says_about_the_graph": "P3 proves a compressor that KNOWS which records matter unlocks S2. The runtime cannot know that from retrieval score plus coarse structural admissibility. A runtime graph is precisely a mechanism for identifying which records matter STRUCTURALLY rather than by score -- reaching the bridge by relation-aware traversal instead of hoping it ranks well. The P3-minus-P2 gap (0.473 vs 0.340 at cal_3000) is now a measured budget for what better discrimination is worth."
   },
   "background_verification_v1": {
+    "V11_idempotency": "Verification event ids are content-addressed over the full determination, so a worker that crashes after appending re-derives the SAME id on restart and replay drops it as a duplicate rather than recording a second opinion. Tested, along with a torn VERIFICATION append being dropped as never-committed.",
     "V12_load_bearing": "Verification status is NOT exposed to CERTIFIED_MEMORY_V1 in this milestone. Proving the substrate independently first means a verification bug cannot masquerade as a retrieval regression, and no prior confirmation needs re-establishing. V10 filtering is opt-in and OFF by default.",
     "artifact": "BACKGROUND_VERIFICATION_V1",
+    "axis_split_landed": {
+      "PROOF_THE_MIGRATION_IS_SEMANTICS_PRESERVING": "Re-ran the bounded-memory verifier against the PRE-SPLIT 1M event log: state hashes IDENTICAL at 100k and 500k, with A1-A5 all True. A schema change that leaves the derived state hash byte-identical on a log written by the old code is the strongest available evidence the split preserved meaning.",
+      "backward_compatibility": "lifecycle_from_event() reads both encodings, mapping legacy UNVERIFIED/SUPPORTED/CONTRADICTED to ACTIVE (all were retrievable). Pre-split logs therefore remain replayable and authoritative (A6).",
+      "tests_changed_visibly": "Four assertions in test_verified_memory_write.py / test_verified_memory_consolidation.py that pinned ingest-time SUPPORTED/CONTRADICTED were updated with comments naming V1/V6 as the cause and pointing at the verification tests that now cover the derived status. Changed visibly rather than loosened.",
+      "what": "VerificationState split into LifecycleState {ACTIVE,SUPERSEDED,RETRACTED} and VerificationStatus {UNVERIFIED,SUPPORTED,CONTRADICTED,FALSIFIED,INCONCLUSIVE}. Ingest now records lifecycle only; verification status is derived purely from appended events and is never stored on a claim."
+    },
     "blocking_conflict_surfaced_at_freeze_time": {
       "V1_vs_current": "V1 requires ingest to leave a claim UNVERIFIED, but ClaimStore.ingest currently ASSIGNS SUPPORTED/CONTRADICTED inline -- it already performs synchronous verification-against-memory. That classification must move out of ingest and become the first verification worker's job.",
       "V6_vs_current": "V6 requires retraction/supersession to be independent of verification status, but they are the SAME enum field today. VerificationState conflates lifecycle/retrievability (SUPERSEDED, RETRACTED) with verification opinion (UNVERIFIED, SUPPORTED, CONTRADICTED), so a record cannot currently be both SUPPORTED and SUPERSEDED -- a reachable, legitimate state.",
@@ -660,12 +667,31 @@
     },
     "core_rule": "Verification APPENDS EVIDENCE ABOUT a claim; it never mutates the claim in place.",
     "derivation_rule_frozen": "No events -> UNVERIFIED; unanimous -> that result; disagreement -> INCONCLUSIVE. Recency does NOT break ties (mirroring the already-frozen 'a later timestamp alone is not supersession' policy, for the same clock-skew/backfill reasons); an explicit supersedes_verification link is required to retire a verdict. Confidence is recorded but deliberately NOT consulted, because averaging disagreeing verifiers is exactly what V7 forbids.",
+    "derivation_verified": {
+      "V6_state_now_expressible": "test_a_record_can_be_supported_and_superseded_simultaneously -- the exact state the pre-split single enum could not represent.",
+      "confidence_does_not_break_ties": "test_disagreeing_verifiers_derive_INCONCLUSIVE -- conf 0.99 SUPPORTED vs conf 0.01 FALSIFIED still yields INCONCLUSIVE, because arg-maxing confidence is the silent averaging V7 forbids.",
+      "recency_does_not_break_ties": "test_recency_does_not_break_ties -- a 2099 verification against a 2020 one yields INCONCLUSIVE, not the later verdict."
+    },
     "design": "configs/background_verification_v1_design.json",
-    "first_worker": "DETERMINISTIC_MEMORY_CONSISTENCY -- verification against existing memory only, no web/LLM. CPU-only and replay-checkable. It inherits the classification being moved out of ingest, so the migration and the first worker are one piece of work.",
+    "first_worker": "DeterministicMemoryConsistencyChecker: memory-consistency only, no web/LLM. determine() is side-effect free and separated from emission so a determination can be inspected without touching the log. It NEVER emits FALSIFIED -- memory consistency can show agreement or disagreement, but establishing falsity needs evidence from outside the store (V2). Queue prioritizes conflicted claims; the other five priority signals are recorded and deliberately unused.",
     "gpu_required": "NONE",
+    "implementation": {
+      "modules": [
+        "hrm_adaptive_memory/memory_write/states.py (axis split)",
+        "hrm_adaptive_memory/memory_write/verification.py (events, derivation, first worker)",
+        "hrm_adaptive_memory/memory_write/claim_store.py (append_verification, derived status, opt-in filtering)"
+      ],
+      "tests": "tests/unit/test_background_verification.py -- 32 tests covering V1-V12. Full suite 1370 passed, 3 skipped."
+    },
     "priority_schema": "conflict_present / claim_importance / source_trust / novelty / age_staleness / dependent_count recorded; V1 policy uses conflict_present ONLY. The rest are deliberately unused -- inventing a weighting before there is evidence about what matters would be the same post-hoc move avoided elsewhere.",
     "scope": "Prove that verification can run asynchronously, append auditable results, survive replay/restart, preserve disagreement, and derive a stable current status without mutating canonical memory. NOT 'make the memory know what is true'.",
-    "status": "DESIGN_FROZEN__NOT_YET_IMPLEMENTED",
+    "status": "COMPLETE__V1_V12_ALL_PASS",
+    "test_suite_landmine_found_and_fixed": {
+      "assessment": "A pre-existing ordering-dependent landmine that any earlier-sorting test file would have detonated. My file exposed it rather than created it -- but it was my change that broke the build, and the honest framing is both.",
+      "cause": "pin_certified_memory_v1_boundary_policy() mutates a PROCESS-GLOBAL default ('legacy' -> 'grammar_v4'). Five test modules call it; none restored it. The suite only passed because every module that pins it sorted alphabetically AFTER the module asserting the default is 'legacy'.",
+      "fix": "tests/unit/conftest.py: an autouse fixture snapshotting and restoring the global around EVERY test, so correctness no longer depends on filename collation. Verified by running the boundary tests before AND after the verification module in one process.",
+      "what": "Adding test_background_verification.py broke SEVEN unrelated tests in test_g2_v4e_entity_boundary.py that still passed in isolation -- the signature of leaked global state, not a regression."
+    },
     "why_INCONCLUSIVE_not_CONTRADICTED_for_disagreement": "CONTRADICTED means the EVIDENCE contradicts the claim; verifiers disagreeing with EACH OTHER is a different fact and must not be collapsed into it."
   },
   "benchmark_lineage": {
@@ -2173,7 +2199,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "BACKGROUND_VERIFICATION_V1 DESIGN FROZEN (2026-08-11), not yet implemented. Core rule: verification APPENDS evidence about a claim and never mutates it in place; current status is DERIVED by replay. Freezing surfaced a blocking conflict with shipped behaviour that had to be settled now rather than during implementation: V1 requires ingest to leave claims UNVERIFIED, but ingest currently assigns SUPPORTED/CONTRADICTED inline; and V6 requires retraction/supersession to be independent of verification status, but they are the same enum field today. Resolution frozen: split lifecycle_state {ACTIVE,SUPERSEDED,RETRACTED} from a purely derived verification_status {UNVERIFIED,SUPPORTED,CONTRADICTED,FALSIFIED,INCONCLUSIVE}. Disagreement derives INCONCLUSIVE and stays queryable -- recency and confidence deliberately do NOT break ties. V12 keeps verification status away from the certified reader so a verification bug cannot masquerade as a retrieval regression. First worker is deterministic memory-consistency only: no web, no LLM. See background_verification_v1.",
+    "NEXT_GATE": "BACKGROUND_VERIFICATION_V1 COMPLETE -- V1-V12 all pass (2026-08-11). Verification APPENDS evidence about a claim and never mutates it; status is DERIVED by replay and never stored. The V1/V6 conflict surfaced at freeze time was resolved by splitting LifecycleState from VerificationStatus, and the migration is proven semantics-preserving the strongest way available: replaying the PRE-SPLIT 1M event log yields BYTE-IDENTICAL state hashes at 100k and 500k. Neither recency nor confidence breaks ties -- disagreement derives INCONCLUSIVE and stays queryable. First worker is deterministic memory-consistency only and never emits FALSIFIED, since establishing falsity needs evidence from outside the store. V12 holds: verification status is not exposed to CERTIFIED_MEMORY_V1, whose identity is unchanged. Implementation also exposed and fixed a pre-existing ordering-dependent test landmine (a process-global boundary policy pinned by five modules and restored by none), now contained by an autouse conftest fixture. 1370 tests pass. CPU-only. NEXT: BACKGROUND_VERIFICATION_V2 (external corroboration) -- but only if the substrate is wanted in that direction. See background_verification_v1.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
@@ -2619,6 +2645,16 @@
     "verdict": "NOT_CERTIFIED"
   },
   "qualified_claims": {
+    "background_verification_v1": {
+      "acceptance_tests": "tests/unit/test_background_verification.py (32 tests, V1-V12)",
+      "claim": "Verification can run asynchronously over the verified-memory store, append auditable results citing resolvable evidence, survive replay and restart without loss or duplication, preserve verifier disagreement explicitly, and derive a stable current status -- all without mutating canonical memory and without exposing verification status to CERTIFIED_MEMORY_V1.",
+      "not_a_claim_about": [
+        "whether the memory knows what is TRUE -- the only worker checks internal consistency",
+        "external corroboration, statistical checks, or LLM verification (deferred to V2)",
+        "answer quality -- no quality gate was run"
+      ],
+      "report": "configs/background_verification_v1_design.json"
+    },
     "bounded_memory_runtime_v1": {
       "acceptance_tests": "evidence/memory_write/bounded_memory_runtime_v1.json (A1-A10)",
       "claim": "The verified-memory runtime holds only current materialized state in RAM; complete history remains on disk, fully auditable by streaming. At 1M events this reduced RSS 53.5% (3895 -> 1811 MB) and cold replay 39% (18.28 -> 11.16s) while producing byte-identical consolidated-state hashes to the pre-change implementation at 100k, 500k and 1M.",
