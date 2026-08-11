@@ -2083,7 +2083,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "VERIFIED_MEMORY_WRITE_V1 MILESTONE_1 COMPLETE (2026-08-11). DAPH now has a living external memory: an append-only verified claim store that ingests, canonicalizes against the certified parser, detects duplicate/support/conflict/supersession, attaches provenance, assigns an explicit verification state, persists, and rebuilds retrieval. The milestone's real claims both hold -- a write BECOMES RETRIEVABLE through the UNMODIFIED certified path (failing before the write, succeeding after), and retraction/supersession correctly change what that path returns while history survives. The pre-flagged false-PASS hazard was REAL: the certified reader's backend cache is content-blind, demonstrated by T6 returning an identical backend for same-id/different-content sets. Provenance-addressed record_ids make it unreachable, so content-addressing is load-bearing. CERTIFIED_MEMORY_V1 identity is unchanged across all write operations. 17 tests pass; full suite 1312 passed. CPU-only -- unaffected by the GPU balance blocker. This is a CAPABILITY result, not a quality claim. Next: background verification and consolidation. See verified_memory_write_v1.",
+    "NEXT_GATE": "VERIFIED_MEMORY_CONSOLIDATION_V1 correctness COMPLETE -- C1-C12 all pass (2026-08-11). Derived state is provably a pure function of the append-only log: the headline invariant (incremental == full replay) is asserted after EVERY event against two genuinely independent implementations, including the retraction-dissolves-groups case that is the most likely consolidation bug. C11 crash recovery implements append -> fsync -> derive -> atomic publish, with snapshots validated against the log they claim to describe and discarded+rebuilt on mismatch; a half-implemented 'rebuild' step was found and fixed during implementation. Consolidation never resolves a contradiction, picks a winner, or infers supersession -- aliases cluster from EXPLICIT alias_of claims only. 43 write+consolidation tests; full suite 1337 passed. CPU-only. NEXT: pressure test at 100k-1M synthetic events, reported as measurements with no frozen threshold. See verified_memory_consolidation_v1.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
@@ -3555,7 +3555,18 @@
       "transferable_retrieval_features_delta": -0.0006,
       "within_scale_delta_auc": 0.0034
     },
+    "verified_memory_consolidation_v1": {
+      "acceptance_tests": "tests/unit/test_verified_memory_consolidation.py (26 tests, C1-C12)",
+      "claim": "Derived consolidated state -- duplicate clusters, alias clusters, support and contradiction groups, the current-state projection and the retrieval index -- is provably a pure function of the append-only event log: an incrementally maintained index and an independent from-scratch full scan produce identical canonical state hashes after every event, and the state survives deletion of all derived artifacts, process restart, torn appends, and snapshots describing a different log.",
+      "not_a_claim_about": [
+        "answer quality -- no quality gate was run",
+        "performance at scale -- the pressure test has not run yet",
+        "truth: consolidation never resolves a contradiction, picks a winner, or infers supersession"
+      ],
+      "report": "configs/verified_memory_consolidation_v1_design.json"
+    },
     "verified_memory_write_v1_milestone_1": {
+      "acceptance_tests": "tests/unit/test_verified_memory_write.py (17 tests)",
       "claim": "DAPH can ingest a new claim, canonicalize it against the certified entity extractor, classify its relationship to existing knowledge (duplicate/support/conflict/supersession), persist it with full provenance and an explicit verification state, and have the FROZEN, UNMODIFIED CERTIFIED_MEMORY_V1 reader retrieve the updated corpus state -- including correct behaviour under retraction and supersession, with history never destroyed.",
       "not_a_claim_about": [
         "answer quality -- no quality gate was run as part of this milestone",
@@ -3563,7 +3574,7 @@
         "scale, concurrency, background verification, or consolidation",
         "any executive/routing capability, which is closed as instrument-limited"
       ],
-      "report": "tests/unit/test_verified_memory_write.py (17 tests) + configs/verified_memory_write_v1_design.json"
+      "report": "configs/verified_memory_write_v1_design.json"
     }
   },
   "result_schema_note": "run_valid / scientific_verdict / mechanism_status / failure_class / split_status are the shared GateResult fields (hrm_adaptive_memory/experiment_integrity/result_schema.py). They replace ad hoc VALID_RUN/PASS collapses -- Confirmation #1 (RUN_VALID=true, MECHANISM_PASS=false) and G2-v1 (RUN_VALID=true, OUTCOME_C) are the two historical cases that motivated keeping these axes independent rather than a single boolean.",
@@ -4083,6 +4094,35 @@
     "failure_reason": "why, when it was not",
     "mechanism_effect_observed": "whether a real effect was measured, independent of promotion",
     "rule": "A FAIL verdict never implies absence of effect. Both are recorded separately."
+  },
+  "verified_memory_consolidation_v1": {
+    "C10_cache_invalidation": "Active-membership changes change the state hash and the reader's backend cache key. test_stale_index_would_have_served_a_removed_record demonstrates the hazard is real -- querying a pre-retraction index still returns the retracted record.",
+    "C11_crash_recovery": {
+      "commit_sequence": "append event -> fsync -> derive incrementally -> atomically publish snapshot (temp -> fsync -> os.replace)",
+      "failure_modes_tested": [
+        "crash after append before snapshot (snapshot absent -- log alone suffices)",
+        "partial snapshot temp file never published",
+        "snapshot describing a different log rejected",
+        "torn final log line dropped as never-committed, corpus_version unchanged, state hash preserved"
+      ],
+      "recovery_rule_implemented": "A snapshot is only ever an accelerator. It records the corpus_version and log sha256 it was derived from, and is DISCARDED AND REBUILT on any mismatch. A gap was found and fixed during implementation: load replayed correctly but did not republish a missing/invalid snapshot, so 'discarded then rebuilt' was only half-implemented."
+    },
+    "alias_handling": "Clusters from EXPLICIT alias_of claims only -- never string similarity, co-occurrence or embeddings, since inferring identity is a truth decision. Ingest-time conflict detection stays local (raw key); alias-aware grouping is global and consolidation-only. They may disagree by design: a later alias claim can reveal a contradiction invisible at ingest.",
+    "artifact": "VERIFIED_MEMORY_CONSOLIDATION_V1",
+    "certified_reader_untouched": "C8 -- identity hash identical across consolidation, and consolidation imports nothing from the certified reasoning path.",
+    "design": "configs/verified_memory_consolidation_v1_design.json (frozen e8da712)",
+    "gpu_required": "NONE -- CPU-only, unaffected by the Lightning balance blocker.",
+    "headline_invariant_C9": {
+      "checked_at_every_step": "Asserted after EVERY event, not only at the end, so a divergence cannot be masked by a later compensating change.",
+      "specific_bug_class_covered": "test_retraction_dissolves_groups_identically_in_both_paths -- a retracted record left behind in a support/contradiction/duplicate group is the most likely consolidation bug, and the contradiction group is asserted to dissolve entirely.",
+      "statement": "incremental consolidation == full replay consolidation",
+      "tested_against_two_independent_implementations": "ConsolidationIndex maintains live indexes one event at a time; consolidate_from_scratch recomputes every group by a fresh full scan with no incremental structure. Comparing one function against itself would prove nothing."
+    },
+    "next": "Pressure test at 100k-1M synthetic events (new claims, duplicates, aliases, conflicts, supersessions, retractions), measuring replay time, incremental latency, active count, index size, memory, retrieval correctness, drift at checkpoints, and cache invalidation. Reported as measurements with NO frozen performance threshold -- inventing one after seeing the numbers would be post-hoc. O(n) full replay is expected to dominate as the log grows; if it does, that is the finding motivating a later checkpoint/compaction design.",
+    "not_a_quality_claim": "CAPABILITY and CORRECTNESS milestone. No quality gate was run and none is implied.",
+    "scope": "Consolidation REORGANIZES memory; it does not decide truth. The append-only event log remains the only authoritative state; duplicate clusters, alias clusters, support/contradiction groups, the current-state projection and the retrieval index are all DERIVED and rebuildable.",
+    "status": "CORRECTNESS_COMPLETE__C1_C12_ALL_PASS__PRESSURE_TEST_NEXT",
+    "tests": "tests/unit/test_verified_memory_consolidation.py -- 26 tests covering C1-C12, all passing. Combined write+consolidation: 43 tests. Full suite 1337 passed, 3 skipped."
   },
   "verified_memory_write_v1": {
     "artifact": "VERIFIED_MEMORY_WRITE_V1",

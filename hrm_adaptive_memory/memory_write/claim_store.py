@@ -35,13 +35,16 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
-from enum import Enum
 from pathlib import Path
 from typing import Iterable
 
 from ..contracts import IndexRecord
+from .consolidation import ConsolidationIndex
+from .states import (  # noqa: F401
+    NON_RETRIEVABLE_STATES, ConflictOutcome, VerificationState)
 
 #: The write template. Chosen because it is a real b3 content shape and
 #: round-trips through the certified extract_v4_entities unchanged --
@@ -50,24 +53,6 @@ CONTENT_TEMPLATE = "subject={subject}; {relation}={value}"
 EXTRACTION_METHOD = "structured_claim_v1+grammar_v4_verify"
 
 
-class VerificationState(str, Enum):
-    UNVERIFIED = "UNVERIFIED"
-    SUPPORTED = "SUPPORTED"
-    CONTRADICTED = "CONTRADICTED"
-    SUPERSEDED = "SUPERSEDED"
-    RETRACTED = "RETRACTED"
-
-
-class ConflictOutcome(str, Enum):
-    NOVEL = "NOVEL"
-    DUPLICATE = "DUPLICATE"
-    SUPPORT = "SUPPORT"
-    CONFLICT = "CONFLICT"
-    SUPERSESSION = "SUPERSESSION"
-
-
-#: States whose records the READER must not see.
-NON_RETRIEVABLE_STATES = frozenset({VerificationState.RETRACTED, VerificationState.SUPERSEDED})
 
 
 class NotNativelyParseableError(ValueError):
@@ -137,39 +122,80 @@ class ClaimStore:
     """Append-only claim store. Current state is derived by replaying the
     event log, so no mutation ever destroys history."""
 
-    def __init__(self, root: str | Path):
+    def __init__(self, root: str | Path, auto_snapshot: bool = True):
         self.root = Path(root)
         self.root.mkdir(parents=True, exist_ok=True)
         self.log_path = self.root / "claims_events.jsonl"
         self.manifest_path = self.root / "MANIFEST.json"
+        self.snapshot_path = self.root / "consolidated_snapshot.json"
+        self.auto_snapshot = auto_snapshot
+        #: True if the final log line was a partial/torn append (a crash
+        #: during step 1 of the commit sequence). The truncated line is
+        #: DISCARDED -- an incomplete event was never committed -- and
+        #: replay proceeds from the intact prefix.
+        self.truncated_tail = False
         self._events: list[dict] = []
         if self.log_path.is_file():
-            self._events = [json.loads(l) for l in self.log_path.read_text().splitlines() if l.strip()]
+            self._events = self._load_events(self.log_path)
         self._records: dict[str, ClaimRecord] = {}
+        self._index = ConsolidationIndex()
         self._replay()
+        # Per the frozen C11 recovery rule: a snapshot is only ever an
+        # accelerator. If it is missing, torn, or describes a different log,
+        # it is DISCARDED and REBUILT from the canonical log -- which is the
+        # authoritative state we just replayed.
+        if self.auto_snapshot and self._events and not self.snapshot_is_valid():
+            self.publish_snapshot()
+
+    def _load_events(self, path: Path) -> list[dict]:
+        events: list[dict] = []
+        lines = path.read_text().splitlines()
+        for i, line in enumerate(lines):
+            if not line.strip():
+                continue
+            try:
+                events.append(json.loads(line))
+            except json.JSONDecodeError:
+                if i == len(lines) - 1:
+                    # torn final append: never committed, safe to drop
+                    self.truncated_tail = True
+                    break
+                raise
+        return events
 
     # --- derived state ---------------------------------------------------
+    def _apply_event(self, ev: dict) -> None:
+        """Apply ONE event to both the record map and the incremental
+        consolidation index. Used by live appends and by full replay, so the
+        two can never diverge in how an event is interpreted."""
+        kind = ev["event"]
+        if kind == "INGEST":
+            r = ev["record"]
+            rec = ClaimRecord(
+                **{**r, "verification_state": VerificationState(r["verification_state"]),
+                   "corroborating_record_ids": tuple(r.get("corroborating_record_ids", ())),
+                   "contradicting_record_ids": tuple(r.get("contradicting_record_ids", ()))})
+            self._records[rec.record_id] = rec
+            self._index.apply_ingest(rec, len(self._events))
+        elif kind == "STATE_CHANGE":
+            rid = ev["record_id"]
+            cur = self._records[rid]
+            rec = replace(
+                cur,
+                verification_state=VerificationState(ev["verification_state"]),
+                corroborating_record_ids=tuple(ev.get("corroborating_record_ids",
+                                                      cur.corroborating_record_ids)),
+                contradicting_record_ids=tuple(ev.get("contradicting_record_ids",
+                                                      cur.contradicting_record_ids)),
+                superseded_by=ev.get("superseded_by", cur.superseded_by))
+            self._records[rid] = rec
+            self._index.apply_state_change(rec, len(self._events))
+
     def _replay(self) -> None:
         self._records = {}
+        self._index = ConsolidationIndex()
         for ev in self._events:
-            kind = ev["event"]
-            if kind == "INGEST":
-                r = ev["record"]
-                self._records[r["record_id"]] = ClaimRecord(
-                    **{**r, "verification_state": VerificationState(r["verification_state"]),
-                       "corroborating_record_ids": tuple(r.get("corroborating_record_ids", ())),
-                       "contradicting_record_ids": tuple(r.get("contradicting_record_ids", ()))})
-            elif kind == "STATE_CHANGE":
-                rid = ev["record_id"]
-                cur = self._records[rid]
-                self._records[rid] = replace(
-                    cur,
-                    verification_state=VerificationState(ev["verification_state"]),
-                    corroborating_record_ids=tuple(ev.get("corroborating_record_ids",
-                                                          cur.corroborating_record_ids)),
-                    contradicting_record_ids=tuple(ev.get("contradicting_record_ids",
-                                                          cur.contradicting_record_ids)),
-                    superseded_by=ev.get("superseded_by", cur.superseded_by))
+            self._apply_event(ev)
 
     @property
     def corpus_version(self) -> int:
@@ -206,15 +232,74 @@ class ClaimStore:
 
     # --- persistence -----------------------------------------------------
     def _append(self, event: dict) -> None:
+        """The frozen C11 commit sequence:
+            1. append the canonical event
+            2. fsync the log
+            3. derive new consolidated state (incrementally)
+            4. atomically publish the snapshot
+
+        A crash between ANY two stages leaves the canonical log sufficient
+        for recovery: the snapshot is only ever an accelerator, is validated
+        against the log it claims to describe, and is discarded on mismatch.
+        """
         self._events.append(event)
-        with self.log_path.open("a") as fh:
+        with self.log_path.open("a") as fh:          # 1
             fh.write(json.dumps(event, sort_keys=True) + "\n")
-        self._replay()
+            fh.flush()
+            os.fsync(fh.fileno())                    # 2
+        self._apply_event(event)                     # 3 -- O(1)-ish, not a full replay
         self._write_manifest()
+        if self.auto_snapshot:
+            self.publish_snapshot()                  # 4
+
+    def _atomic_write(self, path: Path, text: str) -> None:
+        """Write via temp + fsync + os.replace, which is atomic on POSIX, so
+        a crash mid-write can never leave a half-written file that a naive
+        reader would trust."""
+        tmp = path.with_suffix(path.suffix + ".tmp")
+        with tmp.open("w") as fh:
+            fh.write(text)
+            fh.flush()
+            os.fsync(fh.fileno())
+        os.replace(tmp, path)
+
+    def log_sha256(self) -> str:
+        return (hashlib.sha256(self.log_path.read_bytes()).hexdigest()
+                if self.log_path.is_file() else "")
+
+    def consolidated_state(self):
+        """Derived state from the INCREMENTAL index."""
+        return self._index.snapshot()
+
+    def publish_snapshot(self) -> Path:
+        """Stage 4. The snapshot records the corpus_version and log hash it
+        was derived from, so a later load can tell whether it still
+        describes this log."""
+        state = self.consolidated_state()
+        self._atomic_write(self.snapshot_path, json.dumps({
+            "derived_from_corpus_version": self.corpus_version,
+            "derived_from_log_sha256": self.log_sha256(),
+            "state_hash": state.state_hash(),
+            "state": state.to_json(),
+        }, indent=2, sort_keys=True) + "\n")
+        return self.snapshot_path
+
+    def snapshot_is_valid(self) -> bool:
+        """A snapshot is trusted ONLY if it describes exactly this log.
+        Anything else -- missing, torn, or describing a different history --
+        is discarded and rebuilt from the canonical log."""
+        if not self.snapshot_path.is_file():
+            return False
+        try:
+            snap = json.loads(self.snapshot_path.read_text())
+        except json.JSONDecodeError:
+            return False
+        return (snap.get("derived_from_corpus_version") == self.corpus_version
+                and snap.get("derived_from_log_sha256") == self.log_sha256())
 
     def _write_manifest(self) -> None:
-        digest = hashlib.sha256(self.log_path.read_bytes()).hexdigest() if self.log_path.is_file() else ""
-        self.manifest_path.write_text(json.dumps({
+        digest = self.log_sha256()
+        self._atomic_write(self.manifest_path, json.dumps({
             "store": "VERIFIED_MEMORY_WRITE_V1",
             "design": "configs/verified_memory_write_v1_design.json",
             "corpus_version": self.corpus_version,
@@ -223,6 +308,7 @@ class ClaimStore:
             "n_retrievable": len(self.retrievable()),
             "state_counts": {s.value: sum(1 for r in self._records.values()
                                           if r.verification_state == s) for s in VerificationState},
+            "consolidated_state_hash": self.consolidated_state().state_hash(),
         }, indent=2, sort_keys=True) + "\n")
 
     def _state_change(self, record_id: str, state: VerificationState, **extra) -> None:
