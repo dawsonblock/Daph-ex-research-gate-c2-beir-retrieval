@@ -95,6 +95,27 @@ class FailureClass(str, Enum):
     #: NOT a second negative result -- per configs/gate_answer_probe_v2_
     #: design.json PHASE_5, a floor miss stops the pipeline before fitting.
     MINIMUM_CLASS_FLOOR_NOT_MET = "MINIMUM_CLASS_FLOOR_NOT_MET"
+    #: The mechanism under test carries real, measured signal, but the
+    #: DECISION STATE it is allowed to observe is too impoverished to solve
+    #: the problem -- the bottleneck is observability, not sample size, not
+    #: model capacity, and not fitting. First needed for
+    #: ANSWER_PROBE_COST_GATE_V1.1 (RESEARCH_STATUS.json
+    #: answer_probe_cost_gate_v1): direct-generation confidence separates the
+    #: cost-aware action classes at |Cohen's d| up to 0.56, yet at ZERO
+    #: quality loss a confidence-only gate captures only ~1.4% token savings
+    #: against an oracle's ~40% on the same tasks. The residual ~38.6pp is
+    #: opportunity the controller cannot reach because confidence alone
+    #: cannot observe whether relevant external evidence exists.
+    #:
+    #: Distinct from LEARNED_POLICY_UNDERPERFORMS_FIXED_BASELINE (there the
+    #: signal existed and the FIT failed; here the fit is fine and the
+    #: SIGNAL is insufficient by construction) and from
+    #: MINIMUM_CLASS_FLOOR_NOT_MET (there the test lacked power; here the
+    #: measurement succeeded and is itself the result). Carries a positive
+    #: research implication rather than only a negative one: it names the
+    #: specific missing observation, which is what licenses adding a new
+    #: sensing stage rather than more data or a bigger model.
+    OBSERVABILITY_LIMITED = "OBSERVABILITY_LIMITED"
     NOT_APPLICABLE = "NOT_APPLICABLE"
 
 

@@ -12,8 +12,33 @@
       "second_and_deeper_consequence": "The same compression makes accepting almost never rational for a fitted classifier: a false ACCEPT forfeits a full quality point (1.0) while a correct ACCEPT saves ~0.0006 utility, so expected-value reasoning drives the model to escalate unless it is ~99.9% certain memory cannot help. P3 converging to always-escalate is therefore the CORRECT response to the objective as frozen -- the controller is not at fault, the objective is.",
       "what_is_NOT_being_done": "EPSILON is NOT being retuned, and the lambda_T grid is NOT being promoted to a criterion. Either move would be exactly the post-hoc tuning this project's discipline forbids. No promotion claim is made from any of this, and no GPU has been spent on PHASE_4/5."
     },
+    "FROZEN_CONCLUSION": {
+      "statement": "Direct-generation confidence carries measurable information about the value of external-memory escalation, but under the frozen quality-preservation objective it captures only a small fraction of the available cost-saving opportunity. At zero observed quality loss, the confidence-only gate reduces token cost by approximately 1.4%, compared with approximately 40% for the oracle policy. The confidence-only branch was therefore not advanced to confirmation.",
+      "the_result_that_was_banked_instead": {
+        "frontier_at_zero_quality_loss": {
+          "confidence_only_gate_token_saving": 0.014,
+          "oracle_token_saving": 0.4,
+          "unreached_opportunity_pp": 38.6
+        },
+        "why_this_is_the_stronger_result": "It is a property of the information available to the controller, not of one run's luck landing at 1.97% versus 2.03% quality loss. It is stable, mechanistic, and it names what is missing."
+      },
+      "why_NOT_FAILED": "No prospective confirmation test was ever run, so no prospective test was failed. The branch is closed on a measured frontier, not on a rejected hypothesis. Calling it FAILED would misrepresent what happened and would also understate the positive content: the probe demonstrably carries signal (4/5 features clear the frozen separation threshold, |Cohen's d| up to 0.56).",
+      "why_not_advanced": "The best available operating point consumed 98.5% of the permitted quality-loss budget (0.0197 of 0.02) to buy a 10.9% token reduction. Even a passing one-shot confirmation would have licensed only a narrow claim -- 'roughly 10% token savings while just inside a 2-point quality margin on this distribution' -- with essentially no generalization headroom, so a modest distribution shift would erase the operating point. The GPU cost of a qualification-style campaign was not justified by that claim."
+    },
     "artifact": "ANSWER_PROBE_COST_GATE_V1",
+    "decision": "CONFIDENCE_ONLY_GATE_NOT_ADVANCED_TO_CONFIRMATION",
     "design": "configs/gate_answer_probe_cost_v1_design.json (frozen 2f59f6a, BEFORE any label was recomputed)",
+    "diagnosis_bottleneck_has_moved": "Across EOB-v2 (action opportunity is real) -> ANSWER_PROBE_GATE_V1 (confidence has signal; learned controller fails) -> V2 (class-design/instrument defect found and fixed) -> cost-aware development (objective made well-posed; frontier measured), the binding constraint has moved from training-data quantity to OBSERVABILITY. Confidence alone cannot observe whether relevant external evidence exists, which is precisely the quantity the escalation decision depends on. The ~38.6pp of unreached, quality-free cost savings is the quantitative justification for adding one cheap sensing stage rather than more data or a larger model.",
+    "formal_gate_result": {
+      "failure_class": "OBSERVABILITY_LIMITED",
+      "mechanism_status": "NOT_PROMOTED",
+      "reading": "PARTIAL, not NEGATIVE: a real effect was measured (the frontier) and the probe's signal was confirmed; what was not established is a promotable controller. NOT_PROMOTED with failure_class=OBSERVABILITY_LIMITED, not LEARNED_POLICY_UNDERPERFORMS_FIXED_BASELINE, because the fit is sound and the DECISION STATE is the binding constraint.",
+      "run_valid": true,
+      "schema": "hrm_adaptive_memory.experiment_integrity.result_schema.GateResult",
+      "scientific_verdict": "PARTIAL",
+      "split_status": "CONSUMED"
+    },
+    "gpu_spent_on_phase_4_5": "NONE. PHASE_4 (fresh evaluation split) was never built and PHASE_5 (one-shot promotion test) was never run. No confirmation claim exists in either direction.",
     "phase_1_labels": {
       "ANSWER_preferred": 747,
       "MEMORY_preferred": 268,
@@ -52,7 +77,8 @@
     },
     "phase_4_5_status": "NOT STARTED. Deliberately halted before spending GPU on a fresh evaluation split, because the frozen promotion criterion is now demonstrably near-vacuous and PHASE_5 would almost certainly return a null driven by the utility parameterization rather than by the controller.",
     "recommended_resolution_pending_research_lead": "Operationalize the SAME frozen preference ordering ('maximize quality; among quality-tied policies prefer cheaper') as a two-part NON-INFERIORITY test rather than one compressed scalar: (1) quality non-inferior to the best fixed policy within a prospectively frozen margin, AND (2) strictly lower mean compute with a positive grouped-bootstrap LCB on the compute saving. This requires no exchange rate between quality and compute -- the thing lexicographic was chosen to avoid -- while producing an effect size a bootstrap can actually resolve (the oracle's 40% token reduction). It is a faithful restatement of the already-frozen preference ordering, not a new one, but it IS a protocol revision made after seeing PHASE_3 and must therefore be frozen and then tested once on a fresh split.",
-    "status": "PHASE_1-3_COMPLETE__PHASE_4_5_NOT_STARTED__DESIGN_FLAW_IN_FROZEN_UTILITY_IDENTIFIED",
+    "status": "BRANCH_CLOSED__CONFIDENCE_ONLY_GATE_NOT_ADVANCED_TO_CONFIRMATION",
+    "successor": "configs/gate_retrieval_probe_v1_design.json -- ANSWER + RETRIEVAL_PROBE -> FULL_CERTIFIED_MEMORY_V1",
     "v1_1_revision": {
       "attainability_frontier_dev_holdout": {
         "reading": "The quality/compute frontier is STEEP and the gate captures only a small share of the oracle's headroom. At zero quality loss the gate saves just 1.4% of tokens (tau<=0.40); reaching 10% costs ~1.5 quality points; 32% costs ~8.9. The ORACLE by contrast reaches 40% at ZERO quality loss. So the probe has real signal (PHASE_2, |d| up to 0.56) but not enough precision to identify the memory-won't-help tasks cleanly -- that gap between 1.4% and 40% at zero loss is the honest measure of how far confidence-only gating falls short of the information an oracle has."
@@ -2028,7 +2054,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "ANSWER_PROBE_COST_GATE_V1 PHASE_1-3 complete, PHASE_4/5 halted before GPU spend (2026-08-10). The cost-aware objective genuinely fixes V2's class-scarcity problem (268 vs 747 labels, both abundant) and the probe separates the utility classes more strongly than under quality-only (|d| up to 0.56 vs 0.39). But the frozen strictly-lexicographic utility bounds the maximum attainable Delta_U_gate at ~0.0006, so even a perfect oracle beats the best fixed policy by only +0.0007 -- the promotion criterion is near-vacuous BY CONSTRUCTION, and the fitted P3 correctly converged to always-escalate. Real headroom nonetheless exists and is large in the right units: the oracle matches always-escalate's quality exactly (0.3941) at 92.8 vs 154.9 mean tokens, a 40% compute reduction. EPSILON was NOT retuned; halted pending a research-lead decision on restating the same frozen preference ordering as a quality-non-inferiority + compute-reduction test. See answer_probe_cost_gate_v1.",
+    "NEXT_GATE": "CONFIDENCE_ONLY_GATE_NOT_ADVANCED_TO_CONFIRMATION (2026-08-10). Branch closed on a measured frontier rather than a failed test: no prospective confirmation was ever run, and no GPU was spent on PHASE_4/5. Direct-generation confidence carries real information about escalation value (4/5 features clear the frozen separation threshold, |d| up to 0.56), but at ZERO quality loss a confidence-only gate reduces token cost by only ~1.4% against an oracle's ~40% on the same tasks. The best operating point consumed 98.5% of the 0.02 quality budget to buy 10.9%, leaving no generalization headroom, so even a passing confirmation would have licensed only a narrow, fragile claim. Formal result: run_valid=true, scientific_verdict=PARTIAL, mechanism_status=NOT_PROMOTED, failure_class=OBSERVABILITY_LIMITED (new). The bottleneck has moved from training-data quantity to what the controller can OBSERVE -- confidence cannot see whether relevant external evidence exists. NEXT: ANSWER + RETRIEVAL_PROBE -> FULL_CERTIFIED_MEMORY_V1, per configs/gate_retrieval_probe_v1_design.json. See answer_probe_cost_gate_v1.FROZEN_CONCLUSION / qualified_claims.gate_answer_probe_cost_v1.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
@@ -2485,6 +2511,21 @@
         "persistent cognition"
       ],
       "report": "evidence/gate_a/qualified_run_002/gate_a_report_v2r1.json"
+    },
+    "gate_answer_probe_cost_v1": {
+      "claim": "Direct-generation confidence carries measurable information about the value of external-memory escalation, but under a frozen quality-preservation objective it captures only a small fraction of the available cost-saving opportunity: at zero observed quality loss a confidence-only gate reduces token cost by ~1.4%, versus ~40% for the oracle policy on the same tasks.",
+      "measured_frontier_at_zero_quality_loss": {
+        "gate": 0.014,
+        "oracle": 0.4
+      },
+      "not_a_claim_about": [
+        "whether a confidence-only gate would have passed a prospective confirmation -- that test was never run, in either direction",
+        "CERTIFIED_MEMORY_V1, which is untouched throughout",
+        "whether a RICHER decision state can capture the remaining opportunity -- that is the successor study's question, not this one's finding",
+        "generalization beyond this two-family instrument (see KNOWN_LIMITATION_family_label_correlation in the frozen design)"
+      ],
+      "report": "evidence/gate_executive/exec_training_v2_execute.receipts.cost_gate_v1_1_frozen.json",
+      "separation_confirmed": "4/5 confidence features clear |Cohen's d| >= 0.3 (up to 0.56)"
     },
     "gate_answer_probe_v1": {
       "claim": "A cheap confidence probe computed from ANSWER_NOW's own generation (mean/min/sequence token confidence, mean entropy, answer length) carries real action-value information -- it measurably separates tasks where escalating to CERTIFIED_MEMORY_V1 helps from tasks where it doesn't -- but a small logistic-regression policy fit on a 144-task/100-train-row split does not yet turn that signal into a controller that beats trivial fixed policies (always-accept or always-escalate) on held-out data.",

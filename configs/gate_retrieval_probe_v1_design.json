@@ -1,0 +1,83 @@
+{
+  "ARTIFACT": "RETRIEVAL_PROBE_GATE_V1",
+  "ARCHITECTURE": "Question -> cheap ANSWER probe -> confidence features -> CHEAP RETRIEVAL PROBE -> retrieval features -> Executive -> {ACCEPT, FULL_CERTIFIED_MEMORY_V1}",
+
+  "WHY_THIS_EXISTS": "ANSWER_PROBE_COST_GATE_V1.1 closed with CONFIDENCE_ONLY_GATE_NOT_ADVANCED_TO_CONFIRMATION and failure_class=OBSERVABILITY_LIMITED. Its banked frontier: at ZERO quality loss a confidence-only gate reduces cost by ~1.4%, against an oracle's ~40% on the same tasks. That ~38.6pp of unreached, quality-free opportunity is the quantitative justification for adding exactly ONE cheap sensing stage. The hypothesis under test is narrow and falsifiable: confidence cannot observe whether relevant external evidence EXISTS, and that is the specific missing quantity the escalation decision depends on.",
+
+  "WHAT_STAYS_UNCHANGED": [
+    "CERTIFIED_MEMORY_V1 -- identity asserted live before every task, never modified",
+    "the real, unmodified parser boundary (extract_subject / extract_target_relation / grammar_v4) -- zero bypass, no parser modification",
+    "the cheap ANSWER_NOW confidence probe and its 5 features",
+    "no D2/D3 privileged-parsing regimes",
+    "the two clean native families (ANSWER_NOW_viable, MEMORY_required)",
+    "scale-isolated retrieval for MEMORY_required (the RUN_VALID fix from a697cf5)",
+    "no neural controller -- logistic / linear only, complexity beyond that is diagnostic-only"
+  ],
+
+  "THE_PROBE_MUST_BE_STRICTLY_CHEAPER_THAN_FULL_MEMORY": {
+    "probe_runs": "retrieval only (the existing BM25 + dense fusion already in the pipeline), plus the existing identity/binding stage",
+    "probe_does_NOT_run": ["G2 runtime graph construction", "path enumeration/competition", "path-coherent packet composition", "the second HRM generation over the composed packet"],
+    "reuse_not_recompute": "If the executive escalates, the FULL memory action REUSES the probe's already-computed retrieval result rather than recomputing it. Retrieval is therefore paid exactly once per task regardless of the decision. This is both the realistic deployment design and the one that keeps the cost accounting honest -- escalation's marginal cost is precisely the G2 + composition + second-generation work, which is what an ACCEPT actually avoids.",
+    "consequence_for_accounting": "The probe's cost is UNAVOIDABLE and must be charged to every policy including P0_always_accept. A gate cannot look cheap by ignoring the sensing stage it requires."
+  },
+
+  "COST_MODEL_MUST_CHANGE_AND_WHY": {
+    "problem_with_the_inherited_token_cost": "ANSWER_PROBE_COST_GATE used C = prompt_tokens + completion_tokens. A retrieval probe generates NO tokens, so under that metric the probe would appear FREE and any gate using it would show an inflated saving. That is a measurement artifact, not a result.",
+    "PRIMARY_cost_for_this_study": "measured wall-clock latency per stage, in seconds",
+    "required_instrumentation": [
+      "A0_ANSWER_NOW generation latency -- currently NOT recorded (0/1015 receipts); this is the pre-existing gap flagged in configs/gate_answer_probe_cost_v1_design.json INSTRUMENTATION_FIX_REQUIRED_FOR_EVAL and it must be fixed before this study collects anything",
+      "retrieval-probe latency (BM25 + dense fusion + identity/binding)",
+      "G2 + path composition latency",
+      "A1 generation latency -- already recorded"
+    ],
+    "policy_costs": {
+      "P0_always_accept": "A0_latency + probe_latency",
+      "P1_always_escalate": "A0_latency + probe_latency + g2_composition_latency + A1_generation_latency",
+      "gate": "A0_latency + probe_latency + (escalation stages only when it escalates)"
+    },
+    "SECONDARY_reported_alongside": "the token-based cost, for continuity with the closed branch -- reported, never a criterion, and explicitly annotated as not charging for the probe.",
+    "honest_limitation": "Wall-clock latency on a shared GPU studio is noisier than token counts and can drift with machine state. It is nonetheless the only unit that charges the probe for the work it actually does. Latency must therefore be collected in a single uninterrupted run on one machine type, and per-stage medians reported alongside means."
+  },
+
+  "FEATURE_ADMISSIBILITY_REQUIRES_A_NEW_STAGE": {
+    "problem": "hrm_adaptive_memory/experiment_integrity/executive_features.py currently marks AvailabilityStage.POST_RETRIEVAL as NOT admissible for an answer-vs-memory decision, because retrieval was part of the memory action being decided about. This architecture deliberately moves a cheap retrieval to BEFORE the decision, so that rule no longer describes the system.",
+    "required_change": "Add AvailabilityStage.POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY and include it in STAGES_ADMISSIBLE_FOR_ANSWER_VS_MEMORY. POST_RETRIEVAL (the full memory action's internal retrieval) stays inadmissible; POST_GRAPH and POST_GENERATION stay inadmissible. The distinction is real and must be enforced mechanically, not by comment: a feature is admissible only if it is computable WITHOUT running G2, composition, or the second generation.",
+    "hard_rule_carried_forward": "No feature may leak which synthetic family a task came from. Retrieval features describe the corpus's response to a query and are observable for any incoming question in deployment, which satisfies this -- but see KNOWN_LIMITATION."
+  },
+
+  "CANDIDATE_PROBE_FEATURES": {
+    "note": "Exact feature list to be finalized when the probe is implemented and its outputs are inspected for computability -- NOT after any outcome is scored. This list is the frozen intent.",
+    "features": [
+      "top1_retrieval_score",
+      "topk_mean_retrieval_score",
+      "retrieval_score_margin (top1 minus top2 -- is there a decisive best candidate?)",
+      "fused_candidate_count_above_threshold (are plausible supporting records present at all?)",
+      "identity_binding_status (EXACT / RESOLVED / AMBIGUOUS / UNRESOLVED -- can the query subject even be bound to the corpus?)",
+      "relation_extracted (whether extract_target_relation returned a relation at all)",
+      "confidence_retrieval_disagreement (interaction: model appears confident but retrieval finds strong support, or vice versa)"
+    ],
+    "why_these": "They answer the one question confidence structurally cannot: does relevant external evidence appear to exist for THIS query? identity_binding_status is expected to be especially informative -- on the closed branch's development data it was UNRESOLVED for 265/265 zero-evidence GK tasks and EXACT/RESOLVED for 741/750 MEMORY_required tasks, i.e. it is close to an oracle for 'is there anything here to retrieve'. That strength is also a hazard: see KNOWN_LIMITATION."
+  },
+
+  "KNOWN_LIMITATION_binding_status_may_be_too_good_on_this_instrument": "On the current two-family instrument, identity_binding_status alone nearly separates the families by construction, because ANSWER_NOW_viable tasks carry ZERO evidence records and so can never bind. A gate could therefore score well by learning 'is the evidence pool empty', which is trivially true here and uninformative about deployment, where the store is never empty and the real question is whether the store contains evidence relevant to THIS query. This is the same family/label-correlation hazard inherited from the closed branch, sharpened. Two mandatory consequences: (1) the per-family decomposition remains a required diagnostic, and (2) the MEMORY_required family -- where the evidence pool is non-empty for every task and binding succeeds for ~99% -- is the regime where any genuine within-family routing must be demonstrated. A promotion whose entire gain comes from the empty-pool family must be reported as such and does NOT license a general claim.",
+
+  "PROMOTION_CRITERIA": {
+    "shape_carried_over_unchanged_from_ANSWER_PROBE_COST_GATE_V1_1": "All five criteria keep their frozen thresholds -- quality non-inferiority within 0.02; >= 10% relative cost reduction; positive grouped-bootstrap LCB on the saving; P(ACCEPT | memory would improve quality) <= 0.30; eval class floors 40/40. They were set prospectively and deliberately strict, and are reused unchanged so this study cannot be accused of moving bars between branches.",
+    "one_substantive_difference": "Cost is now measured in wall-clock latency (PRIMARY) rather than tokens, per COST_MODEL_MUST_CHANGE_AND_WHY, and the probe's cost is charged to every policy.",
+    "additional_required_comparison": "The gate must also beat the CLOSED BRANCH's confidence-only gate on the same evaluation data. Demonstrating that retrieval features add information beyond confidence alone is the entire point of this study; a gate that merely matches confidence-only performance has not established the hypothesis, regardless of whether it clears the fixed-policy baselines.",
+    "if_not_met": "Report as a formal negative result. Do not retune. A failure here means the cheap-retrieval-probe state is also insufficient, and the next question would be whether the remaining opportunity requires a fundamentally more expensive observation -- which would need its own separately justified design."
+  },
+
+  "PHASE_PLAN": [
+    "PHASE_0: implement the cheap retrieval probe as a separate, reusable stage; add AvailabilityStage.POST_CHEAP_RETRIEVAL_PROBE_PRE_MEMORY; add the missing latency instrumentation (A0, probe, G2+composition). No scoring.",
+    "PHASE_1: development collection over the CONSUMED exec_training_v2 suite (permitted: diagnosis_only / hypothesis_generation_only; controller design is hypothesis generation). Yields probe features + per-stage latencies. NO promotion claim.",
+    "PHASE_2: separation check -- do the retrieval features carry information about Delta_U beyond what confidence already provides? Report incremental value over the confidence-only baseline, not just raw separation.",
+    "PHASE_3: fit controller on TRAIN, select operating point on CALIBRATION with the same half-margin generalization headroom that the closed branch's amendment established. Freeze.",
+    "PHASE_4: build a fresh, never-touched native evaluation split (fresh seeds outside every prior range; zero-overlap independently re-verified).",
+    "PHASE_5: one-shot promotion test against the criteria above, including the required comparison to the confidence-only gate."
+  ],
+
+  "STOP_CONDITION": "If PHASE_2 shows the retrieval features add no incremental information beyond confidence, STOP before fitting and before any evaluation split -- report that negative result directly. The closed branch's frontier already establishes that confidence alone is insufficient; a probe that adds nothing to it would mean the cheap-observation hypothesis is wrong, which is worth knowing without a GPU confirmation campaign.",
+
+  "frozen_utc": "2026-08-11T00:10:00Z"
+}
