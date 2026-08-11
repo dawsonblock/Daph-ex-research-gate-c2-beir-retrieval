@@ -2083,7 +2083,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "EXECUTIVE LINE CLOSED -- INSTRUMENT_LIMITED (2026-08-11). Two independent branches returned the same failure mode: confidence-only captured ~1.4% of a ~40% opportunity (PARTIAL, OBSERVABILITY_LIMITED), and the cheap retrieval probe's apparent gain was 86% a corpus-size indicator constant in real deployment, collapsing to +0.0034 within-scale (NEGATIVE, OBSERVABILITY_LIMITED). The benchmark is now testing corpus-construction artifacts rather than the executive: preferred action correlates with family (empty vs non-empty pool) and scale (corpus size / retrieval budget), not with the task-evidence relationship. A future executive benchmark must vary preferred action WITHIN one corpus, one budget, one parser, one candidate-count distribution, with every task non-empty and all regimes interleaved -- and must NOT be manufactured by modifying CERTIFIED_MEMORY_V1. NEXT PROGRAM: VERIFIED_MEMORY_WRITE_V1 -- moving DAPH from static external memory to a living one that ingests, verifies, versions and consolidates knowledge. See executive_line_closed and configs/verified_memory_write_v1_design.json.",
+    "NEXT_GATE": "VERIFIED_MEMORY_WRITE_V1 MILESTONE_1 COMPLETE (2026-08-11). DAPH now has a living external memory: an append-only verified claim store that ingests, canonicalizes against the certified parser, detects duplicate/support/conflict/supersession, attaches provenance, assigns an explicit verification state, persists, and rebuilds retrieval. The milestone's real claims both hold -- a write BECOMES RETRIEVABLE through the UNMODIFIED certified path (failing before the write, succeeding after), and retraction/supersession correctly change what that path returns while history survives. The pre-flagged false-PASS hazard was REAL: the certified reader's backend cache is content-blind, demonstrated by T6 returning an identical backend for same-id/different-content sets. Provenance-addressed record_ids make it unreachable, so content-addressing is load-bearing. CERTIFIED_MEMORY_V1 identity is unchanged across all write operations. 17 tests pass; full suite 1312 passed. CPU-only -- unaffected by the GPU balance blocker. This is a CAPABILITY result, not a quality claim. Next: background verification and consolidation. See verified_memory_write_v1.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
@@ -3554,6 +3554,16 @@
       "report": "evidence/gate_executive/retrieval_probe_v1_scale_confound.json",
       "transferable_retrieval_features_delta": -0.0006,
       "within_scale_delta_auc": 0.0034
+    },
+    "verified_memory_write_v1_milestone_1": {
+      "claim": "DAPH can ingest a new claim, canonicalize it against the certified entity extractor, classify its relationship to existing knowledge (duplicate/support/conflict/supersession), persist it with full provenance and an explicit verification state, and have the FROZEN, UNMODIFIED CERTIFIED_MEMORY_V1 reader retrieve the updated corpus state -- including correct behaviour under retraction and supersession, with history never destroyed.",
+      "not_a_claim_about": [
+        "answer quality -- no quality gate was run as part of this milestone",
+        "natural-language ingestion or extraction quality on non-b3 text",
+        "scale, concurrency, background verification, or consolidation",
+        "any executive/routing capability, which is closed as instrument-limited"
+      ],
+      "report": "tests/unit/test_verified_memory_write.py (17 tests) + configs/verified_memory_write_v1_design.json"
     }
   },
   "result_schema_note": "run_valid / scientific_verdict / mechanism_status / failure_class / split_status are the shared GateResult fields (hrm_adaptive_memory/experiment_integrity/result_schema.py). They replace ad hoc VALID_RUN/PASS collapses -- Confirmation #1 (RUN_VALID=true, MECHANISM_PASS=false) and G2-v1 (RUN_VALID=true, OUTCOME_C) are the two historical cases that motivated keeping these axes independent rather than a single boolean.",
@@ -4073,6 +4083,40 @@
     "failure_reason": "why, when it was not",
     "mechanism_effect_observed": "whether a real effect was measured, independent of promotion",
     "rule": "A FAIL verdict never implies absence of effect. Both are recorded separately."
+  },
+  "verified_memory_write_v1": {
+    "artifact": "VERIFIED_MEMORY_WRITE_V1",
+    "certified_memory_v1_untouched": "T5 PASSES -- assert_certified_memory_v1_unchanged() gives an identical identity hash before and after ingest/supersede/retract, and a source-level test asserts the write layer never references the certified reasoning path (g2_paths, packet_composition, packet_stage, selector_v2, runtime_graph, generate_with_confidence).",
+    "deferred_to_later_milestones": [
+      "background/asynchronous verification",
+      "consolidation across many records",
+      "natural-language document ingestion",
+      "learned extraction",
+      "concurrent writers",
+      "timestamp-based supersession policy"
+    ],
+    "design": "configs/verified_memory_write_v1_design.json (frozen e0b7008)",
+    "explicitly_not_a_quality_claim": "MILESTONE_1 is a CAPABILITY and CORRECTNESS result. No quality gate was run and none is implied; it must not be reported as improving answer quality.",
+    "frozen_policies_implemented_literally": {
+      "contradicted_is_terminal_not_an_error": "T4 PASSES -- two conflicting claims BOTH persist, BOTH are marked CONTRADICTED, BOTH remain retrievable, and disagreements() reports the conflict rather than silently picking a winner.",
+      "later_timestamp_alone_is_not_supersession": "Test asserts a 2099 observation against a 2020 one yields CONFLICT, not SUPERSESSION. An explicit supersedes link is required.",
+      "never_silently_delete": "Storage is an append-only EVENT LOG (INGEST / STATE_CHANGE); current state is derived by replay. Retraction and supersession change RETRIEVABILITY and STATE, never history. Test asserts the raw log still contains the record after retraction."
+    },
+    "gpu_required": "NONE. This program is CPU-only, so the Lightning balance blocker does not affect it.",
+    "milestone_steps_8_and_9_are_the_real_result": {
+      "step_8_write_becomes_retrievable": "T1 PASSES -- a query retrieves nothing on an empty store, and after ingest retrieves the new record THROUGH THE UNMODIFIED certified retrieval path. Both directions asserted; the pre-write failure is what makes the post-write success meaningful.",
+      "step_9_retraction_and_supersession": "T2 PASSES -- a retracted record becomes unreachable while its bytes remain with state RETRACTED. T3 PASSES -- after supersession the NEW value is retrievable, the old is not, and supersedes/superseded_by links are intact both ways."
+    },
+    "native_parseability_is_fail_closed": "Every ingest renders content via the b3-shaped template 'subject={s}; {r}={v}' and then re-extracts the subject with the CERTIFIED extract_v4_entities, raising NotNativelyParseableError on mismatch. Refuses to write a record the reader cannot parse. Test covers both the success and the refusal path.",
+    "status": "MILESTONE_1_COMPLETE__ALL_ACCEPTANCE_TESTS_PASS",
+    "tests": "tests/unit/test_verified_memory_write.py -- 17 tests, all passing. Full suite 1312 passed, 3 skipped.",
+    "the_false_pass_hazard_was_real_and_is_now_closed": {
+      "T6_demonstrates_it_is_real": "get_cached_backend returns the IDENTICAL backend object for two record sets with the same evidence_id but DIFFERENT content. The hazard is demonstrated, not assumed.",
+      "architectural_consequence": "An 'update' is always a new record plus supersession of the old, never an in-place content edit -- which is the same thing the never-silently-delete policy requires. The two constraints agree.",
+      "hazard": "The certified reader caches retrieval backends under (mode, frozenset(evidence_id)) -- a CONTENT-BLIND key. A write could succeed, the store could be correct, and retrieval could silently answer from a stale index.",
+      "why_it_is_unreachable_here": "record_id is provenance-addressed (sha256 of content|source|observed_at), so any change to what a record says produces a different id, and the content-blind cache key necessarily changes with it. This makes content-addressing load-bearing rather than decorative -- an implementation that reused ids across a content edit would have silently failed."
+    },
+    "what_was_built": "hrm_adaptive_memory/memory_write/ -- an append-only verified claim store implementing milestone steps 1-7 (ingest, canonicalize, detect duplicate/support/conflict/supersession, attach provenance, assign verification state, persist, expose records for retrieval rebuild)."
   },
   "version": "3.7.1"
 }
