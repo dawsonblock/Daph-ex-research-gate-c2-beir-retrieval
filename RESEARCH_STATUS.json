@@ -1183,6 +1183,35 @@
     },
     "tasks_total": 400
   },
+  "executive_line_closed": {
+    "decision": "Stop extracting a third executive signal from this instrument. Do NOT continue with top-k variants, margins, binding flags, or another cheap heuristic over the same five-scale b3 setup.",
+    "diagnosis": "The current benchmark is no longer mainly testing the executive; it is testing artifacts of how the synthetic corpus is constructed. Preferred action correlates with benchmark-construction variables -- family (empty vs non-empty evidence pool) and scale (corpus size, hence retrieval budget and candidate count) -- rather than with the task/evidence relationship. Any cheap observation that can see those variables will appear informative and will not transfer.",
+    "gpu_spent_on_the_final_two_branches": "The retrieval-probe branch cost ZERO GPU -- the probe requires no model generation, so it ran entirely on CPU and its frozen stop condition fired before any evaluation split was built.",
+    "headline": "Executive development is instrument-limited, not merely model-limited.",
+    "preserved_evidence": [
+      "answer_probe_gate_v1 (NOT_PROMOTED, LEARNED_POLICY_UNDERPERFORMS_FIXED_BASELINE)",
+      "answer_probe_gate_v2 (INCONCLUSIVE, MINIMUM_CLASS_FLOOR_NOT_MET; plus the diagnostic that its ANSWER_strict_win class was a prompt-format artifact)",
+      "answer_probe_cost_gate_v1 (PARTIAL, OBSERVABILITY_LIMITED; the 1.4%-vs-40% frontier)",
+      "retrieval_probe_gate_v1 (NEGATIVE, OBSERVABILITY_LIMITED; the corpus-size confound)"
+    ],
+    "requirements_for_any_future_executive_benchmark": {
+      "hard_constraint": "Do NOT modify CERTIFIED_MEMORY_V1 to manufacture such a benchmark. If the current parser and entity grammar cannot support the required natural task variety, that is a BOUNDARY of the certified memory system and must be recorded as such -- the next-generation input contract is then a separate design problem, not a patch to a frozen artifact.",
+      "identifiability_principle": "Preferred action must vary WITHIN the same observable environment, so that scale, candidate count, parser behaviour and retrieval budget cannot identify it.",
+      "required_properties": [
+        "ONE corpus, ONE retrieval budget, ONE parser, ONE entity grammar, ONE candidate-count distribution",
+        "EVERY task has a NON-EMPTY evidence pool (removes the empty-pool shortcut by construction)",
+        "all tasks natively parsed through the same input path -- zero privileged parsing",
+        "interleaved regimes present simultaneously: memory genuinely helps / direct answer genuinely better / tie / misleading-or-conflicting memory",
+        "similar retrieval statistics across regimes, so retrieval-side features cannot proxy the regime"
+      ]
+    },
+    "status": "CLOSED__INSTRUMENT_LIMITED",
+    "successor_program": "configs/verified_memory_write_v1_design.json -- VERIFIED_MEMORY_WRITE_V1",
+    "two_independent_results_same_failure_mode": {
+      "cheap_retrieval_probe": "RETRIEVAL_PROBE_GATE_V1 -- NO_DEPLOYMENT_TRANSFERABLE_INCREMENTAL_INFORMATION. Apparent within-family gain of +0.0566 Delta_AUC was 86% a corpus-size indicator that is CONSTANT in single-corpus deployment; controlled, +0.0229 with negative LCB, and +0.0034 within-scale. scientific_verdict=NEGATIVE, failure_class=OBSERVABILITY_LIMITED.",
+      "confidence_only": "ANSWER_PROBE_COST_GATE_V1.1 -- CONFIDENCE_ONLY_GATE_NOT_ADVANCED_TO_CONFIRMATION. Real signal (4/5 features clear separation, |d| up to 0.56) but operationally too weak: at zero quality loss it captured ~1.4% token savings against an oracle's ~40%. scientific_verdict=PARTIAL, failure_class=OBSERVABILITY_LIMITED."
+    }
+  },
   "executive_opportunity_study": {
     "PRIMARY_RESULT": {
       "ExecutiveOpportunity": 0.0,
@@ -2054,7 +2083,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "RETRIEVAL_PROBE_GATE_V1 CLOSED -- NO_DEPLOYMENT_TRANSFERABLE_INCREMENTAL_INFORMATION (2026-08-11). CORRECTION: the PHASE_2 PASS reported earlier the same day (commit f806e1c) was confounded and is withdrawn. Restricting to MEMORY_required removed the empty-pool shortcut but not a corpus-size one: probe_candidate_count = c2(corpus_size) takes exactly one value per scale, and the five scales differ sharply in how often memory helps (0.453 -> 0.233). That indicator alone accounts for 86% of the apparent +0.0566 Delta_AUC, and it is CONSTANT in any single-corpus deployment. Controlled: deployment-safe Delta_AUC=+0.0229 with 95% CI [-0.0208, +0.0690] (LCB negative -> frozen bar FAILS), and the within-scale control gives +0.0034. The transferable retrieval features (top-1, top-k mean, margin) contribute -0.0006. Formal result: run_valid=true, scientific_verdict=NEGATIVE, mechanism_status=NOT_PROMOTED, failure_class=OBSERVABILITY_LIMITED. ZERO GPU was spent on this branch -- the probe needs no generation, so everything ran on CPU and the stop condition fired before any evaluation split existed. See retrieval_probe_gate_v1.FROZEN_CONCLUSION.",
+    "NEXT_GATE": "EXECUTIVE LINE CLOSED -- INSTRUMENT_LIMITED (2026-08-11). Two independent branches returned the same failure mode: confidence-only captured ~1.4% of a ~40% opportunity (PARTIAL, OBSERVABILITY_LIMITED), and the cheap retrieval probe's apparent gain was 86% a corpus-size indicator constant in real deployment, collapsing to +0.0034 within-scale (NEGATIVE, OBSERVABILITY_LIMITED). The benchmark is now testing corpus-construction artifacts rather than the executive: preferred action correlates with family (empty vs non-empty pool) and scale (corpus size / retrieval budget), not with the task-evidence relationship. A future executive benchmark must vary preferred action WITHIN one corpus, one budget, one parser, one candidate-count distribution, with every task non-empty and all regimes interleaved -- and must NOT be manufactured by modifying CERTIFIED_MEMORY_V1. NEXT PROGRAM: VERIFIED_MEMORY_WRITE_V1 -- moving DAPH from static external memory to a living one that ingests, verifies, versions and consolidates knowledge. See executive_line_closed and configs/verified_memory_write_v1_design.json.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
