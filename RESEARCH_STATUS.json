@@ -5,6 +5,55 @@
     "scope": "applies to G1_TYPED_PATH, G2, and every future compression or traversal mechanism",
     "why": "B4 proved conditional metrics can lie. P2 at M=25 posted 0.785 selected-CES-given-working at cal_3000 -- the best single number in the table -- while having discarded half the required evidence before S2 ever saw it. End-to-end it merely matched plain k=50. The conditional metric RISES as a compressor throws evidence away, so reporting it alone rewards exactly the failure it should expose."
   },
+  "answer_probe_cost_gate_v1": {
+    "DESIGN_FLAW_IDENTIFIED_IN_THE_FROZEN_UTILITY": {
+      "derivable_a_priori": "This is a mathematical property of the lexicographic choice, computable from the frozen definition and the observed token ranges WITHOUT reference to any policy result. It should have been derived when PHASE_0 was written and was not. Recorded as an error in protocol design, not as a data-dependent discovery.",
+      "flaw": "The strictly-lexicographic realization U = Q - EPSILON*C/C_REF bounds the maximum attainable Delta_U_gate at EPSILON * (max achievable token saving) / C_REF ~= 0.01 * 62 / 1000 ~= 0.0006. Even a PERFECT oracle beats the best fixed policy by only +0.0007 under this utility. That is far below what a grouped bootstrap over 11 families can resolve, so the promotion criterion is very nearly unreachable BY CONSTRUCTION.",
+      "second_and_deeper_consequence": "The same compression makes accepting almost never rational for a fitted classifier: a false ACCEPT forfeits a full quality point (1.0) while a correct ACCEPT saves ~0.0006 utility, so expected-value reasoning drives the model to escalate unless it is ~99.9% certain memory cannot help. P3 converging to always-escalate is therefore the CORRECT response to the objective as frozen -- the controller is not at fault, the objective is.",
+      "what_is_NOT_being_done": "EPSILON is NOT being retuned, and the lambda_T grid is NOT being promoted to a criterion. Either move would be exactly the post-hoc tuning this project's discipline forbids. No promotion claim is made from any of this, and no GPU has been spent on PHASE_4/5."
+    },
+    "artifact": "ANSWER_PROBE_COST_GATE_V1",
+    "design": "configs/gate_answer_probe_cost_v1_design.json (frozen 2f59f6a, BEFORE any label was recomputed)",
+    "phase_1_labels": {
+      "ANSWER_preferred": 747,
+      "MEMORY_preferred": 268,
+      "derivation_consistency_mismatches": 0,
+      "note": "Both classes abundant -- the V2 class-scarcity problem is genuinely solved by the objective change, and MEMORY_required carries both classes at 35/65, so real within-family routing work exists.",
+      "per_family": {
+        "ANSWER_NOW_viable": "6 escalate / 259 accept (2.3%)",
+        "MEMORY_required": "262 escalate / 488 accept (34.9%)"
+      }
+    },
+    "phase_2_separation": {
+      "features_clearing": "4/5 (mean_token_confidence d=-0.523, min_token_confidence d=-0.543, sequence_confidence d=-0.562, mean_entropy d=+0.448); answer_length d=+0.086 does not clear",
+      "note": "Materially STRONGER than ANSWER_PROBE_GATE_V1's quality-only separation (|d| 0.30-0.39), and in the expected direction: memory-preferred tasks are answered with lower confidence and higher entropy.",
+      "outcome": "SEPARATION_EXISTS"
+    },
+    "phase_3_design_time_estimate": {
+      "P1_always_escalate": {
+        "U": 0.3925,
+        "mean_tokens": 154.9,
+        "quality": 0.3941
+      },
+      "P3_cost_sensitive_logistic": {
+        "U": 0.3926,
+        "delta_u_gate": 0.0,
+        "lcb": 0.0,
+        "mean_tokens": 152.1,
+        "quality": 0.3941
+      },
+      "P5_oracle": {
+        "U": 0.3932,
+        "mean_tokens": 92.8,
+        "quality": 0.3941
+      },
+      "caveat": "DESIGN USE ONLY on the consumed V2 split -- explicitly NOT a promotion claim.",
+      "reading": "P3 converged to essentially always-escalate: identical quality to P1, only 2.8 tokens/task cheaper. The ORACLE, by contrast, achieves IDENTICAL quality to always-escalate at 92.8 vs 154.9 mean tokens -- a 40% compute reduction at zero quality cost. So substantial real headroom exists and the probe demonstrably has signal (PHASE_2), but the frozen controller did not capture it."
+    },
+    "phase_4_5_status": "NOT STARTED. Deliberately halted before spending GPU on a fresh evaluation split, because the frozen promotion criterion is now demonstrably near-vacuous and PHASE_5 would almost certainly return a null driven by the utility parameterization rather than by the controller.",
+    "recommended_resolution_pending_research_lead": "Operationalize the SAME frozen preference ordering ('maximize quality; among quality-tied policies prefer cheaper') as a two-part NON-INFERIORITY test rather than one compressed scalar: (1) quality non-inferior to the best fixed policy within a prospectively frozen margin, AND (2) strictly lower mean compute with a positive grouped-bootstrap LCB on the compute saving. This requires no exchange rate between quality and compute -- the thing lexicographic was chosen to avoid -- while producing an effect size a bootstrap can actually resolve (the oracle's 40% token reduction). It is a faithful restatement of the already-frozen preference ordering, not a new one, but it IS a protocol revision made after seeing PHASE_3 and must therefore be frozen and then tested once on a fresh split.",
+    "status": "PHASE_1-3_COMPLETE__PHASE_4_5_NOT_STARTED__DESIGN_FLAW_IN_FROZEN_UTILITY_IDENTIFIED"
+  },
   "answer_probe_gate_v1": {
     "PROMOTION_CRITERIA_met": false,
     "RUN_VALID": true,
@@ -1953,7 +2002,7 @@
     "C5_FIXED_K_S2": "FAILED_FRESH_CONFIRMATION",
     "CURRENT_BOTTLENECK": "candidate DISCRIMINATION, not availability or raw pressure. P3 oracle compression unlocks S2 (end-to-end selected CES 0.473-0.620 vs P0 0.320-0.493); the runtime-safe compressor matches only P0 because it cannot tell which records to keep.",
     "FIXED_K50": "SCALE_ROBUSTNESS_FAILED",
-    "NEXT_GATE": "ANSWER_PROBE_GATE_V2 INCONCLUSIVE_INSUFFICIENT_EVAL_CLASS_SUPPORT (2026-08-10): two GPU attempts against the frozen exec_training_v2 suite (1015 tasks). Attempt 1 had a real RUN_VALID defect (MEMORY_required retrieval pooled across all 5 fresh scales instead of scale-isolated, crushing required_in_packet from 73.6% to 31.3%) -- kept in history as invalid, not scored. Attempt 2 (scale-isolated retrieval fix) is trusted: outcome-stratified split (seed 9901) cleared the MEMORY_strict_win eval floor comfortably (53 vs 40 required, confirming the fix worked) but missed the ANSWER_strict_win floor (5 vs 10 required) -- the exact limitation flagged in configs/gate_answer_probe_v2_design.json PHASE_1 before any V2 data existed (that class's incidence is bottlenecked by hand-verified-fact curation, not compute). Per protocol, no model was fit and this is reported as INCONCLUSIVE, not a second negative result. exec_training_v2 is now consumed (data/hrm/exec_training_v2/SPLIT_LINEAGE.json). See answer_probe_gate_v2 / qualified_claims.gate_answer_probe_v2. POST-HOC DIAGNOSTIC (permitted diagnosis-only use of the consumed splits, does not alter the frozen verdict): the ANSWER_strict_win class is itself an artifact -- A1 produced an EMPTY packet on 265/265 V2 and 72/72 V1 GK tasks (memory never executes for a zero-evidence family), so its 13-vs-6 (V2, p=0.167) and 5-vs-2 (V1, p=0.453) strict-win splits are prompt-format resampling noise, not 'memory hurt a correct answer'. Growing that pool to ~2000 tasks would clear the floor of 10 with noise rather than power the test. The real memory-hurts signal is EOB's D2/D3 (Q 0.75->0.37/0.13, D3 64% strict-ANSWER-win replicated twice), which is blocked on native-parser construction, not fact supply. See answer_probe_gate_v2.POST_HOC_DIAGNOSTIC_answer_strict_win_is_an_artifact.",
+    "NEXT_GATE": "ANSWER_PROBE_COST_GATE_V1 PHASE_1-3 complete, PHASE_4/5 halted before GPU spend (2026-08-10). The cost-aware objective genuinely fixes V2's class-scarcity problem (268 vs 747 labels, both abundant) and the probe separates the utility classes more strongly than under quality-only (|d| up to 0.56 vs 0.39). But the frozen strictly-lexicographic utility bounds the maximum attainable Delta_U_gate at ~0.0006, so even a perfect oracle beats the best fixed policy by only +0.0007 -- the promotion criterion is near-vacuous BY CONSTRUCTION, and the fitted P3 correctly converged to always-escalate. Real headroom nonetheless exists and is large in the right units: the oracle matches always-escalate's quality exactly (0.3941) at 92.8 vs 154.9 mean tokens, a 40% compute reduction. EPSILON was NOT retuned; halted pending a research-lead decision on restating the same frozen preference ordering as a quality-non-inferiority + compute-reduction test. See answer_probe_cost_gate_v1.",
     "S2_SELECTOR": "DEVELOPMENT_MECHANISM_SUCCESS; GENERALIZATION_NOT_ESTABLISHED (works conditional on availability, untested at scale with adequate pools)",
     "consumed_splits": [
       "qualification_1",
