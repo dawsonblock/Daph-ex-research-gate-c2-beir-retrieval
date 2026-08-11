@@ -1,0 +1,92 @@
+{
+  "ARTIFACT": "BACKGROUND_VERIFICATION_V1",
+
+  "CORE_RULE": "Verification APPENDS EVIDENCE ABOUT a claim; it never mutates the claim in place.",
+
+  "FLOW": "claim event -> UNVERIFIED -> verification worker -> verification event -> replay/consolidation -> derived current status",
+
+  "WHAT_THIS_MILESTONE_IS_AND_IS_NOT": {
+    "is": "Proof that verification can run asynchronously, append auditable results, survive replay/restart, preserve disagreement, and derive a stable current status WITHOUT mutating canonical memory.",
+    "is_not": "Making the memory know what is true. No external corroboration, no web search, no LLM verifier. Deliberately narrow.",
+    "not_a_quality_claim": "CAPABILITY and CORRECTNESS milestone, like every predecessor in this program. No quality gate is run."
+  },
+
+  "BLOCKING_CONFLICT_WITH_THE_CURRENT_IMPLEMENTATION": {
+    "surfaced_at_freeze_time_deliberately": "Two of the twelve acceptance criteria contradict shipped, tested behaviour. Discovering this during implementation would have meant either quietly weakening a criterion or quietly changing a frozen milestone. It is resolved here instead.",
+    "V1_conflict": {
+      "criterion": "V1 -- ingesting a claim leaves it UNVERIFIED.",
+      "current_behaviour": "ClaimStore.ingest ASSIGNS VerificationState.SUPPORTED when a matching claim exists and VerificationState.CONTRADICTED when a conflicting one does (claim_store.py lines ~391/394). Ingest performs synchronous, inline verification-against-memory today.",
+      "consequence": "V1 requires moving that classification OUT of ingest. Ingest must always record UNVERIFIED, and the SUPPORTED/CONTRADICTED determination becomes the job of the first verification worker -- which is exactly the deterministic verify-against-existing-memory worker this milestone specifies."
+    },
+    "V6_conflict": {
+      "criterion": "V6 -- retraction/supersession semantics remain INDEPENDENT from verification status.",
+      "current_behaviour": "They are the SAME enum field. VerificationState mixes two orthogonal axes: lifecycle/retrievability (SUPERSEDED, RETRACTED) and verification opinion (UNVERIFIED, SUPPORTED, CONTRADICTED). A record therefore cannot be both SUPPORTED and SUPERSEDED, which is a real and reachable state.",
+      "consequence": "The axes must be split before V6 can even be expressed."
+    },
+    "RESOLUTION_FROZEN_HERE": {
+      "split_into_two_fields": {
+        "lifecycle_state": "ACTIVE | SUPERSEDED | RETRACTED -- set by ingest/supersede/retract, controls RETRIEVABILITY. Semantics unchanged from the shipped implementation.",
+        "verification_status": "DERIVED PURELY from verification events; never written directly. UNVERIFIED | SUPPORTED | CONTRADICTED | FALSIFIED | INCONCLUSIVE, defaulting to UNVERIFIED when no verification event exists."
+      },
+      "why_the_migration_is_smaller_than_it_looks": "Consolidation already derives support_groups/contradiction_groups from claim VALUES, not from the state field -- only NON_RETRIEVABLE_STATES consults it, and that becomes {SUPERSEDED, RETRACTED} on the lifecycle axis. ClaimRecord ALREADY carries corroborating_record_ids and contradicting_record_ids, so the structural relation ingest discovers is preserved as a relation without being overloaded into a status.",
+      "tests_that_must_change_and_why": "test_verified_memory_write.py (~136/156/163) and test_verified_memory_consolidation.py (~145) assert ingest-time ConflictOutcome and CONTRADICTED state. ConflictOutcome remains meaningful as a description of what ingest OBSERVED; what changes is that it no longer sets a verification status. These edits are a consequence of the frozen criteria, not a convenience -- and they must be made visibly, not by loosening assertions."
+    }
+  },
+
+  "VERIFICATION_EVENT_SCHEMA": {
+    "event_type": "VERIFICATION",
+    "required_fields": ["verification_event_id", "claim_record_id", "checker_id", "checker_type",
+                        "method", "method_version", "evidence_ids", "observed_at_utc",
+                        "result", "confidence", "notes"],
+    "verification_event_id": "content-addressed over (claim_record_id, checker_id, method, method_version, sorted(evidence_ids), result, observed_at_utc). Gives idempotency for free: re-emitting an identical verification is a detectable duplicate rather than a second opinion, which is what V11 needs for crash/restart safety.",
+    "result": "SUPPORTED | CONTRADICTED | FALSIFIED | INCONCLUSIVE",
+    "confidence": "float in [0,1]. Recorded, NOT used to break ties in V1 -- see DERIVATION_RULE.",
+    "supersedes_verification": "optional explicit link retiring an earlier verification event by id. Required to retire a verdict; recency alone never does."
+  },
+
+  "DERIVATION_RULE_FROZEN": {
+    "rule": ["no verification events -> UNVERIFIED",
+             "all non-retired events agree on one result -> that result",
+             "non-retired events disagree -> INCONCLUSIVE"],
+    "recency_does_not_break_ties": "A later verification event does NOT override an earlier one. This mirrors the temporal policy already frozen for claims (a later timestamp alone is not supersession) and for the same reason: clock skew, backfill and corrections-vs-updates make recency an unsafe proxy for authority. Retiring a verdict requires an explicit supersedes_verification link.",
+    "confidence_does_not_break_ties_in_V1": "Averaging or arg-maxing confidence across disagreeing verifiers is exactly the 'silently averaged away' failure V7 forbids. Confidence is recorded for later use and deliberately not consulted by the V1 derivation.",
+    "why_INCONCLUSIVE_rather_than_CONTRADICTED_for_disagreement": "CONTRADICTED means the EVIDENCE contradicts the claim. Verifiers disagreeing with EACH OTHER is a different fact and must not be collapsed into it. INCONCLUSIVE carries 'no settled verdict', and the disagreement itself stays queryable."
+  },
+
+  "ACCEPTANCE_CRITERIA": {
+    "V1": "Ingesting a claim leaves it UNVERIFIED.",
+    "V2": "A verification event derives SUPPORTED without changing the original claim bytes -- asserted by hashing the claim's log line before and after.",
+    "V3": "Contradictory evidence derives CONTRADICTED while preserving BOTH sides.",
+    "V4": "A later verification event does not erase earlier verification history; all events remain in the log and queryable.",
+    "V5": "Replay from genesis derives the same current verification state as live incremental updates -- the C9 invariant extended to verification.",
+    "V6": "Retraction/supersession semantics remain independent from verification status: a record may be SUPPORTED and SUPERSEDED simultaneously, and retraction does not alter verification history.",
+    "V7": "Verifier disagreement is represented explicitly (INCONCLUSIVE + a queryable disagreement report), never silently averaged.",
+    "V8": "Malformed or unresolvable evidence_ids FAIL CLOSED -- a verification event referencing an unknown record is rejected, not stored with a dangling pointer.",
+    "V9": "Verification results are provenance-addressable and auditable: every derived status can be traced to the exact events that produced it.",
+    "V10": "Retrieval can OPTIONALLY filter or rank by derived verification status without changing canonical storage -- opt-in, OFF by default.",
+    "V11": "Background verification can crash/restart without losing or duplicating committed verification events.",
+    "V12": "CERTIFIED_MEMORY_V1 identity remains unchanged. Verification status is NOT exposed to the certified reader in this milestone."
+  },
+
+  "V12_IS_THE_LOAD_BEARING_CONSTRAINT": "Verification status must not be fed into the certified reader yet. The substrate has to be proven independently first -- otherwise a verification bug becomes indistinguishable from a retrieval regression, and every prior confirmation of CERTIFIED_MEMORY_V1 would need re-establishing. retrievable_index_records() therefore keeps its current behaviour by default, and V10's filtering is an explicit opt-in parameter.",
+
+  "FIRST_WORKER_DELIBERATELY_SIMPLE": {
+    "scope": "Deterministic verification against EXISTING MEMORY only. No web search, no LLM, no external source.",
+    "algorithm": "for a claim: find records sharing its (entity, relation) -> classify supporting / contradicting / superseding -> emit one verification event citing the exact record ids it consulted as evidence_ids.",
+    "why": "CPU-only, fully deterministic, and its correctness is checkable by replay. It also inherits the classification logic being moved out of ingest, so the migration and the first worker are the same piece of work rather than two.",
+    "checker_type": "DETERMINISTIC_MEMORY_CONSISTENCY"
+  },
+
+  "QUEUE_PRIORITY_SCHEMA": {
+    "intent": "The system must not deeply verify everything equally. V1 defines the SCHEMA and leaves the policy open, so a later executive can decide what deserves verification compute.",
+    "fields": ["conflict_present", "claim_importance", "source_trust", "novelty", "age_staleness", "dependent_count"],
+    "v1_policy": "conflict_present only -- claims participating in a contradiction are verified first. The remaining fields are recorded and unused, deliberately: inventing a weighting before there is evidence about what matters would be the same post-hoc move this project avoids elsewhere.",
+    "not_in_scope": "No learned prioritization. No executive integration -- that branch is closed as instrument-limited."
+  },
+
+  "DEFERRED_TO_V2": ["external corroboration (literature, web, official sources, datasets)",
+                     "statistical checks", "LLM-assisted synthesis", "learned prioritization",
+                     "exposing verification status to the certified reader"],
+
+  "frozen_utc": "2026-08-11T05:00:00Z"
+}
