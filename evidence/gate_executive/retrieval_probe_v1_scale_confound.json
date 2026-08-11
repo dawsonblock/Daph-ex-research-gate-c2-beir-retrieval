@@ -1,0 +1,61 @@
+{
+  "DEVELOPMENT_ONLY_no_promotion_claim": true,
+  "PASSED": false,
+  "auc": {
+    "C0_confidence_only": 0.5436115630083844,
+    "C2_all_probe": 0.6002612313853085,
+    "candidate_count_alone": 0.5850566262044801,
+    "confidence_plus_candidate_count_only": 0.5922052934551371,
+    "confidence_plus_deployment_safe_probe": 0.5665201476661244
+  },
+  "binding_status_counts": {
+    "AMBIGUOUS": 6,
+    "EXACT": 326,
+    "RESOLVED": 418
+  },
+  "candidate_count_by_scale": {
+    "exec2_1000": [
+      150.0
+    ],
+    "exec2_1500": [
+      225.0
+    ],
+    "exec2_2200": [
+      300.0
+    ],
+    "exec2_3000": [
+      300.0
+    ],
+    "exec2_700": [
+      105.0
+    ]
+  },
+  "check": "RETRIEVAL_PROBE_GATE_V1 corpus-size confound",
+  "deployment_safe_ci": [
+    -0.020765692640692612,
+    0.06898919503397771
+  ],
+  "deployment_safe_delta_auc": 0.022908584657739928,
+  "frozen_bar": {
+    "min_delta_auc": 0.02,
+    "require_lcb_positive": true
+  },
+  "label_rate_by_scale": {
+    "exec2_1000": 0.4533333333333333,
+    "exec2_1500": 0.3333333333333333,
+    "exec2_2200": 0.23333333333333334,
+    "exec2_3000": 0.30666666666666664,
+    "exec2_700": 0.42
+  },
+  "mean_within_scale_delta_auc": 0.0034088150627607948,
+  "share_of_gain_from_corpus_size_indicator": 0.8577937318790556,
+  "supersedes_verdict_in": "evidence/gate_executive/retrieval_probe_v1_phase2.json",
+  "verdict": "STOP__NO_DEPLOYMENT_TRANSFERABLE_INCREMENTAL_INFORMATION",
+  "within_scale_delta_auc": {
+    "exec2_1000": -0.008249641319942602,
+    "exec2_1500": -0.0514,
+    "exec2_2200": 0.07627329192546584,
+    "exec2_3000": 0.04347826086956519,
+    "exec2_700": -0.043057836161284446
+  }
+}
