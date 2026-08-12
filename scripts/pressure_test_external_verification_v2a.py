@@ -168,7 +168,7 @@ def run(args) -> int:
     out = Path(args.out).resolve()
     out.parent.mkdir(parents=True, exist_ok=True)
     experiment = _start_experiment(
-        f"v2a-external-pressure-{args.max_events}",
+        f"v2a-external-pressure-{args.max_events}-{source_commit[:7]}",
         {
             "protocol": PROTOCOL,
             "protocol_version": PROTOCOL_VERSION,
