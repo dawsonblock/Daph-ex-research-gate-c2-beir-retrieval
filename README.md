@@ -40,9 +40,9 @@ question → subject-preserving query → BM25+BGE retrieval
 | **C2-R** Retrieval coverage | ✅ PASS | Candidate-generation policy frozen (P2 RRF bm25+bge k=10) |
 | **C2-S** Evidence selection | ✅ PASS | Structural selection captures 30% of oracle gap on ID partition |
 | **C3** Surface identity resolution | ✅ MECHANISM_SUCCESS | I3 identity-record retrieval resolves surface defect with 92% accuracy, 0% false resolution |
-| **C4** Integrated memory pipeline | 🔄 IN_PROGRESS | Historical development: +0.1792 quality delta (CI [+0.106, +0.263], threshold +0.15) |
+| **C4** Integrated memory pipeline | ✅ CERTIFIED (development) | H100 certification: +0.2000 quality delta (family CI [+0.1354, +0.2604], threshold +0.15); 17/17 gates passed |
 | **C4-BRIDGE** Runtime bridge acquisition | ❌ NEGATIVE RESULT | No runtime bridge mechanism beats one-pass baseline (B0 CES=0.783 vs B2 CES=0.775) |
-| **D–N** Downstream gates | 🔒 BLOCKED | Pending C4 promotion |
+| **D–N** Downstream gates | 🔒 BLOCKED | Pending untouched qualification/OOD splits and Gate D decision |
 
 Full machine-readable state: [`RESEARCH_STATUS.json`](RESEARCH_STATUS.json)
 
@@ -65,7 +65,13 @@ measures whether the composition adds value beyond any single component.
 | C4_5 | subject-preserving | BM25+BGE | I3 | oracle | Oracle selector ceiling |
 | C4_6 | subject-preserving | BM25+BGE | oracle | oracle_evidence | Full oracle ceiling |
 
-### Historical development scores (rescored with corrected verifier)
+### H100-certified development scores
+
+The fail-closed C4 development certification passed on `NVIDIA H100 80GB HBM3`
+with CUDA 12.8, `float16`, and `HRM_BATCH_SIZE=1`. The certified bundle is
+[`evidence/gate_c4/full/development/certification/CERTIFICATION.json`](evidence/gate_c4/full/development/certification/CERTIFICATION.json);
+its `BUNDLE.sha256` covers the certificate, environment lock, source snapshot,
+receipts, and analysis.
 
 | Arm | Quality | Accuracy |
 |-----|---------|----------|
@@ -73,11 +79,11 @@ measures whether the composition adds value beyond any single component.
 | C4_1 | 0.1708 | 0.1583 |
 | C4_2 | 0.2125 | 0.1667 |
 | C4_3 | 0.2125 | 0.1667 |
-| C4_4 | 0.3417 | 0.2583 |
+| C4_4 | 0.3625 | 0.2917 |
 | C4_5 | 0.7917 | 0.8833 |
 | C4_6 | 0.9542 | 0.9083 |
 
-**Primary delta (C4_4 − C4_0): +0.1792**, family bootstrap CI [+0.106, +0.263], threshold +0.15.
+**Primary delta (C4_4 − C4_0): +0.2000**, family bootstrap CI [+0.1354, +0.2604], threshold +0.15 — **PASS**. All 17 certification gates passed; this certifies the development split only, not the later qualification or OOD splits.
 
 ### C4-BRIDGE negative result
 
@@ -148,12 +154,12 @@ python scripts/analyze_gate_c4.py --dir evidence/gate_c4/full/development
 python scripts/diagnose_c4_composition.py
 ```
 
-### Run on Google Colab (T4 GPU)
+### Run certification on a locked GPU
 
 The full C4 v2_1 fail-closed requalification:
 
 1. Go to [Google Colab](https://colab.research.google.com/)
-2. **Runtime → Change runtime type → T4 GPU + High-RAM**
+2. **Runtime → Change runtime type → GPU + High-RAM**
 3. **File → Upload notebook** → upload [`notebooks/colab_c4_requalify.ipynb`](notebooks/colab_c4_requalify.ipynb)
 4. **Runtime → Run all**
 
@@ -163,11 +169,11 @@ Or run the scripts directly:
 !git clone https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval.git
 %cd Daph-ex-research-gate-c2-beir-retrieval
 !pip install -e ".[hrm]"
-!python scripts/c4_freeze_environment.py --note 'colab T4 certifying run'
+!python scripts/c4_freeze_environment.py --note 'captured certifying runtime'
 !python scripts/colab_c4_requalify.py
 ```
 
-**Expected time on T4 GPU: ~30-40 minutes** (vs 3+ hours on CPU).
+**Expected time depends on the locked GPU** (the H100 development certification completed in roughly 10 minutes; CPU takes hours).
 
 The run is resumable, and fail-closed: it aborts on any protocol abort
 condition rather than producing a result that cannot be certified. It ends by
