@@ -31,6 +31,7 @@ LOCK_SCHEMA_VERSION = "c4-environment-lock-v1"
 # sentence-transformers are deliberately NOT pinned: the C4 pipeline never
 # imports them, and pinning unused packages creates false precision.
 RESULT_AFFECTING_PACKAGES = (
+    "accelerate",
     "torch",
     "transformers",
     "tokenizers",
