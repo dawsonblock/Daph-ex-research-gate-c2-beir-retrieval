@@ -604,10 +604,6 @@ class ClaimStore:
             confidence=float(confidence), notes=notes,
             supersedes_verification=supersedes_verification,
             verification_job_id=verification_job_id)
-        existing = next((event for event in self._verifications.get(claim_record_id, ())
-                         if event.verification_event_id == vid), None)
-        if existing is not None:
-            return existing
         evt = VerificationEvent(
             verification_event_id=vid, claim_record_id=claim_record_id,
             checker_id=checker_id, checker_type=checker_type, method=method,
@@ -615,6 +611,8 @@ class ClaimStore:
             observed_at_utc=observed, result=result, confidence=float(confidence),
             notes=notes, supersedes_verification=supersedes_verification,
             verification_job_id=verification_job_id)
+        if vid in self._verification_ids:
+            return evt
         self._append({"event": "VERIFICATION", "at": _now(), "verification": evt.to_json()})
         return evt
 
@@ -651,10 +649,6 @@ class ClaimStore:
             protocol_id=protocol_id, protocol_version=protocol_version,
             execution_identity=execution_identity, receipt_hash=receipt_hash,
             verification_job_id=verification_job_id)
-        existing = next((event for event in self._verifications.get(claim_record_id, ())
-                         if event.verification_event_id == vid), None)
-        if existing is not None:
-            return existing
         evt = VerificationEvent(
             verification_event_id=vid, claim_record_id=claim_record_id,
             checker_id=checker_id, checker_type=checker_type, method=method,
@@ -664,6 +658,8 @@ class ClaimStore:
             reason_code=reason_code, protocol_id=protocol_id,
             protocol_version=protocol_version, execution_identity=execution_identity,
             receipt_hash=receipt_hash, verification_job_id=verification_job_id)
+        if vid in self._verification_ids:
+            return evt
         self._append({"event": "VERIFICATION", "at": _now(), "verification": evt.to_json()})
         return evt
 
