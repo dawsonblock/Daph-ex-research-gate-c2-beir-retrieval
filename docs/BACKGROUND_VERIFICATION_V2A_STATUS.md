@@ -26,13 +26,45 @@ and exclude withdrawn in-store evidence from present-tense status derivation.
 - `CERTIFIED_MEMORY_V1` was pinned and its identity remained
   `97b3b49cb95fa33b` in the V2A invariance test.
 
-## Not a V2A promotion certificate yet
+## Qualification result
 
-The V2A implementation is deliberately not labeled
-`QUALIFIED_FOR_EXTERNAL_EVIDENCE_V2A`. The 1k-to-1m external-evidence
-pressure characterization, a separately recorded network-integration smoke,
-and a package-level build manifest binding archive hash to the committed source
-and protocol hashes remain required before qualification.
+```text
+BACKGROUND_VERIFICATION_V2A
+run_valid          = true
+mechanism_status   = QUALIFIED
+scientific_verdict = PASS
+```
+
+The qualification gates are recorded and hashed:
+
+- External-evidence pressure ladder:
+  `evidence/background_verification_v2a/pressure/pressure_full_1m.json`.
+  All 1k, 10k, 50k, 100k, 250k, 500k, and 1M checkpoints reproduced the
+  incremental claim-verification and evidence state hashes from genesis.
+  At 1M, evidence append throughput was 2,874/s, verification-event append
+  throughput was 3,350/s, and cold replay completed in 56.87 seconds.
+- Permanent adversarial evidence:
+  `evidence/background_verification_v2a/adversarial/adversarial.json`.
+  All 10 frozen attack/recovery cases passed.
+- Recorded network integration smoke:
+  `evidence/background_verification_v2a/network_smoke/network_smoke.json`.
+  Two stable World Bank records completed live capture and deterministic
+  verification, then reproduced offline from captured bytes with zero network
+  calls. Both records share one publisher, and no independent-publisher
+  corroboration claim is made.
+- Complete repository suite:
+  `evidence/background_verification_v2a/tests/full_suite.json`:
+  **1,659 passed, 3 skipped, 0 failed**.
+
+The root `BUILD_MANIFEST.json` and its packaged copy bind the exact source
+commit/tree, protocol and schema hashes, C4 H100 lock, frozen
+`CERTIFIED_MEMORY_V1` identity, and the four qualification receipt hashes.
+
+## Bounded claim
+
+DAPH can acquire immutable external evidence, preserve source lineage,
+deterministically verify supported exact-field claim classes, survive
+retries/replay/tampering, and maintain auditable current verification state.
 
 V2A does not claim general truth verification, literature understanding,
 semantic contradiction resolution, LLM fact checking, verification-aware

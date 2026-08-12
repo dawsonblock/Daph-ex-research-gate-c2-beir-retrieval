@@ -1,4 +1,26 @@
 {
+  "background_verification_v2a": {
+    "artifact": "BACKGROUND_VERIFICATION_V2A",
+    "run_valid": true,
+    "mechanism_status": "QUALIFIED",
+    "scientific_verdict": "PASS",
+    "bounded_claim": "DAPH can acquire immutable external evidence, preserve source lineage, deterministically verify supported exact-field claim classes, survive retries/replay/tampering, and maintain auditable current verification state.",
+    "explicit_non_claims": [
+      "general truth determination",
+      "arbitrary scientific literature understanding",
+      "semantic contradiction resolution",
+      "verification-aware retrieval improvement",
+      "answer-accuracy improvement"
+    ],
+    "qualification_evidence": {
+      "pressure_1m": "evidence/background_verification_v2a/pressure/pressure_full_1m.json",
+      "adversarial_10_of_10": "evidence/background_verification_v2a/adversarial/adversarial.json",
+      "network_live_then_offline": "evidence/background_verification_v2a/network_smoke/network_smoke.json",
+      "full_suite_1659_passed_3_skipped": "evidence/background_verification_v2a/tests/full_suite.json",
+      "build_manifest": "BUILD_MANIFEST.json"
+    },
+    "c4_h100_history_unchanged": true
+  },
   "PERMANENT_REPORTING_RULE": {
     "form": "CES_end_to_end = P(required evidence survives the compressor) x P(S2 succeeds | it survived)",
     "rule": "For ANY compression mechanism, never report conditional selector performance alone. Always pair coverage after compression with conditional performance, and report the end-to-end composition.",
