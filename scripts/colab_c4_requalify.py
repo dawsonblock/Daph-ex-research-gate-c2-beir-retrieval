@@ -362,7 +362,8 @@ def main(argv=None):
     # certifiable, so failing here costs seconds instead of half an hour.
     run(["pip", "install", "-q", "-r", str(requirements)],
         "Install locked dependencies", timeout=1200, check=True)
-    run(["pip", "install", "-q", "-e", "."], "Install repository (editable)",
+    run(["pip", "install", "-q", "-e", ".[dev]"],
+        "Install repository and test runner (editable)",
         timeout=900, check=True)
 
     # -- Step 4: Verify the environment against the lock -------------------
