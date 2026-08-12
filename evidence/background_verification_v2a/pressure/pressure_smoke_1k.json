@@ -1,0 +1,83 @@
+{
+  "artifact": "BACKGROUND_VERIFICATION_V2A_EXTERNAL_EVIDENCE_PRESSURE",
+  "branch": "background-verification-v2a",
+  "completed_at": "2026-08-12T02:13:27.859377+00:00",
+  "ladder": [
+    1000,
+    10000,
+    50000,
+    100000,
+    250000,
+    500000,
+    1000000
+  ],
+  "max_events": 1000,
+  "mechanism_status": "MEASURED_NOT_YET_QUALIFIED",
+  "protocol": "BACKGROUND_VERIFICATION_V2A",
+  "protocol_version": "1.0.0",
+  "results": [
+    {
+      "checkpoint_and_replay_s": 0.1565885409945622,
+      "claim_accelerator_snapshot_bytes": 446,
+      "claim_log_bytes": 859607,
+      "derived_bytes_written_cumulative": 378660,
+      "events": 1000,
+      "evidence_accelerator_snapshot_bytes": 194,
+      "evidence_append_events_per_s": 1970.5519908819356,
+      "evidence_job_index_estimated_bytes": 245032,
+      "evidence_log_bytes": 1423324,
+      "genesis_replay": {
+        "claim_replay_s": 0.016560500022023916,
+        "claim_verification_events": 1000,
+        "claim_verification_state_hash": "3f8dc07c86bca16699c04bbba9c9e17f58797a8579261a873cabb11a507ce464",
+        "evidence_events_including_retractions": 1049,
+        "evidence_records": 1000,
+        "evidence_replay_s": 0.017659291974268854,
+        "evidence_state_hash": "88a98ec2c69b50a37d275bb8111a621570b57e24cf083c89f2ce123a5e0b4971",
+        "queue_acknowledged": 1000,
+        "queue_pending": 0,
+        "queue_replay_s": 0.007660291972570121,
+        "total_replay_s": 0.04553191701415926
+      },
+      "incremental_equals_genesis": true,
+      "incremental_hashes": {
+        "claim_verification_state_hash": "3f8dc07c86bca16699c04bbba9c9e17f58797a8579261a873cabb11a507ce464",
+        "evidence_state_hash": "88a98ec2c69b50a37d275bb8111a621570b57e24cf083c89f2ce123a5e0b4971"
+      },
+      "lineage_count": 250,
+      "lineage_index_estimated_bytes": 109076,
+      "queue_ack_events_per_s": 19844.851657483854,
+      "queue_acknowledged_ids_resident": 1000,
+      "queue_enqueue_events_per_s": 14491.993499810604,
+      "queue_log_bytes": 583450,
+      "queue_pending_jobs_resident": 0,
+      "queue_state_estimated_bytes": 99486,
+      "raw_snapshot_bytes": 65890,
+      "raw_snapshot_files": 1000,
+      "retraction_events": 49,
+      "rss_bytes": 290258944,
+      "rung_elapsed_s": 1.1205159579403698,
+      "total_elapsed_s": 1.120520707918331,
+      "verification_decisions_per_s": 85424.25975362283,
+      "verification_events_per_s": 3326.1729160183413,
+      "verification_history_estimated_bytes": 254530,
+      "verification_history_events_resident": 1000,
+      "verification_log_bytes": 859607,
+      "write_amplification": 0.13210386197787385
+    }
+  ],
+  "run_valid": true,
+  "scientific_verdict": "MEASUREMENT",
+  "source_commit": "c9c8d9d50d6983c49fc2da3aa918a8a5ebeb833a",
+  "source_tree_hash": "b9d968389e0232003c0294bd878f32ba548ed726",
+  "started_at": "2026-08-12T02:13:25.887612+00:00",
+  "workload": {
+    "all_verifications_expected": "SUPPORTED",
+    "claim_count": 1,
+    "mirrors_per_lineage": 4,
+    "raw_template_count": 1000,
+    "retraction_interval": 20,
+    "seed": 20260811
+  },
+  "write_amplification_definition": "cumulative bytes atomically written to claim/evidence manifests and accelerator snapshots divided by current canonical claim, evidence, and queue log bytes"
+}
