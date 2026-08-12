@@ -2,9 +2,9 @@
   "accelerator": {
     "available": true,
     "cuda": "12.8",
-    "gpu_name": "NVIDIA A100-SXM4-80GB"
+    "gpu_name": "NVIDIA H100 80GB HBM3"
   },
-  "note": "CAPTURED (not transcribed). Frozen via scripts/c4_freeze_environment.py on a Lightning AI Studio (NVIDIA A100-SXM4-80GB) immediately before the qualification run. All packages recorded directly from the live environment; no null pins.",
+  "note": "CAPTURED (not transcribed). Frozen via scripts/c4_freeze_environment.py on a Lightning AI Studio (NVIDIA H100 80GB HBM3) immediately before the qualification run. All packages recorded directly from the live environment; no null pins.",
   "packages": {
     "accelerate": "1.14.0",
     "huggingface_hub": "1.27.0",
