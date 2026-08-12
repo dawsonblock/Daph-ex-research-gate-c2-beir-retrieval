@@ -25,7 +25,7 @@ from hrm_adaptive_memory.memory_write import ClaimStore, VerificationStatus  # n
 
 
 WORLD_BANK = "https://api.worldbank.org/v2/country/CA?format=json"
-USGS_VERSION = "https://earthquake.usgs.gov/fdsnws/event/1/version"
+WORLD_BANK_JAPAN = "https://api.worldbank.org/v2/country/JP?format=json"
 
 
 def _git(*args: str) -> str:
@@ -48,9 +48,9 @@ class RecordedAuthoritativeAcquirer:
             WORLD_BANK: (
                 self._world_bank_fields, "World Bank", "api.worldbank.org",
                 "lin-world-bank-country-canada"),
-            USGS_VERSION: (
-                self._usgs_fields, "U.S. Geological Survey",
-                "earthquake.usgs.gov", "lin-usgs-event-service-version"),
+            WORLD_BANK_JAPAN: (
+                self._world_bank_japan_fields, "World Bank", "api.worldbank.org",
+                "lin-world-bank-country-japan"),
         }
 
     @staticmethod
@@ -62,11 +62,12 @@ class RecordedAuthoritativeAcquirer:
         return {"entity": "Canada country", "capital city": record["capitalCity"]}
 
     @staticmethod
-    def _usgs_fields(raw: bytes) -> dict[str, Any]:
-        version = raw.decode("utf-8").strip()
-        if not version or any(part and not part.isdigit() for part in version.split(".")):
-            raise ValueError("USGS version response is not dotted numeric text")
-        return {"entity": "Earthquake event service", "api version": version}
+    def _world_bank_japan_fields(raw: bytes) -> dict[str, Any]:
+        payload = json.loads(raw)
+        record = payload[1][0]
+        if record.get("iso2Code") != "JP" or record.get("name") != "Japan":
+            raise ValueError("World Bank response is not the frozen Japan record")
+        return {"entity": "Japan country", "capital city": record["capitalCity"]}
 
     def acquire(self, request: AcquisitionRequest) -> AcquisitionResult:
         route = self.routes.get(request.source_uri)
@@ -137,7 +138,7 @@ def main() -> int:
                 "protocol": "BACKGROUND_VERIFICATION_V2A",
                 "source_commit": source_commit,
                 "source_tree_hash": source_tree_hash,
-                "network_scope": "World Bank + USGS only",
+                "network_scope": "World Bank Canada + Japan records only",
                 "qualification_role": "integration smoke, not scientific evaluation",
                 "location": "US", "altitude": "1334",
             })
@@ -151,8 +152,8 @@ def main() -> int:
         fixtures = [
             ("Canada country", "capital city", "Ottawa", "claim-world-bank", WORLD_BANK,
              SourceType.AUTHORITATIVE_STRUCTURED_DATA),
-            ("Earthquake event service", "api version", "2.7.0", "claim-usgs",
-             USGS_VERSION, SourceType.OFFICIAL_PRIMARY_SOURCE),
+            ("Japan country", "capital city", "Tokyo", "claim-world-bank-japan",
+             WORLD_BANK_JAPAN, SourceType.AUTHORITATIVE_STRUCTURED_DATA),
         ]
         records = []
         for index, (entity, relation, value, source_id, url, source_type) in enumerate(fixtures):
@@ -254,7 +255,10 @@ def main() -> int:
         "branch": _git("branch", "--show-current"),
         "completed_at": datetime.now(UTC).isoformat(),
         "network_fetch_count": live.fetch_count,
-        "network_sources": [WORLD_BANK, USGS_VERSION],
+        "network_sources": [WORLD_BANK, WORLD_BANK_JAPAN],
+        "source_record_count": 2,
+        "publisher_count": 1,
+        "independent_publisher_corroboration_claimed": False,
         "live_pipeline_pass": live_pass,
         "offline_replay_pass": offline_pass,
         "offline_network_calls": forbidden.calls,
