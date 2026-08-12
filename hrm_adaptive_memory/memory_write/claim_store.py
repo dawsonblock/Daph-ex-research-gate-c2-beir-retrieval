@@ -65,6 +65,10 @@ class NotNativelyParseableError(ValueError):
     silently poison the corpus."""
 
 
+class IntegrityError(ValueError):
+    """Raised when durable canonical history cannot be authenticated."""
+
+
 @dataclass(frozen=True)
 class ClaimRecord:
     record_id: str
@@ -85,7 +89,8 @@ class ClaimRecord:
 
     @property
     def claim_key(self) -> tuple[str, str]:
-        return (self.canonical_entity.strip().lower(), self.canonical_relation.strip().lower())
+        return (_normalise_claim_part(self.canonical_entity),
+                _normalise_claim_part(self.canonical_relation))
 
     def to_json(self) -> dict:
         d = asdict(self)
@@ -105,6 +110,37 @@ class IngestResult:
 
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def _normalise_claim_part(value: str) -> str:
+    """One identity normalization shared by ingest and consolidation."""
+    return " ".join(value.strip().lower().split())
+
+
+def _record_id(content: str, source_id: str, observed_at_utc: str) -> str:
+    return "vmw-" + hashlib.sha256(
+        f"{content}|{source_id}|{observed_at_utc}".encode()).hexdigest()[:20]
+
+
+def _committed_log_sha256(path: Path):
+    """Hash only complete, parseable committed log lines.
+
+    A missing final newline is a torn append: it was never committed and must
+    not invalidate the prior manifest. Any malformed non-final line remains a
+    fatal corruption and is rejected during replay.
+    """
+    hasher = hashlib.sha256()
+    if path.is_file():
+        with path.open("rb") as handle:
+            lines = handle.readlines()
+        for index, line in enumerate(lines):
+            if index == len(lines) - 1 and not line.endswith(b"\n"):
+                try:
+                    json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+            hasher.update(line)
+    return hasher
 
 
 def _verify_native(content: str, subject: str) -> str:
@@ -159,8 +195,8 @@ class ClaimStore:
         #: Running hash of the canonical log. Recomputing it per append meant
         #: re-reading and re-hashing the entire file on every event -- the
         #: second of three O(n)-per-event costs found by the scaling probe.
-        self._log_hasher = hashlib.sha256(
-            self.log_path.read_bytes() if self.log_path.is_file() else b"")
+        self._log_hasher = _committed_log_sha256(self.log_path)
+        self._verify_manifest_before_replay()
         self._replay()
         # Per the frozen C11 recovery rule: a snapshot is only ever an
         # accelerator. If it is missing, torn, or describes a different log,
@@ -201,7 +237,7 @@ class ClaimStore:
         """Apply ONE event to both the record map and the incremental
         consolidation index. Used by live appends and by full replay, so the
         two can never diverge in how an event is interpreted."""
-        kind = ev["event"]
+        kind = ev.get("event")
         if kind == "INGEST":
             r = ev["record"]
             raw = dict(r)
@@ -212,6 +248,11 @@ class ClaimStore:
             raw["corroborating_record_ids"] = tuple(raw.get("corroborating_record_ids", ()))
             raw["contradicting_record_ids"] = tuple(raw.get("contradicting_record_ids", ()))
             rec = ClaimRecord(**raw)
+            expected_record_id = _record_id(rec.content, rec.source_id, rec.observed_at_utc)
+            if rec.record_id != expected_record_id:
+                raise IntegrityError(
+                    f"INGEST record_id does not authenticate its content: "
+                    f"expected {expected_record_id!r}, got {rec.record_id!r}")
             self._records[rec.record_id] = rec
             self._index.apply_ingest(rec, self._corpus_version)
             self._index_claim_key(rec)
@@ -241,12 +282,35 @@ class ClaimStore:
                 observed_at_utc=v["observed_at_utc"],
                 result=VerificationResult(v["result"]), confidence=float(v["confidence"]),
                 notes=v.get("notes", ""),
-                supersedes_verification=v.get("supersedes_verification"))
+                supersedes_verification=v.get("supersedes_verification"),
+                source_lineage_ids=tuple(v.get("source_lineage_ids", ())),
+                reason_code=v.get("reason_code", ""),
+                protocol_id=v.get("protocol_id", ""),
+                protocol_version=v.get("protocol_version", ""),
+                execution_identity=v.get("execution_identity", ""),
+                receipt_hash=v.get("receipt_hash", ""),
+                verification_job_id=v.get("verification_job_id", ""))
+            expected_verification_id = verification_event_id(
+                claim_record_id=evt.claim_record_id, checker_id=evt.checker_id,
+                checker_type=evt.checker_type, method=evt.method,
+                method_version=evt.method_version, evidence_ids=evt.evidence_ids,
+                result=evt.result.value, confidence=evt.confidence, notes=evt.notes,
+                supersedes_verification=evt.supersedes_verification,
+                observed_at_utc=evt.observed_at_utc,
+                source_lineage_ids=evt.source_lineage_ids, reason_code=evt.reason_code,
+                protocol_id=evt.protocol_id, protocol_version=evt.protocol_version,
+                execution_identity=evt.execution_identity, receipt_hash=evt.receipt_hash,
+                verification_job_id=evt.verification_job_id)
+            if evt.verification_event_id != expected_verification_id:
+                raise IntegrityError(
+                    "VERIFICATION event id does not authenticate its full determination")
             # V11: identical determinations are idempotent, not second opinions
             if evt.verification_event_id in self._verification_ids:
                 return
             self._verification_ids.add(evt.verification_event_id)
             self._verifications.setdefault(evt.claim_record_id, []).append(evt)
+        else:
+            raise IntegrityError(f"unknown canonical event type {kind!r}")
 
     def _index_claim_key(self, rec: ClaimRecord) -> None:
         """Keep the raw-claim-key index in step with a record's activity.
@@ -272,6 +336,22 @@ class ClaimStore:
         for ev in self._stream_events():
             self._corpus_version += 1
             self._apply_event(ev)
+
+    def _verify_manifest_before_replay(self) -> None:
+        """Authenticate existing canonical bytes before reconstruction."""
+        if not self.manifest_path.is_file():
+            return
+        try:
+            manifest = json.loads(self.manifest_path.read_text())
+        except json.JSONDecodeError as exc:
+            raise IntegrityError("MANIFEST.json is not valid JSON") from exc
+        expected = manifest.get("event_log_sha256")
+        if not isinstance(expected, str):
+            raise IntegrityError("MANIFEST.json lacks event_log_sha256")
+        if self.log_sha256() != expected:
+            raise IntegrityError(
+                "canonical event log hash differs from the committed manifest; "
+                "refusing to replay unauthenticated history")
 
     @property
     def corpus_version(self) -> int:
@@ -332,8 +412,11 @@ class ClaimStore:
         self._log_hasher.update(line.encode())
         self._corpus_version += 1
         self._apply_event(event)                     # 3 -- O(1), not a full replay
+        # The manifest is the durable commit anchor. Never let a changed log
+        # re-canonize itself merely because the snapshot cache is stale.
+        self._write_manifest()
         if self.auto_snapshot:
-            self.publish_snapshot()                  # 4 (also refreshes the manifest)
+            self.publish_snapshot()                  # 4; snapshot is cache only
 
     def _atomic_write(self, path: Path, text: str) -> None:
         """Write via temp + fsync + os.replace, which is atomic on POSIX, so
@@ -406,14 +489,13 @@ class ClaimStore:
         content = CONTENT_TEMPLATE.format(subject=subject, relation=relation, value=value)
         canonical_entity = _verify_native(content, subject)  # step 2, fail-closed
         observed = observed_at_utc or _now()
-        record_id = "vmw-" + hashlib.sha256(
-            f"{content}|{source_id}|{observed}".encode()).hexdigest()[:20]
+        record_id = _record_id(content, source_id, observed)
 
         if record_id in self._records:
             return IngestResult(ConflictOutcome.DUPLICATE, self._records[record_id],
                                 note="identical content, source and observation time")
 
-        key = (canonical_entity.strip().lower(), relation.strip().lower())
+        key = (_normalise_claim_part(canonical_entity), _normalise_claim_part(relation))
         existing = [self._records[rid] for rid in sorted(self._active_by_claim_key.get(key, ()))]
         same_value = [r for r in existing if r.value.strip().lower() == value.strip().lower()]
         diff_value = [r for r in existing if r.value.strip().lower() != value.strip().lower()]
@@ -424,8 +506,12 @@ class ClaimStore:
         # otherwise. Classifying support/conflict is the first verification
         # worker's job, not ingest's.
         if supersedes is not None:
-            if self._records.get(supersedes) is None:
+            prior = self._records.get(supersedes)
+            if prior is None:
                 raise KeyError(f"supersedes references unknown record_id {supersedes!r}")
+            if prior.claim_key != key:
+                raise ValueError(
+                    "supersedes must target the same canonical entity and relation")
             outcome = ConflictOutcome.SUPERSESSION
         elif same_value:
             outcome = ConflictOutcome.SUPPORT
@@ -471,7 +557,8 @@ class ClaimStore:
                            evidence_ids, result: VerificationResult,
                            confidence: float, notes: str = "",
                            observed_at_utc: str | None = None,
-                           supersedes_verification: str | None = None) -> VerificationEvent:
+                           supersedes_verification: str | None = None,
+                           verification_job_id: str = "") -> VerificationEvent:
         """Append a verification event. NEVER touches the claim record.
 
         V8 fails closed twice: the claim itself and every cited evidence id
@@ -496,13 +583,70 @@ class ClaimStore:
         vid = verification_event_id(
             claim_record_id=claim_record_id, checker_id=checker_id, method=method,
             method_version=method_version, evidence_ids=evidence,
-            result=result.value, observed_at_utc=observed)
+            result=result.value, observed_at_utc=observed, checker_type=checker_type,
+            confidence=float(confidence), notes=notes,
+            supersedes_verification=supersedes_verification,
+            verification_job_id=verification_job_id)
+        existing = next((event for event in self._verifications.get(claim_record_id, ())
+                         if event.verification_event_id == vid), None)
+        if existing is not None:
+            return existing
         evt = VerificationEvent(
             verification_event_id=vid, claim_record_id=claim_record_id,
             checker_id=checker_id, checker_type=checker_type, method=method,
             method_version=method_version, evidence_ids=evidence,
             observed_at_utc=observed, result=result, confidence=float(confidence),
-            notes=notes, supersedes_verification=supersedes_verification)
+            notes=notes, supersedes_verification=supersedes_verification,
+            verification_job_id=verification_job_id)
+        self._append({"event": "VERIFICATION", "at": _now(), "verification": evt.to_json()})
+        return evt
+
+    def append_external_verification(
+            self, *, claim_record_id: str, checker_id: str, checker_type: str,
+            method: str, method_version: str, evidence_ids, evidence_resolver,
+            result: VerificationResult, confidence: float, reason_code: str,
+            source_lineage_ids=(), protocol_id: str = "BACKGROUND_VERIFICATION_V2A",
+            protocol_version: str = "1.0.0", execution_identity: str = "",
+            receipt_hash: str = "", verification_job_id: str = "", notes: str = "",
+            observed_at_utc: str | None = None) -> VerificationEvent:
+        """Append a V2A event after resolving immutable external evidence.
+
+        V1 keeps its strict claim-store-only evidence validation. V2A uses the
+        same canonical event type but validates ids against the supplied
+        append-only evidence store, avoiding any need to turn snapshots into
+        mutable claims.
+        """
+        if claim_record_id not in self._records:
+            raise EvidenceResolutionError(
+                f"verification targets unknown claim record {claim_record_id!r}")
+        evidence = tuple(evidence_ids)
+        unknown = [eid for eid in evidence if evidence_resolver(eid) is None]
+        if unknown:
+            raise EvidenceResolutionError(
+                f"external verification cites unresolvable evidence ids {unknown!r}")
+        observed = observed_at_utc or _now()
+        vid = verification_event_id(
+            claim_record_id=claim_record_id, checker_id=checker_id, method=method,
+            method_version=method_version, evidence_ids=evidence,
+            result=result.value, observed_at_utc=observed,
+            checker_type=checker_type, confidence=float(confidence), notes=notes,
+            source_lineage_ids=source_lineage_ids, reason_code=reason_code,
+            protocol_id=protocol_id, protocol_version=protocol_version,
+            execution_identity=execution_identity, receipt_hash=receipt_hash,
+            verification_job_id=verification_job_id)
+        existing = next((event for event in self._verifications.get(claim_record_id, ())
+                         if event.verification_event_id == vid), None)
+        if existing is not None:
+            return existing
+        evt = VerificationEvent(
+            verification_event_id=vid, claim_record_id=claim_record_id,
+            checker_id=checker_id, checker_type=checker_type, method=method,
+            method_version=method_version, evidence_ids=evidence,
+            observed_at_utc=observed, result=result, confidence=float(confidence),
+            notes=notes, source_lineage_ids=tuple(sorted(source_lineage_ids)),
+            reason_code=reason_code, protocol_id=protocol_id,
+            protocol_version=protocol_version, execution_identity=execution_identity,
+            receipt_hash=receipt_hash, verification_job_id=verification_job_id)
         self._append({"event": "VERIFICATION", "at": _now(), "verification": evt.to_json()})
         return evt
 
@@ -512,10 +656,38 @@ class ClaimStore:
         return list(self._verifications.get(record_id, ()))
 
     def verification_status(self, record_id: str) -> VerificationStatus:
-        """DERIVED, never stored. See verification.derive_status for the
-        frozen rule."""
+        """Current derived status, retaining historical event bytes.
+
+        A V1 verdict that cites a retracted or superseded in-store claim
+        cannot remain current support. The original event remains auditable;
+        only this present-tense derivation changes. V2A external snapshot
+        lifecycle is handled by its evidence store.
+        """
         events = self._verifications.get(record_id, ())
-        return derive_status(events, retired_ids(events))
+        live = [
+            event for event in events
+            if event.protocol_id or all(
+                evidence_id in self._records
+                and self._records[evidence_id].lifecycle_state not in NON_RETRIEVABLE_STATES
+                for evidence_id in event.evidence_ids)
+        ]
+        return derive_status(live, retired_ids(live))
+
+    def verification_state_hash(self) -> str:
+        """Canonical hash of verification history/current derivation.
+
+        Consolidation's existing state hash deliberately excludes verification
+        opinions. V2A needs an explicit replay anchor for that independent
+        append-only stream without changing the frozen consolidation hash.
+        """
+        payload = [
+            {"claim_record_id": record_id,
+             "status": self.verification_status(record_id).value,
+             "verification_event_ids": [event.verification_event_id for event in events]}
+            for record_id, events in sorted(self._verifications.items())
+        ]
+        return hashlib.sha256(json.dumps(payload, sort_keys=True,
+                                         separators=(",", ":")).encode()).hexdigest()
 
     def verification_disagreements(self) -> list[tuple[str, list[VerificationEvent]]]:
         """V7: claims whose live verification events disagree. Reported

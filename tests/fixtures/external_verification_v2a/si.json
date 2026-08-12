@@ -1,0 +1,10 @@
+{
+  "source_uri": "fixture://authority/si/metre",
+  "status": "SUCCESS",
+  "fetched_at": "2026-08-11T00:00:00+00:00",
+  "publisher": "Fixture Standards Authority",
+  "publisher_domain": "fixture.authority",
+  "raw_content": {"entity": "metre", "symbol": "m"},
+  "extracted_fields": {"entity": "metre", "symbol": "m"}
+}
+

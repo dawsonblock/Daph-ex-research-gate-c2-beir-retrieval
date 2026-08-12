@@ -12,6 +12,6 @@ what it writes is natively parseable by the reader.
 """
 from .claim_store import (  # noqa: F401
     ClaimRecord, ClaimStore, ConflictOutcome, IngestResult,
-    NotNativelyParseableError)
+    IntegrityError, NotNativelyParseableError)
 from .states import (  # noqa: F401
     LifecycleState, VerificationStatus)

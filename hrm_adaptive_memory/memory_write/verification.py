@@ -53,17 +53,42 @@ class VerificationEvent:
     confidence: float
     notes: str = ""
     supersedes_verification: str | None = None
+    # Optional V2A provenance. Empty defaults preserve every V1 event's
+    # serialized shape and content-addressed identity.
+    source_lineage_ids: tuple[str, ...] = ()
+    reason_code: str = ""
+    protocol_id: str = ""
+    protocol_version: str = ""
+    execution_identity: str = ""
+    receipt_hash: str = ""
+    verification_job_id: str = ""
 
     def to_json(self) -> dict:
         d = asdict(self)
         d["result"] = self.result.value
         d["evidence_ids"] = list(self.evidence_ids)
+        # Keep V1 events in their original serialized schema. V2A provenance
+        # is emitted only when this is actually an external determination.
+        for key in ("source_lineage_ids", "reason_code", "protocol_id",
+                    "protocol_version", "execution_identity", "receipt_hash",
+                    "verification_job_id"):
+            if not d[key]:
+                del d[key]
+        if "source_lineage_ids" in d:
+            d["source_lineage_ids"] = list(self.source_lineage_ids)
         return d
 
 
 def verification_event_id(*, claim_record_id: str, checker_id: str, method: str,
                           method_version: str, evidence_ids: Sequence[str],
-                          result: str, observed_at_utc: str) -> str:
+                          result: str, observed_at_utc: str,
+                          checker_type: str = "", confidence: float | None = None,
+                          notes: str = "", supersedes_verification: str | None = None,
+                          source_lineage_ids: Sequence[str] = (),
+                          reason_code: str = "", protocol_id: str = "",
+                          protocol_version: str = "", execution_identity: str = "",
+                          receipt_hash: str = "",
+                          verification_job_id: str = "") -> str:
     """Content-addressed over the full determination.
 
     This gives idempotency for free, which is what V11 needs: a worker that
@@ -71,12 +96,30 @@ def verification_event_id(*, claim_record_id: str, checker_id: str, method: str,
     recompute the SAME determination and produce the SAME id -- so the replay
     sees a duplicate to drop rather than a second, spurious opinion.
     """
-    payload = json.dumps({
+    fields = {
         "claim_record_id": claim_record_id, "checker_id": checker_id,
         "method": method, "method_version": method_version,
         "evidence_ids": sorted(evidence_ids), "result": result,
-        "observed_at_utc": observed_at_utc,
-    }, sort_keys=True, separators=(",", ":"))
+        "checker_type": checker_type, "confidence": confidence, "notes": notes,
+        "supersedes_verification": supersedes_verification,
+    }
+    # Retry-safe jobs are identity-addressed. Their wall-clock observation time
+    # is provenance, not a new determination, so it must not defeat exactly-once
+    # delivery after a crash. Ad-hoc V1 calls retain timestamp identity.
+    if verification_job_id:
+        fields["verification_job_id"] = verification_job_id
+    else:
+        fields["observed_at_utc"] = observed_at_utc
+    # Omit all new fields when empty so V1 event ids remain byte-for-byte
+    # identical to ids computed before V2A existed.
+    extras = {
+        "source_lineage_ids": sorted(source_lineage_ids),
+        "reason_code": reason_code, "protocol_id": protocol_id,
+        "protocol_version": protocol_version, "execution_identity": execution_identity,
+        "receipt_hash": receipt_hash,
+    }
+    fields.update({key: value for key, value in extras.items() if value})
+    payload = json.dumps(fields, sort_keys=True, separators=(",", ":"))
     return "vfy-" + hashlib.sha256(payload.encode()).hexdigest()[:20]
 
 
@@ -140,6 +183,10 @@ def priority_signals(*, conflict_present: bool, claim_importance: float | None =
     }
 
 
+def _normalise_value(value: str) -> str:
+    return " ".join(value.strip().lower().split())
+
+
 class DeterministicMemoryConsistencyChecker:
     """The first worker: verification against EXISTING MEMORY only.
 
@@ -169,10 +216,14 @@ class DeterministicMemoryConsistencyChecker:
         rec = self.store.get(record_id)
         if rec is None:
             raise KeyError(f"unknown claim record {record_id!r}")
+        # Repeated observations from one source are not independent
+        # corroboration. V2A upgrades this to declared lineage; V1 uses the
+        # available source identifier conservatively.
         peers = [r for r in self.store.retrievable()
-                 if r.claim_key == rec.claim_key and r.record_id != record_id]
-        same = [r for r in peers if r.value.strip().lower() == rec.value.strip().lower()]
-        diff = [r for r in peers if r.value.strip().lower() != rec.value.strip().lower()]
+                 if r.claim_key == rec.claim_key and r.record_id != record_id
+                 and r.source_id != rec.source_id]
+        same = [r for r in peers if _normalise_value(r.value) == _normalise_value(rec.value)]
+        diff = [r for r in peers if _normalise_value(r.value) != _normalise_value(rec.value)]
         if diff:
             return (VerificationResult.CONTRADICTED,
                     tuple(sorted(r.record_id for r in diff)),
@@ -186,12 +237,18 @@ class DeterministicMemoryConsistencyChecker:
 
     def verify(self, record_id: str, observed_at_utc: str | None = None) -> VerificationEvent:
         result, evidence, notes = self.determine(record_id)
+        job_material = json.dumps({
+            "claim_record_id": record_id, "checker_id": self.checker_id,
+            "method": self.METHOD, "method_version": self.METHOD_VERSION,
+            "evidence_ids": sorted(evidence), "result": result.value,
+        }, sort_keys=True, separators=(",", ":"))
+        job_id = "memvfy-" + hashlib.sha256(job_material.encode()).hexdigest()[:20]
         return self.store.append_verification(
             claim_record_id=record_id, checker_id=self.checker_id,
             checker_type=self.CHECKER_TYPE, method=self.METHOD,
             method_version=self.METHOD_VERSION, evidence_ids=evidence,
             result=result, confidence=1.0, notes=notes,
-            observed_at_utc=observed_at_utc)
+            observed_at_utc=observed_at_utc, verification_job_id=job_id)
 
     def queue(self) -> list[tuple[int, str]]:
         """Claims awaiting verification, highest priority first. V1 policy:
@@ -201,6 +258,8 @@ class DeterministicMemoryConsistencyChecker:
             conflicted.update(group)
         out = []
         for r in self.store.retrievable():
+            if self.store.verification_status(r.record_id) is not VerificationStatus.UNVERIFIED:
+                continue
             p = priority_signals(conflict_present=r.record_id in conflicted)
             out.append((p["v1_effective_priority"], r.record_id))
         return sorted(out, key=lambda t: (-t[0], t[1]))

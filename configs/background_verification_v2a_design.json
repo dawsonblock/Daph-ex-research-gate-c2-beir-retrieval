@@ -1,0 +1,36 @@
+{
+  "protocol_id": "BACKGROUND_VERIFICATION_V2A",
+  "protocol_version": "1.0.0",
+  "source_commit": "fc4a454f67d79163b95867e54dd1443401169e71",
+  "source_commit_anchor": "remote branch c4-v2_1-prompt-order-conformance via git ls-remote",
+  "claim_schema_version": "VERIFIED_MEMORY_WRITE_V1.2",
+  "event_schema_version": "VERIFICATION_V1_EXTENDED_EXTERNAL_EVIDENCE_V2A",
+  "evidence_schema_version": "EXTERNAL_EVIDENCE_V2A.1",
+  "verification_method_versions": {
+    "authoritative_exact_field": "1.0.0",
+    "acquisition_failure": "1.0.0"
+  },
+  "allowed_v2a_source_classes": [
+    "AUTHORITATIVE_STRUCTURED_DATA",
+    "OFFICIAL_PRIMARY_SOURCE"
+  ],
+  "forbidden_behaviors": [
+    "claim_mutation",
+    "live_url_as_evidence",
+    "llm_adjudication",
+    "recency_arbitration",
+    "confidence_arbitration",
+    "source_count_arbitration",
+    "fuzzy_lineage_inference",
+    "certified_memory_reader_modification",
+    "network_dependent_unit_tests",
+    "gpu_execution"
+  ],
+  "acceptance_test_ids": [
+    "V2A-T1", "V2A-T2", "V2A-T3", "V2A-T4", "V2A-T5", "V2A-T6",
+    "V2A-T7", "V2A-T8", "V2A-T9", "V2A-T10", "V2A-T11", "V2A-T12",
+    "V2A-T13", "V2A-T14", "V2A-T15", "V2A-T16"
+  ],
+  "frozen_utc": "2026-08-11T00:00:00Z"
+}
+
