@@ -42,7 +42,7 @@ question → subject-preserving query → BM25+BGE retrieval
 | **C3** Surface identity resolution | ✅ MECHANISM_SUCCESS | I3 identity-record retrieval resolves surface defect with 92% accuracy, 0% false resolution |
 | **C4** Integrated memory pipeline | ✅ CERTIFIED (development) | H100 certification: +0.2000 quality delta (family CI [+0.1354, +0.2604], threshold +0.15); 17/17 gates passed |
 | **C4-BRIDGE** Runtime bridge acquisition | ❌ NEGATIVE RESULT | No runtime bridge mechanism beats one-pass baseline (B0 CES=0.783 vs B2 CES=0.775) |
-| **V2A** External background verification | ⚠️ REQUALIFICATION REQUIRED | Mechanism implemented and historically exercised; the prior exact-build PASS is void because its receipts came from different source identities |
+| **V2A** External background verification | ✅ QUALIFIED | Replacement commit-bound PASS: one source/tree/environment across full suite, focused security, adversarial, network smoke, and 1M pressure/replay |
 | Cognitive-control donor slice | 🧪 IMPLEMENTED, NOT QUALIFIED | DAPH-native hash-chained provenance, bitemporal facts, unresolved conflicts, decision graph, and deterministic policy rules adapted from selected Semantica concepts |
 | **D–N** Downstream gates | 🔒 BLOCKED | Pending untouched qualification/OOD splits and Gate D decision |
 

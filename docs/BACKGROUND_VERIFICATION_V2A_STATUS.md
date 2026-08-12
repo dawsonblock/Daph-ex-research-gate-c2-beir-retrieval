@@ -1,72 +1,83 @@
 # BACKGROUND_VERIFICATION_V2A status
 
-## Current disposition
+## Replacement qualification
 
 ```text
 IMPLEMENTED          yes
-CORRECTNESS TESTED   yes (focused V2A suite)
-EXACT BUILD QUALIFIED no
+CORRECTNESS TESTED   yes
+EXACT BUILD QUALIFIED yes
 PRODUCTION CLAIM     no
 
-run_valid          = false
-mechanism_status   = IMPLEMENTED_REQUIRES_COMMIT_BOUND_REQUALIFICATION
-scientific_verdict = VOID_PENDING_REQUALIFICATION
+run_valid          = true
+mechanism_status   = QUALIFIED
+scientific_verdict = PASS
 ```
 
-The previous exact-build `QUALIFIED / PASS` declaration is void. Its four
-qualification receipts were produced from different commits and trees, while
-the old package builder checked only that each receipt contained
-`run_valid=true`. Receipt hashes authenticated the files that were packaged;
-they did not prove that those files qualified the packaged source.
+The replacement qualification is bound to one identity:
 
-The historical results remain useful engineering evidence, not qualification
-evidence for the exact packaged build:
+```text
+source_commit      = 77f348325352c0cd76d08514a60196fba61e4749
+source_tree_hash   = 50e4bf0b2b17b06447c1c1d0dc72207834648d50
+environment_sha256 = 6e01a5b84dd1b314fb9a432b990242f3796b08c1f2ada51a631444d6048ef389
+packaging_commit   = 1ffaeeb4e0e46517696c2d6aa1d5a643ada26bae
+```
 
-- 1M-event pressure/replay: commit `aa5aac06687241ab49276f74aed5a108b44c7114`
-- 10-case adversarial run: commit `078923a8b072fb1a72101723154b29d73f9214e3`
-- recorded live/offline network smoke: commit `b06f181e30d2159f4e379220a236b004e3749bf8`
-- 1,659-pass full-suite receipt: commit `6cabd45129ccb3c76ed328132078ea1e0ceb847e`
+The identity also binds the protocol, verifier/evidence runtime,
+qualification validator, claim store, verification-event schema, frozen
+memory and C4 lock, test corpus, fully resolved dependency lock, Python
+build/compiler/ABI, interpreter binary, OS/platform/architecture, and exact
+critical-distribution metadata/WHEEL/RECORD hashes. Missing or mismatched
+identity data is `QUALIFICATION_INVALID`, not a warning.
 
-The focused local V2A suite independently reproduced as 9 passing tests during
-the archive audit. The stored full-suite result is historical because it was
-not produced from the same source identity and its environment was not
-reproducible from the former `dev` extra alone.
+## Recorded gates
 
-## Requalification contract
+- Complete clean-checkout suite: **1,672 passed, 3 skipped, 0 failed**.
+- Focused V2A, qualification-integrity, cognitive-control, and network-capture
+  security suite: **22 passed, 0 failed**.
+- Frozen adversarial regressions: **10/10 passed**.
+- Recorded two-source World Bank integration smoke: live pipeline and offline
+  captured-byte reproduction passed; offline network calls were zero. Both
+  records have one publisher, so no independent-publisher corroboration claim
+  is made.
+- Pressure ladder: 1k, 10k, 50k, 100k, 250k, 500k, and 1M checkpoints all
+  reproduced incremental state from genesis. At 1M, evidence append throughput
+  was 2,815.9/s, verification append throughput 3,358.4/s, and cold replay
+  58.08s. The test establishes the measured envelope, not constant-memory
+  scaling.
 
-Every new pressure, adversarial, network-smoke, and full-suite receipt must
-carry the same `BACKGROUND_VERIFICATION_V2A_QUALIFICATION_IDENTITY_V1`. That
-identity binds:
+Every experiment was recorded and finalized in LitLogger. The four package
+qualification receipts carry one byte-identical
+`BACKGROUND_VERIFICATION_V2A_QUALIFICATION_IDENTITY_V1`; the focused security
+receipt is supplementary evidence under that same identity.
 
-- source commit and source tree;
-- protocol, external-verification runtime, qualification validator, claim
-  store, and verification-event hashes;
-- test-corpus hash;
-- exact qualification dependency-lock hash;
-- Python/interpreter identity and installed dependency versions.
+## Package verification
 
-The package builder recomputes this identity from the claimed Git commit and
-current qualification environment, requires all four receipts to match it,
-checks gate-specific contents, and fails closed on missing or mixed identities.
-It packages the exact common source commit and overlays only the validated
-receipts plus the generated manifest. The environment can be installed with
-`python -m pip install -e '.[qualification]'` or the frozen
-`configs/v2a_qualification_requirements.lock`.
+```text
+archive = dist/Daph-background-verification-v2a-77f3483.tar.gz
+archive_sha256 = 8a7b8f0ed954a3f91cf52974a5a01f2781cce52071e23d2c4789734cf0cdcbd8
+source_archive_payload_sha256 = a5149724b0a2d815612461f6a52dc617e8ec2897dbad8dc496c24a8e0f6d0e69
+archive_entries = 5657
+```
 
-## Implemented capability and bounded language
+A separate clean checkout independently verified the sidecar, safe archive
+layout, embedded manifest, all four package receipt hashes, common identity,
+source commit/tree, and a freshly regenerated deterministic Git-archive
+payload.
 
-V2A provides a CPU-only, offline-testable path from a canonical claim to a
-durable queue, immutable external snapshot, deterministic exact-field decision,
-and append-only `VERIFICATION` event. Disagreement stays `INCONCLUSIVE` and
-evidence retraction changes current derived state without erasing history.
+The invalid earlier cross-commit qualification remains revoked. Its historical
+receipts are not part of this verdict.
 
-The implemented mechanism can preserve declared or deterministically assigned
-source-lineage identifiers. It does not discover hidden syndication. Repeated
-execution, crash-boundary recovery, and replay are idempotent; V2A does not yet
-implement retry scheduling, backoff, or retry budgets. Generic HTTP capture is
-an integration adapter, not a production authority decision or a production
-network-security boundary.
+## Bounded claim
+
+DAPH can acquire immutable external evidence, preserve declared or
+deterministically assigned source lineage, deterministically verify supported
+exact-field claim classes, survive repeated execution/replay/tampering, and
+maintain auditable current verification state.
 
 V2A does not claim general truth verification, literature understanding,
-semantic contradiction resolution, LLM fact checking, verification-aware
-retrieval, answer-quality improvement, or production readiness.
+semantic contradiction resolution, LLM fact checking, retry scheduling,
+verification-aware retrieval, answer-quality improvement, production authority
+classification, or production readiness. The Semantica-derived cognitive
+control substrate remains implemented and unit-tested but is not automatically
+consumed by an executive and is not scientifically qualified by this V2A
+verdict.
