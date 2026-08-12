@@ -1,0 +1,66 @@
+{
+  "artifact": "BACKGROUND_VERIFICATION_V2A_QUALIFIED_BUILD",
+  "bounded_claim": "DAPH can acquire immutable external evidence, preserve source lineage, deterministically verify supported exact-field claim classes, survive retries/replay/tampering, and maintain auditable current verification state.",
+  "branch": "background-verification-v2a",
+  "build_time": "2026-08-12T02:48:27.825836+00:00",
+  "c4_h100_lock": {
+    "history_modified_by_v2a": false,
+    "path": "configs/c4_requirements.lock",
+    "sha256": "296265d740855d8156af5f471a93d32453351d8c6615e18de112b897a8765ec4"
+  },
+  "certified_memory_v1_config_sha256": "8b714fac36f0c044ff29d064bfd6dc48354d9c80d4e465c2407faaaa534bbc18",
+  "certified_memory_v1_identity": "97b3b49cb95fa33b",
+  "explicit_non_claims": [
+    "general truth determination",
+    "arbitrary scientific literature understanding",
+    "verification-aware retrieval improvement",
+    "answer-accuracy improvement"
+  ],
+  "final_archive_sha256_location": "dist/Daph-background-verification-v2a-0efb1f1.tar.gz.sha256",
+  "local_head_equals_origin_head": true,
+  "mechanism_status": "QUALIFIED",
+  "origin_head": "0efb1f113a750eff9cf6fd93f5d14ac580f497f4",
+  "qualification_receipt_hashes": {
+    "adversarial": {
+      "path": "evidence/background_verification_v2a/adversarial/adversarial.json",
+      "sha256": "e7f04e966818aa970c215347c2bf16fba6c43a79d5c14a84614bd91cf565841e"
+    },
+    "full_suite": {
+      "path": "evidence/background_verification_v2a/tests/full_suite.json",
+      "sha256": "7b03217bd31b89c49ffaa4a28b5020be6b00bc23b79a901304e05be4193f21cc"
+    },
+    "network_smoke": {
+      "path": "evidence/background_verification_v2a/network_smoke/network_smoke.json",
+      "sha256": "948ff6a54e73b2b97b3e33280d1b1d7abcf515397e831fc0eeaa12f198f38823"
+    },
+    "pressure": {
+      "path": "evidence/background_verification_v2a/pressure/pressure_full_1m.json",
+      "sha256": "23d0994b2760deb4d0d54ee689723724b057008240293f4b3e9267532c426124"
+    }
+  },
+  "run_valid": true,
+  "schema_hashes": {
+    "claim_store": {
+      "path": "hrm_adaptive_memory/memory_write/claim_store.py",
+      "sha256": "d7a2077935601236e63942ede22b11fc2babab12f004c91e6db0933b2563dd10"
+    },
+    "external_evidence_runtime": {
+      "path": "hrm_adaptive_memory/external_verification/core.py",
+      "sha256": "65df6f67dce552496068ef192f5485b7c4ab3da1d832a704d8c043e8e5b2591d"
+    },
+    "v2a_protocol": {
+      "path": "configs/background_verification_v2a_design.json",
+      "sha256": "db0e15db95eb5e4738fd3b76a506d6fe38ef2b9381ab870e55d5deb13cd9f48b"
+    },
+    "verification_event": {
+      "path": "hrm_adaptive_memory/memory_write/verification.py",
+      "sha256": "b32cdcd78bdabec9a03d19cb6162d2f8c31fbcf41d26900732fa1948838597f4"
+    }
+  },
+  "scientific_verdict": "PASS",
+  "source_archive_payload_definition": "SHA-256 of deterministic git archive for source_commit before adding this generated BUILD_MANIFEST.json",
+  "source_archive_payload_sha256": "203924ea73ec2f54274d95859d9ab5f193e411d499b3a8e94ec112a78985af09",
+  "source_commit": "0efb1f113a750eff9cf6fd93f5d14ac580f497f4",
+  "source_tree_hash": "3cb169b1b1acdc12f584cb70808de51b40f39055",
+  "v2a_protocol_sha256": "db0e15db95eb5e4738fd3b76a506d6fe38ef2b9381ab870e55d5deb13cd9f48b"
+}
