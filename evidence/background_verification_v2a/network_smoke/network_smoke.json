@@ -1,0 +1,96 @@
+{
+  "artifact": "BACKGROUND_VERIFICATION_V2A_NETWORK_INTEGRATION_SMOKE",
+  "bounded_claim": "Two fixed authoritative sources traversed live fetch -> immutable snapshot -> hashes -> declared lineage -> deterministic exact-field verification -> append event -> genesis replay; captured bytes reproduced the decisions offline.",
+  "branch": "background-verification-v2a",
+  "claim_verification_state_hash": "e61271a718ac495ef5869cdd2bdc08b8ffa61ba5ed956cd9f525377190e4be6e",
+  "completed_at": "2026-08-12T02:42:23.473280+00:00",
+  "evidence": [
+    {
+      "content_type": "application/json",
+      "evidence_id": "evd-53be2abfcec0d310dd68",
+      "fetched_at": "2026-08-12T02:42:23.439944+00:00",
+      "hashes_validate": true,
+      "normalized_content_hash": "0cbd809d411d7c4dba0d5ef15c42377f390ed852fb74630fb806c8633e9d4663",
+      "publisher": "World Bank",
+      "publisher_domain": "api.worldbank.org",
+      "raw_content_hash": "ca986b15523113290ec99eba3f4e201611d491f7eaa775878fb1634745d2edef",
+      "source_lineage_id": "lin-world-bank-country-japan",
+      "source_type": "AUTHORITATIVE_STRUCTURED_DATA",
+      "source_uri": "https://api.worldbank.org/v2/country/JP?format=json"
+    },
+    {
+      "content_type": "application/json",
+      "evidence_id": "evd-af4ed77eaff42801d9be",
+      "fetched_at": "2026-08-12T02:42:23.216415+00:00",
+      "hashes_validate": true,
+      "normalized_content_hash": "17639f4d95fcddb6b0b3a2af31b33489a77165602beb6fa7a43377b41b988961",
+      "publisher": "World Bank",
+      "publisher_domain": "api.worldbank.org",
+      "raw_content_hash": "4db47a3300a3e492c3b4801820c4a1d63863c789ead0198b72b5f0c8cc76eaaf",
+      "source_lineage_id": "lin-world-bank-country-canada",
+      "source_type": "AUTHORITATIVE_STRUCTURED_DATA",
+      "source_uri": "https://api.worldbank.org/v2/country/CA?format=json"
+    }
+  ],
+  "evidence_state_hash": "fe41107fc5cca26f94e0afd2ede454a7f103216b5e6c7d57bf3489bfef68253a",
+  "independent_publisher_corroboration_claimed": false,
+  "live_events": [
+    {
+      "event_id": "vfy-cb114e00ab81b8dcca8c",
+      "evidence_ids": [
+        "evd-af4ed77eaff42801d9be"
+      ],
+      "reason_code": "AUTHORITATIVE_EXACT_FIELD_MATCH",
+      "result": "SUPPORTED"
+    },
+    {
+      "event_id": "vfy-d5a1838d5aa862d77941",
+      "evidence_ids": [
+        "evd-53be2abfcec0d310dd68"
+      ],
+      "reason_code": "AUTHORITATIVE_EXACT_FIELD_MATCH",
+      "result": "SUPPORTED"
+    }
+  ],
+  "live_pipeline_pass": true,
+  "mechanism_status": "NETWORK_SMOKE_PASS",
+  "network_fetch_count": 2,
+  "network_sources": [
+    "https://api.worldbank.org/v2/country/CA?format=json",
+    "https://api.worldbank.org/v2/country/JP?format=json"
+  ],
+  "offline_network_calls": 0,
+  "offline_replay_pass": true,
+  "offline_reproductions": [
+    {
+      "captured_evidence": true,
+      "claim_id": "vmw-37745fab5fb5f2cc66fc",
+      "event_id": "vfy-cb114e00ab81b8dcca8c",
+      "event_result": "SUPPORTED",
+      "raw_hash_valid": true,
+      "reason_code": "AUTHORITATIVE_EXACT_FIELD_MATCH",
+      "receipt_hash_equal": true,
+      "result_equal": true
+    },
+    {
+      "captured_evidence": true,
+      "claim_id": "vmw-93c626396e0142cd7f86",
+      "event_id": "vfy-d5a1838d5aa862d77941",
+      "event_result": "SUPPORTED",
+      "raw_hash_valid": true,
+      "reason_code": "AUTHORITATIVE_EXACT_FIELD_MATCH",
+      "receipt_hash_equal": true,
+      "result_equal": true
+    }
+  ],
+  "publisher_count": 1,
+  "run_valid": true,
+  "scientific_verdict": "INTEGRATION_ONLY_NOT_SCIENTIFIC_EVALUATION",
+  "source_commit": "b06f181e30d2159f4e379220a236b004e3749bf8",
+  "source_record_count": 2,
+  "source_tree_hash": "91b875c6e2d0a9ce0a07294a28f6467df065fdc5",
+  "verification_event_ids": [
+    "vfy-cb114e00ab81b8dcca8c",
+    "vfy-d5a1838d5aa862d77941"
+  ]
+}
