@@ -1,0 +1,21 @@
+[OBJECTIVE]
+What is the billing multiplier for Osprey relay unit?
+[EVIDENCE]
+[E1]
+billing multiplier:
+  subject: Bittern control module
+  value: ZETA-CORAL
+[E2]
+Revision applied — Ibis relay unit spare enclosure changed to Osprey relay unit.
+[E3]
+Registry entry: Vireo pressure assembly — billing multiplier — 9659.
+[E4]
+[change] Bluebird pressure assembly :: billing multiplier := quarantined
+[E5]
+subject=Kestrel relay unit; assigned unit=Osprey drive cluster
+[E6]
+billing multiplier:
+  subject: Finch drive cluster
+  value: {"category": "provisional"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

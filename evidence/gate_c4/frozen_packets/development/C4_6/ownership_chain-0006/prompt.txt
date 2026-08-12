@@ -1,0 +1,9 @@
+[OBJECTIVE]
+What is the ownership tier for Ibis control module?
+[EVIDENCE]
+[E1]
+- updated Ibis control module: registered asset now Teal drive cluster
+[E2]
+{"subject": "Teal drive cluster", "ownership tier": "retired"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

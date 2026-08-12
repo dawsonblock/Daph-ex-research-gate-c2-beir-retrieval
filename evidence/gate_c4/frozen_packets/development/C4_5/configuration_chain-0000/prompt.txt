@@ -1,0 +1,9 @@
+[OBJECTIVE]
+Which parameter grade applies to Ibis relay unit?
+[EVIDENCE]
+[E1]
+- updated Auk relay unit: parameter grade now 1101
+[E2]
+Changelog: active configuration for Ibis relay unit set to Auk relay unit.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

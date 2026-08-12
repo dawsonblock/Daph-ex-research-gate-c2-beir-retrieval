@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "df3624f526d14ac7e39e102ecbcf69e70142f8f287c510e03a5c2e69e83914c6",
+  "canonical_subject": "Jacana pressure assembly",
+  "ordered_selected_ids": [
+    "entity_attribute-0002/fact",
+    "entity_attribute-0009/fact",
+    "temporal_chain-0003/link",
+    "procedural_chain-0003/link",
+    "dependency_chain-0004/link",
+    "procedural_chain-0007/value"
+  ],
+  "ordered_text_sha256": [
+    "d8676b935cda20ec042a4f422e193aeb401522216a5b926e67abc9c4c73d2886",
+    "219a35daf2093e9cb2f38f31b272da62f3804086aad02efd507a415c9f07a25e",
+    "6422463aa553abbc247deb573fd5d06d0f511aab397ad73e9f6b882712861d6c",
+    "347692b112b295c0bb4f692dd8ecbd408c1e28631d6d87adceced4abf9ebc2c3",
+    "06113620b26afb17f76873abec80605a8031106b69d9e415f5e85f3b8ba8f67b",
+    "284e8ab3ef29f1327fe1a6e95d49cb5508cb3ec1c671ba02477a54a53062d6af"
+  ],
+  "query_hash": "7f5bc1fb3534adcfc8f7684472fa54d57b640fda1d69f393ec741013efc7858c",
+  "selector_policy_id": "s0",
+  "task_id": "entity_attribute-0002"
+}

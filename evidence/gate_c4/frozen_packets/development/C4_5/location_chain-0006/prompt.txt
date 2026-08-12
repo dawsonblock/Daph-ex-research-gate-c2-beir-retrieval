@@ -1,0 +1,9 @@
+[OBJECTIVE]
+What is the service region for Pelican sensor array?
+[EVIDENCE]
+[E1]
+[hosting venue] Pelican sensor array -> Quail control module
+[E2]
+{"subject": "Quail control module", "service region": "provisional"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

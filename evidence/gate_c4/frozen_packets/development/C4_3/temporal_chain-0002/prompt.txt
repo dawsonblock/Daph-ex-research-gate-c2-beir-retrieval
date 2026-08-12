@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to Quail relay unit?
+[EVIDENCE]
+[E1]
+Revision 2 (effective 2031-06-01) supersedes revision 1: subject=Kestrel relay unit; operating tier=9088
+[E2]
+Revision 2 (effective 2031-06-01) supersedes revision 1: {"subject": "Quail intake manifold", "operating tier": "EPSILON-SLATE"}
+[E3]
+Changelog: assigned unit for Quail relay unit set to Marlin intake manifold.
+[E4]
+Revision 1 (effective 2030-01-01, since superseded) recorded: {"subject": "Quail intake manifold", "operating tier": "ALPHA-RED"}
+[E5]
+For Bluebird sensor array, spare enclosure requires Quail relay unit.
+[E6]
+[change] Gannet relay unit :: ownership tier := {"grade": "quarantined"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,19 @@
+[OBJECTIVE]
+Which required action applies to Finch relay unit?
+[EVIDENCE]
+[E1]
+[required action] Finch drive cluster -> BETA-GREEN
+[E2]
+required action:
+  subject: Bluebird relay unit
+  value: suspended
+[E3]
+For Finch pressure assembly, required action requires 9926.
+[E4]
+Revision applied — Vireo relay unit required action changed to ZETA-CORAL.
+[E5]
+Revision applied — Finch relay unit required dependency changed to Kestrel intake manifold.
+[E6]
+It is recorded in the required action registry that Finch drive cluster holds {"state": "provisional"}.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

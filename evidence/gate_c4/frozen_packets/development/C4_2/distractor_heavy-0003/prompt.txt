@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which routing class applies to DSA-7?
+[EVIDENCE]
+[E1]
+DSA-7 is the short code for Dunlin sensor array.
+[E2]
+[routing class] Finch relay unit -> 2392
+[E3]
+subject=Heron relay unit; calibration routing class=7299
+[E4]
+{"subject": "Bittern control module", "routing class": "retired"}
+[E5]
+- updated Quail pressure assembly: routing class now 2851
+[E6]
+Revision applied — Heron drive cluster routing class changed to {"state": "suspended"}.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

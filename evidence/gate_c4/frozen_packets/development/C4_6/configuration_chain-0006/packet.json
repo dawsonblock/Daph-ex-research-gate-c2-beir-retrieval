@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "071546d124c2410be36c421abcf017a4ebc1387a93c2a40da4f72b9dc47a3d68",
+  "canonical_subject": "Bluebird sensor array",
+  "ordered_selected_ids": [
+    "configuration_chain-0006/link",
+    "configuration_chain-0006/value"
+  ],
+  "ordered_text_sha256": [
+    "e10b8712fd738c3939fb8fcaca9a58ce219c3c8e7a765954a45547a66716c1ec",
+    "fe8229f943f90d5a8c62eb3791ca684d12be05d4e5d8202d0f288e0dae1bdc33"
+  ],
+  "query_hash": "aadea933d230ca00917de24a06b8400f293d1d742d83a897e6de0be160b7ffc0",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "configuration_chain-0006"
+}

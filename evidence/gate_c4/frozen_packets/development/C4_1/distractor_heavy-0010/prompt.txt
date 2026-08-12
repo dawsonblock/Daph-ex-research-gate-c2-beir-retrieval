@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Jacana sensor array, which routing class is recorded?
+[EVIDENCE]
+[E1]
+Per the routing class register, quarantined is allocated to Jacana sensor array.
+[E2]
+Per the calibration routing class register, accredited is allocated to Jacana sensor array.
+[E3]
+Revision applied — Jacana sensor array proposed routing class changed to provisional. Status: rejected.
+[E4]
+[routing class] Osprey sensor array -> ZETA-CORAL
+[E5]
+[calibration routing class] Osprey sensor array -> DELTA-AMBER
+[E6]
+Engineering notes indicate Jacana sensor array uses suspended as its former routing class. This record is historical.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "73935a9562235fcf71a88d3ad585392f75483b1ccd42c9e1d009136a17c89c59",
+  "canonical_subject": "Gannet intake manifold",
+  "ordered_selected_ids": [
+    "temporal_update-0005/identity",
+    "temporal_update-0005/current"
+  ],
+  "ordered_text_sha256": [
+    "61ef979924972e403a74061099570145f022d63ce643acba09cab84f7a285a98",
+    "514db500848a25800e0b5416c49fbe8ebad92bb990cf810abb576336f593ea5c"
+  ],
+  "query_hash": "7fb8e62b44134d396beedd3c759dbf5e7a6d80df7e79d58abc2cf3ea7a3e8f72",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "temporal_update-0005"
+}

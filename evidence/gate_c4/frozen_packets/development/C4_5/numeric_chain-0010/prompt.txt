@@ -1,0 +1,9 @@
+[OBJECTIVE]
+For Teal control module, which billing multiplier is recorded?
+[EVIDENCE]
+[E1]
+[change] Bluebird pressure assembly :: billing multiplier := quarantined
+[E2]
+Engineering notes indicate Teal control module uses Bluebird pressure assembly as its rate record.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,19 @@
+[OBJECTIVE]
+What is the required action for MRU-7?
+[EVIDENCE]
+[E1]
+Abbreviation table: MRU-7 = Marlin relay unit.
+[E2]
+{"subject": "Bluebird pressure assembly", "required action": "retired"}
+[E3]
+Registry entry: Gannet pressure assembly — required action — 7949.
+[E4]
+[change] Jacana sensor array :: required action := {"tier": "accredited"}
+[E5]
+Note: the required action for Auk pressure assembly resolves to {"tier": "accredited"}.
+[E6]
+required action:
+  subject: Bluebird relay unit
+  value: suspended
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,19 @@
+[OBJECTIVE]
+For Bluebird drive cluster, which ownership tier is recorded?
+[EVIDENCE]
+[E1]
+{"subject": "Teal drive cluster", "ownership tier": "retired"}
+[E2]
+[change] Osprey drive cluster :: ownership tier := accredited
+[E3]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E4]
+{"subject": "Bluebird sensor array", "ownership tier": "GAMMA-BLUE"}
+[E5]
+ownership tier:
+  subject: Bluebird sensor array
+  value: 9167
+[E6]
+[change] Teal drive cluster :: proposed ownership tier := provisional This proposal was rejected.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

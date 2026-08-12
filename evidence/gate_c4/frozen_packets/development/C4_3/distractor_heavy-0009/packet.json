@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "9210e4718988082d336b65a26aca785eeee7ce167cc9f56384ca7230c9e5a5ad",
+  "canonical_subject": "Egret relay unit",
+  "ordered_selected_ids": [
+    "distractor_heavy-0009/identity",
+    "distractor_heavy-0004/near-near_entity",
+    "distractor_heavy-0007/near-near_relation",
+    "distractor_heavy-0009/accepted",
+    "distractor_heavy-0000/near-near_relation",
+    "distractor_heavy-0007/accepted"
+  ],
+  "ordered_text_sha256": [
+    "a673cc1ee839f5c73ae0b0373191a8b34e1ea251597686f242fe3f8ac71f3e33",
+    "d82c30a93673d70175f13550a063e60531de9257501291809866da45696fcd4a",
+    "e0f24df2b23aa9e40ce0a3ff78763a514a12a37abb77c75462bbf73aa6ecba69",
+    "84aa64b72446c3b303cf2e687cf41dd2ca0afc2020d2abb8bf65b8163de3e9b4",
+    "18ec4bbc123255a4b1d2128ff640adf951f4361a8fb4e03881131dff62cb06f8",
+    "af7a6a7cb502f80be28398f52982c8394142f40990203154ffa4316512fcc97f"
+  ],
+  "query_hash": "75e2af270085dfd316bd89f7e050475228e60c68845afc3a20c7607af3e39219",
+  "selector_policy_id": "s0",
+  "task_id": "distractor_heavy-0009"
+}

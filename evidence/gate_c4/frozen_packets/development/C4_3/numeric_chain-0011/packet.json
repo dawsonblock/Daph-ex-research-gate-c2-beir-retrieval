@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "9695ed0518c8192da6102708556585b0a5106415d3c53065f72cfbf4009ff9e2",
+  "canonical_subject": "Wren sensor array",
+  "ordered_selected_ids": [
+    "numeric_chain-0002/value",
+    "numeric_chain-0010/value",
+    "numeric_chain-0009/value",
+    "numeric_chain-0004/value",
+    "numeric_chain-0000/value",
+    "numeric_chain-0003/direct"
+  ],
+  "ordered_text_sha256": [
+    "6f4f04ea9eb7f5d37359b5ee04d3f727ae49a4e867ade488395c0622219b5e06",
+    "440433046bde29919e436e81db217c4c86355115fb62e3d104d6c9e6f5f8212b",
+    "16d0a77afbfb4ce05121f53f2688a70f184b4effc03f10bf090ffbeab4f56ebb",
+    "bea61faf377eea8d4a99cf1fc5707e2135019632ef7997da2025409331173ab7",
+    "61a469477e1bd6ec203d56f8345785d6e4b583478e095665aa3a5dc9210acadf",
+    "397bdd9c891a07da710c4f9ae1df4bb2e38eceff9b3db945d4e01dc1291ef670"
+  ],
+  "query_hash": "f7514eda268112240f62632b68292e2f904a716a918932e9418c593d34e6ef1c",
+  "selector_policy_id": "s0",
+  "task_id": "numeric_chain-0011"
+}

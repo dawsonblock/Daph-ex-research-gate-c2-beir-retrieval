@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "9f7c287e5fb3ede9daa1d7e399ff1e1d938a1c14cd7800dd9c4117c66dbd6caf",
+  "canonical_subject": "Wren pressure assembly",
+  "ordered_selected_ids": [
+    "dependency_chain-0005/identity",
+    "dependency_chain-0005/value"
+  ],
+  "ordered_text_sha256": [
+    "05359c1c9e0dd0744722558bfa3568d91bec13edeb1d9d4daec9c5d5a6740ce8",
+    "975ef108bce2f9689446babc6b30bdc970bf44236704405a429279364882238a"
+  ],
+  "query_hash": "03dfc934ad8eefc8baef6f846d21a367718993cecf672260aa586fbef8a0675b",
+  "selector_policy_id": "oracle",
+  "task_id": "dependency_chain-0005"
+}

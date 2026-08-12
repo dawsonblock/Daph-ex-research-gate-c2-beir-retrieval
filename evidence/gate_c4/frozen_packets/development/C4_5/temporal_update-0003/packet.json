@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "d41996b0476054b27e371f427bd4e739af54bff8ae4a55754d4cc2f2a7fd5779",
+  "canonical_subject": "Raven pressure assembly",
+  "ordered_selected_ids": [
+    "temporal_update-0003/identity",
+    "temporal_update-0003/current"
+  ],
+  "ordered_text_sha256": [
+    "99f42b211e16d9ed8ebef50107924eb5ad176e2c17a1c6f50f3ef6da4a0dfe3f",
+    "695c74be2cdee8cdbd6f188ff7081df2d31e1227db2fb5707d27c91132b6e061"
+  ],
+  "query_hash": "b8af2f8050144509a0d2e0233dd9a070da9db9937ea0610f64a1b64d7eeb7b4c",
+  "selector_policy_id": "oracle",
+  "task_id": "temporal_update-0003"
+}

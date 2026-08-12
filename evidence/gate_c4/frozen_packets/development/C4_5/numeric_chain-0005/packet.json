@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "ee3d392eea3e5462ddf8029c532c27956b0fd281dee65e69e342e9427900f9c1",
+  "canonical_subject": "Gannet relay unit",
+  "ordered_selected_ids": [
+    "numeric_chain-0005/identity",
+    "numeric_chain-0005/value"
+  ],
+  "ordered_text_sha256": [
+    "6fb110fc4458d879ba60b1cc20d37dcd3a3c217e0ec2316dd7001be11f3455af",
+    "ecd2824b1b7c2b2d5633ea45e0c43adfd7fecd32ae11d66b2623006fb59e55ed"
+  ],
+  "query_hash": "269724fa3d80284d7b688e87bdee23610eddc84ffca4053faf358175f5855cc9",
+  "selector_policy_id": "oracle",
+  "task_id": "numeric_chain-0005"
+}

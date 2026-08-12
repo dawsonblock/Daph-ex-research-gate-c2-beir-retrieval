@@ -1,0 +1,11 @@
+[OBJECTIVE]
+For PCM-8, which billing multiplier is recorded?
+[EVIDENCE]
+[E1]
+billing multiplier:
+  subject: Bittern control module
+  value: ZETA-CORAL
+[E2]
+In shorthand, Pelican control module is written PCM-8.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

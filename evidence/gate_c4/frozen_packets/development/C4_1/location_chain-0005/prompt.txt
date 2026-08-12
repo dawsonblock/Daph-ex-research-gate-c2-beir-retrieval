@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the service region for SCM-1?
+[EVIDENCE]
+[E1]
+{"subject": "Bluebird intake manifold", "service region": "EPSILON-SLATE"}
+[E2]
+{"subject": "Quail control module", "service region": "provisional"}
+[E3]
+[change] Auk relay unit :: service region := GAMMA-BLUE
+[E4]
+[service region] Gannet control module -> {"grade": "retired"}
+[E5]
+Abbreviation table: SCM-1 = Sparrow control module.
+[E6]
+- updated Gannet pressure assembly: service region now 4305
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

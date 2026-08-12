@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the ownership tier for Dunlin relay unit?
+[EVIDENCE]
+[E1]
+[change] Gannet relay unit :: ownership tier := {"grade": "quarantined"}
+[E2]
+The ownership tier registry records that Kestrel relay unit is assigned {"state": "provisional"}.
+[E3]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E4]
+Registry entry: Nimbus intake manifold — ownership tier — {"tier": "suspended"}.
+[E5]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Revision applied — Dunlin relay unit operating tier changed to true.
+[E6]
+{"subject": "Bluebird sensor array", "ownership tier": "GAMMA-BLUE"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

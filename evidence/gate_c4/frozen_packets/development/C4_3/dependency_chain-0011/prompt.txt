@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For OCM-3, which release channel is recorded?
+[EVIDENCE]
+[E1]
+[release channel] Auk drive cluster -> BETA-GREEN
+[E2]
+Registry entry: Ibis sensor array — release channel — 6392.
+[E3]
+{"subject": "Bluebird sensor array", "release channel": "DELTA-AMBER"}
+[E4]
+In shorthand, Osprey control module is written OCM-3.
+[E5]
+- updated Pelican pressure assembly: release channel now {"grade": "quarantined"}
+[E6]
+[release channel] Osprey control module -> {"state": "accredited"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

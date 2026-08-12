@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the release channel for WPA-6?
+[EVIDENCE]
+[E1]
+Abbreviation table: WPA-6 = Wren pressure assembly.
+[E2]
+Registry entry: Ibis sensor array — release channel — 6392.
+[E3]
+{"subject": "Bluebird sensor array", "release channel": "DELTA-AMBER"}
+[E4]
+[release channel] Auk drive cluster -> BETA-GREEN
+[E5]
+- updated Pelican pressure assembly: release channel now {"grade": "quarantined"}
+[E6]
+For Kestrel intake manifold, release channel requires 7729.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

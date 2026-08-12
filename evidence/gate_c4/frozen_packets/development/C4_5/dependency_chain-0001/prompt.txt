@@ -1,0 +1,9 @@
+[OBJECTIVE]
+Which release channel applies to ICM-8?
+[EVIDENCE]
+[E1]
+[release channel] Auk drive cluster -> BETA-GREEN
+[E2]
+ICM-8 is the short code for Ibis control module.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

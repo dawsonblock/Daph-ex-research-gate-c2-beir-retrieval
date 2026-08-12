@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "8c9bd573dc27e34ac403c0f4f31abdfd479513e40f5c7d7334b6b6db5169331d",
+  "canonical_subject": "",
+  "ordered_selected_ids": [
+    "temporal_chain-0004/current",
+    "procedural_chain-0011/direct",
+    "temporal_chain-0010/superseded",
+    "temporal_update-0010/superseded",
+    "temporal_chain-0000/current",
+    "location_chain-0007/value"
+  ],
+  "ordered_text_sha256": [
+    "690b3b31b432f3b07caf38b719c31831ed8e345702d505e027b57e2747011e09",
+    "c9567f77df129fd4ed9d5f802bcf669cb026578dfaeba47026d17bc9dce84011",
+    "2dfcbb57c8e3292c4d00081d79e8fe64fae0b3f52b1b84759d03ea944b104e43",
+    "7a3d340d99a77007479260eb850c6dd8db0f0c144296ce95e839fde17ef3ce22",
+    "babc95f728aa3860128d2b1e9faaa3adfe872f12ade638a58949541671522d71",
+    "65df2a887288128d1b83b9df4b9a89462dffbd0590336744dd3d0a6aaf0ae7e5"
+  ],
+  "query_hash": "15e55c43cb9a2dff7856b9a8f6e6b888061bafe8a0ef462696a286bbb3be276d",
+  "selector_policy_id": "s0",
+  "task_id": "temporal_chain-0006"
+}

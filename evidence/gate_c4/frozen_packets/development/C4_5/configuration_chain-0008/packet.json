@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "808e26349c73193b22e20f1fcb0fa62840d894897a4765754b14280f32f744e6",
+  "canonical_subject": "Osprey sensor array",
+  "ordered_selected_ids": [
+    "configuration_chain-0008/link",
+    "configuration_chain-0008/value"
+  ],
+  "ordered_text_sha256": [
+    "9842d78fe7c61c5b9759a46541612f67c67b67316fb062cb9d62bd88c72253b1",
+    "8d894e18c85c3fb50c2ddfedc3f91df38509744f908f5041891d5a03bd142d6a"
+  ],
+  "query_hash": "23df0d891c6704b5baaab11891ed08f22f123542a32e0afe9e48c8d718d160d2",
+  "selector_policy_id": "oracle",
+  "task_id": "configuration_chain-0008"
+}

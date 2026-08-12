@@ -1,0 +1,17 @@
+{
+  "candidate_pool_hash": "6a0430c29eca48555f48e74a874e90ad5486bfa78f384e9d276e0626900d7a05",
+  "canonical_subject": "Sparrow pressure assembly",
+  "ordered_selected_ids": [
+    "temporal_chain-0003/identity",
+    "temporal_chain-0003/link",
+    "temporal_chain-0003/current"
+  ],
+  "ordered_text_sha256": [
+    "58569ba0b2d2955843ef6e75ce0ef7efa78c98ec881ff3fe24f1e190762cc62f",
+    "6422463aa553abbc247deb573fd5d06d0f511aab397ad73e9f6b882712861d6c",
+    "425b1bb637bc0f65d6393d7b5e17e293e0adc5f1b19a32356b0fc55e34593b7a"
+  ],
+  "query_hash": "96c1a49aa6cfab5526db08b8db7b85a1e1957e9477295acb73fbbd1c93f08e85",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "temporal_chain-0003"
+}

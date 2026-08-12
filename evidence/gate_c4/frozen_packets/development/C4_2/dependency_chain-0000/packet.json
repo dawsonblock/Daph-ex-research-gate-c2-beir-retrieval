@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "3f5703c5c2c8b57de5f8ad495937a8e0acc2106a55b805ca0975efd76fe490c6",
+  "canonical_subject": "",
+  "ordered_selected_ids": [
+    "dependency_chain-0003/value",
+    "dependency_chain-0011/value",
+    "dependency_chain-0007/direct",
+    "temporal_chain-0003/identity",
+    "temporal_chain-0003/link",
+    "numeric_chain-0004/dead-end-0"
+  ],
+  "ordered_text_sha256": [
+    "df0657a3c045e1eac0a71ba6a313e754a232121b1012447856c633da26f3669e",
+    "a907298d6a5cb01214ee6b9af0afce1c7eed9b3a2a5bcf2f53beccd5e7025d85",
+    "a72b7fbf33baf879b02e7fb0d06daef7b9a2e02288b36230a1f3297653d400ba",
+    "58569ba0b2d2955843ef6e75ce0ef7efa78c98ec881ff3fe24f1e190762cc62f",
+    "6422463aa553abbc247deb573fd5d06d0f511aab397ad73e9f6b882712861d6c",
+    "9c36e531703b1c272253571a479879959771650dfcabe3fd9a3122c244167b94"
+  ],
+  "query_hash": "18389c6944f43931822febb4680cd85a95963efae5101bd0022de4e27aa4e331",
+  "selector_policy_id": "s0",
+  "task_id": "dependency_chain-0000"
+}

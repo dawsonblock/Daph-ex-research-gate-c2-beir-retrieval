@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "46fa2f379304203322339c887c9e7af39fe1329ae6fad147325ad46a37de3d98",
+  "canonical_subject": "Heron relay unit",
+  "ordered_selected_ids": [
+    "location_chain-0009/value",
+    "location_chain-0009/identity"
+  ],
+  "ordered_text_sha256": [
+    "4d2f2b92be5e36e31487a75b676e206ed179ae209641d5720d213ee40c35415e",
+    "fdcf52aaf104ebc1a689cbf4b4300edabf5aa68687aff3966cfeeaab1be66321"
+  ],
+  "query_hash": "99da9168179da3d70ac0bb72ff9dd9f6860309346052e146cf381f378f33a83e",
+  "selector_policy_id": "oracle",
+  "task_id": "location_chain-0009"
+}

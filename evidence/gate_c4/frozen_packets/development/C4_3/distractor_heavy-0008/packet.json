@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "830b9b768ac5b2c70cb27ce432c421d4b5e0e29d298914e95d6a468a15a28744",
+  "canonical_subject": "Wren intake manifold",
+  "ordered_selected_ids": [
+    "distractor_heavy-0008/near-near_status",
+    "distractor_heavy-0008/near-near_temporal",
+    "distractor_heavy-0008/accepted",
+    "distractor_heavy-0008/near-near_relation",
+    "configuration_chain-0011/direct",
+    "procedural_chain-0009/value"
+  ],
+  "ordered_text_sha256": [
+    "5f2180cda7456d3fb45d7401f66556149055aaba987fa13a214028b3c4c25af7",
+    "142deb388100946e56e043157d97be48f70c45f4ce36325b5e4b1a992837fef5",
+    "069f1d21dc2f4377c2e97992d479cfb44ae937a22dc95de5a647f08a0d1858b0",
+    "f8d47cfef4bdb74a062e6246f7b44d6b21141ee1b523bfd1d65dd477e5becc27",
+    "4497f80268c25178cc60cf62d03c48e946b9512229de3d8e002b4fd7aac12dc7",
+    "af69f3803f1ffc6441662209e49b3dc9c47ca6010e3304b4c62b070f7ece489b"
+  ],
+  "query_hash": "fa7d58b77e29d2f0374cac13b6b2f685cfbd9c2536a9af7b92cf03eaa69d5a8a",
+  "selector_policy_id": "s0",
+  "task_id": "distractor_heavy-0008"
+}

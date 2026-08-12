@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which routing class applies to RCM-8?
+[EVIDENCE]
+[E1]
+RCM-8 is the short code for Raven control module.
+[E2]
+[routing class] Finch relay unit -> 2392
+[E3]
+[routing class] Osprey sensor array -> ZETA-CORAL
+[E4]
+[calibration routing class] Osprey sensor array -> DELTA-AMBER
+[E5]
+{"subject": "Osprey drive cluster", "routing class": "4470"}
+[E6]
+{"subject": "Bittern control module", "routing class": "retired"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

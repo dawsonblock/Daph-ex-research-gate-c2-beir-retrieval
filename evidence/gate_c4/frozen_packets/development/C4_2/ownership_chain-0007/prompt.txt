@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the ownership tier for KRU-7?
+[EVIDENCE]
+[E1]
+Abbreviation table: KRU-7 = Kestrel relay unit.
+[E2]
+[change] Osprey drive cluster :: ownership tier := accredited
+[E3]
+Registry entry: Nimbus intake manifold — ownership tier — {"tier": "suspended"}.
+[E4]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E5]
+KRU-7 is the short code for Kestrel relay unit.
+[E6]
+- updated Finch control module: ownership tier now 3529
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

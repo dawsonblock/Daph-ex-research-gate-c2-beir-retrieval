@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "c7f07943ad10065aa0a95eecf55f3c647f6c748af8d3f54e316040bfc56fabf7",
+  "canonical_subject": "Jacana sensor array",
+  "ordered_selected_ids": [
+    "procedural_chain-0003/identity",
+    "procedural_chain-0003/direct"
+  ],
+  "ordered_text_sha256": [
+    "0c3d13d12d53a54ac982609a328469d0c7f123f69fc53509ab83a62394d86d5e",
+    "3849040696c45bb45833bbf55597dacee6ec7ee66013bfb99550f645132272f5"
+  ],
+  "query_hash": "547f6fbcf73c83b157a704e02265a2226d3ecaa3156f85d7ee95737669a696d3",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "procedural_chain-0003"
+}

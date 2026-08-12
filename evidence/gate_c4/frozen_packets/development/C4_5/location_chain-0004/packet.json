@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "b649c7a4f74067c3316c486c7414287ec4811dc57586e5e78d4d8109bfb7f159",
+  "canonical_subject": "Pelican sensor array",
+  "ordered_selected_ids": [
+    "location_chain-0004/link",
+    "location_chain-0004/value"
+  ],
+  "ordered_text_sha256": [
+    "29b01ac986fea1d71ebd404a1366eb986bb27f659a098cdf3b9289ed8d577280",
+    "2f5544c939c339f559a1a28cf91adb75db38842ada83cd0398b016d3d784f7e5"
+  ],
+  "query_hash": "38ec031f8df5eca2368c2a1dae744082d07be86f7bbeb48bc1438070450144d3",
+  "selector_policy_id": "oracle",
+  "task_id": "location_chain-0004"
+}

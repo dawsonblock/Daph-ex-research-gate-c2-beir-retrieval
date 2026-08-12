@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "70412965bcdced73d180ad5e25c1d5d57fc2914f7169f2bf1a4a2dd861868547",
+  "canonical_subject": "Kestrel sensor array",
+  "ordered_selected_ids": [
+    "procedural_chain-0011/identity",
+    "procedural_chain-0011/direct"
+  ],
+  "ordered_text_sha256": [
+    "86f10d7294afa70d11a7172f9366bdf44f4fbc3c6a840987cae670fec0eb65bc",
+    "c9567f77df129fd4ed9d5f802bcf669cb026578dfaeba47026d17bc9dce84011"
+  ],
+  "query_hash": "cfa7d0e9d54ec92576161d917b8405ee530a54c8d8392d85de1720f98cb72caf",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "procedural_chain-0011"
+}

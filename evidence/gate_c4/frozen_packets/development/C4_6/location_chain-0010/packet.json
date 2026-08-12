@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "a9d960a76ec73bd92880d6f0daed9db68844348ca205b2956f9fcf7fd8e62e7b",
+  "canonical_subject": "Dunlin drive cluster",
+  "ordered_selected_ids": [
+    "location_chain-0010/link",
+    "location_chain-0010/value"
+  ],
+  "ordered_text_sha256": [
+    "c84274872ef5a35366c5552384fee7af64ff5847210c66fd745b905830097fda",
+    "d243d754aa60c4d575a6957abdd1fdb3b4320fe16a796f65562d577173fa88c9"
+  ],
+  "query_hash": "32f8e23a2b5aeceb89430170fae877f9563c5ef09b6431400847e7eb4555fcdd",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "location_chain-0010"
+}

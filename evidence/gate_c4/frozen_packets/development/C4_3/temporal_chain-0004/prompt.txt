@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to Pelican relay unit?
+[EVIDENCE]
+[E1]
+Revision 2 (effective 2031-06-01) supersedes revision 1: subject=Kestrel relay unit; operating tier=9088
+[E2]
+Revision 2 (effective 2031-06-01) supersedes revision 1: subject=Pelican drive cluster; operating tier=THETA-OLIVE
+[E3]
+Revision 1 (effective 2030-01-01, since superseded) recorded: subject=Pelican drive cluster; operating tier=GAMMA-BLUE
+[E4]
+subject=Pelican pressure assembly; spare enclosure=Auk relay unit
+[E5]
+{"subject": "Ibis relay unit", "mounted monitor": "Pelican drive cluster"}
+[E6]
+{"subject": "Pelican relay unit", "mounted monitor": "Sparrow drive cluster"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

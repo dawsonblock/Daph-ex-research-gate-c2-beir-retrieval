@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the release channel for Osprey intake manifold?
+[EVIDENCE]
+[E1]
+{"subject": "Pelican intake manifold", "release channel": "{"category": "provisional"}"}
+[E2]
+For Kestrel intake manifold, release channel requires 7729.
+[E3]
+[release channel] Osprey control module -> {"state": "accredited"}
+[E4]
+Note: the release channel for Nimbus intake manifold resolves to suspended.
+[E5]
+It is recorded in the release channel registry that Curlew intake manifold holds GAMMA-BLUE.
+[E6]
+Revision applied — Nimbus intake manifold proposed release channel changed to quarantined. This proposal was rejected.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

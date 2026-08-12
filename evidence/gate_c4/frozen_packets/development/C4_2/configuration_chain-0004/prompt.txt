@@ -1,0 +1,21 @@
+[OBJECTIVE]
+What is the parameter grade for Kestrel drive cluster?
+[EVIDENCE]
+[E1]
+Changelog: parameter grade for Dunlin drive cluster set to {"grade": "provisional"}.
+[E2]
+spare enclosure:
+  subject: Kestrel drive cluster
+  value: Finch relay unit
+[E3]
+[active configuration] Kestrel drive cluster -> Ibis intake manifold
+[E4]
+mounted monitor:
+  subject: Sparrow control module
+  value: Kestrel drive cluster
+[E5]
+subject=Kestrel relay unit; assigned unit=Osprey drive cluster
+[E6]
+[change] Kestrel drive cluster :: spare enclosure := Osprey control module
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

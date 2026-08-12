@@ -1,0 +1,9 @@
+[OBJECTIVE]
+Which release channel applies to IDC-7?
+[EVIDENCE]
+[E1]
+IDC-7 is the short code for Ibis drive cluster.
+[E2]
+For Ibis drive cluster, release channel requires {"grade": "quarantined"}.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

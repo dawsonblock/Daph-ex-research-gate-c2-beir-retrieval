@@ -1,5 +1,12 @@
 {
   "arm_ids": [
+    "C4_0",
+    "C4_1",
+    "C4_2",
+    "C4_3",
+    "C4_4",
+    "C4_5",
+    "C4_6",
     "C4_3o",
     "C4_4m"
   ],
@@ -8,12 +15,16 @@
   "bge_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
   "bridge_policy_version": "excluded_from_primary_c4",
   "candidate_budget": 50,
-  "created_utc": "2026-08-08T02:38:57Z",
+  "created_utc": "2026-08-12T00:22:06Z",
   "device": "cuda",
+  "diagnostic_arm_ids": [
+    "C4_3o",
+    "C4_4m"
+  ],
   "dtype": "float16",
   "evidence_corpus_sha256": "de6d710f5012a6152b945d6208aa0c0ef56fc8b719d34f1e37c197efd7f62547",
   "generation_condition": "DIRECT",
-  "git_commit": "b0c9d6e96eb20a9dae8217977e9428da0372c926",
+  "git_commit": "1bdd7c53635e3bb0a3d147671f3f4af7b1116c95",
   "hrm_max_new_tokens": 64,
   "hrm_model_id": "sapientinc/HRM-Text-1B",
   "hrm_model_revision": "9f082d68b8cd0ebc56e33f1c88c45609174c272c",
@@ -22,8 +33,17 @@
   "normalization": "True",
   "packet_budget": 6,
   "pooling": "cls",
+  "primary_arm_ids": [
+    "C4_0",
+    "C4_1",
+    "C4_2",
+    "C4_3",
+    "C4_4",
+    "C4_5",
+    "C4_6"
+  ],
   "protocol_sha256": "b4e22a551532acd230157cb6a85505ffc2a9108778dd726d9c9b6057160165a4",
-  "python_version": "3.12.3",
+  "python_version": "3.12.11",
   "query_policy_version": "v1_frozen",
   "query_prefix": "Represent this sentence for searching relevant passages: ",
   "rrf_k": 10,

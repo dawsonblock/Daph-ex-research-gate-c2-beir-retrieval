@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "fecaa8a32cb88ac8fb024a0d6fd41e210289537d6caf6ba2e7308b0645f99845",
+  "canonical_subject": "Curlew sensor array",
+  "ordered_selected_ids": [
+    "configuration_chain-0002/link",
+    "configuration_chain-0002/value"
+  ],
+  "ordered_text_sha256": [
+    "cf4b09abb63695ad210d1c9457c03ca277451168c6b0dbc59bfa3b89e8962723",
+    "7bd10fa4e246023abb6b50b5670dcf3d0c73f807d0d2b0dd1a2f807baa06f3e6"
+  ],
+  "query_hash": "3f7b53ba796127061f14d85a18e5a18bca0abc1ee30348b7f809aaa0bd3690f8",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "configuration_chain-0002"
+}

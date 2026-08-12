@@ -1,0 +1,19 @@
+[OBJECTIVE]
+For Dunlin drive cluster, which service region is recorded?
+[EVIDENCE]
+[E1]
+Note: the service region for Bittern drive cluster resolves to provisional.
+[E2]
+Changelog: service region for Quail drive cluster set to {"grade": "retired"}.
+[E3]
+mounted monitor:
+  subject: Dunlin drive cluster
+  value: Pelican drive cluster
+[E4]
+Registry entry: Dunlin drive cluster — active configuration — Bluebird control module.
+[E5]
+Engineering notes indicate Raven drive cluster uses 7730 as its service region.
+[E6]
+Abbreviation table: DDC-8 = Dunlin drive cluster.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For HRU-2, which service region is recorded?
+[EVIDENCE]
+[E1]
+[change] Auk relay unit :: service region := GAMMA-BLUE
+[E2]
+In shorthand, Heron relay unit is written HRU-2.
+[E3]
+- updated Gannet pressure assembly: service region now 4305
+[E4]
+{"subject": "Bluebird intake manifold", "service region": "EPSILON-SLATE"}
+[E5]
+Registry entry: Egret sensor array — service region — THETA-OLIVE.
+[E6]
+For Egret relay unit, service region requires provisional.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

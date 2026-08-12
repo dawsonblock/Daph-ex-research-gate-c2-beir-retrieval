@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "661ec8bab00ed8c4b588cd51ad8f44b62ce2966cb353280cd2cfa5ba183e0451",
+  "canonical_subject": "Teal control module",
+  "ordered_selected_ids": [
+    "numeric_chain-0010/link",
+    "numeric_chain-0010/value"
+  ],
+  "ordered_text_sha256": [
+    "f8f54d84c9d6e096c98796b435e5c41db6cc7c92e4d4513b3db54dd984696b75",
+    "440433046bde29919e436e81db217c4c86355115fb62e3d104d6c9e6f5f8212b"
+  ],
+  "query_hash": "0d21ae9c18b7efcd1526abe9f54bc3d721598b4294a96d953d198e8cd6da41b6",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "numeric_chain-0010"
+}

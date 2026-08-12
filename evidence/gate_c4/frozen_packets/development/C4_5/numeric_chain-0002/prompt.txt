@@ -1,0 +1,9 @@
+[OBJECTIVE]
+Which billing multiplier applies to Auk sensor array?
+[EVIDENCE]
+[E1]
+subject=Auk sensor array; rate record=Bluebird intake manifold
+[E2]
+- updated Bluebird intake manifold: billing multiplier now suspended
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,19 @@
+[OBJECTIVE]
+For Heron control module, which release channel is recorded?
+[EVIDENCE]
+[E1]
+subject=Heron control module; mounted monitor=Wren control module
+[E2]
+[release channel] Osprey control module -> {"state": "accredited"}
+[E3]
+spare enclosure:
+  subject: Raven control module
+  value: Heron sensor array
+[E4]
+subject=Heron relay unit; spare enclosure=Egret control module
+[E5]
+[change] Bluebird control module :: spare enclosure := Heron relay unit
+[E6]
+During setup, Heron control module was paired with Curlew control module for mounted monitor.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

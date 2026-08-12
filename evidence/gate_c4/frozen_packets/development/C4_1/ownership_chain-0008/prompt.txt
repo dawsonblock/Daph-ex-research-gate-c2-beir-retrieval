@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Curlew pressure assembly, which ownership tier is recorded?
+[EVIDENCE]
+[E1]
+Note: the ownership tier for Marlin pressure assembly resolves to DELTA-AMBER.
+[E2]
+subject=Curlew pressure assembly; mounted monitor=Finch sensor array
+[E3]
+subject=Curlew sensor array; applicable procedure=Gannet pressure assembly
+[E4]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E5]
+Registry entry: Nimbus intake manifold — ownership tier — {"tier": "suspended"}.
+[E6]
+{"subject": "Bluebird sensor array", "ownership tier": "GAMMA-BLUE"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

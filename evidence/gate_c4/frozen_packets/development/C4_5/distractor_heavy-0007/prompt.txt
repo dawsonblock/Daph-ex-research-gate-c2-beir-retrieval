@@ -1,0 +1,9 @@
+[OBJECTIVE]
+What is the routing class for PCM-5?
+[EVIDENCE]
+[E1]
+Abbreviation table: PCM-5 = Pelican control module.
+[E2]
+- updated Pelican control module: routing class now {"category": "retired"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

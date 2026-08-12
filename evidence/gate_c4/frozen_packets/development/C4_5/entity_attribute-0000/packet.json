@@ -1,0 +1,13 @@
+{
+  "candidate_pool_hash": "2562d7b4b68f32d009f6e79c82a4c6c3ad1310fc5b663d97ee1a6bbcac934398",
+  "canonical_subject": "Nimbus sensor array",
+  "ordered_selected_ids": [
+    "entity_attribute-0000/fact"
+  ],
+  "ordered_text_sha256": [
+    "92e1842b537e67a956a280b506c8955b3dbf7b8c2dd5471e35767fb06b213538"
+  ],
+  "query_hash": "3f4fb484b2c96ef7ac5301bf45671b1121b8fb8d53f36c5ea705e6bca3ca546b",
+  "selector_policy_id": "oracle",
+  "task_id": "entity_attribute-0000"
+}

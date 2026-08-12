@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "8c1394e5bc53300fabac337921acee8396359a3c7a3b55a8551954291add7a73",
+  "canonical_subject": "Wren sensor array",
+  "ordered_selected_ids": [
+    "location_chain-0003/identity",
+    "location_chain-0003/direct"
+  ],
+  "ordered_text_sha256": [
+    "ba0404db37d8abb077cd09162119f040fac9751aa1dcc82444f6b263e42e7b28",
+    "e79a4a0ddd5795428aa8d285c8e9e3603032f6ab073ba48778fd554533b310f3"
+  ],
+  "query_hash": "8f463115f4700da9daf351d35e97959e0651ec93dbe3f87678af02b46cc84fd4",
+  "selector_policy_id": "oracle",
+  "task_id": "location_chain-0003"
+}

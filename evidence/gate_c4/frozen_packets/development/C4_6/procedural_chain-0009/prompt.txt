@@ -1,0 +1,13 @@
+[OBJECTIVE]
+For JSA-4, which required action is recorded?
+[EVIDENCE]
+[E1]
+In shorthand, Jacana sensor array is written JSA-4.
+[E2]
+Engineering notes indicate Jacana sensor array uses Wren intake manifold as its applicable procedure.
+[E3]
+required action:
+  subject: Wren intake manifold
+  value: THETA-OLIVE
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

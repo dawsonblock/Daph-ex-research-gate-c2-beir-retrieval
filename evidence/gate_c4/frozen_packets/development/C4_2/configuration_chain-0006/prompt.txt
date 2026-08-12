@@ -1,0 +1,21 @@
+[OBJECTIVE]
+What is the parameter grade for Bluebird sensor array?
+[EVIDENCE]
+[E1]
+{"subject": "Bluebird control module", "parameter grade": "{"grade": "provisional"}"}
+[E2]
+For Heron sensor array, parameter grade requires {"category": "accredited"}.
+[E3]
+ownership tier:
+  subject: Bluebird sensor array
+  value: 9167
+[E4]
+[registered asset] Pelican control module -> Bluebird sensor array
+[E5]
+{"subject": "Bluebird sensor array", "release channel": "DELTA-AMBER"}
+[E6]
+parameter grade:
+  subject: Sparrow control module
+  value: GAMMA-BLUE
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

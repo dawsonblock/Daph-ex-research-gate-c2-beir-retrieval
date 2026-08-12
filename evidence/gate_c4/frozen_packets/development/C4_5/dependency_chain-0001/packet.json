@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "4237f961333a7123432fa977a606ae6d3b8a39beea25a6cef87e59f3138d7c3a",
+  "canonical_subject": "Ibis control module",
+  "ordered_selected_ids": [
+    "dependency_chain-0001/value",
+    "dependency_chain-0001/identity"
+  ],
+  "ordered_text_sha256": [
+    "b856767ce1f1b095442b51afbe649adb9573561424e8ae2252d06fe2ce78199a",
+    "97f1c873ce2e1927f245185b9c609f4208fec18539f75116fb65cf6ec53cc82b"
+  ],
+  "query_hash": "fd980827ea0381749ae15d124bf61675cf6954fc37d31a45d748aca15b248c45",
+  "selector_policy_id": "oracle",
+  "task_id": "dependency_chain-0001"
+}

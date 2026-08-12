@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "4b905506964ed6049453f13855eb2e4ea41987452e6b4a58b18d9d9ac51295e4",
+  "canonical_subject": "Teal drive cluster",
+  "ordered_selected_ids": [
+    "entity_attribute-0010/fact",
+    "temporal_chain-0005/link",
+    "ownership_chain-0006/value",
+    "ownership_chain-0006/link",
+    "numeric_chain-0011/value",
+    "ownership_chain-0006/rejected-0"
+  ],
+  "ordered_text_sha256": [
+    "858127a6347fbf954565366c24b13286df75a9d6998fedd577973503e6019910",
+    "5eb456a5f452ce4a253f00d6d163f18227f1893a49a989d04d130e8b53b19133",
+    "a25108d3414b167c07da606b00bda69cd259e228368e48b2e6df81de145b2027",
+    "157f07759320878227d8b475be5960198b74b06cafb8b31968241c7443fe14e9",
+    "161993d1b60494d6226ccdbabd898d65a80c59fda04b79cc5b20a3835ba02d3f",
+    "11df745d9af5301910f072f9cae1f1473b8210c3e359bd236be78f12ae92b737"
+  ],
+  "query_hash": "38582037f965888910e6b9fd43ae4f8af26d72f99199d06afd70e4dfd336400e",
+  "selector_policy_id": "s0",
+  "task_id": "entity_attribute-0010"
+}

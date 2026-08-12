@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "6cb0b4cec264672d0463cf19448db3be6b65669580227d2a98308b5fbaa0da66",
+  "canonical_subject": "",
+  "ordered_selected_ids": [
+    "location_chain-0008/value",
+    "location_chain-0009/value",
+    "location_chain-0003/direct",
+    "location_chain-0010/value",
+    "location_chain-0002/link",
+    "location_chain-0002/dead-end-0"
+  ],
+  "ordered_text_sha256": [
+    "a8b36319f19bbdcea89a1a6c555e9502c84aaf8fff60eff7463c1e93eff7f134",
+    "4d2f2b92be5e36e31487a75b676e206ed179ae209641d5720d213ee40c35415e",
+    "e79a4a0ddd5795428aa8d285c8e9e3603032f6ab073ba48778fd554533b310f3",
+    "d243d754aa60c4d575a6957abdd1fdb3b4320fe16a796f65562d577173fa88c9",
+    "9d03807bc8934a7af9cad4d1313ec76ad5c7c2e1a07bb067708f282a22f1040f",
+    "3c74a3dcd01a8bd34c7967cb14a812a403507c2c64348f55f7c062feba0e2804"
+  ],
+  "query_hash": "cff041d083695221eda2b76340f4442cf3a40215ee7eb832a6e8bb8a0ebd0246",
+  "selector_policy_id": "s0",
+  "task_id": "location_chain-0002"
+}

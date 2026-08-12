@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which ownership tier applies to ORU-7?
+[EVIDENCE]
+[E1]
+Registry entry: Nimbus intake manifold — ownership tier — {"tier": "suspended"}.
+[E2]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E3]
+ORU-7 is the short code for Osprey relay unit.
+[E4]
+[change] Osprey drive cluster :: ownership tier := accredited
+[E5]
+[change] Gannet relay unit :: ownership tier := {"grade": "quarantined"}
+[E6]
+- updated Finch control module: ownership tier now 3529
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

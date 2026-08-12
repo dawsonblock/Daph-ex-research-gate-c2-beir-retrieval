@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For DSA-1, which routing class is recorded?
+[EVIDENCE]
+[E1]
+In shorthand, Dunlin sensor array is written DSA-1.
+[E2]
+[routing class] Finch relay unit -> 2392
+[E3]
+[routing class] Osprey sensor array -> ZETA-CORAL
+[E4]
+- updated Quail pressure assembly: routing class now 2851
+[E5]
+subject=Heron relay unit; calibration routing class=7299
+[E6]
+{"subject": "Bittern control module", "routing class": "retired"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

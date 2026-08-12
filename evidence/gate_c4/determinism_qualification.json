@@ -46,7 +46,7 @@
         }
       },
       "result": "PASS",
-      "tasks": 500
+      "tasks": 120
     }
   },
   "result": "PASS",
@@ -56,6 +56,6 @@
     42,
     12345
   ],
-  "split": "qualification",
-  "tasks": 500
+  "split": "development",
+  "tasks": 120
 }

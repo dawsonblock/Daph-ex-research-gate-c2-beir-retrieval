@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For KSA-6, which required action is recorded?
+[EVIDENCE]
+[E1]
+{"subject": "Bluebird pressure assembly", "required action": "retired"}
+[E2]
+In shorthand, Kestrel sensor array is written KSA-6.
+[E3]
+[change] Jacana sensor array :: required action := {"tier": "accredited"}
+[E4]
+Note: the required action for Auk pressure assembly resolves to {"tier": "accredited"}.
+[E5]
+[required action] Kestrel sensor array -> {"state": "provisional"}
+[E6]
+Revision applied — Auk pressure assembly required action changed to {"category": "accredited"}.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

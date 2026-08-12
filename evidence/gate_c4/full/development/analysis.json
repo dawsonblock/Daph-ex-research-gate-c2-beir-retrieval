@@ -38,8 +38,8 @@
     },
     "C4_1": {
       "n": 120,
-      "quality": 0.175,
-      "correct_rate": 0.16666666666666666
+      "quality": 0.17083333333333334,
+      "correct_rate": 0.15833333333333333
     },
     "C4_2": {
       "n": 120,
@@ -80,17 +80,17 @@
   "adjacent_deltas": {
     "C4_1_vs_C4_0": {
       "n": 120,
-      "mean_delta": 0.0125,
+      "mean_delta": 0.008333333333333333,
       "ci_lower": -0.022916666666666665,
-      "ci_upper": 0.04791666666666667,
-      "ci_lower_cluster": -0.014583333333333334,
-      "ci_upper_cluster": 0.041666666666666664,
-      "ci_lower_template": 0.0125,
-      "ci_upper_template": 0.0125,
+      "ci_upper": 0.041666666666666664,
+      "ci_lower_cluster": -0.020833333333333332,
+      "ci_upper_cluster": 0.03958333333333333,
+      "ci_lower_template": 0.008333333333333333,
+      "ci_upper_template": 0.008333333333333333,
       "flips": {
         "improve": 10,
-        "regress": 10,
-        "unchanged": 100
+        "regress": 11,
+        "unchanged": 99
       },
       "flip_details": {
         "improve": [
@@ -107,6 +107,7 @@
         ],
         "regress": [
           "configuration_chain-0000",
+          "distractor_heavy-0006",
           "entity_attribute-0005",
           "entity_attribute-0006",
           "entity_attribute-0008",
@@ -121,17 +122,17 @@
     },
     "C4_2_vs_C4_1": {
       "n": 120,
-      "mean_delta": 0.0375,
+      "mean_delta": 0.041666666666666664,
       "ci_lower": 0.016666666666666666,
-      "ci_upper": 0.058333333333333334,
-      "ci_lower_cluster": 0.008333333333333333,
-      "ci_upper_cluster": 0.06875,
-      "ci_lower_template": 0.0375,
-      "ci_upper_template": 0.0375,
+      "ci_upper": 0.06875,
+      "ci_lower_cluster": 0.0125,
+      "ci_upper_cluster": 0.07083333333333333,
+      "ci_lower_template": 0.041666666666666664,
+      "ci_upper_template": 0.041666666666666664,
       "flips": {
         "improve": 12,
-        "regress": 6,
-        "unchanged": 102
+        "regress": 5,
+        "unchanged": 103
       },
       "flip_details": {
         "improve": [
@@ -150,7 +151,6 @@
         ],
         "regress": [
           "configuration_chain-0010",
-          "distractor_heavy-0006",
           "entity_attribute-0007",
           "location_chain-0002",
           "location_chain-0010",
@@ -481,8 +481,8 @@
       },
       "canonical": {
         "n": 60,
-        "quality": 0.25416666666666665,
-        "correct_rate": 0.23333333333333334
+        "quality": 0.24583333333333332,
+        "correct_rate": 0.21666666666666667
       }
     },
     "C4_2": {
@@ -1003,5 +1003,64 @@
         ]
       }
     }
+  },
+  "family_regression": {
+    "threshold": -0.1,
+    "per_family": {
+      "configuration_chain": {
+        "n": 12,
+        "mean_delta": 0.1875,
+        "regressed": false
+      },
+      "dependency_chain": {
+        "n": 12,
+        "mean_delta": 0.20833333333333334,
+        "regressed": false
+      },
+      "distractor_heavy": {
+        "n": 12,
+        "mean_delta": 0.375,
+        "regressed": false
+      },
+      "entity_attribute": {
+        "n": 12,
+        "mean_delta": 0.14583333333333334,
+        "regressed": false
+      },
+      "location_chain": {
+        "n": 12,
+        "mean_delta": 0.20833333333333334,
+        "regressed": false
+      },
+      "numeric_chain": {
+        "n": 12,
+        "mean_delta": 0.2916666666666667,
+        "regressed": false
+      },
+      "ownership_chain": {
+        "n": 12,
+        "mean_delta": 0.25,
+        "regressed": false
+      },
+      "procedural_chain": {
+        "n": 12,
+        "mean_delta": 0.125,
+        "regressed": false
+      },
+      "temporal_chain": {
+        "n": 12,
+        "mean_delta": -0.020833333333333332,
+        "regressed": false
+      },
+      "temporal_update": {
+        "n": 12,
+        "mean_delta": 0.22916666666666666,
+        "regressed": false
+      }
+    },
+    "worst_family": "temporal_chain",
+    "worst_delta": -0.020833333333333332,
+    "regressed_families": [],
+    "safe": true
   }
 }

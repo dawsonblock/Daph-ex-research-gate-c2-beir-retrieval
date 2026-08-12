@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Pelican pressure assembly, which billing multiplier is recorded?
+[EVIDENCE]
+[E1]
+Registry entry: Vireo pressure assembly — billing multiplier — 9659.
+[E2]
+[change] Bluebird pressure assembly :: billing multiplier := quarantined
+[E3]
+Revision applied — Kestrel pressure assembly billing multiplier changed to quarantined.
+[E4]
+Registry entry: Raven pressure assembly — billing multiplier — {"state": "provisional"}.
+[E5]
+[change] Wren pressure assembly :: spare enclosure := Pelican pressure assembly
+[E6]
+Changelog: proposed billing multiplier for Bluebird pressure assembly set to suspended. This proposal was rejected.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

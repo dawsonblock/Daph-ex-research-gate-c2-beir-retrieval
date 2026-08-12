@@ -1,0 +1,11 @@
+[OBJECTIVE]
+Which billing multiplier applies to FCM-1?
+[EVIDENCE]
+[E1]
+FCM-1 is the short code for Finch control module.
+[E2]
+billing multiplier:
+  subject: Finch control module
+  value: {"state": "provisional"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

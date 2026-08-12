@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which parameter grade applies to Curlew sensor array?
+[EVIDENCE]
+[E1]
+For Heron sensor array, parameter grade requires {"category": "accredited"}.
+[E2]
+Note: the parameter grade for Curlew relay unit resolves to {"state": "suspended"}.
+[E3]
+{"subject": "Bluebird control module", "parameter grade": "{"grade": "provisional"}"}
+[E4]
+[parameter grade] Dunlin pressure assembly -> THETA-OLIVE
+[E5]
+Changelog: parameter grade for Dunlin drive cluster set to {"grade": "provisional"}.
+[E6]
+{"subject": "Ibis intake manifold", "parameter grade": "7863"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which ownership tier applies to GRU-2?
+[EVIDENCE]
+[E1]
+Abbreviation table: GRU-2 = Gannet relay unit.
+[E2]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E3]
+Registry entry: Nimbus intake manifold — ownership tier — {"tier": "suspended"}.
+[E4]
+{"subject": "Bluebird sensor array", "ownership tier": "GAMMA-BLUE"}
+[E5]
+{"subject": "Teal drive cluster", "ownership tier": "retired"}
+[E6]
+[change] Osprey drive cluster :: ownership tier := accredited
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

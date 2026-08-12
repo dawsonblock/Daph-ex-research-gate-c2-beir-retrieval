@@ -1,0 +1,9 @@
+[OBJECTIVE]
+What is the release channel for Nimbus sensor array?
+[EVIDENCE]
+[E1]
+[required dependency] Nimbus sensor array -> Egret drive cluster
+[E2]
+Revision applied — Egret drive cluster release channel changed to accredited.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

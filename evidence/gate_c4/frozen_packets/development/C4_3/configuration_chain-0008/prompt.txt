@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Osprey sensor array, which parameter grade is recorded?
+[EVIDENCE]
+[E1]
+For Heron sensor array, parameter grade requires {"category": "accredited"}.
+[E2]
+Abbreviation table: OSA-3 = Osprey sensor array.
+[E3]
+[calibration routing class] Osprey sensor array -> DELTA-AMBER
+[E4]
+[routing class] Osprey sensor array -> ZETA-CORAL
+[E5]
+{"subject": "Bluebird control module", "parameter grade": "{"grade": "provisional"}"}
+[E6]
+subject=Osprey sensor array; mounted monitor=Auk control module
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the assigned category for Curlew intake manifold?
+[EVIDENCE]
+[E1]
+[assigned category] Curlew intake manifold -> 8563
+[E2]
+Note: the assigned category for Pelican intake manifold resolves to accredited.
+[E3]
+subject=Curlew sensor array; active configuration=Marlin intake manifold
+[E4]
+{"subject": "Finch intake manifold", "spare enclosure": "Curlew control module"}
+[E5]
+- updated Wren intake manifold: parameter grade now {"category": "accredited"}
+[E6]
+{"subject": "Pelican intake manifold", "release channel": "{"category": "provisional"}"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

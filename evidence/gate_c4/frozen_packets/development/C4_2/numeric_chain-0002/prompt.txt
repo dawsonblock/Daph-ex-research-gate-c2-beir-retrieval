@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which billing multiplier applies to Auk sensor array?
+[EVIDENCE]
+[E1]
+For Marlin sensor array, billing multiplier requires 7618.
+[E2]
+Note: the billing multiplier for Wren sensor array resolves to {"category": "provisional"}.
+[E3]
+During setup, Heron sensor array was paired with {"tier": "retired"} for billing multiplier.
+[E4]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Per the operating tier register, 4792 is allocated to Auk sensor array.
+[E5]
+ASA-2 is the short code for Auk sensor array.
+[E6]
+Revision 1 (effective 2030-01-01, since superseded) recorded: {"subject": "Auk sensor array", "operating tier": "5092"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which assigned category applies to Jacana pressure assembly?
+[EVIDENCE]
+[E1]
+Changelog: assigned category for Jacana pressure assembly set to suspended.
+[E2]
+{"subject": "Marlin pressure assembly", "assigned category": "THETA-OLIVE"}
+[E3]
+Changelog: assigned unit for Sparrow pressure assembly set to Jacana intake manifold.
+[E4]
+- updated Raven control module: assigned category now {"category": "quarantined"}
+[E5]
+[assigned category] Curlew intake manifold -> 8563
+[E6]
+subject=Jacana sensor array; applicable procedure=Auk pressure assembly
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

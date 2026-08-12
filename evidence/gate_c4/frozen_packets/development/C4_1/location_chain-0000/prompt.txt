@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which service region applies to Pelican relay unit?
+[EVIDENCE]
+[E1]
+[change] Auk relay unit :: service region := GAMMA-BLUE
+[E2]
+For Bittern relay unit, service region requires 1101.
+[E3]
+For Egret relay unit, service region requires provisional.
+[E4]
+subject=Egret relay unit; proposed service region=accredited This proposal was rejected.
+[E5]
+{"subject": "Bluebird intake manifold", "service region": "EPSILON-SLATE"}
+[E6]
+{"subject": "Quail control module", "service region": "provisional"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

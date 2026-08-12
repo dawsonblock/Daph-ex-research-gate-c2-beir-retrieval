@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For MPA-5, which assigned category is recorded?
+[EVIDENCE]
+[E1]
+In shorthand, Marlin pressure assembly is written MPA-5.
+[E2]
+- updated Raven control module: assigned category now {"category": "quarantined"}
+[E3]
+{"subject": "Marlin pressure assembly", "assigned category": "THETA-OLIVE"}
+[E4]
+Changelog: assigned category for Auk sensor array set to {"grade": "quarantined"}.
+[E5]
+Changelog: assigned category for Jacana pressure assembly set to suspended.
+[E6]
+Note: the assigned category for Marlin sensor array resolves to ZETA-CORAL.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

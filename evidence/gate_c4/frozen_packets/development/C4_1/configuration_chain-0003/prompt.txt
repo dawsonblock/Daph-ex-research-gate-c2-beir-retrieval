@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which parameter grade applies to MCM-5?
+[EVIDENCE]
+[E1]
+{"subject": "Bluebird control module", "parameter grade": "{"grade": "provisional"}"}
+[E2]
+[parameter grade] Dunlin pressure assembly -> THETA-OLIVE
+[E3]
+Changelog: parameter grade for Dunlin drive cluster set to {"grade": "provisional"}.
+[E4]
+{"subject": "Ibis intake manifold", "parameter grade": "7863"}
+[E5]
+[change] Raven pressure assembly :: parameter grade := provisional
+[E6]
+- updated Auk relay unit: parameter grade now 1101
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,17 @@
+{
+  "candidate_pool_hash": "cd43ba50c5e811ec30879794995f10ebf50406677c371723b7e5d7f9a99c6335",
+  "canonical_subject": "Sparrow control module",
+  "ordered_selected_ids": [
+    "location_chain-0005/identity",
+    "location_chain-0005/link",
+    "location_chain-0005/value"
+  ],
+  "ordered_text_sha256": [
+    "e9f3228f9be392365ef1250eed5093a9ef346293c7d26436225a45166f0d9ed3",
+    "d084c97514c43e1c7aa1a12cbeda395fc05bf55c66bc95f81dd8c013a5c0074f",
+    "a7a92a61bb26b72fa6ecea03d511152c6cccfe9e51d06a8a744473efd35e4999"
+  ],
+  "query_hash": "e4e32770ee588c3b6c37eda32c6b3b0245469c9a224bc617128dc42f66344096",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "location_chain-0005"
+}

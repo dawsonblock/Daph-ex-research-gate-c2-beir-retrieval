@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "154e82c91d3091ec368f3388bf720f6d169e3e799724573a18f7e7dcc5ba8531",
+  "canonical_subject": "Auk sensor array",
+  "ordered_selected_ids": [
+    "entity_attribute-0003/identity",
+    "entity_attribute-0003/fact"
+  ],
+  "ordered_text_sha256": [
+    "bfa773e68dc299933542ae0f1d6340e357e481b94f0835e8745207cd38ca626a",
+    "7c481c2135ab190c88e6534edd7ddaa8580316fa0090f5051d1c347c8abe8097"
+  ],
+  "query_hash": "058adb3d30f1eae5e8309af07112a84ab83bb95997d392300f0b3a6cb85dec4b",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "entity_attribute-0003"
+}

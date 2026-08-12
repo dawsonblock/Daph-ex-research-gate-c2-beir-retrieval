@@ -1,0 +1,9 @@
+[OBJECTIVE]
+For MPA-5, which assigned category is recorded?
+[EVIDENCE]
+[E1]
+In shorthand, Marlin pressure assembly is written MPA-5.
+[E2]
+{"subject": "Marlin pressure assembly", "assigned category": "THETA-OLIVE"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

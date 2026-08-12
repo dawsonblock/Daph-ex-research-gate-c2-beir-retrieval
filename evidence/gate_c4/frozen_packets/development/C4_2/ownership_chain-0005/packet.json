@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "5a1ee68af39f49fc0080ec2de495dcc29b37d29913d9e903763ababd3f437031",
+  "canonical_subject": "",
+  "ordered_selected_ids": [
+    "ownership_chain-0005/identity",
+    "ownership_chain-0010/value",
+    "ownership_chain-0011/direct",
+    "ownership_chain-0011/value",
+    "ownership_chain-0000/value",
+    "numeric_chain-0009/identity"
+  ],
+  "ordered_text_sha256": [
+    "c648c38df9aea22771648969b72afc0fb7e6b0e98d4322c8360027c624361e45",
+    "1b0baed9d6749a3af79465158860802ee9ec09a9a3fc049c6977064fb21fc2da",
+    "b8758ab973f0e2ab9f16ca37656f4570946267ee8f439c94b08b24705d0bdb20",
+    "c6ed9bfae7afb5ec3d0cb77ed19cd2fbaf36257ec48f48a9ec5d4221c7e42a3b",
+    "d7d7ff5d255454ac26b173f41ba3ac74325d557c6469d49af15c165c979177d7",
+    "f96063b0cb0be140a31ad4324443ee18a07513639a0dcf7d7296044d8fe1eac8"
+  ],
+  "query_hash": "7a2ca1db2aa4290a473e58efa22bb542ca0db28751402800e07ece9db933fc94",
+  "selector_policy_id": "s0",
+  "task_id": "ownership_chain-0005"
+}

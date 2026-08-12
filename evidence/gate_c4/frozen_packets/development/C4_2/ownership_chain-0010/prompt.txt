@@ -1,0 +1,19 @@
+[OBJECTIVE]
+For Bluebird drive cluster, which ownership tier is recorded?
+[EVIDENCE]
+[E1]
+[change] Osprey drive cluster :: ownership tier := accredited
+[E2]
+{"subject": "Teal drive cluster", "ownership tier": "retired"}
+[E3]
+ownership tier:
+  subject: Bluebird sensor array
+  value: 9167
+[E4]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E5]
+Registry entry: Dunlin drive cluster — active configuration — Bluebird control module.
+[E6]
+subject=Bluebird drive cluster; mounted monitor=Gannet relay unit
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.
