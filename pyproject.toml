@@ -29,6 +29,7 @@ qualification = [
     "accelerate==1.13.0",
     "psutil==7.2.2",
     "litlogger==2026.6.25",
+    "lightning-sdk==2026.6.30",
     "pip==26.1.2",
     "setuptools==82.0.1",
     "wheel==0.47.0",

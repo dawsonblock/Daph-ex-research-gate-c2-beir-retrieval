@@ -35,7 +35,7 @@ TEST_CORPUS_PATHS = (
 QUALIFICATION_LOCK = "configs/v2a_qualification_requirements.lock"
 QUALIFICATION_DISTRIBUTIONS = (
     "numpy", "torch", "pytest", "transformers", "huggingface-hub",
-    "accelerate", "psutil", "litlogger", "pip", "setuptools", "wheel",
+    "accelerate", "psutil", "litlogger", "lightning-sdk", "pip", "setuptools", "wheel",
 )
 
 
