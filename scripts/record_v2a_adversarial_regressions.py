@@ -279,7 +279,7 @@ def main() -> int:
     if experiment is not None:
         for case in cases:
             experiment["case_pass"].append(case["passed"])
-        experiment["run_valid"] = run_valid
+        experiment["run_valid"] = str(run_valid).lower()
         experiment.finalize()
     print(json.dumps({"run_valid": run_valid, "cases": len(cases),
                       "receipt": str(out)}, sort_keys=True))
