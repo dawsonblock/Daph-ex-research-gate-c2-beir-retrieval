@@ -182,6 +182,10 @@ def main() -> int:
         live_event_ids = sorted(
             event.verification_event_id for claim in records
             for event in claims.verification_events(claim.record_id))
+        live_events = [
+            event for claim in records
+            for event in claims.verification_events(claim.record_id)
+        ]
 
         # Reconstruct from durable logs, with an acquirer that fails on any
         # attempted network access. Re-run every deterministic decision from
@@ -198,14 +202,22 @@ def main() -> int:
         for claim in records:
             replayed_claim = replayed_claims.get(claim.record_id)
             event = replayed_claims.verification_events(claim.record_id)[0]
-            captured = replayed_evidence.get(event.evidence_ids[0])
-            decision = verifier.verify(replayed_claim, captured)
+            captured = (
+                replayed_evidence.get(event.evidence_ids[0])
+                if event.evidence_ids else None)
+            decision = verifier.verify(replayed_claim, captured) if captured else None
             reproduced.append({
                 "claim_id": claim.record_id,
                 "event_id": event.verification_event_id,
-                "result_equal": decision.result is event.result,
-                "receipt_hash_equal": decision.receipt_hash == event.receipt_hash,
-                "raw_hash_valid": replayed_evidence.validate_hashes(captured.evidence_id),
+                "event_result": event.result.value,
+                "reason_code": event.reason_code,
+                "captured_evidence": captured is not None,
+                "result_equal": decision is not None and decision.result is event.result,
+                "receipt_hash_equal": (
+                    decision is not None and decision.receipt_hash == event.receipt_hash),
+                "raw_hash_valid": (
+                    captured is not None
+                    and replayed_evidence.validate_hashes(captured.evidence_id)),
             })
         offline_pass = (
             forbidden.calls == 0 and replay_decisions == []
@@ -249,6 +261,12 @@ def main() -> int:
         "claim_verification_state_hash": live_claim_hash,
         "evidence_state_hash": live_evidence_hash,
         "verification_event_ids": live_event_ids,
+        "live_events": [{
+            "event_id": event.verification_event_id,
+            "result": event.result.value,
+            "reason_code": event.reason_code,
+            "evidence_ids": list(event.evidence_ids),
+        } for event in live_events],
         "offline_reproductions": reproduced,
         "evidence": evidence_receipts,
         "bounded_claim": (
