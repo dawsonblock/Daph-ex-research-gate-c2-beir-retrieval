@@ -9,9 +9,12 @@ from __future__ import annotations
 
 import hashlib
 import heapq
+import ipaddress
 import json
 import os
+import socket
 import urllib.error
+import urllib.parse
 import urllib.request
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
@@ -56,6 +59,7 @@ def _norm(value: Any) -> str:
 
 
 class SourceType(str, Enum):
+    UNTRUSTED_CAPTURE_ONLY = "UNTRUSTED_CAPTURE_ONLY"
     AUTHORITATIVE_STRUCTURED_DATA = "AUTHORITATIVE_STRUCTURED_DATA"
     OFFICIAL_PRIMARY_SOURCE = "OFFICIAL_PRIMARY_SOURCE"
     PRIMARY_SCIENTIFIC_LITERATURE = "PRIMARY_SCIENTIFIC_LITERATURE"
@@ -496,16 +500,68 @@ class LocalStructuredFixtureAcquirer:
             response_metadata=fixture.get("response_metadata", {}), detail=fixture.get("detail", ""))
 
 
+def _validate_public_https_uri(uri: str) -> None:
+    parsed = urllib.parse.urlsplit(uri)
+    if parsed.scheme != "https" or not parsed.hostname:
+        raise ValueError("capture URI must use public HTTPS")
+    if parsed.username or parsed.password or parsed.port not in (None, 443):
+        raise ValueError("capture URI credentials and nonstandard ports are forbidden")
+    hostname = parsed.hostname.rstrip(".").lower()
+    if hostname == "localhost" or hostname.endswith(".localhost"):
+        raise ValueError("localhost capture is forbidden")
+    addresses = socket.getaddrinfo(hostname, 443, type=socket.SOCK_STREAM)
+    if not addresses:
+        raise ValueError("capture hostname did not resolve")
+    for address in addresses:
+        ip = ipaddress.ip_address(address[4][0])
+        if not ip.is_global:
+            raise ValueError(f"non-public capture address is forbidden: {ip}")
+
+
+class _PublicHTTPSRedirectHandler(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        _validate_public_https_uri(newurl)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def _open_public_https(uri: str, *, timeout: int):
+    _validate_public_https_uri(uri)
+    opener = urllib.request.build_opener(_PublicHTTPSRedirectHandler())
+    response = opener.open(uri, timeout=timeout)  # nosec B310 - URI is validated above
+    _validate_public_https_uri(response.geturl())
+    return response
+
+
+def _read_bounded(response, maximum: int) -> bytes:
+    length = response.headers.get("Content-Length")
+    if length is not None and int(length) > maximum:
+        raise ValueError("capture response exceeds maximum body size")
+    raw = response.read(maximum + 1)
+    if len(raw) > maximum:
+        raise ValueError("capture response exceeds maximum body size")
+    return raw
+
+
 class HTTPStructuredDataAcquirer:
-    """Network adapter for explicitly non-qualification integration runs."""
+    """Untrusted public-HTTPS capture for non-qualification integration runs.
+
+    This generic adapter cannot create truth-bearing authoritative evidence.
+    Production authority requires a separately frozen endpoint/extractor
+    registry; callers cannot acquire authority by labeling a request.
+    """
 
     ACQUISITION_METHOD = "http_structured_data"
-    ACQUISITION_VERSION = "1.0.0"
+    ACQUISITION_VERSION = "1.1.0-untrusted-capture"
+    MAX_RESPONSE_BYTES = 8 * 1024 * 1024
 
     def acquire(self, request: AcquisitionRequest) -> AcquisitionResult:
+        if request.source_type is not SourceType.UNTRUSTED_CAPTURE_ONLY:
+            return AcquisitionResult(
+                AcquisitionStatus.INVALID_RESPONSE, request,
+                detail="generic HTTP cannot establish authoritative source identity")
         try:
-            with urllib.request.urlopen(request.source_uri, timeout=15) as response:  # nosec B310 - explicit V2A integration adapter
-                raw = response.read()
+            with _open_public_https(request.source_uri, timeout=15) as response:
+                raw = _read_bounded(response, self.MAX_RESPONSE_BYTES)
                 content_type = response.headers.get_content_type()
                 if content_type not in {"application/json", "text/csv"}:
                     return AcquisitionResult(AcquisitionStatus.UNSUPPORTED_CONTENT, request,
@@ -522,7 +578,7 @@ class HTTPStructuredDataAcquirer:
         except urllib.error.HTTPError as exc:
             status = AcquisitionStatus.RATE_LIMITED if exc.code == 429 else AcquisitionStatus.NOT_FOUND
             return AcquisitionResult(status, request, detail=f"HTTP {exc.code}")
-        except (urllib.error.URLError, TimeoutError):
+        except (urllib.error.URLError, TimeoutError, ValueError, OSError):
             return AcquisitionResult(AcquisitionStatus.NETWORK_ERROR, request)
 
 
@@ -535,12 +591,17 @@ class OfficialTextAcquirer:
     """
 
     ACQUISITION_METHOD = "official_html_text"
-    ACQUISITION_VERSION = "1.0.0"
+    ACQUISITION_VERSION = "1.1.0-untrusted-capture"
+    MAX_RESPONSE_BYTES = 8 * 1024 * 1024
 
     def acquire(self, request: AcquisitionRequest) -> AcquisitionResult:
+        if request.source_type is not SourceType.UNTRUSTED_CAPTURE_ONLY:
+            return AcquisitionResult(
+                AcquisitionStatus.INVALID_RESPONSE, request,
+                detail="generic HTTP cannot establish official source identity")
         try:
-            with urllib.request.urlopen(request.source_uri, timeout=15) as response:  # nosec B310 - explicit V2A integration adapter
-                raw = response.read()
+            with _open_public_https(request.source_uri, timeout=15) as response:
+                raw = _read_bounded(response, self.MAX_RESPONSE_BYTES)
                 content_type = response.headers.get_content_type()
                 if content_type not in {"text/html", "text/plain"}:
                     return AcquisitionResult(AcquisitionStatus.UNSUPPORTED_CONTENT, request,
@@ -551,7 +612,7 @@ class OfficialTextAcquirer:
         except urllib.error.HTTPError as exc:
             status = AcquisitionStatus.RATE_LIMITED if exc.code == 429 else AcquisitionStatus.NOT_FOUND
             return AcquisitionResult(status, request, detail=f"HTTP {exc.code}")
-        except (urllib.error.URLError, TimeoutError):
+        except (urllib.error.URLError, TimeoutError, ValueError, OSError):
             return AcquisitionResult(AcquisitionStatus.NETWORK_ERROR, request)
 
 

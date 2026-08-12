@@ -12,6 +12,8 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
+from hrm_adaptive_memory.external_verification.qualification import qualification_identity
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
@@ -246,6 +248,7 @@ def main() -> int:
         raise RuntimeError("adversarial qualification refuses a dirty source tree")
     source_commit = _git("rev-parse", "HEAD")
     source_tree_hash = _git("rev-parse", "HEAD^{tree}")
+    identity = qualification_identity(ROOT)
     experiment = None
     if not args.skip_litlogger:
         import litlogger
@@ -266,6 +269,7 @@ def main() -> int:
         "scientific_verdict": "PASS" if run_valid else "FAIL",
         "source_commit": source_commit,
         "source_tree_hash": source_tree_hash,
+        "qualification_identity": identity,
         "branch": _git("branch", "--show-current"),
         "completed_at": datetime.now(UTC).isoformat(),
         "elapsed_s": time.perf_counter() - started,

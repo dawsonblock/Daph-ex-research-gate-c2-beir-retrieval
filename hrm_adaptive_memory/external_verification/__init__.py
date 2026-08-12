@@ -7,8 +7,7 @@ It does not import the certified reader, G2, selector, HRM, or executive code.
 from .core import (  # noqa: F401
     AcquisitionRequest, AcquisitionResult, AcquisitionStatus,
     DeterministicExactFieldVerifier, EvidenceStore, ExternalEvidenceRecord,
-    ExternalVerificationWorker, LocalStructuredFixtureAcquirer, SourceLineage,
+    ExternalVerificationWorker, HTTPStructuredDataAcquirer, LocalStructuredFixtureAcquirer, SourceLineage,
     OfficialTextAcquirer, SourceType, VerificationDecision, VerificationJob, VerificationQueue,
     derive_current_status, explain_claim,
 )
-

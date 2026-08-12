@@ -20,6 +20,8 @@ import sys
 import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+
+from hrm_adaptive_memory.external_verification.qualification import qualification_identity
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -160,6 +162,7 @@ def _instrument_atomic_writes(store, counter: dict[str, int], key: str) -> None:
 def run(args) -> int:
     source_commit = _git("rev-parse", "HEAD")
     source_tree_hash = _git("rev-parse", "HEAD^{tree}")
+    identity = qualification_identity(ROOT)
     if _git("status", "--porcelain"):
         raise RuntimeError("pressure qualification refuses a dirty source tree")
 
@@ -174,6 +177,7 @@ def run(args) -> int:
             "protocol_version": PROTOCOL_VERSION,
             "source_commit": source_commit,
             "source_tree_hash": source_tree_hash,
+            "qualification_identity": identity,
             "max_events": str(args.max_events),
             "location": "US",
             "altitude": "1334",
@@ -387,6 +391,7 @@ def run(args) -> int:
             "scientific_verdict": "MEASUREMENT",
             "source_commit": source_commit,
             "source_tree_hash": source_tree_hash,
+            "qualification_identity": identity,
             "branch": _git("branch", "--show-current"),
             "started_at": started_at,
             "completed_at": datetime.now(UTC).isoformat(),

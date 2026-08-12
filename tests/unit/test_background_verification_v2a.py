@@ -7,7 +7,7 @@ from hrm_adaptive_memory.experiment_integrity.certified_memory import (
     assert_certified_memory_v1_unchanged, pin_certified_memory_v1_boundary_policy)
 from hrm_adaptive_memory.external_verification import (
     AcquisitionRequest, EvidenceStore, ExternalVerificationWorker,
-    LocalStructuredFixtureAcquirer, SourceType, VerificationQueue,
+    HTTPStructuredDataAcquirer, LocalStructuredFixtureAcquirer, SourceType, VerificationQueue,
     derive_current_status, explain_claim)
 from hrm_adaptive_memory.memory_write import ClaimStore, VerificationStatus
 
@@ -118,6 +118,23 @@ def test_v2a_t7_failures_are_inconclusive(tmp_path):
     assert claims.verification_events(other.record_id)[0].reason_code == "ACQUISITION_NETWORK_ERROR"
 
 
+def test_generic_http_cannot_promote_caller_asserted_authority():
+    request = AcquisitionRequest(
+        "https://example.com/data.json",
+        source_type=SourceType.AUTHORITATIVE_STRUCTURED_DATA)
+    result = HTTPStructuredDataAcquirer().acquire(request)
+    assert result.status.value == "INVALID_RESPONSE"
+    assert "cannot establish authoritative" in result.detail
+
+
+def test_generic_http_blocks_private_network_capture():
+    request = AcquisitionRequest(
+        "https://127.0.0.1/data.json",
+        source_type=SourceType.UNTRUSTED_CAPTURE_ONLY)
+    result = HTTPStructuredDataAcquirer().acquire(request)
+    assert result.status.value == "NETWORK_ERROR"
+
+
 def test_v2a_t8_replay_hash_t10_retraction_t12_explainability(tmp_path):
     claims, evidence, queue, acquirer = _system(tmp_path)
     claim = _claim(claims)
@@ -172,4 +189,3 @@ def test_v2a_t13_certified_reader_invariance_t14_v1_regression_t15_equivalence_t
     assert assert_certified_memory_v1_unchanged().canonical_sha256() == before
     assert ClaimStore(tmp_path / "claims").verification_state_hash() == claims.verification_state_hash()
     assert not hasattr(evidence, "_events")
-

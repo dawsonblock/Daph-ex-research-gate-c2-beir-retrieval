@@ -12,6 +12,8 @@ import urllib.error
 import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
+
+from hrm_adaptive_memory.external_verification.qualification import qualification_identity
 from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -128,6 +130,7 @@ def main() -> int:
         raise RuntimeError("network smoke refuses a dirty source tree")
     source_commit = _git("rev-parse", "HEAD")
     source_tree_hash = _git("rev-parse", "HEAD^{tree}")
+    identity = qualification_identity(ROOT)
     experiment = None
     if not args.skip_litlogger:
         import litlogger
@@ -252,6 +255,7 @@ def main() -> int:
         "scientific_verdict": "INTEGRATION_ONLY_NOT_SCIENTIFIC_EVALUATION",
         "source_commit": source_commit,
         "source_tree_hash": source_tree_hash,
+        "qualification_identity": identity,
         "branch": _git("branch", "--show-current"),
         "completed_at": datetime.now(UTC).isoformat(),
         "network_fetch_count": live.fetch_count,

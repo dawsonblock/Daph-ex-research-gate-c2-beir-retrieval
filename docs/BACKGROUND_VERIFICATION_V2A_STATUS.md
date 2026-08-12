@@ -1,80 +1,72 @@
 # BACKGROUND_VERIFICATION_V2A status
 
-## Implemented capability
-
-V2A now provides a CPU-only, offline-testable path from a canonical claim to
-a durable queue, immutable external snapshot, deterministic exact-field
-decision, and append-only `VERIFICATION` event. External evidence is stored
-outside claims, is content/provenance-addressed, and is resolved before an
-external verification event is appended.
-
-Disagreement stays `INCONCLUSIVE`; neither recency, confidence, source count,
-nor source class chooses a winner. Evidence retraction is append-only and
-removes the snapshot from the V2A *current* view while retaining the original
-evidence/event for historical audit. The V1 substrate was additionally
-hardened to authenticate a manifest before replay, recompute record and event
-identities, reject unknown events, require structural supersession compatibility,
-and exclude withdrawn in-store evidence from present-tense status derivation.
-
-## Verification performed
-
-- `tests/unit/test_background_verification_v2a.py` covers V2A-T1 through
-  V2A-T16 using only local fixture snapshots.
-- The focused V2A + V1 verification/write + integrity regression command
-  passed: **92 passed**.
-- The complete suite passed: **1,659 passed, 3 skipped**.
-- `CERTIFIED_MEMORY_V1` was pinned and its identity remained
-  `97b3b49cb95fa33b` in the V2A invariance test.
-
-## Qualification result
+## Current disposition
 
 ```text
-BACKGROUND_VERIFICATION_V2A
-run_valid          = true
-mechanism_status   = QUALIFIED
-scientific_verdict = PASS
+IMPLEMENTED          yes
+CORRECTNESS TESTED   yes (focused V2A suite)
+EXACT BUILD QUALIFIED no
+PRODUCTION CLAIM     no
+
+run_valid          = false
+mechanism_status   = IMPLEMENTED_REQUIRES_COMMIT_BOUND_REQUALIFICATION
+scientific_verdict = VOID_PENDING_REQUALIFICATION
 ```
 
-The qualification gates are recorded and hashed:
+The previous exact-build `QUALIFIED / PASS` declaration is void. Its four
+qualification receipts were produced from different commits and trees, while
+the old package builder checked only that each receipt contained
+`run_valid=true`. Receipt hashes authenticated the files that were packaged;
+they did not prove that those files qualified the packaged source.
 
-- External-evidence pressure ladder:
-  `evidence/background_verification_v2a/pressure/pressure_full_1m.json`.
-  All 1k, 10k, 50k, 100k, 250k, 500k, and 1M checkpoints reproduced the
-  incremental claim-verification and evidence state hashes from genesis.
-  At 1M, evidence append throughput was 2,874/s, verification-event append
-  throughput was 3,350/s, and cold replay completed in 56.87 seconds.
-  This qualifies the measured 1M-event envelope, not asymptotically constant
-  resident memory. At 1M, the estimated resident verification-history indexes
-  were 254.6 MB, the evidence-by-job index 249.8 MB, lineage membership
-  110.2 MB, and acknowledged queue IDs 99.6 MB. These remain linear-growth
-  follow-up targets for V2B. A live OS sample during the final interval showed
-  about 1.47 GB RSS; late macOS current-RSS samples in the receipt were affected
-  by page compression and must not be interpreted as peak memory.
-- Permanent adversarial evidence:
-  `evidence/background_verification_v2a/adversarial/adversarial.json`.
-  All 10 frozen attack/recovery cases passed.
-- Recorded network integration smoke:
-  `evidence/background_verification_v2a/network_smoke/network_smoke.json`.
-  Two stable World Bank records completed live capture and deterministic
-  verification, then reproduced offline from captured bytes with zero network
-  calls. Both records share one publisher, and no independent-publisher
-  corroboration claim is made.
-- Complete repository suite:
-  `evidence/background_verification_v2a/tests/full_suite.json`:
-  **1,659 passed, 3 skipped, 0 failed**.
+The historical results remain useful engineering evidence, not qualification
+evidence for the exact packaged build:
 
-The root `BUILD_MANIFEST.json` and its packaged copy bind the exact source
-commit/tree, protocol and schema hashes, C4 H100 lock, frozen
-`CERTIFIED_MEMORY_V1` identity, and the four qualification receipt hashes.
+- 1M-event pressure/replay: commit `aa5aac06687241ab49276f74aed5a108b44c7114`
+- 10-case adversarial run: commit `078923a8b072fb1a72101723154b29d73f9214e3`
+- recorded live/offline network smoke: commit `b06f181e30d2159f4e379220a236b004e3749bf8`
+- 1,659-pass full-suite receipt: commit `6cabd45129ccb3c76ed328132078ea1e0ceb847e`
 
-## Bounded claim
+The focused local V2A suite independently reproduced as 9 passing tests during
+the archive audit. The stored full-suite result is historical because it was
+not produced from the same source identity and its environment was not
+reproducible from the former `dev` extra alone.
 
-DAPH can acquire immutable external evidence, preserve source lineage,
-deterministically verify supported exact-field claim classes, survive
-retries/replay/tampering, and maintain auditable current verification state.
+## Requalification contract
+
+Every new pressure, adversarial, network-smoke, and full-suite receipt must
+carry the same `BACKGROUND_VERIFICATION_V2A_QUALIFICATION_IDENTITY_V1`. That
+identity binds:
+
+- source commit and source tree;
+- protocol, external-verification runtime, qualification validator, claim
+  store, and verification-event hashes;
+- test-corpus hash;
+- exact qualification dependency-lock hash;
+- Python/interpreter identity and installed dependency versions.
+
+The package builder recomputes this identity from the claimed Git commit and
+current qualification environment, requires all four receipts to match it,
+checks gate-specific contents, and fails closed on missing or mixed identities.
+It packages the exact common source commit and overlays only the validated
+receipts plus the generated manifest. The environment can be installed with
+`python -m pip install -e '.[qualification]'` or the frozen
+`configs/v2a_qualification_requirements.lock`.
+
+## Implemented capability and bounded language
+
+V2A provides a CPU-only, offline-testable path from a canonical claim to a
+durable queue, immutable external snapshot, deterministic exact-field decision,
+and append-only `VERIFICATION` event. Disagreement stays `INCONCLUSIVE` and
+evidence retraction changes current derived state without erasing history.
+
+The implemented mechanism can preserve declared or deterministically assigned
+source-lineage identifiers. It does not discover hidden syndication. Repeated
+execution, crash-boundary recovery, and replay are idempotent; V2A does not yet
+implement retry scheduling, backoff, or retry budgets. Generic HTTP capture is
+an integration adapter, not a production authority decision or a production
+network-security boundary.
 
 V2A does not claim general truth verification, literature understanding,
 semantic contradiction resolution, LLM fact checking, verification-aware
-retrieval, or answer-quality improvement. It proves only immutable external
-evidence capture and deterministic comparison for the narrowly authorized
-structured-source classes.
+retrieval, answer-quality improvement, or production readiness.

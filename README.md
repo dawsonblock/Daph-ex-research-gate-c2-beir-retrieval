@@ -42,14 +42,15 @@ question → subject-preserving query → BM25+BGE retrieval
 | **C3** Surface identity resolution | ✅ MECHANISM_SUCCESS | I3 identity-record retrieval resolves surface defect with 92% accuracy, 0% false resolution |
 | **C4** Integrated memory pipeline | ✅ CERTIFIED (development) | H100 certification: +0.2000 quality delta (family CI [+0.1354, +0.2604], threshold +0.15); 17/17 gates passed |
 | **C4-BRIDGE** Runtime bridge acquisition | ❌ NEGATIVE RESULT | No runtime bridge mechanism beats one-pass baseline (B0 CES=0.783 vs B2 CES=0.775) |
-| **V2A** External background verification | ✅ QUALIFIED | Immutable evidence + lineage + deterministic verification; 1M-event pressure/replay PASS, 10/10 adversarial PASS, recorded live/offline smoke PASS |
+| **V2A** External background verification | ⚠️ REQUALIFICATION REQUIRED | Mechanism implemented and historically exercised; the prior exact-build PASS is void because its receipts came from different source identities |
+| Cognitive-control donor slice | 🧪 IMPLEMENTED, NOT QUALIFIED | DAPH-native hash-chained provenance, bitemporal facts, unresolved conflicts, decision graph, and deterministic policy rules adapted from selected Semantica concepts |
 | **D–N** Downstream gates | 🔒 BLOCKED | Pending untouched qualification/OOD splits and Gate D decision |
 
 Full machine-readable state: [`RESEARCH_STATUS.json`](RESEARCH_STATUS.json)
 
 V2A's qualification is deliberately narrow: DAPH can capture immutable
 external evidence, preserve declared lineage, deterministically verify the
-supported exact-field source classes, survive retries/replay/tampering, and
+supported exact-field source classes, survive repeated execution/replay/tampering, and
 maintain an auditable current verification state. It is not a claim of general
 truth determination, arbitrary literature understanding, verification-aware
 retrieval, or improved answer accuracy.

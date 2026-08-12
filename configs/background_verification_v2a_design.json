@@ -1,8 +1,9 @@
 {
   "protocol_id": "BACKGROUND_VERIFICATION_V2A",
   "protocol_version": "1.0.0",
-  "source_commit": "fc4a454f67d79163b95867e54dd1443401169e71",
-  "source_commit_anchor": "remote branch c4-v2_1-prompt-order-conformance via git ls-remote",
+  "protocol_initial_freeze_commit": "fc4a454f67d79163b95867e54dd1443401169e71",
+  "protocol_initial_freeze_note": "Historical design anchor only; never a build-qualification identity.",
+  "qualification_identity_version": "BACKGROUND_VERIFICATION_V2A_QUALIFICATION_IDENTITY_V1",
   "claim_schema_version": "VERIFIED_MEMORY_WRITE_V1.2",
   "event_schema_version": "VERIFICATION_V1_EXTENDED_EXTERNAL_EVIDENCE_V2A",
   "evidence_schema_version": "EXTERNAL_EVIDENCE_V2A.1",
@@ -24,7 +25,9 @@
     "fuzzy_lineage_inference",
     "certified_memory_reader_modification",
     "network_dependent_unit_tests",
-    "gpu_execution"
+    "gpu_execution",
+    "cross_commit_qualification_receipts",
+    "caller_asserted_network_authority"
   ],
   "acceptance_test_ids": [
     "V2A-T1", "V2A-T2", "V2A-T3", "V2A-T4", "V2A-T5", "V2A-T6",
@@ -33,4 +36,3 @@
   ],
   "frozen_utc": "2026-08-11T00:00:00Z"
 }
-
