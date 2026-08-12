@@ -8,6 +8,7 @@ invoked integration layer and is not required for correctness.
 from __future__ import annotations
 
 import hashlib
+import heapq
 import json
 import os
 import urllib.error
@@ -169,6 +170,8 @@ class EvidenceStore:
         self.truncated_tail = False
         self._records: dict[str, ExternalEvidenceRecord] = {}
         self._retracted: set[str] = set()
+        self._by_job: dict[str, list[str]] = {}
+        self._lineage_members: dict[str, list[str]] = {}
         self._event_count = 0
         self._log_hasher = self._committed_log_hasher()
         self._verify_manifest_before_replay()
@@ -230,7 +233,13 @@ class EvidenceStore:
     def _apply_event(self, event: Mapping[str, Any]) -> None:
         if event["event"] == "EVIDENCE_APPENDED":
             record = self._record_from_json(event["record"])
-            self._records.setdefault(record.evidence_id, record)
+            if record.evidence_id not in self._records:
+                self._records[record.evidence_id] = record
+                job_id = str(record.provenance.get("verification_job_id", ""))
+                if job_id:
+                    self._by_job.setdefault(job_id, []).append(record.evidence_id)
+                self._lineage_members.setdefault(
+                    record.source_lineage_id, []).append(record.evidence_id)
         elif event["event"] == "EVIDENCE_RETRACTED":
             self._retracted.add(event["evidence_id"])
         else:
@@ -238,6 +247,7 @@ class EvidenceStore:
 
     def _replay(self) -> None:
         self._records, self._retracted, self._event_count = {}, set(), 0
+        self._by_job, self._lineage_members = {}, {}
         for event in self._stream_events():
             self._event_count += 1
             self._apply_event(event)
@@ -278,27 +288,36 @@ class EvidenceStore:
     def log_sha256(self) -> str:
         return self._log_hasher.hexdigest()
 
-    def _write_manifest(self) -> None:
-        self._atomic_write(self.manifest_path, json.dumps({
+    def _write_manifest(self, *, include_state: bool = False) -> None:
+        manifest = {
             "store": "EXTERNAL_EVIDENCE_V2A.1",
             "event_count": self._event_count,
             "event_log_sha256": self.log_sha256(),
-            "state_hash": self.state_hash(),
-        }, sort_keys=True, indent=2) + "\n")
+        }
+        if include_state:
+            manifest["state_hash"] = self.state_hash()
+        self._atomic_write(self.manifest_path,
+                           json.dumps(manifest, sort_keys=True, indent=2) + "\n")
 
     def state_hash(self) -> str:
-        state = {
-            "records": [(eid, self._records[eid].normalized_content_hash,
-                         self._records[eid].source_lineage_id,
-                         eid not in self._retracted) for eid in sorted(self._records)],
-        }
-        return _sha256(_canonical_json(state))
+        hasher = hashlib.sha256()
+        for evidence_id in sorted(self._records):
+            record = self._records[evidence_id]
+            hasher.update(_canonical_json({
+                "evidence_id": evidence_id,
+                "normalized_content_hash": record.normalized_content_hash,
+                "source_lineage_id": record.source_lineage_id,
+                "active": evidence_id not in self._retracted,
+            }).encode())
+            hasher.update(b"\n")
+        return hasher.hexdigest()
 
     def publish_snapshot(self) -> Path:
         self._atomic_write(self.snapshot_path, json.dumps({
             "event_count": self._event_count, "log_sha256": self.log_sha256(),
             "state_hash": self.state_hash(),
         }, sort_keys=True, indent=2) + "\n")
+        self._write_manifest(include_state=True)
         return self.snapshot_path
 
     def snapshot_is_valid(self) -> bool:
@@ -372,8 +391,8 @@ class EvidenceStore:
             yield self._records[evidence_id]
 
     def by_job(self, job_id: str) -> list[ExternalEvidenceRecord]:
-        return [record for record in self.stream()
-                if record.provenance.get("verification_job_id") == job_id]
+        return [self._records[evidence_id]
+                for evidence_id in self._by_job.get(job_id, ())]
 
     def validate_hashes(self, evidence_id: str) -> bool:
         record = self._records[evidence_id]
@@ -383,8 +402,7 @@ class EvidenceStore:
                 == record.normalized_content_hash)
 
     def source_lineage(self, lineage_id: str) -> SourceLineage | None:
-        members = tuple(record.evidence_id for record in self.stream()
-                        if record.source_lineage_id == lineage_id)
+        members = tuple(self._lineage_members.get(lineage_id, ()))
         if not members:
             return None
         first = self._records[members[0]]
@@ -622,6 +640,7 @@ class VerificationQueue:
         self.log_path = self.root / "verification_queue.jsonl"
         self._jobs: dict[str, VerificationJob] = {}
         self._acknowledged: set[str] = set()
+        self._pending_heap: list[tuple[int, str, str]] = []
         self._replay()
 
     def _stream(self):
@@ -647,6 +666,16 @@ class VerificationQueue:
                 self._jobs.setdefault(raw["job_id"], VerificationJob(**raw))
             elif event["event"] == "ACKNOWLEDGED":
                 self._acknowledged.add(event["job_id"])
+            else:
+                raise ValueError(f"unknown verification queue event {event.get('event')!r}")
+        self._pending_heap = [
+            (-job.priority, job.next_attempt_at, job.job_id)
+            for job_id, job in self._jobs.items()
+            if job_id not in self._acknowledged
+        ]
+        for job_id in self._acknowledged:
+            self._jobs.pop(job_id, None)
+        heapq.heapify(self._pending_heap)
 
     def enqueue(self, *, claim_id: str, priority: int, reason: str, created_at: str,
                 verification_policy_id: str, verification_policy_version: str,
@@ -655,23 +684,39 @@ class VerificationQueue:
                                     "version": verification_policy_version,
                                     "source_uri": request.source_uri, "query": request.query_used})
         job_id = "vjob-" + _sha256(identity)[:20]
-        if job_id not in self._jobs:
-            job = VerificationJob(job_id, claim_id, priority, reason, created_at, 0, created_at,
-                                  verification_policy_id, verification_policy_version, request)
+        candidate = VerificationJob(
+            job_id, claim_id, priority, reason, created_at, 0, created_at,
+            verification_policy_id, verification_policy_version, request)
+        if job_id not in self._jobs and job_id not in self._acknowledged:
+            job = candidate
             self._append({"event": "ENQUEUED", "job": job.to_json()})
             self._jobs[job_id] = job
-        return self._jobs[job_id]
+            heapq.heappush(self._pending_heap,
+                           (-job.priority, job.next_attempt_at, job.job_id))
+        return self._jobs.get(job_id, candidate)
 
     def acknowledge(self, job_id: str) -> None:
+        if job_id in self._acknowledged:
+            return
         if job_id not in self._jobs:
             raise KeyError(job_id)
         if job_id not in self._acknowledged:
             self._append({"event": "ACKNOWLEDGED", "job_id": job_id})
             self._acknowledged.add(job_id)
+            self._jobs.pop(job_id, None)
 
     def pending(self) -> list[VerificationJob]:
         return sorted((job for job_id, job in self._jobs.items() if job_id not in self._acknowledged),
                       key=lambda job: (-job.priority, job.next_attempt_at, job.job_id))
+
+    def next_pending(self) -> VerificationJob | None:
+        while self._pending_heap:
+            _priority, _next_attempt, job_id = self._pending_heap[0]
+            if job_id in self._acknowledged or job_id not in self._jobs:
+                heapq.heappop(self._pending_heap)
+                continue
+            return self._jobs[job_id]
+        return None
 
 
 class ExternalVerificationWorker:
@@ -685,15 +730,12 @@ class ExternalVerificationWorker:
         self.acquirer, self.verifier = acquirer, verifier or DeterministicExactFieldVerifier()
 
     def _committed(self, job_id: str) -> bool:
-        return any(event.verification_job_id == job_id
-                   for record in self.claims.all_records()
-                   for event in self.claims.verification_events(record.record_id))
+        return self.claims.verification_job_committed(job_id)
 
     def run_next(self) -> VerificationDecision | None:
-        pending = self.queue.pending()
-        if not pending:
+        job = self.queue.next_pending()
+        if job is None:
             return None
-        job = pending[0]
         if self._committed(job.job_id):
             self.queue.acknowledge(job.job_id)
             return None
@@ -736,7 +778,7 @@ class ExternalVerificationWorker:
 
     def run_all(self) -> list[VerificationDecision]:
         decisions = []
-        while self.queue.pending():
+        while self.queue.next_pending() is not None:
             decision = self.run_next()
             if decision is not None:
                 decisions.append(decision)

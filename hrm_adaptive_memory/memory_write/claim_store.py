@@ -192,6 +192,9 @@ class ClaimStore:
         self._verifications: dict[str, list[VerificationEvent]] = {}
         #: every verification_event_id ever seen, for V11 idempotency
         self._verification_ids: set[str] = set()
+        #: Durable job identities already committed. This makes crash-retry
+        #: detection O(1) instead of scanning every record and event.
+        self._verification_job_ids: set[str] = set()
         #: Running hash of the canonical log. Recomputing it per append meant
         #: re-reading and re-hashing the entire file on every event -- the
         #: second of three O(n)-per-event costs found by the scaling probe.
@@ -308,6 +311,8 @@ class ClaimStore:
             if evt.verification_event_id in self._verification_ids:
                 return
             self._verification_ids.add(evt.verification_event_id)
+            if evt.verification_job_id:
+                self._verification_job_ids.add(evt.verification_job_id)
             self._verifications.setdefault(evt.claim_record_id, []).append(evt)
         else:
             raise IntegrityError(f"unknown canonical event type {kind!r}")
@@ -332,6 +337,7 @@ class ClaimStore:
         self._active_by_claim_key = {}
         self._verifications = {}
         self._verification_ids = set()
+        self._verification_job_ids = set()
         self._corpus_version = 0
         for ev in self._stream_events():
             self._corpus_version += 1
@@ -367,6 +373,9 @@ class ClaimStore:
 
     def get(self, record_id: str) -> ClaimRecord | None:
         return self._records.get(record_id)
+
+    def verification_job_committed(self, job_id: str) -> bool:
+        return job_id in self._verification_job_ids
 
     def retrievable(self) -> list[ClaimRecord]:
         return [r for r in self._records.values()
@@ -448,7 +457,7 @@ class ClaimStore:
             "state_hash": state.state_hash(),
             "state": state.to_json(),
         }, indent=2, sort_keys=True) + "\n")
-        self._write_manifest()
+        self._write_manifest(include_derived=True)
         return self.snapshot_path
 
     def snapshot_is_valid(self) -> bool:
@@ -464,19 +473,27 @@ class ClaimStore:
         return (snap.get("derived_from_corpus_version") == self.corpus_version
                 and snap.get("derived_from_log_sha256") == self.log_sha256())
 
-    def _write_manifest(self) -> None:
+    def _write_manifest(self, *, include_derived: bool = False) -> None:
         digest = self.log_sha256()
-        self._atomic_write(self.manifest_path, json.dumps({
+        manifest = {
             "store": "VERIFIED_MEMORY_WRITE_V1",
             "design": "configs/verified_memory_write_v1_design.json",
             "corpus_version": self.corpus_version,
             "event_log_sha256": digest,
-            "n_records_total": len(self._records),
-            "n_retrievable": len(self.retrievable()),
-            "lifecycle_counts": {s.value: sum(1 for r in self._records.values()
-                                              if r.lifecycle_state == s) for s in LifecycleState},
-            "consolidated_state_hash": self.consolidated_state().state_hash(),
-        }, indent=2, sort_keys=True) + "\n")
+        }
+        if include_derived:
+            manifest.update({
+                "n_records_total": len(self._records),
+                "n_retrievable": len(self.retrievable()),
+                "lifecycle_counts": {
+                    s.value: sum(1 for r in self._records.values()
+                                 if r.lifecycle_state == s)
+                    for s in LifecycleState
+                },
+                "consolidated_state_hash": self.consolidated_state().state_hash(),
+            })
+        self._atomic_write(self.manifest_path,
+                           json.dumps(manifest, indent=2, sort_keys=True) + "\n")
 
     def _state_change(self, record_id: str, state: LifecycleState, **extra) -> None:
         self._append({"event": "STATE_CHANGE", "record_id": record_id,
@@ -680,14 +697,19 @@ class ClaimStore:
         opinions. V2A needs an explicit replay anchor for that independent
         append-only stream without changing the frozen consolidation hash.
         """
-        payload = [
-            {"claim_record_id": record_id,
-             "status": self.verification_status(record_id).value,
-             "verification_event_ids": [event.verification_event_id for event in events]}
-            for record_id, events in sorted(self._verifications.items())
-        ]
-        return hashlib.sha256(json.dumps(payload, sort_keys=True,
-                                         separators=(",", ":")).encode()).hexdigest()
+        hasher = hashlib.sha256()
+        for record_id, events in sorted(self._verifications.items()):
+            header = {
+                "claim_record_id": record_id,
+                "status": self.verification_status(record_id).value,
+                "verification_event_count": len(events),
+            }
+            hasher.update(json.dumps(
+                header, sort_keys=True, separators=(",", ":")).encode())
+            for event in events:
+                hasher.update(event.verification_event_id.encode())
+                hasher.update(b"\n")
+        return hasher.hexdigest()
 
     def verification_disagreements(self) -> list[tuple[str, list[VerificationEvent]]]:
         """V7: claims whose live verification events disagree. Reported
