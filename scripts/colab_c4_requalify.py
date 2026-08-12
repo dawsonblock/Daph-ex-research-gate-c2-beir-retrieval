@@ -363,7 +363,7 @@ def main(argv=None):
     run(["pip", "install", "-q", "-r", str(requirements)],
         "Install locked dependencies", timeout=1200, check=True)
     run(["pip", "install", "-q", "-e", ".[dev]"],
-        "Install repository and test runner (editable)",
+        "Install repository (editable)",
         timeout=900, check=True)
 
     # -- Step 4: Verify the environment against the lock -------------------
