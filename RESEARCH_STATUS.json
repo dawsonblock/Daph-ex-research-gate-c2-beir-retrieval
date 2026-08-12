@@ -5,6 +5,8 @@
     "mechanism_status": "QUALIFIED",
     "scientific_verdict": "PASS",
     "bounded_claim": "DAPH can acquire immutable external evidence, preserve source lineage, deterministically verify supported exact-field claim classes, survive retries/replay/tampering, and maintain auditable current verification state.",
+    "qualified_scale_envelope": "Measured cumulatively through 1,000,000 evidence/verification events with incremental/genesis state-hash equality at every rung.",
+    "known_scaling_limitation": "Qualification through 1M is not a proof of O(1) resident state. Verification history, evidence-by-job and lineage indexes, and acknowledged queue IDs still grow linearly and remain V2B optimization targets.",
     "explicit_non_claims": [
       "general truth determination",
       "arbitrary scientific literature understanding",

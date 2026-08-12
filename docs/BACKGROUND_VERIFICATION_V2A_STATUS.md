@@ -43,6 +43,13 @@ The qualification gates are recorded and hashed:
   incremental claim-verification and evidence state hashes from genesis.
   At 1M, evidence append throughput was 2,874/s, verification-event append
   throughput was 3,350/s, and cold replay completed in 56.87 seconds.
+  This qualifies the measured 1M-event envelope, not asymptotically constant
+  resident memory. At 1M, the estimated resident verification-history indexes
+  were 254.6 MB, the evidence-by-job index 249.8 MB, lineage membership
+  110.2 MB, and acknowledged queue IDs 99.6 MB. These remain linear-growth
+  follow-up targets for V2B. A live OS sample during the final interval showed
+  about 1.47 GB RSS; late macOS current-RSS samples in the receipt were affected
+  by page compression and must not be interpreted as peak memory.
 - Permanent adversarial evidence:
   `evidence/background_verification_v2a/adversarial/adversarial.json`.
   All 10 frozen attack/recovery cases passed.
