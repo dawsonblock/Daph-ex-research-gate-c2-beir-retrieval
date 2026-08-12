@@ -1,0 +1,79 @@
+{
+  "artifact": "BACKGROUND_VERIFICATION_V2A_ADVERSARIAL_REGRESSIONS",
+  "branch": "background-verification-v2a",
+  "cases": [
+    {
+      "case": "tamper_canonical_log",
+      "detail": "canonical event log hash differs from the committed manifest; refusing to replay unauthenticated history",
+      "observed": "IntegrityError",
+      "passed": true
+    },
+    {
+      "case": "tamper_record_content_retain_id_resealed_manifest",
+      "detail": "INGEST record_id does not authenticate its content: expected 'vmw-0eb699b9e3ef71701a83', got 'vmw-bcf7a0514f8044d9556b'",
+      "observed": "IntegrityError",
+      "passed": true
+    },
+    {
+      "case": "unknown_event_type",
+      "detail": "unknown canonical event type 'BOGUS'",
+      "observed": "IntegrityError",
+      "passed": true
+    },
+    {
+      "case": "retry_after_committed_verification",
+      "event_count": 1,
+      "event_id": "vfy-6f76f6d6699b0e1c1e70",
+      "passed": true
+    },
+    {
+      "case": "same_source_repeated_twice",
+      "evidence_ids": [],
+      "observed_result": "INCONCLUSIVE",
+      "passed": true
+    },
+    {
+      "case": "same_upstream_through_two_mirrors",
+      "independent_lineage_count": 1,
+      "lineage_id": "lin-one-upstream",
+      "mirror_evidence_ids": [
+        "evd-24ac0f742b132f2fd2a7",
+        "evd-70a33a3cb51b19dc9502"
+      ],
+      "passed": true
+    },
+    {
+      "case": "cross_claim_supersession_attempt",
+      "detail": "supersedes must target the same canonical entity and relation",
+      "observed": "ValueError",
+      "passed": true,
+      "prior_state_after_attempt": "ACTIVE"
+    },
+    {
+      "after": "UNVERIFIED",
+      "before": "SUPPORTED",
+      "case": "withdraw_all_supporting_evidence",
+      "historical_event_count": 1,
+      "passed": true
+    },
+    {
+      "case": "mid_log_corruption",
+      "detail": "Expecting value: line 2 column 1 (char 10)",
+      "observed": "JSONDecodeError",
+      "passed": true
+    },
+    {
+      "case": "torn_final_append",
+      "passed": true,
+      "state_hash_equal": true,
+      "truncated_tail": true
+    }
+  ],
+  "completed_at": "2026-08-12T02:38:09.720835+00:00",
+  "elapsed_s": 0.051079209079034626,
+  "mechanism_status": "REGRESSION_EVIDENCE_RECORDED",
+  "run_valid": true,
+  "scientific_verdict": "PASS",
+  "source_commit": "078923a8b072fb1a72101723154b29d73f9214e3",
+  "source_tree_hash": "5f50594026625ef474bb200007cd1cec61b26744"
+}
