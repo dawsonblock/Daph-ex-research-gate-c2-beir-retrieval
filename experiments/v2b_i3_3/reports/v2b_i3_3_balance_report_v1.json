@@ -1,0 +1,38 @@
+{
+  "budget_counts": {
+    "GENEROUS": 149,
+    "STANDARD": 468,
+    "TIGHT": 133
+  },
+  "budget_sensitive_pair_count": 35,
+  "cognitive_channel_counts": {
+    "composition": 97,
+    "conflict": 50,
+    "history": 125,
+    "irreducible": 47,
+    "provenance": 32,
+    "state_irrelevant": 194,
+    "temporal": 35,
+    "verification": 91,
+    "verification_x_budget": 70,
+    "verification_x_history": 9
+  },
+  "designed_optimal_action_counts": {
+    "ANSWER": 98,
+    "DEFER": 132,
+    "REASON_MORE": 97,
+    "RETRIEVE": 97,
+    "SEARCH_MORE": 97,
+    "STOP": 96,
+    "VERIFY": 133
+  },
+  "generator_output_sha256": "461954ed186e1f3b19df8c07a039e54e8dd55fe4be1c96785ae7b64780aec6e5",
+  "minimum_action_count": 96,
+  "schema": "DAPH_V2B_I3_3_BALANCE_REPORT_V1",
+  "split_counts": {
+    "development": 300,
+    "held_out": 300,
+    "validation": 150
+  },
+  "task_count": 750
+}

@@ -43,7 +43,7 @@ question → subject-preserving query → BM25+BGE retrieval
 | **C4** Integrated memory pipeline | ✅ CERTIFIED (development) | H100 certification: +0.2000 quality delta (family CI [+0.1354, +0.2604], threshold +0.15); 17/17 gates passed |
 | **C4-BRIDGE** Runtime bridge acquisition | ❌ NEGATIVE RESULT | No runtime bridge mechanism beats one-pass baseline (B0 CES=0.783 vs B2 CES=0.775) |
 | **V2A** External background verification | ✅ QUALIFIED | Replacement commit-bound PASS: one source/tree/environment across full suite, focused security, adversarial, network smoke, and 1M pressure/replay |
-| Cognitive-control donor slice | 🧪 V2B DEVELOPMENT, NOT QUALIFIED | Post-V2A provenance, bitemporal facts, conflicts, policy rules, trust infrastructure, I3 matched state masking, and I3.1 cached latent/observable oracle regret decomposition; separately scoped by `DAPH_COGNITIVE_CONTROL_V2B_QUALIFICATION_IDENTITY_V1` |
+| Cognitive-control donor slice | 🧪 V2B DEVELOPMENT, NOT QUALIFIED | I3.2.2 freezes metareasoning priors/cost/reward semantics; I3.3 freezes a 750-task, seven-action benchmark and precomputed latent/sequential oracle ground truth. No model-controller or scientific V2B result is claimed. |
 | **D–N** Downstream gates | 🔒 BLOCKED | Pending untouched qualification/OOD splits and Gate D decision |
 
 Full machine-readable state: [`RESEARCH_STATUS.json`](RESEARCH_STATUS.json)
@@ -59,6 +59,13 @@ The V2A qualification is an exact historical source identity at `77f3483`,
 not a blanket status for every later checkout on this branch. Cognitive-control
 changes are separately tracked as unqualified V2B development and do not
 rewrite V2A receipts or claims.
+
+The current V2B benchmark milestone is deliberately methodological. Its
+primary aggregate prior is task-uniform, class-uniform results remain an
+explicit diagnostic, and every oracle cache is bound to the closed benchmark
+artifact graph. The frozen corpus has 300 development, 150 validation, and 300
+held-out tasks. Model-controller work remains disabled until this protocol and
+benchmark layer is independently reproducible.
 
 ---
 

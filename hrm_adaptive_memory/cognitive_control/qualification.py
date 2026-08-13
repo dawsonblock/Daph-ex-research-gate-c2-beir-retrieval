@@ -33,6 +33,8 @@ COMPONENT_PATHS = {
     "i3_qualification_runtime": "hrm_adaptive_memory/cognitive_control/metareasoning_qualification.py",
     "i3_1_qualification_runtime": "hrm_adaptive_memory/cognitive_control/i3_1_qualification.py",
     "i3_2_qualification_runtime": "hrm_adaptive_memory/cognitive_control/i3_2_qualification.py",
+    "i3_2_2_qualification_runtime": "hrm_adaptive_memory/cognitive_control/i3_2_2_qualification.py",
+    "i3_3_qualification_runtime": "hrm_adaptive_memory/cognitive_control/i3_3_qualification.py",
     "authority_runtime": "hrm_adaptive_memory/external_verification/authority_registry.py",
     "authority_extractors": "hrm_adaptive_memory/external_verification/authority_extractors.py",
     "typed_comparator_registry": "hrm_adaptive_memory/external_verification/comparators",
@@ -75,6 +77,13 @@ COMPONENT_PATHS = {
     "v2b_i3_2_runtime": "hrm_adaptive_memory/executive/metareasoning_i3_2.py",
     "v2b_i3_2_baseline": "configs/v2b_i3_2_baseline.json",
     "v2b_i3_2_1_baseline": "configs/v2b_i3_2_1_baseline.json",
+    "v2b_i3_2_2_baseline": "configs/v2b_i3_2_2_baseline.json",
+    "v2b_i3_2_2_protocol": "configs/v2b_i3_2_2_protocol_v1.json",
+    "v2b_i3_2_2_artifact_resolver": "hrm_adaptive_memory/executive/metareasoning_artifacts.py",
+    "v2b_i3_3_manifest": "experiments/v2b_i3_3/manifests/v2b_i3_3_benchmark_manifest_v1.json",
+    "v2b_i3_3_baseline": "configs/v2b_i3_3_baseline.json",
+    "v2b_i3_3_configuration": "experiments/v2b_i3_3/configs/v2b_i3_3_benchmark_freeze_v1.json",
+    "v2b_i3_3_qualification_runtime": "hrm_adaptive_memory/cognitive_control/i3_3_qualification.py",
     "v2b_i3_2_private_extension": "experiments/v2b_i3_2/tasks/v2b_i3_2_information_state_extension_v1.json",
     "v2b_i3_2_manifest": "experiments/v2b_i3_2/benchmark/v2b_i3_2_benchmark_manifest_v1.json",
     "v2b_i3_2_controller_packets": "experiments/v2b_i3_2/benchmark/controller_packets/v2b_i3_2_controller_packets_extension_v1.json",
@@ -92,6 +101,8 @@ TEST_CORPUS_PATHS = (
     "tests/unit/test_v2b_i3_metareasoning.py",
     "tests/unit/test_v2b_i3_1_oracle_efficiency.py",
     "tests/unit/test_v2b_i3_2_sequential_information.py",
+    "tests/unit/test_v2b_i3_2_2_protocol.py",
+    "tests/unit/test_v2b_i3_3_benchmark.py",
 )
 QUALIFICATION_LOCK = "configs/v2b_qualification_requirements.lock"
 CRITICAL_DISTRIBUTIONS = (

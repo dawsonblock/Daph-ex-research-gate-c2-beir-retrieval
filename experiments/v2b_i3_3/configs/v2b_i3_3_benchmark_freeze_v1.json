@@ -1,0 +1,35 @@
+{
+  "schema": "DAPH_V2B_I3_3_BENCHMARK_FREEZE_CONFIGURATION_V1",
+  "status": "FROZEN_BENCHMARK_NOT_A_SCIENTIFIC_RESULT",
+  "benchmark_manifest_path": "experiments/v2b_i3_3/manifests/v2b_i3_3_benchmark_manifest_v1.json",
+  "protocol_path": "configs/v2b_i3_2_2_protocol_v1.json",
+  "policy_path": "configs/v2b_i3_policy_v1.json",
+  "observation_masks_path": "configs/v2b_i3_observation_masks_v1.json",
+  "utility_path": "configs/v2b_i3_1_utility_v1.json",
+  "generator_path": "experiments/v2b_i3_3/generators/generate_v2b_i3_3.py",
+  "oracle_cache_manifest_path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_oracle_cache_manifest_v1.json",
+  "aggregate_priors": ["TASK_UNIFORM", "CLASS_UNIFORM"],
+  "primary_prior": "TASK_UNIFORM",
+  "oracle_limits": {
+    "max_latent_states_per_task": 20000,
+    "max_latent_transitions_per_task": 120000,
+    "max_information_states_per_condition": 500000,
+    "max_information_transitions_per_condition": 3000000,
+    "max_members_per_belief": 32
+  },
+  "split_counts": {
+    "development": 300,
+    "validation": 150,
+    "held_out": 300
+  },
+  "required_conditions": [
+    "STATE_BLIND_CONTROLLER",
+    "STATE_AWARE_CONTROLLER",
+    "NO_VERIFICATION",
+    "NO_TEMPORAL",
+    "NO_PROVENANCE",
+    "NO_CONFLICT",
+    "NO_HISTORY"
+  ],
+  "claim_boundary": "Frozen deterministic benchmark infrastructure only; no model-controller or V2B scientific verdict."
+}

@@ -1,0 +1,3756 @@
+{
+  "packets": [
+    {
+      "instance_id": "opaque-dev-0000",
+      "task_id": "i3_3_development_0000",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0000",
+      "task_id": "i3_3_development_0001",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0001",
+      "task_id": "i3_3_development_0002",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0001",
+      "task_id": "i3_3_development_0003",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0002",
+      "task_id": "i3_3_development_0004",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0002",
+      "task_id": "i3_3_development_0005",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0003",
+      "task_id": "i3_3_development_0006",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0003",
+      "task_id": "i3_3_development_0007",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0004",
+      "task_id": "i3_3_development_0008",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0004",
+      "task_id": "i3_3_development_0009",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0005",
+      "task_id": "i3_3_development_0010",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0005",
+      "task_id": "i3_3_development_0011",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0006",
+      "task_id": "i3_3_development_0012",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0006",
+      "task_id": "i3_3_development_0013",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0007",
+      "task_id": "i3_3_development_0014",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0007",
+      "task_id": "i3_3_development_0015",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0008",
+      "task_id": "i3_3_development_0016",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0008",
+      "task_id": "i3_3_development_0017",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0009",
+      "task_id": "i3_3_development_0018",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0009",
+      "task_id": "i3_3_development_0019",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0010",
+      "task_id": "i3_3_development_0020",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0010",
+      "task_id": "i3_3_development_0021",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0011",
+      "task_id": "i3_3_development_0022",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0011",
+      "task_id": "i3_3_development_0023",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0012",
+      "task_id": "i3_3_development_0024",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0012",
+      "task_id": "i3_3_development_0025",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0013",
+      "task_id": "i3_3_development_0026",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0013",
+      "task_id": "i3_3_development_0027",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0014",
+      "task_id": "i3_3_development_0028",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0014",
+      "task_id": "i3_3_development_0029",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0015",
+      "task_id": "i3_3_development_0030",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0015",
+      "task_id": "i3_3_development_0031",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0016",
+      "task_id": "i3_3_development_0032",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0016",
+      "task_id": "i3_3_development_0033",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0017",
+      "task_id": "i3_3_development_0034",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0017",
+      "task_id": "i3_3_development_0035",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0018",
+      "task_id": "i3_3_development_0036",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0018",
+      "task_id": "i3_3_development_0037",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0019",
+      "task_id": "i3_3_development_0038",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0019",
+      "task_id": "i3_3_development_0039",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0020",
+      "task_id": "i3_3_development_0040",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0020",
+      "task_id": "i3_3_development_0041",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0021",
+      "task_id": "i3_3_development_0042",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0021",
+      "task_id": "i3_3_development_0043",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0022",
+      "task_id": "i3_3_development_0044",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0022",
+      "task_id": "i3_3_development_0045",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0023",
+      "task_id": "i3_3_development_0046",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0023",
+      "task_id": "i3_3_development_0047",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0024",
+      "task_id": "i3_3_development_0048",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0024",
+      "task_id": "i3_3_development_0049",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0025",
+      "task_id": "i3_3_development_0050",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0025",
+      "task_id": "i3_3_development_0051",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0026",
+      "task_id": "i3_3_development_0052",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0026",
+      "task_id": "i3_3_development_0053",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0027",
+      "task_id": "i3_3_development_0054",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0027",
+      "task_id": "i3_3_development_0055",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0028",
+      "task_id": "i3_3_development_0056",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0028",
+      "task_id": "i3_3_development_0057",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0029",
+      "task_id": "i3_3_development_0058",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0029",
+      "task_id": "i3_3_development_0059",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0030",
+      "task_id": "i3_3_development_0060",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0030",
+      "task_id": "i3_3_development_0061",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0031",
+      "task_id": "i3_3_development_0062",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0031",
+      "task_id": "i3_3_development_0063",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0032",
+      "task_id": "i3_3_development_0064",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0032",
+      "task_id": "i3_3_development_0065",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0033",
+      "task_id": "i3_3_development_0066",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0033",
+      "task_id": "i3_3_development_0067",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0034",
+      "task_id": "i3_3_development_0068",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0034",
+      "task_id": "i3_3_development_0069",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0035",
+      "task_id": "i3_3_development_0070",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0035",
+      "task_id": "i3_3_development_0071",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0036",
+      "task_id": "i3_3_development_0072",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0036",
+      "task_id": "i3_3_development_0073",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0037",
+      "task_id": "i3_3_development_0074",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0037",
+      "task_id": "i3_3_development_0075",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0038",
+      "task_id": "i3_3_development_0076",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0038",
+      "task_id": "i3_3_development_0077",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0039",
+      "task_id": "i3_3_development_0078",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0039",
+      "task_id": "i3_3_development_0079",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0040",
+      "task_id": "i3_3_development_0080",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0040",
+      "task_id": "i3_3_development_0081",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0041",
+      "task_id": "i3_3_development_0082",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0041",
+      "task_id": "i3_3_development_0083",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0042",
+      "task_id": "i3_3_development_0084",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0042",
+      "task_id": "i3_3_development_0085",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0043",
+      "task_id": "i3_3_development_0086",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0043",
+      "task_id": "i3_3_development_0087",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0044",
+      "task_id": "i3_3_development_0088",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0044",
+      "task_id": "i3_3_development_0089",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0045",
+      "task_id": "i3_3_development_0090",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0045",
+      "task_id": "i3_3_development_0091",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0046",
+      "task_id": "i3_3_development_0092",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0046",
+      "task_id": "i3_3_development_0093",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0047",
+      "task_id": "i3_3_development_0094",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0047",
+      "task_id": "i3_3_development_0095",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0048",
+      "task_id": "i3_3_development_0096",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0048",
+      "task_id": "i3_3_development_0097",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0049",
+      "task_id": "i3_3_development_0098",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0049",
+      "task_id": "i3_3_development_0099",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0050",
+      "task_id": "i3_3_development_0100",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0050",
+      "task_id": "i3_3_development_0101",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0051",
+      "task_id": "i3_3_development_0102",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0051",
+      "task_id": "i3_3_development_0103",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0052",
+      "task_id": "i3_3_development_0104",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0052",
+      "task_id": "i3_3_development_0105",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0053",
+      "task_id": "i3_3_development_0106",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0053",
+      "task_id": "i3_3_development_0107",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0054",
+      "task_id": "i3_3_development_0108",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0054",
+      "task_id": "i3_3_development_0109",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0055",
+      "task_id": "i3_3_development_0110",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0055",
+      "task_id": "i3_3_development_0111",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0056",
+      "task_id": "i3_3_development_0112",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0056",
+      "task_id": "i3_3_development_0113",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0057",
+      "task_id": "i3_3_development_0114",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0057",
+      "task_id": "i3_3_development_0115",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0058",
+      "task_id": "i3_3_development_0116",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0058",
+      "task_id": "i3_3_development_0117",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0059",
+      "task_id": "i3_3_development_0118",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0059",
+      "task_id": "i3_3_development_0119",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0060",
+      "task_id": "i3_3_development_0120",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0060",
+      "task_id": "i3_3_development_0121",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0061",
+      "task_id": "i3_3_development_0122",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0061",
+      "task_id": "i3_3_development_0123",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0062",
+      "task_id": "i3_3_development_0124",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0062",
+      "task_id": "i3_3_development_0125",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0063",
+      "task_id": "i3_3_development_0126",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0063",
+      "task_id": "i3_3_development_0127",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0064",
+      "task_id": "i3_3_development_0128",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0064",
+      "task_id": "i3_3_development_0129",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0065",
+      "task_id": "i3_3_development_0130",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0065",
+      "task_id": "i3_3_development_0131",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0066",
+      "task_id": "i3_3_development_0132",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0066",
+      "task_id": "i3_3_development_0133",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0067",
+      "task_id": "i3_3_development_0134",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0067",
+      "task_id": "i3_3_development_0135",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0068",
+      "task_id": "i3_3_development_0136",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0068",
+      "task_id": "i3_3_development_0137",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0069",
+      "task_id": "i3_3_development_0138",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0069",
+      "task_id": "i3_3_development_0139",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0070",
+      "task_id": "i3_3_development_0140",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0070",
+      "task_id": "i3_3_development_0141",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0071",
+      "task_id": "i3_3_development_0142",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0071",
+      "task_id": "i3_3_development_0143",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0072",
+      "task_id": "i3_3_development_0144",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0072",
+      "task_id": "i3_3_development_0145",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0073",
+      "task_id": "i3_3_development_0146",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0073",
+      "task_id": "i3_3_development_0147",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0074",
+      "task_id": "i3_3_development_0148",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0074",
+      "task_id": "i3_3_development_0149",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0075",
+      "task_id": "i3_3_development_0150",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0075",
+      "task_id": "i3_3_development_0151",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0076",
+      "task_id": "i3_3_development_0152",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0076",
+      "task_id": "i3_3_development_0153",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0077",
+      "task_id": "i3_3_development_0154",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0077",
+      "task_id": "i3_3_development_0155",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0078",
+      "task_id": "i3_3_development_0156",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0078",
+      "task_id": "i3_3_development_0157",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0079",
+      "task_id": "i3_3_development_0158",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0079",
+      "task_id": "i3_3_development_0159",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0080",
+      "task_id": "i3_3_development_0160",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0080",
+      "task_id": "i3_3_development_0161",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0081",
+      "task_id": "i3_3_development_0162",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0081",
+      "task_id": "i3_3_development_0163",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0082",
+      "task_id": "i3_3_development_0164",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0082",
+      "task_id": "i3_3_development_0165",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0083",
+      "task_id": "i3_3_development_0166",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0083",
+      "task_id": "i3_3_development_0167",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0084",
+      "task_id": "i3_3_development_0168",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0084",
+      "task_id": "i3_3_development_0169",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0085",
+      "task_id": "i3_3_development_0170",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0085",
+      "task_id": "i3_3_development_0171",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0086",
+      "task_id": "i3_3_development_0172",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0086",
+      "task_id": "i3_3_development_0173",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0087",
+      "task_id": "i3_3_development_0174",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0087",
+      "task_id": "i3_3_development_0175",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0088",
+      "task_id": "i3_3_development_0176",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0088",
+      "task_id": "i3_3_development_0177",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0089",
+      "task_id": "i3_3_development_0178",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0089",
+      "task_id": "i3_3_development_0179",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0090",
+      "task_id": "i3_3_development_0180",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0090",
+      "task_id": "i3_3_development_0181",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0091",
+      "task_id": "i3_3_development_0182",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0091",
+      "task_id": "i3_3_development_0183",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0092",
+      "task_id": "i3_3_development_0184",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0092",
+      "task_id": "i3_3_development_0185",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0093",
+      "task_id": "i3_3_development_0186",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0093",
+      "task_id": "i3_3_development_0187",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0094",
+      "task_id": "i3_3_development_0188",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0094",
+      "task_id": "i3_3_development_0189",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0095",
+      "task_id": "i3_3_development_0190",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0095",
+      "task_id": "i3_3_development_0191",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0096",
+      "task_id": "i3_3_development_0192",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0096",
+      "task_id": "i3_3_development_0193",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0097",
+      "task_id": "i3_3_development_0194",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0097",
+      "task_id": "i3_3_development_0195",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0098",
+      "task_id": "i3_3_development_0196",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0098",
+      "task_id": "i3_3_development_0197",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0099",
+      "task_id": "i3_3_development_0198",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0099",
+      "task_id": "i3_3_development_0199",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0100",
+      "task_id": "i3_3_development_0200",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0100",
+      "task_id": "i3_3_development_0201",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0101",
+      "task_id": "i3_3_development_0202",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0101",
+      "task_id": "i3_3_development_0203",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0102",
+      "task_id": "i3_3_development_0204",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0102",
+      "task_id": "i3_3_development_0205",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0103",
+      "task_id": "i3_3_development_0206",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0103",
+      "task_id": "i3_3_development_0207",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0104",
+      "task_id": "i3_3_development_0208",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0104",
+      "task_id": "i3_3_development_0209",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0105",
+      "task_id": "i3_3_development_0210",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0105",
+      "task_id": "i3_3_development_0211",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0106",
+      "task_id": "i3_3_development_0212",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0106",
+      "task_id": "i3_3_development_0213",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0107",
+      "task_id": "i3_3_development_0214",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0107",
+      "task_id": "i3_3_development_0215",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0108",
+      "task_id": "i3_3_development_0216",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0108",
+      "task_id": "i3_3_development_0217",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0109",
+      "task_id": "i3_3_development_0218",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0109",
+      "task_id": "i3_3_development_0219",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0110",
+      "task_id": "i3_3_development_0220",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0110",
+      "task_id": "i3_3_development_0221",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0111",
+      "task_id": "i3_3_development_0222",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0111",
+      "task_id": "i3_3_development_0223",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0112",
+      "task_id": "i3_3_development_0224",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0112",
+      "task_id": "i3_3_development_0225",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0113",
+      "task_id": "i3_3_development_0226",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0113",
+      "task_id": "i3_3_development_0227",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0114",
+      "task_id": "i3_3_development_0228",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0114",
+      "task_id": "i3_3_development_0229",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0115",
+      "task_id": "i3_3_development_0230",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0115",
+      "task_id": "i3_3_development_0231",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0116",
+      "task_id": "i3_3_development_0232",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0116",
+      "task_id": "i3_3_development_0233",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0117",
+      "task_id": "i3_3_development_0234",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0117",
+      "task_id": "i3_3_development_0235",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0118",
+      "task_id": "i3_3_development_0236",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0118",
+      "task_id": "i3_3_development_0237",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0119",
+      "task_id": "i3_3_development_0238",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0119",
+      "task_id": "i3_3_development_0239",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0120",
+      "task_id": "i3_3_development_0240",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0120",
+      "task_id": "i3_3_development_0241",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0121",
+      "task_id": "i3_3_development_0242",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0121",
+      "task_id": "i3_3_development_0243",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0122",
+      "task_id": "i3_3_development_0244",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0122",
+      "task_id": "i3_3_development_0245",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0123",
+      "task_id": "i3_3_development_0246",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0123",
+      "task_id": "i3_3_development_0247",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0124",
+      "task_id": "i3_3_development_0248",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0124",
+      "task_id": "i3_3_development_0249",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0125",
+      "task_id": "i3_3_development_0250",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0125",
+      "task_id": "i3_3_development_0251",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0126",
+      "task_id": "i3_3_development_0252",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0126",
+      "task_id": "i3_3_development_0253",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0127",
+      "task_id": "i3_3_development_0254",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0127",
+      "task_id": "i3_3_development_0255",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0128",
+      "task_id": "i3_3_development_0256",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0128",
+      "task_id": "i3_3_development_0257",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0129",
+      "task_id": "i3_3_development_0258",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0129",
+      "task_id": "i3_3_development_0259",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0130",
+      "task_id": "i3_3_development_0260",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0130",
+      "task_id": "i3_3_development_0261",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0131",
+      "task_id": "i3_3_development_0262",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0131",
+      "task_id": "i3_3_development_0263",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0132",
+      "task_id": "i3_3_development_0264",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0132",
+      "task_id": "i3_3_development_0265",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0133",
+      "task_id": "i3_3_development_0266",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0133",
+      "task_id": "i3_3_development_0267",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0134",
+      "task_id": "i3_3_development_0268",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0134",
+      "task_id": "i3_3_development_0269",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0135",
+      "task_id": "i3_3_development_0270",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0135",
+      "task_id": "i3_3_development_0271",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0136",
+      "task_id": "i3_3_development_0272",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0136",
+      "task_id": "i3_3_development_0273",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-dev-0137",
+      "task_id": "i3_3_development_0274",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0137",
+      "task_id": "i3_3_development_0275",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0138",
+      "task_id": "i3_3_development_0276",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0138",
+      "task_id": "i3_3_development_0277",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0139",
+      "task_id": "i3_3_development_0278",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0139",
+      "task_id": "i3_3_development_0279",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0140",
+      "task_id": "i3_3_development_0280",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0140",
+      "task_id": "i3_3_development_0281",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0141",
+      "task_id": "i3_3_development_0282",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0141",
+      "task_id": "i3_3_development_0283",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0142",
+      "task_id": "i3_3_development_0284",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0142",
+      "task_id": "i3_3_development_0285",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0143",
+      "task_id": "i3_3_development_0286",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0143",
+      "task_id": "i3_3_development_0287",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0144",
+      "task_id": "i3_3_development_0288",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0144",
+      "task_id": "i3_3_development_0289",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0145",
+      "task_id": "i3_3_development_0290",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0145",
+      "task_id": "i3_3_development_0291",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0146",
+      "task_id": "i3_3_development_0292",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0146",
+      "task_id": "i3_3_development_0293",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-dev-0147",
+      "task_id": "i3_3_development_0294",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0147",
+      "task_id": "i3_3_development_0295",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-dev-0148",
+      "task_id": "i3_3_development_0296",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0148",
+      "task_id": "i3_3_development_0297",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-dev-0149",
+      "task_id": "i3_3_development_0298",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-dev-0149",
+      "task_id": "i3_3_development_0299",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0000",
+      "task_id": "i3_3_validation_0000",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0000",
+      "task_id": "i3_3_validation_0001",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0001",
+      "task_id": "i3_3_validation_0002",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0001",
+      "task_id": "i3_3_validation_0003",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0002",
+      "task_id": "i3_3_validation_0004",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0002",
+      "task_id": "i3_3_validation_0005",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0003",
+      "task_id": "i3_3_validation_0006",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0003",
+      "task_id": "i3_3_validation_0007",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0004",
+      "task_id": "i3_3_validation_0008",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0004",
+      "task_id": "i3_3_validation_0009",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0005",
+      "task_id": "i3_3_validation_0010",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0005",
+      "task_id": "i3_3_validation_0011",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0006",
+      "task_id": "i3_3_validation_0012",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0006",
+      "task_id": "i3_3_validation_0013",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0007",
+      "task_id": "i3_3_validation_0014",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0007",
+      "task_id": "i3_3_validation_0015",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0008",
+      "task_id": "i3_3_validation_0016",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0008",
+      "task_id": "i3_3_validation_0017",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0009",
+      "task_id": "i3_3_validation_0018",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0009",
+      "task_id": "i3_3_validation_0019",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0010",
+      "task_id": "i3_3_validation_0020",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0010",
+      "task_id": "i3_3_validation_0021",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0011",
+      "task_id": "i3_3_validation_0022",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0011",
+      "task_id": "i3_3_validation_0023",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0012",
+      "task_id": "i3_3_validation_0024",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0012",
+      "task_id": "i3_3_validation_0025",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0013",
+      "task_id": "i3_3_validation_0026",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0013",
+      "task_id": "i3_3_validation_0027",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0014",
+      "task_id": "i3_3_validation_0028",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0014",
+      "task_id": "i3_3_validation_0029",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0015",
+      "task_id": "i3_3_validation_0030",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0015",
+      "task_id": "i3_3_validation_0031",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0016",
+      "task_id": "i3_3_validation_0032",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0016",
+      "task_id": "i3_3_validation_0033",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0017",
+      "task_id": "i3_3_validation_0034",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0017",
+      "task_id": "i3_3_validation_0035",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0018",
+      "task_id": "i3_3_validation_0036",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0018",
+      "task_id": "i3_3_validation_0037",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0019",
+      "task_id": "i3_3_validation_0038",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0019",
+      "task_id": "i3_3_validation_0039",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0020",
+      "task_id": "i3_3_validation_0040",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0020",
+      "task_id": "i3_3_validation_0041",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0021",
+      "task_id": "i3_3_validation_0042",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0021",
+      "task_id": "i3_3_validation_0043",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0022",
+      "task_id": "i3_3_validation_0044",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0022",
+      "task_id": "i3_3_validation_0045",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0023",
+      "task_id": "i3_3_validation_0046",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0023",
+      "task_id": "i3_3_validation_0047",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0024",
+      "task_id": "i3_3_validation_0048",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0024",
+      "task_id": "i3_3_validation_0049",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0025",
+      "task_id": "i3_3_validation_0050",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0025",
+      "task_id": "i3_3_validation_0051",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0026",
+      "task_id": "i3_3_validation_0052",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0026",
+      "task_id": "i3_3_validation_0053",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0027",
+      "task_id": "i3_3_validation_0054",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0027",
+      "task_id": "i3_3_validation_0055",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0028",
+      "task_id": "i3_3_validation_0056",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0028",
+      "task_id": "i3_3_validation_0057",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0029",
+      "task_id": "i3_3_validation_0058",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0029",
+      "task_id": "i3_3_validation_0059",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0030",
+      "task_id": "i3_3_validation_0060",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0030",
+      "task_id": "i3_3_validation_0061",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0031",
+      "task_id": "i3_3_validation_0062",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0031",
+      "task_id": "i3_3_validation_0063",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0032",
+      "task_id": "i3_3_validation_0064",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0032",
+      "task_id": "i3_3_validation_0065",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0033",
+      "task_id": "i3_3_validation_0066",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0033",
+      "task_id": "i3_3_validation_0067",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0034",
+      "task_id": "i3_3_validation_0068",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0034",
+      "task_id": "i3_3_validation_0069",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0035",
+      "task_id": "i3_3_validation_0070",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0035",
+      "task_id": "i3_3_validation_0071",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0036",
+      "task_id": "i3_3_validation_0072",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0036",
+      "task_id": "i3_3_validation_0073",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0037",
+      "task_id": "i3_3_validation_0074",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0037",
+      "task_id": "i3_3_validation_0075",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0038",
+      "task_id": "i3_3_validation_0076",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0038",
+      "task_id": "i3_3_validation_0077",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0039",
+      "task_id": "i3_3_validation_0078",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0039",
+      "task_id": "i3_3_validation_0079",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0040",
+      "task_id": "i3_3_validation_0080",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0040",
+      "task_id": "i3_3_validation_0081",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0041",
+      "task_id": "i3_3_validation_0082",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0041",
+      "task_id": "i3_3_validation_0083",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0042",
+      "task_id": "i3_3_validation_0084",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0042",
+      "task_id": "i3_3_validation_0085",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0043",
+      "task_id": "i3_3_validation_0086",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0043",
+      "task_id": "i3_3_validation_0087",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0044",
+      "task_id": "i3_3_validation_0088",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0044",
+      "task_id": "i3_3_validation_0089",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0045",
+      "task_id": "i3_3_validation_0090",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0045",
+      "task_id": "i3_3_validation_0091",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0046",
+      "task_id": "i3_3_validation_0092",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0046",
+      "task_id": "i3_3_validation_0093",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0047",
+      "task_id": "i3_3_validation_0094",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0047",
+      "task_id": "i3_3_validation_0095",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0048",
+      "task_id": "i3_3_validation_0096",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0048",
+      "task_id": "i3_3_validation_0097",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0049",
+      "task_id": "i3_3_validation_0098",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0049",
+      "task_id": "i3_3_validation_0099",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0050",
+      "task_id": "i3_3_validation_0100",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0050",
+      "task_id": "i3_3_validation_0101",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0051",
+      "task_id": "i3_3_validation_0102",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0051",
+      "task_id": "i3_3_validation_0103",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0052",
+      "task_id": "i3_3_validation_0104",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0052",
+      "task_id": "i3_3_validation_0105",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0053",
+      "task_id": "i3_3_validation_0106",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0053",
+      "task_id": "i3_3_validation_0107",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0054",
+      "task_id": "i3_3_validation_0108",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0054",
+      "task_id": "i3_3_validation_0109",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0055",
+      "task_id": "i3_3_validation_0110",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0055",
+      "task_id": "i3_3_validation_0111",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0056",
+      "task_id": "i3_3_validation_0112",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0056",
+      "task_id": "i3_3_validation_0113",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0057",
+      "task_id": "i3_3_validation_0114",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0057",
+      "task_id": "i3_3_validation_0115",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0058",
+      "task_id": "i3_3_validation_0116",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0058",
+      "task_id": "i3_3_validation_0117",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0059",
+      "task_id": "i3_3_validation_0118",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0059",
+      "task_id": "i3_3_validation_0119",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0060",
+      "task_id": "i3_3_validation_0120",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0060",
+      "task_id": "i3_3_validation_0121",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0061",
+      "task_id": "i3_3_validation_0122",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0061",
+      "task_id": "i3_3_validation_0123",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0062",
+      "task_id": "i3_3_validation_0124",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0062",
+      "task_id": "i3_3_validation_0125",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0063",
+      "task_id": "i3_3_validation_0126",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0063",
+      "task_id": "i3_3_validation_0127",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0064",
+      "task_id": "i3_3_validation_0128",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0064",
+      "task_id": "i3_3_validation_0129",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0065",
+      "task_id": "i3_3_validation_0130",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0065",
+      "task_id": "i3_3_validation_0131",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0066",
+      "task_id": "i3_3_validation_0132",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0066",
+      "task_id": "i3_3_validation_0133",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0067",
+      "task_id": "i3_3_validation_0134",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0067",
+      "task_id": "i3_3_validation_0135",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0068",
+      "task_id": "i3_3_validation_0136",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0068",
+      "task_id": "i3_3_validation_0137",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0069",
+      "task_id": "i3_3_validation_0138",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0069",
+      "task_id": "i3_3_validation_0139",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-val-0070",
+      "task_id": "i3_3_validation_0140",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0070",
+      "task_id": "i3_3_validation_0141",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0071",
+      "task_id": "i3_3_validation_0142",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0071",
+      "task_id": "i3_3_validation_0143",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-val-0072",
+      "task_id": "i3_3_validation_0144",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0072",
+      "task_id": "i3_3_validation_0145",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-val-0073",
+      "task_id": "i3_3_validation_0146",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0073",
+      "task_id": "i3_3_validation_0147",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-val-0074",
+      "task_id": "i3_3_validation_0148",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-val-0074",
+      "task_id": "i3_3_validation_0149",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0000",
+      "task_id": "i3_3_held_out_0000",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0000",
+      "task_id": "i3_3_held_out_0001",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0001",
+      "task_id": "i3_3_held_out_0002",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0001",
+      "task_id": "i3_3_held_out_0003",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0002",
+      "task_id": "i3_3_held_out_0004",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0002",
+      "task_id": "i3_3_held_out_0005",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0003",
+      "task_id": "i3_3_held_out_0006",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0003",
+      "task_id": "i3_3_held_out_0007",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0004",
+      "task_id": "i3_3_held_out_0008",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0004",
+      "task_id": "i3_3_held_out_0009",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0005",
+      "task_id": "i3_3_held_out_0010",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0005",
+      "task_id": "i3_3_held_out_0011",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0006",
+      "task_id": "i3_3_held_out_0012",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0006",
+      "task_id": "i3_3_held_out_0013",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0007",
+      "task_id": "i3_3_held_out_0014",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0007",
+      "task_id": "i3_3_held_out_0015",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0008",
+      "task_id": "i3_3_held_out_0016",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0008",
+      "task_id": "i3_3_held_out_0017",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0009",
+      "task_id": "i3_3_held_out_0018",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0009",
+      "task_id": "i3_3_held_out_0019",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0010",
+      "task_id": "i3_3_held_out_0020",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0010",
+      "task_id": "i3_3_held_out_0021",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0011",
+      "task_id": "i3_3_held_out_0022",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0011",
+      "task_id": "i3_3_held_out_0023",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0012",
+      "task_id": "i3_3_held_out_0024",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0012",
+      "task_id": "i3_3_held_out_0025",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0013",
+      "task_id": "i3_3_held_out_0026",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0013",
+      "task_id": "i3_3_held_out_0027",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0014",
+      "task_id": "i3_3_held_out_0028",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0014",
+      "task_id": "i3_3_held_out_0029",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0015",
+      "task_id": "i3_3_held_out_0030",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0015",
+      "task_id": "i3_3_held_out_0031",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0016",
+      "task_id": "i3_3_held_out_0032",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0016",
+      "task_id": "i3_3_held_out_0033",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0017",
+      "task_id": "i3_3_held_out_0034",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0017",
+      "task_id": "i3_3_held_out_0035",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0018",
+      "task_id": "i3_3_held_out_0036",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0018",
+      "task_id": "i3_3_held_out_0037",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0019",
+      "task_id": "i3_3_held_out_0038",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0019",
+      "task_id": "i3_3_held_out_0039",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0020",
+      "task_id": "i3_3_held_out_0040",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0020",
+      "task_id": "i3_3_held_out_0041",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0021",
+      "task_id": "i3_3_held_out_0042",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0021",
+      "task_id": "i3_3_held_out_0043",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0022",
+      "task_id": "i3_3_held_out_0044",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0022",
+      "task_id": "i3_3_held_out_0045",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0023",
+      "task_id": "i3_3_held_out_0046",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0023",
+      "task_id": "i3_3_held_out_0047",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0024",
+      "task_id": "i3_3_held_out_0048",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0024",
+      "task_id": "i3_3_held_out_0049",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0025",
+      "task_id": "i3_3_held_out_0050",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0025",
+      "task_id": "i3_3_held_out_0051",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0026",
+      "task_id": "i3_3_held_out_0052",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0026",
+      "task_id": "i3_3_held_out_0053",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0027",
+      "task_id": "i3_3_held_out_0054",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0027",
+      "task_id": "i3_3_held_out_0055",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0028",
+      "task_id": "i3_3_held_out_0056",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0028",
+      "task_id": "i3_3_held_out_0057",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0029",
+      "task_id": "i3_3_held_out_0058",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0029",
+      "task_id": "i3_3_held_out_0059",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0030",
+      "task_id": "i3_3_held_out_0060",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0030",
+      "task_id": "i3_3_held_out_0061",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0031",
+      "task_id": "i3_3_held_out_0062",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0031",
+      "task_id": "i3_3_held_out_0063",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0032",
+      "task_id": "i3_3_held_out_0064",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0032",
+      "task_id": "i3_3_held_out_0065",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0033",
+      "task_id": "i3_3_held_out_0066",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0033",
+      "task_id": "i3_3_held_out_0067",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0034",
+      "task_id": "i3_3_held_out_0068",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0034",
+      "task_id": "i3_3_held_out_0069",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0035",
+      "task_id": "i3_3_held_out_0070",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0035",
+      "task_id": "i3_3_held_out_0071",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0036",
+      "task_id": "i3_3_held_out_0072",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0036",
+      "task_id": "i3_3_held_out_0073",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0037",
+      "task_id": "i3_3_held_out_0074",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0037",
+      "task_id": "i3_3_held_out_0075",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0038",
+      "task_id": "i3_3_held_out_0076",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0038",
+      "task_id": "i3_3_held_out_0077",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0039",
+      "task_id": "i3_3_held_out_0078",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0039",
+      "task_id": "i3_3_held_out_0079",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0040",
+      "task_id": "i3_3_held_out_0080",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0040",
+      "task_id": "i3_3_held_out_0081",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0041",
+      "task_id": "i3_3_held_out_0082",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0041",
+      "task_id": "i3_3_held_out_0083",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0042",
+      "task_id": "i3_3_held_out_0084",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0042",
+      "task_id": "i3_3_held_out_0085",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0043",
+      "task_id": "i3_3_held_out_0086",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0043",
+      "task_id": "i3_3_held_out_0087",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0044",
+      "task_id": "i3_3_held_out_0088",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0044",
+      "task_id": "i3_3_held_out_0089",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0045",
+      "task_id": "i3_3_held_out_0090",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0045",
+      "task_id": "i3_3_held_out_0091",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0046",
+      "task_id": "i3_3_held_out_0092",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0046",
+      "task_id": "i3_3_held_out_0093",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0047",
+      "task_id": "i3_3_held_out_0094",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0047",
+      "task_id": "i3_3_held_out_0095",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0048",
+      "task_id": "i3_3_held_out_0096",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0048",
+      "task_id": "i3_3_held_out_0097",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0049",
+      "task_id": "i3_3_held_out_0098",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0049",
+      "task_id": "i3_3_held_out_0099",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0050",
+      "task_id": "i3_3_held_out_0100",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0050",
+      "task_id": "i3_3_held_out_0101",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0051",
+      "task_id": "i3_3_held_out_0102",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0051",
+      "task_id": "i3_3_held_out_0103",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0052",
+      "task_id": "i3_3_held_out_0104",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0052",
+      "task_id": "i3_3_held_out_0105",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0053",
+      "task_id": "i3_3_held_out_0106",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0053",
+      "task_id": "i3_3_held_out_0107",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0054",
+      "task_id": "i3_3_held_out_0108",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0054",
+      "task_id": "i3_3_held_out_0109",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0055",
+      "task_id": "i3_3_held_out_0110",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0055",
+      "task_id": "i3_3_held_out_0111",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0056",
+      "task_id": "i3_3_held_out_0112",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0056",
+      "task_id": "i3_3_held_out_0113",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0057",
+      "task_id": "i3_3_held_out_0114",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0057",
+      "task_id": "i3_3_held_out_0115",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0058",
+      "task_id": "i3_3_held_out_0116",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0058",
+      "task_id": "i3_3_held_out_0117",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0059",
+      "task_id": "i3_3_held_out_0118",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0059",
+      "task_id": "i3_3_held_out_0119",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0060",
+      "task_id": "i3_3_held_out_0120",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0060",
+      "task_id": "i3_3_held_out_0121",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0061",
+      "task_id": "i3_3_held_out_0122",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0061",
+      "task_id": "i3_3_held_out_0123",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0062",
+      "task_id": "i3_3_held_out_0124",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0062",
+      "task_id": "i3_3_held_out_0125",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0063",
+      "task_id": "i3_3_held_out_0126",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0063",
+      "task_id": "i3_3_held_out_0127",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0064",
+      "task_id": "i3_3_held_out_0128",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0064",
+      "task_id": "i3_3_held_out_0129",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0065",
+      "task_id": "i3_3_held_out_0130",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0065",
+      "task_id": "i3_3_held_out_0131",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0066",
+      "task_id": "i3_3_held_out_0132",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0066",
+      "task_id": "i3_3_held_out_0133",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0067",
+      "task_id": "i3_3_held_out_0134",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0067",
+      "task_id": "i3_3_held_out_0135",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0068",
+      "task_id": "i3_3_held_out_0136",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0068",
+      "task_id": "i3_3_held_out_0137",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0069",
+      "task_id": "i3_3_held_out_0138",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0069",
+      "task_id": "i3_3_held_out_0139",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0070",
+      "task_id": "i3_3_held_out_0140",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0070",
+      "task_id": "i3_3_held_out_0141",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0071",
+      "task_id": "i3_3_held_out_0142",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0071",
+      "task_id": "i3_3_held_out_0143",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0072",
+      "task_id": "i3_3_held_out_0144",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0072",
+      "task_id": "i3_3_held_out_0145",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0073",
+      "task_id": "i3_3_held_out_0146",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0073",
+      "task_id": "i3_3_held_out_0147",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0074",
+      "task_id": "i3_3_held_out_0148",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0074",
+      "task_id": "i3_3_held_out_0149",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0075",
+      "task_id": "i3_3_held_out_0150",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0075",
+      "task_id": "i3_3_held_out_0151",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0076",
+      "task_id": "i3_3_held_out_0152",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0076",
+      "task_id": "i3_3_held_out_0153",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0077",
+      "task_id": "i3_3_held_out_0154",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0077",
+      "task_id": "i3_3_held_out_0155",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0078",
+      "task_id": "i3_3_held_out_0156",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0078",
+      "task_id": "i3_3_held_out_0157",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0079",
+      "task_id": "i3_3_held_out_0158",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0079",
+      "task_id": "i3_3_held_out_0159",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0080",
+      "task_id": "i3_3_held_out_0160",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0080",
+      "task_id": "i3_3_held_out_0161",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0081",
+      "task_id": "i3_3_held_out_0162",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0081",
+      "task_id": "i3_3_held_out_0163",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0082",
+      "task_id": "i3_3_held_out_0164",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0082",
+      "task_id": "i3_3_held_out_0165",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0083",
+      "task_id": "i3_3_held_out_0166",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0083",
+      "task_id": "i3_3_held_out_0167",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0084",
+      "task_id": "i3_3_held_out_0168",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0084",
+      "task_id": "i3_3_held_out_0169",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0085",
+      "task_id": "i3_3_held_out_0170",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0085",
+      "task_id": "i3_3_held_out_0171",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0086",
+      "task_id": "i3_3_held_out_0172",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0086",
+      "task_id": "i3_3_held_out_0173",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0087",
+      "task_id": "i3_3_held_out_0174",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0087",
+      "task_id": "i3_3_held_out_0175",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0088",
+      "task_id": "i3_3_held_out_0176",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0088",
+      "task_id": "i3_3_held_out_0177",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0089",
+      "task_id": "i3_3_held_out_0178",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0089",
+      "task_id": "i3_3_held_out_0179",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0090",
+      "task_id": "i3_3_held_out_0180",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0090",
+      "task_id": "i3_3_held_out_0181",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0091",
+      "task_id": "i3_3_held_out_0182",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0091",
+      "task_id": "i3_3_held_out_0183",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0092",
+      "task_id": "i3_3_held_out_0184",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0092",
+      "task_id": "i3_3_held_out_0185",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0093",
+      "task_id": "i3_3_held_out_0186",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0093",
+      "task_id": "i3_3_held_out_0187",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0094",
+      "task_id": "i3_3_held_out_0188",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0094",
+      "task_id": "i3_3_held_out_0189",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0095",
+      "task_id": "i3_3_held_out_0190",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0095",
+      "task_id": "i3_3_held_out_0191",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0096",
+      "task_id": "i3_3_held_out_0192",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0096",
+      "task_id": "i3_3_held_out_0193",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0097",
+      "task_id": "i3_3_held_out_0194",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0097",
+      "task_id": "i3_3_held_out_0195",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0098",
+      "task_id": "i3_3_held_out_0196",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0098",
+      "task_id": "i3_3_held_out_0197",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0099",
+      "task_id": "i3_3_held_out_0198",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0099",
+      "task_id": "i3_3_held_out_0199",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0100",
+      "task_id": "i3_3_held_out_0200",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0100",
+      "task_id": "i3_3_held_out_0201",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0101",
+      "task_id": "i3_3_held_out_0202",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0101",
+      "task_id": "i3_3_held_out_0203",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0102",
+      "task_id": "i3_3_held_out_0204",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0102",
+      "task_id": "i3_3_held_out_0205",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0103",
+      "task_id": "i3_3_held_out_0206",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0103",
+      "task_id": "i3_3_held_out_0207",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0104",
+      "task_id": "i3_3_held_out_0208",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0104",
+      "task_id": "i3_3_held_out_0209",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0105",
+      "task_id": "i3_3_held_out_0210",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0105",
+      "task_id": "i3_3_held_out_0211",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0106",
+      "task_id": "i3_3_held_out_0212",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0106",
+      "task_id": "i3_3_held_out_0213",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0107",
+      "task_id": "i3_3_held_out_0214",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0107",
+      "task_id": "i3_3_held_out_0215",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0108",
+      "task_id": "i3_3_held_out_0216",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0108",
+      "task_id": "i3_3_held_out_0217",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0109",
+      "task_id": "i3_3_held_out_0218",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0109",
+      "task_id": "i3_3_held_out_0219",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0110",
+      "task_id": "i3_3_held_out_0220",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0110",
+      "task_id": "i3_3_held_out_0221",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0111",
+      "task_id": "i3_3_held_out_0222",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0111",
+      "task_id": "i3_3_held_out_0223",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0112",
+      "task_id": "i3_3_held_out_0224",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0112",
+      "task_id": "i3_3_held_out_0225",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0113",
+      "task_id": "i3_3_held_out_0226",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0113",
+      "task_id": "i3_3_held_out_0227",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0114",
+      "task_id": "i3_3_held_out_0228",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0114",
+      "task_id": "i3_3_held_out_0229",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0115",
+      "task_id": "i3_3_held_out_0230",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0115",
+      "task_id": "i3_3_held_out_0231",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0116",
+      "task_id": "i3_3_held_out_0232",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0116",
+      "task_id": "i3_3_held_out_0233",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0117",
+      "task_id": "i3_3_held_out_0234",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0117",
+      "task_id": "i3_3_held_out_0235",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0118",
+      "task_id": "i3_3_held_out_0236",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0118",
+      "task_id": "i3_3_held_out_0237",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0119",
+      "task_id": "i3_3_held_out_0238",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0119",
+      "task_id": "i3_3_held_out_0239",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0120",
+      "task_id": "i3_3_held_out_0240",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0120",
+      "task_id": "i3_3_held_out_0241",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0121",
+      "task_id": "i3_3_held_out_0242",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0121",
+      "task_id": "i3_3_held_out_0243",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0122",
+      "task_id": "i3_3_held_out_0244",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0122",
+      "task_id": "i3_3_held_out_0245",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0123",
+      "task_id": "i3_3_held_out_0246",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0123",
+      "task_id": "i3_3_held_out_0247",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0124",
+      "task_id": "i3_3_held_out_0248",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0124",
+      "task_id": "i3_3_held_out_0249",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0125",
+      "task_id": "i3_3_held_out_0250",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0125",
+      "task_id": "i3_3_held_out_0251",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0126",
+      "task_id": "i3_3_held_out_0252",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0126",
+      "task_id": "i3_3_held_out_0253",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0127",
+      "task_id": "i3_3_held_out_0254",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0127",
+      "task_id": "i3_3_held_out_0255",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0128",
+      "task_id": "i3_3_held_out_0256",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0128",
+      "task_id": "i3_3_held_out_0257",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0129",
+      "task_id": "i3_3_held_out_0258",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0129",
+      "task_id": "i3_3_held_out_0259",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0130",
+      "task_id": "i3_3_held_out_0260",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0130",
+      "task_id": "i3_3_held_out_0261",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0131",
+      "task_id": "i3_3_held_out_0262",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0131",
+      "task_id": "i3_3_held_out_0263",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0132",
+      "task_id": "i3_3_held_out_0264",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0132",
+      "task_id": "i3_3_held_out_0265",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0133",
+      "task_id": "i3_3_held_out_0266",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0133",
+      "task_id": "i3_3_held_out_0267",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0134",
+      "task_id": "i3_3_held_out_0268",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0134",
+      "task_id": "i3_3_held_out_0269",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0135",
+      "task_id": "i3_3_held_out_0270",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0135",
+      "task_id": "i3_3_held_out_0271",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0136",
+      "task_id": "i3_3_held_out_0272",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0136",
+      "task_id": "i3_3_held_out_0273",
+      "task_summary": "NO_FINAL_ASSERTION_REQUESTED. Terminate the bounded internal control process."
+    },
+    {
+      "instance_id": "opaque-hel-0137",
+      "task_id": "i3_3_held_out_0274",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0137",
+      "task_id": "i3_3_held_out_0275",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0138",
+      "task_id": "i3_3_held_out_0276",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0138",
+      "task_id": "i3_3_held_out_0277",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0139",
+      "task_id": "i3_3_held_out_0278",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0139",
+      "task_id": "i3_3_held_out_0279",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0140",
+      "task_id": "i3_3_held_out_0280",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0140",
+      "task_id": "i3_3_held_out_0281",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0141",
+      "task_id": "i3_3_held_out_0282",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0141",
+      "task_id": "i3_3_held_out_0283",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0142",
+      "task_id": "i3_3_held_out_0284",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0142",
+      "task_id": "i3_3_held_out_0285",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0143",
+      "task_id": "i3_3_held_out_0286",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0143",
+      "task_id": "i3_3_held_out_0287",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0144",
+      "task_id": "i3_3_held_out_0288",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0144",
+      "task_id": "i3_3_held_out_0289",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0145",
+      "task_id": "i3_3_held_out_0290",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0145",
+      "task_id": "i3_3_held_out_0291",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0146",
+      "task_id": "i3_3_held_out_0292",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0146",
+      "task_id": "i3_3_held_out_0293",
+      "task_summary": "Decide whether another bounded operation is warranted before termination."
+    },
+    {
+      "instance_id": "opaque-hel-0147",
+      "task_id": "i3_3_held_out_0294",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0147",
+      "task_id": "i3_3_held_out_0295",
+      "task_summary": "Choose the next auditable action using only the public control packet."
+    },
+    {
+      "instance_id": "opaque-hel-0148",
+      "task_id": "i3_3_held_out_0296",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0148",
+      "task_id": "i3_3_held_out_0297",
+      "task_summary": "Choose the next bounded cognitive action for the available evidence state."
+    },
+    {
+      "instance_id": "opaque-hel-0149",
+      "task_id": "i3_3_held_out_0298",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    },
+    {
+      "instance_id": "opaque-hel-0149",
+      "task_id": "i3_3_held_out_0299",
+      "task_summary": "Select one permitted control action under the current evidence and resource budget."
+    }
+  ],
+  "schema": "DAPH_V2B_I3_3_CONTROLLER_PACKETS_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT"
+}

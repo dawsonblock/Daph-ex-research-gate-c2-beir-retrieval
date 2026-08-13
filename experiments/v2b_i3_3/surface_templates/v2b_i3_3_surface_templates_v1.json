@@ -1,0 +1,10 @@
+{
+  "schema": "DAPH_V2B_I3_3_SURFACE_TEMPLATES_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "templates": [
+    "Choose the next bounded cognitive action for the available evidence state.",
+    "Select one permitted control action under the current evidence and resource budget.",
+    "Decide whether another bounded operation is warranted before termination.",
+    "Choose the next auditable action using only the public control packet."
+  ]
+}

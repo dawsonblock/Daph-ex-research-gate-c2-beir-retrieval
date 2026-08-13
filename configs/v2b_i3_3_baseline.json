@@ -1,0 +1,15 @@
+{
+  "schema": "V2B_I3_2_2_PROTOCOL_BASELINE_V1",
+  "status": "RECORDED_DEVELOPMENT_BASELINE_NOT_SCIENTIFICALLY_QUALIFIED",
+  "source_commit": "775e01c9e6ed7f84bb1a78bb0e910245cfadf8ef",
+  "source_tree_hash": "2fed8511ce55047e20a0c075903f81a2f9e73dc0",
+  "artifacts": {
+    "protocol": {"path": "configs/v2b_i3_2_2_protocol_v1.json", "sha256": "943f9dba101d883879484b51ac6db6679496d382bfceb5809d4b107baeaff874"},
+    "integrity_baseline": {"path": "configs/v2b_i3_2_2_baseline.json", "sha256": "de3db31c795ada107b7d2a6c207f12d416913cdad6eccedfa88ebfc8438ee9b9"},
+    "latent_oracle": {"path": "hrm_adaptive_memory/executive/metareasoning_transition_table.py", "sha256": "df19d466da71475f8911d528ece11ef8855fbb65b9507c23c78a9c9583f63c69"},
+    "sequential_observable_oracle": {"path": "hrm_adaptive_memory/executive/metareasoning_sequential_oracle.py", "sha256": "d2db80dfb02618874a2831d8715185223f2a58ac473849146e26a433656dadf2"},
+    "artifact_resolver": {"path": "hrm_adaptive_memory/executive/metareasoning_artifacts.py", "sha256": "fb5b4cee5754800e0ff4a164515eb7c795331e008a80fc88bfee3993708f1329"},
+    "protocol_tests": {"path": "tests/unit/test_v2b_i3_2_2_protocol.py", "sha256": "6644d8d80ca473ddcb11fa80d59ca2cf6c3413df60a12943f1e5ac7209b57174"}
+  },
+  "claim_boundary": "Recorded I3.2.2 methodology baseline for I3.3 lineage; not a V2B scientific verdict."
+}

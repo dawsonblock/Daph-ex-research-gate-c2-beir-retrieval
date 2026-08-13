@@ -1,0 +1,16 @@
+{
+  "condition_build_seconds": {
+    "NO_CONFLICT": 39.82419570791535,
+    "NO_HISTORY": 38.74723895895295,
+    "NO_PROVENANCE": 39.52564691693988,
+    "NO_TEMPORAL": 39.44530616700649,
+    "NO_VERIFICATION": 39.81220874993596,
+    "STATE_AWARE_CONTROLLER": 38.7336927090073,
+    "STATE_BLIND_CONTROLLER": 40.20133720792364
+  },
+  "latent_build_seconds": 25.080183750018477,
+  "peak_resident_memory_native_units": 2117550080,
+  "platform_note": "resource.getrusage(RUSAGE_SELF).ru_maxrss native platform units",
+  "schema": "DAPH_V2B_I3_3_ORACLE_CHARACTERIZATION_V1",
+  "status": "MEASURED_DEVELOPMENT_TELEMETRY_NOT_ORACLE_IDENTITY"
+}

@@ -1,0 +1,48 @@
+{
+  "channels": [
+    "verification",
+    "temporal",
+    "provenance",
+    "conflict",
+    "history",
+    "composition",
+    "irreducible",
+    "state_irrelevant",
+    "verification_x_budget",
+    "verification_x_history"
+  ],
+  "generator_revision": "v2b-i3.3-generator-v1",
+  "pair_action_cycle": [
+    [
+      "ANSWER",
+      "RETRIEVE"
+    ],
+    [
+      "VERIFY",
+      "SEARCH_MORE"
+    ],
+    [
+      "REASON_MORE",
+      "DEFER"
+    ],
+    [
+      "STOP",
+      "STOP"
+    ],
+    [
+      "ANSWER",
+      "VERIFY"
+    ],
+    [
+      "RETRIEVE",
+      "SEARCH_MORE"
+    ],
+    [
+      "REASON_MORE",
+      "DEFER"
+    ]
+  ],
+  "schema": "DAPH_V2B_I3_3_TASK_FAMILIES_V1",
+  "seed": 3301,
+  "status": "FROZEN_FOR_DEVELOPMENT"
+}
