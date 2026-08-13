@@ -31,6 +31,8 @@ class I3Runtime:
     unresolved_conflict: bool
     composition_complete: bool
     provenance_count: int
+    conflict_resolvable: bool
+    prior_outcomes: tuple[str, ...]
     retrieved: bool = False
     searched: bool = False
 
@@ -48,7 +50,8 @@ def initial_i3_runtime(task: I3BenchmarkTask, resources: ResourceState) -> I3Run
     latent = task.latent
     return I3Runtime(task, resources, latent.verification_state, latent.temporal_status,
                      latent.unresolved_conflict, latent.composition_complete,
-                     task.observable_provenance_count)
+                     task.observable_provenance_count, latent.conflict_resolvable,
+                     latent.initial_prior_outcomes)
 
 
 def runtime_state_hash(runtime: I3Runtime) -> str:
@@ -60,6 +63,8 @@ def runtime_state_hash(runtime: I3Runtime) -> str:
         "unresolved_conflict": runtime.unresolved_conflict,
         "composition_complete": runtime.composition_complete,
         "provenance_count": runtime.provenance_count,
+        "conflict_resolvable": runtime.conflict_resolvable,
+        "prior_outcomes": list(runtime.prior_outcomes),
         "retrieved": runtime.retrieved,
         "searched": runtime.searched,
         "resources": runtime.resources.as_dict(),
@@ -80,7 +85,7 @@ def policy_facts(runtime: I3Runtime) -> tuple[DatalogFact, ...]:
     if (runtime.temporal_status is TemporalStatus.STALE
             or runtime.verification_state is VerificationState.STALE):
         facts.append(DatalogFact("stale", (task_id,)))
-    if runtime.unresolved_conflict:
+    if runtime.unresolved_conflict and not runtime.conflict_resolvable:
         facts.append(DatalogFact("unresolved_conflict", (task_id,)))
     # This is a policy-only determination, never a public controller fact.
     if answerable(runtime):
@@ -113,7 +118,8 @@ def build_observable_snapshot(runtime: I3Runtime, *, prior_decisions: tuple[Deci
     # Never project the private environment task id into a controller packet.
     public_id = task.controller_instance_id or task.task_id
     conflicts = (() if not runtime.unresolved_conflict else (
-        ConflictSummary(f"conflict-{public_id}", "benchmark_relation", 2, "UNRESOLVED"),))
+        ConflictSummary(f"conflict-{public_id}", "benchmark_relation", 2,
+                        "RESOLVABLE" if runtime.conflict_resolvable else "IRREDUCIBLE"),))
     signals = ("COMPOSITION_COMPLETE" if runtime.composition_complete
                else "COMPOSITION_INCOMPLETE",)
     return CognitiveStateSnapshot(
@@ -127,7 +133,8 @@ def build_observable_snapshot(runtime: I3Runtime, *, prior_decisions: tuple[Deci
             runtime.provenance_count, None),),
         provenance_summaries=(f"lineage_count={runtime.provenance_count}",),
         temporal_status=runtime.temporal_status, unresolved_conflicts=conflicts,
-        prior_decisions=prior_decisions[-16:], prior_outcomes=prior_outcomes[-16:],
+        prior_decisions=prior_decisions[-16:],
+        prior_outcomes=(runtime.prior_outcomes + prior_outcomes)[-16:],
         resource_state=runtime.resources.as_dict(), policy_facts=(),
         observation_signals=signals,
     )
@@ -139,6 +146,7 @@ def state_delta(before: I3Runtime, after: I3Runtime) -> dict[str, object]:
         "verification_state": (before.verification_state.value, after.verification_state.value),
         "temporal_status": (before.temporal_status.value, after.temporal_status.value),
         "unresolved_conflict": (before.unresolved_conflict, after.unresolved_conflict),
+        "conflict_resolvable": (before.conflict_resolvable, after.conflict_resolvable),
         "composition_complete": (before.composition_complete, after.composition_complete),
         "provenance_count": (before.provenance_count, after.provenance_count),
     }

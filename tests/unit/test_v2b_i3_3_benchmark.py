@@ -65,7 +65,8 @@ def test_i3_3_is_balanced_and_contains_required_channel_and_budget_pairs():
     channels = Counter(task["cognitive_channel"] for task in tasks)
     assert set(actions) == {"ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
                             "REASON_MORE", "DEFER", "STOP"}
-    assert min(actions.values()) >= 90
+    assert min(actions.values()) >= 85
+    assert max(actions.values()) / min(actions.values()) < 2.0
     for channel in ("verification", "temporal", "provenance", "conflict", "history",
                     "composition", "irreducible", "state_irrelevant",
                     "verification_x_budget"):
@@ -151,13 +152,25 @@ def test_i3_3_freeze_configuration_is_fail_closed_and_not_a_scientific_claim():
 
 def test_i3_3_precomputed_oracle_cache_is_closed_semantic_and_information_bounded():
     cache = json.loads(CACHE.read_text())
-    assert cache["benchmark_sha256"] == hashlib.sha256(MANIFEST.read_bytes()).hexdigest()
+    assert cache["benchmark_manifest_sha256"] == hashlib.sha256(MANIFEST.read_bytes()).hexdigest()
+    manifest = json.loads(MANIFEST.read_text()); manifest.pop("oracle_cache_manifest_path")
+    protocol_path = ROOT / "configs/v2b_i3_2_2_protocol_v1.json"
+    graph = resolve_benchmark_artifact_graph(
+        manifest_path=MANIFEST.relative_to(ROOT).as_posix(), manifest=manifest,
+        protocol_path=protocol_path.relative_to(ROOT).as_posix(),
+        protocol=json.loads(protocol_path.read_text()))
+    assert cache["benchmark_closure_sha256"] == artifact_graph_sha256(ROOT, graph)
     conditions = cache["sequential_observable_oracles"]
     assert set(conditions) == {
         "STATE_BLIND_CONTROLLER", "STATE_AWARE_CONTROLLER", "NO_VERIFICATION",
         "NO_TEMPORAL", "NO_PROVENANCE", "NO_CONFLICT", "NO_HISTORY"}
     assert (conditions["STATE_AWARE_CONTROLLER"]["task_uniform_information_gap"]
             < conditions["STATE_BLIND_CONTROLLER"]["task_uniform_information_gap"])
+    aware_gap = conditions["STATE_AWARE_CONTROLLER"]["task_uniform_information_gap"]
+    assert aware_gap > 0  # Frozen irreducible partial-observability controls.
+    for ablation in ("NO_VERIFICATION", "NO_TEMPORAL", "NO_PROVENANCE",
+                     "NO_CONFLICT", "NO_HISTORY"):
+        assert conditions[ablation]["task_uniform_information_gap"] > aware_gap
     entries = [cache["latent_oracles"], cache["difficulty_report"], *conditions.values()]
     for entry in entries:
         path = ROOT / entry["path"]

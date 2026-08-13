@@ -160,7 +160,8 @@ class V2BMetareasoningExperiment:
                 "verification_states": [item.state.value for item in snapshot.verification_states],
                 "provenance_summaries": list(snapshot.provenance_summaries),
                 "temporal_status": snapshot.temporal_status.value,
-                "conflicts": [item.conflict_id for item in snapshot.unresolved_conflicts],
+                "conflicts": [{"id": item.conflict_id, "status": item.status}
+                              for item in snapshot.unresolved_conflicts],
                 "prior_decisions": [item.decision_id for item in snapshot.prior_decisions],
                 "prior_outcomes": list(snapshot.prior_outcomes),
                 "observation_signals": list(snapshot.observation_signals),

@@ -9,7 +9,13 @@
     "irreducible",
     "state_irrelevant",
     "verification_x_budget",
-    "verification_x_history"
+    "verification_x_history",
+    "irreducible_alias",
+    "conflict_alias",
+    "temporal_alias",
+    "verification_alias",
+    "provenance_alias",
+    "history_alias"
   ],
   "generator_revision": "v2b-i3.3-generator-v1",
   "pair_action_cycle": [
@@ -23,23 +29,23 @@
     ],
     [
       "REASON_MORE",
-      "DEFER"
-    ],
-    [
-      "STOP",
       "STOP"
     ],
     [
       "ANSWER",
-      "VERIFY"
-    ],
-    [
-      "RETRIEVE",
       "SEARCH_MORE"
     ],
     [
+      "RETRIEVE",
+      "REASON_MORE"
+    ],
+    [
+      "DEFER",
+      "STOP"
+    ],
+    [
       "REASON_MORE",
-      "DEFER"
+      "STOP"
     ]
   ],
   "schema": "DAPH_V2B_I3_3_TASK_FAMILIES_V1",

@@ -174,6 +174,8 @@ def build_oracle_policy_table_for_runtime(*, initial_runtime: I3Runtime, policy:
                         unresolved_conflict=runtime.unresolved_conflict,
                         composition_complete=runtime.composition_complete,
                         provenance_count=runtime.provenance_count,
+                        conflict_resolvable=runtime.conflict_resolvable,
+                        prior_outcomes=runtime.prior_outcomes,
                         retrieved=runtime.retrieved, searched=runtime.searched)
                 except ResourceExhausted:
                     continue

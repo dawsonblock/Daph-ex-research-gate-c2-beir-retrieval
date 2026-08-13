@@ -38,6 +38,8 @@ class LatentTaskState:
     composition_complete: bool
     expected_terminal: DecisionAction
     required_provenance_count: int = 0
+    conflict_resolvable: bool = False
+    initial_prior_outcomes: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -133,7 +135,8 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _load_payloads(path: Path) -> tuple[Mapping[str, Any], Mapping[str, Mapping[str, str]], Mapping[str, str]]:
+def _load_payloads(path: Path, *, verify_oracle_cache: bool = True
+                   ) -> tuple[Mapping[str, Any], Mapping[str, Mapping[str, str]], Mapping[str, str]]:
     """Load private task dynamics and separately stored controller packets."""
     payload = json.loads(path.read_text())
     if payload.get("schema") == BENCHMARK_SCHEMA:
@@ -156,7 +159,7 @@ def _load_payloads(path: Path) -> tuple[Mapping[str, Any], Mapping[str, Mapping[
     graph = resolve_benchmark_artifact_graph(
         manifest_path=manifest_relative, manifest=payload,
         json_loader=lambda relative: json.loads((root / relative).read_text()))
-    if "oracle_cache_manifest" in graph:
+    if verify_oracle_cache and "oracle_cache_manifest" in graph:
         cache = json.loads((root / graph["oracle_cache_manifest"]).read_text())
         for role, (_, expected_sha256) in oracle_cache_artifacts(cache).items():
             if _sha256(root / graph[role]) != expected_sha256:
@@ -221,9 +224,10 @@ def _load_payloads(path: Path) -> tuple[Mapping[str, Any], Mapping[str, Mapping[
     }
 
 
-def load_metareasoning_benchmark(path: str | Path) -> MetareasoningBenchmark:
+def load_metareasoning_benchmark(path: str | Path, *, verify_oracle_cache: bool = True
+                                 ) -> MetareasoningBenchmark:
     path = Path(path).resolve()
-    payload, packets, artifact_hashes = _load_payloads(path)
+    payload, packets, artifact_hashes = _load_payloads(path, verify_oracle_cache=verify_oracle_cache)
     if payload.get("status") not in {FROZEN_DEVELOPMENT_STATUS, FROZEN_BENCHMARK_STATUS}:
         raise ValueError("V2B-I3 benchmark must be frozen for development")
     profiles = _load_budget_profiles(payload.get("budget_profiles"))
@@ -258,6 +262,9 @@ def load_metareasoning_benchmark(path: str | Path) -> MetareasoningBenchmark:
                 composition_complete=bool(latent["composition_complete"]),
                 expected_terminal=validate_v2b_action(latent["expected_terminal"]),
                 required_provenance_count=int(latent.get("required_provenance_count", 0)),
+                conflict_resolvable=bool(latent.get("conflict_resolvable", False)),
+                initial_prior_outcomes=tuple(str(value) for value in
+                                             latent.get("initial_prior_outcomes", ())),
             ),
             observable_provenance_count=int(raw.get("observable_provenance_count", 0)),
             action_effects=effects,

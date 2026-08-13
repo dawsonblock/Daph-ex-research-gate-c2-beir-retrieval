@@ -35,11 +35,11 @@ I3_3_BUDGET_PROFILES = {
 PAIR_ACTIONS = (
     ("ANSWER", "RETRIEVE"),
     ("VERIFY", "SEARCH_MORE"),
-    ("REASON_MORE", "DEFER"),
-    ("STOP", "STOP"),
-    ("ANSWER", "VERIFY"),
-    ("RETRIEVE", "SEARCH_MORE"),
-    ("REASON_MORE", "DEFER"),
+    ("REASON_MORE", "STOP"),
+    ("ANSWER", "SEARCH_MORE"),
+    ("RETRIEVE", "REASON_MORE"),
+    ("DEFER", "STOP"),
+    ("REASON_MORE", "STOP"),
 )
 SURFACES = (
     "Choose the next bounded cognitive action for the available evidence state.",
@@ -61,7 +61,8 @@ def action_task(action: str, *, index: int, split: str, pair_id: str,
                 summary: str, budget: str) -> dict[str, object]:
     latent = {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT",
               "unresolved_conflict": False, "composition_complete": True,
-              "expected_terminal": "ANSWER", "required_provenance_count": 0}
+              "expected_terminal": "ANSWER", "required_provenance_count": 0,
+              "conflict_resolvable": False, "initial_prior_outcomes": []}
     effects: dict[str, dict[str, str]] = {}
     provenance = 2
     channel = "verification"
@@ -92,13 +93,16 @@ def action_task(action: str, *, index: int, split: str, pair_id: str,
             channel = "provenance"
     elif action == "SEARCH_MORE":
         provenance = 0
-        # The frozen shared policy requires DEFER under an active conflict, so
-        # SEARCH_MORE challenge cases model a prior failed retrieval rather
-        # than bypassing that safety rule.
-        latent.update(verification_state="MISSING", temporal_status="UNKNOWN")
-        effects["RETRIEVE"] = {}
-        effects["SEARCH_MORE"] = {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}
-        channel = "history"
+        if (index // 2) % 2:
+            latent.update(unresolved_conflict=True, conflict_resolvable=True)
+            effects["SEARCH_MORE"] = {"unresolved_conflict": "false"}
+            channel = "conflict"
+        else:
+            latent.update(verification_state="MISSING", temporal_status="UNKNOWN",
+                          initial_prior_outcomes=["RETRIEVE_FAILED", "RETRIEVE_FAILED"])
+            effects["RETRIEVE"] = {}
+            effects["SEARCH_MORE"] = {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}
+            channel = "history"
     elif action == "REASON_MORE":
         latent["composition_complete"] = False
         effects["REASON_MORE"] = {"composition_complete": "true"}
@@ -134,8 +138,29 @@ def generate() -> tuple[list[dict[str, object]], list[dict[str, str]]]:
     tasks: list[dict[str, object]] = []; packets: list[dict[str, str]] = []
     for split, count in SPLIT_COUNTS.items():
         for pair_index in range(count // 2):
-            budget_sensitive = pair_index % 11 == 0
-            actions = (("DEFER", "VERIFY") if budget_sensitive
+            budget_sensitive = pair_index % 13 in {0, 5}
+            irreducible_alias = pair_index % 17 == 0 and not budget_sensitive
+            conflict_alias = (pair_index % 19 == 0
+                              and not budget_sensitive and not irreducible_alias)
+            temporal_alias = (pair_index % 23 == 0 and not budget_sensitive
+                              and not irreducible_alias and not conflict_alias)
+            verification_alias = (pair_index % 29 == 0 and not budget_sensitive
+                                  and not irreducible_alias and not conflict_alias
+                                  and not temporal_alias)
+            provenance_alias = (pair_index % 31 == 0 and not budget_sensitive
+                                and not irreducible_alias and not conflict_alias
+                                and not temporal_alias and not verification_alias)
+            history_alias = (pair_index % 37 == 0 and not budget_sensitive
+                             and not irreducible_alias and not conflict_alias
+                             and not temporal_alias and not verification_alias
+                             and not provenance_alias)
+            actions = (("DEFER", "VERIFY") if budget_sensitive else
+                       ("RETRIEVE", "VERIFY") if irreducible_alias
+                       else ("SEARCH_MORE", "DEFER") if conflict_alias
+                       else ("ANSWER", "VERIFY") if temporal_alias
+                       else ("ANSWER", "VERIFY") if verification_alias
+                       else ("ANSWER", "VERIFY") if provenance_alias
+                       else ("RETRIEVE", "SEARCH_MORE") if history_alias
                        else PAIR_ACTIONS[pair_index % len(PAIR_ACTIONS)])
             pair_id = f"opaque-{split[:3]}-{pair_index:04d}"
             summary = SURFACES[(pair_index + len(split)) % len(SURFACES)]
@@ -156,11 +181,98 @@ def generate() -> tuple[list[dict[str, object]], list[dict[str, str]]]:
                         "verification_state": "UNVERIFIED", "temporal_status": "CURRENT",
                         "unresolved_conflict": False, "composition_complete": True,
                         "expected_terminal": "ANSWER", "required_provenance_count": 0,
+                        "conflict_resolvable": False, "initial_prior_outcomes": [],
                     }
                     task["observable_provenance_count"] = 1
                     task["action_effects"] = {"VERIFY": {"verification_state": "SUFFICIENT"}}
                     task["cognitive_channel"] = "verification_x_budget"
                     task["category"] = f"verification_x_budget_{action.lower()}"
+                elif irreducible_alias:
+                    # Full structured observation is deliberately identical;
+                    # only the private transition model differs. This leaves a
+                    # bounded, permanent information gap under STATE_AWARE.
+                    task["high_stakes"] = False
+                    task["latent"] = {
+                        "verification_state": "MISSING", "temporal_status": "UNKNOWN",
+                        "unresolved_conflict": False, "composition_complete": True,
+                        "expected_terminal": "ANSWER", "required_provenance_count": 0,
+                        "conflict_resolvable": False, "initial_prior_outcomes": [],
+                    }
+                    task["observable_provenance_count"] = 0
+                    task["action_effects"] = {
+                        action: {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+                    task["cognitive_channel"] = "irreducible_alias"
+                    task["category"] = f"irreducible_alias_{action.lower()}"
+                elif conflict_alias:
+                    task["high_stakes"] = False
+                    task["latent"] = {
+                        "verification_state": "SUFFICIENT", "temporal_status": "CURRENT",
+                        "unresolved_conflict": True, "composition_complete": True,
+                        "expected_terminal": "ANSWER" if offset == 0 else "DEFER",
+                        "required_provenance_count": 0,
+                        "conflict_resolvable": offset == 0, "initial_prior_outcomes": [],
+                    }
+                    task["observable_provenance_count"] = 2
+                    task["action_effects"] = ({"SEARCH_MORE": {"unresolved_conflict": "false"}}
+                                              if offset == 0 else {})
+                    task["cognitive_channel"] = "conflict_alias"
+                    task["category"] = f"conflict_alias_{action.lower()}"
+                elif temporal_alias:
+                    task["high_stakes"] = False
+                    task["latent"] = {
+                        "verification_state": "SUFFICIENT",
+                        "temporal_status": "CURRENT" if offset == 0 else "STALE",
+                        "unresolved_conflict": False, "composition_complete": True,
+                        "expected_terminal": "ANSWER", "required_provenance_count": 0,
+                        "conflict_resolvable": False, "initial_prior_outcomes": [],
+                    }
+                    task["observable_provenance_count"] = 2
+                    task["action_effects"] = ({} if offset == 0
+                                              else {"VERIFY": {"temporal_status": "CURRENT"}})
+                    task["cognitive_channel"] = "temporal_alias"
+                    task["category"] = f"temporal_alias_{action.lower()}"
+                elif verification_alias:
+                    task["high_stakes"] = False
+                    task["latent"] = {
+                        "verification_state": "SUFFICIENT" if offset == 0 else "UNVERIFIED",
+                        "temporal_status": "CURRENT", "unresolved_conflict": False,
+                        "composition_complete": True, "expected_terminal": "ANSWER",
+                        "required_provenance_count": 0, "conflict_resolvable": False,
+                        "initial_prior_outcomes": [],
+                    }
+                    task["observable_provenance_count"] = 2
+                    task["action_effects"] = ({} if offset == 0
+                                              else {"VERIFY": {"verification_state": "SUFFICIENT"}})
+                    task["cognitive_channel"] = "verification_alias"
+                    task["category"] = f"verification_alias_{action.lower()}"
+                elif provenance_alias:
+                    task["high_stakes"] = False
+                    task["latent"] = {
+                        "verification_state": "SUFFICIENT", "temporal_status": "CURRENT",
+                        "unresolved_conflict": False, "composition_complete": True,
+                        "expected_terminal": "ANSWER", "required_provenance_count": 2 if offset == 0 else 3,
+                        "conflict_resolvable": False, "initial_prior_outcomes": [],
+                    }
+                    task["observable_provenance_count"] = 3 if offset == 0 else 1
+                    task["action_effects"] = ({} if offset == 0
+                                              else {"VERIFY": {"provenance_count": "3"}})
+                    task["cognitive_channel"] = "provenance_alias"
+                    task["category"] = f"provenance_alias_{action.lower()}"
+                elif history_alias:
+                    task["high_stakes"] = False
+                    task["latent"] = {
+                        "verification_state": "MISSING", "temporal_status": "UNKNOWN",
+                        "unresolved_conflict": False, "composition_complete": True,
+                        "expected_terminal": "ANSWER", "required_provenance_count": 0,
+                        "conflict_resolvable": False,
+                        "initial_prior_outcomes": ([] if offset == 0 else
+                                                   ["RETRIEVE_FAILED", "RETRIEVE_FAILED"]),
+                    }
+                    task["observable_provenance_count"] = 0
+                    task["action_effects"] = {
+                        action: {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+                    task["cognitive_channel"] = "history_alias"
+                    task["category"] = f"history_alias_{action.lower()}"
                 tasks.append(task)
                 packets.append({"task_id": str(task["task_id"]), "instance_id": pair_id,
                                 "task_summary": str(task["task_summary"])})
@@ -187,7 +299,12 @@ def main() -> None:
                 "pair_action_cycle": PAIR_ACTIONS,
                 "channels": ["verification", "temporal", "provenance", "conflict", "history",
                              "composition", "irreducible", "state_irrelevant",
-                             "verification_x_budget", "verification_x_history"]}
+                             "verification_x_budget", "verification_x_history",
+                             "irreducible_alias", "conflict_alias"]}
+    families["channels"].append("temporal_alias")
+    families["channels"].append("verification_alias")
+    families["channels"].append("provenance_alias")
+    families["channels"].append("history_alias")
     surfaces = {"schema": "DAPH_V2B_I3_3_SURFACE_TEMPLATES_V1",
                 "status": "FROZEN_FOR_DEVELOPMENT", "templates": SURFACES}
     split_payload = {"schema": "DAPH_V2B_I3_3_SPLITS_V1", "status": "FROZEN_FOR_DEVELOPMENT",

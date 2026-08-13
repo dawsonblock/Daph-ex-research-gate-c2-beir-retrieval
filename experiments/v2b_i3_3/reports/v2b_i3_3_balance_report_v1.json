@@ -1,33 +1,39 @@
 {
   "budget_counts": {
-    "GENEROUS": 149,
-    "STANDARD": 468,
-    "TIGHT": 133
+    "GENEROUS": 178,
+    "STANDARD": 512,
+    "TIGHT": 60
   },
-  "budget_sensitive_pair_count": 35,
+  "budget_sensitive_pair_count": 60,
   "cognitive_channel_counts": {
-    "composition": 97,
-    "conflict": 50,
-    "history": 125,
-    "irreducible": 47,
-    "provenance": 32,
-    "state_irrelevant": 194,
-    "temporal": 35,
-    "verification": 91,
-    "verification_x_budget": 70,
-    "verification_x_history": 9
+    "composition": 94,
+    "conflict": 36,
+    "conflict_alias": 28,
+    "history": 54,
+    "history_alias": 16,
+    "irreducible": 30,
+    "irreducible_alias": 40,
+    "provenance": 16,
+    "provenance_alias": 14,
+    "state_irrelevant": 167,
+    "temporal": 13,
+    "temporal_alias": 30,
+    "verification": 63,
+    "verification_alias": 24,
+    "verification_x_budget": 120,
+    "verification_x_history": 5
   },
   "designed_optimal_action_counts": {
-    "ANSWER": 98,
-    "DEFER": 132,
-    "REASON_MORE": 97,
-    "RETRIEVE": 97,
-    "SEARCH_MORE": 97,
-    "STOP": 96,
-    "VERIFY": 133
+    "ANSWER": 108,
+    "DEFER": 104,
+    "REASON_MORE": 94,
+    "RETRIEVE": 102,
+    "SEARCH_MORE": 94,
+    "STOP": 93,
+    "VERIFY": 155
   },
-  "generator_output_sha256": "461954ed186e1f3b19df8c07a039e54e8dd55fe4be1c96785ae7b64780aec6e5",
-  "minimum_action_count": 96,
+  "generator_output_sha256": "1a0bf1fdac146ccbcb5d1d6b42ef5c608a19e4253c7774fcecfa1dafbefe10f8",
+  "minimum_action_count": 93,
   "schema": "DAPH_V2B_I3_3_BALANCE_REPORT_V1",
   "split_counts": {
     "development": 300,

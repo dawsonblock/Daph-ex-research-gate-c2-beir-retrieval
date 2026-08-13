@@ -151,6 +151,10 @@ class MatchedMetareasoningController:
         verification = state.verification_states[0].state if state.verification_states else None
         composition_incomplete = "COMPOSITION_INCOMPLETE" in state.observation_signals
         if state.unresolved_conflicts:
+            if (any(item.status == "RESOLVABLE" for item in state.unresolved_conflicts)
+                    and not self._executed(observation, DecisionAction.SEARCH_MORE)
+                    and self._available(observation, DecisionAction.SEARCH_MORE)):
+                return ActionProposal(DecisionAction.SEARCH_MORE, "OBSERVED_RESOLVABLE_CONFLICT")
             return ActionProposal(DecisionAction.DEFER, "OBSERVED_UNRESOLVED_CONFLICT")
         if (verification in {VerificationState.UNVERIFIED, VerificationState.STALE}
                 or state.temporal_status is TemporalStatus.STALE):
@@ -165,6 +169,11 @@ class MatchedMetareasoningController:
                 and not composition_incomplete):
             return ActionProposal(DecisionAction.ANSWER, "OBSERVED_CURRENT_SUPPORTED_EVIDENCE")
         if verification in {VerificationState.MISSING, VerificationState.FALSIFIED}:
+            if (state.prior_outcomes.count("RETRIEVE_FAILED") >= 2
+                    and not self._executed(observation, DecisionAction.SEARCH_MORE)
+                    and self._available(observation, DecisionAction.SEARCH_MORE)):
+                return ActionProposal(DecisionAction.SEARCH_MORE,
+                                      "OBSERVED_REPEATED_RETRIEVAL_FAILURE")
             if (not self._executed(observation, DecisionAction.RETRIEVE)
                     and self._available(observation, DecisionAction.RETRIEVE)
                     and not self._rejected(observation, DecisionAction.RETRIEVE)):

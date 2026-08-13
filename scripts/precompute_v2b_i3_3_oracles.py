@@ -18,6 +18,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from hrm_adaptive_memory.executive.metareasoning_benchmark import load_metareasoning_benchmark
+from hrm_adaptive_memory.executive.metareasoning_artifacts import (
+    artifact_graph_sha256, resolve_benchmark_artifact_graph)
 from hrm_adaptive_memory.executive.metareasoning_controller import load_observation_masks
 from hrm_adaptive_memory.executive.metareasoning_executor import initial_i3_runtime
 from hrm_adaptive_memory.executive.metareasoning_sequential_oracle import (
@@ -68,7 +70,10 @@ def main() -> None:
     args = parser.parse_args()
     config = json.loads(CONFIG.read_text())
     benchmark_path = ROOT / config["benchmark_manifest_path"]
-    benchmark = load_metareasoning_benchmark(benchmark_path)
+    # Cache rebuilding necessarily starts while the previous cache no longer
+    # matches new benchmark bytes. Exact cache validation resumes after the
+    # atomic semantic artifacts and manifest have been regenerated.
+    benchmark = load_metareasoning_benchmark(benchmark_path, verify_oracle_cache=False)
     policy = load_frozen_policy(ROOT / config["policy_path"])
     masks = load_observation_masks(ROOT / config["observation_masks_path"])
     utility = MetareasoningUtility.from_file(ROOT / config["utility_path"])
@@ -112,7 +117,18 @@ def main() -> None:
     write_gzip_jsonl(latent_path, latent_rows)
 
     condition_records = {}
-    benchmark_hash = sha256(benchmark_path)
+    benchmark_manifest_sha256 = sha256(benchmark_path)
+    manifest_payload = json.loads(benchmark_path.read_text())
+    # Oracle inputs form a closed graph that deliberately excludes the oracle
+    # cache edge itself, avoiding a self-referential hash cycle.
+    manifest_inputs = dict(manifest_payload)
+    manifest_inputs.pop("oracle_cache_manifest_path", None)
+    protocol_path = ROOT / config["protocol_path"]
+    protocol_payload = json.loads(protocol_path.read_text())
+    oracle_input_graph = resolve_benchmark_artifact_graph(
+        manifest_path=benchmark_path.relative_to(ROOT).as_posix(), manifest=manifest_inputs,
+        protocol_path=protocol_path.relative_to(ROOT).as_posix(), protocol=protocol_payload)
+    benchmark_hash = artifact_graph_sha256(ROOT, oracle_input_graph)
     if set(selected) == set(config["required_conditions"]):
         selected = tuple(config["required_conditions"])
     for condition in selected:
@@ -173,7 +189,9 @@ def main() -> None:
     manifest = {
         "schema": "DAPH_V2B_I3_3_ORACLE_CACHE_MANIFEST_V1",
         "status": "FROZEN_BENCHMARK_NOT_A_SCIENTIFIC_RESULT",
-        "benchmark_sha256": benchmark_hash,
+        "benchmark_manifest_sha256": benchmark_manifest_sha256,
+        "benchmark_closure_sha256": benchmark_hash,
+        "benchmark_closure_artifacts": dict(sorted(oracle_input_graph.items())),
         "latent_oracles": {
             "path": latent_path.relative_to(ROOT).as_posix(), "sha256": sha256(latent_path),
             "table_set_sha256": combined_hash({key: table.table_sha256

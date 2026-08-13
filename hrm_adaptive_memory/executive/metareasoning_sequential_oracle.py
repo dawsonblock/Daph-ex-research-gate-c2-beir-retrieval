@@ -332,7 +332,8 @@ def canonical_packet(observation: ControllerObservation) -> dict[str, object]:
             "verification_states": [item.state.value for item in snapshot.verification_states],
             "provenance_summaries": list(snapshot.provenance_summaries),
             "temporal_status": snapshot.temporal_status.value,
-            "conflicts": [item.conflict_id for item in snapshot.unresolved_conflicts],
+            "conflicts": [{"id": item.conflict_id, "status": item.status}
+                          for item in snapshot.unresolved_conflicts],
             "prior_decisions": [{"action": item.selected_action,
                                  "outcome": item.outcome} for item in snapshot.prior_decisions],
             "prior_outcomes": list(snapshot.prior_outcomes),
@@ -392,7 +393,8 @@ def _apply_proposal(*, runtime: I3Runtime, proposed: DecisionAction, policy: Fro
 def _epistemic_signature(runtime: I3Runtime) -> tuple[object, ...]:
     """Fields whose change can create decision-relevant public information."""
     return (runtime.verification_state, runtime.temporal_status, runtime.unresolved_conflict,
-            runtime.composition_complete, runtime.provenance_count)
+            runtime.conflict_resolvable, runtime.composition_complete,
+            runtime.provenance_count, runtime.prior_outcomes)
 
 
 def _member_runtime(member: LatentMember, contexts: Mapping[str, _Context]) -> I3Runtime:
