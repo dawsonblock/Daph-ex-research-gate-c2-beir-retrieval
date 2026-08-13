@@ -59,11 +59,12 @@ neither controller can infer the better evidence action until it observes an
 action result. Resource state is therefore a causal input to the optimal
 action rather than passive bookkeeping.
 
-The private corpus is split into `development`, `validation`, and `held_out`
-partitions. This small corpus is a protocol fixture, not the eventual
-100–300/100/200+ qualification-scale benchmark; the held-out partition is
-still executed and receipted separately so that future scale-up preserves the
-same split boundary.
+The I3.3.1 private corpus is split into `development`, `validation`,
+`held_out_instance`, `held_out_surface`, and `held_out_structure` partitions.
+The latter two isolate unseen surface forms and exact transition structures;
+instance-held-out measures new instances of familiar control dynamics. Every
+split is executed and receipted separately, so these are distinct
+generalization claims rather than one ambiguous held-out aggregate.
 
 ## Execution semantics
 

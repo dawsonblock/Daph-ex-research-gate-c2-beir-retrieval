@@ -56,6 +56,8 @@ class I3BenchmarkTask:
     # An opaque public identifier.  The private task id is used only by the
     # environment, policy, and receipts; this value is what a controller sees.
     controller_instance_id: str = ""
+    semantic_structure_coarse: str = ""
+    semantic_structure_exact: str = ""
 
     def __post_init__(self) -> None:
         if self.latent.required_provenance_count < 0:
@@ -63,8 +65,10 @@ class I3BenchmarkTask:
         if (not self.task_id or self.task_id != self.task_id.lower()
                 or not self.category or not self.task_summary):
             raise ValueError("I3 tasks require lowercase ids, a category, and a summary")
-        if self.split not in {"development", "validation", "held_out"}:
-            raise ValueError("I3 tasks require development, validation, or held_out split")
+        if self.split not in {"development", "validation", "held_out",
+                              "held_out_instance", "held_out_surface",
+                              "held_out_structure"}:
+            raise ValueError("I3 task uses an unsupported benchmark split")
         if self.latent.expected_terminal not in {
                 DecisionAction.ANSWER, DecisionAction.DEFER, DecisionAction.STOP}:
             raise ValueError("I3 tasks require a terminal action")
@@ -269,6 +273,8 @@ def load_metareasoning_benchmark(path: str | Path, *, verify_oracle_cache: bool 
             observable_provenance_count=int(raw.get("observable_provenance_count", 0)),
             action_effects=effects,
             controller_instance_id=str(public.get("instance_id", task_id)),
+            semantic_structure_coarse=str(raw.get("semantic_structure_coarse", "")),
+            semantic_structure_exact=str(raw.get("semantic_structure_exact", "")),
         )
         if task.budget_profile not in profiles:
             raise ValueError(f"task {task.task_id} references an unknown budget profile")

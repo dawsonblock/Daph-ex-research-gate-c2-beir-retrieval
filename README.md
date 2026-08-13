@@ -43,7 +43,7 @@ question → subject-preserving query → BM25+BGE retrieval
 | **C4** Integrated memory pipeline | ✅ CERTIFIED (development) | H100 certification: +0.2000 quality delta (family CI [+0.1354, +0.2604], threshold +0.15); 17/17 gates passed |
 | **C4-BRIDGE** Runtime bridge acquisition | ❌ NEGATIVE RESULT | No runtime bridge mechanism beats one-pass baseline (B0 CES=0.783 vs B2 CES=0.775) |
 | **V2A** External background verification | ✅ QUALIFIED | Replacement commit-bound PASS: one source/tree/environment across full suite, focused security, adversarial, network smoke, and 1M pressure/replay |
-| Cognitive-control donor slice | 🧪 V2B DEVELOPMENT, NOT QUALIFIED | I3.2.2 freezes metareasoning priors/cost/reward semantics; I3.3 freezes a 750-task, seven-action benchmark and precomputed latent/sequential oracle ground truth. No model-controller or scientific V2B result is claimed. |
+| Cognitive-control donor slice | 🧪 V2B DEVELOPMENT, NOT QUALIFIED | I3.2.2 freezes metareasoning semantics; I3.3.1 freezes a strict-JSON 750-task benchmark with instance, surface, and structurally novel held-out splits plus oracle-confirmed ground truth. No model-controller or scientific V2B result is claimed. |
 | **D–N** Downstream gates | 🔒 BLOCKED | Pending untouched qualification/OOD splits and Gate D decision |
 
 Full machine-readable state: [`RESEARCH_STATUS.json`](RESEARCH_STATUS.json)

@@ -16,6 +16,7 @@ BENCHMARK_ARTIFACT_FIELDS = {
     "split_definitions": "split_definitions_path",
     "surface_templates": "surface_templates_path",
     "balance_report": "balance_report_path",
+    "structural_diversity_report": "structural_diversity_report_path",
     "oracle_cache_manifest": "oracle_cache_manifest_path",
 }
 PROTOCOL_ARTIFACT_FIELDS = {
@@ -85,6 +86,9 @@ def oracle_cache_artifacts(cache: Mapping[str, object]) -> dict[str, tuple[str, 
     if not isinstance(latent, Mapping) or not isinstance(difficulty, Mapping) or not isinstance(sequential, Mapping):
         raise RuntimeError("I3.3 oracle cache is incomplete")
     entries = {"oracle_latent_tables": latent, "oracle_difficulty_report": difficulty}
+    oracle_balance = cache.get("oracle_balance_report")
+    if oracle_balance is not None:
+        entries["oracle_balance_report"] = oracle_balance
     entries.update({f"oracle_sequential_{str(name).lower()}": value
                     for name, value in sequential.items()})
     for role, entry in entries.items():

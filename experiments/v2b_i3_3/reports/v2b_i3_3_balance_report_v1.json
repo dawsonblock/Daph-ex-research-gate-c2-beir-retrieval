@@ -1,43 +1,44 @@
 {
+  "authority_note": "Exact latent oracle, not generator intent, defines optimal actions.",
   "budget_counts": {
-    "GENEROUS": 178,
-    "STANDARD": 512,
+    "GENEROUS": 174,
+    "STANDARD": 516,
     "TIGHT": 60
   },
   "budget_sensitive_pair_count": 60,
   "cognitive_channel_counts": {
     "composition": 94,
-    "conflict": 36,
-    "conflict_alias": 28,
-    "history": 54,
+    "conflict": 38,
+    "conflict_alias": 26,
+    "history": 59,
     "history_alias": 16,
-    "irreducible": 30,
-    "irreducible_alias": 40,
-    "provenance": 16,
-    "provenance_alias": 14,
-    "state_irrelevant": 167,
+    "irreducible": 29,
+    "irreducible_alias": 38,
+    "provenance": 19,
+    "provenance_alias": 10,
+    "state_irrelevant": 169,
     "temporal": 13,
     "temporal_alias": 30,
-    "verification": 63,
-    "verification_alias": 24,
-    "verification_x_budget": 120,
-    "verification_x_history": 5
+    "verification": 69,
+    "verification_alias": 20,
+    "verification_x_budget": 120
   },
-  "designed_optimal_action_counts": {
+  "designed_action_counts_non_authoritative": {
     "ANSWER": 108,
-    "DEFER": 104,
+    "DEFER": 102,
     "REASON_MORE": 94,
-    "RETRIEVE": 102,
-    "SEARCH_MORE": 94,
-    "STOP": 93,
-    "VERIFY": 155
+    "RETRIEVE": 104,
+    "SEARCH_MORE": 98,
+    "STOP": 91,
+    "VERIFY": 153
   },
-  "generator_output_sha256": "1a0bf1fdac146ccbcb5d1d6b42ef5c608a19e4253c7774fcecfa1dafbefe10f8",
-  "minimum_action_count": 93,
+  "generator_output_sha256": "80b1196acef812f3f70dd492c7d20b904a509894c9f3f02efcb44e59754ecdb9",
   "schema": "DAPH_V2B_I3_3_BALANCE_REPORT_V1",
   "split_counts": {
     "development": 300,
-    "held_out": 300,
+    "held_out_instance": 100,
+    "held_out_structure": 150,
+    "held_out_surface": 50,
     "validation": 150
   },
   "task_count": 750

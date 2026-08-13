@@ -20,7 +20,20 @@
   "split_counts": {
     "development": 300,
     "validation": 150,
-    "held_out": 300
+    "held_out_instance": 100,
+    "held_out_surface": 50,
+    "held_out_structure": 150
+  },
+  "structural_novelty_thresholds": {
+    "validation_exact_unseen_minimum": 30,
+    "held_out_structure_exact_unseen_minimum": 50,
+    "held_out_structure_task_fraction_minimum": 0.2
+  },
+  "oracle_balance_thresholds": {
+    "designed_oracle_agreement": 1.0,
+    "minimum_singleton_optimal_actions": 7,
+    "maximum_tied_task_fraction": 0.15,
+    "minimum_q_margin_bands": 2
   },
   "required_conditions": [
     "STATE_BLIND_CONTROLLER",

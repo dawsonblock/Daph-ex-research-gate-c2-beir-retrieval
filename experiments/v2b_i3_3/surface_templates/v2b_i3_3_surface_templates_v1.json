@@ -1,10 +1,48 @@
 {
+  "development_templates": [
+    "Choose the next bounded cognitive action using the public evidence packet.",
+    "Choose one permitted control action under the remaining resource budget.",
+    "Choose the next auditable operation without access to private task state.",
+    "Choose one bounded action from the frozen seven-action vocabulary.",
+    "Select the next bounded cognitive action using the public evidence packet.",
+    "Select one permitted control action under the remaining resource budget.",
+    "Select the next auditable operation without access to private task state.",
+    "Select one bounded action from the frozen seven-action vocabulary.",
+    "Identify the next bounded cognitive action using the public evidence packet.",
+    "Identify one permitted control action under the remaining resource budget.",
+    "Identify the next auditable operation without access to private task state.",
+    "Identify one bounded action from the frozen seven-action vocabulary.",
+    "Determine the next bounded cognitive action using the public evidence packet.",
+    "Determine one permitted control action under the remaining resource budget.",
+    "Determine the next auditable operation without access to private task state.",
+    "Determine one bounded action from the frozen seven-action vocabulary.",
+    "Commit to the next bounded cognitive action using the public evidence packet.",
+    "Commit to one permitted control action under the remaining resource budget.",
+    "Commit to the next auditable operation without access to private task state.",
+    "Commit to one bounded action from the frozen seven-action vocabulary.",
+    "Return the next bounded cognitive action using the public evidence packet.",
+    "Return one permitted control action under the remaining resource budget.",
+    "Return the next auditable operation without access to private task state.",
+    "Return one bounded action from the frozen seven-action vocabulary.",
+    "Nominate the next bounded cognitive action using the public evidence packet.",
+    "Nominate one permitted control action under the remaining resource budget.",
+    "Nominate the next auditable operation without access to private task state.",
+    "Nominate one bounded action from the frozen seven-action vocabulary.",
+    "Resolve the next bounded cognitive action using the public evidence packet.",
+    "Resolve one permitted control action under the remaining resource budget."
+  ],
+  "held_out_surface_templates": [
+    "Resolve the next auditable operation without access to private task state.",
+    "Resolve one bounded action from the frozen seven-action vocabulary.",
+    "Evaluate the next bounded cognitive action using the public evidence packet.",
+    "Evaluate one permitted control action under the remaining resource budget.",
+    "Evaluate the next auditable operation without access to private task state.",
+    "Evaluate one bounded action from the frozen seven-action vocabulary.",
+    "Issue the next bounded cognitive action using the public evidence packet.",
+    "Issue one permitted control action under the remaining resource budget.",
+    "Issue the next auditable operation without access to private task state.",
+    "Issue one bounded action from the frozen seven-action vocabulary."
+  ],
   "schema": "DAPH_V2B_I3_3_SURFACE_TEMPLATES_V1",
-  "status": "FROZEN_FOR_DEVELOPMENT",
-  "templates": [
-    "Choose the next bounded cognitive action for the available evidence state.",
-    "Select one permitted control action under the current evidence and resource budget.",
-    "Decide whether another bounded operation is warranted before termination.",
-    "Choose the next auditable action using only the public control packet."
-  ]
+  "status": "FROZEN_FOR_DEVELOPMENT"
 }

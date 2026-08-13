@@ -1,0 +1,117 @@
+{
+  "by_split": {
+    "development": {
+      "q_margin_bands": {
+        "MEDIUM": 276,
+        "TIE": 24
+      },
+      "singleton_optimal_action_counts": {
+        "ANSWER": 43,
+        "DEFER": 18,
+        "REASON_MORE": 38,
+        "RETRIEVE": 40,
+        "SEARCH_MORE": 37,
+        "STOP": 38,
+        "VERIFY": 62
+      },
+      "tied_optimal_action_sets": {
+        "DEFER|STOP": 24
+      }
+    },
+    "held_out_instance": {
+      "q_margin_bands": {
+        "MEDIUM": 92,
+        "TIE": 8
+      },
+      "singleton_optimal_action_counts": {
+        "ANSWER": 14,
+        "DEFER": 6,
+        "REASON_MORE": 13,
+        "RETRIEVE": 14,
+        "SEARCH_MORE": 13,
+        "STOP": 13,
+        "VERIFY": 19
+      },
+      "tied_optimal_action_sets": {
+        "DEFER|STOP": 8
+      }
+    },
+    "held_out_structure": {
+      "q_margin_bands": {
+        "MEDIUM": 138,
+        "TIE": 12
+      },
+      "singleton_optimal_action_counts": {
+        "ANSWER": 22,
+        "DEFER": 8,
+        "REASON_MORE": 18,
+        "RETRIEVE": 22,
+        "SEARCH_MORE": 20,
+        "STOP": 17,
+        "VERIFY": 31
+      },
+      "tied_optimal_action_sets": {
+        "DEFER|STOP": 12
+      }
+    },
+    "held_out_surface": {
+      "q_margin_bands": {
+        "MEDIUM": 46,
+        "TIE": 4
+      },
+      "singleton_optimal_action_counts": {
+        "ANSWER": 7,
+        "DEFER": 2,
+        "REASON_MORE": 7,
+        "RETRIEVE": 6,
+        "SEARCH_MORE": 8,
+        "STOP": 6,
+        "VERIFY": 10
+      },
+      "tied_optimal_action_sets": {
+        "DEFER|STOP": 4
+      }
+    },
+    "validation": {
+      "q_margin_bands": {
+        "MEDIUM": 138,
+        "TIE": 12
+      },
+      "singleton_optimal_action_counts": {
+        "ANSWER": 22,
+        "DEFER": 8,
+        "REASON_MORE": 18,
+        "RETRIEVE": 22,
+        "SEARCH_MORE": 20,
+        "STOP": 17,
+        "VERIFY": 31
+      },
+      "tied_optimal_action_sets": {
+        "DEFER|STOP": 12
+      }
+    }
+  },
+  "designed_oracle_agreement_count": 750,
+  "designed_oracle_disagreements": [],
+  "multi_optimal_task_count": 60,
+  "q_margin_bands": {
+    "MEDIUM": 690,
+    "TIE": 60
+  },
+  "schema": "DAPH_V2B_I3_3_1_ORACLE_BALANCE_REPORT_V1",
+  "singleton_optimal_action_counts": {
+    "ANSWER": 108,
+    "DEFER": 42,
+    "REASON_MORE": 94,
+    "RETRIEVE": 104,
+    "SEARCH_MORE": 98,
+    "STOP": 91,
+    "VERIFY": 153
+  },
+  "status": "FROZEN_BENCHMARK_NOT_EXECUTIVE_RESULT",
+  "task_count": 750,
+  "tie_semantics": "Any action in latent_optimal_actions has zero action regret.",
+  "tied_optimal_action_sets": {
+    "DEFER|STOP": 60
+  }
+}

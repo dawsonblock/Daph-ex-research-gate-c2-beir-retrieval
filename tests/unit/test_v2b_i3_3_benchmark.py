@@ -8,6 +8,7 @@ import importlib.util
 import json
 from pathlib import Path
 
+from hrm_adaptive_memory.common.canonical_json import canonical_bytes, loads_strict
 from hrm_adaptive_memory.cognitive_control.i3_3_qualification import validate_configuration
 from hrm_adaptive_memory.executive.metareasoning_artifacts import (
     artifact_graph_sha256, resolve_benchmark_artifact_graph)
@@ -29,10 +30,6 @@ CONFIG = ROOT / "experiments/v2b_i3_3/configs/v2b_i3_3_benchmark_freeze_v1.json"
 CACHE = ROOT / "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_oracle_cache_manifest_v1.json"
 
 
-def canonical(value: object) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
-
-
 def test_i3_3_generator_matches_all_frozen_concrete_task_and_packet_bytes():
     path = ROOT / "experiments/v2b_i3_3/generators/generate_v2b_i3_3.py"
     spec = importlib.util.spec_from_file_location("v2b_i3_3_generator", path)
@@ -41,6 +38,9 @@ def test_i3_3_generator_matches_all_frozen_concrete_task_and_packet_bytes():
     tasks, packets = module.generate()
     assert tasks == json.loads(PRIVATE.read_text())["tasks"]
     assert packets == json.loads(PACKETS.read_text())["packets"]
+    module.SEED += 1
+    changed_tasks, changed_packets = module.generate()
+    assert (changed_tasks, changed_packets) != (tasks, packets)
 
 
 def test_i3_3_split_hashes_are_exact_disjoint_and_have_frozen_counts():
@@ -49,13 +49,15 @@ def test_i3_3_split_hashes_are_exact_disjoint_and_have_frozen_counts():
     by_id = {task["task_id"]: task for task in private["tasks"]}
     seen: set[str] = set()
     assert {name: len(items) for name, items in splits.items()} == {
-        "development": 300, "validation": 150, "held_out": 300}
+        "development": 300, "validation": 150,
+        "held_out_instance": 100, "held_out_surface": 50,
+        "held_out_structure": 150}
     for split, items in splits.items():
         for item in items:
             assert item["task_id"] not in seen
             seen.add(item["task_id"])
             assert by_id[item["task_id"]]["split"] == split
-            assert hashlib.sha256(canonical(by_id[item["task_id"]])).hexdigest() == item["task_sha256"]
+            assert hashlib.sha256(canonical_bytes(by_id[item["task_id"]])).hexdigest() == item["task_sha256"]
     assert seen == set(by_id)
 
 
@@ -78,8 +80,34 @@ def test_i3_3_is_balanced_and_contains_required_channel_and_budget_pairs():
     assert len(pairs) >= 30
     for members in pairs.values():
         assert {item["budget_profile"] for item in members} == {"TIGHT", "GENEROUS"}
-        assert len({canonical(item["latent"]) for item in members}) == 1
-        assert len({canonical(item["action_effects"]) for item in members}) == 1
+        assert len({canonical_bytes(item["latent"]) for item in members}) == 1
+        assert len({canonical_bytes(item["action_effects"]) for item in members}) == 1
+
+
+def test_i3_3_semantic_structure_splits_have_frozen_novelty_and_surface_isolation():
+    tasks = json.loads(PRIVATE.read_text())["tasks"]
+    by_split = {split: [task for task in tasks if task["split"] == split]
+                for split in json.loads(SPLITS.read_text())["splits"]}
+    development = {task["semantic_structure_exact"] for task in by_split["development"]}
+    assert len(development) >= 100
+    assert len({task["semantic_structure_exact"] for task in by_split["validation"]}
+               - development) >= 30
+    assert not ({task["semantic_structure_exact"] for task in by_split["held_out_structure"]}
+                & development)
+    assert len({task["semantic_structure_exact"] for task in by_split["held_out_structure"]}) >= 50
+    surfaces = json.loads((ROOT / "experiments/v2b_i3_3/surface_templates/"
+                           "v2b_i3_3_surface_templates_v1.json").read_text())
+    held_out_templates = set(surfaces["held_out_surface_templates"])
+    development_templates = set(surfaces["development_templates"])
+    assert held_out_templates.isdisjoint(development_templates)
+    assert all(any(task["task_summary"].startswith(template)
+                   for template in held_out_templates)
+               for task in by_split["held_out_surface"])
+
+
+def test_i3_3_all_frozen_json_is_strict_rfc_8259():
+    for path in sorted((ROOT / "experiments/v2b_i3_3").rglob("*.json")):
+        loads_strict(path.read_bytes())
 
 
 def test_i3_3_public_packets_are_opaque_and_have_no_latent_or_oracle_leakage():
@@ -104,9 +132,11 @@ def test_i3_3_manifest_closure_and_loader_use_the_same_artifact_graph():
         json_loader=lambda relative: json.loads((ROOT / relative).read_text()))
     assert set(graph) >= {"benchmark_manifest", "private_environment", "controller_packets",
                           "task_families", "split_definitions", "surface_templates",
-                          "balance_report", "protocol", "policy", "utility",
+                          "balance_report", "structural_diversity_report",
+                          "protocol", "policy", "utility",
                           "observation_masks", "resource_profiles", "oracle_cache_manifest",
                           "oracle_latent_tables", "oracle_difficulty_report",
+                          "oracle_balance_report",
                           "oracle_sequential_state_aware_controller"}
     assert len(artifact_graph_sha256(ROOT, graph)) == 64
     benchmark = load_metareasoning_benchmark(MANIFEST)
@@ -118,13 +148,20 @@ def test_i3_3_manifest_closure_and_loader_use_the_same_artifact_graph():
         for role, relative in loader_graph.items()}
 
 
-def test_i3_3_every_task_has_a_bounded_exact_latent_oracle():
+def test_i3_3_representative_tasks_have_bounded_exact_latent_oracles():
     benchmark = load_metareasoning_benchmark(MANIFEST)
     policy = load_frozen_policy(ROOT / "configs/v2b_i3_policy_v1.json")
     utility = MetareasoningUtility.from_file(ROOT / "configs/v2b_i3_1_utility_v1.json")
     cache = OracleTableCache()
     optimal_actions: Counter[str] = Counter()
-    for task in benchmark.tasks:
+    samples = [next(task for task in benchmark.tasks
+                    if task.split == split and task.category.endswith(action.lower()))
+               for split, action in zip(
+                   ("development", "development", "validation", "validation",
+                    "held_out_instance", "held_out_surface", "held_out_structure"),
+                   ("ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
+                    "REASON_MORE", "STOP", "DEFER"))]
+    for task in samples:
         runtime = initial_i3_runtime(task, ResourceState(benchmark.budget_for(task)))
         table = cache.get_or_build(initial_runtime=runtime, policy=policy, utility=utility,
                                    include_policy_feedback=True)
@@ -133,8 +170,23 @@ def test_i3_3_every_task_has_a_bounded_exact_latent_oracle():
         assert len(table.states) <= 20_000
         assert len(table.transitions) <= 120_000
         optimal_actions.update(action.value for action in table.optimal_actions[table.initial_state_id])
-    assert set(optimal_actions) == {"ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
-                                    "REASON_MORE", "DEFER", "STOP"}
+    assert optimal_actions
+
+
+def test_i3_3_every_designed_optimal_action_is_oracle_optimal():
+    cache = json.loads(CACHE.read_text())
+    report = json.loads((ROOT / cache["oracle_balance_report"]["path"]).read_text())
+    assert report["designed_oracle_agreement_count"] == report["task_count"] == 750
+    assert report["designed_oracle_disagreements"] == []
+    assert sum(report["singleton_optimal_action_counts"].values()) + sum(
+        report["tied_optimal_action_sets"].values()) == 750
+    assert set(report["singleton_optimal_action_counts"]) == {
+        "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"}
+    assert report["multi_optimal_task_count"] / report["task_count"] <= 0.15
+    assert len(report["q_margin_bands"]) >= 2
+    assert set(report["by_split"]) == {
+        "development", "validation", "held_out_instance",
+        "held_out_surface", "held_out_structure"}
 
 
 def test_i3_3_freeze_configuration_is_fail_closed_and_not_a_scientific_claim():
@@ -171,7 +223,8 @@ def test_i3_3_precomputed_oracle_cache_is_closed_semantic_and_information_bounde
     for ablation in ("NO_VERIFICATION", "NO_TEMPORAL", "NO_PROVENANCE",
                      "NO_CONFLICT", "NO_HISTORY"):
         assert conditions[ablation]["task_uniform_information_gap"] > aware_gap
-    entries = [cache["latent_oracles"], cache["difficulty_report"], *conditions.values()]
+    entries = [cache["latent_oracles"], cache["difficulty_report"],
+               cache["oracle_balance_report"], *conditions.values()]
     for entry in entries:
         path = ROOT / entry["path"]
         assert hashlib.sha256(path.read_bytes()).hexdigest() == entry["sha256"]
