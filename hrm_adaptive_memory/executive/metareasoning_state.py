@@ -14,7 +14,7 @@ import hashlib
 import json
 
 from .metareasoning_executor import I3Runtime
-from .resources import ResourceState
+from .resources import DEFAULT_ACTION_COSTS, POLICY_REJECTION_COST, ResourceState
 
 
 @dataclass(frozen=True)
@@ -30,6 +30,7 @@ class OracleState:
     retrievals_remaining: int
     verifications_remaining: int
     searches_remaining: int
+    policy_rejections_used: int = 0
 
     def __post_init__(self) -> None:
         if min(self.steps_remaining, self.reasoning_units_remaining,
@@ -54,6 +55,7 @@ class OracleState:
             "retrievals_remaining": self.retrievals_remaining,
             "verifications_remaining": self.verifications_remaining,
             "searches_remaining": self.searches_remaining,
+            "policy_rejections_used": self.policy_rejections_used,
         }
 
     def capacity(self) -> tuple[int, int, int, int, int]:
@@ -65,7 +67,9 @@ class OracleState:
 
 def canonicalize_runtime_state(runtime: I3Runtime) -> OracleState:
     remaining = runtime.resources.as_dict()
-    units, remainder = divmod(remaining["reasoning_tokens_remaining"], 128)
+    reasoning_unit = DEFAULT_ACTION_COSTS[next(action for action in DEFAULT_ACTION_COSTS
+                                                if action.value == "REASON_MORE")].reasoning_tokens
+    units, remainder = divmod(remaining["reasoning_tokens_remaining"], reasoning_unit)
     if remainder:
         raise ValueError("I3.1 canonical state requires 128-token reasoning units")
     return OracleState(
@@ -80,6 +84,7 @@ def canonicalize_runtime_state(runtime: I3Runtime) -> OracleState:
         retrievals_remaining=remaining["retrieval_calls_remaining"],
         verifications_remaining=remaining["verification_calls_remaining"],
         searches_remaining=remaining["search_calls_remaining"],
+        policy_rejections_used=remaining.get("policy_rejections_used", 0),
     )
 
 
@@ -92,17 +97,27 @@ def runtime_from_oracle_state(template: I3Runtime, state: OracleState) -> I3Runt
     """
     budget = template.resources.budget
     steps_used = budget.max_executive_steps - state.steps_remaining
-    tokens_used = budget.max_reasoning_tokens - state.reasoning_units_remaining * 128
+    reasoning_unit = DEFAULT_ACTION_COSTS[next(action for action in DEFAULT_ACTION_COSTS
+                                                if action.value == "REASON_MORE")].reasoning_tokens
+    tokens_used = budget.max_reasoning_tokens - state.reasoning_units_remaining * reasoning_unit
     retrieval_used = budget.max_retrieval_calls - state.retrievals_remaining
     verification_used = budget.max_verification_calls - state.verifications_remaining
     search_used = budget.max_search_calls - state.searches_remaining
     # Only nonterminal actions can precede an oracle state, therefore this is
     # uniquely determined by the used resource counters.
-    elapsed = retrieval_used * 5 + verification_used * 8 + search_used * 6 + (tokens_used // 128) * 4
+    from hrm_adaptive_memory.cognitive_control.core import DecisionAction
+    elapsed = (
+        retrieval_used * DEFAULT_ACTION_COSTS[DecisionAction.RETRIEVE].elapsed_ms
+        + verification_used * DEFAULT_ACTION_COSTS[DecisionAction.VERIFY].elapsed_ms
+        + search_used * DEFAULT_ACTION_COSTS[DecisionAction.SEARCH_MORE].elapsed_ms
+        + (tokens_used // reasoning_unit) * DEFAULT_ACTION_COSTS[DecisionAction.REASON_MORE].elapsed_ms
+        + state.policy_rejections_used * POLICY_REJECTION_COST.elapsed_ms
+    )
     resources = ResourceState(
         budget, executive_steps_used=steps_used, reasoning_tokens_used=tokens_used,
         retrieval_calls_used=retrieval_used, verification_calls_used=verification_used,
-        search_calls_used=search_used, elapsed_ms=elapsed, monetary_cost_microusd=0)
+        search_calls_used=search_used, elapsed_ms=elapsed, monetary_cost_microusd=0,
+        policy_rejections_used=state.policy_rejections_used)
     from dataclasses import replace
     from hrm_adaptive_memory.cognitive_control.state import TemporalStatus, VerificationState
     return replace(template, resources=resources,
@@ -111,4 +126,3 @@ def runtime_from_oracle_state(template: I3Runtime, state: OracleState) -> I3Runt
                    unresolved_conflict=state.conflict_state,
                    composition_complete=state.composition_state,
                    retrieved=state.retrieved, searched=state.searched)
-

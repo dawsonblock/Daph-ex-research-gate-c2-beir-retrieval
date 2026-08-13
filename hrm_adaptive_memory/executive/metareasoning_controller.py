@@ -14,6 +14,20 @@ from .actions import ActionProposal
 
 
 @dataclass(frozen=True)
+class PolicyFeedback:
+    """Frozen, controller-visible I3.2 policy response.
+
+    Fine-grained rule ids are deliberately omitted.  The controller sees the
+    effect, any required action, and a coarse class only; an evaluator can
+    model exactly the same feedback without exposing a detailed policy oracle.
+    """
+
+    effect: str
+    resolved_action: DecisionAction | None
+    reason_class: str
+
+
+@dataclass(frozen=True)
 class ControllerObservation:
     """Same controller contract in both conditions; only `cognitive_state` is masked."""
 
@@ -24,6 +38,7 @@ class ControllerObservation:
     executed_actions: tuple[DecisionAction, ...]
     rejected_actions: tuple[DecisionAction, ...]
     cognitive_state: CognitiveStateSnapshot | None
+    policy_feedback: tuple[PolicyFeedback, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -139,7 +154,8 @@ class MatchedMetareasoningController:
             return ActionProposal(DecisionAction.DEFER, "OBSERVED_UNRESOLVED_CONFLICT")
         if (verification in {VerificationState.UNVERIFIED, VerificationState.STALE}
                 or state.temporal_status is TemporalStatus.STALE):
-            if self._available(observation, DecisionAction.VERIFY):
+            if (not self._executed(observation, DecisionAction.VERIFY)
+                    and self._available(observation, DecisionAction.VERIFY)):
                 return ActionProposal(DecisionAction.VERIFY, "OBSERVED_VERIFICATION_GAP")
             return ActionProposal(DecisionAction.DEFER, "VERIFICATION_BUDGET_UNAVAILABLE")
         if composition_incomplete and not self._executed(observation, DecisionAction.REASON_MORE):

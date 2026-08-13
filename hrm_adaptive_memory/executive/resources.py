@@ -58,6 +58,13 @@ DEFAULT_ACTION_COSTS: dict[DecisionAction, ActionCost] = {
     DecisionAction.STOP: ActionCost(elapsed_ms=1),
 }
 
+# I3.2 freezes policy feedback as a visible, bounded control event. It is not
+# an executive action and therefore remains outside the seven-action contract,
+# but it consumes one control step and the same minimal timing cost as a
+# terminal control decision. Both runtime and information-state oracle import
+# this single definition.
+POLICY_REJECTION_COST = ActionCost(elapsed_ms=DEFAULT_ACTION_COSTS[DecisionAction.DEFER].elapsed_ms)
+
 
 @dataclass(frozen=True)
 class ResourceState:
@@ -69,6 +76,7 @@ class ResourceState:
     search_calls_used: int = 0
     elapsed_ms: int = 0
     monetary_cost_microusd: int = 0
+    policy_rejections_used: int = 0
 
     def can_execute(self, action: DecisionAction) -> bool:
         try:
@@ -91,6 +99,7 @@ class ResourceState:
             search_calls_used=self.search_calls_used + cost.search_calls,
             elapsed_ms=self.elapsed_ms + cost.elapsed_ms,
             monetary_cost_microusd=self.monetary_cost_microusd + cost.monetary_cost_microusd,
+            policy_rejections_used=self.policy_rejections_used,
         )
         if any((
             next_state.executive_steps_used > self.budget.max_executive_steps,
@@ -102,6 +111,31 @@ class ResourceState:
             next_state.monetary_cost_microusd > self.budget.max_monetary_cost_microusd,
         )):
             raise ResourceExhausted(f"resource budget prevents {action.value}")
+        return next_state
+
+    def consume_policy_rejection(self) -> "ResourceState":
+        """Record a visible denied proposal under the frozen I3.2 semantics."""
+        cost = POLICY_REJECTION_COST
+        next_state = ResourceState(
+            self.budget, executive_steps_used=self.executive_steps_used + 1,
+            reasoning_tokens_used=self.reasoning_tokens_used,
+            retrieval_calls_used=self.retrieval_calls_used,
+            verification_calls_used=self.verification_calls_used,
+            search_calls_used=self.search_calls_used,
+            elapsed_ms=self.elapsed_ms + cost.elapsed_ms,
+            monetary_cost_microusd=self.monetary_cost_microusd + cost.monetary_cost_microusd)
+        next_state = ResourceState(
+            next_state.budget, executive_steps_used=next_state.executive_steps_used,
+            reasoning_tokens_used=next_state.reasoning_tokens_used,
+            retrieval_calls_used=next_state.retrieval_calls_used,
+            verification_calls_used=next_state.verification_calls_used,
+            search_calls_used=next_state.search_calls_used, elapsed_ms=next_state.elapsed_ms,
+            monetary_cost_microusd=next_state.monetary_cost_microusd,
+            policy_rejections_used=self.policy_rejections_used + 1)
+        if (next_state.executive_steps_used > self.budget.max_executive_steps
+                or next_state.elapsed_ms > self.budget.max_elapsed_ms
+                or next_state.monetary_cost_microusd > self.budget.max_monetary_cost_microusd):
+            raise ResourceExhausted("resource budget prevents policy rejection feedback")
         return next_state
 
     def as_dict(self) -> dict[str, int]:
@@ -121,4 +155,5 @@ class ResourceState:
             "monetary_cost_microusd": self.monetary_cost_microusd,
             "monetary_cost_microusd_remaining": (
                 self.budget.max_monetary_cost_microusd - self.monetary_cost_microusd),
+            "policy_rejections_used": self.policy_rejections_used,
         }

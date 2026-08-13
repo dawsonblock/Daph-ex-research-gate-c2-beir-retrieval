@@ -18,6 +18,9 @@ BENCHMARK_SCHEMA = "DAPH_V2B_I3_METAREASONING_BENCHMARK_V1"
 BENCHMARK_MANIFEST_SCHEMA = "DAPH_V2B_I3_BENCHMARK_MANIFEST_V1"
 CONTROLLER_PACKETS_SCHEMA = "DAPH_V2B_I3_CONTROLLER_PACKETS_V1"
 I3_1_CONTROLLER_PACKETS_SCHEMA = "DAPH_V2B_I3_1_CONTROLLER_PACKETS_V1"
+I3_2_BENCHMARK_MANIFEST_SCHEMA = "DAPH_V2B_I3_2_BENCHMARK_MANIFEST_V1"
+I3_2_TASK_EXTENSION_SCHEMA = "DAPH_V2B_I3_2_TASK_EXTENSION_V1"
+I3_2_CONTROLLER_PACKETS_SCHEMA = "DAPH_V2B_I3_2_CONTROLLER_PACKETS_V1"
 FROZEN_DEVELOPMENT_STATUS = "FROZEN_FOR_DEVELOPMENT"
 
 
@@ -130,7 +133,7 @@ def _load_payloads(path: Path) -> tuple[Mapping[str, Any], Mapping[str, Mapping[
         # Compatibility for the frozen I3 development baseline. New I3 runs use
         # the manifest path below so controller packets are physically separate.
         return payload, {}, {"private_environment": _sha256(path)}
-    if payload.get("schema") != BENCHMARK_MANIFEST_SCHEMA:
+    if payload.get("schema") not in {BENCHMARK_MANIFEST_SCHEMA, I3_2_BENCHMARK_MANIFEST_SCHEMA}:
         raise ValueError("unsupported V2B-I3 metareasoning benchmark schema")
     if payload.get("status") != FROZEN_DEVELOPMENT_STATUS:
         raise ValueError("V2B-I3 benchmark manifest must be frozen for development")
@@ -141,11 +144,30 @@ def _load_payloads(path: Path) -> tuple[Mapping[str, Any], Mapping[str, Mapping[
     if private_payload.get("schema") != BENCHMARK_SCHEMA:
         raise ValueError("V2B-I3 private environment has an unsupported schema")
     packet_schema = packet_payload.get("schema")
-    if packet_schema not in {CONTROLLER_PACKETS_SCHEMA, I3_1_CONTROLLER_PACKETS_SCHEMA}:
+    if packet_schema not in {CONTROLLER_PACKETS_SCHEMA, I3_1_CONTROLLER_PACKETS_SCHEMA,
+                             I3_2_CONTROLLER_PACKETS_SCHEMA}:
         raise ValueError("V2B-I3 controller packets have an unsupported schema")
     if packet_payload.get("status") != FROZEN_DEVELOPMENT_STATUS:
         raise ValueError("V2B-I3 controller packets must be frozen for development")
     packets = packet_payload.get("packets")
+    extension_path = None
+    if payload.get("schema") == I3_2_BENCHMARK_MANIFEST_SCHEMA:
+        extension_path = (path.parent / str(payload.get("task_extension_path", ""))).resolve()
+        extension_payload = json.loads(extension_path.read_text())
+        if (extension_payload.get("schema") != I3_2_TASK_EXTENSION_SCHEMA
+                or extension_payload.get("status") != FROZEN_DEVELOPMENT_STATUS
+                or not isinstance(extension_payload.get("tasks"), list)):
+            raise ValueError("V2B-I3.2 task extension must be frozen and nonempty")
+        private_payload = dict(private_payload)
+        private_payload["tasks"] = list(private_payload.get("tasks", ())) + extension_payload["tasks"]
+        private_payload["benchmark_id"] = str(payload.get("benchmark_id", private_payload.get("benchmark_id", "")))
+        packets_extension_path = (path.parent / str(payload.get("controller_packets_extension_path", ""))).resolve()
+        packets_extension = json.loads(packets_extension_path.read_text())
+        if (packets_extension.get("schema") != I3_2_CONTROLLER_PACKETS_SCHEMA
+                or packets_extension.get("status") != FROZEN_DEVELOPMENT_STATUS
+                or not isinstance(packets_extension.get("packets"), list)):
+            raise ValueError("V2B-I3.2 controller extension must be frozen and nonempty")
+        packets = list(packets) + packets_extension["packets"]
     if not isinstance(packets, list):
         raise ValueError("V2B-I3 controller packet artifact must contain packets")
     by_task: dict[str, Mapping[str, str]] = {}
@@ -172,6 +194,9 @@ def _load_payloads(path: Path) -> tuple[Mapping[str, Any], Mapping[str, Mapping[
     return private_payload, by_task, {
         "benchmark_manifest": _sha256(path), "private_environment": _sha256(private_path),
         "controller_packets": _sha256(packets_path),
+        **({"task_extension": _sha256(extension_path),
+            "controller_packets_extension": _sha256(packets_extension_path)}
+           if extension_path is not None else {}),
     }
 
 

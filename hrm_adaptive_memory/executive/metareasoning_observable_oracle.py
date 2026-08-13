@@ -1,4 +1,4 @@
-"""Information-bound oracle for the V2B-I3.1 initial decision state.
+"""Opening-observation information bound retained from V2B-I3.1.
 
 The latent table asks what an omniscient controller could do.  This module
 groups *initial* latent states that emit the same frozen controller packet and
@@ -21,8 +21,12 @@ from .metareasoning_state import runtime_from_oracle_state
 from .metareasoning_transition_table import OraclePolicyTable
 
 
-OBSERVABLE_ORACLE_SCHEMA = "DAPH_V2B_OBSERVABLE_ORACLE_TABLE_V1"
-OBSERVABLE_ORACLE_REVISION = "v2b-i3.1-observable-initial-oracle-v1"
+OPENING_OBSERVABLE_ORACLE_SCHEMA = "DAPH_V2B_OPENING_OBSERVABLE_ORACLE_TABLE_V1"
+OPENING_OBSERVABLE_ORACLE_REVISION = "v2b-i3.1-opening-observable-oracle-v1"
+# Compatibility names deliberately remain for archived I3.1 receipts.  I3.2
+# uses the sequential information-state oracle in a separate module.
+OBSERVABLE_ORACLE_SCHEMA = OPENING_OBSERVABLE_ORACLE_SCHEMA
+OBSERVABLE_ORACLE_REVISION = OPENING_OBSERVABLE_ORACLE_REVISION
 
 
 def _canonical_hash(value: object) -> str:
@@ -68,7 +72,7 @@ class ObservationClass:
 
 
 @dataclass(frozen=True)
-class ObservableOraclePolicyTable:
+class OpeningObservableOracle:
     mask_sha256: str
     identity_sha256: str
     classes: Mapping[str, ObservationClass]
@@ -87,7 +91,7 @@ class ObservableOraclePolicyTable:
 
     def serializable(self) -> dict[str, object]:
         return {
-            "schema": OBSERVABLE_ORACLE_SCHEMA,
+            "schema": OPENING_OBSERVABLE_ORACLE_SCHEMA,
             "mask_sha256": self.mask_sha256,
             "identity_sha256": self.identity_sha256,
             "class_count": len(self.classes),
@@ -106,9 +110,9 @@ class ObservableOraclePolicyTable:
         return _canonical_hash(self.serializable())
 
 
-def build_observable_oracle(*, runtime_tables: Iterable[tuple[object, OraclePolicyTable]],
-                            mask: ObservationMask) -> ObservableOraclePolicyTable:
-    """Build one uniform-prior information-bound table for an observation mask."""
+def build_opening_observable_oracle(*, runtime_tables: Iterable[tuple[object, OraclePolicyTable]],
+                                    mask: ObservationMask) -> OpeningObservableOracle:
+    """Build the I3.1 opening-action diagnostic, not a sequential optimum."""
     runtime_tables = tuple(runtime_tables)
     grouped: dict[str, list[tuple[str, OraclePolicyTable]]] = {}
     for runtime, table in runtime_tables:
@@ -140,5 +144,17 @@ def build_observable_oracle(*, runtime_tables: Iterable[tuple[object, OraclePoli
     identities = sorted(table.identity_sha256 for _, table in runtime_tables)
     identity = _canonical_hash({"latent_tables": identities, "mask_sha256": mask.sha256(),
                                 "prior": "UNIFORM_BY_INITIAL_OBSERVATION_CLASS_V1",
-                                "revision": OBSERVABLE_ORACLE_REVISION})
-    return ObservableOraclePolicyTable(mask.sha256(), identity, classes, state_to_observation)
+                                "revision": OPENING_OBSERVABLE_ORACLE_REVISION})
+    return OpeningObservableOracle(mask.sha256(), identity, classes, state_to_observation)
+
+
+def opening_information_gap(*, table: OraclePolicyTable,
+                            oracle: OpeningObservableOracle) -> float:
+    """I3.1 opening-only diagnostic; do not treat it as trajectory-wide loss."""
+    return oracle.information_gap(table)
+
+
+# Kept so I3.1 receipts and callers remain replayable. New I3.2 code must use
+# `build_sequential_observable_oracle` in `metareasoning_sequential_oracle`.
+ObservableOraclePolicyTable = OpeningObservableOracle
+build_observable_oracle = build_opening_observable_oracle

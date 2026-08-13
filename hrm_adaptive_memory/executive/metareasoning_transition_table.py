@@ -23,11 +23,11 @@ from .metareasoning_executor import (
 from .metareasoning_state import OracleState, canonicalize_runtime_state, runtime_from_oracle_state
 from .metareasoning_utility import MetareasoningUtility, frozen_action_cost_hash
 from .policy import FrozenPolicy
-from .resources import ResourceBudget, ResourceState
+from .resources import ResourceBudget, ResourceExhausted, ResourceState
 
 
 ORACLE_TABLE_SCHEMA = "DAPH_V2B_ORACLE_TABLE_V1"
-ORACLE_IMPLEMENTATION_REVISION = "v2b-i3.1-transition-table-v1"
+ORACLE_IMPLEMENTATION_REVISION = "v2b-i3.2-transition-table-policy-feedback-v1"
 DEFAULT_MAX_STATES = 20_000
 DEFAULT_MAX_TRANSITIONS = 140_000
 
@@ -52,7 +52,7 @@ class TransitionResult:
     task_success: bool | None
     action_cost: float
     policy_effect: str
-    resolved_action: DecisionAction
+    resolved_action: DecisionAction | None
 
 
 @dataclass(frozen=True)
@@ -130,16 +130,19 @@ def _resolve(policy: FrozenPolicy, runtime: I3Runtime,
 def build_oracle_policy_table(*, task: I3BenchmarkTask, policy: FrozenPolicy,
                               utility: MetareasoningUtility,
                               budget: ResourceBudget,
+                              include_policy_feedback: bool = False,
                               max_states: int = DEFAULT_MAX_STATES,
                               max_transitions: int = DEFAULT_MAX_TRANSITIONS) -> OraclePolicyTable:
     """Enumerate a finite latent graph once, then solve it backwards exactly."""
     return build_oracle_policy_table_for_runtime(
         initial_runtime=initial_i3_runtime(task, ResourceState(budget)), policy=policy,
-        utility=utility, max_states=max_states, max_transitions=max_transitions)
+        utility=utility, include_policy_feedback=include_policy_feedback,
+        max_states=max_states, max_transitions=max_transitions)
 
 
 def build_oracle_policy_table_for_runtime(*, initial_runtime: I3Runtime, policy: FrozenPolicy,
                                           utility: MetareasoningUtility,
+                                          include_policy_feedback: bool = False,
                                           max_states: int = DEFAULT_MAX_STATES,
                                           max_transitions: int = DEFAULT_MAX_TRANSITIONS) -> OraclePolicyTable:
     """Build a table from an explicitly budgeted initial runtime."""
@@ -161,6 +164,33 @@ def build_oracle_policy_table_for_runtime(*, initial_runtime: I3Runtime, policy:
         for proposed in V2B_ACTIONS:
             effect, resolved = _resolve(policy, runtime, proposed)
             if resolved is None or not runtime.resources.can_execute(resolved):
+                if not include_policy_feedback:
+                    continue
+                try:
+                    rejected_runtime = I3Runtime(
+                        task=runtime.task, resources=runtime.resources.consume_policy_rejection(),
+                        verification_state=runtime.verification_state, temporal_status=runtime.temporal_status,
+                        unresolved_conflict=runtime.unresolved_conflict,
+                        composition_complete=runtime.composition_complete,
+                        retrieved=runtime.retrieved, searched=runtime.searched)
+                except ResourceExhausted:
+                    continue
+                next_state = canonicalize_runtime_state(rejected_runtime)
+                next_id = next_state.state_id()
+                if next_state.steps_remaining >= states[state_id].steps_remaining:
+                    raise RuntimeError("ORACLE_ZERO_COST_CYCLE")
+                if next_id not in states:
+                    if len(states) >= max_states:
+                        raise RuntimeError("ORACLE_STATE_SPACE_LIMIT")
+                    states[next_id] = next_state
+                    runtimes[next_id] = rejected_runtime
+                    queue.append(next_id)
+                result = TransitionResult(
+                    next_state_id=next_id, terminal=False, terminal_result=None,
+                    task_success=None,
+                    action_cost=utility.action_utility(runtime.resources, rejected_runtime.resources),
+                    policy_effect=effect.value, resolved_action=None)
+                proposal_transitions[(state_id, proposed)] = result
                 continue
             execution = executor.execute(runtime, resolved)
             cost = utility.action_utility(runtime.resources, execution.runtime.resources)
@@ -227,11 +257,16 @@ def build_oracle_policy_table_for_runtime(*, initial_runtime: I3Runtime, policy:
 
     proposal_q: dict[tuple[str, DecisionAction], float] = {}
     for key, transition in proposal_transitions.items():
-        proposal_q[key] = q_values[(key[0], transition.resolved_action)]
+        if transition.resolved_action is None:
+            assert transition.next_state_id is not None
+            proposal_q[key] = transition.action_cost + values[transition.next_state_id]
+        else:
+            proposal_q[key] = q_values[(key[0], transition.resolved_action)]
     identity = _hash({
         "task_sha256": _task_hash(task), "budget_sha256": _budget_hash(task, initial_runtime),
         "policy_sha256": policy.sha256, "utility_sha256": utility.sha256,
         "action_cost_sha256": frozen_action_cost_hash(),
+        "include_policy_feedback": include_policy_feedback,
         "oracle_implementation_revision": ORACLE_IMPLEMENTATION_REVISION,
     })
     elapsed = perf_counter() - started
@@ -259,17 +294,20 @@ class OracleTableCache:
         self.misses = 0
 
     def get_or_build(self, *, initial_runtime: I3Runtime, policy: FrozenPolicy,
-                     utility: MetareasoningUtility) -> OraclePolicyTable:
+                     utility: MetareasoningUtility,
+                     include_policy_feedback: bool = False) -> OraclePolicyTable:
         task = initial_runtime.task
         key = _hash({"task": _task_hash(task), "budget": _budget_hash(task, initial_runtime),
                      "policy": policy.sha256, "utility": utility.sha256,
-                     "costs": frozen_action_cost_hash(), "revision": ORACLE_IMPLEMENTATION_REVISION})
+                     "costs": frozen_action_cost_hash(), "include_policy_feedback": include_policy_feedback,
+                     "revision": ORACLE_IMPLEMENTATION_REVISION})
         if key in self._tables:
             self.hits += 1
             return self._tables[key]
         self.misses += 1
         table = build_oracle_policy_table_for_runtime(
-            initial_runtime=initial_runtime, policy=policy, utility=utility)
+            initial_runtime=initial_runtime, policy=policy, utility=utility,
+            include_policy_feedback=include_policy_feedback)
         self._tables[key] = table
         return table
 

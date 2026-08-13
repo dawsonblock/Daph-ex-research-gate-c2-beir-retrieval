@@ -32,6 +32,7 @@ COMPONENT_PATHS = {
     "qualification_runtime": "hrm_adaptive_memory/cognitive_control/qualification.py",
     "i3_qualification_runtime": "hrm_adaptive_memory/cognitive_control/metareasoning_qualification.py",
     "i3_1_qualification_runtime": "hrm_adaptive_memory/cognitive_control/i3_1_qualification.py",
+    "i3_2_qualification_runtime": "hrm_adaptive_memory/cognitive_control/i3_2_qualification.py",
     "authority_runtime": "hrm_adaptive_memory/external_verification/authority_registry.py",
     "authority_extractors": "hrm_adaptive_memory/external_verification/authority_extractors.py",
     "typed_comparator_registry": "hrm_adaptive_memory/external_verification/comparators",
@@ -70,6 +71,14 @@ COMPONENT_PATHS = {
     "v2b_i3_1_controller_packets": "experiments/v2b_i3_1/benchmark/controller_packets/v2b_i3_1_controller_packets_v1.json",
     "v2b_i3_1_configuration": "experiments/v2b_i3_1/configs/v2b_i3_1_development.json",
     "v2b_i3_1_runner": "scripts/run_v2b_i3_1_development.py",
+    "v2b_i3_2_sequential_oracle": "hrm_adaptive_memory/executive/metareasoning_sequential_oracle.py",
+    "v2b_i3_2_runtime": "hrm_adaptive_memory/executive/metareasoning_i3_2.py",
+    "v2b_i3_2_baseline": "configs/v2b_i3_2_baseline.json",
+    "v2b_i3_2_private_extension": "experiments/v2b_i3_2/tasks/v2b_i3_2_information_state_extension_v1.json",
+    "v2b_i3_2_manifest": "experiments/v2b_i3_2/benchmark/v2b_i3_2_benchmark_manifest_v1.json",
+    "v2b_i3_2_controller_packets": "experiments/v2b_i3_2/benchmark/controller_packets/v2b_i3_2_controller_packets_extension_v1.json",
+    "v2b_i3_2_configuration": "experiments/v2b_i3_2/configs/v2b_i3_2_development.json",
+    "v2b_i3_2_runner": "scripts/run_v2b_i3_2_development.py",
 }
 TEST_CORPUS_PATHS = (
     "tests/unit/test_cognitive_control.py",
@@ -81,6 +90,7 @@ TEST_CORPUS_PATHS = (
     "tests/unit/test_v2b_i2_executive.py",
     "tests/unit/test_v2b_i3_metareasoning.py",
     "tests/unit/test_v2b_i3_1_oracle_efficiency.py",
+    "tests/unit/test_v2b_i3_2_sequential_information.py",
 )
 QUALIFICATION_LOCK = "configs/v2b_qualification_requirements.lock"
 CRITICAL_DISTRIBUTIONS = (
