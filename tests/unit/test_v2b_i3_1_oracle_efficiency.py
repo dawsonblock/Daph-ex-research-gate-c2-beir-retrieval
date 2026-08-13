@@ -3,7 +3,10 @@ from __future__ import annotations
 
 from dataclasses import replace
 import json
+import os
 from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 
@@ -11,7 +14,7 @@ from hrm_adaptive_memory.executive.metareasoning_benchmark import load_metareaso
 from hrm_adaptive_memory.executive.metareasoning_controller import (
     STATE_AWARE_MASK, STATE_BLIND_MASK, MatchedMetareasoningController)
 from hrm_adaptive_memory.executive.metareasoning_executor import (
-    build_observable_snapshot, initial_i3_runtime)
+    DeterministicMetareasoningExecutor, build_observable_snapshot, initial_i3_runtime)
 from hrm_adaptive_memory.executive.metareasoning_i3_1 import replay_trajectory, trajectory_payload
 from hrm_adaptive_memory.executive.metareasoning_loop import STATE_AWARE, V2BMetareasoningExperiment
 from hrm_adaptive_memory.executive.metareasoning_observable_oracle import build_observable_oracle
@@ -70,6 +73,40 @@ def test_i3_1_action_regret_is_a_table_lookup_with_runtime_parity():
         if origin == state_id:
             assert table.action_regret(origin, candidate) == pytest.approx(
                 max(0.0, table.state_values[origin] - q_value))
+
+
+def test_i3_1_transition_cost_and_next_state_match_runtime_executor():
+    _, policy, utility, runtimes = _inputs()
+    runtime = runtimes["i3_retrieval_required"]
+    table = build_oracle_policy_table_for_runtime(initial_runtime=runtime, policy=policy, utility=utility)
+    transition = table.transitions[(table.initial_state_id, next(
+        action for action in table.optimal_actions[table.initial_state_id] if action.value == "RETRIEVE"))]
+    execution = DeterministicMetareasoningExecutor().execute(runtime, transition.resolved_action)
+    assert transition.action_cost == utility.action_utility(runtime.resources, execution.runtime.resources)
+    assert transition.next_state_id == canonicalize_runtime_state(execution.runtime).state_id()
+
+
+def test_i3_1_table_hash_is_stable_across_python_hash_seeds():
+    program = """
+from hrm_adaptive_memory.executive.metareasoning_benchmark import load_metareasoning_benchmark
+from hrm_adaptive_memory.executive.metareasoning_executor import initial_i3_runtime
+from hrm_adaptive_memory.executive.metareasoning_transition_table import build_oracle_policy_table_for_runtime
+from hrm_adaptive_memory.executive.metareasoning_utility import MetareasoningUtility
+from hrm_adaptive_memory.executive.policy import load_frozen_policy
+from hrm_adaptive_memory.executive.resources import ResourceState
+from pathlib import Path
+r = Path('.')
+b = load_metareasoning_benchmark(r / 'experiments/v2b_i3_1/benchmark/v2b_i3_1_benchmark_manifest_v1.json')
+t = next(x for x in b.tasks if x.task_id == 'i3_retrieval_required')
+o = build_oracle_policy_table_for_runtime(initial_runtime=initial_i3_runtime(t, ResourceState(b.budget_for(t))), policy=load_frozen_policy(r / 'configs/v2b_i3_policy_v1.json'), utility=MetareasoningUtility.from_file(r / 'configs/v2b_i3_1_utility_v1.json'))
+print(o.table_sha256)
+"""
+    hashes = []
+    for seed in ("1", "777"):
+        environment = {**os.environ, "PYTHONHASHSEED": seed}
+        hashes.append(subprocess.check_output(
+            [sys.executable, "-c", program], cwd=ROOT, text=True, env=environment).strip())
+    assert hashes[0] == hashes[1]
 
 
 def test_i3_1_table_cache_reuses_latent_table_across_conditions():
