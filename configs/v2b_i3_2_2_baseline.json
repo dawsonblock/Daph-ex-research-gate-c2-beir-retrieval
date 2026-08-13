@@ -1,0 +1,22 @@
+{
+  "schema": "V2B_I3_2_1_INTEGRITY_BASELINE_V1",
+  "status": "RECORDED_DEVELOPMENT_BASELINE_NOT_QUALIFIED",
+  "source_commit": "3f98b20e68488a5d5f6bc37eeabc662be91fcea2",
+  "source_tree": "929d477c4f872b3f8a86ca925dc237346a6c3714",
+  "artifact_hashes": {
+    "benchmark_manifest": "d2900ac3f0ae75d1833380cd753b2c6fc714d3dd37ab40f0c12119e1b9ccb5de",
+    "private_environment": "a65fa506f0bad4d49937a8da9bdf1f1485f001b7af94fe50e1bd25c64181c566",
+    "base_controller_packets": "ae1067a6d7323c04fe26dc918c7f750a1a8cc6a5ac8dc05ca3d0a6c734dc1ba6",
+    "task_extension": "798eb172d16063c41222cd3da76df2f64c6278679d56a43a7d487e6d78b480eb",
+    "controller_packets_extension": "952ae91e304ae3e4914e3ba7af84856243218a5a942db5e00671da0621385a56",
+    "policy": "82d8572a51321c3237925b4f32ee765d8db597a7055e49af633cb82b9b4f43d7",
+    "observation_masks": "4b4ea5b125ffceefb92458d1c0cdfd926833efb42c08cbdc35ff84351a404103",
+    "utility": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07",
+    "action_costs": "8313462cc8ba4f176bbcd691930cc93de0971ba3f8af34d9e957beb37fa55dca",
+    "latent_oracle": "e1523deabccdb4f3b9452b86d0f24238c370746fd543b996b9d31366c59861d3",
+    "sequential_observable_oracle": "56a708be6bb53ab8ffc0b408ff18fc3fb2b937677e66e3e0ce88392c78e7103c",
+    "qualification_runtime": "e9f7c86c3cadc09e4902ec53383ef7db603e4ab126739ac739c40b3b0259c232",
+    "test_corpus": "17b49f0d4dd85cdc2af1eba48009fa0d40e9cdec6fee39070bec26fb4c3764fa",
+    "environment_lock": "43289a25aa694baa329e13e441a8285e8f0b076f869c829b0313e9ab4a860917"
+  }
+}

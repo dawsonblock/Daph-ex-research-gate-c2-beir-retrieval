@@ -91,8 +91,9 @@ def test_i3_controller_packets_fail_closed_on_latent_or_oracle_leakage(tmp_path)
     packets = json.loads(PACKETS_PATH.read_text())
     packets["packets"][0]["optimal_action"] = "ANSWER"
     packet_path = tmp_path / "packets.json"; packet_path.write_text(json.dumps(packets))
-    manifest["private_environment_path"] = str(PRIVATE_BENCHMARK_PATH)
-    manifest["controller_packets_path"] = str(packet_path)
+    private_path = tmp_path / "private.json"; private_path.write_bytes(PRIVATE_BENCHMARK_PATH.read_bytes())
+    manifest["private_environment_path"] = "private.json"
+    manifest["controller_packets_path"] = "packets.json"
     manifest_path = tmp_path / "manifest.json"; manifest_path.write_text(json.dumps(manifest))
     with pytest.raises(ValueError, match="forbidden"):
         load_metareasoning_benchmark(manifest_path)

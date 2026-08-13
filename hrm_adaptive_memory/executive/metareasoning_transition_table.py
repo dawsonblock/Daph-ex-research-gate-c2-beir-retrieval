@@ -27,7 +27,7 @@ from .resources import ResourceBudget, ResourceExhausted, ResourceState
 
 
 ORACLE_TABLE_SCHEMA = "DAPH_V2B_ORACLE_TABLE_V1"
-ORACLE_IMPLEMENTATION_REVISION = "v2b-i3.2-transition-table-policy-feedback-v1"
+ORACLE_IMPLEMENTATION_REVISION = "v2b-i3.2.2-cost-reward-separated-v1"
 DEFAULT_MAX_STATES = 20_000
 DEFAULT_MAX_TRANSITIONS = 140_000
 
@@ -51,6 +51,7 @@ class TransitionResult:
     terminal_result: str | None
     task_success: bool | None
     action_cost: float
+    immediate_reward: float
     policy_effect: str
     resolved_action: DecisionAction | None
 
@@ -172,6 +173,7 @@ def build_oracle_policy_table_for_runtime(*, initial_runtime: I3Runtime, policy:
                         verification_state=runtime.verification_state, temporal_status=runtime.temporal_status,
                         unresolved_conflict=runtime.unresolved_conflict,
                         composition_complete=runtime.composition_complete,
+                        provenance_count=runtime.provenance_count,
                         retrieved=runtime.retrieved, searched=runtime.searched)
                 except ResourceExhausted:
                     continue
@@ -188,12 +190,16 @@ def build_oracle_policy_table_for_runtime(*, initial_runtime: I3Runtime, policy:
                 result = TransitionResult(
                     next_state_id=next_id, terminal=False, terminal_result=None,
                     task_success=None,
-                    action_cost=utility.action_utility(runtime.resources, rejected_runtime.resources),
+                    action_cost=utility.action_cost(runtime.resources, rejected_runtime.resources),
+                    immediate_reward=utility.immediate_reward(
+                        before=runtime.resources, after=rejected_runtime.resources),
                     policy_effect=effect.value, resolved_action=None)
                 proposal_transitions[(state_id, proposed)] = result
                 continue
             execution = executor.execute(runtime, resolved)
-            cost = utility.action_utility(runtime.resources, execution.runtime.resources)
+            cost = utility.action_cost(runtime.resources, execution.runtime.resources)
+            immediate_reward = utility.immediate_reward(
+                before=runtime.resources, after=execution.runtime.resources)
             next_id: str | None = None
             if not execution.terminal:
                 next_state = canonicalize_runtime_state(execution.runtime)
@@ -212,6 +218,7 @@ def build_oracle_policy_table_for_runtime(*, initial_runtime: I3Runtime, policy:
                 next_state_id=next_id, terminal=execution.terminal,
                 terminal_result=execution.outcome_code if execution.terminal else None,
                 task_success=execution.task_success, action_cost=cost,
+                immediate_reward=immediate_reward,
                 policy_effect=effect.value, resolved_action=resolved)
             proposal_transitions[(state_id, proposed)] = result
             transitions.setdefault((state_id, resolved), result)
@@ -233,15 +240,16 @@ def build_oracle_policy_table_for_runtime(*, initial_runtime: I3Runtime, policy:
                 continue
             if transition.terminal:
                 assert transition.task_success is not None
-                value = transition.action_cost + utility.terminal_reward(action, transition.task_success)
+                value = (transition.immediate_reward - transition.action_cost
+                         + utility.terminal_reward(action, transition.task_success))
                 if transition.task_success:
-                    costs.append(-transition.action_cost)
+                    costs.append(transition.action_cost)
             else:
                 assert transition.next_state_id is not None
-                value = transition.action_cost + values[transition.next_state_id]
+                value = transition.immediate_reward - transition.action_cost + values[transition.next_state_id]
                 later = min_cost[transition.next_state_id]
                 if later != float("inf"):
-                    costs.append(-transition.action_cost + later)
+                    costs.append(transition.action_cost + later)
             candidates[action] = value
             q_values[(state_id, action)] = value
         if not candidates:
@@ -259,7 +267,8 @@ def build_oracle_policy_table_for_runtime(*, initial_runtime: I3Runtime, policy:
     for key, transition in proposal_transitions.items():
         if transition.resolved_action is None:
             assert transition.next_state_id is not None
-            proposal_q[key] = transition.action_cost + values[transition.next_state_id]
+            proposal_q[key] = (transition.immediate_reward - transition.action_cost
+                               + values[transition.next_state_id])
         else:
             proposal_q[key] = q_values[(key[0], transition.resolved_action)]
     identity = _hash({

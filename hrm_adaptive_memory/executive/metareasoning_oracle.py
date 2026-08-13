@@ -67,7 +67,7 @@ class ExactOptimalPolicyOracle:
         return table.action_regret(table.state_id_for(runtime), action)
 
     def action_cost(self, before: I3Runtime, after: I3Runtime) -> float:
-        return self.utility.action_utility(before.resources, after.resources)
+        return self.utility.action_cost(before.resources, after.resources)
 
     def terminal_utility(self, task_success: bool,
                          action: DecisionAction = DecisionAction.ANSWER) -> float:

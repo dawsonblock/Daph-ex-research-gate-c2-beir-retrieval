@@ -17,10 +17,10 @@ It is separate from the qualified V2A external-verification identity. The
 current branch must not be represented as a byte-identical V2A-qualified
 source tree merely because its V2A core still matches the V2A manifest.
 
-The current V2B-infrastructure focused development check is **32 passed, 0
-failed** across authority/comparator, peer-bound-network, checkpoint,
+At the first V2B-I1 infrastructure milestone, the focused development check
+was **32 passed, 0 failed** across authority/comparator, peer-bound-network, checkpoint,
 action/schema, adversarial, and cognitive-control tests. It is a local
-development result, not a V2A replacement receipt or a V2B scientific
+historical development result, not the current suite count, a V2A replacement receipt, or a V2B scientific
 qualification.
 
 The first V2B infrastructure milestone additionally introduces a lifecycle-bound

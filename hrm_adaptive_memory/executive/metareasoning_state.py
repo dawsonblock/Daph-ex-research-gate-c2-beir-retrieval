@@ -23,6 +23,7 @@ class OracleState:
     temporal_state: str
     conflict_state: bool
     composition_state: bool
+    provenance_count: int
     retrieved: bool
     searched: bool
     steps_remaining: int
@@ -48,6 +49,7 @@ class OracleState:
             "temporal_state": self.temporal_state,
             "conflict_state": self.conflict_state,
             "composition_state": self.composition_state,
+            "provenance_count": self.provenance_count,
             "retrieved": self.retrieved,
             "searched": self.searched,
             "steps_remaining": self.steps_remaining,
@@ -77,6 +79,7 @@ def canonicalize_runtime_state(runtime: I3Runtime) -> OracleState:
         temporal_state=runtime.temporal_status.value,
         conflict_state=runtime.unresolved_conflict,
         composition_state=runtime.composition_complete,
+        provenance_count=runtime.provenance_count,
         retrieved=runtime.retrieved,
         searched=runtime.searched,
         steps_remaining=remaining["executive_steps_remaining"],
@@ -125,4 +128,5 @@ def runtime_from_oracle_state(template: I3Runtime, state: OracleState) -> I3Runt
                    temporal_status=TemporalStatus(state.temporal_state),
                    unresolved_conflict=state.conflict_state,
                    composition_complete=state.composition_state,
+                   provenance_count=state.provenance_count,
                    retrieved=state.retrieved, searched=state.searched)

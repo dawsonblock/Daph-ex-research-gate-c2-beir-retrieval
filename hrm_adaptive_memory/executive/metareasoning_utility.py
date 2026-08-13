@@ -110,7 +110,12 @@ class MetareasoningUtility:
         })
 
     def action_utility(self, before: ResourceState, after: ResourceState) -> float:
-        return -(
+        """Compatibility net utility for a cost-only nonterminal transition."""
+        return -self.action_cost(before, after)
+
+    def action_cost(self, before: ResourceState, after: ResourceState) -> float:
+        """Return a positive, explicitly named resource cost."""
+        return (
             self.executive_step * (after.executive_steps_used - before.executive_steps_used)
             + self.retrieval * (after.retrieval_calls_used - before.retrieval_calls_used)
             + self.verification * (after.verification_calls_used - before.verification_calls_used)
@@ -119,6 +124,15 @@ class MetareasoningUtility:
             ((after.reasoning_tokens_used - before.reasoning_tokens_used) / 128)
             + self.logical_ms * (after.elapsed_ms - before.elapsed_ms)
         )
+
+    @staticmethod
+    def immediate_reward(*, before: ResourceState, after: ResourceState) -> float:
+        """Frozen I3.2.2 shaping reward; kept separate from resource cost."""
+        del before, after
+        return 0.0
+
+    def net_step_utility(self, before: ResourceState, after: ResourceState) -> float:
+        return self.immediate_reward(before=before, after=after) - self.action_cost(before, after)
 
     def terminal_reward(self, action: DecisionAction, success: bool) -> float:
         if action is DecisionAction.ANSWER:
@@ -129,4 +143,3 @@ class MetareasoningUtility:
             return self.correct_stop if success else self.incorrect_stop
         # RESOURCE_EXHAUSTED/nonterminal dead-ends are terminal failures.
         return self.incorrect_answer
-

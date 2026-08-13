@@ -8,8 +8,10 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from pathlib import PurePosixPath
 from typing import Any, Mapping
+
+from hrm_adaptive_memory.executive.metareasoning_artifacts import (
+    resolve_benchmark_artifact_graph)
 
 from .qualification import (
     _combined_hash, _git, _git_bytes, _tree_hash, dependency_environment)
@@ -17,8 +19,8 @@ from .qualification import (
 
 IDENTITY_VERSION = "DAPH_V2B_I3_2_SEQUENTIAL_INFORMATION_ORACLE_IDENTITY_V1"
 I3_2_COMPONENTS = {
-    "i3_1_baseline": "configs/v2b_i3_2_baseline.json",
-    "i3_2_baseline": "configs/v2b_i3_2_1_baseline.json",
+    "i3_2_methodology_baseline": "configs/v2b_i3_2_baseline.json",
+    "i3_2_1_integrity_baseline": "configs/v2b_i3_2_1_baseline.json",
     "benchmark_runtime": "hrm_adaptive_memory/executive/metareasoning_benchmark.py",
     "runtime_state": "hrm_adaptive_memory/executive/metareasoning_state.py",
     "latent_transition_table": "hrm_adaptive_memory/executive/metareasoning_transition_table.py",
@@ -35,12 +37,6 @@ I3_2_COMPONENTS = {
     "development_config": "experiments/v2b_i3_2/configs/v2b_i3_2_development.json",
     "development_runner": "scripts/run_v2b_i3_2_development.py",
 }
-BENCHMARK_ARTIFACT_FIELDS = {
-    "private_environment": "private_environment_path",
-    "controller_packets": "controller_packets_path",
-    "task_extension": "task_extension_path",
-    "controller_packets_extension": "controller_packets_extension_path",
-}
 ORACLE_LIMIT_MAXIMA = {
     "max_information_states": 1_000_000,
     "max_information_transitions": 10_000_000,
@@ -54,28 +50,6 @@ I3_2_TEST_CORPUS = (
 )
 
 
-def _repository_relative(manifest_path: str, referenced_path: object) -> str:
-    """Resolve one manifest edge without allowing it to escape the repository."""
-    if not isinstance(referenced_path, str) or not referenced_path:
-        raise RuntimeError("I3.2 benchmark manifest has an empty artifact path")
-    if PurePosixPath(manifest_path).is_absolute() or PurePosixPath(referenced_path).is_absolute():
-        raise RuntimeError("I3.2 qualification paths must be repository-relative")
-    candidate = PurePosixPath(manifest_path).parent.joinpath(referenced_path)
-    parts: list[str] = []
-    for part in candidate.parts:
-        if part in {"", "."}:
-            continue
-        if part == "..":
-            if not parts:
-                raise RuntimeError("I3.2 benchmark artifact escapes the repository")
-            parts.pop()
-        else:
-            parts.append(part)
-    if not parts:
-        raise RuntimeError("I3.2 benchmark artifact resolves to the repository root")
-    return PurePosixPath(*parts).as_posix()
-
-
 def benchmark_artifact_paths(root: Path, commit: str,
                              manifest_path: str) -> dict[str, str]:
     """Derive the exact qualification graph from the committed manifest."""
@@ -86,11 +60,7 @@ def benchmark_artifact_paths(root: Path, commit: str,
     if (not isinstance(manifest, Mapping)
             or manifest.get("schema") != "DAPH_V2B_I3_2_BENCHMARK_MANIFEST_V1"):
         raise RuntimeError("I3.2 qualification requires the I3.2 benchmark manifest")
-    paths = {"benchmark_manifest": manifest_path}
-    for name, field in BENCHMARK_ARTIFACT_FIELDS.items():
-        paths[name] = _repository_relative(manifest_path, manifest.get(field))
-    if len(set(paths.values())) != len(paths):
-        raise RuntimeError("I3.2 benchmark manifest aliases qualification artifacts")
+    paths = resolve_benchmark_artifact_graph(manifest_path=manifest_path, manifest=manifest)
     for path in paths.values():
         _tree_hash(root, commit, path)
     return paths

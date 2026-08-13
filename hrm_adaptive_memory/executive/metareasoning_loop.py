@@ -286,7 +286,7 @@ class V2BMetareasoningExperiment:
             delta = state_delta(runtime, execution.runtime)
             regret = oracle.action_regret(runtime, selected)
             action_cost = oracle.action_cost(runtime, execution.runtime)
-            realized_utility += action_cost
+            realized_utility -= action_cost
             if execution.terminal:
                 assert execution.task_success is not None
                 realized_utility += oracle.terminal_utility(execution.task_success, selected)
@@ -364,7 +364,7 @@ class V2BMetareasoningExperiment:
         p90_index = max(0, min(len(normalized_regrets) - 1,
                                int((len(normalized_regrets) - 1) * 0.9)))
         costs_after_sufficiency = [
-            -trace.action_cost for task in tasks for trace in task.traces
+            trace.action_cost for task in tasks for trace in task.traces
             if trace.answerable_before and trace.execution_status == "EXECUTED"
             and trace.action_cost is not None
         ]
@@ -415,6 +415,6 @@ class V2BMetareasoningExperiment:
                 sum(trace.task_success is True for trace in answers) / len(answers) if answers else 0.0),
             "policy_violation_rate": policy_violations / len(executed) if executed else 0.0,
             "executive_steps": sum(task.resources["executive_steps_used"] for task in tasks),
-            "total_action_cost": -sum(
+            "total_action_cost": sum(
                 trace.action_cost or 0.0 for trace in executed),
         }

@@ -82,7 +82,9 @@ def test_i3_1_transition_cost_and_next_state_match_runtime_executor():
     transition = table.transitions[(table.initial_state_id, next(
         action for action in table.optimal_actions[table.initial_state_id] if action.value == "RETRIEVE"))]
     execution = DeterministicMetareasoningExecutor().execute(runtime, transition.resolved_action)
-    assert transition.action_cost == utility.action_utility(runtime.resources, execution.runtime.resources)
+    assert transition.action_cost == utility.action_cost(runtime.resources, execution.runtime.resources)
+    assert transition.immediate_reward == utility.immediate_reward(
+        before=runtime.resources, after=execution.runtime.resources)
     assert transition.next_state_id == canonicalize_runtime_state(execution.runtime).state_id()
 
 

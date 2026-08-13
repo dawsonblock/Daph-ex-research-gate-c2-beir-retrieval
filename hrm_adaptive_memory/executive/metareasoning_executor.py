@@ -30,6 +30,7 @@ class I3Runtime:
     temporal_status: TemporalStatus
     unresolved_conflict: bool
     composition_complete: bool
+    provenance_count: int
     retrieved: bool = False
     searched: bool = False
 
@@ -46,7 +47,8 @@ class I3ActionExecution:
 def initial_i3_runtime(task: I3BenchmarkTask, resources: ResourceState) -> I3Runtime:
     latent = task.latent
     return I3Runtime(task, resources, latent.verification_state, latent.temporal_status,
-                     latent.unresolved_conflict, latent.composition_complete)
+                     latent.unresolved_conflict, latent.composition_complete,
+                     task.observable_provenance_count)
 
 
 def runtime_state_hash(runtime: I3Runtime) -> str:
@@ -57,6 +59,7 @@ def runtime_state_hash(runtime: I3Runtime) -> str:
         "temporal_status": runtime.temporal_status.value,
         "unresolved_conflict": runtime.unresolved_conflict,
         "composition_complete": runtime.composition_complete,
+        "provenance_count": runtime.provenance_count,
         "retrieved": runtime.retrieved,
         "searched": runtime.searched,
         "resources": runtime.resources.as_dict(),
@@ -99,6 +102,7 @@ def answerable(runtime: I3Runtime) -> bool:
         and runtime.temporal_status is TemporalStatus.CURRENT
         and not runtime.unresolved_conflict
         and runtime.composition_complete
+        and runtime.provenance_count >= runtime.task.latent.required_provenance_count
     )
 
 
@@ -116,12 +120,12 @@ def build_observable_snapshot(runtime: I3Runtime, *, prior_decisions: tuple[Deci
         task_id=public_id, task_summary=task.task_summary,
         relevant_memories=(MemorySummary(
             f"memory-{public_id}", 1.0, runtime.verification_state,
-            task.observable_provenance_count, task.observable_provenance_count,
+            runtime.provenance_count, runtime.provenance_count,
             "UNRESOLVED" if runtime.unresolved_conflict else "NONE", runtime.temporal_status),),
         verification_states=(VerificationSummary(
             f"verification-{public_id}", runtime.verification_state,
-            task.observable_provenance_count, None),),
-        provenance_summaries=(f"lineage_count={task.observable_provenance_count}",),
+            runtime.provenance_count, None),),
+        provenance_summaries=(f"lineage_count={runtime.provenance_count}",),
         temporal_status=runtime.temporal_status, unresolved_conflicts=conflicts,
         prior_decisions=prior_decisions[-16:], prior_outcomes=prior_outcomes[-16:],
         resource_state=runtime.resources.as_dict(), policy_facts=(),
@@ -136,6 +140,7 @@ def state_delta(before: I3Runtime, after: I3Runtime) -> dict[str, object]:
         "temporal_status": (before.temporal_status.value, after.temporal_status.value),
         "unresolved_conflict": (before.unresolved_conflict, after.unresolved_conflict),
         "composition_complete": (before.composition_complete, after.composition_complete),
+        "provenance_count": (before.provenance_count, after.provenance_count),
     }
     changed = {name: {"before": old, "after": new}
                for name, (old, new) in fields.items() if old != new}
@@ -146,6 +151,7 @@ def state_delta(before: I3Runtime, after: I3Runtime) -> dict[str, object]:
             and after.temporal_status is TemporalStatus.CURRENT)
         or (before.unresolved_conflict and not after.unresolved_conflict)
         or (not before.composition_complete and after.composition_complete)
+        or (before.provenance_count < after.provenance_count)
     )
     return {
         "changed": changed,
@@ -178,6 +184,8 @@ class DeterministicMetareasoningExecutor:
             updates["unresolved_conflict"] = effect["unresolved_conflict"] == "true"
         if "composition_complete" in effect:
             updates["composition_complete"] = effect["composition_complete"] == "true"
+        if "provenance_count" in effect:
+            updates["provenance_count"] = int(effect["provenance_count"])
         return replace(runtime, **updates)
 
     def execute(self, runtime: I3Runtime, action: DecisionAction) -> I3ActionExecution:

@@ -107,7 +107,7 @@ def test_i3_2_sequential_verify_action_splits_posterior_and_closes_uncertainty()
                for outcome in transition.outcomes)
     assert table.expected_latent_values[initial] >= table.belief_values[initial]
     assert table.information_gap(initial) > 0
-    assert table.build_metrics["fraction_resolved_after_one_action"] > 0
+    assert table.build_metrics["one_step_full_resolution_rate"] > 0
 
 
 def test_i3_2_policy_rejection_is_visible_costed_and_can_split_a_belief():
@@ -124,7 +124,8 @@ def test_i3_2_policy_rejection_is_visible_costed_and_can_split_a_belief():
                     if table.member_transitions[(initial, DecisionAction.SEARCH_MORE, member.key)]
                     .history_event.execution_status == "POLICY_REJECTED")
     rejection = table.member_transitions[(initial, DecisionAction.SEARCH_MORE, rejected.key)]
-    assert rejection.immediate_utility < 0
+    assert rejection.action_cost > 0
+    assert rejection.immediate_reward == 0
     assert rejection.feedback.reason_class == "POLICY_DENIED"
 
 
@@ -169,9 +170,10 @@ def test_i3_2_runtime_latent_and_observable_transitions_share_resource_semantics
         outcome = _apply_proposal(runtime=runtime, proposed=action, policy=policy, utility=utility)
         transition = table.member_transitions[(root, action, member.key)]
         assert outcome.history_event == transition.history_event
-        assert outcome.immediate_utility == pytest.approx(transition.immediate_utility)
+        assert outcome.action_cost == pytest.approx(transition.action_cost)
+        assert outcome.immediate_reward == pytest.approx(transition.immediate_reward)
         assert latent.proposal_transitions[(latent.initial_state_id, action)].action_cost == pytest.approx(
-            outcome.immediate_utility)
+            outcome.action_cost)
 
 
 def test_i3_2_decomposition_and_trajectory_replay_are_exact():

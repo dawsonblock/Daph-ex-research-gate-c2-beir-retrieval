@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from enum import Enum
 import json
 from statistics import median
 from typing import Mapping
@@ -20,8 +21,8 @@ from .policy import FrozenPolicy
 from .resources import ResourceState
 
 
-TRAJECTORY_RECEIPT_SCHEMA = "DAPH_V2B_I3_2_TRAJECTORY_RECEIPT_V1"
-DEVELOPMENT_RECEIPT_SCHEMA = "DAPH_V2B_I3_2_DEVELOPMENT_RECEIPT_V1"
+TRAJECTORY_RECEIPT_SCHEMA = "DAPH_V2B_I3_2_2_TRAJECTORY_RECEIPT_V1"
+DEVELOPMENT_RECEIPT_SCHEMA = "DAPH_V2B_I3_2_2_DEVELOPMENT_RECEIPT_V1"
 
 
 @dataclass(frozen=True)
@@ -37,7 +38,10 @@ class I3_2Trace:
     state_before_hash: str
     state_after_hash: str | None
     executed_action: DecisionAction | None
-    immediate_utility: float
+    action_cost: float
+    immediate_reward: float
+    terminal_reward: float | None
+    net_step_utility: float
     information_gain_bits: float
     action_regret: float
 
@@ -53,6 +57,13 @@ class I3_2TaskRun:
     realized_utility: float
     final_state_hash: str | None
     resources: Mapping[str, int]
+
+
+class AggregatePrior(str, Enum):
+    """Frozen benchmark-level weighting over initial information classes."""
+
+    TASK_UNIFORM = "TASK_UNIFORM"
+    CLASS_UNIFORM = "CLASS_UNIFORM"
 
 
 def _member_for(runtime: I3Runtime, latent_table: OraclePolicyTable) -> LatentMember:
@@ -108,10 +119,13 @@ def run_task_with_runtime(*, initial_runtime: I3Runtime, condition: str,
             execution_status=outcome.history_event.execution_status,
             state_before_hash=runtime_state_hash(runtime), state_after_hash=next_hash,
             executed_action=selected if outcome.history_event.execution_status == "EXECUTED" else None,
-            immediate_utility=outcome.immediate_utility,
+            action_cost=outcome.action_cost, immediate_reward=outcome.immediate_reward,
+            terminal_reward=outcome.terminal_utility,
+            net_step_utility=outcome.immediate_reward - outcome.action_cost
+            + float(outcome.terminal_utility or 0.0),
             information_gain_bits=transition.expected_information_gain_bits,
             action_regret=table.action_regret(information_id, proposal.action)))
-        realized += outcome.immediate_utility
+        realized += outcome.immediate_reward - outcome.action_cost
         if outcome.terminal:
             assert outcome.terminal_utility is not None
             realized += outcome.terminal_utility
@@ -169,8 +183,24 @@ def aggregate_metrics(*, runs: tuple[I3_2TaskRun, ...],
                       oracle_set: SequentialObservableOracleSet,
                       benchmark: MetareasoningBenchmark, mask: ObservationMask) -> dict[str, float | int]:
     groups = tuple(decomposition.values())
-    def avg(name: str) -> float:
-        return sum(float(item[name]) for item in groups) / len(groups)
+    def weighted(name: str, prior: AggregatePrior) -> float:
+        weights = ([1.0] * len(groups) if prior is AggregatePrior.CLASS_UNIFORM
+                   else [float(item["member_count"]) for item in groups])
+        return sum(weight * float(item[name]) for weight, item in zip(weights, groups)) / sum(weights)
+    aggregate_views = {
+        prior.value.lower(): {
+            name: weighted(name, prior)
+            for name in ("information_gap", "decision_gap", "total_regret",
+                         "latent_upper_bound", "observable_upper_bound", "controller_value")
+        } for prior in AggregatePrior
+    }
+    for view in aggregate_views.values():
+        if abs(view["total_regret"] - view["information_gap"] - view["decision_gap"]) > 1e-8:
+            raise RuntimeError("I3.2.2 aggregate regret decomposition failed")
+    labeled_aggregates = {
+        f"{prior}_{name}": value for prior, view in aggregate_views.items()
+        for name, value in view.items()
+    }
     all_traces = tuple(trace for run in runs for trace in run.traces)
     successful = sum(run.task_success for run in runs)
     by_task = {task.task_id: task for task in benchmark.tasks}
@@ -183,21 +213,18 @@ def aggregate_metrics(*, runs: tuple[I3_2TaskRun, ...],
         for value in packet["cognitive_state"].values()) for packet in packets]  # type: ignore[index,union-attr]
     return {
         "task_count": len(runs), "task_success_rate": successful / len(runs),
-        "mean_information_gap": avg("information_gap"), "mean_decision_gap": avg("decision_gap"),
-        "mean_total_regret": avg("total_regret"),
-        "mean_latent_upper_bound": avg("latent_upper_bound"),
-        "mean_observable_upper_bound": avg("observable_upper_bound"),
-        "mean_controller_value": avg("controller_value"),
+        **labeled_aggregates,
         "mean_belief_cardinality": sum(int(item["member_count"]) for item in groups) / len(groups),
         "max_belief_cardinality": max(int(item["member_count"]) for item in groups),
-        "policy_probe_count": sum(trace.policy_effect != "ALLOW" for trace in all_traces),
-        "policy_probe_information_gain_bits": sum(trace.information_gain_bits for trace in all_traces
-                                                     if trace.policy_effect != "ALLOW"),
-        "rejected_proposal_cost": -sum(trace.immediate_utility for trace in all_traces
-                                         if trace.execution_status in {"POLICY_REJECTED", "RESOURCE_REJECTED"}),
+        "policy_intervention_count": sum(trace.policy_effect != "ALLOW" for trace in all_traces),
+        "policy_feedback_information_gain_bits": sum(
+            trace.information_gain_bits for trace in all_traces if trace.policy_effect != "ALLOW"),
+        "rejected_proposal_cost": sum(trace.action_cost for trace in all_traces
+                                       if trace.execution_status in {"POLICY_REJECTED", "RESOURCE_REJECTED"}),
         "mean_action_information_gain_bits": (sum(trace.information_gain_bits for trace in all_traces)
                                                / max(1, len(all_traces))),
-        "total_action_utility_cost": -sum(trace.immediate_utility for trace in all_traces),
+        "total_action_cost": sum(trace.action_cost for trace in all_traces),
+        "total_immediate_reward": sum(trace.immediate_reward for trace in all_traces),
         "mean_observation_bytes": sum(observation_sizes) / len(observation_sizes),
         "mean_cognitive_fact_count": sum(cognitive_fact_counts) / len(cognitive_fact_counts),
     }
@@ -235,9 +262,11 @@ def replay_trajectory(*, benchmark: MetareasoningBenchmark, task_id: str,
         after = None if outcome.runtime is None else runtime_state_hash(outcome.runtime)
         if trace["state_after_hash"] != after:
             raise RuntimeError("I3.2 replay post-state mismatch")
-        if float(trace["immediate_utility"]) != outcome.immediate_utility:
+        if float(trace["action_cost"]) != outcome.action_cost:
             raise RuntimeError("I3.2 replay action-cost mismatch")
-        utility_value += outcome.immediate_utility
+        if float(trace["immediate_reward"]) != outcome.immediate_reward:
+            raise RuntimeError("I3.2 replay immediate-reward mismatch")
+        utility_value += outcome.immediate_reward - outcome.action_cost
         if outcome.terminal:
             assert outcome.terminal_utility is not None
             utility_value += outcome.terminal_utility

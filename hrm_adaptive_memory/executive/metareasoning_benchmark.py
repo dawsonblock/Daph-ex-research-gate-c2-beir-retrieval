@@ -12,6 +12,7 @@ from hrm_adaptive_memory.cognitive_control.core import DecisionAction
 from hrm_adaptive_memory.cognitive_control.state import TemporalStatus, VerificationState
 
 from .resources import DEFAULT_ACTION_COSTS, ResourceBudget
+from .metareasoning_artifacts import oracle_cache_artifacts, resolve_benchmark_artifact_graph
 
 
 BENCHMARK_SCHEMA = "DAPH_V2B_I3_METAREASONING_BENCHMARK_V1"
@@ -21,7 +22,10 @@ I3_1_CONTROLLER_PACKETS_SCHEMA = "DAPH_V2B_I3_1_CONTROLLER_PACKETS_V1"
 I3_2_BENCHMARK_MANIFEST_SCHEMA = "DAPH_V2B_I3_2_BENCHMARK_MANIFEST_V1"
 I3_2_TASK_EXTENSION_SCHEMA = "DAPH_V2B_I3_2_TASK_EXTENSION_V1"
 I3_2_CONTROLLER_PACKETS_SCHEMA = "DAPH_V2B_I3_2_CONTROLLER_PACKETS_V1"
+I3_3_BENCHMARK_MANIFEST_SCHEMA = "DAPH_V2B_I3_3_BENCHMARK_MANIFEST_V1"
+I3_3_CONTROLLER_PACKETS_SCHEMA = "DAPH_V2B_I3_3_CONTROLLER_PACKETS_V1"
 FROZEN_DEVELOPMENT_STATUS = "FROZEN_FOR_DEVELOPMENT"
+FROZEN_BENCHMARK_STATUS = "FROZEN_FOR_BENCHMARK_QUALIFICATION"
 
 
 @dataclass(frozen=True)
@@ -33,6 +37,7 @@ class LatentTaskState:
     unresolved_conflict: bool
     composition_complete: bool
     expected_terminal: DecisionAction
+    required_provenance_count: int = 0
 
 
 @dataclass(frozen=True)
@@ -51,6 +56,8 @@ class I3BenchmarkTask:
     controller_instance_id: str = ""
 
     def __post_init__(self) -> None:
+        if self.latent.required_provenance_count < 0:
+            raise ValueError("required provenance count must be nonnegative")
         if (not self.task_id or self.task_id != self.task_id.lower()
                 or not self.category or not self.task_summary):
             raise ValueError("I3 tasks require lowercase ids, a category, and a summary")
@@ -133,26 +140,43 @@ def _load_payloads(path: Path) -> tuple[Mapping[str, Any], Mapping[str, Mapping[
         # Compatibility for the frozen I3 development baseline. New I3 runs use
         # the manifest path below so controller packets are physically separate.
         return payload, {}, {"private_environment": _sha256(path)}
-    if payload.get("schema") not in {BENCHMARK_MANIFEST_SCHEMA, I3_2_BENCHMARK_MANIFEST_SCHEMA}:
+    if payload.get("schema") not in {BENCHMARK_MANIFEST_SCHEMA, I3_2_BENCHMARK_MANIFEST_SCHEMA,
+                                     I3_3_BENCHMARK_MANIFEST_SCHEMA}:
         raise ValueError("unsupported V2B-I3 metareasoning benchmark schema")
-    if payload.get("status") != FROZEN_DEVELOPMENT_STATUS:
+    if payload.get("status") not in {FROZEN_DEVELOPMENT_STATUS, FROZEN_BENCHMARK_STATUS}:
         raise ValueError("V2B-I3 benchmark manifest must be frozen for development")
-    private_path = (path.parent / str(payload.get("private_environment_path", ""))).resolve()
-    packets_path = (path.parent / str(payload.get("controller_packets_path", ""))).resolve()
+    root = next((parent for parent in path.parents if (parent / ".git").exists()), None)
+    if root is None:
+        # Extracted qualification archives intentionally omit .git; derive the
+        # root from the stable experiments/ segment. Standalone test manifests
+        # resolve relative to their own directory.
+        experiments = next((parent for parent in path.parents if parent.name == "experiments"), None)
+        root = experiments.parent if experiments is not None else path.parent
+    manifest_relative = path.relative_to(root).as_posix()
+    graph = resolve_benchmark_artifact_graph(
+        manifest_path=manifest_relative, manifest=payload,
+        json_loader=lambda relative: json.loads((root / relative).read_text()))
+    if "oracle_cache_manifest" in graph:
+        cache = json.loads((root / graph["oracle_cache_manifest"]).read_text())
+        for role, (_, expected_sha256) in oracle_cache_artifacts(cache).items():
+            if _sha256(root / graph[role]) != expected_sha256:
+                raise ValueError(f"V2B-I3 oracle cache hash mismatch: {role}")
+    private_path = (root / graph["private_environment"]).resolve()
+    packets_path = (root / graph["controller_packets"]).resolve()
     private_payload = json.loads(private_path.read_text())
     packet_payload = json.loads(packets_path.read_text())
     if private_payload.get("schema") != BENCHMARK_SCHEMA:
         raise ValueError("V2B-I3 private environment has an unsupported schema")
     packet_schema = packet_payload.get("schema")
     if packet_schema not in {CONTROLLER_PACKETS_SCHEMA, I3_1_CONTROLLER_PACKETS_SCHEMA,
-                             I3_2_CONTROLLER_PACKETS_SCHEMA}:
+                             I3_2_CONTROLLER_PACKETS_SCHEMA, I3_3_CONTROLLER_PACKETS_SCHEMA}:
         raise ValueError("V2B-I3 controller packets have an unsupported schema")
     if packet_payload.get("status") != FROZEN_DEVELOPMENT_STATUS:
         raise ValueError("V2B-I3 controller packets must be frozen for development")
     packets = packet_payload.get("packets")
     extension_path = None
     if payload.get("schema") == I3_2_BENCHMARK_MANIFEST_SCHEMA:
-        extension_path = (path.parent / str(payload.get("task_extension_path", ""))).resolve()
+        extension_path = (root / graph["task_extension"]).resolve()
         extension_payload = json.loads(extension_path.read_text())
         if (extension_payload.get("schema") != I3_2_TASK_EXTENSION_SCHEMA
                 or extension_payload.get("status") != FROZEN_DEVELOPMENT_STATUS
@@ -161,7 +185,7 @@ def _load_payloads(path: Path) -> tuple[Mapping[str, Any], Mapping[str, Mapping[
         private_payload = dict(private_payload)
         private_payload["tasks"] = list(private_payload.get("tasks", ())) + extension_payload["tasks"]
         private_payload["benchmark_id"] = str(payload.get("benchmark_id", private_payload.get("benchmark_id", "")))
-        packets_extension_path = (path.parent / str(payload.get("controller_packets_extension_path", ""))).resolve()
+        packets_extension_path = (root / graph["controller_packets_extension"]).resolve()
         packets_extension = json.loads(packets_extension_path.read_text())
         if (packets_extension.get("schema") != I3_2_CONTROLLER_PACKETS_SCHEMA
                 or packets_extension.get("status") != FROZEN_DEVELOPMENT_STATUS
@@ -182,9 +206,10 @@ def _load_payloads(path: Path) -> tuple[Mapping[str, Any], Mapping[str, Mapping[
                            else {"task_id", "instance_id", "task_summary"})
         if set(packet) != expected_fields or not isinstance(packet["task_summary"], str):
             raise ValueError("V2B-I3 controller packet fields do not match the frozen schema")
-        if (packet_schema == I3_1_CONTROLLER_PACKETS_SCHEMA
+        if (packet_schema in {I3_1_CONTROLLER_PACKETS_SCHEMA, I3_2_CONTROLLER_PACKETS_SCHEMA,
+                              I3_3_CONTROLLER_PACKETS_SCHEMA}
                 and (not isinstance(packet["instance_id"], str) or not packet["instance_id"])):
-            raise ValueError("V2B-I3.1 controller packets require opaque instance ids")
+            raise ValueError("V2B-I3 controller packets require opaque instance ids")
         if any(token in packet["task_summary"].lower() for token in forbidden):
             raise ValueError("V2B-I3 controller packet contains a forbidden latent/oracle value")
         by_task[packet["task_id"]] = {
@@ -192,18 +217,14 @@ def _load_payloads(path: Path) -> tuple[Mapping[str, Any], Mapping[str, Mapping[
             "instance_id": str(packet.get("instance_id", packet["task_id"])),
         }
     return private_payload, by_task, {
-        "benchmark_manifest": _sha256(path), "private_environment": _sha256(private_path),
-        "controller_packets": _sha256(packets_path),
-        **({"task_extension": _sha256(extension_path),
-            "controller_packets_extension": _sha256(packets_extension_path)}
-           if extension_path is not None else {}),
+        role: _sha256(root / relative) for role, relative in graph.items()
     }
 
 
 def load_metareasoning_benchmark(path: str | Path) -> MetareasoningBenchmark:
     path = Path(path).resolve()
     payload, packets, artifact_hashes = _load_payloads(path)
-    if payload.get("status") != FROZEN_DEVELOPMENT_STATUS:
+    if payload.get("status") not in {FROZEN_DEVELOPMENT_STATUS, FROZEN_BENCHMARK_STATUS}:
         raise ValueError("V2B-I3 benchmark must be frozen for development")
     profiles = _load_budget_profiles(payload.get("budget_profiles"))
     _validate_frozen_action_costs(payload.get("action_costs"))
@@ -236,6 +257,7 @@ def load_metareasoning_benchmark(path: str | Path) -> MetareasoningBenchmark:
                 unresolved_conflict=bool(latent["unresolved_conflict"]),
                 composition_complete=bool(latent["composition_complete"]),
                 expected_terminal=validate_v2b_action(latent["expected_terminal"]),
+                required_provenance_count=int(latent.get("required_provenance_count", 0)),
             ),
             observable_provenance_count=int(raw.get("observable_provenance_count", 0)),
             action_effects=effects,

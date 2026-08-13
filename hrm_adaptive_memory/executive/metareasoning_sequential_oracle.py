@@ -34,7 +34,7 @@ from .resources import ResourceExhausted
 
 
 SEQUENTIAL_ORACLE_SCHEMA = "DAPH_V2B_I3_2_SEQUENTIAL_INFORMATION_TABLE_V1"
-SEQUENTIAL_ORACLE_REVISION = "v2b-i3.2-sequential-information-oracle-v1"
+SEQUENTIAL_ORACLE_REVISION = "v2b-i3.2.2-sequential-information-oracle-v1"
 PRIOR_DEFINITION = "UNIFORM_BY_INITIAL_OBSERVATION_CLASS_V1"
 POLICY_FEEDBACK_VISIBILITY = {
     "effect": True,
@@ -140,7 +140,8 @@ class MemberTransition:
     next_runtime_state_hash: str | None
     terminal: bool
     terminal_utility: float | None
-    immediate_utility: float
+    action_cost: float
+    immediate_reward: float
     feedback: PolicyFeedback
     history_event: InformationHistoryEvent
     observation_hash: str | None
@@ -153,7 +154,8 @@ class InformationOutcome:
     next_information_state_id: str | None
     terminal: bool
     expected_utility: float | None
-    expected_immediate_utility: float
+    expected_action_cost: float
+    expected_immediate_reward: float
     member_keys: tuple[str, ...]
     entropy_after_bits: float | None
 
@@ -212,7 +214,8 @@ class SequentialObservablePolicyTable:
                                   "next_information_state_id": outcome.next_information_state_id,
                                   "terminal": outcome.terminal,
                                   "expected_utility": outcome.expected_utility,
-                                  "expected_immediate_utility": outcome.expected_immediate_utility,
+                                  "expected_action_cost": outcome.expected_action_cost,
+                                  "expected_immediate_reward": outcome.expected_immediate_reward,
                                   "member_keys": list(outcome.member_keys),
                                   "entropy_after_bits": outcome.entropy_after_bits}
                                  for outcome in transition.outcomes],
@@ -256,7 +259,8 @@ class _RuntimeOutcome:
     terminal: bool
     terminal_utility: float | None
     task_success: bool | None
-    immediate_utility: float
+    action_cost: float
+    immediate_reward: float
     feedback: PolicyFeedback
     history_event: InformationHistoryEvent
 
@@ -354,37 +358,41 @@ def _apply_proposal(*, runtime: I3Runtime, proposed: DecisionAction, policy: Fro
         try:
             next_runtime = replace(runtime, resources=runtime.resources.consume_policy_rejection())
         except ResourceExhausted:
-            return _RuntimeOutcome(None, True, utility.incorrect_defer, False, 0.0, feedback,
+            return _RuntimeOutcome(None, True, utility.incorrect_defer, False, 0.0, 0.0, feedback,
                                    InformationHistoryEvent(proposed, decision.effect, None,
                                                            "RESOURCE_EXHAUSTED"))
-        immediate = utility.action_utility(runtime.resources, next_runtime.resources)
-        return _RuntimeOutcome(next_runtime, False, None, None, immediate, feedback, event)
+        cost = utility.action_cost(runtime.resources, next_runtime.resources)
+        reward = utility.immediate_reward(before=runtime.resources, after=next_runtime.resources)
+        return _RuntimeOutcome(next_runtime, False, None, None, cost, reward, feedback, event)
     assert resolved is not None
     if not runtime.resources.can_execute(resolved):
         event = InformationHistoryEvent(proposed, decision.effect, resolved, "RESOURCE_REJECTED")
         try:
             next_runtime = replace(runtime, resources=runtime.resources.consume_policy_rejection())
         except ResourceExhausted:
-            return _RuntimeOutcome(None, True, utility.incorrect_defer, False, 0.0, feedback,
+            return _RuntimeOutcome(None, True, utility.incorrect_defer, False, 0.0, 0.0, feedback,
                                    InformationHistoryEvent(proposed, decision.effect, resolved,
                                                            "RESOURCE_EXHAUSTED"))
-        immediate = utility.action_utility(runtime.resources, next_runtime.resources)
-        return _RuntimeOutcome(next_runtime, False, None, None, immediate, feedback, event)
+        cost = utility.action_cost(runtime.resources, next_runtime.resources)
+        reward = utility.immediate_reward(before=runtime.resources, after=next_runtime.resources)
+        return _RuntimeOutcome(next_runtime, False, None, None, cost, reward, feedback, event)
     execution = DeterministicMetareasoningExecutor().execute(runtime, resolved)
-    immediate = utility.action_utility(runtime.resources, execution.runtime.resources)
+    cost = utility.action_cost(runtime.resources, execution.runtime.resources)
+    reward = utility.immediate_reward(before=runtime.resources, after=execution.runtime.resources)
     event = InformationHistoryEvent(proposed, decision.effect, resolved, "EXECUTED")
     if execution.terminal:
         assert execution.task_success is not None
         return _RuntimeOutcome(execution.runtime, True,
-                               utility.terminal_reward(resolved, execution.task_success), execution.task_success, immediate,
+                               utility.terminal_reward(resolved, execution.task_success), execution.task_success,
+                               cost, reward,
                                feedback, event)
-    return _RuntimeOutcome(execution.runtime, False, None, None, immediate, feedback, event)
+    return _RuntimeOutcome(execution.runtime, False, None, None, cost, reward, feedback, event)
 
 
 def _epistemic_signature(runtime: I3Runtime) -> tuple[object, ...]:
     """Fields whose change can create decision-relevant public information."""
     return (runtime.verification_state, runtime.temporal_status, runtime.unresolved_conflict,
-            runtime.composition_complete)
+            runtime.composition_complete, runtime.provenance_count)
 
 
 def _member_runtime(member: LatentMember, contexts: Mapping[str, _Context]) -> I3Runtime:
@@ -431,6 +439,10 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
                  max_information_states: int, max_information_transitions: int,
                  max_members_per_belief: int, benchmark_hash: str) -> SequentialObservablePolicyTable:
     started = perf_counter(); rss_before = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    # A belief table can only reach members present in its initial class.
+    # Binding every unrelated task table here added quadratic hashing work
+    # without adding a semantic dependency to this policy table.
+    relevant_task_ids = tuple(sorted({member.task_id for member in initial_members}))
     initial = _make_information_state(
         members=initial_members, history=(), mask=mask, contexts=contexts,
         max_members_per_belief=max_members_per_belief)
@@ -515,13 +527,17 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
                                                 canonicalize_runtime_state(outcome.runtime).state_id(), Fraction(1, 1))
                     member_transitions[(information_id, proposed, member.key)] = MemberTransition(
                         member.key, next_member, runtime_state_hash(outcome.runtime), False, None,
-                        outcome.immediate_utility, outcome.feedback, outcome.history_event, packet_hash)
+                        outcome.action_cost, outcome.immediate_reward,
+                        outcome.feedback, outcome.history_event, packet_hash)
                 outcomes.append(InformationOutcome(
                     outcome_id=_hash({"packet": packet_hash, "history": successor.history_hash}),
                     probability=total, next_information_state_id=successor_id, terminal=False,
                     expected_utility=None,
-                    expected_immediate_utility=sum(float(member.posterior_weight) * outcome.immediate_utility
-                                                   for member, outcome in members_outcomes) / float(total),
+                    expected_action_cost=sum(float(member.posterior_weight) * outcome.action_cost
+                                             for member, outcome in members_outcomes) / float(total),
+                    expected_immediate_reward=sum(
+                        float(member.posterior_weight) * outcome.immediate_reward
+                        for member, outcome in members_outcomes) / float(total),
                     member_keys=tuple(sorted(member.key for member, _ in members_outcomes)),
                     entropy_after_bits=successor.entropy_bits))
             for terminal_key, members_outcomes in sorted(
@@ -530,8 +546,11 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
                 expected_terminal = sum(
                     float(member.posterior_weight) * float(outcome.terminal_utility or 0.0)
                     for member, outcome in members_outcomes) / float(probability)
-                expected_immediate = sum(
-                    float(member.posterior_weight) * outcome.immediate_utility
+                expected_cost = sum(
+                    float(member.posterior_weight) * outcome.action_cost
+                    for member, outcome in members_outcomes) / float(probability)
+                expected_reward = sum(
+                    float(member.posterior_weight) * outcome.immediate_reward
                     for member, outcome in members_outcomes) / float(probability)
                 posterior = tuple(member.posterior_weight / probability
                                   for member, _ in members_outcomes)
@@ -541,13 +560,14 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
                     member_transitions[(information_id, proposed, member.key)] = MemberTransition(
                         member.key, None,
                         None if outcome.runtime is None else runtime_state_hash(outcome.runtime),
-                        True, outcome.terminal_utility, outcome.immediate_utility,
+                        True, outcome.terminal_utility, outcome.action_cost, outcome.immediate_reward,
                         outcome.feedback, outcome.history_event, None)
                 outcomes.append(InformationOutcome(
                     outcome_id=_hash({"terminal_public_feedback": terminal_key}), probability=probability,
                     next_information_state_id=None, terminal=True,
                     expected_utility=expected_terminal,
-                    expected_immediate_utility=expected_immediate,
+                    expected_action_cost=expected_cost,
+                    expected_immediate_reward=expected_reward,
                     member_keys=tuple(sorted(member.key for member, _ in members_outcomes)),
                     entropy_after_bits=terminal_entropy))
             if outcomes:
@@ -570,7 +590,8 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
         candidates = {}
         for action, transition in transitions_by_state.get(information_id, ()):
             candidates[action] = sum(float(outcome.probability) * (
-                outcome.expected_immediate_utility + (outcome.expected_utility if outcome.terminal
+                outcome.expected_immediate_reward - outcome.expected_action_cost
+                + (outcome.expected_utility if outcome.terminal
                 else values[outcome.next_information_state_id])) for outcome in transition.outcomes)
             q_values[(information_id, action)] = candidates[action]
         if candidates:
@@ -590,7 +611,7 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
                 and len(states[outcome.next_information_state_id].members) == 1
                 for outcome in transition.outcomes)
         for transition in root_transitions)
-    fraction_resolved_after_one_action = (
+    one_step_full_resolution_rate = (
         resolving_first_actions / len(root_transitions)
         if len(initial.members) > 1 and root_transitions else 0.0)
 
@@ -599,7 +620,8 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
         "utility_sha256": utility.sha256, "action_cost_sha256": frozen_action_cost_hash(),
         "prior_definition": PRIOR_DEFINITION, "policy_feedback_visibility_sha256": policy_feedback_visibility_hash(),
         "max_members_per_belief": max_members_per_belief,
-        "latent_oracles": sorted(context.latent_table.table_sha256 for context in contexts.values()),
+        "latent_oracles": [contexts[task_id].latent_table.table_sha256
+                            for task_id in relevant_task_ids],
         "revision": SEQUENTIAL_ORACLE_REVISION,
     })
     rss_after = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
@@ -614,7 +636,9 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
                        "belief_peak_resident_memory_delta_kib": max(0, rss_after - rss_before),
                        "max_belief_cardinality": max(len(item.members) for item in states.values()),
                        "ambiguous_information_state_fraction": sum(len(item.members) > 1 for item in states.values()) / len(states),
-                       "fraction_resolved_after_one_action": fraction_resolved_after_one_action})
+                       # Fraction of root actions whose every outcome is
+                       # nonterminal and a singleton posterior belief.
+                       "one_step_full_resolution_rate": one_step_full_resolution_rate})
     return table
 
 
