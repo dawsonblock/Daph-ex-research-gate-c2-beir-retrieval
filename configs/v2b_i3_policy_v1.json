@@ -1,0 +1,15 @@
+{
+  "schema": "DAPH_V2B_I3_POLICY_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "policy_id": "v2b_i3_deterministic_safety_policy_v1",
+  "rules": [
+    {"rule_id": "high_stakes_unverified_requires_verify", "head": {"predicate": "require", "args": ["T", "verify", "high_stakes_unverified"]}, "body": [{"predicate": "high_stakes", "args": ["T"]}, {"predicate": "unverified", "args": ["T"]}]},
+    {"rule_id": "stale_requires_verify", "head": {"predicate": "require", "args": ["T", "verify", "stale_evidence"]}, "body": [{"predicate": "stale", "args": ["T"]}]},
+    {"rule_id": "conflict_requires_defer", "head": {"predicate": "require", "args": ["T", "defer", "unresolved_conflict"]}, "body": [{"predicate": "unresolved_conflict", "args": ["T"]}]},
+    {"rule_id": "falsified_denies_answer", "head": {"predicate": "deny", "args": ["T", "answer", "falsified_support"]}, "body": [{"predicate": "falsified", "args": ["T"]}]},
+    {"rule_id": "sufficient_denies_search_more", "head": {"predicate": "deny", "args": ["T", "search_more", "evidence_already_sufficient"]}, "body": [{"predicate": "evidence_sufficient", "args": ["T"]}]},
+    {"rule_id": "retrieval_exhausted_denies_retrieve", "head": {"predicate": "deny", "args": ["T", "retrieve", "retrieval_budget_exhausted"]}, "body": [{"predicate": "retrieval_exhausted", "args": ["T"]}]},
+    {"rule_id": "verification_exhausted_denies_verify", "head": {"predicate": "deny", "args": ["T", "verify", "verification_budget_exhausted"]}, "body": [{"predicate": "verification_exhausted", "args": ["T"]}]},
+    {"rule_id": "search_exhausted_denies_search", "head": {"predicate": "deny", "args": ["T", "search_more", "search_budget_exhausted"]}, "body": [{"predicate": "search_exhausted", "args": ["T"]}]}
+  ]
+}

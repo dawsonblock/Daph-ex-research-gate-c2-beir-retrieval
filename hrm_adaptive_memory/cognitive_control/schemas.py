@@ -6,7 +6,7 @@ import json
 from typing import Any
 
 
-SCHEMA_REGISTRY_VERSION = "DAPH_COGNITIVE_SCHEMA_REGISTRY_V2"
+SCHEMA_REGISTRY_VERSION = "DAPH_COGNITIVE_SCHEMA_REGISTRY_V3"
 
 SCHEMAS: dict[str, dict[str, Any]] = {
     "provenance": {
@@ -49,7 +49,7 @@ SCHEMAS: dict[str, dict[str, Any]] = {
         "bounded_categories": 16,
         "required": ["task_id", "relevant_memories", "verification_states", "temporal_status",
                      "unresolved_conflicts", "prior_decisions", "prior_outcomes", "resource_state",
-                     "policy_facts"],
+                     "policy_facts", "observation_signals"],
     },
     "resource_state": {
         "schema": "DAPH_V2B_RESOURCE_STATE_V1",
@@ -61,6 +61,13 @@ SCHEMAS: dict[str, dict[str, Any]] = {
         "schema": "DAPH_V2B_EXECUTIVE_ACTIONS_V1",
         "allowed": ["ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"],
         "forbidden": ["SPAWN_SPECIALIST", "SWITCH_STRATEGY", "ABANDON_STRATEGY", "VERIFY_ALTERNATE_SOURCE"],
+    },
+    "metareasoning_action_trace": {
+        "schema": "DAPH_V2B_I3_ACTION_TRACE_V1",
+        "required": ["proposed_action", "policy_resolved_action", "execution_status",
+                     "executed_action", "pre_state_hash", "post_state_hash", "state_delta"],
+        "invariants": ["deny_records_rejection_without_execution", "state_delta_per_executed_action",
+                       "latent_terminal_labels_not_controller_input"],
     },
 }
 

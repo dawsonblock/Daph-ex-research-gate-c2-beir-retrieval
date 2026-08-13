@@ -1,0 +1,12 @@
+{
+  "schema": "DAPH_V2B_EXPERIMENT_CONFIGURATION_V1",
+  "status": "DEVELOPMENT_EXPERIMENT_NOT_QUALIFIED",
+  "experiment_id": "v2b_i3_metareasoning_validity_v1",
+  "controller": {"algorithm_id": "v2b_i3_matched_metareasoning_controller_v1", "parameters": "IDENTICAL; state visibility is the only masked input"},
+  "controller_conditions": {"STATE_BLIND_CONTROLLER": "cognitive_state=MASKED", "STATE_AWARE_CONTROLLER": "cognitive_state=EXPOSED"},
+  "shared_substrate": ["frozen benchmark", "action schema", "resource profiles", "policy gate", "executor", "utility weights"],
+  "model": {"id": "NONE_DETERMINISTIC_INFRASTRUCTURE", "revision": "NONE", "tokenizer_revision": "NONE", "generation_configuration": {}},
+  "benchmark": {"path": "experiments/v2b/tasks/v2b_i3_metareasoning_benchmark_v1.json", "status": "FROZEN_FOR_DEVELOPMENT"},
+  "policy": {"path": "configs/v2b_i3_policy_v1.json", "status": "FROZEN_FOR_DEVELOPMENT"},
+  "forbidden": ["scientific_qualification_claim", "learned_executive", "sub_agent_spawning", "skill_formation", "critic", "live_network_acquisition"]
+}

@@ -1,0 +1,130 @@
+{
+  "schema": "DAPH_V2B_I3_METAREASONING_BENCHMARK_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "benchmark_id": "v2b_i3_metareasoning_validity_synthetic_v1",
+  "scope": "Deterministic metareasoning development environment; not scientific qualification evidence.",
+  "protocol": {
+    "latent_state": "Used only by environment dynamics, scoring, and the exact oracle; never passed to either controller.",
+    "observable_state": "Only the state-aware condition receives a bounded projection: verification, temporal status, provenance count, conflicts, composition progress, prior actions/outcomes, and budget.",
+    "shared_policy_substrate": "Both conditions are subject to the same hidden deterministic safety policy; STATE_BLIND is not policy-free.",
+    "forbidden_controller_inputs": ["expected_terminal", "action_effects", "utility_weights", "oracle_output", "policy_facts", "reasoning_required", "evidence_sufficient"]
+  },
+  "budget_profiles": {
+    "TIGHT": {"max_executive_steps": 4, "max_reasoning_tokens": 128, "max_retrieval_calls": 0, "max_verification_calls": 0, "max_search_calls": 0, "max_elapsed_ms": 10000, "max_monetary_cost_microusd": 0},
+    "STANDARD": {"max_executive_steps": 12, "max_reasoning_tokens": 512, "max_retrieval_calls": 4, "max_verification_calls": 3, "max_search_calls": 3, "max_elapsed_ms": 10000, "max_monetary_cost_microusd": 0},
+    "GENEROUS": {"max_executive_steps": 16, "max_reasoning_tokens": 768, "max_retrieval_calls": 6, "max_verification_calls": 4, "max_search_calls": 5, "max_elapsed_ms": 16000, "max_monetary_cost_microusd": 0}
+  },
+  "utility_weights": {
+    "success_reward": 100.0,
+    "failure_penalty": 100.0,
+    "executive_step": 0.1,
+    "retrieval": 2.0,
+    "verification": 3.0,
+    "search": 2.0,
+    "reasoning_128_tokens": 2.0,
+    "logical_ms": 0.01
+  },
+  "tasks": [
+    {
+      "task_id": "i3_immediate_answer", "category": "immediate_answer",
+      "task_summary": "Current independently verified evidence is already available.",
+      "high_stakes": false, "budget_profile": "STANDARD", "observable_provenance_count": 2,
+      "latent": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT", "unresolved_conflict": false, "composition_complete": true, "expected_terminal": "ANSWER"}, "action_effects": {}
+    },
+    {
+      "task_id": "i3_retrieval_required", "category": "retrieval_required",
+      "task_summary": "Relevant evidence may exist but is not in the current working set.",
+      "high_stakes": false, "budget_profile": "STANDARD", "observable_provenance_count": 0,
+      "latent": {"verification_state": "MISSING", "temporal_status": "UNKNOWN", "unresolved_conflict": false, "composition_complete": true, "expected_terminal": "ANSWER"},
+      "action_effects": {"RETRIEVE": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "i3_verification_required", "category": "verification_required",
+      "task_summary": "A high-stakes relevant memory is plausible but has not been checked.",
+      "high_stakes": true, "budget_profile": "STANDARD", "observable_provenance_count": 1,
+      "latent": {"verification_state": "UNVERIFIED", "temporal_status": "CURRENT", "unresolved_conflict": false, "composition_complete": true, "expected_terminal": "ANSWER"},
+      "action_effects": {"VERIFY": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "i3_conflict", "category": "conflict",
+      "task_summary": "Available authoritative evidence remains contradictory.",
+      "high_stakes": true, "budget_profile": "STANDARD", "observable_provenance_count": 2,
+      "latent": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT", "unresolved_conflict": true, "composition_complete": true, "expected_terminal": "DEFER"}, "action_effects": {}
+    },
+    {
+      "task_id": "i3_stale", "category": "stale_temporal",
+      "task_summary": "A once-supported fact needs a current refresh.",
+      "high_stakes": false, "budget_profile": "STANDARD", "observable_provenance_count": 1,
+      "latent": {"verification_state": "SUFFICIENT", "temporal_status": "STALE", "unresolved_conflict": false, "composition_complete": true, "expected_terminal": "ANSWER"},
+      "action_effects": {"VERIFY": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "i3_falsified_memory", "category": "false_memory",
+      "task_summary": "The relevant memory is explicitly falsified; another evidence path may exist.",
+      "high_stakes": false, "budget_profile": "STANDARD", "observable_provenance_count": 1,
+      "latent": {"verification_state": "FALSIFIED", "temporal_status": "CURRENT", "unresolved_conflict": false, "composition_complete": true, "expected_terminal": "ANSWER"},
+      "action_effects": {"RETRIEVE": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "i3_search_after_retrieval", "category": "search_more_required",
+      "task_summary": "Initial working evidence is incomplete and may need one bounded expansion.",
+      "high_stakes": false, "budget_profile": "STANDARD", "observable_provenance_count": 0,
+      "latent": {"verification_state": "MISSING", "temporal_status": "UNKNOWN", "unresolved_conflict": false, "composition_complete": true, "expected_terminal": "ANSWER"},
+      "action_effects": {"SEARCH_MORE": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "i3_composition", "category": "reason_more_required",
+      "task_summary": "Evidence is available but the answer composition is not complete.",
+      "high_stakes": false, "budget_profile": "STANDARD", "observable_provenance_count": 2,
+      "latent": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT", "unresolved_conflict": false, "composition_complete": false, "expected_terminal": "ANSWER"},
+      "action_effects": {"REASON_MORE": {"composition_complete": "true"}}
+    },
+    {
+      "task_id": "i3_insufficient", "category": "insufficient_evidence",
+      "task_summary": "No bounded evidence action resolves the available uncertainty.",
+      "high_stakes": false, "budget_profile": "STANDARD", "observable_provenance_count": 0,
+      "latent": {"verification_state": "MISSING", "temporal_status": "UNKNOWN", "unresolved_conflict": false, "composition_complete": true, "expected_terminal": "DEFER"}, "action_effects": {}
+    },
+    {
+      "task_id": "i3_tight_budget", "category": "budget_conditioned_tight",
+      "task_summary": "Relevant evidence is absent under a constrained resource profile.",
+      "high_stakes": false, "budget_profile": "TIGHT", "observable_provenance_count": 0,
+      "latent": {"verification_state": "MISSING", "temporal_status": "UNKNOWN", "unresolved_conflict": false, "composition_complete": true, "expected_terminal": "DEFER"}, "action_effects": {}
+    },
+    {
+      "task_id": "i3_generous_search", "category": "budget_conditioned_generous",
+      "task_summary": "Relevant evidence is absent under a resource profile that permits bounded expansion.",
+      "high_stakes": false, "budget_profile": "GENEROUS", "observable_provenance_count": 0,
+      "latent": {"verification_state": "MISSING", "temporal_status": "UNKNOWN", "unresolved_conflict": false, "composition_complete": true, "expected_terminal": "ANSWER"},
+      "action_effects": {"SEARCH_MORE": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "i3_ambiguous_retrieve", "category": "ambiguous_decision_retrieve",
+      "task_summary": "The current answer path is incomplete; choose one bounded evidence action.",
+      "high_stakes": false, "budget_profile": "STANDARD", "observable_provenance_count": 0,
+      "latent": {"verification_state": "MISSING", "temporal_status": "UNKNOWN", "unresolved_conflict": false, "composition_complete": true, "expected_terminal": "ANSWER"},
+      "action_effects": {"RETRIEVE": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "i3_ambiguous_verify", "category": "ambiguous_decision_verify",
+      "task_summary": "The current answer path is incomplete; choose one bounded evidence action.",
+      "high_stakes": false, "budget_profile": "STANDARD", "observable_provenance_count": 1,
+      "latent": {"verification_state": "UNVERIFIED", "temporal_status": "CURRENT", "unresolved_conflict": false, "composition_complete": true, "expected_terminal": "ANSWER"},
+      "action_effects": {"VERIFY": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "i3_hidden_transition_retrieve", "category": "partially_observable_retrieve",
+      "task_summary": "Two bounded evidence actions are available; their utility is uncertain until an observation.",
+      "high_stakes": false, "budget_profile": "STANDARD", "observable_provenance_count": 0,
+      "latent": {"verification_state": "MISSING", "temporal_status": "UNKNOWN", "unresolved_conflict": false, "composition_complete": true, "expected_terminal": "ANSWER"},
+      "action_effects": {"RETRIEVE": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "i3_hidden_transition_verify", "category": "partially_observable_verify",
+      "task_summary": "Two bounded evidence actions are available; their utility is uncertain until an observation.",
+      "high_stakes": false, "budget_profile": "STANDARD", "observable_provenance_count": 0,
+      "latent": {"verification_state": "MISSING", "temporal_status": "UNKNOWN", "unresolved_conflict": false, "composition_complete": true, "expected_terminal": "ANSWER"},
+      "action_effects": {"VERIFY": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    }
+  ]
+}

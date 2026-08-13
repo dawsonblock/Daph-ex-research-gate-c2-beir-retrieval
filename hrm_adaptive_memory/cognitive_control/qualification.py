@@ -45,6 +45,15 @@ COMPONENT_PATHS = {
     "v2b_i2_policy": "configs/v2b_i2_policy_v1.json",
     "v2b_i2_benchmark": "experiments/v2b/tasks/v2b_i2_frozen_benchmark_v1.json",
     "v2b_i2_configuration": "experiments/v2b/configs/v2b_i2_development.json",
+    "v2b_i3_benchmark_runtime": "hrm_adaptive_memory/executive/metareasoning_benchmark.py",
+    "v2b_i3_controller": "hrm_adaptive_memory/executive/metareasoning_controller.py",
+    "v2b_i3_executor": "hrm_adaptive_memory/executive/metareasoning_executor.py",
+    "v2b_i3_oracle": "hrm_adaptive_memory/executive/metareasoning_oracle.py",
+    "v2b_i3_loop": "hrm_adaptive_memory/executive/metareasoning_loop.py",
+    "v2b_i3_policy": "configs/v2b_i3_policy_v1.json",
+    "v2b_i3_benchmark": "experiments/v2b/tasks/v2b_i3_metareasoning_benchmark_v1.json",
+    "v2b_i3_configuration": "experiments/v2b/configs/v2b_i3_development.json",
+    "v2b_i3_runner": "scripts/run_v2b_i3_development.py",
 }
 TEST_CORPUS_PATHS = (
     "tests/unit/test_cognitive_control.py",
@@ -54,6 +63,7 @@ TEST_CORPUS_PATHS = (
     "tests/unit/test_v2b_schemas_and_actions.py",
     "tests/adversarial/test_v2b_infrastructure_adversarial.py",
     "tests/unit/test_v2b_i2_executive.py",
+    "tests/unit/test_v2b_i3_metareasoning.py",
 )
 QUALIFICATION_LOCK = "configs/v2b_qualification_requirements.lock"
 CRITICAL_DISTRIBUTIONS = (

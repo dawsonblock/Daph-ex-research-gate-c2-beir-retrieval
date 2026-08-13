@@ -1,4 +1,4 @@
-"""Versioned, immutable deterministic policy loading for V2B-I2."""
+"""Versioned, immutable deterministic policy loading for V2B development."""
 from __future__ import annotations
 
 import hashlib
@@ -10,7 +10,7 @@ from hrm_adaptive_memory.cognitive_control.core import PolicyGate, PolicyRule
 from hrm_adaptive_memory.cognitive_control.datalog import DatalogFact
 
 
-POLICY_SCHEMA = "DAPH_V2B_I2_POLICY_V1"
+POLICY_SCHEMAS = frozenset({"DAPH_V2B_I2_POLICY_V1", "DAPH_V2B_I3_POLICY_V1"})
 
 
 def _fact(raw: object) -> DatalogFact:
@@ -32,12 +32,12 @@ class FrozenPolicy:
 def load_frozen_policy(path: str | Path) -> FrozenPolicy:
     raw = Path(path).read_bytes()
     payload = json.loads(raw)
-    if payload.get("schema") != POLICY_SCHEMA or payload.get("status") != "FROZEN_FOR_DEVELOPMENT":
-        raise ValueError("V2B-I2 policy must be a frozen development policy")
+    if payload.get("schema") not in POLICY_SCHEMAS or payload.get("status") != "FROZEN_FOR_DEVELOPMENT":
+        raise ValueError("V2B policy must be a frozen development policy")
     rules = tuple(PolicyRule(
         rule_id=entry["rule_id"], head=_fact(entry["head"]),
         body=tuple(_fact(atom) for atom in entry["body"]),
     ) for entry in payload.get("rules", ()))
     if not rules or not isinstance(payload.get("policy_id"), str):
-        raise ValueError("V2B-I2 policy must have an id and nonempty rules")
+        raise ValueError("V2B policy must have an id and nonempty rules")
     return FrozenPolicy(payload["policy_id"], hashlib.sha256(raw).hexdigest(), PolicyGate(rules))

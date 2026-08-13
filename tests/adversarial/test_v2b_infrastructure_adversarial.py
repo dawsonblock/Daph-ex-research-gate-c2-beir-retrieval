@@ -31,6 +31,12 @@ def test_v2b_identity_rejects_i2_development_harness_as_scientific_qualification
         validate_run_configuration(configuration)
 
 
+def test_v2b_identity_rejects_i3_development_protocol_as_scientific_qualification():
+    configuration = json.loads((ROOT / "experiments/v2b/configs/v2b_i3_development.json").read_text())
+    with pytest.raises(RuntimeError, match="not frozen"):
+        validate_run_configuration(configuration)
+
+
 def test_registry_rejects_tampered_extractor_pin(tmp_path):
     source = json.loads((ROOT / "configs/authority_registry_v2b.json").read_text())
     source["definitions"][0]["extractor_sha256"] = "0" * 64

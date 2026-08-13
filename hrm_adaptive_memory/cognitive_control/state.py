@@ -72,12 +72,14 @@ class CognitiveStateSnapshot:
     prior_outcomes: tuple[str, ...]
     resource_state: Mapping[str, int | float]
     policy_facts: tuple[DatalogFact, ...]
+    observation_signals: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if not self.task_id or not self.task_summary:
             raise ValueError("cognitive snapshots require task identity and a summary")
         for field in (self.relevant_memories, self.verification_states,
                       self.provenance_summaries, self.unresolved_conflicts,
-                      self.prior_decisions, self.prior_outcomes, self.policy_facts):
+                      self.prior_decisions, self.prior_outcomes, self.policy_facts,
+                      self.observation_signals):
             if len(field) > 16:
                 raise ValueError("cognitive snapshots expose at most 16 items per category")
