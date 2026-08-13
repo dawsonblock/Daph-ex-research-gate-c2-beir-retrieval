@@ -453,6 +453,11 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
     transitions: dict[tuple[str, DecisionAction], InformationTransition] = {}
     transitions_by_state: dict[str, list[tuple[DecisionAction, InformationTransition]]] = {}
     member_transitions: dict[tuple[str, DecisionAction, str], MemberTransition] = {}
+    # Runtime evolution depends on latent member state and proposal, not on
+    # the public history used to group beliefs. Reusing this exact result
+    # avoids re-running policy/Datalog and execution for the same Markov
+    # transition across multiple information states.
+    proposal_outcome_cache: dict[tuple[str, DecisionAction], _RuntimeOutcome] = {}
     queue: deque[str] = deque([initial_id])
 
     while queue:
@@ -464,8 +469,13 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
             terminal_groups: dict[tuple[str, str | None, str],
                                   list[tuple[LatentMember, _RuntimeOutcome]]] = {}
             for member in state.members:
-                outcome = _apply_proposal(runtime=_member_runtime(member, contexts), proposed=proposed,
-                                          policy=policy, utility=utility)
+                cache_key = (member.key, proposed)
+                outcome = proposal_outcome_cache.get(cache_key)
+                if outcome is None:
+                    outcome = _apply_proposal(
+                        runtime=_member_runtime(member, contexts), proposed=proposed,
+                        policy=policy, utility=utility)
+                    proposal_outcome_cache[cache_key] = outcome
                 if outcome.terminal:
                     key = (outcome.feedback.effect,
                            None if outcome.feedback.resolved_action is None

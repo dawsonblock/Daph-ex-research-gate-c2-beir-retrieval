@@ -1,6 +1,6 @@
 {
   "schema": "DAPH_V2B_I3_3_BENCHMARK_FREEZE_CONFIGURATION_V1",
-  "status": "FROZEN_BENCHMARK_NOT_A_SCIENTIFIC_RESULT",
+  "status": "FROZEN_SCIENTIFIC_BENCHMARK_NO_EXECUTIVE_RESULT",
   "benchmark_manifest_path": "experiments/v2b_i3_3/manifests/v2b_i3_3_benchmark_manifest_v1.json",
   "protocol_path": "configs/v2b_i3_2_2_protocol_v1.json",
   "policy_path": "configs/v2b_i3_policy_v1.json",
@@ -29,6 +29,18 @@
     "held_out_structure_exact_unseen_minimum": 50,
     "held_out_structure_task_fraction_minimum": 0.2
   },
+  "topology_novelty_thresholds": {
+    "development_unique_minimum": 50,
+    "validation_unseen_from_development_minimum": 25,
+    "held_out_structure_unseen_from_pretest_minimum": 50,
+    "held_out_structure_overlap_with_development_and_validation_maximum": 0
+  },
+  "difficulty_band_thresholds": {
+    "required_bands": ["EASY", "MEDIUM", "HARD", "TIE"],
+    "minimum_fraction_per_band": 0.05,
+    "maximum_fraction_per_band": 0.55
+  },
+  "budget_sensitive_task_fraction_minimum": 0.25,
   "oracle_balance_thresholds": {
     "designed_oracle_agreement": 1.0,
     "minimum_singleton_optimal_actions": 7,
@@ -44,5 +56,5 @@
     "NO_CONFLICT",
     "NO_HISTORY"
   ],
-  "claim_boundary": "Frozen deterministic benchmark infrastructure only; no model-controller or V2B scientific verdict."
+  "claim_boundary": "Frozen scientific benchmark only; no model-controller or V2B scientific verdict."
 }

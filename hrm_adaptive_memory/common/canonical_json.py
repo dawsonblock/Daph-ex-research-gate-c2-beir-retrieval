@@ -2,7 +2,7 @@
 
 Python's standard encoder accepts NaN and infinities by default.  Those tokens
 are not JSON and make frozen evidence parser-dependent, so this module is the
-only writer used by the I3.3.1 benchmark and oracle-cache pipeline.
+only writer used by the I3.3.2 benchmark and oracle-cache pipeline.
 """
 from __future__ import annotations
 
@@ -45,4 +45,3 @@ def load_strict(path: str | Path) -> Any:
 
 def canonical_sha256(value: object) -> str:
     return hashlib.sha256(canonical_bytes(value)).hexdigest()
-

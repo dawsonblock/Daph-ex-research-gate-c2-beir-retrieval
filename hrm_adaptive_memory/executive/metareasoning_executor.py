@@ -9,7 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass, replace
-from typing import Mapping
+from typing import Mapping, Sequence
 
 from hrm_adaptive_memory.cognitive_control.actions import V2B_ACTIONS
 from hrm_adaptive_memory.cognitive_control.core import DecisionAction
@@ -182,7 +182,64 @@ class DeterministicMetareasoningExecutor:
     """Applies benchmark dynamics. It never calls an LLM, retrieval service, or HTTP."""
 
     @staticmethod
-    def _apply_effect(runtime: I3Runtime, effect: Mapping[str, str]) -> I3Runtime:
+    def _condition_matches(runtime: I3Runtime, condition: Mapping[str, object]) -> bool:
+        fields: dict[str, object] = {
+            "verification_state": runtime.verification_state.value,
+            "temporal_status": runtime.temporal_status.value,
+            "unresolved_conflict": runtime.unresolved_conflict,
+            "composition_complete": runtime.composition_complete,
+            "provenance_count": runtime.provenance_count,
+            "conflict_resolvable": runtime.conflict_resolvable,
+            "retrieved": runtime.retrieved,
+            "searched": runtime.searched,
+        }
+        for key, expected in condition.items():
+            if key == "prior_outcomes_contains":
+                expected_values = (tuple(str(item) for item in expected)
+                                   if isinstance(expected, Sequence)
+                                   and not isinstance(expected, (str, bytes))
+                                   else (str(expected),))
+                if not all(value in runtime.prior_outcomes for value in expected_values):
+                    return False
+            elif key == "prior_outcomes_not_contains":
+                expected_values = (tuple(str(item) for item in expected)
+                                   if isinstance(expected, Sequence)
+                                   and not isinstance(expected, (str, bytes))
+                                   else (str(expected),))
+                if any(value in runtime.prior_outcomes for value in expected_values):
+                    return False
+            elif key not in fields or fields[key] != expected:
+                return False
+        return True
+
+    @classmethod
+    def _resolved_effect(cls, runtime: I3Runtime,
+                         effect: Mapping[str, object]) -> Mapping[str, object]:
+        rules = effect.get("rules")
+        if rules is None:
+            return effect
+        if (not isinstance(rules, Sequence) or isinstance(rules, (str, bytes))
+                or not all(isinstance(rule, Mapping) for rule in rules)):
+            raise ValueError("I3 conditional effect rules must be ordered mappings")
+        for rule in rules:
+            condition = rule.get("when", {})
+            update = rule.get("set", {})
+            if not isinstance(condition, Mapping) or not isinstance(update, Mapping):
+                raise ValueError("I3 conditional effect needs mapping when/set clauses")
+            if cls._condition_matches(runtime, condition):
+                resolved = dict(update)
+                if "append_prior_outcome" in rule:
+                    resolved["append_prior_outcome"] = rule["append_prior_outcome"]
+                return resolved
+        default = effect.get("default", {})
+        if not isinstance(default, Mapping):
+            raise ValueError("I3 conditional effect default must be a mapping")
+        return default
+
+    @classmethod
+    def _apply_effect(cls, runtime: I3Runtime,
+                      effect: Mapping[str, object]) -> I3Runtime:
+        effect = cls._resolved_effect(runtime, effect)
         updates: dict[str, object] = {}
         if "verification_state" in effect:
             updates["verification_state"] = VerificationState(effect["verification_state"])
@@ -194,6 +251,23 @@ class DeterministicMetareasoningExecutor:
             updates["composition_complete"] = effect["composition_complete"] == "true"
         if "provenance_count" in effect:
             updates["provenance_count"] = int(effect["provenance_count"])
+        if "conflict_resolvable" in effect:
+            value = effect["conflict_resolvable"]
+            updates["conflict_resolvable"] = (
+                value if isinstance(value, bool) else str(value).lower() == "true")
+        if "append_prior_outcome" in effect:
+            appended = effect["append_prior_outcome"]
+            values = ([str(item) for item in appended]
+                      if isinstance(appended, Sequence) and not isinstance(appended, (str, bytes))
+                      else [str(appended)])
+            updates["prior_outcomes"] = runtime.prior_outcomes + tuple(values)
+        if "append_prior_outcome_once" in effect:
+            appended = effect["append_prior_outcome_once"]
+            values = ([str(item) for item in appended]
+                      if isinstance(appended, Sequence) and not isinstance(appended, (str, bytes))
+                      else [str(appended)])
+            updates["prior_outcomes"] = runtime.prior_outcomes + tuple(
+                value for value in values if value not in runtime.prior_outcomes)
         return replace(runtime, **updates)
 
     def execute(self, runtime: I3Runtime, action: DecisionAction) -> I3ActionExecution:

@@ -1,4 +1,22 @@
 {
+  "v2b_i3_3_2_scientific_split": {
+    "artifact": "DAPH_V2B_I3_3_2_SCIENTIFIC_SPLIT_IDENTITY_V1",
+    "status": "FROZEN_SCIENTIFIC_BENCHMARK_NO_EXECUTIVE_RESULT",
+    "task_count": 750,
+    "designed_oracle_agreement": "750/750",
+    "held_out_structure_topologies": 51,
+    "held_out_structure_overlap_with_development_or_validation": 0,
+    "difficulty_bands": {
+      "EASY": 188,
+      "MEDIUM": 409,
+      "HARD": 58,
+      "TIE": 95
+    },
+    "budget_sensitive_tasks": 190,
+    "state_aware_task_uniform_information_gap": 4.311493333333333,
+    "state_blind_task_uniform_information_gap": 10.057626666666666,
+    "claim_boundary": "Frozen scientific benchmark and exact representation characterization only; no model executive result and no V2B scientific verdict."
+  },
   "background_verification_v2a": {
     "artifact": "BACKGROUND_VERIFICATION_V2A",
     "run_valid": true,

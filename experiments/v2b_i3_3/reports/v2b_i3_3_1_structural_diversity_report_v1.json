@@ -1,39 +1,39 @@
 {
   "exact_structure_overlap_matrix": {
     "development": {
-      "development": 179,
-      "held_out_instance": 81,
+      "development": 124,
+      "held_out_instance": 61,
       "held_out_structure": 0,
-      "held_out_surface": 44,
-      "validation": 0
+      "held_out_surface": 38,
+      "validation": 6
     },
     "held_out_instance": {
-      "development": 81,
-      "held_out_instance": 81,
+      "development": 61,
+      "held_out_instance": 61,
       "held_out_structure": 0,
-      "held_out_surface": 44,
-      "validation": 0
+      "held_out_surface": 38,
+      "validation": 6
     },
     "held_out_structure": {
       "development": 0,
       "held_out_instance": 0,
-      "held_out_structure": 116,
+      "held_out_structure": 79,
       "held_out_surface": 0,
-      "validation": 33
-    },
-    "held_out_surface": {
-      "development": 44,
-      "held_out_instance": 44,
-      "held_out_structure": 0,
-      "held_out_surface": 44,
       "validation": 0
     },
+    "held_out_surface": {
+      "development": 38,
+      "held_out_instance": 38,
+      "held_out_structure": 0,
+      "held_out_surface": 38,
+      "validation": 6
+    },
     "validation": {
-      "development": 0,
-      "held_out_instance": 0,
-      "held_out_structure": 33,
-      "held_out_surface": 0,
-      "validation": 118
+      "development": 6,
+      "held_out_instance": 6,
+      "held_out_structure": 0,
+      "held_out_surface": 6,
+      "validation": 82
     }
   },
   "novelty_against_development": {
@@ -42,32 +42,32 @@
       "exact_unseen_from_development": 0
     },
     "held_out_structure": {
-      "coarse_unseen_from_development": 113,
-      "exact_unseen_from_development": 116
+      "coarse_unseen_from_development": 9,
+      "exact_unseen_from_development": 79
     },
     "held_out_surface": {
       "coarse_unseen_from_development": 0,
       "exact_unseen_from_development": 0
     },
     "validation": {
-      "coarse_unseen_from_development": 114,
-      "exact_unseen_from_development": 118
+      "coarse_unseen_from_development": 58,
+      "exact_unseen_from_development": 76
     }
   },
   "schema": "DAPH_V2B_I3_3_1_STRUCTURAL_DIVERSITY_REPORT_V1",
   "status": "FROZEN_BENCHMARK_NOT_EXECUTIVE_RESULT",
   "unique_coarse_structures": {
-    "development": 179,
-    "held_out_instance": 81,
-    "held_out_structure": 113,
-    "held_out_surface": 44,
-    "validation": 114
+    "development": 124,
+    "held_out_instance": 61,
+    "held_out_structure": 9,
+    "held_out_surface": 38,
+    "validation": 64
   },
   "unique_exact_structures": {
-    "development": 179,
-    "held_out_instance": 81,
-    "held_out_structure": 116,
-    "held_out_surface": 44,
-    "validation": 118
+    "development": 124,
+    "held_out_instance": 61,
+    "held_out_structure": 79,
+    "held_out_surface": 38,
+    "validation": 82
   }
 }

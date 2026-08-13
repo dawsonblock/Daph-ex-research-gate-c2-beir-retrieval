@@ -1,12 +1,12 @@
-# DAPH
+# DAPH v3.7.1
 
 ### Auditable adaptive memory, external verification, and metareasoning research
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](pyproject.toml)
-[![Tests](https://img.shields.io/badge/tests-1%2C759%20passed-22C55E)](#verification)
+[![Tests](https://img.shields.io/badge/tests-1%2C760%20passed-22C55E)](#verification)
 [![License: MIT](https://img.shields.io/badge/license-MIT-64748B)](LICENSE)
 [![V2A](https://img.shields.io/badge/V2A-qualified-16A34A)](#scientific-status)
-[![V2B](https://img.shields.io/badge/V2B-development-F59E0B)](#v2b-i331-benchmark-integrity)
+[![V2B](https://img.shields.io/badge/V2B-I3.3.2-frozen%20benchmark-F59E0B)](#v2b-i332-scientific-split)
 
 DAPH is a gate-structured research system for testing when an AI should
 retrieve, verify, reason further, defer, or stop. It combines a bounded memory
@@ -19,7 +19,7 @@ Every research result has an explicit source identity, frozen protocol,
 environment boundary, and evidence package.
 
 > **Current state:** V2A external verification is qualified at its frozen
-> historical commit. V2B-I3.3.1 is a frozen benchmark-integrity milestone—not
+> historical commit. V2B-I3.3.2 is a frozen scientific-benchmark milestone—not
 > an executive result and not a production-readiness claim.
 
 ## Why DAPH
@@ -67,13 +67,16 @@ only.
 
 ## Scientific status
 
+Historical release gate: **Gate A0 — PASSED**. This marker records the
+qualified controlled-evidence-use result; it does not broaden the V2B claim.
+
 | Program | Status | Bounded result |
 |---|---|---|
 | C4 integrated memory pipeline | **Certified on development** | H100/CUDA 12.8 run passed all 17 frozen gates; development-only quality delta `+0.2000` |
 | V2A external background verification | **Qualified** | Immutable capture, source lineage, deterministic exact-field verification, retries/replay/tamper handling, and current verification state |
 | V2B-I1 trusted infrastructure | **Development baseline** | Registered authority acquisition, peer-bound HTTPS, raw-to-fields re-derivation, typed comparison, signed checkpoint trust roots |
 | V2B-I3.2.2 methodology | **Frozen methodology** | Task/class priors, cost/reward semantics, sequential information-state oracle, and regret decomposition |
-| V2B-I3.3.1 benchmark integrity | **Frozen benchmark; no executive result** | 750 tasks, strict JSON artifacts, oracle-confirmed labels, structural held-out split, latent and seven observable-oracle caches |
+| V2B-I3.3.2 scientific split | **Frozen benchmark; no executive result** | 750 tasks, strict JSON artifacts, behavior-derived topology isolation, four Q-margin bands, latent and seven observable-oracle caches |
 | V2B model executive | **Not started** | A pinned model, tokenizer, prompt, decoder, and experiment identity must be frozen first |
 | Production verifier | **No-go** | Research qualification is not general truth determination or autonomous production authority |
 
@@ -83,7 +86,7 @@ that result or inherit its qualification.
 
 Full machine-readable status: [RESEARCH_STATUS.json](RESEARCH_STATUS.json)
 
-## V2B-I3.3.1 benchmark integrity
+## V2B-I3.3.2 scientific split
 
 The current milestone asks whether the benchmark is strong and reproducible
 enough for a later matched model-controller experiment.
@@ -93,23 +96,24 @@ enough for a later matched model-controller experiment.
 | Split | Tasks | Purpose |
 |---|---:|---|
 | Development | 300 | Controller and prompt development |
-| Validation | 150 | Threshold selection with novel exact structures |
+| Validation | 150 | Pre-test selection on topologies excluded from final structure-held-out |
 | Held-out instance | 100 | New instances of familiar control structures |
 | Held-out surface | 50 | Unseen task-summary templates |
-| Held-out structure | 150 | Exact transition structures absent from development |
+| Held-out structure | 150 | Executable control topologies absent from development and validation |
 | **Total** | **750** | Frozen deterministic benchmark |
 
-Each task carries coarse and exact semantic-structure hashes derived from its
-latent epistemic state, resource budget, policy-relevant state, transition
-graph, terminal semantics, and cognitive channel. Cosmetic IDs, entity names,
-surface wording, split names, and generator intent are excluded.
+Each task retains coarse and exact semantic hashes for diagnostics. A separate
+behavior-derived topology identity commits the reachable proposal, policy,
+transition, and terminal graph while excluding task IDs, surface wording,
+generator channel labels, state labels, and budget-profile names.
 
 ### Integrity results
 
-- `750 / 750` designed actions belong to the exact latent-oracle optimum set.
-- `60` tasks preserve an explicit zero-regret `DEFER | STOP` tie.
-- Development contains `179` exact semantic structures.
-- Structure-held-out contains `116` exact structures with **zero** development overlap.
+- Designed actions belong to the exact latent-oracle optimum set for `750 / 750` tasks.
+- Q-margin bands contain `188` EASY, `409` MEDIUM, `58` HARD, and `95` exact-TIE tasks.
+- `190 / 750` tasks (`25.3%`) occur in same-state, different-budget pairs.
+- Structure-held-out contains `51` behavior-derived topologies with **zero** development or validation overlap.
+- Optimal trajectories cover depth 1, 2, 3, and 4+ control programs.
 - All hash-bearing artifacts use strict RFC JSON; `NaN` and infinities fail closed.
 - The deterministic seed is operational and reproduces the frozen concrete corpus.
 - Exhaustive latent and sequential oracle regeneration is separated from fast unit tests.
@@ -118,13 +122,13 @@ The representation characterization preserves the intended ordering:
 
 | Observation condition | Task-uniform information gap ↓ |
 |---|---:|
-| State aware | `0.561747` |
-| No temporal | `0.563947` |
-| No provenance | `0.578093` |
-| No history | `0.584707` |
-| No conflict | `0.600947` |
-| No verification | `0.764747` |
-| State blind | `3.930413` |
+| State aware | `4.311493` |
+| No temporal | `4.312667` |
+| No provenance | `4.317547` |
+| No verification | `4.327840` |
+| No history | `4.504747` |
+| No conflict | `4.827187` |
+| State blind | `10.057627` |
 
 These are properties of the frozen synthetic environment and observation
 representations. They do **not** show that a model executive can exploit the
@@ -132,11 +136,12 @@ state. That question belongs to the next matched, pinned model experiment.
 
 Key artifacts:
 
-- [I3.3.1 benchmark methodology](docs/V2B_I3_3_BENCHMARK.md)
-- [Recorded I3.3 baseline](configs/v2b_i3_3_1_baseline.json)
+- [I3.3.2 benchmark methodology](docs/V2B_I3_3_BENCHMARK.md)
+- [Recorded I3.3.1 baseline](configs/v2b_i3_3_2_baseline.json)
 - [Benchmark manifest](experiments/v2b_i3_3/manifests/v2b_i3_3_benchmark_manifest_v1.json)
 - [Oracle-confirmed balance report](experiments/v2b_i3_3/reports/v2b_i3_3_1_oracle_balance_report_v1.json)
 - [Structural-diversity report](experiments/v2b_i3_3/reports/v2b_i3_3_1_structural_diversity_report_v1.json)
+- [Topology-diversity report](experiments/v2b_i3_3/reports/v2b_i3_3_2_topology_diversity_report_v1.json)
 - [Oracle cache manifest](experiments/v2b_i3_3/oracle_tables/v2b_i3_3_oracle_cache_manifest_v1.json)
 
 ## V2A verification trust chain
@@ -215,7 +220,7 @@ python -m pip install -e ".[hrm]"
 
 ```bash
 python -m pytest -q
-# 1,759 passed, 4 skipped
+# 1,760 passed, 4 skipped
 ```
 
 Run the focused I3 methodology and integrity suites:
@@ -228,7 +233,7 @@ python -m pytest -q \
   tests/unit/test_v2b_i3_2_2_protocol.py \
   tests/unit/test_v2b_i3_3_benchmark.py \
   tests/adversarial/test_v2b_infrastructure_adversarial.py
-# 58 passed
+# 59 passed
 ```
 
 The exhaustive cache-regeneration gate is intentionally explicit:
@@ -304,7 +309,8 @@ flowchart TD
     I31 --> I32[V2B-I3.2 sequential information-state oracle]
     I32 --> I322[V2B-I3.2.2 frozen methodology]
     I322 --> I331[V2B-I3.3.1 benchmark integrity]
-    I331 -. not started .-> I34[V2B-I3.4 pinned model experiment]
+    I331 --> I332[V2B-I3.3.2 scientific split]
+    I332 -. not started .-> I34[V2B-I3.4 pinned model experiment]
 ```
 
 ## Reports and documentation

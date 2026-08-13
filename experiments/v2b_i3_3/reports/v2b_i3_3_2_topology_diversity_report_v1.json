@@ -1,0 +1,77 @@
+{
+  "held_out_structure_unseen_from_development_and_validation": 51,
+  "identity_semantics": "Behavior-derived proposal/policy/transition connectivity; excludes task ids, surface text, generator channel labels, state labels, and budget-profile names.",
+  "schema": "DAPH_V2B_I3_3_2_TOPOLOGY_DIVERSITY_REPORT_V1",
+  "status": "FROZEN_SCIENTIFIC_BENCHMARK_NO_EXECUTIVE_RESULT",
+  "topology_depth_bands": {
+    "development": {
+      "DEPTH_1": 82,
+      "DEPTH_2": 171,
+      "NO_SUCCESS_PATH": 47
+    },
+    "held_out_instance": {
+      "DEPTH_1": 27,
+      "DEPTH_2": 57,
+      "NO_SUCCESS_PATH": 16
+    },
+    "held_out_structure": {
+      "DEPTH_1": 59,
+      "DEPTH_4_PLUS": 91
+    },
+    "held_out_surface": {
+      "DEPTH_1": 13,
+      "DEPTH_2": 29,
+      "NO_SUCCESS_PATH": 8
+    },
+    "validation": {
+      "DEPTH_1": 38,
+      "DEPTH_2": 24,
+      "DEPTH_3": 64,
+      "NO_SUCCESS_PATH": 24
+    }
+  },
+  "topology_overlap_matrix": {
+    "development": {
+      "development": 75,
+      "held_out_instance": 44,
+      "held_out_structure": 0,
+      "held_out_surface": 30,
+      "validation": 11
+    },
+    "held_out_instance": {
+      "development": 44,
+      "held_out_instance": 44,
+      "held_out_structure": 0,
+      "held_out_surface": 30,
+      "validation": 9
+    },
+    "held_out_structure": {
+      "development": 0,
+      "held_out_instance": 0,
+      "held_out_structure": 51,
+      "held_out_surface": 0,
+      "validation": 0
+    },
+    "held_out_surface": {
+      "development": 30,
+      "held_out_instance": 30,
+      "held_out_structure": 0,
+      "held_out_surface": 30,
+      "validation": 7
+    },
+    "validation": {
+      "development": 11,
+      "held_out_instance": 9,
+      "held_out_structure": 0,
+      "held_out_surface": 7,
+      "validation": 68
+    }
+  },
+  "transition_topologies": {
+    "development": 75,
+    "held_out_instance": 44,
+    "held_out_structure": 51,
+    "held_out_surface": 30,
+    "validation": 68
+  }
+}

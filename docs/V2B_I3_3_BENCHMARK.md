@@ -1,38 +1,95 @@
-# V2B-I3.3.1 Benchmark Integrity Pass
+# V2B-I3.3.2 Scientific Split Hardening
 
-V2B-I3.3.1 preserves the I3.3 seven-action environment and performs the final
-benchmark-integrity pass after the I3.2.2 methodology freeze. It does not add a
-model controller and is not a scientific V2B result.
+V2B-I3.3.2 is the final benchmark-engineering milestone before a pinned model
+executive. It preserves the I3.2.2 protocol, seven-action vocabulary, exact
+latent oracle, and sequential information-state oracle. It adds no model,
+critic, sub-agent, skill system, or new executive action.
 
-The concrete corpus contains 750 immutable task instances: 300 development,
-150 validation, 100 instance-held-out, 50 surface-held-out, and 150
-structure-held-out. It covers verification, temporal validity,
-provenance lineage, conflict, decision history, composition, irreducible
-partial observability, state-irrelevant controls, and budget-conditioned
-pairs. Structure-held-out exact semantic signatures are disjoint from
-development; surface-held-out templates are also disjoint. Concrete JSON is
-authoritative; the deterministic generator and operational seed
-are provenance for the frozen bytes rather than an instruction to regenerate
-held-out evaluation data.
+The frozen corpus contains 750 immutable instances:
 
-Each task commits both coarse and exact semantic-structure identities derived
-from latent state, budgets, policy-relevant state, deterministic transition
-effects, terminal semantics, and the cognitive channel. IDs, surface text,
-entities, split names, and intended labels are excluded. Generator intent is
-non-authoritative: the exact latent oracle defines the tied or singleton
-optimal-action set and the oracle-confirmed balance report must show complete
-agreement before freeze.
+| Split | Tasks | Scientific role |
+|---|---:|---|
+| Development | 300 | Prompt/controller development |
+| Validation | 150 | Pre-test selection and threshold calibration |
+| Held-out instance | 100 | New instances of familiar control problems |
+| Held-out surface | 50 | Unseen task-summary realizations |
+| Held-out structure | 150 | Unseen executable metareasoning topology |
 
-All hash-bearing JSON uses one strict RFC-8259 writer (`allow_nan=False`). A
-task with no successful terminal path records `successful_path_exists=false`
-and `minimum_remaining_cost=null`; it never serializes `Infinity`. Fast tests
-verify cache identities and representative recomputation, while exhaustive
-750-task latent and seven-condition sequential regeneration remains a separate
-qualification gate.
+## Three structure identities
 
-The benchmark uses the I3.2.2 protocol's seven actions and utility semantics.
-Each controller condition changes only the observation mask. Oracle cache
-records bind latent and sequential observable ground truth without enabling a
-model-controller claim.
+Each private task retains coarse and exact semantic identities for diagnostic
+stratification. I3.3.2 adds a stronger `transition_topology_sha256` derived
+from the reachable proposal, policy-resolution, transition-connectivity, and
+terminal-result graph.
 
-Status: **FROZEN BENCHMARK INTEGRITY EVIDENCE, NOT AN EXECUTIVE RESULT**.
+The topology identity deliberately excludes task IDs, split names, surface
+text, entity names, generator indices, cognitive-channel labels, state labels,
+and budget-profile names. Resource limits affect topology only through the
+executable graph they produce.
+
+The final isolation invariant is:
+
+```text
+T(HELD_OUT_STRUCTURE) ∩
+  (T(DEVELOPMENT) ∪ T(VALIDATION)) = ∅
+```
+
+Instance-held-out may share topology with development by design. Surface-
+held-out shares control semantics but uses a disjoint frozen template pool.
+The three splits therefore support different, non-interchangeable claims.
+
+## Real multistep programs
+
+Validation and structural-held-out tasks use deterministic conditional action
+effects to express staged programs. Examples include retrieval followed by
+verification, verification followed by reasoning, search followed by
+verification, and failed or misordered operations that poison the current
+control path. The runtime and both oracles execute the same frozen conditional
+effect semantics.
+
+Tasks are characterized by minimum optimal trajectory depth, maximum relevant
+depth, decision branch points, and policy interventions. The held-out
+structure split includes depth-four-or-greater optimal trajectories rather
+than relying on decoy metadata for novelty.
+
+## Decision difficulty
+
+Difficulty is evaluator-only and comes from the exact latent-oracle Q margin:
+
+```text
+normalized margin =
+  (best Q − best non-tied alternative Q) /
+  (correct-answer reward − incorrect-answer reward)
+```
+
+The frozen bands are:
+
+- `HARD`: `0 < margin < 0.005`
+- `MEDIUM`: `0.005 ≤ margin < 0.10`
+- `EASY`: `margin ≥ 0.10`
+- `TIE`: multiple exactly optimal actions
+
+No difficulty label, Q value, topology identity, split role, latent state, or
+oracle output appears in a controller packet.
+
+## Artifact and qualification boundary
+
+All hash-bearing JSON uses the shared strict RFC-8259 serializer with
+`allow_nan=False`. The benchmark closure binds the private corpus, public
+packets, split manifests, topology allocation, semantic/topology reports,
+policy, utility, budgets, observation masks, latent oracle set, and all seven
+sequential observable-oracle sets.
+
+The identity is:
+
+```text
+DAPH_V2B_I3_3_2_SCIENTIFIC_SPLIT_IDENTITY_V1
+```
+
+Its claim boundary is intentionally narrow:
+
+> **FROZEN SCIENTIFIC BENCHMARK; NO MODEL EXECUTIVE RESULT**
+
+Exhaustive cache regeneration remains an explicit qualification test rather
+than part of the fast unit suite. Once this identity is frozen, benchmark
+mathematics and held-out data must not be tuned around model behavior.

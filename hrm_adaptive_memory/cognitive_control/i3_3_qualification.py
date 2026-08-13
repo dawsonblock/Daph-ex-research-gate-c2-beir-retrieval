@@ -15,11 +15,11 @@ from hrm_adaptive_memory.executive.metareasoning_artifacts import (
 from .qualification import _combined_hash, _git, _git_bytes, _tree_hash, dependency_environment
 
 
-IDENTITY_VERSION = "DAPH_V2B_I3_3_1_BENCHMARK_INTEGRITY_IDENTITY_V1"
+IDENTITY_VERSION = "DAPH_V2B_I3_3_2_SCIENTIFIC_SPLIT_IDENTITY_V1"
 CONFIGURATION_PATH = "experiments/v2b_i3_3/configs/v2b_i3_3_benchmark_freeze_v1.json"
 COMPONENTS = {
     "i3_2_2_protocol_baseline": "configs/v2b_i3_3_baseline.json",
-    "i3_3_frozen_benchmark_baseline": "configs/v2b_i3_3_1_baseline.json",
+    "i3_3_1_integrity_baseline": "configs/v2b_i3_3_2_baseline.json",
     "protocol_identity_runtime": "hrm_adaptive_memory/cognitive_control/i3_2_2_qualification.py",
     "benchmark_identity_runtime": "hrm_adaptive_memory/cognitive_control/i3_3_qualification.py",
     "artifact_resolver": "hrm_adaptive_memory/executive/metareasoning_artifacts.py",
@@ -28,6 +28,7 @@ COMPONENTS = {
     "latent_state": "hrm_adaptive_memory/executive/metareasoning_state.py",
     "latent_executor": "hrm_adaptive_memory/executive/metareasoning_executor.py",
     "latent_oracle": "hrm_adaptive_memory/executive/metareasoning_transition_table.py",
+    "transition_topology": "hrm_adaptive_memory/executive/metareasoning_topology.py",
     "sequential_observable_oracle": "hrm_adaptive_memory/executive/metareasoning_sequential_oracle.py",
     "utility": "hrm_adaptive_memory/executive/metareasoning_utility.py",
     "metrics_and_replay": "hrm_adaptive_memory/executive/metareasoning_i3_2.py",
@@ -49,7 +50,7 @@ TEST_CORPUS = (
 def validate_configuration(configuration: Mapping[str, object]) -> None:
     if configuration.get("schema") != "DAPH_V2B_I3_3_BENCHMARK_FREEZE_CONFIGURATION_V1":
         raise RuntimeError("I3.3 benchmark configuration schema is unsupported")
-    if configuration.get("status") != "FROZEN_BENCHMARK_NOT_A_SCIENTIFIC_RESULT":
+    if configuration.get("status") != "FROZEN_SCIENTIFIC_BENCHMARK_NO_EXECUTIVE_RESULT":
         raise RuntimeError("I3.3 benchmark is not frozen")
     if configuration.get("primary_prior") != "TASK_UNIFORM":
         raise RuntimeError("I3.3 primary aggregate prior must be task-uniform")
@@ -80,6 +81,20 @@ def validate_configuration(configuration: Mapping[str, object]) -> None:
             "maximum_tied_task_fraction": 0.15,
             "minimum_q_margin_bands": 2}:
         raise RuntimeError("I3.3.1 oracle-balance thresholds are not frozen")
+    if configuration.get("topology_novelty_thresholds") != {
+            "development_unique_minimum": 50,
+            "validation_unseen_from_development_minimum": 25,
+            "held_out_structure_unseen_from_pretest_minimum": 50,
+            "held_out_structure_overlap_with_development_and_validation_maximum": 0}:
+        raise RuntimeError("I3.3.2 topology novelty thresholds are not frozen")
+    difficulty = configuration.get("difficulty_band_thresholds")
+    if (not isinstance(difficulty, Mapping)
+            or difficulty.get("required_bands") != ["EASY", "MEDIUM", "HARD", "TIE"]
+            or difficulty.get("minimum_fraction_per_band") != 0.05
+            or difficulty.get("maximum_fraction_per_band") != 0.55):
+        raise RuntimeError("I3.3.2 difficulty thresholds are not frozen")
+    if configuration.get("budget_sensitive_task_fraction_minimum") != 0.25:
+        raise RuntimeError("I3.3.2 budget-sensitivity threshold is not frozen")
     limits = configuration.get("oracle_limits")
     expected = {
         "max_latent_states_per_task", "max_latent_transitions_per_task",
@@ -112,7 +127,7 @@ def i3_3_benchmark_identity(root: str | Path, commit: str = "HEAD") -> dict[str,
         _tree_hash(root, source_commit, path)
     return {
         "identity_version": IDENTITY_VERSION,
-        "claim_boundary": "Frozen I3.3.1 benchmark integrity identity; no executive scientific result.",
+        "claim_boundary": "Frozen I3.3.2 scientific benchmark identity; no model executive result.",
         "source_commit": source_commit,
         "source_tree_hash": _git(root, "rev-parse", f"{source_commit}^{{tree}}"),
         "component_hashes": {

@@ -52,7 +52,7 @@ class I3BenchmarkTask:
     budget_profile: str
     latent: LatentTaskState
     observable_provenance_count: int
-    action_effects: Mapping[DecisionAction, Mapping[str, str]]
+    action_effects: Mapping[DecisionAction, Mapping[str, object]]
     # An opaque public identifier.  The private task id is used only by the
     # environment, policy, and receipts; this value is what a controller sees.
     controller_instance_id: str = ""

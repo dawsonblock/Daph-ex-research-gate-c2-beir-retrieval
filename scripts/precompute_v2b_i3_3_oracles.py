@@ -26,6 +26,7 @@ from hrm_adaptive_memory.executive.metareasoning_executor import initial_i3_runt
 from hrm_adaptive_memory.executive.metareasoning_sequential_oracle import (
     build_sequential_observable_oracle)
 from hrm_adaptive_memory.executive.metareasoning_transition_table import OracleTableCache
+from hrm_adaptive_memory.executive.metareasoning_topology import transition_topology
 from hrm_adaptive_memory.executive.metareasoning_utility import MetareasoningUtility
 from hrm_adaptive_memory.executive.policy import load_frozen_policy
 from hrm_adaptive_memory.executive.resources import ResourceState
@@ -63,12 +64,14 @@ def q_margin(table, state_id: str) -> float:
     return 0.0 if len(values) < 2 else values[0] - values[1]
 
 
-def margin_band(value: float, tied: bool) -> str:
+def margin_band(value: float, tied: bool, reward_span: float) -> str:
+    """Frozen normalized Q-margin bands for I3.3.2 decision difficulty."""
     if tied:
         return "TIE"
-    if value < 1.0:
+    normalized = value / reward_span
+    if normalized < 0.005:
         return "HARD"
-    if value < 5.0:
+    if normalized < 0.10:
         return "MEDIUM"
     return "EASY"
 
@@ -82,10 +85,10 @@ def log_experiment(manifest: dict[str, object], characterization: dict[str, obje
     source_tree = subprocess.check_output(
         ["git", "rev-parse", "HEAD^{tree}"], cwd=ROOT, text=True).strip()
     experiment = litlogger.init(
-        name=f"v2b-i3.3.1-oracle-regeneration-{source_commit[:7]}",
+        name=f"v2b-i3.3.2-oracle-regeneration-{source_commit[:7]}",
         teamspace="deep-gpu-acceleration-project",
         metadata={
-            "protocol": "DAPH_V2B_I3_3_1_BENCHMARK_INTEGRITY",
+            "protocol": "DAPH_V2B_I3_3_2_SCIENTIFIC_SPLIT",
             "status": "DEVELOPMENT_NOT_QUALIFIED",
             "source_commit": source_commit,
             "source_tree_hash": source_tree,
@@ -151,6 +154,10 @@ def main() -> None:
     margins_by_split: dict[str, Counter[str]] = defaultdict(Counter)
     disagreements: list[dict[str, object]] = []
     difficulty_rows = []
+    topology_by_task = {}
+    topology_by_split: dict[str, set[str]] = defaultdict(set)
+    depth_by_split: dict[str, Counter[str]] = defaultdict(Counter)
+    reward_span = utility.correct_answer - utility.incorrect_answer
     for task_id in sorted(runtimes):
         table = cache.get_or_build(initial_runtime=runtimes[task_id], policy=policy,
                                    utility=utility, include_policy_feedback=True)
@@ -177,19 +184,32 @@ def main() -> None:
                              in table.q_values.items() if origin == root},
             })
         margin = q_margin(table, root)
-        margin_counts[margin_band(margin, len(actions) > 1)] += 1
+        band = margin_band(margin, len(actions) > 1, reward_span)
+        margin_counts[band] += 1
         margins_by_split[str(private_by_id[task_id]["split"])][
-            margin_band(margin, len(actions) > 1)] += 1
+            band] += 1
+        topology = transition_topology(table)
+        topology_by_task[task_id] = topology
+        split = str(private_by_id[task_id]["split"])
+        topology_by_split[split].add(topology.sha256)
+        depth_by_split[split][topology.depth_band] += 1
         minimum_cost = table.minimum_remaining_cost[root]
         successful_path_exists = minimum_cost != float("inf")
         latent_rows.append({"task_id": task_id, "table": semantic_table(table)})
         difficulty_rows.append({
             "task_id": task_id, "latent_value": table.state_values[root],
             "latent_optimal_actions": actions, "optimal_q_margin": q_margin(table, root),
+            "normalized_optimal_q_margin": margin / reward_span,
+            "q_margin_band": band,
             "successful_path_exists": successful_path_exists,
             "minimum_remaining_cost": minimum_cost if successful_path_exists else None,
             "semantic_structure_coarse": private_by_id[task_id]["semantic_structure_coarse"],
             "semantic_structure_exact": private_by_id[task_id]["semantic_structure_exact"],
+            "transition_topology_sha256": topology.sha256,
+            "minimum_optimal_trajectory_depth": topology.minimum_optimal_trajectory_depth,
+            "maximum_relevant_trajectory_depth": topology.maximum_relevant_trajectory_depth,
+            "topology_depth_band": topology.depth_band,
+            "decision_branch_points": topology.decision_branch_points,
             "split": private_by_id[task_id]["split"],
             "reachable_states": len(table.states),
             "reachable_transitions": len(table.transitions),
@@ -197,6 +217,54 @@ def main() -> None:
     latent_seconds = perf_counter() - started
     latent_path = output / "v2b_i3_3_latent_oracles_v1.jsonl.gz"
     write_gzip_jsonl(latent_path, latent_rows)
+
+    topology_roles: dict[str, set[str]] = defaultdict(set)
+    topology_tasks: dict[str, list[str]] = defaultdict(list)
+    for task_id, topology in sorted(topology_by_task.items()):
+        split = str(private_by_id[task_id]["split"])
+        topology_roles[topology.sha256].add(split)
+        topology_tasks[topology.sha256].append(task_id)
+    held_out_topologies = topology_by_split["held_out_structure"]
+    pretest_topologies = topology_by_split["development"] | topology_by_split["validation"]
+    if held_out_topologies & pretest_topologies:
+        raise RuntimeError("I3_3_2_TOPOLOGY_LEAKAGE")
+    topology_allocation = {
+        "schema": "DAPH_V2B_I3_3_2_TOPOLOGY_ALLOCATION_V1",
+        "status": "FROZEN_SCIENTIFIC_BENCHMARK_NO_EXECUTIVE_RESULT",
+        "topologies": {
+            key: {"roles": sorted(topology_roles[key]), "task_ids": sorted(topology_tasks[key])}
+            for key in sorted(topology_roles)
+        },
+        "invariants": {
+            "held_out_structure_disjoint_from_development": True,
+            "held_out_structure_disjoint_from_validation": True,
+            "held_out_structure_disjoint_from_pretest_union": True,
+        },
+    }
+    topology_allocation_path = output.parent / "splits/topology_allocation_v1.json"
+    write_json(topology_allocation_path, topology_allocation)
+    splits = tuple(sorted(topology_by_split))
+    overlap = {
+        left: {right: len(topology_by_split[left] & topology_by_split[right])
+               for right in splits}
+        for left in splits
+    }
+    topology_report = {
+        "schema": "DAPH_V2B_I3_3_2_TOPOLOGY_DIVERSITY_REPORT_V1",
+        "status": "FROZEN_SCIENTIFIC_BENCHMARK_NO_EXECUTIVE_RESULT",
+        "transition_topologies": {
+            split: len(topology_by_split[split]) for split in splits},
+        "topology_overlap_matrix": overlap,
+        "topology_depth_bands": {
+            split: dict(sorted(depth_by_split[split].items())) for split in splits},
+        "held_out_structure_unseen_from_development_and_validation": len(
+            held_out_topologies - pretest_topologies),
+        "identity_semantics": (
+            "Behavior-derived proposal/policy/transition connectivity; excludes task ids, "
+            "surface text, generator channel labels, state labels, and budget-profile names."),
+    }
+    topology_report_path = output.parent / "reports/v2b_i3_3_2_topology_diversity_report_v1.json"
+    write_json(topology_report_path, topology_report)
 
     condition_records = {}
     benchmark_manifest_sha256 = sha256(benchmark_path)
@@ -253,12 +321,12 @@ def main() -> None:
 
     difficulty_path = output / "v2b_i3_3_difficulty_report_v1.json"
     write_json(difficulty_path, {
-        "schema": "DAPH_V2B_I3_3_DIFFICULTY_REPORT_V1",
+        "schema": "DAPH_V2B_I3_3_2_DIFFICULTY_REPORT_V1",
         "status": "FROZEN_BENCHMARK_NOT_A_SCIENTIFIC_RESULT",
         "tasks": difficulty_rows,
     })
     oracle_balance = {
-        "schema": "DAPH_V2B_I3_3_1_ORACLE_BALANCE_REPORT_V1",
+        "schema": "DAPH_V2B_I3_3_2_ORACLE_BALANCE_REPORT_V1",
         "status": "FROZEN_BENCHMARK_NOT_EXECUTIVE_RESULT",
         "task_count": len(difficulty_rows),
         "singleton_optimal_action_counts": dict(sorted(singleton_counts.items())),
@@ -270,12 +338,20 @@ def main() -> None:
                 "singleton_optimal_action_counts": dict(sorted(singleton_by_split[split].items())),
                 "tied_optimal_action_sets": dict(sorted(ties_by_split[split].items())),
                 "q_margin_bands": dict(sorted(margins_by_split[split].items())),
+                "topology_depth_bands": dict(sorted(depth_by_split[split].items())),
             }
             for split in sorted({str(task["split"]) for task in private_by_id.values()})
         },
         "designed_oracle_agreement_count": len(difficulty_rows) - len(disagreements),
         "designed_oracle_disagreements": disagreements,
         "tie_semantics": "Any action in latent_optimal_actions has zero action regret.",
+        "q_margin_semantics": {
+            "normalization": "raw_q_margin / (correct_answer - incorrect_answer)",
+            "HARD": "0 < normalized margin < 0.005",
+            "MEDIUM": "0.005 <= normalized margin < 0.10",
+            "EASY": "normalized margin >= 0.10",
+            "TIE": "multiple exactly optimal actions",
+        },
     }
     oracle_balance_path = output.parent / "reports/v2b_i3_3_1_oracle_balance_report_v1.json"
     write_json(oracle_balance_path, oracle_balance)
@@ -310,6 +386,14 @@ def main() -> None:
         "oracle_balance_report": {
             "path": oracle_balance_path.relative_to(ROOT).as_posix(),
             "sha256": sha256(oracle_balance_path),
+        },
+        "topology_allocation": {
+            "path": topology_allocation_path.relative_to(ROOT).as_posix(),
+            "sha256": sha256(topology_allocation_path),
+        },
+        "topology_diversity_report": {
+            "path": topology_report_path.relative_to(ROOT).as_posix(),
+            "sha256": sha256(topology_report_path),
         },
         "latent_optimal_action_counts_with_ties": dict(sorted(action_counts.items())),
         "limits": limits,

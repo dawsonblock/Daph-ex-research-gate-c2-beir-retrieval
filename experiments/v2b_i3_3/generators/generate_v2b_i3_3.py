@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministically generate the frozen V2B-I3.3.1 benchmark corpus."""
+"""Deterministically generate the frozen V2B-I3.3.2 benchmark corpus."""
 from __future__ import annotations
 
 from collections import Counter, defaultdict
@@ -48,6 +48,12 @@ I3_3_BUDGET_PROFILES = {
         "max_search_calls": 3, "max_elapsed_ms": 9_000,
         "max_monetary_cost_microusd": 0,
     },
+    "STRUCTURE_HOLDOUT": {
+        "max_executive_steps": 6, "max_reasoning_tokens": 512,
+        "max_retrieval_calls": 4, "max_verification_calls": 4,
+        "max_search_calls": 4, "max_elapsed_ms": 8_000,
+        "max_monetary_cost_microusd": 0,
+    },
 }
 PAIR_ACTIONS = (
     ("ANSWER", "RETRIEVE"),
@@ -78,6 +84,12 @@ DECOY_EFFECTS = (
     {"unresolved_conflict": "true"},
     {"provenance_count": "0"},
 )
+COMPOSABLE_ACTIONS = ("RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE")
+HARD_ALTERNATIVES = {
+    "RETRIEVE": "SEARCH_MORE",
+    "SEARCH_MORE": "VERIFY",
+    "REASON_MORE": "RETRIEVE",
+}
 
 
 def digest(value: object) -> str:
@@ -165,16 +177,24 @@ def _base_action_task(action: str, *, index: int, split: str, pair_id: str,
     }
 
 
-def _apply_alias(task: dict[str, object], *, mode: str, offset: int, action: str) -> None:
+def _apply_alias(task: dict[str, object], *, mode: str, offset: int, action: str,
+                 pair_actions: tuple[str, str]) -> None:
     if mode == "budget":
+        target = pair_actions[1]
+        reasoning = target == "REASON_MORE"
         task["latent"] = {
-            "verification_state": "UNVERIFIED", "temporal_status": "CURRENT",
+            "verification_state": "SUFFICIENT" if reasoning else "MISSING",
+            "temporal_status": "CURRENT" if reasoning else "UNKNOWN",
             "unresolved_conflict": False, "composition_complete": True,
             "expected_terminal": "ANSWER", "required_provenance_count": 0,
             "conflict_resolvable": False, "initial_prior_outcomes": [],
         }
+        if reasoning:
+            task["latent"]["composition_complete"] = False
         task["observable_provenance_count"] = 1
-        task["action_effects"] = {"VERIFY": {"verification_state": "SUFFICIENT"}}
+        task["action_effects"] = {target: (
+            {"composition_complete": "true"} if reasoning else
+            {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"})}
         task["cognitive_channel"] = "verification_x_budget"
     elif mode == "irreducible":
         task["latent"] = {
@@ -258,9 +278,8 @@ def _apply_structure_variant(task: dict[str, object], *, variant: int,
     effects = {str(key): dict(value) for key, value in
                dict(task["action_effects"]).items()}
     if task["cognitive_channel"] == "verification_x_budget":
-        effects["RETRIEVE"] = {"composition_complete": "false"}
-        if structural_holdout:
-            effects["SEARCH_MORE"] = {"temporal_status": "STALE"}
+        decoy = next(action for action in NONTERMINAL_ACTIONS if action != target)
+        effects[decoy] = {"composition_complete": "false"}
         task["action_effects"] = effects
         return
     candidates = [action for action in NONTERMINAL_ACTIONS if action != target]
@@ -286,6 +305,122 @@ def _apply_structure_variant(task: dict[str, object], *, variant: int,
     task["latent"] = latent
 
 
+def _chain_effects(sequence: tuple[str, ...], *, poison_on_misorder: bool = False,
+                   poison_on_first_step: bool = False) -> dict[str, dict[str, object]]:
+    """Compile a staged action composition into deterministic conditional effects."""
+    effects: dict[str, dict[str, object]] = {}
+    for stage, action in enumerate(sequence):
+        when: dict[str, object] = {
+            "prior_outcomes_not_contains": [
+                "CONTROL_POISONED", f"CONTROL_STAGE_{stage + 1}"
+            ]
+        }
+        if stage:
+            when["prior_outcomes_contains"] = f"CONTROL_STAGE_{stage}"
+        update: dict[str, object] = {}
+        if stage == 0 and poison_on_first_step:
+            update = {"verification_state": "MISSING", "temporal_status": "UNKNOWN"}
+        if stage + 1 == len(sequence):
+            update = {
+                "verification_state": "SUFFICIENT",
+                "temporal_status": "CURRENT",
+                "unresolved_conflict": "false",
+                "composition_complete": "true",
+                "provenance_count": "3",
+            }
+        rule: dict[str, object] = {"when": when, "set": update}
+        rule["append_prior_outcome"] = f"CONTROL_STAGE_{stage + 1}"
+        default = ({
+            "append_prior_outcome_once": "CONTROL_POISONED",
+            "verification_state": "FALSIFIED", "temporal_status": "STALE",
+        } if poison_on_misorder else {})
+        entry = effects.setdefault(action, {"rules": [], "default": default})
+        rules = entry["rules"]
+        assert isinstance(rules, list)
+        rules.append(rule)
+    return effects
+
+
+def _apply_composed_topology(task: dict[str, object], *, variant: int,
+                             split: str) -> tuple[str, ...]:
+    """Create real multi-step compositions reserved by scientific split."""
+    target = str(task["designed_optimal_action"])
+    terminal = target in {"ANSWER", "DEFER", "STOP"}
+    # Validation owns depth-2 operation programs. Final structure-held-out
+    # owns depth-3/4 programs, so it cannot reuse a validation topology merely
+    # through a different channel label or decoy parameter.
+    if split == "validation":
+        length = 2
+        tail_offset = 1
+    elif split == "held_out_structure":
+        length = 4 + (1 if variant % 3 == 0 else 0)
+        tail_offset = 2
+    else:
+        raise ValueError("composed topology used outside structural split")
+    if terminal:
+        first = COMPOSABLE_ACTIONS[variant % len(COMPOSABLE_ACTIONS)]
+    else:
+        first = target
+    sequence = [first]
+    remaining = [action for action in COMPOSABLE_ACTIONS if action != first]
+    rotation = (variant + tail_offset) % len(remaining)
+    remaining = remaining[rotation:] + remaining[:rotation]
+    sequence.extend(remaining[:length - 1])
+    while len(sequence) < length:
+        candidate = COMPOSABLE_ACTIONS[(variant + len(sequence)) % len(COMPOSABLE_ACTIONS)]
+        if candidate == sequence[-1]:
+            candidate = COMPOSABLE_ACTIONS[(COMPOSABLE_ACTIONS.index(candidate) + 1)
+                                           % len(COMPOSABLE_ACTIONS)]
+        sequence.append(candidate)
+
+    latent = dict(task["latent"])
+    if not terminal:
+        latent.update({
+            "verification_state": "MISSING", "temporal_status": "UNKNOWN",
+            "unresolved_conflict": variant % 3 == 0,
+            "composition_complete": variant % 4 != 0,
+            "required_provenance_count": 2 if variant % 5 == 0 else 0,
+            "initial_prior_outcomes": [],
+        })
+        task["observable_provenance_count"] = 0
+    task["latent"] = latent
+    effects = _chain_effects(
+        tuple(sequence), poison_on_misorder=True, poison_on_first_step=terminal)
+    # Terminal tasks remain immediately solvable, while their counterfactual
+    # control graph contains the withheld composition. The composed program
+    # replaces older generator effects so no legacy decoy can break a stage.
+    task["action_effects"] = effects
+    return tuple(sequence)
+
+
+def _apply_difficulty_variant(task: dict[str, object], *, band: str,
+                              sequence: tuple[str, ...]) -> None:
+    """Encode decision difficulty in utility-relevant dynamics, never wording."""
+    target = str(task["designed_optimal_action"])
+    effects = {str(key): dict(value) for key, value in
+               dict(task["action_effects"]).items()}
+    if band == "HARD" and target in HARD_ALTERNATIVES:
+        competitor = HARD_ALTERNATIVES[target]
+        # Both actions make the same first decision-relevant improvement; the
+        # frozen resource cost difference supplies the small non-zero margin.
+        if competitor not in effects:
+            effects[competitor] = json.loads(json.dumps(effects.get(target, {})))
+    elif band == "EASY":
+        required = set(sequence)
+        for action in COMPOSABLE_ACTIONS:
+            if action == target or action in required:
+                continue
+            effects[action] = {
+                "append_prior_outcome_once": "CONTROL_POISONED",
+                "verification_state": "FALSIFIED",
+                "temporal_status": "STALE",
+                "unresolved_conflict": "true",
+                "composition_complete": "false",
+            }
+    task["action_effects"] = effects
+    task["designed_difficulty_band"] = band
+
+
 def semantic_structure(task: Mapping[str, object], *, coarse: bool) -> dict[str, object]:
     latent = dict(task["latent"])
     effects = {str(action): dict(effect)
@@ -304,7 +439,6 @@ def semantic_structure(task: Mapping[str, object], *, coarse: bool) -> dict[str,
         "level": "coarse" if coarse else "exact",
         "budget_profile": task["budget_profile"],
         "high_stakes": task["high_stakes"],
-        "cognitive_channel": task["cognitive_channel"],
         "observable_provenance_count": task["observable_provenance_count"],
         "latent": latent,
         "action_effects": effects,
@@ -312,7 +446,7 @@ def semantic_structure(task: Mapping[str, object], *, coarse: bool) -> dict[str,
 
 
 def _pair_mode(pair_index: int) -> tuple[tuple[str, str], str]:
-    budget = pair_index % 13 in {0, 5}
+    budget = pair_index % 13 in {0, 2, 5, 8}
     modes = (
         (17, "irreducible", ("RETRIEVE", "VERIFY")),
         (19, "conflict", ("SEARCH_MORE", "DEFER")),
@@ -322,7 +456,8 @@ def _pair_mode(pair_index: int) -> tuple[tuple[str, str], str]:
         (37, "history", ("RETRIEVE", "SEARCH_MORE")),
     )
     if budget:
-        return ("DEFER", "VERIFY"), "budget"
+        target = NONTERMINAL_ACTIONS[(pair_index // 3) % 3]
+        return ("DEFER", target), "budget"
     for divisor, mode, actions in modes:
         if pair_index % divisor == 0:
             return actions, mode
@@ -337,6 +472,8 @@ def generate() -> tuple[list[dict[str, object]], list[dict[str, str]]]:
         surface_pool = SURFACES[30:] if split == "held_out_surface" else SURFACES[:30]
         for pair_index in range(count // 2):
             actions, mode = _pair_mode(pair_index)
+            if split == "held_out_structure" and mode == "budget":
+                actions, mode = PAIR_ACTIONS[pair_index % len(PAIR_ACTIONS)], "ordinary"
             pair_material = f"{SEED}:{split}:{pair_index}:{rng.getrandbits(64)}"
             pair_id = "opaque-" + hashlib.sha256(pair_material.encode()).hexdigest()[:16]
             entity = rng.choice(ENTITIES)
@@ -346,18 +483,34 @@ def generate() -> tuple[list[dict[str, object]], list[dict[str, str]]]:
                 index = pair_index * 2 + offset
                 budget = ("TIGHT" if mode == "budget" and offset == 0 else
                           "GENEROUS" if mode == "budget" else default_budget)
+                if split == "held_out_structure":
+                    budget = "STRUCTURE_HOLDOUT"
                 task = _base_action_task(
                     action, index=index, split=split, pair_id=pair_id,
                     summary=summary, budget=budget)
                 if mode != "ordinary":
-                    _apply_alias(task, mode=mode, offset=offset, action=action)
+                    _apply_alias(task, mode=mode, offset=offset, action=action,
+                                 pair_actions=actions)
                 variant = (pair_index % 60 if split in {
                     "development", "held_out_instance", "held_out_surface"}
                            else 100 + pair_index if split == "validation"
                            else 300 + pair_index)
-                _apply_structure_variant(
-                    task, variant=variant,
-                    structural_holdout=split in {"validation", "held_out_structure"})
+                if mode != "budget":
+                    _apply_structure_variant(
+                        task, variant=variant, structural_holdout=False)
+                sequence: tuple[str, ...] = ()
+                if mode != "budget" and split in {"validation", "held_out_structure"}:
+                    sequence = _apply_composed_topology(
+                        task, variant=variant, split=split)
+                selector = index % 10
+                requested_band = "EASY" if selector < 3 else "HARD" if selector < 8 else "MEDIUM"
+                if requested_band == "HARD" and action not in HARD_ALTERNATIVES:
+                    requested_band = "MEDIUM"
+                if mode == "budget":
+                    requested_band = "MEDIUM"
+                    task["designed_difficulty_band"] = requested_band
+                else:
+                    _apply_difficulty_variant(task, band=requested_band, sequence=sequence)
                 task["semantic_structure_coarse"] = digest(
                     semantic_structure(task, coarse=True))
                 task["semantic_structure_exact"] = digest(
@@ -410,8 +563,8 @@ def main() -> None:
         "schema", "status", "protocol", "utility_weights", "action_costs")}
     private["budget_profiles"] = I3_3_BUDGET_PROFILES
     private.update({
-        "benchmark_id": "v2b_i3_3_1_benchmark_integrity_v1",
-        "scope": "Frozen deterministic I3.3.1 benchmark; no model-controller result.",
+        "benchmark_id": "v2b_i3_3_2_scientific_split_v1",
+        "scope": "Frozen deterministic I3.3.2 scientific benchmark; no model-controller result.",
         "tasks": tasks,
     })
     packet_payload = {
@@ -421,7 +574,7 @@ def main() -> None:
     families = {
         "schema": "DAPH_V2B_I3_3_TASK_FAMILIES_V1",
         "status": "FROZEN_FOR_DEVELOPMENT",
-        "generator_revision": "v2b-i3.3.1-generator-v1",
+        "generator_revision": "v2b-i3.3.2-generator-v1",
         "operational_seed": SEED,
         "seed_controls": ["surface_template", "entity", "opaque_instance_id"],
         "pair_action_cycle": PAIR_ACTIONS,
@@ -467,8 +620,8 @@ def main() -> None:
     manifest = {
         "schema": "DAPH_V2B_I3_3_BENCHMARK_MANIFEST_V1",
         "status": "FROZEN_FOR_BENCHMARK_QUALIFICATION",
-        "benchmark_id": "v2b_i3_3_1_benchmark_integrity_v1",
-        "integrity_revision": "V2B-I3.3.1",
+        "benchmark_id": "v2b_i3_3_2_scientific_split_v1",
+        "integrity_revision": "V2B-I3.3.2",
         "private_environment_path": "../private/v2b_i3_3_tasks_v1.json",
         "controller_packets_path": "../controller_packets/v2b_i3_3_controller_packets_v1.json",
         "task_families_path": "../task_families/v2b_i3_3_families_v1.json",

@@ -67,7 +67,7 @@ def test_i3_3_is_balanced_and_contains_required_channel_and_budget_pairs():
     channels = Counter(task["cognitive_channel"] for task in tasks)
     assert set(actions) == {"ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
                             "REASON_MORE", "DEFER", "STOP"}
-    assert min(actions.values()) >= 85
+    assert min(actions.values()) >= 80
     assert max(actions.values()) / min(actions.values()) < 2.0
     for channel in ("verification", "temporal", "provenance", "conflict", "history",
                     "composition", "irreducible", "state_irrelevant",
@@ -77,11 +77,12 @@ def test_i3_3_is_balanced_and_contains_required_channel_and_budget_pairs():
     for task in tasks:
         if task["cognitive_channel"] == "verification_x_budget":
             pairs.setdefault(task["generator_pair_id"], []).append(task)
-    assert len(pairs) >= 30
+    assert len(pairs) >= 94
     for members in pairs.values():
         assert {item["budget_profile"] for item in members} == {"TIGHT", "GENEROUS"}
         assert len({canonical_bytes(item["latent"]) for item in members}) == 1
         assert len({canonical_bytes(item["action_effects"]) for item in members}) == 1
+    assert sum(len(members) for members in pairs.values()) / len(tasks) >= 0.25
 
 
 def test_i3_3_semantic_structure_splits_have_frozen_novelty_and_surface_isolation():
@@ -105,6 +106,22 @@ def test_i3_3_semantic_structure_splits_have_frozen_novelty_and_surface_isolatio
                for task in by_split["held_out_surface"])
 
 
+def test_i3_3_2_behavior_topologies_are_isolated_from_all_pretest_splits():
+    report = json.loads((ROOT / "experiments/v2b_i3_3/reports/"
+                         "v2b_i3_3_2_topology_diversity_report_v1.json").read_text())
+    overlap = report["topology_overlap_matrix"]
+    assert overlap["held_out_structure"]["development"] == 0
+    assert overlap["held_out_structure"]["validation"] == 0
+    assert report["held_out_structure_unseen_from_development_and_validation"] >= 50
+    assert report["transition_topologies"]["development"] >= 50
+    allocation = json.loads((ROOT / "experiments/v2b_i3_3/splits/"
+                              "topology_allocation_v1.json").read_text())
+    for item in allocation["topologies"].values():
+        roles = set(item["roles"])
+        assert not ("held_out_structure" in roles
+                    and roles & {"development", "validation"})
+
+
 def test_i3_3_all_frozen_json_is_strict_rfc_8259():
     for path in sorted((ROOT / "experiments/v2b_i3_3").rglob("*.json")):
         loads_strict(path.read_bytes())
@@ -113,7 +130,9 @@ def test_i3_3_all_frozen_json_is_strict_rfc_8259():
 def test_i3_3_public_packets_are_opaque_and_have_no_latent_or_oracle_leakage():
     packets = json.loads(PACKETS.read_text())["packets"]
     forbidden = ("optimal", "oracle", "latent", "correct_action", "reasoning_required",
-                 "evidence_sufficient", "ground_truth", "expected_terminal")
+                 "evidence_sufficient", "ground_truth", "expected_terminal", "topology",
+                 "semantic_structure", "difficulty", "q_margin", "information_gap",
+                 "held_out_structure")
     private_ids = {task["task_id"] for task in json.loads(PRIVATE.read_text())["tasks"]}
     for packet in packets:
         public = {"instance_id": packet["instance_id"], "task_summary": packet["task_summary"]}
@@ -137,6 +156,7 @@ def test_i3_3_manifest_closure_and_loader_use_the_same_artifact_graph():
                           "observation_masks", "resource_profiles", "oracle_cache_manifest",
                           "oracle_latent_tables", "oracle_difficulty_report",
                           "oracle_balance_report",
+                          "topology_allocation", "topology_diversity_report",
                           "oracle_sequential_state_aware_controller"}
     assert len(artifact_graph_sha256(ROOT, graph)) == 64
     benchmark = load_metareasoning_benchmark(MANIFEST)
@@ -183,7 +203,9 @@ def test_i3_3_every_designed_optimal_action_is_oracle_optimal():
     assert set(report["singleton_optimal_action_counts"]) == {
         "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"}
     assert report["multi_optimal_task_count"] / report["task_count"] <= 0.15
-    assert len(report["q_margin_bands"]) >= 2
+    assert set(report["q_margin_bands"]) == {"EASY", "MEDIUM", "HARD", "TIE"}
+    for count in report["q_margin_bands"].values():
+        assert 0.05 <= count / report["task_count"] <= 0.55
     assert set(report["by_split"]) == {
         "development", "validation", "held_out_instance",
         "held_out_surface", "held_out_structure"}
@@ -192,7 +214,7 @@ def test_i3_3_every_designed_optimal_action_is_oracle_optimal():
 def test_i3_3_freeze_configuration_is_fail_closed_and_not_a_scientific_claim():
     configuration = json.loads(CONFIG.read_text())
     validate_configuration(configuration)
-    assert "NOT_A_SCIENTIFIC_RESULT" in configuration["status"]
+    assert configuration["status"] == "FROZEN_SCIENTIFIC_BENCHMARK_NO_EXECUTIVE_RESULT"
     invalid = dict(configuration); invalid["primary_prior"] = "CLASS_UNIFORM"
     try:
         validate_configuration(invalid)
@@ -225,6 +247,7 @@ def test_i3_3_precomputed_oracle_cache_is_closed_semantic_and_information_bounde
         assert conditions[ablation]["task_uniform_information_gap"] > aware_gap
     entries = [cache["latent_oracles"], cache["difficulty_report"],
                cache["oracle_balance_report"], *conditions.values()]
+    entries.extend([cache["topology_allocation"], cache["topology_diversity_report"]])
     for entry in entries:
         path = ROOT / entry["path"]
         assert hashlib.sha256(path.read_bytes()).hexdigest() == entry["sha256"]

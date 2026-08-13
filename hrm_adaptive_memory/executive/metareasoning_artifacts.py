@@ -89,6 +89,12 @@ def oracle_cache_artifacts(cache: Mapping[str, object]) -> dict[str, tuple[str, 
     oracle_balance = cache.get("oracle_balance_report")
     if oracle_balance is not None:
         entries["oracle_balance_report"] = oracle_balance
+    topology_allocation = cache.get("topology_allocation")
+    if topology_allocation is not None:
+        entries["topology_allocation"] = topology_allocation
+    topology_report = cache.get("topology_diversity_report")
+    if topology_report is not None:
+        entries["topology_diversity_report"] = topology_report
     entries.update({f"oracle_sequential_{str(name).lower()}": value
                     for name, value in sequential.items()})
     for role, entry in entries.items():

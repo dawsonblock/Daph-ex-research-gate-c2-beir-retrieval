@@ -1,4 +1,4 @@
-"""Exhaustive I3.3.1 oracle regeneration gate (intentionally not a unit test)."""
+"""Exhaustive I3.3.2 oracle regeneration gate (intentionally not a unit test)."""
 from __future__ import annotations
 
 import hashlib
