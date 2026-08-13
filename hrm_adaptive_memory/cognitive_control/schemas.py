@@ -6,7 +6,7 @@ import json
 from typing import Any
 
 
-SCHEMA_REGISTRY_VERSION = "DAPH_COGNITIVE_SCHEMA_REGISTRY_V1"
+SCHEMA_REGISTRY_VERSION = "DAPH_COGNITIVE_SCHEMA_REGISTRY_V2"
 
 SCHEMAS: dict[str, dict[str, Any]] = {
     "provenance": {
@@ -43,6 +43,24 @@ SCHEMAS: dict[str, dict[str, Any]] = {
         "rule_heads": ["deny(task,action,reason)", "require(task,action,reason)"],
         "invariants": ["unique_rule_ids", "range_restricted_variables", "known_actions",
                        "conflicting_requirements_deny"],
+    },
+    "cognitive_state_snapshot": {
+        "schema": "DAPH_COGNITIVE_STATE_SNAPSHOT_V1",
+        "bounded_categories": 16,
+        "required": ["task_id", "relevant_memories", "verification_states", "temporal_status",
+                     "unresolved_conflicts", "prior_decisions", "prior_outcomes", "resource_state",
+                     "policy_facts"],
+    },
+    "resource_state": {
+        "schema": "DAPH_V2B_RESOURCE_STATE_V1",
+        "required": ["executive_steps", "reasoning_tokens", "retrieval_calls", "verification_calls",
+                     "search_calls", "elapsed_ms", "monetary_cost_microusd"],
+        "invariants": ["hard_budget_limits", "action_costs_accounted"],
+    },
+    "executive_action": {
+        "schema": "DAPH_V2B_EXECUTIVE_ACTIONS_V1",
+        "allowed": ["ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"],
+        "forbidden": ["SPAWN_SPECIALIST", "SWITCH_STRATEGY", "ABANDON_STRATEGY", "VERIFY_ALTERNATE_SOURCE"],
     },
 }
 

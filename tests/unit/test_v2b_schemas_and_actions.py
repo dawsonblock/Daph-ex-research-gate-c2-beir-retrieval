@@ -19,4 +19,5 @@ def test_v2b_schema_identity_covers_decision_outcome_temporal_conflict_and_prove
     identity = schema_identity()
     assert identity["sha256"]
     assert set(identity["definitions"]) == {
-        "provenance", "temporal_fact", "conflict", "decision", "outcome", "policy"}
+        "provenance", "temporal_fact", "conflict", "decision", "outcome", "policy",
+        "cognitive_state_snapshot", "resource_state", "executive_action"}

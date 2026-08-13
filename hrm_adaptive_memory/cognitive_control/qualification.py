@@ -26,6 +26,7 @@ COMPONENT_PATHS = {
     "cognitive_datalog": "hrm_adaptive_memory/cognitive_control/datalog.py",
     "cognitive_schemas": "hrm_adaptive_memory/cognitive_control/schemas.py",
     "cognitive_actions": "hrm_adaptive_memory/cognitive_control/actions.py",
+    "cognitive_state": "hrm_adaptive_memory/cognitive_control/state.py",
     "cognitive_checkpoints": "hrm_adaptive_memory/cognitive_control/checkpoints.py",
     "checkpoint_trusted_signers": "configs/cognitive_checkpoint_trusted_signers_v2b.json",
     "qualification_runtime": "hrm_adaptive_memory/cognitive_control/qualification.py",
@@ -34,6 +35,16 @@ COMPONENT_PATHS = {
     "typed_comparator_registry": "hrm_adaptive_memory/external_verification/comparators",
     "typed_verifier": "hrm_adaptive_memory/external_verification/typed_verifier.py",
     "peer_bound_network": "hrm_adaptive_memory/external_verification/network",
+    "v2b_i2_actions": "hrm_adaptive_memory/executive/actions.py",
+    "v2b_i2_resources": "hrm_adaptive_memory/executive/resources.py",
+    "v2b_i2_benchmark_runtime": "hrm_adaptive_memory/executive/benchmark.py",
+    "v2b_i2_policy_runtime": "hrm_adaptive_memory/executive/policy.py",
+    "v2b_i2_controller": "hrm_adaptive_memory/executive/controller.py",
+    "v2b_i2_executor": "hrm_adaptive_memory/executive/executor.py",
+    "v2b_i2_loop": "hrm_adaptive_memory/executive/loop.py",
+    "v2b_i2_policy": "configs/v2b_i2_policy_v1.json",
+    "v2b_i2_benchmark": "experiments/v2b/tasks/v2b_i2_frozen_benchmark_v1.json",
+    "v2b_i2_configuration": "experiments/v2b/configs/v2b_i2_development.json",
 }
 TEST_CORPUS_PATHS = (
     "tests/unit/test_cognitive_control.py",
@@ -42,6 +53,7 @@ TEST_CORPUS_PATHS = (
     "tests/unit/test_v2b_cognitive_checkpoints.py",
     "tests/unit/test_v2b_schemas_and_actions.py",
     "tests/adversarial/test_v2b_infrastructure_adversarial.py",
+    "tests/unit/test_v2b_i2_executive.py",
 )
 QUALIFICATION_LOCK = "configs/v2b_qualification_requirements.lock"
 CRITICAL_DISTRIBUTIONS = (
