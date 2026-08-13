@@ -16,15 +16,18 @@ from typing import Mapping
 
 from .metareasoning_benchmark import I3BenchmarkTask
 from .metareasoning_executor import (
-    DeterministicMetareasoningExecutor, I3Runtime, policy_facts)
+    DeterministicMetareasoningExecutor, I3Runtime, policy_facts, runtime_state_hash)
 from .policy import FrozenPolicy
 from .resources import ResourceExhausted, ResourceState
 
 
 @dataclass(frozen=True)
 class OracleDecision:
+    state_hash: str
     action: DecisionAction | None
     utility: float
+    q_values: Mapping[str, float]
+    minimum_remaining_cost: float
 
 
 class ExactOptimalPolicyOracle:
@@ -85,6 +88,11 @@ class ExactOptimalPolicyOracle:
         assert action is not None
         return action if runtime.resources.can_execute(action) else None
 
+    def legal_actions(self, runtime: I3Runtime) -> tuple[DecisionAction, ...]:
+        return tuple(sorted({resolved for proposed in V2B_ACTIONS
+                             if (resolved := self._resolve(runtime, proposed)) is not None},
+                            key=lambda action: action.value))
+
     def _execute_value(self, runtime: I3Runtime, action: DecisionAction,
                        continuation) -> float:
         try:
@@ -109,16 +117,30 @@ class ExactOptimalPolicyOracle:
             return max(candidates, default=-self.weights["failure_penalty"])
 
         key = self._key(initial)
-        best_action: DecisionAction | None = None
-        best_value = -float("inf")
-        for proposed in V2B_ACTIONS:
-            action = self._resolve(initial, proposed)
-            if action is None:
-                continue
-            candidate = self._execute_value(initial, action, value)
-            if candidate > best_value:
-                best_action, best_value = action, candidate
-        return OracleDecision(best_action, value(key))
+        q_values: dict[str, float] = {}
+        for action in self.legal_actions(initial):
+            q_values[action.value] = self._execute_value(initial, action, value)
+        best_action = max(q_values, key=q_values.get) if q_values else None
+
+        @lru_cache(maxsize=None)
+        def minimum_success_cost(key: tuple[object, ...]) -> float:
+            runtime = self._runtime(initial, key)
+            costs: list[float] = []
+            for action in self.legal_actions(runtime):
+                result = self.executor.execute(runtime, action)
+                immediate = -self.action_cost(runtime, result.runtime)
+                if result.terminal:
+                    if result.task_success:
+                        costs.append(immediate)
+                else:
+                    next_cost = minimum_success_cost(self._key(result.runtime))
+                    if next_cost != float("inf"):
+                        costs.append(immediate + next_cost)
+            return min(costs, default=float("inf"))
+
+        return OracleDecision(runtime_state_hash(initial),
+                              None if best_action is None else DecisionAction(best_action), value(key),
+                              q_values, minimum_success_cost(key))
 
     def action_value(self, runtime: I3Runtime, action: DecisionAction) -> float:
         """Optimal continuation value if an already-authorized action executes now."""
@@ -136,3 +158,20 @@ class ExactOptimalPolicyOracle:
     def action_regret(self, runtime: I3Runtime, action: DecisionAction) -> float:
         optimum = self.solve(runtime).utility
         return max(0.0, optimum - self.action_value(runtime, action))
+
+    def reachable_states(self, initial: I3Runtime) -> tuple[I3Runtime, ...]:
+        """Enumerate finite policy-legal states for consistency/replay checks."""
+        queue = [initial]
+        seen: set[tuple[object, ...]] = set()
+        states: list[I3Runtime] = []
+        while queue:
+            runtime = queue.pop()
+            key = self._key(runtime)
+            if key in seen:
+                continue
+            seen.add(key); states.append(runtime)
+            for action in self.legal_actions(runtime):
+                result = self.executor.execute(runtime, action)
+                if not result.terminal:
+                    queue.append(result.runtime)
+        return tuple(states)

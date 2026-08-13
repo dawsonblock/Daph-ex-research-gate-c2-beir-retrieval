@@ -18,6 +18,7 @@
     "hrm_adaptive_memory/cognitive_control/checkpoints.py",
     "configs/cognitive_checkpoint_trusted_signers_v2b.json",
     "hrm_adaptive_memory/cognitive_control/qualification.py",
+    "hrm_adaptive_memory/cognitive_control/metareasoning_qualification.py",
     "hrm_adaptive_memory/external_verification/authority_registry.py",
     "hrm_adaptive_memory/external_verification/comparators",
     "hrm_adaptive_memory/external_verification/network",
@@ -37,7 +38,10 @@
     "hrm_adaptive_memory/executive/metareasoning_oracle.py",
     "hrm_adaptive_memory/executive/metareasoning_loop.py",
     "configs/v2b_i3_policy_v1.json",
+    "configs/v2b_i3_observation_masks_v1.json",
     "experiments/v2b/tasks/v2b_i3_metareasoning_benchmark_v1.json",
+    "experiments/v2b/benchmark/v2b_i3_benchmark_manifest_v1.json",
+    "experiments/v2b/benchmark/controller_packets/v2b_i3_controller_packets_v1.json",
     "scripts/run_v2b_i3_development.py",
     "tests/unit/test_cognitive_control.py",
     "configs/cognitive_control_v2b_design.json"

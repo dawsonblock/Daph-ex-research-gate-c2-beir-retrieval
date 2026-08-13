@@ -2,7 +2,8 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+import hashlib
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -10,10 +11,12 @@ from hrm_adaptive_memory.cognitive_control.actions import validate_v2b_action
 from hrm_adaptive_memory.cognitive_control.core import DecisionAction
 from hrm_adaptive_memory.cognitive_control.state import TemporalStatus, VerificationState
 
-from .resources import ResourceBudget
+from .resources import DEFAULT_ACTION_COSTS, ResourceBudget
 
 
 BENCHMARK_SCHEMA = "DAPH_V2B_I3_METAREASONING_BENCHMARK_V1"
+BENCHMARK_MANIFEST_SCHEMA = "DAPH_V2B_I3_BENCHMARK_MANIFEST_V1"
+CONTROLLER_PACKETS_SCHEMA = "DAPH_V2B_I3_CONTROLLER_PACKETS_V1"
 FROZEN_DEVELOPMENT_STATUS = "FROZEN_FOR_DEVELOPMENT"
 
 
@@ -31,6 +34,7 @@ class LatentTaskState:
 @dataclass(frozen=True)
 class I3BenchmarkTask:
     task_id: str
+    split: str
     category: str
     task_summary: str
     high_stakes: bool
@@ -43,6 +47,8 @@ class I3BenchmarkTask:
         if (not self.task_id or self.task_id != self.task_id.lower()
                 or not self.category or not self.task_summary):
             raise ValueError("I3 tasks require lowercase ids, a category, and a summary")
+        if self.split not in {"development", "validation", "held_out"}:
+            raise ValueError("I3 tasks require development, validation, or held_out split")
         if self.latent.expected_terminal not in {
                 DecisionAction.ANSWER, DecisionAction.DEFER, DecisionAction.STOP}:
             raise ValueError("I3 tasks require a terminal action")
@@ -61,12 +67,21 @@ class MetareasoningBenchmark:
     budget_profiles: Mapping[str, ResourceBudget]
     utility_weights: Mapping[str, float]
     metadata: Mapping[str, Any]
+    artifact_hashes: Mapping[str, str]
 
     def budget_for(self, task: I3BenchmarkTask) -> ResourceBudget:
         try:
             return self.budget_profiles[task.budget_profile]
         except KeyError as error:
             raise ValueError(f"unknown I3 budget profile: {task.budget_profile}") from error
+
+    def for_split(self, split: str) -> "MetareasoningBenchmark":
+        tasks = tuple(task for task in self.tasks if task.split == split)
+        if not tasks:
+            raise ValueError(f"I3 benchmark split is empty: {split}")
+        return MetareasoningBenchmark(
+            self.benchmark_id, tasks, self.budget_profiles, self.utility_weights,
+            self.metadata, self.artifact_hashes)
 
 
 def _load_budget_profiles(raw: object) -> Mapping[str, ResourceBudget]:
@@ -93,13 +108,67 @@ def _load_utility_weights(raw: object) -> Mapping[str, float]:
     return weights
 
 
-def load_metareasoning_benchmark(path: str | Path) -> MetareasoningBenchmark:
-    payload = json.loads(Path(path).read_text())
-    if payload.get("schema") != BENCHMARK_SCHEMA:
+def _validate_frozen_action_costs(raw: object) -> None:
+    """Bind the benchmark's declared costs to the executor's actual cost table."""
+    expected = {action.value: asdict(cost) for action, cost in DEFAULT_ACTION_COSTS.items()}
+    if raw != expected:
+        raise ValueError("I3 frozen action costs do not match the executor cost table")
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _load_payloads(path: Path) -> tuple[Mapping[str, Any], Mapping[str, Mapping[str, str]], Mapping[str, str]]:
+    """Load private task dynamics and separately stored controller packets."""
+    payload = json.loads(path.read_text())
+    if payload.get("schema") == BENCHMARK_SCHEMA:
+        # Compatibility for the frozen I3 development baseline. New I3 runs use
+        # the manifest path below so controller packets are physically separate.
+        return payload, {}, {"private_environment": _sha256(path)}
+    if payload.get("schema") != BENCHMARK_MANIFEST_SCHEMA:
         raise ValueError("unsupported V2B-I3 metareasoning benchmark schema")
+    if payload.get("status") != FROZEN_DEVELOPMENT_STATUS:
+        raise ValueError("V2B-I3 benchmark manifest must be frozen for development")
+    private_path = (path.parent / str(payload.get("private_environment_path", ""))).resolve()
+    packets_path = (path.parent / str(payload.get("controller_packets_path", ""))).resolve()
+    private_payload = json.loads(private_path.read_text())
+    packet_payload = json.loads(packets_path.read_text())
+    if private_payload.get("schema") != BENCHMARK_SCHEMA:
+        raise ValueError("V2B-I3 private environment has an unsupported schema")
+    if packet_payload.get("schema") != CONTROLLER_PACKETS_SCHEMA:
+        raise ValueError("V2B-I3 controller packets have an unsupported schema")
+    if packet_payload.get("status") != FROZEN_DEVELOPMENT_STATUS:
+        raise ValueError("V2B-I3 controller packets must be frozen for development")
+    packets = packet_payload.get("packets")
+    if not isinstance(packets, list):
+        raise ValueError("V2B-I3 controller packet artifact must contain packets")
+    by_task: dict[str, Mapping[str, str]] = {}
+    forbidden = {"reasoning_required", "correct_action", "optimal_action", "evidence_sufficient",
+                 "expected_terminal_action", "oracle_value", "ground_truth_transition"}
+    for packet in packets:
+        if not isinstance(packet, Mapping) or not isinstance(packet.get("task_id"), str):
+            raise ValueError("V2B-I3 controller packets require task ids")
+        if forbidden.intersection(packet):
+            raise ValueError("V2B-I3 controller packet contains a forbidden latent/oracle field")
+        if set(packet) != {"task_id", "task_summary"} or not isinstance(packet["task_summary"], str):
+            raise ValueError("V2B-I3 controller packets allow only task_id and task_summary")
+        if any(token in packet["task_summary"].lower() for token in forbidden):
+            raise ValueError("V2B-I3 controller packet contains a forbidden latent/oracle value")
+        by_task[packet["task_id"]] = {"task_summary": packet["task_summary"]}
+    return private_payload, by_task, {
+        "benchmark_manifest": _sha256(path), "private_environment": _sha256(private_path),
+        "controller_packets": _sha256(packets_path),
+    }
+
+
+def load_metareasoning_benchmark(path: str | Path) -> MetareasoningBenchmark:
+    path = Path(path).resolve()
+    payload, packets, artifact_hashes = _load_payloads(path)
     if payload.get("status") != FROZEN_DEVELOPMENT_STATUS:
         raise ValueError("V2B-I3 benchmark must be frozen for development")
     profiles = _load_budget_profiles(payload.get("budget_profiles"))
+    _validate_frozen_action_costs(payload.get("action_costs"))
     raw_tasks = payload.get("tasks")
     if not isinstance(raw_tasks, list) or not raw_tasks:
         raise ValueError("V2B-I3 frozen benchmark must contain tasks")
@@ -114,9 +183,14 @@ def load_metareasoning_benchmark(path: str | Path) -> MetareasoningBenchmark:
             validate_v2b_action(action): dict(effect)
             for action, effect in dict(raw.get("action_effects", {})).items()
         }
+        task_id = str(raw["task_id"])
+        public = packets.get(task_id, {})
+        if packets and task_id not in packets:
+            raise ValueError(f"I3 private task has no controller packet: {task_id}")
         task = I3BenchmarkTask(
-            task_id=str(raw["task_id"]), category=str(raw["category"]),
-            task_summary=str(raw["task_summary"]), high_stakes=bool(raw["high_stakes"]),
+            task_id=task_id, category=str(raw["category"]),
+            split=str(raw.get("split", "development")),
+            task_summary=str(public.get("task_summary", raw["task_summary"])), high_stakes=bool(raw["high_stakes"]),
             budget_profile=str(raw["budget_profile"]),
             latent=LatentTaskState(
                 verification_state=VerificationState(latent["verification_state"]),
@@ -133,9 +207,12 @@ def load_metareasoning_benchmark(path: str | Path) -> MetareasoningBenchmark:
         tasks.append(task)
     if len({task.task_id for task in tasks}) != len(tasks):
         raise ValueError("V2B-I3 task ids must be unique")
+    if packets and set(packets) != {task.task_id for task in tasks}:
+        raise ValueError("V2B-I3 controller packet ids must exactly match private task ids")
     return MetareasoningBenchmark(
         benchmark_id=str(payload.get("benchmark_id", "")), tasks=tuple(tasks),
         budget_profiles=profiles, utility_weights=_load_utility_weights(payload.get("utility_weights")),
         metadata={key: value for key, value in payload.items()
                   if key not in {"tasks", "budget_profiles", "utility_weights"}},
+        artifact_hashes=artifact_hashes,
     )

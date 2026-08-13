@@ -1,0 +1,8 @@
+{
+  "schema": "DAPH_V2B_I3_BENCHMARK_MANIFEST_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "benchmark_id": "v2b_i3_metareasoning_validity_synthetic_v1",
+  "private_environment_path": "../tasks/v2b_i3_metareasoning_benchmark_v1.json",
+  "controller_packets_path": "controller_packets/v2b_i3_controller_packets_v1.json",
+  "boundary": "Private environment carries latent dynamics and scoring. Controllers receive only the separately stored packets plus runtime observation projection."
+}

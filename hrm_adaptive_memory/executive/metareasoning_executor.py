@@ -11,6 +11,7 @@ import json
 from dataclasses import dataclass, replace
 from typing import Mapping
 
+from hrm_adaptive_memory.cognitive_control.actions import V2B_ACTIONS
 from hrm_adaptive_memory.cognitive_control.core import DecisionAction
 from hrm_adaptive_memory.cognitive_control.datalog import DatalogFact
 from hrm_adaptive_memory.cognitive_control.state import (
@@ -144,7 +145,21 @@ def state_delta(before: I3Runtime, after: I3Runtime) -> dict[str, object]:
         or (before.unresolved_conflict and not after.unresolved_conflict)
         or (not before.composition_complete and after.composition_complete)
     )
-    return {"changed": changed, "decision_relevant_improvement": improved}
+    return {
+        "changed": changed,
+        "evidence_delta": {"before": before.verification_state.value,
+                           "after": after.verification_state.value},
+        "verification_delta": {"before": before.verification_state.value,
+                               "after": after.verification_state.value},
+        "temporal_delta": {"before": before.temporal_status.value,
+                           "after": after.temporal_status.value},
+        "conflict_delta": {"before": before.unresolved_conflict,
+                           "after": after.unresolved_conflict},
+        "reasoning_delta": {"before": before.composition_complete,
+                            "after": after.composition_complete},
+        "answerability_delta": {"before": answerable(before), "after": answerable(after)},
+        "decision_relevant_improvement": improved,
+    }
 
 
 class DeterministicMetareasoningExecutor:
@@ -171,6 +186,11 @@ class DeterministicMetareasoningExecutor:
             next_runtime = replace(next_runtime, searched=True)
         next_runtime = self._apply_effect(next_runtime, next_runtime.task.action_effects.get(action, {}))
         if action not in {DecisionAction.ANSWER, DecisionAction.DEFER, DecisionAction.STOP}:
+            # A transition that consumes the final executable budget must be
+            # terminal. This prevents nonterminal dead-end states with no
+            # legal action for either the policy-constrained oracle or runner.
+            if not any(next_runtime.resources.can_execute(candidate) for candidate in V2B_ACTIONS):
+                return I3ActionExecution(action, next_runtime, True, False, "RESOURCE_EXHAUSTED")
             return I3ActionExecution(action, next_runtime, False, None, f"{action.value}_COMPLETED")
         if action is DecisionAction.ANSWER:
             success = next_runtime.task.latent.expected_terminal is DecisionAction.ANSWER and answerable(next_runtime)

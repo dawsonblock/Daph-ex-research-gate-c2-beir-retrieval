@@ -1,7 +1,11 @@
 """Matched controller used in both V2B-I3 masking conditions."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
+import hashlib
+import json
+from pathlib import Path
+from typing import Mapping
 
 from hrm_adaptive_memory.cognitive_control.core import DecisionAction
 from hrm_adaptive_memory.cognitive_control.state import CognitiveStateSnapshot, TemporalStatus, VerificationState
@@ -16,9 +20,77 @@ class ControllerObservation:
     task_id: str
     task_summary: str
     resource_state: dict[str, int]
+    allowed_actions: tuple[DecisionAction, ...]
     executed_actions: tuple[DecisionAction, ...]
     rejected_actions: tuple[DecisionAction, ...]
     cognitive_state: CognitiveStateSnapshot | None
+
+
+@dataclass(frozen=True)
+class ObservationMask:
+    """Frozen controller-visible fields; resource state and action history are always basic inputs."""
+
+    verification: bool = False
+    provenance: bool = False
+    temporal: bool = False
+    conflicts: bool = False
+    prior_outcomes: bool = False
+    composition: bool = False
+
+    def sha256(self) -> str:
+        encoded = json.dumps({
+            "verification": self.verification, "provenance": self.provenance,
+            "temporal": self.temporal, "conflicts": self.conflicts,
+            "prior_outcomes": self.prior_outcomes, "composition": self.composition,
+        }, sort_keys=True, separators=(",", ":")).encode()
+        return hashlib.sha256(encoded).hexdigest()
+
+
+STATE_BLIND_MASK = ObservationMask()
+STATE_AWARE_MASK = ObservationMask(
+    verification=True, provenance=True, temporal=True, conflicts=True,
+    prior_outcomes=True, composition=True)
+
+
+def load_observation_masks(path: str | Path) -> Mapping[str, ObservationMask]:
+    """Load frozen I3 ablation masks; unknown fields fail closed."""
+    payload = json.loads(Path(path).read_text())
+    if (payload.get("schema") != "DAPH_V2B_I3_OBSERVATION_MASKS_V1"
+            or payload.get("status") != "FROZEN_FOR_DEVELOPMENT"):
+        raise ValueError("I3 observation masks must be frozen for development")
+    raw_masks = payload.get("masks")
+    if not isinstance(raw_masks, Mapping) or not raw_masks:
+        raise ValueError("I3 observation masks must be nonempty")
+    fields = {"verification", "provenance", "temporal", "conflicts", "prior_outcomes", "composition"}
+    masks: dict[str, ObservationMask] = {}
+    for name, raw in raw_masks.items():
+        if not isinstance(name, str) or not isinstance(raw, Mapping) or set(raw) != fields:
+            raise ValueError("I3 masks require a condition name and exactly the frozen fields")
+        if not all(isinstance(value, bool) for value in raw.values()):
+            raise ValueError("I3 observation mask values must be booleans")
+        masks[name] = ObservationMask(**dict(raw))
+    if masks.get("STATE_BLIND_CONTROLLER") != STATE_BLIND_MASK:
+        raise ValueError("I3 state-blind mask must hide every cognitive field")
+    if masks.get("STATE_AWARE_CONTROLLER") != STATE_AWARE_MASK:
+        raise ValueError("I3 state-aware mask must expose every frozen cognitive field")
+    return masks
+
+
+def apply_observation_mask(snapshot: CognitiveStateSnapshot, mask: ObservationMask) -> CognitiveStateSnapshot | None:
+    """Return the exact bounded cognitive projection supplied to a controller."""
+    if mask == STATE_BLIND_MASK:
+        return None
+    return replace(
+        snapshot,
+        relevant_memories=snapshot.relevant_memories if mask.verification else (),
+        verification_states=snapshot.verification_states if mask.verification else (),
+        provenance_summaries=snapshot.provenance_summaries if mask.provenance else (),
+        temporal_status=snapshot.temporal_status if mask.temporal else TemporalStatus.UNKNOWN,
+        unresolved_conflicts=snapshot.unresolved_conflicts if mask.conflicts else (),
+        prior_decisions=snapshot.prior_decisions if mask.prior_outcomes else (),
+        prior_outcomes=snapshot.prior_outcomes if mask.prior_outcomes else (),
+        observation_signals=snapshot.observation_signals if mask.composition else (),
+    )
 
 
 class MatchedMetareasoningController:
@@ -44,6 +116,8 @@ class MatchedMetareasoningController:
 
     @staticmethod
     def _available(observation: ControllerObservation, action: DecisionAction) -> bool:
+        if action not in observation.allowed_actions:
+            return False
         resources = observation.resource_state
         if action is DecisionAction.RETRIEVE:
             return resources["retrieval_calls_remaining"] > 0
@@ -57,7 +131,9 @@ class MatchedMetareasoningController:
 
     def _state_aware_choice(self, observation: ControllerObservation,
                             state: CognitiveStateSnapshot) -> ActionProposal:
-        verification = state.verification_states[0].state
+        if "NO_FINAL_ASSERTION_REQUESTED" in observation.task_summary:
+            return ActionProposal(DecisionAction.STOP, "TASK_REQUESTS_INTERNAL_STOP")
+        verification = state.verification_states[0].state if state.verification_states else None
         composition_incomplete = "COMPOSITION_INCOMPLETE" in state.observation_signals
         if state.unresolved_conflicts:
             return ActionProposal(DecisionAction.DEFER, "OBSERVED_UNRESOLVED_CONFLICT")
@@ -89,6 +165,8 @@ class MatchedMetareasoningController:
 
     def _state_blind_choice(self, observation: ControllerObservation) -> ActionProposal:
         """Fixed fallback path, with policy/resource rejection feedback for replanning."""
+        if "NO_FINAL_ASSERTION_REQUESTED" in observation.task_summary:
+            return ActionProposal(DecisionAction.STOP, "TASK_REQUESTS_INTERNAL_STOP")
         if (not self._executed(observation, DecisionAction.RETRIEVE)
                 and not self._rejected(observation, DecisionAction.RETRIEVE)
                 and self._available(observation, DecisionAction.RETRIEVE)):
