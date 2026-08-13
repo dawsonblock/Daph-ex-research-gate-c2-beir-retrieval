@@ -6,20 +6,19 @@ be mistaken for a V2B scientific qualification.
 """
 from __future__ import annotations
 
+import json
 from pathlib import Path
+from pathlib import PurePosixPath
 from typing import Any, Mapping
 
-from .qualification import _combined_hash, _git, _tree_hash, dependency_environment
+from .qualification import (
+    _combined_hash, _git, _git_bytes, _tree_hash, dependency_environment)
 
 
 IDENTITY_VERSION = "DAPH_V2B_I3_2_SEQUENTIAL_INFORMATION_ORACLE_IDENTITY_V1"
 I3_2_COMPONENTS = {
     "i3_1_baseline": "configs/v2b_i3_2_baseline.json",
-    "private_environment": "experiments/v2b/tasks/v2b_i3_metareasoning_benchmark_v1.json",
-    "private_extension": "experiments/v2b_i3_2/tasks/v2b_i3_2_information_state_extension_v1.json",
-    "controller_packets": "experiments/v2b/benchmark/controller_packets/v2b_i3_controller_packets_v1.json",
-    "controller_packet_extension": "experiments/v2b_i3_2/benchmark/controller_packets/v2b_i3_2_controller_packets_extension_v1.json",
-    "benchmark_manifest": "experiments/v2b_i3_2/benchmark/v2b_i3_2_benchmark_manifest_v1.json",
+    "i3_2_baseline": "configs/v2b_i3_2_1_baseline.json",
     "benchmark_runtime": "hrm_adaptive_memory/executive/metareasoning_benchmark.py",
     "runtime_state": "hrm_adaptive_memory/executive/metareasoning_state.py",
     "latent_transition_table": "hrm_adaptive_memory/executive/metareasoning_transition_table.py",
@@ -36,12 +35,79 @@ I3_2_COMPONENTS = {
     "development_config": "experiments/v2b_i3_2/configs/v2b_i3_2_development.json",
     "development_runner": "scripts/run_v2b_i3_2_development.py",
 }
+BENCHMARK_ARTIFACT_FIELDS = {
+    "private_environment": "private_environment_path",
+    "controller_packets": "controller_packets_path",
+    "task_extension": "task_extension_path",
+    "controller_packets_extension": "controller_packets_extension_path",
+}
+ORACLE_LIMIT_MAXIMA = {
+    "max_information_states": 1_000_000,
+    "max_information_transitions": 10_000_000,
+    "max_members_per_belief": 10_000,
+}
 I3_2_TEST_CORPUS = (
     "tests/unit/test_v2b_i3_metareasoning.py",
     "tests/unit/test_v2b_i3_1_oracle_efficiency.py",
     "tests/unit/test_v2b_i3_2_sequential_information.py",
     "tests/adversarial/test_v2b_infrastructure_adversarial.py",
 )
+
+
+def _repository_relative(manifest_path: str, referenced_path: object) -> str:
+    """Resolve one manifest edge without allowing it to escape the repository."""
+    if not isinstance(referenced_path, str) or not referenced_path:
+        raise RuntimeError("I3.2 benchmark manifest has an empty artifact path")
+    if PurePosixPath(manifest_path).is_absolute() or PurePosixPath(referenced_path).is_absolute():
+        raise RuntimeError("I3.2 qualification paths must be repository-relative")
+    candidate = PurePosixPath(manifest_path).parent.joinpath(referenced_path)
+    parts: list[str] = []
+    for part in candidate.parts:
+        if part in {"", "."}:
+            continue
+        if part == "..":
+            if not parts:
+                raise RuntimeError("I3.2 benchmark artifact escapes the repository")
+            parts.pop()
+        else:
+            parts.append(part)
+    if not parts:
+        raise RuntimeError("I3.2 benchmark artifact resolves to the repository root")
+    return PurePosixPath(*parts).as_posix()
+
+
+def benchmark_artifact_paths(root: Path, commit: str,
+                             manifest_path: str) -> dict[str, str]:
+    """Derive the exact qualification graph from the committed manifest."""
+    try:
+        manifest = json.loads(_git_bytes(root, commit, manifest_path))
+    except (json.JSONDecodeError, UnicodeDecodeError) as error:
+        raise RuntimeError("I3.2 benchmark manifest is not canonical JSON") from error
+    if (not isinstance(manifest, Mapping)
+            or manifest.get("schema") != "DAPH_V2B_I3_2_BENCHMARK_MANIFEST_V1"):
+        raise RuntimeError("I3.2 qualification requires the I3.2 benchmark manifest")
+    paths = {"benchmark_manifest": manifest_path}
+    for name, field in BENCHMARK_ARTIFACT_FIELDS.items():
+        paths[name] = _repository_relative(manifest_path, manifest.get(field))
+    if len(set(paths.values())) != len(paths):
+        raise RuntimeError("I3.2 benchmark manifest aliases qualification artifacts")
+    for path in paths.values():
+        _tree_hash(root, commit, path)
+    return paths
+
+
+def validate_oracle_limits(configuration: Mapping[str, Any]) -> Mapping[str, int]:
+    """Validate and return the exact caps consumed by development/qualification runners."""
+    limits = configuration.get("oracle_limits")
+    if not isinstance(limits, Mapping) or set(limits) != set(ORACLE_LIMIT_MAXIMA):
+        raise RuntimeError("I3.2 qualification lacks the exact frozen oracle limits")
+    validated: dict[str, int] = {}
+    for name, maximum in ORACLE_LIMIT_MAXIMA.items():
+        value = limits.get(name)
+        if isinstance(value, bool) or not isinstance(value, int) or not 0 < value <= maximum:
+            raise RuntimeError(f"I3.2 qualification has an invalid oracle limit: {name}")
+        validated[name] = value
+    return validated
 
 
 def validate_i3_2_configuration(configuration: Mapping[str, Any]) -> None:
@@ -58,6 +124,7 @@ def validate_i3_2_configuration(configuration: Mapping[str, Any]) -> None:
     visibility = configuration.get("policy_feedback_visibility")
     if not isinstance(visibility, Mapping) or not visibility.get("rejection_consumes_control_step"):
         raise RuntimeError("I3.2 qualification lacks frozen policy-feedback semantics")
+    validate_oracle_limits(configuration)
 
 
 def i3_2_identity(root: str | Path, configuration: Mapping[str, Any],
@@ -65,12 +132,15 @@ def i3_2_identity(root: str | Path, configuration: Mapping[str, Any],
     validate_i3_2_configuration(configuration)
     root = Path(root).resolve()
     source_commit = _git(root, "rev-parse", commit)
+    manifest_path = str(configuration["benchmark"]["path"])
+    artifact_paths = benchmark_artifact_paths(root, source_commit, manifest_path)
+    component_paths = {**I3_2_COMPONENTS, **artifact_paths}
     return {
         "identity_version": IDENTITY_VERSION,
         "source_commit": source_commit,
         "source_tree_hash": _git(root, "rev-parse", f"{source_commit}^{{tree}}"),
         "component_hashes": {name: {"path": path, "sha256": _tree_hash(root, source_commit, path)}
-                             for name, path in I3_2_COMPONENTS.items()},
+                             for name, path in component_paths.items()},
         "test_corpus_sha256": _combined_hash(root, source_commit, I3_2_TEST_CORPUS),
         "configuration": dict(configuration),
         "environment": dependency_environment(),

@@ -29,6 +29,7 @@ from hrm_adaptive_memory.executive.metareasoning_transition_table import OracleT
 from hrm_adaptive_memory.executive.metareasoning_utility import MetareasoningUtility, frozen_action_cost_hash
 from hrm_adaptive_memory.executive.policy import load_frozen_policy
 from hrm_adaptive_memory.executive.resources import ResourceState
+from hrm_adaptive_memory.cognitive_control.i3_2_qualification import validate_oracle_limits
 
 
 def _sha256(path: Path) -> str:
@@ -74,6 +75,7 @@ def main() -> None:
     config = json.loads(config_path.read_text())
     if config.get("status") != "DEVELOPMENT_EXPERIMENT_NOT_QUALIFIED":
         raise RuntimeError("I3.2 runner accepts only development-only configuration")
+    oracle_limits = validate_oracle_limits(config)
     output = args.output.resolve()
     if output.exists() and any(output.iterdir()):
         raise RuntimeError("I3.2 output directory must be empty")
@@ -105,8 +107,9 @@ def main() -> None:
             runtime_tables=((runtimes[task_id], table) for task_id, table in latent_tables.items()),
             mask=mask, policy=policy, utility=utility,
             benchmark_hash=_sha256(benchmark_path),
-            max_information_states=int(config["oracle_limits"]["max_information_states"]),
-            max_information_transitions=int(config["oracle_limits"]["max_information_transitions"]))
+            max_information_states=oracle_limits["max_information_states"],
+            max_information_transitions=oracle_limits["max_information_transitions"],
+            max_members_per_belief=oracle_limits["max_members_per_belief"])
     sequential_seconds = perf_counter() - sequential_started
     sequential_records = {}
     for condition, oracle_set in sequential_sets.items():

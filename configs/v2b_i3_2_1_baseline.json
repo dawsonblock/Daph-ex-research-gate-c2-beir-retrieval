@@ -1,0 +1,18 @@
+{
+  "schema": "DAPH_V2B_I3_2_1_BASELINE_V1",
+  "milestone": "V2B-I3.2.1 Sequential Oracle Integrity Cleanup",
+  "i3_2_baseline_source_commit": "4f668a802217ba71acabdbabdc3bb9dd3a934f6b",
+  "i3_2_baseline_source_tree": "a2593f155ed21e0bc8689bfea719f432ce0011d5",
+  "i3_2_artifacts": {
+    "benchmark_manifest_sha256": "d2900ac3f0ae75d1833380cd753b2c6fc714d3dd37ab40f0c12119e1b9ccb5de",
+    "actual_base_controller_packets_sha256": "ae1067a6d7323c04fe26dc918c7f750a1a8cc6a5ac8dc05ca3d0a6c734dc1ba6",
+    "task_extension_sha256": "798eb172d16063c41222cd3da76df2f64c6278679d56a43a7d487e6d78b480eb",
+    "controller_packets_extension_sha256": "952ae91e304ae3e4914e3ba7af84856243218a5a942db5e00671da0621385a56",
+    "development_configuration_sha256": "767ccd913adbd8f467d7aac095b149d69c30c637bcd0350d0db3a46a5884a8d6",
+    "policy_sha256": "82d8572a51321c3237925b4f32ee765d8db597a7055e49af633cb82b9b4f43d7",
+    "observation_masks_sha256": "4b4ea5b125ffceefb92458d1c0cdfd926833efb42c08cbdc35ff84351a404103",
+    "utility_sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07",
+    "sequential_oracle_sha256": "c4523103601c42c05208778e7ad3a7f833cbfc8c86c8c53a4c5bceb4eeeae5c8"
+  },
+  "status": "RECORDED_DEVELOPMENT_BASELINE_NOT_QUALIFIED"
+}

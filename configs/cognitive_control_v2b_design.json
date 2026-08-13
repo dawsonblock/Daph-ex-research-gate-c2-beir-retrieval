@@ -53,6 +53,7 @@
     "experiments/v2b_i3_1/benchmark/controller_packets/v2b_i3_1_controller_packets_v1.json",
     "configs/v2b_i3_1_utility_v1.json",
     "configs/v2b_i3_2_baseline.json",
+    "configs/v2b_i3_2_1_baseline.json",
     "experiments/v2b/benchmark/v2b_i3_benchmark_manifest_v1.json",
     "experiments/v2b/benchmark/controller_packets/v2b_i3_controller_packets_v1.json",
     "scripts/run_v2b_i3_development.py",

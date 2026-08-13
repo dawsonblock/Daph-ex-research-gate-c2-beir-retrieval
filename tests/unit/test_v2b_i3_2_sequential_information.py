@@ -2,12 +2,15 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from pathlib import Path
+import subprocess
 
 import pytest
 
 from hrm_adaptive_memory.cognitive_control.core import DecisionAction
-from hrm_adaptive_memory.cognitive_control.i3_2_qualification import validate_i3_2_configuration
+from hrm_adaptive_memory.cognitive_control.i3_2_qualification import (
+    ORACLE_LIMIT_MAXIMA, benchmark_artifact_paths, validate_i3_2_configuration)
 from hrm_adaptive_memory.executive.metareasoning_benchmark import load_metareasoning_benchmark
 from hrm_adaptive_memory.executive.metareasoning_controller import (
     MatchedMetareasoningController, load_observation_masks)
@@ -20,6 +23,7 @@ from hrm_adaptive_memory.executive.metareasoning_sequential_oracle import (
     _apply_proposal, build_sequential_observable_oracle, canonical_packet,
     controller_observation)
 from hrm_adaptive_memory.executive.metareasoning_transition_table import OracleTableCache
+from hrm_adaptive_memory.executive.metareasoning_state import runtime_from_oracle_state
 from hrm_adaptive_memory.executive.metareasoning_utility import MetareasoningUtility
 from hrm_adaptive_memory.executive.policy import load_frozen_policy
 from hrm_adaptive_memory.executive.resources import ResourceState
@@ -103,6 +107,7 @@ def test_i3_2_sequential_verify_action_splits_posterior_and_closes_uncertainty()
                for outcome in transition.outcomes)
     assert table.expected_latent_values[initial] >= table.belief_values[initial]
     assert table.information_gap(initial) > 0
+    assert table.build_metrics["fraction_resolved_after_one_action"] > 0
 
 
 def test_i3_2_policy_rejection_is_visible_costed_and_can_split_a_belief():
@@ -130,6 +135,23 @@ def test_i3_2_irreducible_alias_has_residual_information_gap_even_when_state_is_
     root = table.initial_information_state_id
     assert table.information_gap(root) > 0
     assert table.expected_latent_values[root] > table.belief_values[root]
+    # Ending the episode does not reveal evaluator-private ground truth.
+    assert table.transitions[(root, DecisionAction.DEFER)].expected_information_gain_bits == pytest.approx(0.0)
+
+
+def test_i3_2_observable_optima_are_controller_proposable_in_every_state():
+    _, _, _, mask, runtimes, latent_tables, oracle = _sequential(
+        ("i3_2_verify_supported", "i3_2_verify_irreducible"), "STATE_AWARE_CONTROLLER")
+    for table in oracle.tables.values():
+        for state_id, state in table.information_states.items():
+            member = state.members[0]
+            latent = latent_tables[member.task_id]
+            runtime = runtime_from_oracle_state(
+                runtimes[member.task_id], latent.states[member.state_id])
+            observation = controller_observation(runtime=runtime, history=state.history, mask=mask)
+            assert set(table.optimal_actions[state_id]).issubset(observation.allowed_actions)
+            assert {action for origin, action in table.transitions if origin == state_id}.issubset(
+                observation.allowed_actions)
 
 
 def test_i3_2_runtime_latent_and_observable_transitions_share_resource_semantics():
@@ -180,3 +202,39 @@ def test_i3_2_fails_closed_on_belief_space_limit_and_development_identity():
             benchmark_hash="test-i3-2", max_information_states=1, max_information_transitions=10)
     with pytest.raises(RuntimeError, match="not frozen"):
         validate_i3_2_configuration(json.loads(CONFIGURATION.read_text()))
+
+
+def test_i3_2_member_limit_is_supplied_by_the_caller():
+    _, policy, utility, masks, runtimes, tables = _inputs(
+        ("i3_2_verify_supported", "i3_2_verify_irreducible"))
+    with pytest.raises(RuntimeError, match="INFORMATION_STATE_MEMBER_LIMIT"):
+        build_sequential_observable_oracle(
+            runtime_tables=((runtimes[key], tables[key]) for key in sorted(runtimes)),
+            mask=masks["STATE_AWARE_CONTROLLER"], policy=policy, utility=utility,
+            benchmark_hash="test-i3-2", max_members_per_belief=1)
+
+
+def test_i3_2_qualification_validates_every_oracle_limit():
+    configuration = json.loads(CONFIGURATION.read_text())
+    configuration["status"] = "FROZEN_FOR_QUALIFICATION"
+    validate_i3_2_configuration(configuration)
+    for name, maximum in ORACLE_LIMIT_MAXIMA.items():
+        for bad in (0, -1, True, "256", maximum + 1):
+            candidate = json.loads(json.dumps(configuration))
+            candidate["oracle_limits"][name] = bad
+            with pytest.raises(RuntimeError, match="invalid oracle limit"):
+                validate_i3_2_configuration(candidate)
+
+
+def test_i3_2_committed_manifest_graph_binds_the_artifacts_the_loader_uses():
+    commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    relative_manifest = MANIFEST.relative_to(ROOT).as_posix()
+    paths = benchmark_artifact_paths(ROOT, commit, relative_manifest)
+    assert paths["controller_packets"] == (
+        "experiments/v2b_i3_1/benchmark/controller_packets/"
+        "v2b_i3_1_controller_packets_v1.json")
+    benchmark = load_metareasoning_benchmark(MANIFEST)
+    for name, path in paths.items():
+        committed = subprocess.check_output(["git", "show", f"{commit}:{path}"], cwd=ROOT)
+        expected = hashlib.sha256(committed).hexdigest()
+        assert benchmark.artifact_hashes[name] == expected

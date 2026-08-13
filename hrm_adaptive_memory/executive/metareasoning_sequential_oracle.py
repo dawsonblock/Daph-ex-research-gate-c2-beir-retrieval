@@ -393,9 +393,10 @@ def _member_runtime(member: LatentMember, contexts: Mapping[str, _Context]) -> I
 
 
 def _make_information_state(*, members: Iterable[LatentMember], history: tuple[InformationHistoryEvent, ...],
-                            mask: ObservationMask, contexts: Mapping[str, _Context]) -> InformationState:
+                            mask: ObservationMask, contexts: Mapping[str, _Context],
+                            max_members_per_belief: int) -> InformationState:
     ordered = tuple(sorted(members, key=lambda item: item.key))
-    if len(ordered) > DEFAULT_MAX_MEMBERS_PER_BELIEF:
+    if len(ordered) > max_members_per_belief:
         raise RuntimeError("INFORMATION_STATE_MEMBER_LIMIT")
     runtime = _member_runtime(ordered[0], contexts)
     packet = controller_observation(runtime=runtime, history=history, mask=mask)
@@ -428,9 +429,11 @@ def _initial_groups(contexts: Mapping[str, _Context], mask: ObservationMask) -> 
 def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping[str, _Context],
                  mask: ObservationMask, policy: FrozenPolicy, utility: MetareasoningUtility,
                  max_information_states: int, max_information_transitions: int,
-                 benchmark_hash: str) -> SequentialObservablePolicyTable:
+                 max_members_per_belief: int, benchmark_hash: str) -> SequentialObservablePolicyTable:
     started = perf_counter(); rss_before = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    initial = _make_information_state(members=initial_members, history=(), mask=mask, contexts=contexts)
+    initial = _make_information_state(
+        members=initial_members, history=(), mask=mask, contexts=contexts,
+        max_members_per_belief=max_members_per_belief)
     initial_id = initial.state_id()
     states: dict[str, InformationState] = {initial_id: initial}
     transitions: dict[tuple[str, DecisionAction], InformationTransition] = {}
@@ -440,15 +443,20 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
 
     while queue:
         information_id = queue.popleft(); state = states[information_id]
-        for proposed in V2B_ACTIONS:
+        public_observation = controller_observation(
+            runtime=_member_runtime(state.members[0], contexts), history=state.history, mask=mask)
+        for proposed in public_observation.allowed_actions:
             groups: dict[tuple[str, str], list[tuple[LatentMember, _RuntimeOutcome]]] = {}
-            terminal_groups: dict[tuple[str, float, float], list[tuple[LatentMember, _RuntimeOutcome]]] = {}
+            terminal_groups: dict[tuple[str, str | None, str],
+                                  list[tuple[LatentMember, _RuntimeOutcome]]] = {}
             for member in state.members:
                 outcome = _apply_proposal(runtime=_member_runtime(member, contexts), proposed=proposed,
                                           policy=policy, utility=utility)
                 if outcome.terminal:
-                    key = (outcome.history_event.execution_status, float(outcome.terminal_utility or 0.0),
-                           outcome.immediate_utility)
+                    key = (outcome.feedback.effect,
+                           None if outcome.feedback.resolved_action is None
+                           else outcome.feedback.resolved_action.value,
+                           outcome.history_event.execution_status)
                     terminal_groups.setdefault(key, []).append((member, outcome))
                     continue
                 assert outcome.runtime is not None
@@ -491,7 +499,8 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
                         member.task_id, context.latent_table.identity_sha256, next_state_id,
                         member.posterior_weight / total))
                 successor = _make_information_state(members=successor_members, history=history,
-                                                    mask=mask, contexts=contexts)
+                                                    mask=mask, contexts=contexts,
+                                                    max_members_per_belief=max_members_per_belief)
                 successor_id = successor.state_id()
                 if successor_id not in states:
                     if len(states) >= max_information_states:
@@ -515,8 +524,19 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
                                                    for member, outcome in members_outcomes) / float(total),
                     member_keys=tuple(sorted(member.key for member, _ in members_outcomes)),
                     entropy_after_bits=successor.entropy_bits))
-            for (_, terminal_utility, immediate), members_outcomes in sorted(terminal_groups.items()):
+            for terminal_key, members_outcomes in sorted(
+                    terminal_groups.items(), key=lambda item: json.dumps(item[0])):
                 probability = sum(member.posterior_weight for member, _ in members_outcomes)
+                expected_terminal = sum(
+                    float(member.posterior_weight) * float(outcome.terminal_utility or 0.0)
+                    for member, outcome in members_outcomes) / float(probability)
+                expected_immediate = sum(
+                    float(member.posterior_weight) * outcome.immediate_utility
+                    for member, outcome in members_outcomes) / float(probability)
+                posterior = tuple(member.posterior_weight / probability
+                                  for member, _ in members_outcomes)
+                terminal_entropy = -sum(
+                    float(weight) * math.log2(float(weight)) for weight in posterior if weight)
                 for member, outcome in members_outcomes:
                     member_transitions[(information_id, proposed, member.key)] = MemberTransition(
                         member.key, None,
@@ -524,12 +544,12 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
                         True, outcome.terminal_utility, outcome.immediate_utility,
                         outcome.feedback, outcome.history_event, None)
                 outcomes.append(InformationOutcome(
-                    outcome_id=_hash({"terminal": members_outcomes[0][1].history_event.as_dict(),
-                                      "utility": terminal_utility}), probability=probability,
+                    outcome_id=_hash({"terminal_public_feedback": terminal_key}), probability=probability,
                     next_information_state_id=None, terminal=True,
-                    expected_utility=terminal_utility, expected_immediate_utility=immediate,
+                    expected_utility=expected_terminal,
+                    expected_immediate_utility=expected_immediate,
                     member_keys=tuple(sorted(member.key for member, _ in members_outcomes)),
-                    entropy_after_bits=0.0))
+                    entropy_after_bits=terminal_entropy))
             if outcomes:
                 transitions[(information_id, proposed)] = InformationTransition(
                     proposed, tuple(sorted(outcomes, key=lambda item: item.outcome_id)),
@@ -561,10 +581,24 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
         else:
             values[information_id] = utility.incorrect_defer; optimal[information_id] = ()
 
+    root_transitions = [transition for (origin, _), transition in transitions.items()
+                        if origin == initial_id]
+    resolving_first_actions = sum(
+        bool(transition.outcomes)
+        and all(not outcome.terminal
+                and outcome.next_information_state_id is not None
+                and len(states[outcome.next_information_state_id].members) == 1
+                for outcome in transition.outcomes)
+        for transition in root_transitions)
+    fraction_resolved_after_one_action = (
+        resolving_first_actions / len(root_transitions)
+        if len(initial.members) > 1 and root_transitions else 0.0)
+
     identity = _hash({
         "benchmark_hash": benchmark_hash, "mask_sha256": mask.sha256(), "policy_sha256": policy.sha256,
         "utility_sha256": utility.sha256, "action_cost_sha256": frozen_action_cost_hash(),
         "prior_definition": PRIOR_DEFINITION, "policy_feedback_visibility_sha256": policy_feedback_visibility_hash(),
+        "max_members_per_belief": max_members_per_belief,
         "latent_oracles": sorted(context.latent_table.table_sha256 for context in contexts.values()),
         "revision": SEQUENTIAL_ORACLE_REVISION,
     })
@@ -580,7 +614,7 @@ def _build_table(*, initial_members: tuple[LatentMember, ...], contexts: Mapping
                        "belief_peak_resident_memory_delta_kib": max(0, rss_after - rss_before),
                        "max_belief_cardinality": max(len(item.members) for item in states.values()),
                        "ambiguous_information_state_fraction": sum(len(item.members) > 1 for item in states.values()) / len(states),
-                       "fraction_resolved_after_one_action": 0.0})
+                       "fraction_resolved_after_one_action": fraction_resolved_after_one_action})
     return table
 
 
@@ -588,7 +622,8 @@ def build_sequential_observable_oracle(*, runtime_tables: Iterable[tuple[I3Runti
                                        mask: ObservationMask, policy: FrozenPolicy,
                                        utility: MetareasoningUtility, benchmark_hash: str,
                                        max_information_states: int = DEFAULT_MAX_INFORMATION_STATES,
-                                       max_information_transitions: int = DEFAULT_MAX_INFORMATION_TRANSITIONS) -> SequentialObservableOracleSet:
+                                       max_information_transitions: int = DEFAULT_MAX_INFORMATION_TRANSITIONS,
+                                       max_members_per_belief: int = DEFAULT_MAX_MEMBERS_PER_BELIEF) -> SequentialObservableOracleSet:
     """Construct exact full-trajectory observable policy tables for one mask."""
     contexts = {runtime.task.task_id: _Context(runtime, table) for runtime, table in runtime_tables}
     tables: dict[str, SequentialObservablePolicyTable] = {}
@@ -597,6 +632,7 @@ def build_sequential_observable_oracle(*, runtime_tables: Iterable[tuple[I3Runti
         table = _build_table(initial_members=members, contexts=contexts, mask=mask, policy=policy,
                              utility=utility, max_information_states=max_information_states,
                              max_information_transitions=max_information_transitions,
+                             max_members_per_belief=max_members_per_belief,
                              benchmark_hash=benchmark_hash)
         tables[table.initial_information_state_id] = table
         for member in members:

@@ -74,6 +74,7 @@ COMPONENT_PATHS = {
     "v2b_i3_2_sequential_oracle": "hrm_adaptive_memory/executive/metareasoning_sequential_oracle.py",
     "v2b_i3_2_runtime": "hrm_adaptive_memory/executive/metareasoning_i3_2.py",
     "v2b_i3_2_baseline": "configs/v2b_i3_2_baseline.json",
+    "v2b_i3_2_1_baseline": "configs/v2b_i3_2_1_baseline.json",
     "v2b_i3_2_private_extension": "experiments/v2b_i3_2/tasks/v2b_i3_2_information_state_extension_v1.json",
     "v2b_i3_2_manifest": "experiments/v2b_i3_2/benchmark/v2b_i3_2_benchmark_manifest_v1.json",
     "v2b_i3_2_controller_packets": "experiments/v2b_i3_2/benchmark/controller_packets/v2b_i3_2_controller_packets_extension_v1.json",
