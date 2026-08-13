@@ -162,8 +162,18 @@ class PolicyGate:
                           and f.args[0] == task_id)
         if denied:
             return PolicyDecision(PolicyEffect.DENY, proposed, None, tuple(denied))
-        if required and all(f.args[1] != proposed.value.lower() for f in required):
-            action = DecisionAction(required[0].args[1].upper())
+        required_actions = tuple(sorted({fact.args[1] for fact in required}))
+        if len(required_actions) > 1:
+            # Policy rules are constraints, not ranked suggestions. Selecting
+            # the first Datalog fact would make a Python sort order an
+            # accidental safety policy, so incompatible requirements deny the
+            # proposed action until a separately frozen resolution rule exists.
+            reasons = ("POLICY_CONFLICT",) + tuple(
+                f"POLICY_CONFLICT_REQUIRE_{action.upper()}"
+                for action in required_actions)
+            return PolicyDecision(PolicyEffect.DENY, proposed, None, reasons)
+        if required_actions and required_actions[0] != proposed.value.lower():
+            action = DecisionAction(required_actions[0].upper())
             return PolicyDecision(PolicyEffect.REQUIRE, proposed, action,
                                   tuple(f.args[2] for f in required))
         return PolicyDecision(PolicyEffect.ALLOW, proposed, None, ())

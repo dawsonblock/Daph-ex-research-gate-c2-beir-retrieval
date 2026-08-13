@@ -132,3 +132,49 @@ def test_datalog_recursion_and_policy_gate_are_deterministic():
         DatalogFact("high_stakes", ("task",)), DatalogFact("unverified", ("task",))})
     assert result.effect is PolicyEffect.REQUIRE
     assert result.required_action is DecisionAction.VERIFY
+
+
+def test_policy_gate_denies_incompatible_requirements_instead_of_sorting_them():
+    gate = PolicyGate((
+        PolicyRule(
+            "require-verify",
+            DatalogFact("require", ("T", "verify", "unverified")),
+            (DatalogFact("unverified", ("T",)),)),
+        PolicyRule(
+            "require-defer",
+            DatalogFact("require", ("T", "defer", "human_review")),
+            (DatalogFact("human_review", ("T",)),)),
+    ))
+    facts = {DatalogFact("unverified", ("task",)),
+             DatalogFact("human_review", ("task",))}
+
+    # Even if the proposal satisfies one requirement, another incompatible
+    # requirement makes execution unsafe until explicit policy resolves it.
+    result = gate.evaluate("task", DecisionAction.VERIFY, facts)
+    assert result.effect is PolicyEffect.DENY
+    assert result.required_action is None
+    assert result.reason_codes == (
+        "POLICY_CONFLICT",
+        "POLICY_CONFLICT_REQUIRE_DEFER",
+        "POLICY_CONFLICT_REQUIRE_VERIFY",
+    )
+
+
+def test_policy_gate_coalesces_duplicate_requirements_for_one_action():
+    gate = PolicyGate((
+        PolicyRule(
+            "require-verify-unverified",
+            DatalogFact("require", ("T", "verify", "unverified")),
+            (DatalogFact("unverified", ("T",)),)),
+        PolicyRule(
+            "require-verify-high-stakes",
+            DatalogFact("require", ("T", "verify", "high_stakes")),
+            (DatalogFact("high_stakes", ("T",)),)),
+    ))
+    result = gate.evaluate("task", DecisionAction.ANSWER, {
+        DatalogFact("unverified", ("task",)),
+        DatalogFact("high_stakes", ("task",)),
+    })
+    assert result.effect is PolicyEffect.REQUIRE
+    assert result.required_action is DecisionAction.VERIFY
+    assert result.reason_codes == ("high_stakes", "unverified")
