@@ -39,6 +39,11 @@ def _sha256(value: bytes | str) -> str:
     return hashlib.sha256(value.encode("utf-8") if isinstance(value, str) else value).hexdigest()
 
 
+def canonical_extracted_fields_sha256(fields: Mapping[str, object]) -> str:
+    """Return the deterministic digest of an extractor's structured result."""
+    return _sha256(_canonical_json(dict(fields)))
+
+
 @dataclass(frozen=True)
 class AuthorityDefinition:
     authority_id: str
@@ -47,6 +52,7 @@ class AuthorityDefinition:
     relations: tuple[str, ...]
     endpoint_patterns: tuple[str, ...]
     allowed_query_keys: tuple[str, ...]
+    required_query_values: tuple[tuple[str, str], ...]
     source_type: str
     extractor_id: str
     extractor_module: str
@@ -72,8 +78,15 @@ class AuthorityDefinition:
             "AUTHORITATIVE_STRUCTURED_DATA", "OFFICIAL_PRIMARY_SOURCE",
         }:
             raise ValueError("registered authority must use a qualified source type")
-        if any(not key or not key.replace("_", "").isalnum() for key in self.allowed_query_keys):
+        if any(not isinstance(key, str) or not key or not key.replace("_", "").isalnum()
+               for key in self.allowed_query_keys):
             raise ValueError("authority allowed query keys must be nonempty names")
+        required = dict(self.required_query_values)
+        if (len(required) != len(self.required_query_values)
+                or any(not isinstance(key, str) or not isinstance(value, str)
+                       or key not in self.allowed_query_keys or not value
+                       for key, value in self.required_query_values)):
+            raise ValueError("authority required query values must use allowed nonempty keys and values")
 
     def allows(self, *, relation: str, source_uri: str) -> bool:
         parsed = urlsplit(source_uri)
@@ -85,9 +98,15 @@ class AuthorityDefinition:
             return False
         if not any(fnmatchcase(parsed.path or "/", pattern) for pattern in self.endpoint_patterns):
             return False
-        query = parse_qsl(parsed.query, keep_blank_values=True, strict_parsing=False)
-        return len({key for key, _value in query}) == len(query) and all(
-            key in self.allowed_query_keys for key, _value in query)
+        try:
+            query = parse_qsl(parsed.query, keep_blank_values=True, strict_parsing=True)
+        except ValueError:
+            return False
+        if len({key for key, _value in query}) != len(query):
+            return False
+        query_values = dict(query)
+        return (all(key in self.allowed_query_keys for key in query_values)
+                and all(query_values.get(key) == value for key, value in self.required_query_values))
 
     def to_json(self) -> dict[str, object]:
         return {
@@ -97,6 +116,7 @@ class AuthorityDefinition:
             "relations": list(self.relations),
             "endpoint_patterns": list(self.endpoint_patterns),
             "allowed_query_keys": list(self.allowed_query_keys),
+            "required_query_values": dict(self.required_query_values),
             "source_type": self.source_type,
             "extractor_id": self.extractor_id,
             "extractor_module": self.extractor_module,
@@ -170,6 +190,10 @@ def load_authority_registry(path: str | Path, *, repository_root: str | Path | N
             raise ValueError("registered authority extractor does not match its pinned hash")
         for field_name in ("domains", "relations", "endpoint_patterns", "allowed_query_keys", "content_types"):
             definition[field_name] = tuple(definition.get(field_name, ()))
+        required_values = definition.get("required_query_values", {})
+        if not isinstance(required_values, dict):
+            raise ValueError("authority required_query_values must be a JSON object")
+        definition["required_query_values"] = tuple(sorted(required_values.items()))
         definitions.append(AuthorityDefinition(**definition))
     return AuthorityRegistry(definitions, registry_version=str(payload.get("registry_version", "")), status=status)
 
@@ -186,7 +210,14 @@ class VerifiedExtractor:
     extract: Callable[[bytes, str], Mapping[str, object]]
 
 
-def _load_verified_extractor(root: Path, definition: AuthorityDefinition) -> VerifiedExtractor:
+def load_verified_extractor(repository_root: str | Path,
+                           definition: AuthorityDefinition) -> VerifiedExtractor:
+    """Load the exact committed extractor module and symbol named by the registry.
+
+    The hash binds executable identity; it does not sandbox code. The pinned
+    extractor module remains part of the reviewed, trusted source tree.
+    """
+    root = Path(repository_root).resolve()
     module_path = (root / definition.extractor_module).resolve()
     if root not in module_path.parents:
         raise ValueError("registered extractor module is outside repository")
@@ -207,7 +238,7 @@ class RegisteredAuthorityAcquirer:
     """Truth-bearing acquisition bound to a frozen registry and verified extractor bytes."""
 
     ACQUISITION_METHOD = "registered_authority"
-    ACQUISITION_VERSION = "2.0.0-v2b"
+    ACQUISITION_VERSION = "3.0.0-v2b"
 
     def __init__(self, registry: AuthorityRegistry, transport: object, *,
                  repository_root: str | Path):
@@ -219,7 +250,7 @@ class RegisteredAuthorityAcquirer:
     def _extractor(self, definition: AuthorityDefinition) -> VerifiedExtractor:
         # Reload verified bytes for each acquisition. This deliberately leaves
         # no injectable callable cache between a pinned file/symbol and use.
-        extractor = _load_verified_extractor(self.root, definition)
+        extractor = load_verified_extractor(self.root, definition)
         if (extractor.sha256 != definition.extractor_sha256
                 or extractor.module != definition.extractor_module
                 or extractor.symbol != definition.extractor_symbol):
@@ -265,7 +296,7 @@ class RegisteredAuthorityAcquirer:
                                      raw_content=response.body, content_type=response.content_type)
         registry_identity = self.registry.identity()
         attestation = {
-            "schema": "DAPH_AUTHORITY_ATTESTATION_V1",
+            "schema": "DAPH_AUTHORITY_ATTESTATION_V2",
             "authority_id": final_definition.authority_id,
             "registry_sha256": registry_identity["sha256"],
             "registry_status": self.registry.status.value,
@@ -279,6 +310,7 @@ class RegisteredAuthorityAcquirer:
             "final_uri": response.final_uri,
             "peer_ip": response.peer_ip,
             "raw_content_sha256": _sha256(response.body),
+            "extracted_fields_sha256": canonical_extracted_fields_sha256(fields),
             "acquisition_method": self.ACQUISITION_METHOD,
             "acquisition_version": self.ACQUISITION_VERSION,
         }

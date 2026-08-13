@@ -10,6 +10,7 @@
       "relations": ["capital_city"],
       "endpoint_patterns": ["/v2/country/??"],
       "allowed_query_keys": ["format"],
+      "required_query_values": {"format": "json"},
       "source_type": "AUTHORITATIVE_STRUCTURED_DATA",
       "extractor_id": "world_bank_country_v1",
       "extractor_module": "hrm_adaptive_memory/external_verification/authority_extractors.py",

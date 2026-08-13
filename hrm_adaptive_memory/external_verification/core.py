@@ -303,13 +303,12 @@ class EvidenceStore:
                            json.dumps(manifest, sort_keys=True, indent=2) + "\n")
 
     def state_hash(self) -> str:
+        """Commit the complete current evidence state, not a retrieval subset."""
         hasher = hashlib.sha256()
         for evidence_id in sorted(self._records):
             record = self._records[evidence_id]
             hasher.update(_canonical_json({
-                "evidence_id": evidence_id,
-                "normalized_content_hash": record.normalized_content_hash,
-                "source_lineage_id": record.source_lineage_id,
+                "record": record.to_json(),
                 "active": evidence_id not in self._retracted,
             }).encode())
             hasher.update(b"\n")
@@ -399,11 +398,30 @@ class EvidenceStore:
                 for evidence_id in self._by_job.get(job_id, ())]
 
     def validate_hashes(self, evidence_id: str) -> bool:
-        record = self._records[evidence_id]
-        raw = (self.root / record.raw_snapshot_location).read_bytes()
-        return (_sha256(raw) == record.raw_content_hash
-                and _sha256(_normalise_content(raw, record.character_encoding))
-                == record.normalized_content_hash)
+        try:
+            self.raw_snapshot(evidence_id)
+        except (KeyError, OSError, ValueError):
+            return False
+        return True
+
+    def raw_snapshot(self, evidence_id: str) -> bytes:
+        """Return authenticated immutable bytes for a persisted evidence record.
+
+        A caller cannot supply an arbitrary path or a merely hash-shaped record:
+        the record must have been replayed from this store's committed event log.
+        """
+        record = self._records.get(evidence_id)
+        if record is None:
+            raise KeyError(f"unknown evidence_id {evidence_id!r}")
+        path = (self.root / record.raw_snapshot_location).resolve()
+        if self.root.resolve() not in path.parents or not path.is_file():
+            raise ValueError("evidence raw snapshot is absent or outside the evidence store")
+        raw = path.read_bytes()
+        if _sha256(raw) != record.raw_content_hash:
+            raise ValueError("evidence raw snapshot hash does not match its immutable record")
+        if _sha256(_normalise_content(raw, record.character_encoding)) != record.normalized_content_hash:
+            raise ValueError("evidence raw snapshot normalization does not match its immutable record")
+        return raw
 
     def source_lineage(self, lineage_id: str) -> SourceLineage | None:
         members = tuple(self._lineage_members.get(lineage_id, ()))

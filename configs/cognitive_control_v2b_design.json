@@ -26,6 +26,7 @@
   ],
   "required_before_qualification": [
     "frozen policy schema and corpus",
+    "frozen trusted-signer registry identity",
     "decision, temporal, conflict, and provenance schema hashes",
     "executive adapter identity",
     "V2B benchmark corpus hash",

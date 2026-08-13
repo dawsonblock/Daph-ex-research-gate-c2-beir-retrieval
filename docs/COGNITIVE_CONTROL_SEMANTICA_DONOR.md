@@ -17,7 +17,7 @@ It is separate from the qualified V2A external-verification identity. The
 current branch must not be represented as a byte-identical V2A-qualified
 source tree merely because its V2A core still matches the V2A manifest.
 
-The current V2B-infrastructure focused development check is **31 passed, 0
+The current V2B-infrastructure focused development check is **32 passed, 0
 failed** across authority/comparator, peer-bound-network, checkpoint,
 action/schema, adversarial, and cognitive-control tests. It is a local
 development result, not a V2A replacement receipt or a V2B scientific
@@ -29,13 +29,25 @@ and externally trusted Ed25519 checkpoint contracts. Truth-bearing acquisition
 requires a registry frozen for an experiment or qualification, validates every
 redirect and final URI against its authority definition, executes only the
 verified extractor module/symbol named by that definition, and records an
-authority attestation. Typed verification rejects an authoritative-looking
-record unless that attestation matches the currently frozen registry. A
+authority attestation. It pins the permitted `format=json` World Bank query
+value as well as its key. Typed verification rejects an authoritative-looking
+record unless it is the exact persisted EvidenceStore record and its
+hash-verified raw snapshot re-extracts to exactly the same fields through the
+currently pinned extractor; an attestation is consistency metadata, never a
+substitute for raw-to-fields re-derivation. A
 checkpoint is verified only against an external signer/key registry; it cannot
 trust a public key carried in its own payload. These are implementation
 prerequisites only: no authority endpoint, typed relation, checkpoint,
 controller, benchmark, or receipt is scientifically qualified by their
 presence.
+
+The authority extractor is reviewed, trusted executable Python within this
+single-process research boundary. Its hash proves executable identity, not
+sandbox safety. A future plugin or distributed-acquisition architecture must
+isolate extractors and authenticate acquisition receipts independently. The
+V2B qualification identity already binds the exact trusted-signer registry
+configuration as a component hash; before qualification that registry must be
+frozen and contain public keys only.
 
 The donor archive `semantica-main 2.zip` has SHA-256
 `54abd52728f488ca687a318ec8361d70250ff5b6019a80f69218a7296d652b1b` and is

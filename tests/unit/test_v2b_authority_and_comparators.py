@@ -10,7 +10,7 @@ import pytest
 
 from hrm_adaptive_memory.external_verification.authority_registry import (
     AUTHORITY_NOT_REGISTERED, AuthorityNotRegistered, RegisteredAuthorityAcquirer,
-    RegistryStatus, load_authority_registry)
+    RegistryStatus, canonical_extracted_fields_sha256, load_authority_registry)
 from hrm_adaptive_memory.external_verification.comparators import (
     ComparisonKind, ComparisonOutcome, RelationSchema, ValueType,
     default_comparator_registry)
@@ -58,6 +58,9 @@ def test_authority_registry_binds_authority_relation_endpoint_and_query_contract
     with pytest.raises(AuthorityNotRegistered, match=AUTHORITY_NOT_REGISTERED):
         registry.resolve(authority_id="world_bank_country_v1", relation="capital_city",
                          source_uri="https://api.worldbank.org/v2/country/CAN?callback=evil")
+    with pytest.raises(AuthorityNotRegistered, match=AUTHORITY_NOT_REGISTERED):
+        registry.resolve(authority_id="world_bank_country_v1", relation="capital_city",
+                         source_uri="https://api.worldbank.org/v2/country/CA?format=xml")
 
 
 def test_typed_comparators_have_frozen_compatible_contracts_and_symmetric_tolerance():
@@ -113,16 +116,45 @@ def test_typed_verifier_requires_a_valid_registered_authority_attestation(tmp_pa
     acquirer = RegisteredAuthorityAcquirer(registry, _Transport(), repository_root=ROOT)
     result = acquirer.acquire(AcquisitionRequest(SOURCE_URI), authority_id="world_bank_country_v1",
                               relation="capital_city")
-    evidence = EvidenceStore(tmp_path / "evidence").append_acquisition(
+    evidence_store = EvidenceStore(tmp_path / "evidence")
+    evidence = evidence_store.append_acquisition(
         result, claim_record_id="claim-1", acquisition_method=acquirer.ACQUISITION_METHOD,
         acquisition_version=acquirer.ACQUISITION_VERSION)
     claim = SimpleNamespace(record_id="claim-1", canonical_entity="Canada",
                             canonical_relation="capital_city", value="Ottawa")
     verifier = TypedFieldVerifier(
-        RelationSchemaRegistry((RelationSchema("capital_city", ValueType.CANONICAL_STRING),)), registry)
+        RelationSchemaRegistry((RelationSchema("capital_city", ValueType.CANONICAL_STRING),)),
+        registry, evidence_store, ROOT)
     assert verifier.verify(claim, evidence).result.value == "SUPPORTED"
     assert verifier.verify(claim, replace(evidence, authority_attestation={})).reason_code == (
-        "AUTHORITY_ATTESTATION_MISSING")
+        "EVIDENCE_RECORD_DIFFERS_FROM_STORE")
+
+    # Reproduce the audit finding, including a forged fields digest and an
+    # altered materialized record. The immutable bytes still say Ottawa.
+    forged_fields = {"entity": "Canada", "capital_city": "Toronto"}
+    forged_attestation = {**evidence.authority_attestation,
+                          "extracted_fields_sha256": canonical_extracted_fields_sha256(forged_fields)}
+    forged = replace(evidence, extracted_fields=forged_fields,
+                     authority_attestation=forged_attestation)
+    evidence_store._records[evidence.evidence_id] = forged
+    toronto_claim = SimpleNamespace(record_id="claim-2", canonical_entity="Canada",
+                                    canonical_relation="capital_city", value="Toronto")
+    assert verifier.verify(toronto_claim, forged).reason_code == "AUTHORITY_REDERIVED_FIELDS_HASH_MISMATCH"
+
+
+def test_evidence_state_hash_commits_the_complete_semantic_record(tmp_path):
+    registry = _frozen_registry(tmp_path)
+    acquirer = RegisteredAuthorityAcquirer(registry, _Transport(), repository_root=ROOT)
+    result = acquirer.acquire(AcquisitionRequest(SOURCE_URI), authority_id="world_bank_country_v1",
+                              relation="capital_city")
+    evidence_store = EvidenceStore(tmp_path / "evidence")
+    evidence = evidence_store.append_acquisition(
+        result, claim_record_id="claim-1", acquisition_method=acquirer.ACQUISITION_METHOD,
+        acquisition_version=acquirer.ACQUISITION_VERSION)
+    original = evidence_store.state_hash()
+    evidence_store._records[evidence.evidence_id] = replace(
+        evidence, authority_attestation={**evidence.authority_attestation, "schema": "tampered"})
+    assert evidence_store.state_hash() != original
 
 
 def test_development_registry_cannot_start_truth_bearing_acquisition():
