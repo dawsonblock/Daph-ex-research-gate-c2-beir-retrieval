@@ -27,6 +27,7 @@ COMPONENT_PATHS = {
     "cognitive_schemas": "hrm_adaptive_memory/cognitive_control/schemas.py",
     "cognitive_actions": "hrm_adaptive_memory/cognitive_control/actions.py",
     "cognitive_checkpoints": "hrm_adaptive_memory/cognitive_control/checkpoints.py",
+    "checkpoint_trusted_signers": "configs/cognitive_checkpoint_trusted_signers_v2b.json",
     "qualification_runtime": "hrm_adaptive_memory/cognitive_control/qualification.py",
     "authority_runtime": "hrm_adaptive_memory/external_verification/authority_registry.py",
     "authority_extractors": "hrm_adaptive_memory/external_verification/authority_extractors.py",

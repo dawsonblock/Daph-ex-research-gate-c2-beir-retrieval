@@ -11,6 +11,7 @@ from hrm_adaptive_memory.memory_write.verification import VerificationResult
 
 from .comparators import (ComparisonOutcome, RelationSchema,
                           default_comparator_registry)
+from .authority_registry import AuthorityNotRegistered, AuthorityRegistry
 from .core import (ExternalEvidenceRecord, SourceType, VerificationDecision)
 
 
@@ -46,8 +47,66 @@ class TypedFieldVerifier:
     """Fail-closed relation-schema verifier for post-V2A experiments."""
 
     schemas: RelationSchemaRegistry
+    authority_registry: AuthorityRegistry
     method: str = "authoritative_typed_field"
-    method_version: str = "1.0.0-v2b"
+    method_version: str = "2.0.0-v2b"
+
+    def _attestation_error(self, claim: ClaimRecord, evidence: ExternalEvidenceRecord) -> str | None:
+        """Validate provenance produced by the registered authority path.
+
+        A source-class enum is caller-controlled metadata. Typed evidence can
+        only influence truth-bearing results when its recorded acquisition
+        matches this frozen registry/extractor contract.
+        """
+        try:
+            self.authority_registry.require_truth_bearing()
+        except ValueError:
+            return "AUTHORITY_REGISTRY_NOT_FROZEN"
+        attestation = dict(evidence.authority_attestation)
+        required = {
+            "schema", "authority_id", "registry_sha256", "registry_status", "relation",
+            "extractor_id", "extractor_module", "extractor_symbol", "extractor_sha256",
+            "schema_id", "source_uri", "final_uri", "peer_ip", "raw_content_sha256",
+            "acquisition_method", "acquisition_version",
+        }
+        if not required.issubset(attestation):
+            return "AUTHORITY_ATTESTATION_MISSING"
+        if (attestation["schema"] != "DAPH_AUTHORITY_ATTESTATION_V1"
+                or attestation["relation"] != claim.canonical_relation
+                or attestation["registry_sha256"] != self.authority_registry.identity()["sha256"]
+                or attestation["registry_status"] != self.authority_registry.status.value
+                or attestation["source_uri"] != evidence.source_uri
+                or attestation["final_uri"] != evidence.canonical_source_uri
+                or attestation["raw_content_sha256"] != evidence.raw_content_hash
+                or evidence.acquisition_method != attestation["acquisition_method"]
+                or evidence.acquisition_version != attestation["acquisition_version"]
+                or attestation["acquisition_method"] != "registered_authority"
+                or attestation["acquisition_version"] != "2.0.0-v2b"):
+            return "AUTHORITY_ATTESTATION_MISMATCH"
+        try:
+            definition = self.authority_registry.resolve(
+                authority_id=str(attestation["authority_id"]),
+                relation=claim.canonical_relation, source_uri=evidence.source_uri)
+            final_definition = self.authority_registry.resolve(
+                authority_id=str(attestation["authority_id"]),
+                relation=claim.canonical_relation, source_uri=evidence.canonical_source_uri)
+        except AuthorityNotRegistered:
+            return "AUTHORITY_ATTESTATION_URI_NOT_REGISTERED"
+        if definition != final_definition or any((
+            attestation["extractor_id"] != definition.extractor_id,
+            attestation["extractor_module"] != definition.extractor_module,
+            attestation["extractor_symbol"] != definition.extractor_symbol,
+            attestation["extractor_sha256"] != definition.extractor_sha256,
+            attestation["schema_id"] != definition.schema_id,
+        )):
+            return "AUTHORITY_ATTESTATION_EXTRACTOR_MISMATCH"
+        try:
+            import ipaddress
+            if not ipaddress.ip_address(str(attestation["peer_ip"])).is_global:
+                return "AUTHORITY_ATTESTATION_PEER_NOT_PUBLIC"
+        except ValueError:
+            return "AUTHORITY_ATTESTATION_PEER_INVALID"
+        return None
 
     def verify(self, claim: ClaimRecord, evidence: ExternalEvidenceRecord) -> VerificationDecision:
         base: dict[str, object] = {
@@ -59,6 +118,10 @@ class TypedFieldVerifier:
         }:
             return self._decision(VerificationResult.INCONCLUSIVE, claim, evidence, base,
                                   "SOURCE_CLASS_NOT_QUALIFIED")
+        attestation_error = self._attestation_error(claim, evidence)
+        if attestation_error is not None:
+            return self._decision(VerificationResult.INCONCLUSIVE, claim, evidence, base,
+                                  attestation_error)
         schema = self.schemas.resolve(claim.canonical_relation)
         if schema is None:
             return self._decision(VerificationResult.INCONCLUSIVE, claim, evidence, base,

@@ -30,6 +30,15 @@ class _Connection:
     def close(self): self.closed = True
 
 
+class _RedirectResponse(_Response):
+    status = 302
+    def getheaders(self): return [("Location", "https://redirect.example/data")]
+
+
+class _RedirectConnection(_Connection):
+    def getresponse(self): return _RedirectResponse()
+
+
 class _Resolver:
     def resolve(self, uri, policy):
         return ResolvedEndpoint(uri, "example.test", 443, ("8.8.8.8",))
@@ -48,6 +57,17 @@ def test_peer_bound_transport_accepts_validated_peer_and_exposes_final_uri():
     response = client.fetch("https://example.test/data")
     assert response.peer_ip == "8.8.8.8"
     assert response.content_type == "application/json"
+
+
+def test_peer_bound_transport_validates_every_redirect_hop_for_authority_callers():
+    connections = iter((_RedirectConnection("8.8.8.8"), _Connection("8.8.8.8")))
+    client = PeerBoundHTTPSClient(
+        resolver=_Resolver(), connection_factory=lambda endpoint, ip, timeout: next(connections))
+    checked = []
+    response = client.fetch("https://example.test/data", uri_validator=checked.append)
+    assert response.final_uri == "https://redirect.example/data"
+    assert checked == ["https://example.test/data", "https://redirect.example/data",
+                       "https://redirect.example/data"]
 
 
 def test_public_resolver_rejects_private_dns_answers(monkeypatch):

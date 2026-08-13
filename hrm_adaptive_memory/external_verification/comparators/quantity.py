@@ -4,7 +4,8 @@ from decimal import Decimal
 import re
 from typing import Any
 
-from .base import ComparisonKind, ComparisonOutcome, ComparisonResult, RelationSchema
+from .base import (ComparisonKind, ComparisonOutcome, ComparisonResult,
+                   RelationSchema, within_tolerance)
 from ._helpers import decimal_value
 
 
@@ -43,9 +44,7 @@ class QuantityComparator:
             claim = _quantity(claim_value, schema.canonical_unit or "")
             evidence = _quantity(evidence_value, schema.canonical_unit or "")
             if schema.comparator is ComparisonKind.TOLERANCE:
-                absolute = decimal_value(schema.absolute_tolerance or "0")
-                relative = decimal_value(schema.relative_tolerance or "0")
-                matched = abs(claim - evidence) <= max(absolute, abs(claim) * relative)
+                matched = within_tolerance(claim, evidence, schema)
             else:
                 matched = claim == evidence
             return ComparisonResult(ComparisonOutcome.MATCH if matched else ComparisonOutcome.MISMATCH,

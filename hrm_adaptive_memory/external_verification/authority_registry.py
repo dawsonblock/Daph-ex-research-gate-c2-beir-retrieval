@@ -1,18 +1,20 @@
 """Frozen authority definitions for controlled, truth-bearing acquisition.
 
-Generic HTTP capture deliberately stays outside this registry.  A relation can
-only be acquired as authoritative when an exact authority, domain, endpoint,
-extractor fingerprint, and schema are all registered together.
+Generic HTTP remains untrusted capture. A relation can become authoritative
+only when the registry binds its endpoint, every redirect, the exact extractor
+module bytes, the extractor symbol, and the response schema.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from enum import Enum
 from fnmatch import fnmatchcase
 import hashlib
 import json
 from pathlib import Path
+from types import ModuleType
 from typing import Callable, Iterable, Mapping
-from urllib.parse import urlsplit
+from urllib.parse import parse_qsl, urlsplit
 
 
 AUTHORITY_NOT_REGISTERED = "AUTHORITY_NOT_REGISTERED"
@@ -20,6 +22,13 @@ AUTHORITY_NOT_REGISTERED = "AUTHORITY_NOT_REGISTERED"
 
 class AuthorityNotRegistered(ValueError):
     code = AUTHORITY_NOT_REGISTERED
+
+
+class RegistryStatus(str, Enum):
+    DEVELOPMENT_ONLY = "DEVELOPMENT_ONLY"
+    FROZEN_FOR_EXPERIMENT = "FROZEN_FOR_EXPERIMENT"
+    FROZEN_FOR_QUALIFICATION = "FROZEN_FOR_QUALIFICATION"
+    RETIRED = "RETIRED"
 
 
 def _canonical_json(value: object) -> str:
@@ -37,8 +46,11 @@ class AuthorityDefinition:
     domains: tuple[str, ...]
     relations: tuple[str, ...]
     endpoint_patterns: tuple[str, ...]
+    allowed_query_keys: tuple[str, ...]
     source_type: str
     extractor_id: str
+    extractor_module: str
+    extractor_symbol: str
     extractor_sha256: str
     schema_id: str
     content_types: tuple[str, ...] = ("application/json",)
@@ -50,12 +62,18 @@ class AuthorityDefinition:
         if (not self.domains or not self.relations or not self.endpoint_patterns or not self.content_types
                 or any(not domain or domain != domain.lower().rstrip(".") for domain in self.domains)):
             raise ValueError("authority domains, relations, and endpoint patterns are required")
+        if (not self.extractor_module or Path(self.extractor_module).is_absolute()
+                or ".." in Path(self.extractor_module).parts
+                or not self.extractor_symbol.isidentifier()):
+            raise ValueError("authority extractor module and symbol must be repository-local identifiers")
         if len(self.extractor_sha256) != 64 or any(char not in "0123456789abcdef" for char in self.extractor_sha256):
             raise ValueError("authority extractor_sha256 must be a lowercase SHA-256 digest")
         if self.source_type not in {
             "AUTHORITATIVE_STRUCTURED_DATA", "OFFICIAL_PRIMARY_SOURCE",
         }:
             raise ValueError("registered authority must use a qualified source type")
+        if any(not key or not key.replace("_", "").isalnum() for key in self.allowed_query_keys):
+            raise ValueError("authority allowed query keys must be nonempty names")
 
     def allows(self, *, relation: str, source_uri: str) -> bool:
         parsed = urlsplit(source_uri)
@@ -65,7 +83,11 @@ class AuthorityDefinition:
         hostname = parsed.hostname.lower().rstrip(".")
         if hostname not in self.domains or relation not in self.relations:
             return False
-        return any(fnmatchcase(parsed.path or "/", pattern) for pattern in self.endpoint_patterns)
+        if not any(fnmatchcase(parsed.path or "/", pattern) for pattern in self.endpoint_patterns):
+            return False
+        query = parse_qsl(parsed.query, keep_blank_values=True, strict_parsing=False)
+        return len({key for key, _value in query}) == len(query) and all(
+            key in self.allowed_query_keys for key, _value in query)
 
     def to_json(self) -> dict[str, object]:
         return {
@@ -74,8 +96,11 @@ class AuthorityDefinition:
             "domains": list(self.domains),
             "relations": list(self.relations),
             "endpoint_patterns": list(self.endpoint_patterns),
+            "allowed_query_keys": list(self.allowed_query_keys),
             "source_type": self.source_type,
             "extractor_id": self.extractor_id,
+            "extractor_module": self.extractor_module,
+            "extractor_symbol": self.extractor_symbol,
             "extractor_sha256": self.extractor_sha256,
             "schema_id": self.schema_id,
             "content_types": list(self.content_types),
@@ -84,13 +109,26 @@ class AuthorityDefinition:
 
 
 class AuthorityRegistry:
-    """Read-only registry with fail-closed authority resolution."""
+    """Read-only registry with explicit lifecycle state and fail-closed lookup."""
 
-    def __init__(self, definitions: Iterable[AuthorityDefinition]):
+    def __init__(self, definitions: Iterable[AuthorityDefinition], *, registry_version: str,
+                 status: RegistryStatus):
         entries = tuple(definitions)
         self._by_id = {entry.authority_id: entry for entry in entries}
-        if len(self._by_id) != len(entries):
-            raise ValueError("authority ids must be unique")
+        if len(self._by_id) != len(entries) or not registry_version:
+            raise ValueError("authority ids must be unique and registry_version is required")
+        self.registry_version, self.status = registry_version, status
+
+    @property
+    def definitions(self) -> tuple[AuthorityDefinition, ...]:
+        return tuple(self._by_id[key] for key in sorted(self._by_id))
+
+    def require_truth_bearing(self) -> None:
+        if self.status not in {
+            RegistryStatus.FROZEN_FOR_EXPERIMENT,
+            RegistryStatus.FROZEN_FOR_QUALIFICATION,
+        }:
+            raise ValueError("authority registry is not frozen for truth-bearing acquisition")
 
     def resolve(self, *, authority_id: str, relation: str,
                 source_uri: str) -> AuthorityDefinition:
@@ -102,9 +140,10 @@ class AuthorityRegistry:
         return definition
 
     def identity(self) -> dict[str, object]:
-        definitions = [self._by_id[key].to_json() for key in sorted(self._by_id)]
-        return {"schema": "DAPH_AUTHORITY_REGISTRY_V1", "definitions": definitions,
-                "sha256": _sha256(_canonical_json(definitions))}
+        payload = {"schema": "DAPH_AUTHORITY_REGISTRY_V2", "registry_version": self.registry_version,
+                   "status": self.status.value,
+                   "definitions": [entry.to_json() for entry in self.definitions]}
+        return {**payload, "sha256": _sha256(_canonical_json(payload))}
 
 
 def load_authority_registry(path: str | Path, *, repository_root: str | Path | None = None) -> AuthorityRegistry:
@@ -112,12 +151,16 @@ def load_authority_registry(path: str | Path, *, repository_root: str | Path | N
     registry_path = Path(path).resolve()
     root = Path(repository_root).resolve() if repository_root is not None else registry_path.parent.parent
     payload = json.loads(registry_path.read_text())
-    if payload.get("schema") != "DAPH_AUTHORITY_REGISTRY_V1":
+    if payload.get("schema") != "DAPH_AUTHORITY_REGISTRY_V2":
         raise ValueError("unsupported authority registry schema")
+    try:
+        status = RegistryStatus(payload["status"])
+    except (KeyError, ValueError) as error:
+        raise ValueError("authority registry has an unsupported status") from error
     definitions = []
     for raw in payload.get("definitions", ()):
         definition = dict(raw)
-        module_path = definition.pop("extractor_module", None)
+        module_path = definition.get("extractor_module")
         if not isinstance(module_path, str):
             raise ValueError("registered authority must identify its extractor module")
         module = (root / module_path).resolve()
@@ -125,49 +168,63 @@ def load_authority_registry(path: str | Path, *, repository_root: str | Path | N
             raise ValueError("registered authority extractor module is absent or outside repository")
         if _sha256(module.read_bytes()) != definition.get("extractor_sha256"):
             raise ValueError("registered authority extractor does not match its pinned hash")
-        for field_name in ("domains", "relations", "endpoint_patterns", "content_types"):
-            definition[field_name] = tuple(definition[field_name])
+        for field_name in ("domains", "relations", "endpoint_patterns", "allowed_query_keys", "content_types"):
+            definition[field_name] = tuple(definition.get(field_name, ()))
         definitions.append(AuthorityDefinition(**definition))
-    return AuthorityRegistry(definitions)
+    return AuthorityRegistry(definitions, registry_version=str(payload.get("registry_version", "")), status=status)
 
 
-# No endpoint is authoritative merely because a caller says it is. V2B must
-# explicitly freeze concrete records before it enables authoritative HTTP.
-EMPTY_AUTHORITY_REGISTRY = AuthorityRegistry(())
+EMPTY_AUTHORITY_REGISTRY = AuthorityRegistry((), registry_version="0", status=RegistryStatus.RETIRED)
 
 
 @dataclass(frozen=True)
-class FrozenExtractor:
+class VerifiedExtractor:
     extractor_id: str
+    module: str
+    symbol: str
     sha256: str
     extract: Callable[[bytes, str], Mapping[str, object]]
 
-    @classmethod
-    def from_file(cls, extractor_id: str, path: str | Path,
-                  extract: Callable[[bytes, str], Mapping[str, object]]) -> "FrozenExtractor":
-        raw = Path(path).read_bytes()
-        return cls(extractor_id, _sha256(raw), extract)
+
+def _load_verified_extractor(root: Path, definition: AuthorityDefinition) -> VerifiedExtractor:
+    module_path = (root / definition.extractor_module).resolve()
+    if root not in module_path.parents:
+        raise ValueError("registered extractor module is outside repository")
+    source = module_path.read_bytes()
+    if _sha256(source) != definition.extractor_sha256:
+        raise ValueError("registered authority extractor does not match its pinned hash")
+    module = ModuleType(f"_daph_verified_{definition.extractor_id}_{definition.extractor_sha256[:12]}")
+    module.__file__ = str(module_path)
+    exec(compile(source, str(module_path), "exec"), module.__dict__)  # noqa: S102 - verified committed bytes
+    candidate = getattr(module, definition.extractor_symbol, None)
+    if not callable(candidate):
+        raise ValueError("registered authority extractor symbol is not callable")
+    return VerifiedExtractor(definition.extractor_id, definition.extractor_module,
+                             definition.extractor_symbol, definition.extractor_sha256, candidate)
 
 
 class RegisteredAuthorityAcquirer:
-    """The only path that promotes network bytes to registered authority.
-
-    It is intentionally separate from generic HTTP. The registry dictates the
-    relation, endpoint, schema, extractor fingerprint, source type, and
-    content type; caller-provided request labels cannot create authority.
-    """
+    """Truth-bearing acquisition bound to a frozen registry and verified extractor bytes."""
 
     ACQUISITION_METHOD = "registered_authority"
-    ACQUISITION_VERSION = "1.0.0-v2b"
+    ACQUISITION_VERSION = "2.0.0-v2b"
 
-    def __init__(self, registry: AuthorityRegistry, transport: object,
-                 extractors: Iterable[FrozenExtractor]):
+    def __init__(self, registry: AuthorityRegistry, transport: object, *,
+                 repository_root: str | Path):
+        registry.require_truth_bearing()
         self.registry = registry
         self.transport = transport
-        entries = tuple(extractors)
-        self.extractors = {extractor.extractor_id: extractor for extractor in entries}
-        if len(self.extractors) != len(entries):
-            raise ValueError("extractor ids must be unique")
+        self.root = Path(repository_root).resolve()
+
+    def _extractor(self, definition: AuthorityDefinition) -> VerifiedExtractor:
+        # Reload verified bytes for each acquisition. This deliberately leaves
+        # no injectable callable cache between a pinned file/symbol and use.
+        extractor = _load_verified_extractor(self.root, definition)
+        if (extractor.sha256 != definition.extractor_sha256
+                or extractor.module != definition.extractor_module
+                or extractor.symbol != definition.extractor_symbol):
+            raise ValueError("registered authority extractor binding changed")
+        return extractor
 
     def acquire(self, request: object, *, authority_id: str, relation: str):
         # Delayed imports preserve a one-way dependency: frozen V2A core never
@@ -180,20 +237,25 @@ class RegisteredAuthorityAcquirer:
         try:
             definition = self.registry.resolve(authority_id=authority_id, relation=relation,
                                                source_uri=request.source_uri)
-        except AuthorityNotRegistered as error:
-            return AcquisitionResult(AcquisitionStatus.INVALID_RESPONSE, request, detail=str(error))
-        extractor = self.extractors.get(definition.extractor_id)
-        if extractor is None or extractor.sha256 != definition.extractor_sha256:
-            return AcquisitionResult(AcquisitionStatus.INVALID_RESPONSE, request,
-                                     detail="REGISTERED_EXTRACTOR_MISMATCH")
-        try:
-            response = self.transport.fetch(request.source_uri)
+            extractor = self._extractor(definition)
+            response = self.transport.fetch(
+                request.source_uri,
+                uri_validator=lambda uri: self.registry.resolve(
+                    authority_id=authority_id, relation=relation, source_uri=uri))
+            # Re-check final URI even if a custom transport ignores the callback.
+            final_definition = self.registry.resolve(authority_id=authority_id, relation=relation,
+                                                     source_uri=response.final_uri)
         except (NetworkPolicyError, NetworkTransportError):
             return AcquisitionResult(AcquisitionStatus.NETWORK_ERROR, request)
+        except AuthorityNotRegistered as error:
+            return AcquisitionResult(AcquisitionStatus.INVALID_RESPONSE, request, detail=str(error))
+        except ValueError:
+            return AcquisitionResult(AcquisitionStatus.INVALID_RESPONSE, request,
+                                     detail="REGISTERED_EXTRACTOR_MISMATCH")
         if response.status >= 400:
             status = AcquisitionStatus.RATE_LIMITED if response.status == 429 else AcquisitionStatus.NOT_FOUND
             return AcquisitionResult(status, request, detail=f"HTTP {response.status}")
-        if response.content_type not in definition.content_types:
+        if response.content_type not in final_definition.content_types:
             return AcquisitionResult(AcquisitionStatus.UNSUPPORTED_CONTENT, request,
                                      raw_content=response.body, content_type=response.content_type)
         try:
@@ -201,16 +263,36 @@ class RegisteredAuthorityAcquirer:
         except (TypeError, ValueError, UnicodeDecodeError):
             return AcquisitionResult(AcquisitionStatus.PARSE_ERROR, request,
                                      raw_content=response.body, content_type=response.content_type)
-        metadata = {**dict(request.request_metadata), "authority_id": definition.authority_id,
-                    "authority_registry_sha256": self.registry.identity()["sha256"],
+        registry_identity = self.registry.identity()
+        attestation = {
+            "schema": "DAPH_AUTHORITY_ATTESTATION_V1",
+            "authority_id": final_definition.authority_id,
+            "registry_sha256": registry_identity["sha256"],
+            "registry_status": self.registry.status.value,
+            "relation": relation,
+            "extractor_id": extractor.extractor_id,
+            "extractor_module": extractor.module,
+            "extractor_symbol": extractor.symbol,
+            "extractor_sha256": extractor.sha256,
+            "schema_id": final_definition.schema_id,
+            "source_uri": request.source_uri,
+            "final_uri": response.final_uri,
+            "peer_ip": response.peer_ip,
+            "raw_content_sha256": _sha256(response.body),
+            "acquisition_method": self.ACQUISITION_METHOD,
+            "acquisition_version": self.ACQUISITION_VERSION,
+        }
+        metadata = {**dict(request.request_metadata), "authority_id": final_definition.authority_id,
+                    "authority_registry_sha256": registry_identity["sha256"],
                     "extractor_id": extractor.extractor_id, "extractor_sha256": extractor.sha256,
-                    "schema_id": definition.schema_id}
+                    "schema_id": final_definition.schema_id}
         controlled_request = replace(
             request, canonical_source_uri=response.final_uri,
-            source_type=SourceType(definition.source_type), request_metadata=metadata)
+            source_type=SourceType(final_definition.source_type), request_metadata=metadata)
         return AcquisitionResult(
             AcquisitionStatus.SUCCESS, controlled_request, raw_content=response.body,
             content_type=response.content_type, fetched_at="", extracted_fields=fields,
-            publisher=definition.publisher, publisher_domain=definition.domains[0],
+            publisher=final_definition.publisher, publisher_domain=final_definition.domains[0],
+            authority_attestation=attestation,
             response_metadata={"http_status": response.status, "final_uri": response.final_uri,
-                               "peer_ip": response.peer_ip, "authority_id": definition.authority_id})
+                               "peer_ip": response.peer_ip, "authority_id": final_definition.authority_id})

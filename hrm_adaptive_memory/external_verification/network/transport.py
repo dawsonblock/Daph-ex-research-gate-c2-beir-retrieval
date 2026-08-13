@@ -110,9 +110,11 @@ class PeerBoundHTTPSClient:
         parsed = urlsplit(uri)
         return (parsed.path or "/") + (f"?{parsed.query}" if parsed.query else "")
 
-    def fetch(self, uri: str) -> PeerBoundResponse:
+    def fetch(self, uri: str, *, uri_validator: Callable[[str], object] | None = None) -> PeerBoundResponse:
         source_uri, current_uri = uri, uri
         deadline = self.clock() + self.policy.total_timeout_seconds
+        if uri_validator is not None:
+            uri_validator(current_uri)
         for redirect_index in range(self.policy.max_redirects + 1):
             endpoint = self.resolver.resolve(current_uri, self.policy)
             peer_ip = endpoint.addresses[0]
@@ -142,11 +144,17 @@ class PeerBoundHTTPSClient:
                         raise NetworkPolicyError("capture redirect limit exceeded")
                     current_uri = urljoin(current_uri, location)
                     validate_public_https_uri(current_uri, self.policy)
+                    if uri_validator is not None:
+                        # Truth-bearing callers bind this to their authority
+                        # definition, so every redirect hop stays authorized.
+                        uri_validator(current_uri)
                     continue
                 raw = _read_bounded(response, self.policy.max_compressed_bytes)
                 body = _decompress_bounded(raw, headers.get("content-encoding", ""),
                                            self.policy.max_decompressed_bytes)
                 self._remaining(deadline)
+                if uri_validator is not None:
+                    uri_validator(current_uri)
                 return PeerBoundResponse(source_uri, current_uri, response.status, headers, body, actual_peer)
             except (NetworkPolicyError, NetworkTransportError):
                 raise

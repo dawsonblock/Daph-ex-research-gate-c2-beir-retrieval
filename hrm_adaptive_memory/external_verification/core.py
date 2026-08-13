@@ -98,6 +98,7 @@ class AcquisitionResult:
     observed_at: str | None = None
     upstream_source_id: str | None = None
     source_lineage_id: str | None = None
+    authority_attestation: Mapping[str, Any] = field(default_factory=dict)
     response_metadata: Mapping[str, Any] = field(default_factory=dict)
     detail: str = ""
 
@@ -138,6 +139,7 @@ class ExternalEvidenceRecord:
     response_metadata_hash: str
     source_lineage_id: str
     upstream_source_id: str | None
+    authority_attestation: Mapping[str, Any]
     lifecycle_state: str
     provenance: Mapping[str, Any]
 
@@ -228,6 +230,7 @@ class EvidenceStore:
     def _record_from_json(data: Mapping[str, Any]) -> ExternalEvidenceRecord:
         raw = dict(data)
         raw["source_type"] = SourceType(raw["source_type"])
+        raw.setdefault("authority_attestation", {})
         return ExternalEvidenceRecord(**raw)
 
     def _apply_event(self, event: Mapping[str, Any]) -> None:
@@ -366,6 +369,7 @@ class EvidenceStore:
             request_metadata_hash=_sha256(_canonical_json(dict(result.request.request_metadata))),
             response_metadata_hash=_sha256(_canonical_json(dict(result.response_metadata))),
             source_lineage_id=lineage_id, upstream_source_id=result.upstream_source_id,
+            authority_attestation=dict(result.authority_attestation),
             lifecycle_state="ACTIVE", provenance=dict(provenance or {}))
         if evidence_id not in self._records:
             self._append({"event": "EVIDENCE_APPENDED", "at": fetched_at, "record": record.to_json()})

@@ -17,16 +17,25 @@ It is separate from the qualified V2A external-verification identity. The
 current branch must not be represented as a byte-identical V2A-qualified
 source tree merely because its V2A core still matches the V2A manifest.
 
-The current post-qualification focused development check is **28 passed, 0
-failed** across the V2A, qualification, and cognitive-control unit files. It
-is a local development result, not a V2A replacement receipt or a V2B
-scientific qualification.
+The current V2B-infrastructure focused development check is **31 passed, 0
+failed** across authority/comparator, peer-bound-network, checkpoint,
+action/schema, adversarial, and cognitive-control tests. It is a local
+development result, not a V2A replacement receipt or a V2B scientific
+qualification.
 
-The first V2B infrastructure milestone additionally introduces a frozen
+The first V2B infrastructure milestone additionally introduces a lifecycle-bound
 authority registry, relation-bound typed comparators, peer-bound HTTPS capture,
-and Ed25519 checkpoint contracts. These are implementation prerequisites only:
-no authority endpoint, typed relation, checkpoint, controller, benchmark, or
-receipt is scientifically qualified by their presence.
+and externally trusted Ed25519 checkpoint contracts. Truth-bearing acquisition
+requires a registry frozen for an experiment or qualification, validates every
+redirect and final URI against its authority definition, executes only the
+verified extractor module/symbol named by that definition, and records an
+authority attestation. Typed verification rejects an authoritative-looking
+record unless that attestation matches the currently frozen registry. A
+checkpoint is verified only against an external signer/key registry; it cannot
+trust a public key carried in its own payload. These are implementation
+prerequisites only: no authority endpoint, typed relation, checkpoint,
+controller, benchmark, or receipt is scientifically qualified by their
+presence.
 
 The donor archive `semantica-main 2.zip` has SHA-256
 `54abd52728f488ca687a318ec8361d70250ff5b6019a80f69218a7296d652b1b` and is

@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from decimal import Decimal
-
 from .base import ComparisonKind, ComparisonOutcome, ComparisonResult, RelationSchema
+from .base import within_tolerance
 from ._helpers import decimal_value
 
 
@@ -12,9 +11,7 @@ class DecimalComparator:
         try:
             claim, evidence = decimal_value(claim_value), decimal_value(evidence_value)
             if schema.comparator is ComparisonKind.TOLERANCE:
-                absolute = decimal_value(schema.absolute_tolerance or "0")
-                relative = decimal_value(schema.relative_tolerance or "0")
-                matched = abs(claim - evidence) <= max(absolute, abs(claim) * relative)
+                matched = within_tolerance(claim, evidence, schema)
             else:
                 matched = claim == evidence
             return ComparisonResult(ComparisonOutcome.MATCH if matched else ComparisonOutcome.MISMATCH,

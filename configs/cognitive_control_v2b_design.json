@@ -15,6 +15,7 @@
     "hrm_adaptive_memory/cognitive_control/schemas.py",
     "hrm_adaptive_memory/cognitive_control/actions.py",
     "hrm_adaptive_memory/cognitive_control/checkpoints.py",
+    "configs/cognitive_checkpoint_trusted_signers_v2b.json",
     "hrm_adaptive_memory/cognitive_control/qualification.py",
     "hrm_adaptive_memory/external_verification/authority_registry.py",
     "hrm_adaptive_memory/external_verification/comparators",
