@@ -13,13 +13,16 @@ from hrm_adaptive_memory.cognitive_control import (
 T0 = "2026-01-01T00:00:00+00:00"
 T1 = "2026-06-01T00:00:00+00:00"
 T2 = "2026-08-01T00:00:00+00:00"
+UTC_T0 = "2026-01-01T00:00:00.000000Z"
+UTC_T1 = "2026-06-01T00:00:00.000000Z"
+UTC_T2 = "2026-08-01T00:00:00.000000Z"
 
 
-def _provenance(store, entity="claim-1", operation="prov-1"):
+def _provenance(store, entity="claim-1", operation="prov-1", created_at=T1):
     return store.record_provenance(
         entity_id=entity, entity_type="claim", payload={"value": 6},
         activity_id="verification", agent_id="daph-v2a", agent_type="software_agent",
-        source_id="evidence-1", created_at=T1, operation_id=operation,
+        source_id="evidence-1", created_at=created_at, operation_id=operation,
         derived_from=("evidence-1",), bundle_id="run-1")
 
 
@@ -87,7 +90,9 @@ def test_invalidation_and_supersession_change_views_without_deletion(tmp_path):
     assert provenance.provenance_id in store.invalidated_provenance
     assert store.query_facts(valid_at=T1, known_at=T1) == (fact,)
     assert store.query_facts(valid_at=T2, known_at=T2) == ()
-    assert store.supersede_fact(fact.fact_id, at=T2, operation_id="supersede").superseded_at == T2
+    superseded = store.supersede_fact(fact.fact_id, at=T2, operation_id="supersede")
+    assert superseded.superseded_at == UTC_T2
+    assert store.supersede_fact(fact.fact_id, at=T2, operation_id="supersede") == superseded
     assert store.query_facts(valid_at=T2, known_at=T2) == ()
 
 
@@ -107,9 +112,12 @@ def test_decisions_form_auditable_causal_graph_and_record_outcomes(tmp_path):
         expected_utility=0.2, uncertainty="MEDIUM", timestamp=T2,
         operation_id="decision-2", parent_decision_id=first.decision_id)
     assert store.causal_ancestors(second.decision_id) == (first,)
-    completed = store.record_outcome(second.decision_id, outcome={"verified": True},
+    completed = store.record_outcome(second.decision_id, outcome={"verified": True}, at=T2,
                                      operation_id="outcome-2")
     assert completed.outcome == {"verified": True}
+    assert completed.outcome_at == UTC_T2
+    assert store.record_outcome(second.decision_id, outcome={"verified": True}, at=T2,
+                                operation_id="outcome-2") == completed
     assert CognitiveControlStore(tmp_path).decisions[second.decision_id].outcome == {"verified": True}
 
 
@@ -178,3 +186,75 @@ def test_policy_gate_coalesces_duplicate_requirements_for_one_action():
     assert result.effect is PolicyEffect.REQUIRE
     assert result.required_action is DecisionAction.VERIFY
     assert result.reason_codes == ("high_stakes", "unverified")
+
+
+def test_timestamps_require_timezones_and_are_stored_as_canonical_utc(tmp_path):
+    store = CognitiveControlStore(tmp_path)
+    provenance = _provenance(store, created_at="2026-06-01T02:30:00+02:30")
+    assert provenance.created_at == UTC_T1
+    fact = store.record_fact(
+        entity="carbon", relation="atomic_number", value=6,
+        source_evidence_id="ev", source_lineage_id="lineage",
+        provenance_id=provenance.provenance_id,
+        valid_from="2026-01-01T03:00:00+03:00", valid_until=None,
+        recorded_at="2026-06-01T00:00:00Z", operation_id="fact")
+    assert fact.valid_from == UTC_T0
+    assert fact.recorded_at == UTC_T1
+    with pytest.raises(ValueError, match="timezone"):
+        _provenance(store, operation="naive-provenance", created_at="2026-06-01T00:00:00")
+    with pytest.raises(ValueError, match="timezone"):
+        store.query_facts(valid_at="2026-08-01T00:00:00", known_at=T2)
+
+
+def test_temporal_lifecycle_events_cannot_predate_their_causes(tmp_path):
+    store = CognitiveControlStore(tmp_path)
+    provenance = _provenance(store)
+    fact = store.record_fact(entity="x", relation="role", value="ceo",
+                             source_evidence_id="ev", source_lineage_id="lin",
+                             provenance_id=provenance.provenance_id,
+                             valid_from=T0, valid_until=None, recorded_at=T1,
+                             operation_id="fact")
+    with pytest.raises(ValueError, match="later than valid_from"):
+        store.record_fact(entity="x", relation="invalid", value="ceo",
+                          source_evidence_id="ev", source_lineage_id="lin",
+                          provenance_id=provenance.provenance_id,
+                          valid_from=T1, valid_until=T1, recorded_at=T1,
+                          operation_id="invalid-interval")
+    with pytest.raises(ValueError, match="predate provenance"):
+        store.invalidate_provenance(provenance.provenance_id, by="reviewer", reason="withdrawn",
+                                    at=T0, operation_id="early-invalidation")
+    with pytest.raises(ValueError, match="predate recorded_at"):
+        store.supersede_fact(fact.fact_id, at=T0, operation_id="early-supersession")
+
+    decision = store.record_decision(
+        task_id="task", selected_action=DecisionAction.VERIFY,
+        alternatives_considered=(DecisionAction.ANSWER,), observations=(), evidence_used=(),
+        memory_used=(), policy_id="policy-v1", reason_code="VERIFY_FIRST",
+        resource_state={}, expected_utility=None, uncertainty="HIGH", timestamp=T1,
+        operation_id="decision")
+    with pytest.raises(ValueError, match="predate decision"):
+        store.record_outcome(decision.decision_id, outcome={"verified": False}, at=T0,
+                             operation_id="early-outcome")
+
+
+def test_policy_gate_rejects_malformed_actions_and_rule_shapes_at_construction():
+    condition = (DatalogFact("unverified", ("T",)),)
+    with pytest.raises(ValueError, match="invalid require action"):
+        PolicyGate((PolicyRule(
+            "invalid-action", DatalogFact("require", ("T", "destroy", "bad")), condition),))
+    rule = PolicyRule(
+        "duplicate", DatalogFact("require", ("T", "verify", "unverified")), condition)
+    with pytest.raises(ValueError, match="duplicate policy rule_id"):
+        PolicyGate((rule, rule))
+    with pytest.raises(ValueError, match="unbound head variables"):
+        PolicyGate((PolicyRule(
+            "unsafe", DatalogFact("require", ("T", "verify", "unverified")),
+            (DatalogFact("unverified", ("OTHER",)),)),))
+
+
+def test_policy_gate_rejects_caller_injected_policy_effects():
+    gate = PolicyGate(())
+    with pytest.raises(ValueError, match="reserved predicate"):
+        gate.evaluate("task", DecisionAction.ANSWER, {
+            DatalogFact("require", ("task", "destroy", "injected")),
+        })

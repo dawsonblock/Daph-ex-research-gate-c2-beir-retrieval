@@ -67,6 +67,26 @@ payload.
 The invalid earlier cross-commit qualification remains revoked. Its historical
 receipts are not part of this verdict.
 
+## Scope boundary for later cognitive-control development
+
+This exact V2A qualification is the source tree at `77f3483` named above.
+The recorded focused receipt remains **22 passed, 0 failed** because it is an
+immutable receipt for that source identity; it must not be edited to describe
+later work.
+
+The branch can also contain later changes under
+`hrm_adaptive_memory/cognitive_control/`, including the post-qualification
+policy-conflict repair and the V2B development protocol. Those changes are
+unit-tested development work, not part of the V2A component set or V2A test
+corpus. Therefore a checkout containing them is **not** a byte-for-byte copy
+of the qualified V2A source tree, and it must not be labelled an “exact V2A
+qualified build.” They do not alter the V2A verdict because the V2A identity
+intentionally excludes cognitive control.
+
+`COGNITIVE_CONTROL_V2B_QUALIFICATION_IDENTITY_V1` is reserved for a separate
+future qualification. No V2B scientific result, receipt, or executive claim
+has been issued.
+
 ## Bounded claim
 
 DAPH can acquire immutable external evidence, preserve declared or

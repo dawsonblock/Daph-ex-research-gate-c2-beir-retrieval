@@ -10,6 +10,18 @@ SCIENTIFICALLY QUALIFIED no
 PRODUCTION READY   no
 ```
 
+This is post-qualification development, governed by
+`COGNITIVE_CONTROL_V2B_QUALIFICATION_IDENTITY_V1` in
+[`configs/cognitive_control_v2b_design.json`](../configs/cognitive_control_v2b_design.json).
+It is separate from the qualified V2A external-verification identity. The
+current branch must not be represented as a byte-identical V2A-qualified
+source tree merely because its V2A core still matches the V2A manifest.
+
+The current post-qualification focused development check is **28 passed, 0
+failed** across the V2A, qualification, and cognitive-control unit files. It
+is a local development result, not a V2A replacement receipt or a V2B
+scientific qualification.
+
 The donor archive `semantica-main 2.zip` has SHA-256
 `54abd52728f488ca687a318ec8361d70250ff5b6019a80f69218a7296d652b1b` and is
 MIT licensed by Hawksight AI. DAPH adapts only the selected concepts; it does
@@ -27,9 +39,22 @@ not vendor the Semantica package or its dependency surface.
 - Structured executive decision and outcome records with parent-decision
   causal ancestry.
 - A finite positive-Datalog engine and deterministic policy gate with
-  `ALLOW`, `DENY`, and `REQUIRE` effects.
+  `ALLOW`, `DENY`, and `REQUIRE` effects. Incompatible required actions deny
+  with `POLICY_CONFLICT`; compatible requirements coalesce. Rules are
+  validated at gate construction, so an unknown action or malformed rule never
+  becomes a runtime action-selection failure.
 - An append-only canonical event log; all graphs and indexes are replayed
-  materialized views.
+  materialized views. Cognitive-control V2 stores timezone-aware timestamps in
+  canonical UTC RFC3339 form and rejects lifecycle events that predate their
+  causes.
+
+The timestamp and outcome-lifecycle hardening changes the cognitive event
+schema from `DAPH_COGNITIVE_CONTROL_V1` to
+`DAPH_COGNITIVE_CONTROL_V2`. V1 event logs are rejected rather than silently
+rewritten, because an automatic rewrite could invent missing timestamps or
+alter historical event hashes. This is acceptable while the subsystem is
+explicitly development-only; any future migration must be separate,
+deterministic, and evidence-preserving.
 
 ## Deliberately untouched
 
@@ -40,6 +65,7 @@ not vendor the Semantica package or its dependency surface.
 - Learned executive routing and verification-aware retrieval.
 
 This slice establishes storage and deterministic control primitives. It does
-not show that using them improves answers or executive decisions. That needs a
-separate frozen integration protocol and experimental receipts after V2A's
-commit-bound requalification is repaired.
+not show that using them improves answers or executive decisions. That needs
+the separate frozen V2B protocol, environment-bound receipts, an independently
+verified package, and a restricted initial action space before any learned
+executive is introduced.

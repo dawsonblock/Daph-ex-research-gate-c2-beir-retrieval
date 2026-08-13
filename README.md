@@ -43,7 +43,7 @@ question → subject-preserving query → BM25+BGE retrieval
 | **C4** Integrated memory pipeline | ✅ CERTIFIED (development) | H100 certification: +0.2000 quality delta (family CI [+0.1354, +0.2604], threshold +0.15); 17/17 gates passed |
 | **C4-BRIDGE** Runtime bridge acquisition | ❌ NEGATIVE RESULT | No runtime bridge mechanism beats one-pass baseline (B0 CES=0.783 vs B2 CES=0.775) |
 | **V2A** External background verification | ✅ QUALIFIED | Replacement commit-bound PASS: one source/tree/environment across full suite, focused security, adversarial, network smoke, and 1M pressure/replay |
-| Cognitive-control donor slice | 🧪 IMPLEMENTED, NOT QUALIFIED | DAPH-native hash-chained provenance, bitemporal facts, unresolved conflicts, decision graph, and deterministic policy rules adapted from selected Semantica concepts |
+| Cognitive-control donor slice | 🧪 V2B DEVELOPMENT, NOT QUALIFIED | Post-V2A DAPH-native provenance, bitemporal facts, conflicts, decision graph, and deterministic policy rules; separately scoped by `COGNITIVE_CONTROL_V2B_QUALIFICATION_IDENTITY_V1` |
 | **D–N** Downstream gates | 🔒 BLOCKED | Pending untouched qualification/OOD splits and Gate D decision |
 
 Full machine-readable state: [`RESEARCH_STATUS.json`](RESEARCH_STATUS.json)
@@ -54,6 +54,11 @@ supported exact-field source classes, survive repeated execution/replay/tamperin
 maintain an auditable current verification state. It is not a claim of general
 truth determination, arbitrary literature understanding, verification-aware
 retrieval, or improved answer accuracy.
+
+The V2A qualification is an exact historical source identity at `77f3483`,
+not a blanket status for every later checkout on this branch. Cognitive-control
+changes are separately tracked as unqualified V2B development and do not
+rewrite V2A receipts or claims.
 
 ---
 

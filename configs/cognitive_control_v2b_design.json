@@ -1,0 +1,43 @@
+{
+  "protocol_id": "COGNITIVE_CONTROL_V2B",
+  "protocol_version": "0.1.0-development",
+  "qualification_identity_version": "COGNITIVE_CONTROL_V2B_QUALIFICATION_IDENTITY_V1",
+  "status": "DEVELOPMENT_NOT_QUALIFIED",
+  "scope": "Verification-aware deterministic cognitive control; no executive integration claim.",
+  "v2a_qualification_boundary": {
+    "qualified_source_commit": "77f348325352c0cd76d08514a60196fba61e4749",
+    "qualified_source_tree": "50e4bf0b2b17b06447c1c1d0dc72207834648d50",
+    "statement": "V2A binds external background verification only. It excludes this protocol and all cognitive-control components."
+  },
+  "current_components": [
+    "hrm_adaptive_memory/cognitive_control/core.py",
+    "hrm_adaptive_memory/cognitive_control/datalog.py",
+    "tests/unit/test_cognitive_control.py",
+    "configs/cognitive_control_v2b_design.json"
+  ],
+  "required_before_qualification": [
+    "frozen policy schema and corpus",
+    "decision, temporal, conflict, and provenance schema hashes",
+    "executive adapter identity",
+    "V2B benchmark corpus hash",
+    "experiment configuration and controller/model identity",
+    "clean-environment test and benchmark receipts",
+    "independent package verification"
+  ],
+  "initial_action_space": [
+    "ANSWER",
+    "RETRIEVE",
+    "VERIFY",
+    "SEARCH_MORE",
+    "REASON_MORE",
+    "DEFER",
+    "STOP"
+  ],
+  "forbidden_claims": [
+    "V2A qualification extension",
+    "scientific qualification",
+    "automatic executive integration",
+    "autonomous specialist spawning",
+    "production readiness"
+  ]
+}
