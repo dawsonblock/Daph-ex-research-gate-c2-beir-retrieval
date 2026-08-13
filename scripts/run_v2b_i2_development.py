@@ -30,6 +30,36 @@ def _git(*args: str) -> str:
     return subprocess.check_output(["git", *args], cwd=ROOT, text=True).strip()
 
 
+def _log_development_receipt(receipt: dict[str, object], receipt_path: Path) -> None:
+    """Record each development execution without upgrading its scientific status."""
+    import litlogger
+
+    control = receipt["conditions"]["CONTROL"]["metrics"]  # type: ignore[index]
+    v2b = receipt["conditions"]["V2B"]["metrics"]  # type: ignore[index]
+    experiment = litlogger.init(
+        name=f"v2b-i2-deterministic-development-{receipt['source_commit'][:7]}",
+        teamspace="deep-gpu-acceleration-project",
+        metadata={
+            "protocol": "DAPH_V2B_I2_DEVELOPMENT",
+            "status": str(receipt["status"]),
+            "claim_boundary": str(receipt["claim_boundary"]),
+            "source_commit": str(receipt["source_commit"]),
+            "source_tree_hash": str(receipt["source_tree_hash"]),
+            "receipt_schema": str(receipt["schema"]),
+            "receipt_sha256": _sha256(receipt_path),
+            "location": "US",
+            "altitude": "1334",
+        },
+        print_url=True,
+    )
+    for prefix, metrics in (("control", control), ("v2b", v2b)):
+        for metric, value in metrics.items():
+            experiment[f"{prefix}_{metric}"].append(value)
+    experiment["run_valid"] = str(receipt["run_valid"]).lower()
+    experiment["qualification"] = "NOT_QUALIFIED_DEVELOPMENT_ONLY"
+    experiment.finalize()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
@@ -76,6 +106,7 @@ def main() -> None:
     if output not in target.parents:
         raise ValueError("V2B-I2 receipt path must remain under the output directory")
     target.write_text(json.dumps(receipt, sort_keys=True, indent=2) + "\n")
+    _log_development_receipt(receipt, target)
     print(target)
 
 

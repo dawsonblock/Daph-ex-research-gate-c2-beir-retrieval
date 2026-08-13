@@ -35,7 +35,10 @@ It intentionally uses no LLM, live retrieval, or live network verification.
 
 `scripts/run_v2b_i2_development.py` only runs from a clean committed checkout
 and writes a development-only receipt. It rejects qualification status, dirty
-source trees, nonempty output directories, and unsafe run identifiers.
+source trees, nonempty output directories, and unsafe run identifiers. Each
+accepted development run also records the receipt identity and both conditions'
+metrics to the configured LitLogger teamspace; it never logs a qualification
+claim.
 
 The focused development suite currently reports **39 passed, 0 failed**. This
 is implementation evidence for the deterministic harness, not a V2B
