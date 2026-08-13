@@ -12,6 +12,7 @@ license = "MIT"
 authors = [{ name = "DAPH / ExFusion contributors" }]
 keywords = ["mamba", "ssm", "moe", "hybrid", "transformer", "model-merging", "dare", "ties"]
 dependencies = [
+    "cryptography>=42",
     "numpy>=1.24",
     "torch>=2.1",
 ]

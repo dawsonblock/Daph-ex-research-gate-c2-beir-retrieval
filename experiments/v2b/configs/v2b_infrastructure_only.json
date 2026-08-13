@@ -1,0 +1,24 @@
+{
+  "schema": "DAPH_V2B_EXPERIMENT_CONFIGURATION_V1",
+  "status": "INFRASTRUCTURE_ONLY_NOT_AN_EXPERIMENT",
+  "controller": {
+    "id": "NONE",
+    "revision": "NONE"
+  },
+  "model": {
+    "id": "NONE",
+    "revision": "NONE",
+    "tokenizer_revision": "NONE",
+    "generation_configuration": {}
+  },
+  "benchmark": {
+    "path": "experiments/v2b/tasks/v2b_benchmark_v1.json",
+    "status": "NOT_FROZEN"
+  },
+  "forbidden": [
+    "receipt_generation",
+    "scientific_qualification_claim",
+    "learned_executive",
+    "sub_agent_spawning"
+  ]
+}

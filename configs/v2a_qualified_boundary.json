@@ -1,0 +1,34 @@
+{
+  "schema": "DAPH_V2A_QUALIFIED_BOUNDARY_V1",
+  "qualified_commit": "77f348325352c0cd76d08514a60196fba61e4749",
+  "qualified_tree": "50e4bf0b2b17b06447c1c1d0dc72207834648d50",
+  "required_tag": "v2a-qualified",
+  "build_manifest": {
+    "path": "BUILD_MANIFEST.json",
+    "qualified_archive": "dist/Daph-background-verification-v2a-77f3483.tar.gz",
+    "qualified_archive_sha256": "8a7b8f0ed954a3f91cf52974a5a01f2781cce52071e23d2c4789734cf0cdcbd8"
+  },
+  "qualification_receipts": [
+    "evidence/background_verification_v2a/pressure/pressure_full_1m.json",
+    "evidence/background_verification_v2a/adversarial/adversarial.json",
+    "evidence/background_verification_v2a/network_smoke/network_smoke.json",
+    "evidence/background_verification_v2a/tests/full_suite.json"
+  ],
+  "qualification_inputs": [
+    "configs/background_verification_v2a_design.json",
+    "configs/v2a_qualification_requirements.lock",
+    "configs/certified_memory_v1.json",
+    "configs/c4_requirements.lock",
+    "hrm_adaptive_memory/external_verification/core.py",
+    "hrm_adaptive_memory/external_verification/qualification.py",
+    "hrm_adaptive_memory/memory_write/claim_store.py",
+    "hrm_adaptive_memory/memory_write/verification.py",
+    "tests/unit/test_background_verification_v2a.py",
+    "tests/unit/test_v2a_qualification.py"
+  ],
+  "required_v2b_declaration": {
+    "path": "configs/cognitive_control_v2b_design.json",
+    "protocol_id": "COGNITIVE_CONTROL_V2B",
+    "status": "DEVELOPMENT_NOT_QUALIFIED"
+  }
+}

@@ -9,13 +9,8 @@ from __future__ import annotations
 
 import hashlib
 import heapq
-import ipaddress
 import json
 import os
-import socket
-import urllib.error
-import urllib.parse
-import urllib.request
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from enum import Enum
@@ -26,6 +21,7 @@ from hrm_adaptive_memory.memory_write.claim_store import ClaimRecord, ClaimStore
 from hrm_adaptive_memory.memory_write.states import VerificationStatus
 from hrm_adaptive_memory.memory_write.verification import (
     VerificationResult, derive_status, retired_ids)
+from .network import NetworkPolicyError, NetworkTransportError, PeerBoundHTTPSClient
 
 
 PROTOCOL_ID = "BACKGROUND_VERIFICATION_V2A"
@@ -500,48 +496,6 @@ class LocalStructuredFixtureAcquirer:
             response_metadata=fixture.get("response_metadata", {}), detail=fixture.get("detail", ""))
 
 
-def _validate_public_https_uri(uri: str) -> None:
-    parsed = urllib.parse.urlsplit(uri)
-    if parsed.scheme != "https" or not parsed.hostname:
-        raise ValueError("capture URI must use public HTTPS")
-    if parsed.username or parsed.password or parsed.port not in (None, 443):
-        raise ValueError("capture URI credentials and nonstandard ports are forbidden")
-    hostname = parsed.hostname.rstrip(".").lower()
-    if hostname == "localhost" or hostname.endswith(".localhost"):
-        raise ValueError("localhost capture is forbidden")
-    addresses = socket.getaddrinfo(hostname, 443, type=socket.SOCK_STREAM)
-    if not addresses:
-        raise ValueError("capture hostname did not resolve")
-    for address in addresses:
-        ip = ipaddress.ip_address(address[4][0])
-        if not ip.is_global:
-            raise ValueError(f"non-public capture address is forbidden: {ip}")
-
-
-class _PublicHTTPSRedirectHandler(urllib.request.HTTPRedirectHandler):
-    def redirect_request(self, req, fp, code, msg, headers, newurl):
-        _validate_public_https_uri(newurl)
-        return super().redirect_request(req, fp, code, msg, headers, newurl)
-
-
-def _open_public_https(uri: str, *, timeout: int):
-    _validate_public_https_uri(uri)
-    opener = urllib.request.build_opener(_PublicHTTPSRedirectHandler())
-    response = opener.open(uri, timeout=timeout)  # nosec B310 - URI is validated above
-    _validate_public_https_uri(response.geturl())
-    return response
-
-
-def _read_bounded(response, maximum: int) -> bytes:
-    length = response.headers.get("Content-Length")
-    if length is not None and int(length) > maximum:
-        raise ValueError("capture response exceeds maximum body size")
-    raw = response.read(maximum + 1)
-    if len(raw) > maximum:
-        raise ValueError("capture response exceeds maximum body size")
-    return raw
-
-
 class HTTPStructuredDataAcquirer:
     """Untrusted public-HTTPS capture for non-qualification integration runs.
 
@@ -551,8 +505,11 @@ class HTTPStructuredDataAcquirer:
     """
 
     ACQUISITION_METHOD = "http_structured_data"
-    ACQUISITION_VERSION = "1.1.0-untrusted-capture"
+    ACQUISITION_VERSION = "1.2.0-peer-bound-untrusted-capture"
     MAX_RESPONSE_BYTES = 8 * 1024 * 1024
+
+    def __init__(self, client: PeerBoundHTTPSClient | None = None):
+        self.client = client or PeerBoundHTTPSClient()
 
     def acquire(self, request: AcquisitionRequest) -> AcquisitionResult:
         if request.source_type is not SourceType.UNTRUSTED_CAPTURE_ONLY:
@@ -560,25 +517,26 @@ class HTTPStructuredDataAcquirer:
                 AcquisitionStatus.INVALID_RESPONSE, request,
                 detail="generic HTTP cannot establish authoritative source identity")
         try:
-            with _open_public_https(request.source_uri, timeout=15) as response:
-                raw = _read_bounded(response, self.MAX_RESPONSE_BYTES)
-                content_type = response.headers.get_content_type()
-                if content_type not in {"application/json", "text/csv"}:
-                    return AcquisitionResult(AcquisitionStatus.UNSUPPORTED_CONTENT, request,
-                                             content_type=content_type)
-                try:
-                    extracted = json.loads(raw) if content_type == "application/json" else {}
-                except json.JSONDecodeError:
-                    return AcquisitionResult(AcquisitionStatus.PARSE_ERROR, request,
-                                             raw_content=raw, content_type=content_type)
-                return AcquisitionResult(AcquisitionStatus.SUCCESS, request, raw_content=raw,
-                                         content_type=content_type, fetched_at=_utc_now(),
-                                         extracted_fields=extracted,
-                                         response_metadata={"http_status": response.status})
-        except urllib.error.HTTPError as exc:
-            status = AcquisitionStatus.RATE_LIMITED if exc.code == 429 else AcquisitionStatus.NOT_FOUND
-            return AcquisitionResult(status, request, detail=f"HTTP {exc.code}")
-        except (urllib.error.URLError, TimeoutError, ValueError, OSError):
+            response = self.client.fetch(request.source_uri)
+            if response.status >= 400:
+                status = AcquisitionStatus.RATE_LIMITED if response.status == 429 else AcquisitionStatus.NOT_FOUND
+                return AcquisitionResult(status, request, detail=f"HTTP {response.status}")
+            raw, content_type = response.body, response.content_type
+            if content_type not in {"application/json", "text/csv"}:
+                return AcquisitionResult(AcquisitionStatus.UNSUPPORTED_CONTENT, request,
+                                         raw_content=raw, content_type=content_type)
+            try:
+                extracted = json.loads(raw) if content_type == "application/json" else {}
+            except json.JSONDecodeError:
+                return AcquisitionResult(AcquisitionStatus.PARSE_ERROR, request,
+                                         raw_content=raw, content_type=content_type)
+            return AcquisitionResult(AcquisitionStatus.SUCCESS, request, raw_content=raw,
+                                     content_type=content_type, fetched_at=_utc_now(),
+                                     extracted_fields=extracted,
+                                     response_metadata={"http_status": response.status,
+                                                        "final_uri": response.final_uri,
+                                                        "peer_ip": response.peer_ip})
+        except (NetworkPolicyError, NetworkTransportError):
             return AcquisitionResult(AcquisitionStatus.NETWORK_ERROR, request)
 
 
@@ -591,8 +549,11 @@ class OfficialTextAcquirer:
     """
 
     ACQUISITION_METHOD = "official_html_text"
-    ACQUISITION_VERSION = "1.1.0-untrusted-capture"
+    ACQUISITION_VERSION = "1.2.0-peer-bound-untrusted-capture"
     MAX_RESPONSE_BYTES = 8 * 1024 * 1024
+
+    def __init__(self, client: PeerBoundHTTPSClient | None = None):
+        self.client = client or PeerBoundHTTPSClient()
 
     def acquire(self, request: AcquisitionRequest) -> AcquisitionResult:
         if request.source_type is not SourceType.UNTRUSTED_CAPTURE_ONLY:
@@ -600,19 +561,20 @@ class OfficialTextAcquirer:
                 AcquisitionStatus.INVALID_RESPONSE, request,
                 detail="generic HTTP cannot establish official source identity")
         try:
-            with _open_public_https(request.source_uri, timeout=15) as response:
-                raw = _read_bounded(response, self.MAX_RESPONSE_BYTES)
-                content_type = response.headers.get_content_type()
-                if content_type not in {"text/html", "text/plain"}:
-                    return AcquisitionResult(AcquisitionStatus.UNSUPPORTED_CONTENT, request,
-                                             raw_content=raw, content_type=content_type)
-                return AcquisitionResult(AcquisitionStatus.SUCCESS, request, raw_content=raw,
-                                         content_type=content_type, fetched_at=_utc_now(),
-                                         response_metadata={"http_status": response.status})
-        except urllib.error.HTTPError as exc:
-            status = AcquisitionStatus.RATE_LIMITED if exc.code == 429 else AcquisitionStatus.NOT_FOUND
-            return AcquisitionResult(status, request, detail=f"HTTP {exc.code}")
-        except (urllib.error.URLError, TimeoutError, ValueError, OSError):
+            response = self.client.fetch(request.source_uri)
+            if response.status >= 400:
+                status = AcquisitionStatus.RATE_LIMITED if response.status == 429 else AcquisitionStatus.NOT_FOUND
+                return AcquisitionResult(status, request, detail=f"HTTP {response.status}")
+            raw, content_type = response.body, response.content_type
+            if content_type not in {"text/html", "text/plain"}:
+                return AcquisitionResult(AcquisitionStatus.UNSUPPORTED_CONTENT, request,
+                                         raw_content=raw, content_type=content_type)
+            return AcquisitionResult(AcquisitionStatus.SUCCESS, request, raw_content=raw,
+                                     content_type=content_type, fetched_at=_utc_now(),
+                                     response_metadata={"http_status": response.status,
+                                                        "final_uri": response.final_uri,
+                                                        "peer_ip": response.peer_ip})
+        except (NetworkPolicyError, NetworkTransportError):
             return AcquisitionResult(AcquisitionStatus.NETWORK_ERROR, request)
 
 

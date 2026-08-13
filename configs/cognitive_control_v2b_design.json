@@ -1,7 +1,7 @@
 {
   "protocol_id": "COGNITIVE_CONTROL_V2B",
   "protocol_version": "0.1.0-development",
-  "qualification_identity_version": "COGNITIVE_CONTROL_V2B_QUALIFICATION_IDENTITY_V1",
+  "qualification_identity_version": "DAPH_COGNITIVE_CONTROL_V2B_QUALIFICATION_IDENTITY_V1",
   "status": "DEVELOPMENT_NOT_QUALIFIED",
   "scope": "Verification-aware deterministic cognitive control; no executive integration claim.",
   "v2a_qualification_boundary": {
@@ -12,6 +12,14 @@
   "current_components": [
     "hrm_adaptive_memory/cognitive_control/core.py",
     "hrm_adaptive_memory/cognitive_control/datalog.py",
+    "hrm_adaptive_memory/cognitive_control/schemas.py",
+    "hrm_adaptive_memory/cognitive_control/actions.py",
+    "hrm_adaptive_memory/cognitive_control/checkpoints.py",
+    "hrm_adaptive_memory/cognitive_control/qualification.py",
+    "hrm_adaptive_memory/external_verification/authority_registry.py",
+    "hrm_adaptive_memory/external_verification/comparators",
+    "hrm_adaptive_memory/external_verification/network",
+    "hrm_adaptive_memory/external_verification/typed_verifier.py",
     "tests/unit/test_cognitive_control.py",
     "configs/cognitive_control_v2b_design.json"
   ],

@@ -11,7 +11,7 @@ PRODUCTION READY   no
 ```
 
 This is post-qualification development, governed by
-`COGNITIVE_CONTROL_V2B_QUALIFICATION_IDENTITY_V1` in
+`DAPH_COGNITIVE_CONTROL_V2B_QUALIFICATION_IDENTITY_V1` in
 [`configs/cognitive_control_v2b_design.json`](../configs/cognitive_control_v2b_design.json).
 It is separate from the qualified V2A external-verification identity. The
 current branch must not be represented as a byte-identical V2A-qualified
@@ -21,6 +21,12 @@ The current post-qualification focused development check is **28 passed, 0
 failed** across the V2A, qualification, and cognitive-control unit files. It
 is a local development result, not a V2A replacement receipt or a V2B
 scientific qualification.
+
+The first V2B infrastructure milestone additionally introduces a frozen
+authority registry, relation-bound typed comparators, peer-bound HTTPS capture,
+and Ed25519 checkpoint contracts. These are implementation prerequisites only:
+no authority endpoint, typed relation, checkpoint, controller, benchmark, or
+receipt is scientifically qualified by their presence.
 
 The donor archive `semantica-main 2.zip` has SHA-256
 `54abd52728f488ca687a318ec8361d70250ff5b6019a80f69218a7296d652b1b` and is

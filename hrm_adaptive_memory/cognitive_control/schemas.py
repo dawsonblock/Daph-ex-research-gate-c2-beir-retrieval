@@ -1,0 +1,53 @@
+"""Versioned cognitive-control schema descriptors used by V2B identity binding."""
+from __future__ import annotations
+
+import hashlib
+import json
+from typing import Any
+
+
+SCHEMA_REGISTRY_VERSION = "DAPH_COGNITIVE_SCHEMA_REGISTRY_V1"
+
+SCHEMAS: dict[str, dict[str, Any]] = {
+    "provenance": {
+        "schema": "DAPH_PROVENANCE_RECORD_V1",
+        "required": ["provenance_id", "entity_id", "entity_type", "payload_hash", "activity_id",
+                     "agent_id", "agent_type", "source_id", "derived_from", "created_at", "operation_id"],
+    },
+    "temporal_fact": {
+        "schema": "DAPH_TEMPORAL_FACT_V2",
+        "required": ["fact_id", "entity", "relation", "value", "source_evidence_id",
+                     "source_lineage_id", "provenance_id", "valid_from", "recorded_at"],
+        "invariants": ["timezone_aware_utc", "valid_until_gt_valid_from",
+                       "superseded_at_gte_recorded_at"],
+    },
+    "conflict": {
+        "schema": "DAPH_CONFLICT_EVENT_V1",
+        "required": ["conflict_id", "entity", "relation", "fact_ids", "distinct_values",
+                     "source_lineage_ids", "detected_at", "status"],
+        "status_values": ["UNRESOLVED"],
+    },
+    "decision": {
+        "schema": "DAPH_DECISION_RECORD_V2",
+        "required": ["decision_id", "task_id", "selected_action", "policy_id", "reason_code",
+                     "resource_state", "timestamp", "parent_decision_id"],
+        "invariants": ["timezone_aware_utc", "parent_timestamp_lte_child_timestamp"],
+    },
+    "outcome": {
+        "schema": "DAPH_DECISION_OUTCOME_V2",
+        "required": ["decision_id", "outcome", "outcome_at"],
+        "invariants": ["timezone_aware_utc", "outcome_at_gte_decision_timestamp"],
+    },
+    "policy": {
+        "schema": "DAPH_COGNITIVE_POLICY_V2",
+        "rule_heads": ["deny(task,action,reason)", "require(task,action,reason)"],
+        "invariants": ["unique_rule_ids", "range_restricted_variables", "known_actions",
+                       "conflicting_requirements_deny"],
+    },
+}
+
+
+def schema_identity() -> dict[str, Any]:
+    payload = {"schema": SCHEMA_REGISTRY_VERSION, "definitions": SCHEMAS}
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return {**payload, "sha256": hashlib.sha256(encoded).hexdigest()}

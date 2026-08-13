@@ -83,7 +83,7 @@ of the qualified V2A source tree, and it must not be labelled an “exact V2A
 qualified build.” They do not alter the V2A verdict because the V2A identity
 intentionally excludes cognitive control.
 
-`COGNITIVE_CONTROL_V2B_QUALIFICATION_IDENTITY_V1` is reserved for a separate
+`DAPH_COGNITIVE_CONTROL_V2B_QUALIFICATION_IDENTITY_V1` is reserved for a separate
 future qualification. No V2B scientific result, receipt, or executive claim
 has been issued.
 
