@@ -106,18 +106,20 @@ def build_observable_snapshot(runtime: I3Runtime, *, prior_decisions: tuple[Deci
                               prior_outcomes: tuple[str, ...]) -> CognitiveStateSnapshot:
     """Project bounded observable cognitive state without terminal/oracle labels."""
     task = runtime.task
+    # Never project the private environment task id into a controller packet.
+    public_id = task.controller_instance_id or task.task_id
     conflicts = (() if not runtime.unresolved_conflict else (
-        ConflictSummary(f"conflict-{task.task_id}", "benchmark_relation", 2, "UNRESOLVED"),))
+        ConflictSummary(f"conflict-{public_id}", "benchmark_relation", 2, "UNRESOLVED"),))
     signals = ("COMPOSITION_COMPLETE" if runtime.composition_complete
                else "COMPOSITION_INCOMPLETE",)
     return CognitiveStateSnapshot(
-        task_id=task.task_id, task_summary=task.task_summary,
+        task_id=public_id, task_summary=task.task_summary,
         relevant_memories=(MemorySummary(
-            f"memory-{task.task_id}", 1.0, runtime.verification_state,
+            f"memory-{public_id}", 1.0, runtime.verification_state,
             task.observable_provenance_count, task.observable_provenance_count,
             "UNRESOLVED" if runtime.unresolved_conflict else "NONE", runtime.temporal_status),),
         verification_states=(VerificationSummary(
-            f"verification-{task.task_id}", runtime.verification_state,
+            f"verification-{public_id}", runtime.verification_state,
             task.observable_provenance_count, None),),
         provenance_summaries=(f"lineage_count={task.observable_provenance_count}",),
         temporal_status=runtime.temporal_status, unresolved_conflicts=conflicts,

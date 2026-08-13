@@ -17,6 +17,7 @@ from .resources import DEFAULT_ACTION_COSTS, ResourceBudget
 BENCHMARK_SCHEMA = "DAPH_V2B_I3_METAREASONING_BENCHMARK_V1"
 BENCHMARK_MANIFEST_SCHEMA = "DAPH_V2B_I3_BENCHMARK_MANIFEST_V1"
 CONTROLLER_PACKETS_SCHEMA = "DAPH_V2B_I3_CONTROLLER_PACKETS_V1"
+I3_1_CONTROLLER_PACKETS_SCHEMA = "DAPH_V2B_I3_1_CONTROLLER_PACKETS_V1"
 FROZEN_DEVELOPMENT_STATUS = "FROZEN_FOR_DEVELOPMENT"
 
 
@@ -42,6 +43,9 @@ class I3BenchmarkTask:
     latent: LatentTaskState
     observable_provenance_count: int
     action_effects: Mapping[DecisionAction, Mapping[str, str]]
+    # An opaque public identifier.  The private task id is used only by the
+    # environment, policy, and receipts; this value is what a controller sees.
+    controller_instance_id: str = ""
 
     def __post_init__(self) -> None:
         if (not self.task_id or self.task_id != self.task_id.lower()
@@ -136,7 +140,8 @@ def _load_payloads(path: Path) -> tuple[Mapping[str, Any], Mapping[str, Mapping[
     packet_payload = json.loads(packets_path.read_text())
     if private_payload.get("schema") != BENCHMARK_SCHEMA:
         raise ValueError("V2B-I3 private environment has an unsupported schema")
-    if packet_payload.get("schema") != CONTROLLER_PACKETS_SCHEMA:
+    packet_schema = packet_payload.get("schema")
+    if packet_schema not in {CONTROLLER_PACKETS_SCHEMA, I3_1_CONTROLLER_PACKETS_SCHEMA}:
         raise ValueError("V2B-I3 controller packets have an unsupported schema")
     if packet_payload.get("status") != FROZEN_DEVELOPMENT_STATUS:
         raise ValueError("V2B-I3 controller packets must be frozen for development")
@@ -151,11 +156,19 @@ def _load_payloads(path: Path) -> tuple[Mapping[str, Any], Mapping[str, Mapping[
             raise ValueError("V2B-I3 controller packets require task ids")
         if forbidden.intersection(packet):
             raise ValueError("V2B-I3 controller packet contains a forbidden latent/oracle field")
-        if set(packet) != {"task_id", "task_summary"} or not isinstance(packet["task_summary"], str):
-            raise ValueError("V2B-I3 controller packets allow only task_id and task_summary")
+        expected_fields = ({"task_id", "task_summary"} if packet_schema == CONTROLLER_PACKETS_SCHEMA
+                           else {"task_id", "instance_id", "task_summary"})
+        if set(packet) != expected_fields or not isinstance(packet["task_summary"], str):
+            raise ValueError("V2B-I3 controller packet fields do not match the frozen schema")
+        if (packet_schema == I3_1_CONTROLLER_PACKETS_SCHEMA
+                and (not isinstance(packet["instance_id"], str) or not packet["instance_id"])):
+            raise ValueError("V2B-I3.1 controller packets require opaque instance ids")
         if any(token in packet["task_summary"].lower() for token in forbidden):
             raise ValueError("V2B-I3 controller packet contains a forbidden latent/oracle value")
-        by_task[packet["task_id"]] = {"task_summary": packet["task_summary"]}
+        by_task[packet["task_id"]] = {
+            "task_summary": packet["task_summary"],
+            "instance_id": str(packet.get("instance_id", packet["task_id"])),
+        }
     return private_payload, by_task, {
         "benchmark_manifest": _sha256(path), "private_environment": _sha256(private_path),
         "controller_packets": _sha256(packets_path),
@@ -201,6 +214,7 @@ def load_metareasoning_benchmark(path: str | Path) -> MetareasoningBenchmark:
             ),
             observable_provenance_count=int(raw.get("observable_provenance_count", 0)),
             action_effects=effects,
+            controller_instance_id=str(public.get("instance_id", task_id)),
         )
         if task.budget_profile not in profiles:
             raise ValueError(f"task {task.task_id} references an unknown budget profile")

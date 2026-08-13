@@ -1,0 +1,22 @@
+{
+  "schema": "DAPH_V2B_I3_1_CONTROLLER_PACKETS_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "packets": [
+    {"task_id": "i3_immediate_answer", "instance_id": "opaque-immediate", "task_summary": "Current independently verified evidence is already available."},
+    {"task_id": "i3_retrieval_required", "instance_id": "opaque-retrieval", "task_summary": "Relevant evidence may exist but is not in the current working set."},
+    {"task_id": "i3_verification_required", "instance_id": "opaque-verification", "task_summary": "A high-stakes relevant memory is plausible but has not been checked."},
+    {"task_id": "i3_conflict", "instance_id": "opaque-conflict", "task_summary": "Available authoritative evidence remains contradictory."},
+    {"task_id": "i3_stale", "instance_id": "opaque-stale", "task_summary": "A once-supported fact needs a current refresh."},
+    {"task_id": "i3_falsified_memory", "instance_id": "opaque-falsified", "task_summary": "The relevant memory is explicitly falsified; another evidence path may exist."},
+    {"task_id": "i3_search_after_retrieval", "instance_id": "opaque-search", "task_summary": "Initial working evidence is incomplete and may need one bounded expansion."},
+    {"task_id": "i3_composition", "instance_id": "opaque-composition", "task_summary": "Evidence is available but the answer composition is not complete."},
+    {"task_id": "i3_insufficient", "instance_id": "opaque-insufficient", "task_summary": "No bounded evidence action resolves the available uncertainty."},
+    {"task_id": "i3_tight_budget", "instance_id": "opaque-budget-search", "task_summary": "Relevant evidence is absent; resource profile determines whether bounded expansion is viable."},
+    {"task_id": "i3_generous_search", "instance_id": "opaque-budget-search", "task_summary": "Relevant evidence is absent; resource profile determines whether bounded expansion is viable."},
+    {"task_id": "i3_ambiguous_retrieve", "instance_id": "opaque-evidence-choice", "task_summary": "The current answer path is incomplete; choose one bounded evidence action."},
+    {"task_id": "i3_ambiguous_verify", "instance_id": "opaque-evidence-choice", "task_summary": "The current answer path is incomplete; choose one bounded evidence action."},
+    {"task_id": "i3_hidden_transition_retrieve", "instance_id": "opaque-hidden-path", "task_summary": "Two bounded evidence actions are available; their utility is uncertain until an observation."},
+    {"task_id": "i3_hidden_transition_verify", "instance_id": "opaque-hidden-path", "task_summary": "Two bounded evidence actions are available; their utility is uncertain until an observation."},
+    {"task_id": "i3_stop_without_assertion", "instance_id": "opaque-stop", "task_summary": "NO_FINAL_ASSERTION_REQUESTED: terminate the internal process without making an answer claim."}
+  ]
+}

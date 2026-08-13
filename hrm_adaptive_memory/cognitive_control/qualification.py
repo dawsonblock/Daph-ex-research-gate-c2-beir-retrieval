@@ -31,6 +31,7 @@ COMPONENT_PATHS = {
     "checkpoint_trusted_signers": "configs/cognitive_checkpoint_trusted_signers_v2b.json",
     "qualification_runtime": "hrm_adaptive_memory/cognitive_control/qualification.py",
     "i3_qualification_runtime": "hrm_adaptive_memory/cognitive_control/metareasoning_qualification.py",
+    "i3_1_qualification_runtime": "hrm_adaptive_memory/cognitive_control/i3_1_qualification.py",
     "authority_runtime": "hrm_adaptive_memory/external_verification/authority_registry.py",
     "authority_extractors": "hrm_adaptive_memory/external_verification/authority_extractors.py",
     "typed_comparator_registry": "hrm_adaptive_memory/external_verification/comparators",
@@ -58,6 +59,17 @@ COMPONENT_PATHS = {
     "v2b_i3_controller_packets": "experiments/v2b/benchmark/controller_packets/v2b_i3_controller_packets_v1.json",
     "v2b_i3_configuration": "experiments/v2b/configs/v2b_i3_development.json",
     "v2b_i3_runner": "scripts/run_v2b_i3_development.py",
+    "v2b_i3_1_state": "hrm_adaptive_memory/executive/metareasoning_state.py",
+    "v2b_i3_1_transition_table": "hrm_adaptive_memory/executive/metareasoning_transition_table.py",
+    "v2b_i3_1_observable_oracle": "hrm_adaptive_memory/executive/metareasoning_observable_oracle.py",
+    "v2b_i3_1_utility": "hrm_adaptive_memory/executive/metareasoning_utility.py",
+    "v2b_i3_1_metrics": "hrm_adaptive_memory/executive/metareasoning_i3_1.py",
+    "v2b_i3_1_baseline": "configs/v2b_i3_1_baseline.json",
+    "v2b_i3_1_utility_config": "configs/v2b_i3_1_utility_v1.json",
+    "v2b_i3_1_manifest": "experiments/v2b_i3_1/benchmark/v2b_i3_1_benchmark_manifest_v1.json",
+    "v2b_i3_1_controller_packets": "experiments/v2b_i3_1/benchmark/controller_packets/v2b_i3_1_controller_packets_v1.json",
+    "v2b_i3_1_configuration": "experiments/v2b_i3_1/configs/v2b_i3_1_development.json",
+    "v2b_i3_1_runner": "scripts/run_v2b_i3_1_development.py",
 }
 TEST_CORPUS_PATHS = (
     "tests/unit/test_cognitive_control.py",
@@ -68,6 +80,7 @@ TEST_CORPUS_PATHS = (
     "tests/adversarial/test_v2b_infrastructure_adversarial.py",
     "tests/unit/test_v2b_i2_executive.py",
     "tests/unit/test_v2b_i3_metareasoning.py",
+    "tests/unit/test_v2b_i3_1_oracle_efficiency.py",
 )
 QUALIFICATION_LOCK = "configs/v2b_qualification_requirements.lock"
 CRITICAL_DISTRIBUTIONS = (

@@ -1,0 +1,23 @@
+{
+  "schema": "DAPH_V2B_I3_1_UTILITY_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "utility_id": "v2b_i3_1_information_bound_utility_v1",
+  "terminal_rewards": {
+    "correct_answer": 100.0,
+    "incorrect_answer": -120.0,
+    "correct_defer": 70.0,
+    "incorrect_defer": -30.0,
+    "correct_stop": 0.0,
+    "incorrect_stop": -30.0
+  },
+  "resource_weights": {
+    "executive_step": 0.1,
+    "retrieval": 2.0,
+    "verification": 3.0,
+    "search": 2.0,
+    "reasoning_128_tokens": 2.0,
+    "logical_ms": 0.01
+  },
+  "action_cost_sha256": "8313462cc8ba4f176bbcd691930cc93de0971ba3f8af34d9e957beb37fa55dca",
+  "revision": "v2b-i3.1-utility-v1"
+}

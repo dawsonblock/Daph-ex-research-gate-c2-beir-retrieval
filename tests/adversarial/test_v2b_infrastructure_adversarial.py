@@ -9,6 +9,7 @@ import pytest
 from hrm_adaptive_memory.cognitive_control.actions import validate_v2b_action
 from hrm_adaptive_memory.cognitive_control.qualification import validate_run_configuration
 from hrm_adaptive_memory.cognitive_control.metareasoning_qualification import validate_i3_configuration
+from hrm_adaptive_memory.cognitive_control.i3_1_qualification import validate_i3_1_configuration
 from hrm_adaptive_memory.external_verification.authority_registry import load_authority_registry
 
 
@@ -38,6 +39,12 @@ def test_v2b_identity_rejects_i3_development_protocol_as_scientific_qualificatio
         validate_run_configuration(configuration)
     with pytest.raises(RuntimeError, match="not frozen"):
         validate_i3_configuration(configuration)
+
+
+def test_v2b_identity_rejects_i3_1_development_methodology_as_scientific_qualification():
+    configuration = json.loads((ROOT / "experiments/v2b_i3_1/configs/v2b_i3_1_development.json").read_text())
+    with pytest.raises(RuntimeError, match="not frozen"):
+        validate_i3_1_configuration(configuration)
 
 
 def test_registry_rejects_tampered_extractor_pin(tmp_path):

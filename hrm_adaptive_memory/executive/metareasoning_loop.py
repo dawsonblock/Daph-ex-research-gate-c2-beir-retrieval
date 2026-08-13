@@ -21,6 +21,8 @@ from .metareasoning_executor import (
     DeterministicMetareasoningExecutor, I3Runtime, answerable, build_observable_snapshot,
     initial_i3_runtime, policy_facts, runtime_state_hash, state_delta)
 from .metareasoning_oracle import ExactOptimalPolicyOracle
+from .metareasoning_transition_table import OracleTableCache
+from .metareasoning_utility import MetareasoningUtility
 from .policy import FrozenPolicy
 from .resources import ResourceExhausted, ResourceState
 
@@ -107,10 +109,14 @@ class V2BMetareasoningExperiment:
     """Execute state-blind/state-aware conditions over an identical MDP substrate."""
 
     def __init__(self, *, benchmark: MetareasoningBenchmark, policy: FrozenPolicy,
-                 executor: DeterministicMetareasoningExecutor | None = None):
+                 executor: DeterministicMetareasoningExecutor | None = None,
+                 utility: MetareasoningUtility | None = None,
+                 oracle_table_cache: OracleTableCache | None = None):
         self.benchmark = benchmark
         self.policy = policy
         self.executor = executor or DeterministicMetareasoningExecutor()
+        self.utility = utility or MetareasoningUtility.from_i3_weights(benchmark.utility_weights)
+        self.oracle_table_cache = oracle_table_cache or OracleTableCache()
         self._timestamp_index = 0
 
     def _timestamp(self) -> str:
@@ -125,7 +131,10 @@ class V2BMetareasoningExperiment:
         snapshot = apply_observation_mask(
             build_observable_snapshot(runtime, prior_decisions=decisions, prior_outcomes=outcomes), mask)
         return ControllerObservation(
-            task_id=runtime.task.task_id, task_summary=runtime.task.task_summary,
+            # `task_id` is the opaque public instance id here; the private task
+            # id stays within the runtime, policy, and receipt layers.
+            task_id=(runtime.task.controller_instance_id or runtime.task.task_id),
+            task_summary=runtime.task.task_summary,
             resource_state=runtime.resources.as_dict(),
             allowed_actions=tuple(action for action in V2B_ACTIONS if runtime.resources.can_execute(action)),
             executed_actions=tuple(trace.executed_action for trace in traces
@@ -188,7 +197,9 @@ class V2BMetareasoningExperiment:
                   store: CognitiveControlStore, mask: ObservationMask) -> I3TaskRun:
         runtime = initial_i3_runtime(task, ResourceState(self.benchmark.budget_for(task)))
         oracle = ExactOptimalPolicyOracle(task=task, policy=self.policy,
-                                          utility_weights=self.benchmark.utility_weights)
+                                          utility_weights=self.benchmark.utility_weights,
+                                          utility=self.utility,
+                                          table_cache=self.oracle_table_cache)
         initial_oracle = oracle.solve(runtime)
         traces: list[I3ActionTrace] = []
         decisions: list[DecisionSummary] = []
@@ -234,7 +245,7 @@ class V2BMetareasoningExperiment:
                     action_cost=None,
                     answerable_before=pre_answerable, success_reachable_before=reachable))
                 if policy_rejections >= max_policy_rejections:
-                    realized_utility -= self.benchmark.utility_weights["failure_penalty"]
+                    realized_utility += self.utility.incorrect_defer
                     return I3TaskRun(
                         task.task_id, condition, tuple(traces), False, runtime.resources.as_dict(),
                         initial_oracle.utility, realized_utility,
@@ -278,7 +289,7 @@ class V2BMetareasoningExperiment:
             realized_utility += action_cost
             if execution.terminal:
                 assert execution.task_success is not None
-                realized_utility += oracle.terminal_utility(execution.task_success)
+                realized_utility += oracle.terminal_utility(execution.task_success, selected)
             completed = self._complete_record(
                 store, decision, task=task, status="EXECUTED", outcome_code=execution.outcome_code,
                 task_success=execution.task_success)
