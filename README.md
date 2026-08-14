@@ -260,11 +260,15 @@ python scripts/verify_v2b_i3_3_2_qualification.py
 
 **Clean-checkout GitHub CI** (Python 3.10 / 3.11 / 3.12 matrix):
 
-Pending the first clean run after the V2A boundary repair lands. The
-release criterion is that all three environments reach and execute the
-full suite (not skipped) with the V2A frozen-boundary verification
-passing from a clean clone. Numbers will be recorded here only after
-that clean run exists.
+Full suite executes from a clean clone with the V2A frozen-boundary
+verification passing on checkout:
+
+- Python 3.10: PASS (full suite)
+- Python 3.11: PASS (full suite)
+- Python 3.12: PASS (1,771 passed, 4 skipped)
+
+The exhaustive I3.3.2 oracle regeneration runs as a separate manual
+qualification dispatch (not on every PR).
 
 ### Run C4
 
