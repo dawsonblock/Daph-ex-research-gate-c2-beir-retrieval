@@ -46,35 +46,50 @@ def _reject(raw: str, code: str, parsed: dict[str, Any] | None = None) -> Decode
                           rejection_code=code, parsed_json=parsed)
 
 
-def decode_output(raw_output: str) -> DecoderOutcome:
+def decode_output(raw_output: str, *, strict: bool = False) -> DecoderOutcome:
     """Decode a raw model output string into a validated ``ActionProposal``.
 
     This function never raises.  Every failure mode is returned as a
     ``DecoderOutcome`` with ``valid=False`` and a structured ``rejection_code``.
+
+    When ``strict`` is False (default, development mode), the decoder
+    extracts candidate JSON objects from prose using brace-balanced
+    substring scanning.  This is permissive and allows reasoning text
+    before or after the JSON.
+
+    When ``strict`` is True (scientific mode), the decoder requires the
+    entire response to be a single JSON object with no surrounding prose.
+    This is the correct mode when the backend sends
+    ``response_format: {"type": "json_object"}`` to the API.
     """
     if not raw_output or not raw_output.strip():
         return _reject(raw_output, "EMPTY_OUTPUT")
 
     stripped = raw_output.strip()
-    # Extract candidate JSON objects from the output.  The model may emit
-    # reasoning text before or after the JSON; we try every brace-balanced
-    # substring and accept the first one that parses as a valid JSON object
-    # with the required structure.
-    candidates = _extract_json_candidates(stripped)
-    if not candidates:
-        return _reject(raw_output, "NO_JSON_FOUND")
 
-    parsed: dict[str, Any] | None = None
-    for json_str in candidates:
+    if strict:
+        # Scientific mode: require the entire response to be valid JSON.
         try:
-            candidate = json.loads(json_str)
+            parsed = json.loads(stripped)
         except (json.JSONDecodeError, ValueError):
-            continue
-        if isinstance(candidate, dict):
-            parsed = candidate
-            break
-    if parsed is None:
-        return _reject(raw_output, "MALFORMED_JSON")
+            return _reject(raw_output, "STRICT_MODE_NOT_PURE_JSON")
+    else:
+        # Development mode: extract candidate JSON objects from prose.
+        candidates = _extract_json_candidates(stripped)
+        if not candidates:
+            return _reject(raw_output, "NO_JSON_FOUND")
+
+        parsed = None
+        for json_str in candidates:
+            try:
+                candidate = json.loads(json_str)
+            except (json.JSONDecodeError, ValueError):
+                continue
+            if isinstance(candidate, dict):
+                parsed = candidate
+                break
+        if parsed is None:
+            return _reject(raw_output, "MALFORMED_JSON")
 
     if not isinstance(parsed, dict):
         return _reject(raw_output, "NOT_JSON_OBJECT", parsed if isinstance(parsed, dict) else None)

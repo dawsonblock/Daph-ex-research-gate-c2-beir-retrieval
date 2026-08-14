@@ -167,10 +167,20 @@ def test_check_pair_fingerprints_mismatch():
     assert record.pair_valid is False
 
 
-def test_check_pair_fingerprints_none_is_valid():
-    """If either fingerprint is None, pair is valid (no evidence of drift)."""
+def test_check_pair_fingerprints_none_is_invalid_when_required():
+    """If require_fingerprint is True (default), missing fingerprint invalidates pair."""
     record = check_pair_fingerprints(
         pair_id="p1",
         first_call_fingerprint=None,
         second_call_fingerprint="fp_abc")
+    assert record.pair_valid is False
+
+
+def test_check_pair_fingerprints_none_is_valid_when_not_required():
+    """If require_fingerprint is False, missing fingerprint is acceptable."""
+    record = check_pair_fingerprints(
+        pair_id="p1",
+        first_call_fingerprint=None,
+        second_call_fingerprint="fp_abc",
+        require_fingerprint=False)
     assert record.pair_valid is True

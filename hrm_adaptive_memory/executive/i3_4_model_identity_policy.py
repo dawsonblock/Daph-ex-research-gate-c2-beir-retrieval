@@ -27,6 +27,8 @@ import json
 from dataclasses import dataclass, field
 from typing import Any
 
+from .i3_4_generation_config import FROZEN_CONFIG
+
 IDENTITY_POLICY_SCHEMA = "DAPH_V2B_I3_4_MODEL_IDENTITY_POLICY_V1"
 IDENTITY_POLICY_VERSION = 1
 
@@ -87,7 +89,17 @@ class ModelIdentityPolicy:
         first_fingerprint: str | None,
         second_fingerprint: str | None,
     ) -> tuple[bool, str]:
-        """Verify that fingerprints match within a pair."""
+        """Verify that fingerprints match within a pair.
+
+        If require_fingerprint is True, a missing fingerprint invalidates
+        the pair.  If require_fingerprint is False, missing fingerprints
+        are acceptable (no evidence of drift).
+        """
+        if self.require_fingerprint:
+            if first_fingerprint is None:
+                return False, "Fingerprint required but missing on first call"
+            if second_fingerprint is None:
+                return False, "Fingerprint required but missing on second call"
         if not self.allow_fingerprint_change_within_pair:
             if first_fingerprint is not None and second_fingerprint is not None:
                 if first_fingerprint != second_fingerprint:
@@ -107,11 +119,12 @@ class ModelIdentityPolicy:
 
 
 # Frozen policy for the first I3.4 experiment.
+# The generation_config_sha256 is bound from the actual FrozenGenerationConfig.
 FROZEN_IDENTITY_POLICY = ModelIdentityPolicy(
     frozen_model="deepseek-v4-flash",
     frozen_provider="deepseek",
     thinking_mode="disabled",
-    generation_config_sha256="",  # Set at runtime from FrozenGenerationConfig
+    generation_config_sha256=FROZEN_CONFIG.sha256(),
     revision_source="system_fingerprint",
     require_fingerprint=True,
     allow_fingerprint_change_across_pairs=True,

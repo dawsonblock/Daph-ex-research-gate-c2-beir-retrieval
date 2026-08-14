@@ -57,6 +57,8 @@ class PinnedModelController:
     backend: ModelBackend = field(default_factory=StubBackend)
     temperature: float = 0.0
     max_tokens: int = 2048
+    # Scientific mode: strict whole-response JSON (no prose extraction).
+    strict_json: bool = True
     # Development tracking (mutable, not part of frozen identity)
     last_decoder_outcome: DecoderOutcome | None = field(default=None, repr=False, init=False)
     last_call_result: ModelCallResult | None = field(default=None, repr=False, init=False)
@@ -88,7 +90,7 @@ class PinnedModelController:
         self.last_backend_error = None
         self.last_call_result = call_result
         self._call_count += 1
-        outcome = decode_output(call_result.raw_output)
+        outcome = decode_output(call_result.raw_output, strict=self.strict_json)
         self.last_decoder_outcome = outcome
         if outcome.valid and outcome.proposal is not None:
             return outcome.proposal

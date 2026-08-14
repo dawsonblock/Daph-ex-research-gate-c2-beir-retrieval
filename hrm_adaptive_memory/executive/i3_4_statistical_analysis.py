@@ -126,16 +126,28 @@ def topology_cluster_bootstrap(
     iterations: int = DEFAULT_ITERATIONS,
     ci_level: float = DEFAULT_CI_LEVEL,
     seed: int = DEFAULT_SEED,
+    estimand: str = "topology_uniform",
 ) -> BootstrapResult:
     """Topology-cluster bootstrap for structural held-out inference.
 
     Resampling unit: topology cluster (identified by transition_topology_sha256).
-    Clusters are resampled with replacement.  Within each selected cluster,
-    all member tasks are included, preserving blind/aware pairing.
+    Clusters are resampled with replacement.
 
-    This is the primary inferential CI for structural-generalization claims.
-    150 tasks representing 51 topologies would overcount effective sample
-    size if task-level bootstrap were used.
+    Two estimands are supported:
+
+    - ``topology_uniform`` (default, primary for structural-generalization
+      claims): compute the mean ΔDG within each topology cluster first, then
+      bootstrap/average the cluster means equally.  This gives equal weight
+      per topology, which is the correct estimand for "generalization across
+      unseen topologies."
+
+    - ``task_population`` (secondary): concatenate all tasks from selected
+      clusters and compute the task-level mean.  This gives equal weight per
+      task and is the correct estimand for "expected performance over the
+      task population."
+
+    The primary inferential CI for structural-generalization claims uses
+    ``topology_uniform``.  Report ``task_population`` as a secondary metric.
     """
     n = len(deltas)
     if n == 0:
@@ -160,19 +172,36 @@ def topology_cluster_bootstrap(
             iterations=iterations, seed=seed,
             resampling_unit="topology_cluster", n_units=0)
 
-    rng = random.Random(seed)
-    point_estimate = mean_delta_dg(deltas)
+    # Precompute per-cluster mean ΔDG for topology_uniform estimand.
+    cluster_means: dict[str, float] = {}
+    for cid in cluster_ids:
+        cluster_means[cid] = mean_delta_dg(clusters[cid])
 
-    # For cluster bootstrap, each resample draws n_clusters clusters with
-    # replacement, then computes the mean over all tasks in selected clusters.
-    # This gives equal weight per cluster (not per task).
-    bootstrap_means: list[float] = []
-    for _ in range(iterations):
-        all_sampled: list[I34PairedDelta] = []
-        for _ in range(n_clusters):
-            cid = cluster_ids[rng.randrange(n_clusters)]
-            all_sampled.extend(clusters[cid])
-        bootstrap_means.append(mean_delta_dg(all_sampled))
+    rng = random.Random(seed)
+
+    if estimand == "topology_uniform":
+        # Primary: equal weight per topology.
+        # Point estimate = mean of cluster means.
+        point_estimate = sum(cluster_means[cid] for cid in cluster_ids) / n_clusters
+
+        bootstrap_means: list[float] = []
+        for _ in range(iterations):
+            sampled_cluster_means = [
+                cluster_means[cluster_ids[rng.randrange(n_clusters)]]
+                for _ in range(n_clusters)
+            ]
+            bootstrap_means.append(sum(sampled_cluster_means) / n_clusters)
+    else:
+        # Secondary: task-population (task-weighted).
+        point_estimate = mean_delta_dg(deltas)
+
+        bootstrap_means = []
+        for _ in range(iterations):
+            all_sampled: list[I34PairedDelta] = []
+            for _ in range(n_clusters):
+                cid = cluster_ids[rng.randrange(n_clusters)]
+                all_sampled.extend(clusters[cid])
+            bootstrap_means.append(mean_delta_dg(all_sampled))
 
     bootstrap_means.sort()
     alpha = 1.0 - ci_level

@@ -25,6 +25,13 @@ def test_frozen_policy_disallows_across_phase_change():
     assert FROZEN_IDENTITY_POLICY.allow_fingerprint_change_across_phases is False
 
 
+def test_frozen_policy_binds_generation_config_hash():
+    """The identity policy must bind the actual generation config hash, not empty string."""
+    from hrm_adaptive_memory.executive.i3_4_generation_config import FROZEN_CONFIG
+    assert FROZEN_IDENTITY_POLICY.generation_config_sha256 != ""
+    assert FROZEN_IDENTITY_POLICY.generation_config_sha256 == FROZEN_CONFIG.sha256()
+
+
 def test_identity_policy_has_sha256():
     h = identity_policy_sha256()
     assert len(h) == 64
@@ -65,10 +72,11 @@ def test_verify_pair_mismatch():
     assert "within pair" in reason.lower()
 
 
-def test_verify_pair_none_is_ok():
-    """If either fingerprint is None, pair is OK (no evidence of change)."""
-    valid, _ = FROZEN_IDENTITY_POLICY.verify_pair(None, "fp_abc")
-    assert valid
+def test_verify_pair_none_is_invalid_when_required():
+    """If require_fingerprint is True, a missing fingerprint invalidates the pair."""
+    valid, reason = FROZEN_IDENTITY_POLICY.verify_pair(None, "fp_abc")
+    assert not valid
+    assert "missing" in reason.lower()
 
 
 def test_verify_phase_consistent():

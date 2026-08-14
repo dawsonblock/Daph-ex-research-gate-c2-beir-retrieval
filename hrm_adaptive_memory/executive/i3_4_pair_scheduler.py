@@ -128,22 +128,41 @@ def check_pair_fingerprints(
     second_call_fingerprint: str | None,
     first_call_timestamp: str | None = None,
     second_call_timestamp: str | None = None,
+    require_fingerprint: bool = True,
 ) -> PairFingerprintRecord:
     """Check if fingerprints match within a pair.
 
     Preregistered invalidation rule:
-    - If either fingerprint is None, the pair is valid (no evidence of drift).
+    - If require_fingerprint is True (default), a missing fingerprint
+      invalidates the pair.
+    - If require_fingerprint is False, missing fingerprints are acceptable
+      (no evidence of drift).
     - If both fingerprints are present and differ, the pair is INVALID.
     - If both fingerprints are present and match, the pair is valid.
 
     If fingerprint changes occur repeatedly, the phase should be stopped.
     """
-    if first_call_fingerprint is None or second_call_fingerprint is None:
-        match = True  # No evidence of drift; cannot invalidate
-        valid = True
-    else:
+    if require_fingerprint:
+        if first_call_fingerprint is None or second_call_fingerprint is None:
+            return PairFingerprintRecord(
+                pair_id=pair_id,
+                first_call_fingerprint=first_call_fingerprint,
+                second_call_fingerprint=second_call_fingerprint,
+                first_call_timestamp=first_call_timestamp,
+                second_call_timestamp=second_call_timestamp,
+                fingerprint_match=False,
+                pair_valid=False,
+            )
         match = first_call_fingerprint == second_call_fingerprint
-        valid = match  # Within-pair provider identity change → pair invalid
+        valid = match
+    else:
+        # When fingerprint is not required, missing fingerprints are acceptable.
+        if first_call_fingerprint is None or second_call_fingerprint is None:
+            match = True  # No evidence of drift; cannot invalidate
+            valid = True
+        else:
+            match = first_call_fingerprint == second_call_fingerprint
+            valid = match
     return PairFingerprintRecord(
         pair_id=pair_id,
         first_call_fingerprint=first_call_fingerprint,
