@@ -19,8 +19,10 @@ Every research result has an explicit source identity, frozen protocol,
 environment boundary, and evidence package.
 
 > **Current state:** V2A external verification is qualified at its frozen
-> historical commit. V2B-I3.3.2 is a frozen scientific-benchmark milestone—not
-> an executive result and not a production-readiness claim.
+> historical commit. V2B-I3.3.2 is a frozen scientific-benchmark milestone.
+> V2B-I3.4 pinned/matched model executive is engineering-implemented; scientific
+> evaluation is not yet qualified. V2B-I3.4.1 scientific protocol repair is in
+> progress—no held-out model result has been produced.
 
 ## Why DAPH
 
@@ -77,6 +79,9 @@ qualified controlled-evidence-use result; it does not broaden the V2B claim.
 | V2B-I1 trusted infrastructure | **Development baseline** | Registered authority acquisition, peer-bound HTTPS, raw-to-fields re-derivation, typed comparison, signed checkpoint trust roots |
 | V2B-I3.2.2 methodology | **Frozen methodology** | Task/class priors, cost/reward semantics, sequential information-state oracle, and regret decomposition |
 | V2B-I3.3.2 scientific split | **Frozen benchmark; no executive result** | 750 tasks, strict JSON artifacts, behavior-derived topology isolation, four Q-margin bands, latent and seven observable-oracle caches |
+| V2B-I3.3.3 release hardening | **QUALIFIED_FROZEN_BENCHMARK** | Receipt-based V2A provenance, fail-closed boundary tests, clean-checkout CI, frozen baseline manifest, immutable qualification bundle |
+| V2B-I3.4 pinned model executive | **ENGINEERING IMPLEMENTED; SCIENTIFIC EVALUATION NOT YET QUALIFIED** | Condition-agnostic controller, DeepSeek backend, strict JSON decoder, frozen system prompt, controller identity, development metrics |
+| V2B-I3.4.1 scientific protocol repair | **IN PROGRESS; NO HELD-OUT MODEL RESULT** | IG/DG/TR decomposition restored, Scientific Criteria V2 frozen, paired/topology-cluster bootstrap, frozen generation config (thinking disabled), retry policy with call receipts, counterbalanced paired scheduler |
 | V2B model executive | **Not started** | A pinned model, tokenizer, prompt, decoder, and experiment identity must be frozen first |
 | Production verifier | **No-go** | Research qualification is not general truth determination or autonomous production authority |
 
@@ -337,7 +342,9 @@ flowchart TD
     I32 --> I322[V2B-I3.2.2 frozen methodology]
     I322 --> I331[V2B-I3.3.1 benchmark integrity]
     I331 --> I332[V2B-I3.3.2 scientific split]
-    I332 -. not started .-> I34[V2B-I3.4 pinned model experiment]
+    I332 --> I333[V2B-I3.3.3 release hardening]
+    I333 --> I34[V2B-I3.4 pinned model executive]
+    I34 --> I341[V2B-I3.4.1 scientific protocol repair]
 ```
 
 ## Reports and documentation

@@ -1,154 +1,94 @@
 # Changelog
 
-## Unreleased — V2B-I3.3.2 scientific split hardening
+All notable changes to the DAPH research repository are documented here.
+The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
-- Record the immutable I3.3.1 baseline at commit `4cdc024` / tree `61e9837`.
-- Add behavior-derived transition-topology identities that exclude task,
-  surface, split, channel, state-label, and budget-profile metadata.
-- Freeze 51 structure-held-out topologies with zero overlap against both
-  development and validation; preserve separate instance/surface claims.
-- Add conditional multistep benchmark dynamics with depth-3 validation and
-  depth-4+ final structural-control programs.
-- Populate frozen normalized Q-margin bands: 188 EASY, 409 MEDIUM, 58 HARD,
-  and 95 exact ties; retain zero regret for every tied-optimal action.
-- Freeze 190 same-state/different-budget tasks (25.3%) and require complete
-  controller-packet leakage, strict JSON, cache closure, and oracle parity.
-- Regenerate 750 latent oracle tables and all seven sequential observable
-  oracle sets. This is benchmark evidence only, not a model-executive result.
+## [V2B-I3.4.1] — Scientific Protocol Repair (In Progress)
 
-## 3.7.1 — Gate C measured; mechanism saturates, benchmark does not certify
+### Added
+- **Pre-repair baseline** (`v2b-i3.4-pre-scientific-repair` tag): Permanent
+  baseline at commit `8386fcd` with 12 known audit findings.
+- **IG/DG/TR decomposition** (`i3_4_scientific_scoring.py`): Restored the
+  frozen I3.2.2 definitions. TR = IG + DG algebraically. Individual task
+  contributions are NOT clamped. Non-negativity holds at the aggregate level.
+- **Scientific Criteria V2** (`v2b_i3_4_scientific_criteria_v2.json`):
+  Primary hypothesis uses decision_gap (DG), not trajectory_regret (TR).
+  Primary success criterion: LCB_95(ΔDG) > 0. Four distinct claims.
+  Prohibition on substituting TR for DG. 23 validity gates (G01-G23).
+- **Paired bootstrap** (`i3_4_statistical_analysis.py`): Task-level
+  resampling, 10000 iterations, 95% CI, frozen seed.
+- **Topology-cluster bootstrap**: Cluster-level resampling for structural
+  held-out inference (51 clusters, not 150 tasks).
+- **FrozenGenerationConfig**: Explicit thinking_mode='disabled',
+  response_format='json_object', all parameters explicitly bound.
+- **RetryPolicy**: Explicit retry matrix (only transport-like failures
+  retried). CallReceipt with append-only audit trail per attempt.
+- **Counterbalanced paired scheduler**: Deterministic order from
+  SHA256(experiment_id || task_id). Adjacent pair calls. Fingerprint
+  invalidation rule.
+- **Supersession notice** for Scientific Criteria V1 (preserved unmodified).
 
-- Bounded two-pass retrieval + entity-anchored precision packing reaches the
-  oracle ceiling: 1.000 quality, 1.000 complete-evidence-set recovery, zero
-  failures across all 500 tasks and all twelve taxonomy classes.
-- Verdict is nonetheless FAIL_ITERATIVE_RETRIEVAL: under Gate A's own rule
-  (LCB95 > 0 for every grouping key) the family view yields +0.0000 because
-  bridge structure exists in only one family of five. The threshold was frozen
-  before results were read and was not moved.
-- Marginal utility: precision packing +0.018, bounded follow-up +0.182,
-  deterministic calculator +0.000.
-- Negative results recorded: CALCULATE is not promoted; adaptive retrieval is
-  not justified (91/91 follow-ups positive, so Gate D should be expected to
-  fail here); the slot-label echo was an evidence-confusability artefact.
-- Fixed an evidence-selection defect that discarded an already-retrieved second
-  hop because anchoring used question entities only; the affected run is
-  retained and voided rather than overwritten.
+### Changed
+- README updated to reflect I3.3.3, I3.4, and I3.4.1 status.
+- Architecture diagram updated to include I3.3.3, I3.4, and I3.4.1.
 
-## 3.7.0 — Gate A0 and Gate B qualified; lineage repaired
+### Notes
+- Scientific Criteria V1 is SUPERSEDED but preserved as historical evidence.
+- The I3.3.2 benchmark remains immutable (750 tasks, splits, oracles, etc.).
+- No held-out model evaluation has been run.
+- Branch: `i3.4.1-scientific-protocol-repair`
 
-Release integrity: 3.6.1 shipped newer science under stale metadata (pyproject
-3.6.1, `daph.__version__` 3.4.1, README asserting Gate A had not been run).
-This release makes version, README, changelog, and gate state agree, enforced
-by tests, and adds machine-readable `RESEARCH_STATUS.json`.
+## [V2B-I3.4] — Pinned Model Executive (Engineering Implemented)
 
-- **Gate A0 PASS** — HRM-Text-1B uses correctly supplied evidence on the
-  controlled synthetic benchmark: mean B3−B0 = 0.998, grouped-bootstrap LCB95
-  = 0.994 for every grouping key. Scoped to the controlled synthetic corpus;
-  not a claim about general, natural-document, or persistent memory.
-- **Gate B PASS** — BM25 recovers complete evidence sets on 81.8% of tasks and
-  lifts downstream quality to 0.800 vs a 0.002 baseline. Scoped to *the tested
-  dense stack*: MiniLM-L6-v2, single-vector, mean-pooled, cosine.
-- Retrieval precision established as a binding constraint: with required
-  evidence held present, quality falls 1.00 (random distractors) → 0.67
-  (same-template) → 0.39 (retriever top-k), with the model emitting evidence
-  slot labels instead of answers.
-- Corrected a lexical tokenizer defect that glued sentence-final punctuation
-  onto tokens, hiding evidence from every lexical query; BM25 complete-set
-  success rose 0.618 → 0.818 and `numeric_derivation` 0.000 → 1.000. Gate A0's
-  qualified claim is unaffected (neither arm retrieves); see the erratum.
-- Corrected a generator defect that embedded a gold answer in its own question
-  (`controlled_gate_a_v2`), and a B1 control leak where subword truncation
-  could synthesise the answer token at a chunk boundary.
-- Added: canonical six-arm retrieval backends, revision-pinned embedding
-  backend with hashed config, complete-evidence-set metrics, failure
-  attribution, phase-attributed resource accounting, the HRM state contract
-  and commit ledger, bounded two-pass retrieval with bridge detection, and an
-  AST-restricted calculator.
-- Voided and failed runs are retained, never overwritten.
+### Added
+- **PinnedModelController**: Condition-agnostic executive controller backed
+  by a pinned language model. No if/aware/else branching.
+- **DeepSeek backend**: OpenAI-compatible API with retry logic.
+- **Strict JSON decoder**: Fail-closed output validation with 7-action
+  vocabulary. Rejects malformed JSON, unknown actions, missing fields.
+- **Frozen system prompt**: No benchmark-specific heuristics or condition
+  identity leakage.
+- **Controller identity**: Binds model, prompt, serializer, decoder,
+  controller code, backend code, and generation settings.
+- **Development metrics**: Model valid-action rate, malformed-output rate,
+  latency, token usage, action distribution, backend error tracking.
+- **Scientific Criteria V1** (later superseded by V2).
 
-## 3.6.1 — Gate A confound controls
+### Fixed
+- Exception handling in `PinnedModelController.choose()`: API errors
+  fail-closed with `BACKEND_ERROR_PROPOSAL` instead of crashing.
+- Broken condition-branching test: regex patterns now use `re.search()`.
+- `_extract_json` replaced with `_extract_json_candidates` for reasoning
+  text with braces.
+- `assert_no_condition_leakage` now checks string values, not just keys.
+- Mutable shared list aliases in NULL_* constants fixed.
+- Config consistency: added `relevant_memories` to canonical_nulls,
+  removed unused generation settings.
 
-- Remove model-visible B0/B1/B2/B3 labels from study prompts and retain condition identity only in immutable receipts.
-- Split `CAPABILITY_USE` from non-promotable `EVIDENCE_GROUNDED` studies so abstention framing cannot be reported as oracle-evidence capability.
-- Add an optional answer-free, token-matched B1b hard-distractor control and require it uniformly when selected.
-- Require explicit source-cluster labels and report grouped bootstrap results for template, family, and source cluster; Gate A uses the most conservative result and requires every declared cluster view to pass.
-- Record gross quality plus retrieval, compute, latency, token, and verification costs in counterfactual receipts.
-- Lock the supplied TurboVec snapshot (`3eba4445…ee341`, Python 0.8.0 / Rust 0.9.0) as a disabled compressed-dense experimental backend; no TurboVec runtime or adapter is enabled.
+## [V2B-I3.3.3] — Release/Qualification Hardening
 
-No real Gate A experiment is included. Retrieval expansion remains blocked.
+### Added
+- Receipt-based V2A provenance boundary.
+- Fail-closed V2A boundary tests.
+- Clean-checkout CI on Python 3.10, 3.11, and 3.12.
+- Frozen I3.3.2 baseline manifest.
+- Immutable qualification bundle.
+- Exhaustive latent and sequential oracle regeneration.
+- Benchmark-closure reproduction.
+- Structural-depth/difficulty preregistration.
+- Branch protection on `main` and `v2b-infrastructure`.
 
-## 3.6.0 — HRM adaptive-memory control plane
+### Status
+- `QUALIFIED_FROZEN_BENCHMARK` — benchmark qualification only, not
+  executive qualification.
 
-- Rename the canonical research namespace to `hrm_adaptive_memory` while retaining one-release `hrm_memory` compatibility aliases.
-- Add asynchronous retrieval, graph, memory, consolidation, HRM-runtime, and action-executor contracts with immutable receipts and explicit capability negotiation.
-- Add five logical memory kinds, fail-closed lifecycle transitions, immutable provider-neutral derivation caching, and an audited external-source lock.
-- Add loopback-only sidecar configuration and keep every external runtime disabled until its scientific prerequisite passes.
-- Add a canonical paired B0/B1/B2/B3 runner that constructs each context, independently consumes oracle labels, token-matches irrelevant context, records prompt/evidence/model receipts, and prevents fake results from qualifying.
-- Add deterministic grouped Gate A bootstrap with 24/100/500 task tiers; only a 500-task qualification can unlock retrieval expansion.
-- Preserve primitive BM25/hash/hybrid controls and add 13 adversarial control-plane tests, including a deterministic loopback RuVector bridge contract; complete suite: 204 passing tests.
+## [V2B-I3.3.2] — Scientific Split (Frozen Benchmark)
 
-No real Gate A experiment is included. RuVector, Graphiti, iterative retrieval, adaptive recurrence, and controller training remain blocked.
-
-## 3.5.0 — HRM external memory + adaptive compute foundation
-
-- Add a revision-pinned native HRM-Text-1B adapter with correct PrefixLM masking.
-- Add append-only source, semantic, and episodic memory with provenance and lineage.
-- Add structural chunking, BM25+dense RRF retrieval, reranking interfaces, and evidence metrics.
-- Add redundancy-aware 4096-token evidence packing and the mandatory oracle-context gate.
-- Add recurrent H/L state tracing, recurrence ablation declarations, isolated counterfactual execution, and a fail-closed utility controller.
-- Add executable Stage A/B/C commands, immutable configuration, protocol documentation, and tests.
-
-This release establishes the experimental substrate. It does not claim HRM memory, retrieval, recurrence, or controller gains.
-
-## 3.4.1 — qualification-tier enforcement
-
-- Bound `SMOKE`, `PILOT`, `QUALIFICATION`, and `FINAL` sample/group/seed minimums to the executable E3 qualification paths; a two-task result can no longer promote an arm.
-- Added a separate placement-promotion decision requiring tier validation, natural-test success, at least two-of-three seed replication, and stable `PROFILE_PILOT`/`PROFILE_FULL` evidence for profiled placements.
-- Made calibrated sensitivity sampling family-stratified and recorded per-family success/failure availability and realized balance.
-- Expanded every verified task family to three distinct prompt templates and labeled generator-scale difficulty separately from empirical/model difficulty.
-- Corrected profile stability to rank only layers shared by every seed and added a multi-seed profile aggregation command.
-- Added final-tier predeclared sample-size enforcement and fail-fast CLI validation before model loading or GPU training.
-- Made the multi-seed location study resumable and removed duplicated receipt records from summary payloads for long qualification runs.
-- Cached expensive E2 calibration outcomes and added a declared largest-feasible-family rule (minimum five families) when an arm cannot supply a mixed-success sensitivity band; the natural test still retains all nine families.
-- Made multi-seed profile aggregation emit the canonical mean-contribution ranking/region and a digest-bound `AGGREGATED_PROFILE`, avoiding placement from an arbitrary seed.
-
-This release changes qualification enforcement, not the scientific result. The historical one-rescue result remains `MECHANISM_SIGNAL`; router training remains blocked.
-
-## 3.4.0 — receipt-backed E3 scientific accounting
-
-- Replaced the correctness-as-utility fallback with mandatory per-task quality and actual E2/E3 execution compute.
-- Split qualification into capability gate E3-Q and cost-aware gate E3-U, with explicit `FAIL_QUALITY`, `PASS_QUALITY_FAIL_UTILITY`, `PASS_QUALITY_AND_UTILITY`, and `INSUFFICIENT_POWER` states.
-- Added configurable lambda sweeps, aggregate/per-example break-even compute prices, grouped template bootstrap, seed/family/difficulty breakdowns, and immutable paired records.
-- Added distinct calibrated-sensitivity and untouched natural-test contracts plus nine deterministic verified task families.
-- Added profile tiers and stability metrics, data-driven placement promotion, effort-frontier/Pareto reporting, and an actual-compute oracle gate.
-- Added explicit answer-only, external verified-reward, and unimplemented-GRPO objective contracts; supervised CE is never labeled RLVR.
-- Added immutable artifact commit/version/test/source-tree metadata and a postprocessing CLI that emits separate quality and utility evidence.
-- Added a batch-size-one research step override that records the E3 refinement dose actually executed.
-
-The historical one-rescue result remains a mechanism signal, not statistical or cost-aware qualification. Router training remains blocked.
-
-## 3.3.0 — standalone marginal-utility controller
-
-- Added the independent `daph_metareasoner` Stage 1 package around one frozen model and four actions: STOP, THINK, VERIFY, and DECOMPOSE.
-- Added isolated counterfactual state/action collection with explicit gross quality change, action cost, net VOC, hidden-state features, immutable digests, and execution receipts.
-- Added a mandatory oracle opportunity gate, cheap and hidden binary probes, hidden and sham action-value ensembles, ensemble uncertainty, paired confidence gates, and oracle-capture reporting.
-- Added fixed, confidence, entropy, stability, length, family, and action-frequency-matched random controls.
-- Added verified-only on-path execution with hard budget and loop guards; unchosen actions are never executed.
-- Added leakage-resistant experience/validation/test/OOD task generation and reproducible CLI workflows.
-- Preserved the first pinned real-model smoke as a negative result: oracle opportunity did not clear the predeclared threshold, so controller training was correctly blocked.
-
-No learned-controller or value-of-computation hypothesis is claimed as validated by this release.
-
-## 3.2.0 — middle-layer E3 research build
-
-- Made bounded middle-layer recurrent refinement the canonical E3 experiment while retaining final-state refinement as a control.
-- Added deterministic heuristic, manual, and profile-guided region selection plus zero-gated pretrained-layer reuse.
-- Added complete middle/refinement metadata to compute receipts while preserving exact E2 and physical E0 < E1 < E2 < E3.
-- Added a full/partial layer-contribution profiler with supervised CE, verified-reward, and external-callback objective contracts.
-- Fixed scalar state-dict hashing and verified QwenExFusion counterfactual collection end to end.
-- Added a reusable internal Qwen effort probe and real adaptive dispatch; unverified policy fallback now errors.
-- Added E2-first hard-case mining, rescue/regression metrics, bootstrap E3 qualification, variant/dose/location experiment contracts, and task-first staged E3 training.
-- Blocked policy fitting until effort-arm and oracle-opportunity qualification pass.
-- Added 14 new v3.2 research gates; full suite: 116 passing tests.
-
-No layer-concentration, E3-quality, or routing hypothesis is claimed as validated by this release.
+### Added
+- 750 frozen tasks across development, validation, and held-out splits.
+- Behavior-derived topology isolation.
+- Four Q-margin difficulty bands.
+- Latent oracle tables (750 tables, 227248 reachable states).
+- Seven sequential observable oracle sets (one per condition/mask).
+- Task-uniform information gap values per condition.
+- Structural held-out composition: 150 tasks, 51 topologies.
