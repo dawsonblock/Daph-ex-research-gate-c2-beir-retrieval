@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main, v2b-infrastructure]
   push:
-    branches: [main, v2b-infrastructure]
+    branches: [main, v2b-infrastructure, i3.4.1-scientific-protocol-repair]
   workflow_dispatch:
 
 permissions:
