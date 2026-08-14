@@ -69,6 +69,12 @@ class ModelIdentityPolicy:
             "allow_fingerprint_change_across_phases": self.allow_fingerprint_change_across_phases,
         }
 
+    def sha256(self) -> str:
+        """Canonical SHA-256 of the identity policy."""
+        encoded = json.dumps(self.as_dict(), sort_keys=True,
+                             separators=(",", ":")).encode()
+        return hashlib.sha256(encoded).hexdigest()
+
     def verify_call(
         self,
         reported_model: str | None,
