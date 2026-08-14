@@ -1,0 +1,19 @@
+{
+  "schema": "DAPH_V2B_REVIEW_LITE_LARGE_ARTIFACTS_V1",
+  "authoritative_branch": "v2b-infrastructure",
+  "source_commit": "810047cdf639b57d4e89f899f38f0de009511712",
+  "source_tree": "ce805a9ab5ac6816e9c81e5d32ab12d511e1273b",
+  "note": "This review-lite branch intentionally omits the large generated scientific artifacts listed below. They remain on the authoritative v2b-infrastructure branch. Each oracle-table entry records the SHA-256 from the frozen oracle cache manifest so a reviewer can locate and verify the canonical artifact. This branch is NON-AUTHORITATIVE and must never be used for qualification.",
+  "artifacts": [
+    {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_latent_oracles_v1.jsonl.gz", "sha256": "9b0dcf69bd5692b7190d5e12ac7f8a3ba074cf82307038db21d3371ac08fd05d", "size": 36096813, "description": "Latent oracle tables (all 750 tasks)"},
+    {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_conflict_v1.jsonl.gz", "sha256": "df69464ac1e56e09452ea8f2805718eca326a72ef13e248d7c7c9cf7a6c7bd68", "size": 83126201, "condition": "NO_CONFLICT", "description": "Sequential observable oracle set: NO_CONFLICT"},
+    {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_history_v1.jsonl.gz", "sha256": "cbe7c68e5ece5f08cb1f181b00549fe1405fdbf4f94d3d22b499dabe61f2e7dc", "size": 83115300, "condition": "NO_HISTORY", "description": "Sequential observable oracle set: NO_HISTORY"},
+    {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_provenance_v1.jsonl.gz", "sha256": "310c3b07c41cd4fdb5a82c7a066e80c62a59d2eb715ec631679c60aa70b996d5", "size": 82894467, "condition": "NO_PROVENANCE", "description": "Sequential observable oracle set: NO_PROVENANCE"},
+    {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_temporal_v1.jsonl.gz", "sha256": "e3d48e1d5ae634802267e8771eb753f17ed4ad39d56541b59448acf9dc8066b", "size": 82777928, "condition": "NO_TEMPORAL", "description": "Sequential observable oracle set: NO_TEMPORAL"},
+    {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_verification_v1.jsonl.gz", "sha256": "0c54cfbea6f00186764410d48083b6b4d88914ef3da6059bc75443e8172138e2", "size": 82893874, "condition": "NO_VERIFICATION", "description": "Sequential observable oracle set: NO_VERIFICATION"},
+    {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_state_aware_controller_v1.jsonl.gz", "sha256": "d64285431698eb78bc5eae097d7f5c327cf5bfd3032e7d62df8e30104c4e516a", "size": 82889061, "condition": "STATE_AWARE_CONTROLLER", "description": "Sequential observable oracle set: STATE_AWARE_CONTROLLER"},
+    {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_state_blind_controller_v1.jsonl.gz", "sha256": "411f29173c2f54cd3301dd2ea8a2c7a5af7d721eb41bc8aa2bb840e58b23d79d", "size": 82016768, "condition": "STATE_BLIND_CONTROLLER", "description": "Sequential observable oracle set: STATE_BLIND_CONTROLLER"},
+    {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_difficulty_report_v1.json", "sha256": "1987290bb63d813218014bdd36619d9f02f5dec74917c35a14d3c0024c11ba92", "size": 702279, "description": "Per-task difficulty report (large JSON, omitted from lite)"},
+    {"path": "evidence/", "sha256": null, "size": 257440021, "file_count": 3849, "description": "Historical evidence bundles (gate_a/b/c/c2/c3/c4, executive, memory_write, voc, e3, etc.)"}
+  ]
+}
