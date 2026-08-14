@@ -643,6 +643,92 @@ def test_scientific_criteria_has_prohibition_clause():
     assert "held-out" in raw["prohibition"].lower() or "held out" in raw["prohibition"].lower()
 
 
+# --- Scientific Criteria V2 ---
+
+
+SCIENTIFIC_CRITERIA_V2_PATH = ROOT / "experiments/v2b_i3_4/configs/v2b_i3_4_scientific_criteria_v2.json"
+
+
+def test_criteria_v2_is_frozen():
+    raw = json.loads(SCIENTIFIC_CRITERIA_V2_PATH.read_text())
+    assert raw["schema"] == "DAPH_V2B_I3_4_SCIENTIFIC_CRITERIA_V2"
+    assert raw["status"] == "FROZEN_BEFORE_HELD_OUT_EVALUATION"
+
+
+def test_criteria_v2_supersedes_v1():
+    raw = json.loads(SCIENTIFIC_CRITERIA_V2_PATH.read_text())
+    assert "supersedes" in raw
+    assert raw["supersedes"]["v1_status"] == "SUPERSEDED_BEFORE_HELD_OUT_EVALUATION"
+
+
+def test_criteria_v2_primary_hypothesis_uses_dg():
+    raw = json.loads(SCIENTIFIC_CRITERIA_V2_PATH.read_text())
+    hyp = raw["primary_hypothesis"]
+    assert hyp["metric"] == "decision_gap"
+    assert hyp["direction"] == "aware < blind"
+    assert hyp["improvement"] == "ΔDG = DG_blind - DG_aware > 0"
+
+
+def test_criteria_v2_defines_correct_decomposition():
+    raw = json.loads(SCIENTIFIC_CRITERIA_V2_PATH.read_text())
+    defs = raw["definitions"]
+    assert "IG_M_s" in defs
+    assert "DG_M_s" in defs
+    assert "TR_M_s" in defs
+    assert "identity" in defs
+    assert "no_clamping" in defs
+
+
+def test_criteria_v2_prohibits_tr_substitution():
+    raw = json.loads(SCIENTIFIC_CRITERIA_V2_PATH.read_text())
+    assert "prohibition_on_substitution" in raw
+    assert "TR" in raw["prohibition_on_substitution"]
+    assert "DG" in raw["prohibition_on_substitution"]
+
+
+def test_criteria_v2_defines_topology_cluster_bootstrap():
+    raw = json.loads(SCIENTIFIC_CRITERIA_V2_PATH.read_text())
+    tcb = raw["statistical_plan"]["topology_cluster_bootstrap"]
+    assert tcb["cluster_variable"] == "transition_topology_sha256"
+    assert tcb["resampling_unit"] == "topology_cluster"
+    assert "held_out_structure" in tcb["applies_to"]
+
+
+def test_criteria_v2_primary_success_criterion():
+    raw = json.loads(SCIENTIFIC_CRITERIA_V2_PATH.read_text())
+    crit = raw["statistical_plan"]["primary_success_criterion"]
+    assert "LCB_95" in crit["condition"]
+    assert crit["condition"].endswith("> 0")
+
+
+def test_criteria_v2_defines_validity_gates():
+    raw = json.loads(SCIENTIFIC_CRITERIA_V2_PATH.read_text())
+    gates = raw["validity_gates"]
+    assert "G17" in gates
+    assert "TR = IG + DG" in gates["G17"]
+    assert "G18" in gates
+    assert "G19" in gates
+    assert "G23" in gates
+    assert "VOID" in gates["void_vs_fail"]
+    assert "FAIL" in gates["void_vs_fail"]
+
+
+def test_criteria_v2_defines_four_distinct_claims():
+    raw = json.loads(SCIENTIFIC_CRITERIA_V2_PATH.read_text())
+    claims = raw["distinct_claims"]
+    assert "representation_advantage" in claims
+    assert "information_without_exploitation" in claims
+    assert "executive_exploitation" in claims
+    assert "control_efficiency" in claims
+
+
+def test_criteria_v2_references_scoring_module():
+    raw = json.loads(SCIENTIFIC_CRITERIA_V2_PATH.read_text())
+    refs = raw["frozen_references"]
+    assert refs["scoring_module"] == "hrm_adaptive_memory.executive.i3_4_scientific_scoring"
+    assert refs["scoring_schema"] == "DAPH_V2B_I3_4_SCIENTIFIC_SCORING_V1"
+
+
 # --- System prompt ---
 
 

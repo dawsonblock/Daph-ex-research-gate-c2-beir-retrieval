@@ -1,0 +1,205 @@
+{
+  "schema": "DAPH_V2B_I3_4_SCIENTIFIC_CRITERIA_V2",
+  "status": "FROZEN_BEFORE_HELD_OUT_EVALUATION",
+  "milestone": "V2B-I3.4.1",
+  "description": "Frozen scientific criteria V2 for the I3.4.1 pinned-model executive experiment. Restores the correct IG/DG/TR decomposition from I3.2.2. V1 is superseded; it used max(0, optimal - realized) as DG, which is actually TR. These thresholds are fixed before any held-out model evaluation.",
+  "claim_boundary": "The central scientific question is whether the same pinned AI model makes better executive decisions when exposed to structured cognitive state. This is a question about executive decision quality (DG), not merely whether the state contains information (IG) or whether end-to-end regret improves (TR).",
+  "supersedes": {
+    "v1_path": "experiments/v2b_i3_4/configs/v2b_i3_4_scientific_criteria_v1.json",
+    "v1_status": "SUPERSEDED_BEFORE_HELD_OUT_EVALUATION",
+    "reason": "V1 conflated DG and TR by using max(0, optimal_utility - realized_utility) as DG."
+  },
+  "definitions": {
+    "V_L_star": "Latent optimal value: V_L^*(s) = optimal value from the full latent state.",
+    "V_O_M": "Observable optimal value: V_O^M(B_M(s)) = optimal value available from observable information under condition M.",
+    "V_pi_M": "Controller value: V_π^M(s) = realized value from controller π under condition M.",
+    "IG_M_s": "Information gap: IG_M(s) = V_L^*(s) - V_O^M(B_M(s))",
+    "DG_M_s": "Decision gap: DG_M(s) = V_O^M(B_M(s)) - V_π^M(s)",
+    "TR_M_s": "Total regret: TR_M(s) = V_L^*(s) - V_π^M(s)",
+    "identity": "TR_M(s) = IG_M(s) + DG_M(s) algebraically.",
+    "no_clamping": "Individual task contributions to IG or DG are NOT clamped. Non-negativity holds only at the information-class expectation level.",
+    "scoring_module": "hrm_adaptive_memory.executive.i3_4_scientific_scoring",
+    "scoring_schema": "DAPH_V2B_I3_4_SCIENTIFIC_SCORING_V1"
+  },
+  "primary_hypothesis": {
+    "statement": "The pinned model produces lower decision gap under the state-aware condition than under the state-blind condition: DG_aware < DG_blind.",
+    "metric": "decision_gap",
+    "direction": "aware < blind",
+    "improvement": "ΔDG = DG_blind - DG_aware > 0",
+    "primary_test": "paired_bootstrap"
+  },
+  "distinct_claims": {
+    "representation_advantage": {
+      "condition": "ΔIG > 0",
+      "delta": "ΔIG = IG_blind - IG_aware",
+      "interpretation": "The state-aware representation contains more useful information than the state-blind representation.",
+      "note": "This is a property of the observation mask, not of the model. It should hold by construction if the mask reveals more cognitive state."
+    },
+    "information_without_exploitation": {
+      "condition": "ΔIG > 0 AND ΔDG ≈ 0",
+      "delta_ig": "ΔIG = IG_blind - IG_aware",
+      "delta_dg": "ΔDG = DG_blind - DG_aware",
+      "interpretation": "State contains useful information, but the model executive does not exploit it effectively.",
+      "note": "This is still a scientifically useful result. Do not manufacture a success from TR."
+    },
+    "executive_exploitation": {
+      "condition": "ΔDG > 0",
+      "delta_dg": "ΔDG = DG_blind - DG_aware",
+      "interpretation": "The same model makes better executive decisions because of the observable cognitive state.",
+      "note": "This is the primary scientific claim."
+    },
+    "control_efficiency": {
+      "condition": "ΔDG > 0 AND ΔTR > 0 AND cost_aware ≤ cost_blind",
+      "delta_dg": "ΔDG = DG_blind - DG_aware",
+      "delta_tr": "ΔTR = TR_blind - TR_aware",
+      "metric_cost": "total_action_cost",
+      "interpretation": "Structured cognitive state improves end-to-end control efficiency.",
+      "note": "Stronger than executive_exploitation. Requires cost efficiency in addition to decision quality."
+    }
+  },
+  "prohibition_on_substitution": "No scientific report may substitute TR for DG. TR = IG + DG, so if ΔIG > 0, then ΔTR > 0 does not imply ΔDG > 0. Reporting ΔTR as evidence of executive exploitation is prohibited.",
+  "statistical_plan": {
+    "paired_design": "Blind and aware conditions share the same tasks. For each task i: d_i = DG_blind,i - DG_aware,i.",
+    "point_estimate": "ΔDG = (1/N) Σ d_i",
+    "primary_test": "Paired bootstrap on per-task DG differences.",
+    "bootstrap": {
+      "method": "paired_bootstrap",
+      "resampling_unit": "task",
+      "iterations": 10000,
+      "ci_level": 0.95,
+      "random_seed": "FROZEN_BEFORE_EVALUATION",
+      "note": "Do NOT bootstrap individual transitions as independent observations. Resample at the task level."
+    },
+    "primary_success_criterion": {
+      "condition": "LCB_95(ΔDG) > 0",
+      "description": "The lower bound of the 95% paired bootstrap CI of ΔDG must be strictly positive.",
+      "requires": "All run-validity gates must pass."
+    },
+    "topology_grouping": {
+      "method": "Group tasks by topology depth band (DEPTH_1, DEPTH_4_PLUS). Report both task-level and topology-level aggregates.",
+      "variable": "topology_depth_band",
+      "note": "Treat topology as a grouping variable, not a covariate for post-hoc adjustment."
+    },
+    "topology_cluster_bootstrap": {
+      "method": "topology_cluster_bootstrap",
+      "cluster_variable": "transition_topology_sha256",
+      "resampling_unit": "topology_cluster",
+      "iterations": 10000,
+      "ci_level": 0.95,
+      "note": "For HELD_OUT_STRUCTURE: resample topology clusters (51 clusters), not individual tasks (150 tasks). Preserve blind/aware pairing within each selected cluster. This is the primary inferential CI for structural-generalization claims.",
+      "applies_to": ["held_out_structure", "held_out_structure_depth_1", "held_out_structure_depth_4_plus"]
+    },
+    "multiple_comparisons": {
+      "correction": "Bonferroni",
+      "note": "Applied only to the exploratory ablation family, not to the primary blind-vs-aware comparison."
+    }
+  },
+  "evaluation_order": {
+    "phase_1": "held_out_instance",
+    "phase_2": "held_out_surface",
+    "phase_3": "held_out_structure_last",
+    "note": "Each phase must be evaluated and reported before proceeding to the next. Results from earlier phases inform whether later phases are warranted. No configuration changes between phases."
+  },
+  "evaluation_populations": {
+    "development": {"task_count": 300, "purpose": "engineering, not science"},
+    "validation": {"task_count": 150, "purpose": "final engineering variant selection"},
+    "held_out_instance": {"task_count": 100, "purpose": "primary scientific result"},
+    "held_out_surface": {"task_count": 50, "purpose": "surface generalization"},
+    "held_out_structure": {
+      "task_count": 150,
+      "topology_count": 51,
+      "by_depth_band": {"DEPTH_1": 59, "DEPTH_4_PLUS": 91},
+      "by_difficulty": {"EASY": 99, "MEDIUM": 51, "HARD": 0, "TIE": 0},
+      "purpose": "topology generalization",
+      "primary_ci": "topology_cluster_bootstrap"
+    }
+  },
+  "ablation_policy": {
+    "order": "after_main_conditions",
+    "conditions": ["NO_VERIFICATION", "NO_PROVENANCE", "NO_TEMPORAL", "NO_CONFLICT", "NO_HISTORY"],
+    "purpose": "Attribute executive improvement to specific cognitive-state components by computing IG_M and DG_M for each ablation.",
+    "interpretation": {
+      "ig_increase": "Removing a state component raises IG → the representation lost useful information.",
+      "dg_increase_beyond_ig": "Removing a component raises DG beyond what IG explains → that component helped the model make decisions."
+    },
+    "note": "Ablations are exploratory. Apply Bonferroni correction to the ablation family. Ablations do not change the primary claim threshold."
+  },
+  "structural_split_limitations": {
+    "held_out_structure_composition": {
+      "task_count": 150,
+      "topology_count": 51,
+      "by_difficulty_band": {"EASY": 99, "MEDIUM": 51, "HARD": 0, "TIE": 0},
+      "by_topology_depth_band": {"DEPTH_1": 59, "DEPTH_4_PLUS": 91}
+    },
+    "claim_restrictions": [
+      "No HARD or TIE difficulty claims are possible (zero tasks in held-out structure).",
+      "DEPTH_1 claims are topology generalization within the same horizon class.",
+      "DEPTH_4_PLUS claims are topology+horizon extrapolation and must be reported separately.",
+      "Do not pool DEPTH_1 and DEPTH_4_PLUS into a single structural claim.",
+      "Structural-generalization claims must use topology-cluster bootstrap as the primary CI.",
+      "Report both task-level descriptive CI and topology-cluster inferential CI for structural results."
+    ],
+    "source": "configs/v2b_i3_3_3_baseline.json:structural_held_out_composition"
+  },
+  "repetition_policy": {
+    "default_repetitions": 1,
+    "nondeterminism_probe": "Before scientific evaluation, run a development repeatability probe with identical packets under identical settings.",
+    "probe_metrics": ["exact raw-output agreement", "parsed-action agreement", "reason-code agreement", "system-fingerprint agreement"],
+    "if_deterministic": "Retain 1 call per task per condition.",
+    "if_nondeterministic": "Activate 3-5 repetitions and freeze that count before validation. V_π,i = (1/R) Σ V_π,i,r. Aggregate repetitions within a task before bootstrapping tasks.",
+    "note": "Never decide repetition count after held-out performance is visible."
+  },
+  "replay_requirements": {
+    "model_output_reproducibility": "Store raw model outputs (raw_output, system_fingerprint, finish_reason) per step. Replay requires the same prompt, packet, and generation settings.",
+    "evaluation_reproducibility": "Given the same parsed action, the trajectory and scoring must be exactly reproducible using the deterministic policy/executor/oracle infrastructure.",
+    "separation": "Model-output nondeterminism is distinguished from deterministic evaluation replay. A failed model-output replay does not invalidate evaluation replay.",
+    "identity_check": "TR = IG + DG must hold for every task contribution within tolerance 1e-9."
+  },
+  "reporting_requirements": {
+    "task_level": "Report paired DG, IG, TR differences and costs per task.",
+    "topology_level": "Report DG, IG, TR, and success rates grouped by DEPTH_1 and DEPTH_4_PLUS.",
+    "condition_level": "Report aggregate IG, DG, TR for STATE_BLIND_CONTROLLER and STATE_AWARE_CONTROLLER.",
+    "structural_limitations": "Explicitly state the EASY/MEDIUM composition and the absence of HARD/TIE tasks in every structural claim.",
+    "development_metrics": "Report model valid-action rate, malformed-output rate, latency, and token usage as development metrics, NOT as scientific conclusions.",
+    "claim_boundary": "State explicitly which distinct claim is supported: representation_advantage, information_without_exploitation, executive_exploitation, or control_efficiency.",
+    "no_tr_substitution": "Never report ΔTR as evidence of executive exploitation without also reporting ΔDG."
+  },
+  "validity_gates": {
+    "G01": "source commit/tree match",
+    "G02": "I3.3.2 qualification identity valid",
+    "G03": "benchmark closure exact",
+    "G04": "evaluation oracle-view hashes exact",
+    "G05": "Scientific Criteria V2 exact",
+    "G06": "controller identity exact",
+    "G07": "model/backend config exact",
+    "G08": "prompt hash exact",
+    "G09": "serializer/decoder hashes exact",
+    "G10": "condition leakage tests pass",
+    "G11": "strict output schema enforced",
+    "G12": "paired call schedule exact",
+    "G13": "fingerprint/provider policy satisfied",
+    "G14": "call receipts complete",
+    "G15": "trajectory replay exact",
+    "G16": "deterministic evaluation replay exact",
+    "G17": "TR = IG + DG (tolerance 1e-9)",
+    "G18": "class/aggregate IG >= 0",
+    "G19": "class/aggregate DG >= 0",
+    "G20": "no held-out configuration mutation",
+    "G21": "statistical implementation hash exact",
+    "G22": "full test suite passes",
+    "G23": "bundle manifest verifies",
+    "void_vs_fail": "Any hard-gate failure makes the scientific run VOID, not FAIL. FAIL means a valid experiment whose hypothesis was unsupported."
+  },
+  "frozen_references": {
+    "benchmark_identity": "v2b_i3_3_2_scientific_split_v1",
+    "benchmark_closure_sha256": "9f4255d61dbbac14dd768cb61ee3381ef493ccb7b88b5b365a027dbb1c2eca5e",
+    "qualification_status": "QUALIFIED_FROZEN_BENCHMARK",
+    "i3_3_3_baseline": "configs/v2b_i3_3_3_baseline.json",
+    "controller_identity": "experiments/v2b_i3_4/manifests/v2b_i3_4_controller_identity_v1.json",
+    "pinned_model_config": "experiments/v2b_i3_4/configs/v2b_i3_4_pinned_model_config_v1.json",
+    "scoring_module": "hrm_adaptive_memory.executive.i3_4_scientific_scoring",
+    "scoring_schema": "DAPH_V2B_I3_4_SCIENTIFIC_SCORING_V1",
+    "pre_repair_baseline": "experiments/v2b_i3_4/baselines/v2b_i3_4_pre_scientific_repair_baseline_v1.json"
+  },
+  "prohibition": "These thresholds, statistical tests, grouping variables, claim boundaries, and validity gates must not be modified after any held-out model evaluation has been run. Any change constitutes a new experiment identity."
+}
