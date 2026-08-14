@@ -1,0 +1,110 @@
+{
+  "schema": "DAPH_V2B_I3_4_PRE_REPAIR_BASELINE_V1",
+  "status": "FROZEN_BASELINE",
+  "milestone": "V2B-I3.4.1",
+  "description": "Permanent pre-repair baseline of the I3.4 pinned-model executive scaffold. Captured before the I3.4.1 scientific protocol repair. Preserved as historical evidence; not modified by subsequent work.",
+  "source": {
+    "commit": "8386fcd0c5d9ee2949f6b81ba3374789e11f4e8c",
+    "tree": "bb3171683cd0ac52317761f17f0b6e68ddd11b4b",
+    "branch": "i3.4-pinned-model-executive",
+    "tag": "v2b-i3.4-pre-scientific-repair"
+  },
+  "controller_identity": {
+    "path": "experiments/v2b_i3_4/manifests/v2b_i3_4_controller_identity_v1.json",
+    "identity_sha256": "608dcf498bbab235ad6444bd4fe30875882ec7fb961a541b845d7e7006ee19ac"
+  },
+  "scientific_criteria_v1": {
+    "path": "experiments/v2b_i3_4/configs/v2b_i3_4_scientific_criteria_v1.json",
+    "sha256": "dc347bbedd14fd9f3ee078d68a03aafc43753e00dd826dc9e18045284c4f15c9",
+    "status": "SUPERSEDED_BEFORE_HELD_OUT_EVALUATION",
+    "supersession_note": "V1 used max(0, optimal_utility - realized_utility) as DG, which is actually TR. V2 will restore the proper IG/DG/TR decomposition. V1 is preserved as historical evidence and must not be edited."
+  },
+  "i3_3_2_benchmark_closure": {
+    "sha256": "9f4255d61dbbac14dd768cb61ee3381ef493ccb7b88b5b365a027dbb1c2eca5e",
+    "qualification_status": "QUALIFIED_FROZEN_BENCHMARK",
+    "immutability": "The 750 frozen tasks, task summaries, private latent environments, split allocation, action vocabulary, resource profiles, policy semantics, utility weights, topology identities, and I3.2.2 sequential-information methodology remain immutable."
+  },
+  "test_suite": {
+    "result": "PASSED",
+    "passed": 1572,
+    "skipped": 3,
+    "failed": 0,
+    "warnings": 2,
+    "duration_seconds": 87.51
+  },
+  "known_audit_findings": [
+    {
+      "id": "F01",
+      "severity": "CRITICAL",
+      "description": "DG was defined as max(0, optimal_utility - realized_utility) which is TR (total regret), not DG (decision gap). The proper decomposition TR = IG + DG was not implemented.",
+      "fix_phase": "Phase 1"
+    },
+    {
+      "id": "F02",
+      "severity": "HIGH",
+      "description": "No evaluation-specific observable oracle views. The 750-task global observable value was used for all scientific subsets, but the observable optimum depends on the prior over latent states in each evaluation population.",
+      "fix_phase": "Phase 2"
+    },
+    {
+      "id": "F03",
+      "severity": "HIGH",
+      "description": "Scientific Criteria V1 conflated DG and TR. Primary hypothesis stated DG_aware < DG_blind but the metric used was trajectory_regret = max(0, optimal - realized) which is TR.",
+      "fix_phase": "Phase 3"
+    },
+    {
+      "id": "F04",
+      "severity": "MEDIUM",
+      "description": "No topology-cluster bootstrap for structural held-out inference. 150 tasks represent only 51 topologies; task-level bootstrap overcounts effective sample size.",
+      "fix_phase": "Phase 4"
+    },
+    {
+      "id": "F05",
+      "severity": "MEDIUM",
+      "description": "No explicit thinking/reasoning mode configuration. Provider default reasoning budget is implicit, adding uncontrolled variance.",
+      "fix_phase": "Phase 5"
+    },
+    {
+      "id": "F06",
+      "severity": "MEDIUM",
+      "description": "Decoder uses permissive JSON extraction (scans prose for brace-balanced substrings). Strict scientific path requires native JSON response mode.",
+      "fix_phase": "Phase 6"
+    },
+    {
+      "id": "F07",
+      "severity": "MEDIUM",
+      "description": "Retry policy is too broad (retries all exceptions). No call-receipt audit trail for API attempts.",
+      "fix_phase": "Phase 7"
+    },
+    {
+      "id": "F08",
+      "severity": "MEDIUM",
+      "description": "Model identity assumes immutable weights but provider may not expose stable revision. Need matched-hosted-model identity policy.",
+      "fix_phase": "Phase 8"
+    },
+    {
+      "id": "F09",
+      "severity": "HIGH",
+      "description": "No full experiment identity binding. Controller identity is only one component; the experiment needs to bind all reproducibility inputs.",
+      "fix_phase": "Phase 9"
+    },
+    {
+      "id": "F10",
+      "severity": "HIGH",
+      "description": "No counterbalanced paired call scheduler. Sequential blind-then-aware execution is vulnerable to provider drift.",
+      "fix_phase": "Phase 10"
+    },
+    {
+      "id": "F11",
+      "severity": "LOW",
+      "description": "No repetition/nondeterminism probe before scientific evaluation.",
+      "fix_phase": "Phase 11"
+    },
+    {
+      "id": "F12",
+      "severity": "LOW",
+      "description": "No adversarial packet tests or replay qualification tests in the test suite.",
+      "fix_phase": "Phase 12"
+    }
+  ],
+  "prohibition": "This baseline artifact is frozen. Do not modify it. Subsequent I3.4.1 work proceeds on branch i3.4.1-scientific-protocol-repair."
+}
