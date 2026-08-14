@@ -3,6 +3,20 @@
 All notable changes to the DAPH research repository are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## 3.7.1
+
+### Added
+- V2B-I3.4.1 scientific protocol repair: IG/DG/TR decomposition restored,
+  Scientific Criteria V2 frozen, paired/topology-cluster bootstrap,
+  frozen generation config (thinking disabled), retry policy with call
+  receipts, counterbalanced paired scheduler, model identity policy,
+  adversarial/replay qualification tests.
+- V2B-I3.4 pinned model executive: DeepSeek backend, strict JSON decoder,
+  frozen system prompt, controller identity, development metrics.
+- V2B-I3.3.3 release hardening: receipt-based V2A provenance, fail-closed
+  boundary tests, clean-checkout CI, frozen baseline manifest.
+- CHANGELOG.md created.
+
 ## [V2B-I3.4.1] — Scientific Protocol Repair (In Progress)
 
 ### Added
