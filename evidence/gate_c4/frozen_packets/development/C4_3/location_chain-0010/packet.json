@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "a9d960a76ec73bd92880d6f0daed9db68844348ca205b2956f9fcf7fd8e62e7b",
+  "canonical_subject": "Dunlin drive cluster",
+  "ordered_selected_ids": [
+    "location_chain-0002/value",
+    "location_chain-0007/direct",
+    "configuration_chain-0007/dead-end-0",
+    "configuration_chain-0007/link",
+    "location_chain-0004/value",
+    "configuration_chain-0007/identity"
+  ],
+  "ordered_text_sha256": [
+    "b1082dc45444b66958457d5ec77dc9f0231ed27df454d46df7f66cc6db59794a",
+    "7bce9733f750e9f3b32ebce927c52f236626ce0e88a83bc0b9e925e24d6405af",
+    "cb17cd67e422f3eb77272c9d090d6357194aa16a79ddb8ec1ca404d6a21583c8",
+    "7035900bdb9fbc8860861e9e06eadd4ece89a7bf4249f391690501be2f9076de",
+    "2f5544c939c339f559a1a28cf91adb75db38842ada83cd0398b016d3d784f7e5",
+    "f51031290acf9a539d48315872f0b1d415ffb53c2f4449d10ff59bec5b189702"
+  ],
+  "query_hash": "32f8e23a2b5aeceb89430170fae877f9563c5ef09b6431400847e7eb4555fcdd",
+  "selector_policy_id": "s0",
+  "task_id": "location_chain-0010"
+}

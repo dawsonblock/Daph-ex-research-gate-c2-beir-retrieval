@@ -1,0 +1,17 @@
+{
+  "schema": "DAPH_V2B_I3_1_BASELINE_V1",
+  "milestone": "V2B-I3.1 Oracle Efficiency and Information-Bound Correctness",
+  "i3_baseline_source_commit": "b2febc37a0dac167772b49d7f439abd36e6ba1c0",
+  "i3_baseline_source_tree": "afd21ab275c68508c15f2ad33999d125c62ec4eb",
+  "i3_baseline_tag": "v2b-i3-development-baseline",
+  "i3_baseline_artifacts": {
+    "benchmark_manifest_sha256": "28b3ac08e92e94106bc473575815ee48b3cacc05ddbff00f0b2227f4bd417432",
+    "private_benchmark_sha256": "a65fa506f0bad4d49937a8da9bdf1f1485f001b7af94fe50e1bd25c64181c566",
+    "controller_packets_sha256": "8e5e34e467cd2662043296adb48dfc26048ea9c6c0d9173fd4d0e948209450dc",
+    "policy_sha256": "82d8572a51321c3237925b4f32ee765d8db597a7055e49af633cb82b9b4f43d7",
+    "observation_masks_sha256": "4b4ea5b125ffceefb92458d1c0cdfd926833efb42c08cbdc35ff84351a404103",
+    "action_cost_sha256": "8313462cc8ba4f176bbcd691930cc93de0971ba3f8af34d9e957beb37fa55dca",
+    "test_corpus_sha256": "402f531d6600bc7e51891317c78e06140aa9e927a0a456870f21783ace4b2826"
+  },
+  "status": "RECORDED_DEVELOPMENT_BASELINE_NOT_QUALIFIED"
+}

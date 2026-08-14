@@ -1,0 +1,9 @@
+[OBJECTIVE]
+For WSA-7, which billing multiplier is recorded?
+[EVIDENCE]
+[E1]
+Note: the billing multiplier for Wren sensor array resolves to {"category": "provisional"}.
+[E2]
+In shorthand, Wren sensor array is written WSA-7.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

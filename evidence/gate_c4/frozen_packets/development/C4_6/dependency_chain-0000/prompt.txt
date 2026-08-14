@@ -1,0 +1,9 @@
+[OBJECTIVE]
+Which release channel applies to Sparrow pressure assembly?
+[EVIDENCE]
+[E1]
+Changelog: required dependency for Sparrow pressure assembly set to Ibis sensor array.
+[E2]
+Registry entry: Ibis sensor array — release channel — 6392.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

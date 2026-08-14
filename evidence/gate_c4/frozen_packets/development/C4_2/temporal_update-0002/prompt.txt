@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to Raven drive cluster?
+[EVIDENCE]
+[E1]
+Revision 2 (effective 2031-06-01) supersedes revision 1: [operating tier] Raven drive cluster -> 8249
+[E2]
+Revision 1 (effective 2030-01-01, since superseded) recorded: - updated Raven drive cluster: operating tier now 9976
+[E3]
+Revision 1 (effective 2030-01-01, since superseded) recorded: Changelog: operating tier for Raven drive cluster set to provisional.
+[E4]
+Revision 2 (effective 2031-06-01) supersedes revision 1: The operating tier registry records that Raven drive cluster is assigned suspended.
+[E5]
+Revision 2 (effective 2031-06-01) supersedes revision 1: subject=Pelican drive cluster; operating tier=THETA-OLIVE
+[E6]
+Revision 1 (effective 2030-01-01, since superseded) recorded: subject=Pelican drive cluster; operating tier=GAMMA-BLUE
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

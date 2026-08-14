@@ -1,0 +1,51 @@
+{
+  "ARTIFACT": "Executive-training split v1",
+  "PURPOSE": "Training data for Executive v0 (binary ANSWER_NOW vs USE_CERTIFIED_MEMORY only -- no RETRIEVE_MORE/GRAPH_REFINE/VERIFY/STOP, no recurrent controller, no learned memory modification). Distinct from EOB-v1/v2 (both now consumed for the opportunity-exists decision) and from data/hrm/b3_calibration_v1 (development/calibration tier).",
+
+  "PRIVILEGED_PARSING_RESOLUTION": "Per the scope caveat recorded on EOB-v1/v2 (RESEARCH_STATUS.json PRIVILEGED_PARSING_SCOPE_CAVEAT): this split uses ONLY b3-native task phrasing, verified against the REAL, unmodified extract_subject/extract_target_relation (hrm_adaptive_memory/c4/query_stage.py) for every single task before acceptance -- zero bypass, zero synthetic identity injection anywhere in this split. D2/D3-style redundant/distractor-evidence variants are NOT included here (that variant structurally requires either a synthetic locator or accepting the same ambiguity being eliminated -- grammar_v4's entity extractor requires 2-4 total words with a mandatory role-phrase shape that no natural single- or multi-word real-world proper noun satisfies, confirmed empirically). Deferred to a later study once Executive v0's core ANSWER_NOW-vs-MEMORY policy is established.",
+
+  "FAMILIES": {
+    "ANSWER_NOW_viable": {
+      "source": "hrm_adaptive_memory.experiments.exec_training_dataset.build_answer_now_tasks() -- hand-curated, hand-verified general-knowledge facts (country capitals, chemical element symbols), NOT procedurally generated, since these must be actually TRUE rather than merely internally consistent",
+      "count": 72,
+      "template": "What is the {relation} for {subject}? (b3-native shape, verified via extract_subject/extract_target_relation for every task, zero bypass)",
+      "evidence": "NONE -- zero evidence records, matching D0's empty-pool semantics from EOB-v1/v2. Sidesteps the entity-extraction mismatch entirely since there is no evidence content for grammar_v4 to parse.",
+      "expected_pattern": "Q(ANSWER_NOW) should be high IF HRM-Text-1B's parametric knowledge covers these facts -- this is an empirical question this split's own execution answers, not assumed in advance. Q(MEMORY) should be no better (no evidence exists) and costs strictly more."
+    },
+    "MEMORY_required": {
+      "source": "sampled from data/hrm/b3_calibration_v1 (calibration-tier, reusable across diagnostic studies) -- unchanged generation, unchanged sampling approach used by EOB-v1/v2's D1",
+      "count": 72,
+      "note": "Matched count to ANSWER_NOW_viable for a balanced binary training set."
+    }
+  },
+
+  "SPLIT_DISCIPLINE": {
+    "role": "development/training -- NOT a confirmation split. Executive v0 is trained on this data directly.",
+    "requirement_before_promotion": "A SEPARATE, later, genuinely untouched executive-confirmation split is required before any promotion claim -- this split may never be reused for that purpose once training has occurred.",
+    "zero_overlap_required_against": [
+      "data/hrm/controlled_gate_a_v4/{development,qualification,ood,confirmation}",
+      "data/hrm/b3_calibration_v1/{cal_700,cal_1000,cal_1500,cal_2200,cal_3000}",
+      "data/hrm/g2_confirmation_2/confirm2_*",
+      "data/hrm/eob_v1/*", "data/hrm/eob_v2/*"
+    ]
+  },
+
+  "FEATURE_DISCIPLINE": {
+    "reference": "hrm_adaptive_memory.experiment_integrity.executive_features -- Executive v0 may use ONLY PRE_DECISION-stage features (require_admissible_for_answer_vs_memory() is the fail-closed gate). No POST_RETRIEVAL/POST_GRAPH/POST_GENERATION feature may be consumed, since those require part of the MEMORY action to have already run.",
+    "hard_rule": "Do not add a feature that implicitly leaks which SYNTHETIC FAMILY a task came from (e.g. 'does the subject look like a real-world proper noun') -- that would overfit to this study's own construction rather than learning a genuinely useful decision signal. Features must describe properties a real deployed system could observe about ANY incoming question, not properties of this benchmark's own generation process."
+  },
+
+  "EVALUATION_LADDER": {
+    "policies": ["E0_always_answer_now", "E1_always_memory", "E2_simple_heuristic",
+                "E3_frequency_matched_random", "E4_learned_executive_v0", "E5_oracle"],
+    "primary_metric": "policy regret: R_exec = U(oracle) - U(learned executive)",
+    "secondary_metric": "practical gain over best fixed policy: Delta_U_exec = U(learned executive) - max(U(always_answer), U(always_memory))",
+    "asymmetric_error_tracking": {
+      "P_memory_chosen_given_answer_better": "captures the D2/D3-class failure mode (unnecessary memory can destroy a correct answer) even though this split has no D2/D3-style tasks -- tracked for when the action space/data later expands",
+      "P_answer_chosen_given_memory_better": "captures the D1-class failure mode (skipping memory makes an otherwise-impossible task fail)"
+    },
+    "these_must_not_be_hidden_inside_aggregate_accuracy": true
+  },
+
+  "frozen_utc": "2026-08-10T03:00:00Z"
+}

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the assigned category for Pelican intake manifold?
+[EVIDENCE]
+[E1]
+Note: the assigned category for Pelican intake manifold resolves to accredited.
+[E2]
+[assigned category] Curlew intake manifold -> 8563
+[E3]
+{"subject": "Pelican intake manifold", "release channel": "{"category": "provisional"}"}
+[E4]
+Per the assigned category register, 3119 is allocated to Bluebird intake manifold.
+[E5]
+- updated Raven control module: assigned category now {"category": "quarantined"}
+[E6]
+- updated Wren intake manifold: parameter grade now {"category": "accredited"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,89 @@
+{
+  "PURPOSE": "Does observable runtime state predict when invoking CERTIFIED_MEMORY_V1 (configs/certified_memory_v1.json) beats answering directly? This is an OPPORTUNITY STUDY, not controller training -- it exists to establish, before any controller is built, whether there is a real, statistically-supported, operationally-meaningful gap between the oracle per-task action choice and the best single fixed policy.",
+
+  "MEMORY_OPERATION_IS_FROZEN": "The memory action (E1/A1) invokes CERTIFIED_MEMORY_V1 exactly as confirmed -- hrm_adaptive_memory.experiment_integrity.certified_memory.assert_certified_memory_v1_unchanged() is called before every use and this run aborts (fail-closed) on any mismatch. This study may not alter retrieval, graph construction, path ranking, the composer's contract, or packet_budget=6. If a controller-development need to change the memory operation arises later, that requires freezing CERTIFIED_MEMORY_V2 and re-confirming it BEFORE it may be used in any executive study.",
+
+  "DATASET": {
+    "suite": "data/hrm/b3_calibration_v1/",
+    "scales": ["cal_700", "cal_1000", "cal_1500", "cal_2200", "cal_3000"],
+    "role": "calibration (development-tier, per hrm_adaptive_memory.experiment_integrity.split_lineage.SplitRole.CALIBRATION) -- explicitly NOT g2_confirmation_2, which is consumed and diagnosis_only. Reusing calibration data for this NEW question (is there action-value heterogeneity at all?) is the same tier of use HRM qualification itself made of this suite: a development/qualification-grade study, not a final confirmation claim. An untouched confirmation split for the executive layer, if this study passes, is a SEPARATE future gate -- not built yet, not named, not touched by this study.",
+    "tasks_total": 750
+  },
+
+  "ACTIONS": {
+    "A0_ANSWER_NOW": {
+      "definition": "HRM answers with an EMPTY evidence packet -- selection.selected_ids=() through the unmodified run_packet_stage/compose_evidence_prompt path, which already renders '[NO EXTERNAL EVIDENCE]' when contents is empty (byte-identical to the Gate A composer, parity-tested). No new prompt format invented; this reuses the existing frozen composer exactly.",
+      "cost": "zero retrieval, zero graph construction, zero composition -- the cheap default action"
+    },
+    "A1_USE_CERTIFIED_MEMORY": {
+      "definition": "Exactly H2_g2_pathcoherent from qualification/confirmation-2: C2 retrieval -> G2 graph -> frozen path ranking -> path-coherent packet composer -> packet_budget=6, gated by assert_certified_memory_v1_unchanged().",
+      "cost": "retrieval + graph + composition, then HRM generation over a 6-record packet"
+    }
+  },
+
+  "UTILITY_V1": "U(a) = Q(a) (quality/correctness only -- token/latency/compute cost terms deferred to a later utility version once opportunity is established, per research-lead directive to start with the cleanest falsifiable question)",
+
+  "ORACLE_TIE_BREAK": "If Q(A0)==Q(A1) for a task, the oracle (E3) picks A0_ANSWER_NOW -- the cheaper action wins ties. Frozen before any task is scored; prevents a memory-favoring tie-break from inflating the oracle's apparent advantage.",
+
+  "POLICY_LADDER": {
+    "E0": "always ANSWER_NOW -- U(E0) = mean_i Q(A0_i)",
+    "E1": "always USE_CERTIFIED_MEMORY -- U(E1) = mean_i Q(A1_i)",
+    "E2": "simple FIXED heuristic, defined and frozen below BEFORE any task is scored",
+    "E3": "oracle per-task choice -- U(E3) = mean_i max(Q(A0_i), Q(A1_i)), tie-break A0"
+  },
+
+  "E2_FROZEN_HEURISTIC": {
+    "rule": "USE_CERTIFIED_MEMORY iff (identity_status in {EXACT, RESOLVED}) AND (n_complete_paths >= 1); else ANSWER_NOW.",
+    "rationale": "Both conditions are the cheapest, most structurally obvious pre-generation signals that the memory pipeline has ANYTHING coherent to offer: an unresolved identity means the retrieval/graph stage has no canonical subject to anchor on, and zero complete paths means the composer has no complete evidence chain to hand HRM regardless of packet_budget. This is a naive necessary-condition gate, not a learned rule -- it exists so E3's oracle ceiling is compared against something better than the two degenerate always-X policies, without smuggling in anything resembling a trained controller.",
+    "computed_from": "identity_status (run_identity_stage), n_complete_paths (len([p for p in g2_prefilter(...).all_paths if p.complete])) -- both already computed as part of building the A1 packet, no extra pipeline calls needed, no evaluator truth involved."
+  },
+
+  "PRIMARY_METRIC": {
+    "name": "ExecutiveOpportunity",
+    "formula": "U(E3) - max(U(E0), U(E1))",
+    "reading": "The utility available purely from choosing the right action per task, above whatever the best SINGLE fixed policy already achieves. This is the ceiling a controller could ever capture -- if it is small or unreliable, training a controller is not worth it yet."
+  },
+
+  "FROZEN_PROMOTION_CRITERIA": {
+    "material_opportunity_margin": 0.05,
+    "margin_rationale": "5 percentage points of quality. Smaller than this, the complexity/risk of building and deploying a learned executive is not obviously justified over just picking the better fixed policy. This is a considered, frozen judgment call (analogous to the 0.03 HRM qualification margin, which was reasoned relative to C4's PRIMARY_DELTA_THRESHOLD=0.15) -- NOT re-derived from this study's own data.",
+    "lcb_must_exceed": 0.0,
+    "lcb_method": "grouped_lcb_executive_opportunity (scripts/run_executive_opportunity_study.py) -- a generalization of scripts/diagnose_c5_confirmation_stopgate.grouped_lcb to a compound (max-based) per-replicate statistic instead of a simple paired mean, using the SAME resampling convention (resample by family group with replacement, not by task; seed=12345, iterations=2000) so the two are methodologically consistent even though grouped_lcb itself cannot express a max() term.",
+    "action_diversity_requirement": {
+      "rule": "Both A0 and A1 must each account for >= 15% of E3's oracle per-task choices.",
+      "rationale": "If one action captures >85% of oracle picks, ExecutiveOpportunity may be technically positive but operationally useless -- there is little a controller could learn beyond a trivial always-X rule. This is the exact failure mode the research-lead directive named explicitly (a 99%-memory oracle). 15% is a frozen, non-tuned threshold chosen before this run for the same reason as the margin above: symmetric, not favoring either action, and well above 'a handful of edge-case tasks.'"
+    },
+    "promoted_iff": "ExecutiveOpportunity >= 0.05 AND LCB_2.5% > 0.0 AND both actions >= 15% of oracle picks"
+  },
+
+  "STATE_FEATURES_CAPTURED_NOT_USED_AS_DECISION_INPUT_HERE": {
+    "purpose": "Recorded per task in every receipt for a FUTURE Executive v1 to learn from -- NOT read by this study's own oracle/heuristic/metric computation beyond the two named fields in E2_FROZEN_HEURISTIC. Evaluator truth (task correctness, the answer string) is never a feature.",
+    "features": [
+      "identity_status", "retrieval_score_margin (top1-top2 fused score)",
+      "graph_reachability (fraction of candidate pool with >=1 incident edge)",
+      "working_set_size", "n_complete_paths", "n_competing_paths (path_competition_bucket)",
+      "structural_competition_ratio (n_complete_paths / max(1, working_set_size))",
+      "bridge_availability_estimate (bool: >=1 bridge record in working set)",
+      "terminal_availability_estimate (bool: >=1 terminal record in working set)",
+      "packet_coherence (packet_composition.packet_coherence_ratio on the A1 packet)",
+      "cost_already_spent (A0's own token/latency, as a proxy -- meaningful once utility includes cost terms)"
+    ],
+    "hard_rule": "If Executive v1 is ever trained, its input features are restricted to this frozen list (pre-generation, non-evaluator state only). Adding a feature later requires updating this list explicitly, not silently expanding what a controller sees."
+  },
+
+  "PROCESSING_ORDER": [
+    "1. RUN_VALID: both actions scored for every task, hash chain intact (A1 uses the same hash chain as confirmation-2, A0's packet_hash/prompt_hash computed identically over an empty packet), CERTIFIED_MEMORY_V1 assertion held for every A1 invocation, prompt binding held for every generation.",
+    "2. Compute U(E0), U(E1), U(E2), U(E3), ExecutiveOpportunity.",
+    "3. Apply FROZEN_PROMOTION_CRITERIA (margin, LCB, action diversity) exactly as specified above -- no threshold tuned after seeing the result.",
+    "4. Freeze the verdict before any feature-vs-outcome inspection.",
+    "5. Only if promoted: proceed to state-feature-vs-DeltaU diagnostic inspection (the LAST step, per research-lead directive: 'examine which runtime-visible state features explain the difference' happens only after opportunity is established, never before)."
+  ],
+
+  "VERDICT_NAMING": {
+    "if_promoted": "EXECUTIVE_OPPORTUNITY_CONFIRMED -- proceed to design Executive v0 (two actions only: ANSWER_NOW, USE_CERTIFIED_MEMORY) trained to predict U-hat(a|state) from the frozen feature list, benchmarked against E0/E1/E2/E3 exactly as specified in the research-lead directive.",
+    "if_not_promoted": "NO_EXECUTIVE_OPPORTUNITY -- do not train a controller. If ExecutiveOpportunity is small/unreliable but one fixed policy (E0 or E1) clearly dominates, promote that fixed policy as the default action and stop -- this is itself a valid, useful finding, not a failure requiring further tuning of this study's thresholds.",
+    "if_low_diversity": "EXPANSION_NOT_WARRANTED -- even if the margin/LCB pass, if action diversity fails, treat as NO_EXECUTIVE_OPPORTUNITY: the oracle's near-total preference for one action means a controller has nothing meaningful to route."
+  },
+
+  "frozen_utc": "2026-08-10T08:00:00Z"
+}

@@ -1,0 +1,19 @@
+[OBJECTIVE]
+Which release channel applies to Sparrow pressure assembly?
+[EVIDENCE]
+[E1]
+- updated Pelican pressure assembly: release channel now {"grade": "quarantined"}
+[E2]
+release channel:
+  subject: Bittern pressure assembly
+  value: {"state": "accredited"}
+[E3]
+Per the release channel register, 8457 is allocated to Jacana pressure assembly.
+[E4]
+During setup, Kestrel pressure assembly was paired with {"category": "provisional"} for release channel.
+[E5]
+[release channel] Auk drive cluster -> BETA-GREEN
+[E6]
+{"subject": "Bluebird sensor array", "release channel": "DELTA-AMBER"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

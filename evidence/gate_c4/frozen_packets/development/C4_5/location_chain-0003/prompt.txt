@@ -1,0 +1,9 @@
+[OBJECTIVE]
+Which service region applies to WSA-5?
+[EVIDENCE]
+[E1]
+WSA-5 is the short code for Wren sensor array.
+[E2]
+[change] Wren sensor array :: service region := {"grade": "provisional"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

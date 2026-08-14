@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "bb57c493f75ad39a75a0a36a7ab59979c21516b53604d3ba8e05537fc21a7372",
+  "canonical_subject": "",
+  "ordered_selected_ids": [
+    "entity_attribute-0007/identity",
+    "entity_attribute-0007/fact",
+    "entity_attribute-0004/fact",
+    "entity_attribute-0009/fact",
+    "entity_attribute-0001/fact",
+    "entity_attribute-0002/fact"
+  ],
+  "ordered_text_sha256": [
+    "e2bdface038707467769882ee7c96d67f38eb2f6afcca2f88eddce25ef618062",
+    "ed87c8fafec78a620332e2a957fa80c5fa169d270907d83547f5ed817ed02f18",
+    "cab653f21c59062280c29e217a4a929512f1c7615b7e2a735e68ba3c376fab10",
+    "219a35daf2093e9cb2f38f31b272da62f3804086aad02efd507a415c9f07a25e",
+    "71c6b9923d91a86c5a765194d18641b997b7ce6561d81fe9c25267e846de0181",
+    "d8676b935cda20ec042a4f422e193aeb401522216a5b926e67abc9c4c73d2886"
+  ],
+  "query_hash": "6e9a83cafa32dbf74a21709a61a8ee28889aec7b0289de34b8fe49df7241a739",
+  "selector_policy_id": "s0",
+  "task_id": "entity_attribute-0007"
+}

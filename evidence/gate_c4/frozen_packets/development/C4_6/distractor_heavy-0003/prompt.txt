@@ -1,0 +1,9 @@
+[OBJECTIVE]
+Which routing class applies to DSA-7?
+[EVIDENCE]
+[E1]
+DSA-7 is the short code for Dunlin sensor array.
+[E2]
+During setup, Dunlin sensor array was paired with {"grade": "accredited"} for routing class.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

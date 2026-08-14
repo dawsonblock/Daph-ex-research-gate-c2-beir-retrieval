@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "ed3c24882fdff2d779f61e7a07dbe8312ddbeb0005a44bbd34caf021aadc9bb2",
+  "canonical_subject": "",
+  "ordered_selected_ids": [
+    "configuration_chain-0007/value",
+    "configuration_chain-0007/identity",
+    "configuration_chain-0001/value",
+    "configuration_chain-0007/direct",
+    "configuration_chain-0004/value",
+    "configuration_chain-0010/value"
+  ],
+  "ordered_text_sha256": [
+    "838befbbf2aa573d0c2d76a9e992862376fdcd83fc383d0cb3f33aee9953b67d",
+    "f51031290acf9a539d48315872f0b1d415ffb53c2f4449d10ff59bec5b189702",
+    "ad6b9864d2ddd4564b3b6f6ef9ea98f44a61808d546de064162e9b0a5b75388f",
+    "f3418f04dc70bc9f9a0f9f28333a18ee522123f0dd356e501b6735abd68632c4",
+    "6f31237c15c96bf728aef2eee0f1b7cc346824a7799525f201d798ba5f6bc6b3",
+    "2634bc4d077ae2d3d971ca35ac50241b64e269a20eabd5908073c7ffbf0ef3de"
+  ],
+  "query_hash": "bdba8bec09fdaaa607b4b1db393ab0f4a261cc385c20a3212ebb813d0fccd995",
+  "selector_policy_id": "s0",
+  "task_id": "configuration_chain-0007"
+}

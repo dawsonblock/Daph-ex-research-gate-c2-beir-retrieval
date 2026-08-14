@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which parameter grade applies to MCM-5?
+[EVIDENCE]
+[E1]
+Changelog: parameter grade for Dunlin drive cluster set to {"grade": "provisional"}.
+[E2]
+{"subject": "Bluebird control module", "parameter grade": "{"grade": "provisional"}"}
+[E3]
+[parameter grade] Dunlin pressure assembly -> THETA-OLIVE
+[E4]
+MCM-5 is the short code for Marlin control module.
+[E5]
+{"subject": "Ibis intake manifold", "parameter grade": "7863"}
+[E6]
+[change] Raven pressure assembly :: parameter grade := provisional
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

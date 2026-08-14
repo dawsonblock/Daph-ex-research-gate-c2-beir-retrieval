@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "20681a655940c3876989909abd780c3f47c7bb56ae8fa68d4240b6ff080eb379",
+  "canonical_subject": "",
+  "ordered_selected_ids": [
+    "dependency_chain-0005/value",
+    "dependency_chain-0000/value",
+    "dependency_chain-0002/value",
+    "dependency_chain-0002/rejected-1",
+    "dependency_chain-0001/value",
+    "dependency_chain-0002/rejected-0"
+  ],
+  "ordered_text_sha256": [
+    "975ef108bce2f9689446babc6b30bdc970bf44236704405a429279364882238a",
+    "91e88bd1d6699b0035930281acf5343654d48e0adbdb13f5f4609bd0e44cb079",
+    "60f13e51ba287106d990008f1c44fe9fa9526d3548698f65de3e9d6d4a7190a7",
+    "0679f18b3ff0a7815d98de8a5afb17a3169323ae4b876b2da0318b8d22ca750d",
+    "b856767ce1f1b095442b51afbe649adb9573561424e8ae2252d06fe2ce78199a",
+    "a4cb7c47da06889c358d395fbb80b7c994981088692ec9728ad1dccca1089b34"
+  ],
+  "query_hash": "c484f1e07b6041bc1feae25e4ede49a43dafddda95dda5fc828b32c4579b5d69",
+  "selector_policy_id": "s0",
+  "task_id": "dependency_chain-0006"
+}

@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "7cc01a12b17c5ed1fcca215271940d4c7df0d162827070797912ca7b5e60a6cc",
+  "canonical_subject": "Curlew pressure assembly",
+  "ordered_selected_ids": [
+    "ownership_chain-0011/value",
+    "ownership_chain-0008/dead-end-1",
+    "ownership_chain-0001/value",
+    "ownership_chain-0011/direct",
+    "ownership_chain-0008/link",
+    "procedural_chain-0000/link"
+  ],
+  "ordered_text_sha256": [
+    "c6ed9bfae7afb5ec3d0cb77ed19cd2fbaf36257ec48f48a9ec5d4221c7e42a3b",
+    "5690e2efb5fa14bc62c9eafa31747bafc956f19906389eba12c4b205fec03ebd",
+    "304ec075fe8a6a94baa0cfb56c28bd0925c097b309131769622d1413f7a9e8fa",
+    "b8758ab973f0e2ab9f16ca37656f4570946267ee8f439c94b08b24705d0bdb20",
+    "5bdcaf4818df33dce0f286e9f41c6962b3c7f28d517fe9223211db67c7abce8e",
+    "8bf57fe5917a229f613480ea71bf85a6b6ced9fd7a004858fbbb527dc7f35237"
+  ],
+  "query_hash": "34c2bf441ac5357b271f2f99f463544afa20eacef7a30799346cd94df1534378",
+  "selector_policy_id": "s0",
+  "task_id": "ownership_chain-0008"
+}

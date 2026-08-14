@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "d52f5a0294313b63e9ab464866aa21f3c09eceba6252b298278ca435dea0b35a",
+  "canonical_subject": "Heron sensor array",
+  "ordered_selected_ids": [
+    "numeric_chain-0007/identity",
+    "numeric_chain-0007/direct"
+  ],
+  "ordered_text_sha256": [
+    "49b53000990909b1840be1e6f6f190d04d48b3860def363c2db6a3127e3837fd",
+    "35923fc2a14fc7775319c114b36eac1cb1273096c3bb6da2c6ef532ea7ffed41"
+  ],
+  "query_hash": "b747266acf95413fae8c0510bd76dd1be9f1b75efec66c371936d956ea72f4f4",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "numeric_chain-0007"
+}

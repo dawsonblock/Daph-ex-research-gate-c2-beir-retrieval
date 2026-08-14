@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "3bcd6708c9dd7825e373e496b98e9b4fea58c936e44d0e95d04ae3b8561c23d2",
+  "canonical_subject": "Ibis control module",
+  "ordered_selected_ids": [
+    "ownership_chain-0000/value",
+    "dependency_chain-0001/dead-end-0",
+    "ownership_chain-0002/value",
+    "ownership_chain-0007/value",
+    "ownership_chain-0010/value",
+    "ownership_chain-0006/link"
+  ],
+  "ordered_text_sha256": [
+    "d7d7ff5d255454ac26b173f41ba3ac74325d557c6469d49af15c165c979177d7",
+    "95c4ac647f54dc6875c81dcd199d47565720143ee27fb528aee32e8e908a8e4c",
+    "b9e2cdbb387c10c4209225f9eb603beb6bbb76da9f9635ca2de9dbb52b53da67",
+    "aaf842b9ec40b20e5f75969ff373c0146261c32d6a566e55aec5a51166ba026a",
+    "1b0baed9d6749a3af79465158860802ee9ec09a9a3fc049c6977064fb21fc2da",
+    "157f07759320878227d8b475be5960198b74b06cafb8b31968241c7443fe14e9"
+  ],
+  "query_hash": "98e35c818ca0ffbe49687866f6275f8028bbda681fba2e1b2941b71ca37e2a77",
+  "selector_policy_id": "s0",
+  "task_id": "ownership_chain-0006"
+}

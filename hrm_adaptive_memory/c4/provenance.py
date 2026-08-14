@@ -76,6 +76,58 @@ def verify_results_hash(bundle_dir: Path) -> bool:
     return expected == actual
 
 
+# --- Bundle-level root hash (covers everything, including certification/) --
+
+BUNDLE_HASH_FILENAME = "BUNDLE.sha256"
+
+# Never hashed into the bundle root: it is itself the file being written, and
+# unlike RESULTS.sha256 (scoped to raw results, verified as a distinct step
+# earlier in the pipeline) this one has to be written strictly last.
+_BUNDLE_HASH_EXCLUDE = frozenset({BUNDLE_HASH_FILENAME})
+
+
+def compute_bundle_hash(bundle_dir: Path) -> str:
+    """Compute a root hash covering EVERY file under a bundle directory.
+
+    RESULTS.sha256 is deliberately narrow -- direct-child .jsonl/.json files
+    only, verified as its own early step. It does not cover certification/
+    (CERTIFICATION.json, ENVIRONMENT.lock, PROTOCOL.json, SOURCE_SNAPSHOT.json,
+    source_snapshot.zip), so a bundle could pass every RESULTS.sha256 check
+    while its lineage artifacts went unverified. This is the file meant to be
+    the single root of trust: it walks the whole tree, recursively, and its
+    own listing is sorted by relative path for a deterministic result
+    independent of filesystem iteration order.
+    """
+    files = sorted(
+        f for f in bundle_dir.rglob("*")
+        if f.is_file() and f.name not in _BUNDLE_HASH_EXCLUDE
+    )
+    lines = []
+    for f in files:
+        digest = _sha256_file(f)
+        rel = f.relative_to(bundle_dir).as_posix()
+        lines.append(f"{digest}  {rel}")
+    return "\n".join(lines) + "\n"
+
+
+def write_bundle_hash(bundle_dir: Path) -> str:
+    """Write BUNDLE.sha256. Call this LAST -- after every other artifact,
+    including CERTIFICATION.json, already exists -- or it won't be covered."""
+    content = compute_bundle_hash(bundle_dir)
+    (bundle_dir / BUNDLE_HASH_FILENAME).write_text(content)
+    return content
+
+
+def verify_bundle_hash(bundle_dir: Path) -> bool:
+    """Verify BUNDLE.sha256 for a bundle directory."""
+    hash_file = bundle_dir / BUNDLE_HASH_FILENAME
+    if not hash_file.exists():
+        return False
+    expected = hash_file.read_text()
+    actual = compute_bundle_hash(bundle_dir)
+    return expected == actual
+
+
 def build_manifest(
     *,
     repo: Path,

@@ -1,0 +1,2852 @@
+{
+  "audit_utc": "2026-08-09T21:00:00Z",
+  "boundary_failure_rate": 0.178,
+  "derivation": "extract_v4_entities run over all 5 calibration scales' evidence; expected_entity computed by truncating at the first complete role suffix from the generator's CLOSED grammar (_ROLES), not guessed",
+  "distinct_boundary_failures": 810,
+  "entries": [
+    {
+      "count": 11,
+      "expected_entity": "Kestrel pressure assembly",
+      "raw_extraction": "Kestrel pressure assembly resolves",
+      "source_template_family": "configuration_chain, dependency_chain, entity_attribute, location_chain, numeric_chain, ownership_chain, temporal_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 11,
+      "expected_entity": "Raven pressure assembly",
+      "raw_extraction": "Raven pressure assembly\n  value",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 10,
+      "expected_entity": "Curlew sensor array",
+      "raw_extraction": "Curlew sensor array resolves",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, ownership_chain, temporal_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 10,
+      "expected_entity": "Dunlin pressure assembly",
+      "raw_extraction": "Dunlin pressure assembly set",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, numeric_chain, procedural_chain, temporal_chain, temporal_update",
+      "trailing_token": "set"
+    },
+    {
+      "count": 10,
+      "expected_entity": "Quail pressure assembly",
+      "raw_extraction": "Quail pressure assembly uses",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain, temporal_update",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 10,
+      "expected_entity": "Quail drive cluster",
+      "raw_extraction": "Quail drive cluster resolves",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 9,
+      "expected_entity": "Jacana relay unit",
+      "raw_extraction": "Jacana relay unit set",
+      "source_template_family": "configuration_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 9,
+      "expected_entity": "Nimbus control module",
+      "raw_extraction": "Nimbus control module resolves",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 9,
+      "expected_entity": "Pelican sensor array",
+      "raw_extraction": "Pelican sensor array\n  value",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 9,
+      "expected_entity": "Quail intake manifold",
+      "raw_extraction": "Quail intake manifold\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 9,
+      "expected_entity": "Nimbus drive cluster",
+      "raw_extraction": "Nimbus drive cluster uses",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Bittern control module",
+      "raw_extraction": "Bittern control module set",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Kestrel intake manifold",
+      "raw_extraction": "Kestrel intake manifold as",
+      "source_template_family": "dependency_chain, location_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Auk drive cluster",
+      "raw_extraction": "Auk drive cluster set",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Marlin control module",
+      "raw_extraction": "Marlin control module set",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain, temporal_update",
+      "trailing_token": "set"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Curlew pressure assembly",
+      "raw_extraction": "Curlew pressure assembly uses",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Raven control module",
+      "raw_extraction": "Raven control module\n  value",
+      "source_template_family": "configuration_chain, location_chain, ownership_chain, procedural_chain, temporal_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Bluebird pressure assembly",
+      "raw_extraction": "Bluebird pressure assembly as",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Auk sensor array",
+      "raw_extraction": "Auk sensor array resolves",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Heron pressure assembly",
+      "raw_extraction": "Heron pressure assembly resolves",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Osprey control module",
+      "raw_extraction": "Osprey control module resolves",
+      "source_template_family": "dependency_chain, distractor_heavy, entity_attribute, location_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Ibis pressure assembly",
+      "raw_extraction": "Ibis pressure assembly as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Jacana control module",
+      "raw_extraction": "Jacana control module set",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Marlin intake manifold",
+      "raw_extraction": "Marlin intake manifold\n  value",
+      "source_template_family": "dependency_chain, entity_attribute, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Raven drive cluster",
+      "raw_extraction": "Raven drive cluster uses",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Marlin drive cluster",
+      "raw_extraction": "Marlin drive cluster set",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, numeric_chain, procedural_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Kestrel control module",
+      "raw_extraction": "Kestrel control module set",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, temporal_update",
+      "trailing_token": "set"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Sparrow pressure assembly",
+      "raw_extraction": "Sparrow pressure assembly uses",
+      "source_template_family": "dependency_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Heron intake manifold",
+      "raw_extraction": "Heron intake manifold\n  value",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, temporal_chain, temporal_update",
+      "trailing_token": "value"
+    },
+    {
+      "count": 8,
+      "expected_entity": "Gannet pressure assembly",
+      "raw_extraction": "Gannet pressure assembly resolves",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, entity_attribute, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Egret relay unit",
+      "raw_extraction": "Egret relay unit uses",
+      "source_template_family": "dependency_chain, location_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Teal drive cluster",
+      "raw_extraction": "Teal drive cluster uses",
+      "source_template_family": "numeric_chain, ownership_chain, temporal_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Raven sensor array",
+      "raw_extraction": "Raven sensor array resolves",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Jacana control module",
+      "raw_extraction": "Jacana control module resolves",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, ownership_chain, temporal_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Curlew sensor array",
+      "raw_extraction": "Curlew sensor array\n  value",
+      "source_template_family": "configuration_chain, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Egret relay unit",
+      "raw_extraction": "Egret relay unit resolves",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, numeric_chain, temporal_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Bluebird control module",
+      "raw_extraction": "Bluebird control module resolves",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Nimbus sensor array",
+      "raw_extraction": "Nimbus sensor array uses",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Marlin pressure assembly",
+      "raw_extraction": "Marlin pressure assembly set",
+      "source_template_family": "dependency_chain, distractor_heavy, temporal_update",
+      "trailing_token": "set"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Sparrow pressure assembly",
+      "raw_extraction": "Sparrow pressure assembly as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain, procedural_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Vireo relay unit",
+      "raw_extraction": "Vireo relay unit uses",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Gannet intake manifold",
+      "raw_extraction": "Gannet intake manifold\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain, procedural_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Bluebird control module",
+      "raw_extraction": "Bluebird control module set",
+      "source_template_family": "distractor_heavy, numeric_chain, procedural_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Teal pressure assembly",
+      "raw_extraction": "Teal pressure assembly resolves",
+      "source_template_family": "distractor_heavy, numeric_chain, procedural_chain, temporal_update",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Sparrow relay unit",
+      "raw_extraction": "Sparrow relay unit uses",
+      "source_template_family": "dependency_chain, numeric_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Raven control module",
+      "raw_extraction": "Raven control module resolves",
+      "source_template_family": "dependency_chain, distractor_heavy, numeric_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Kestrel drive cluster",
+      "raw_extraction": "Kestrel drive cluster uses",
+      "source_template_family": "configuration_chain, numeric_chain, ownership_chain, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Marlin sensor array",
+      "raw_extraction": "Marlin sensor array\n  value",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Quail control module",
+      "raw_extraction": "Quail control module resolves",
+      "source_template_family": "configuration_chain, numeric_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Heron control module",
+      "raw_extraction": "Heron control module uses",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Pelican pressure assembly",
+      "raw_extraction": "Pelican pressure assembly\n  value",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Kestrel drive cluster",
+      "raw_extraction": "Kestrel drive cluster set",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Finch drive cluster",
+      "raw_extraction": "Finch drive cluster set",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Bluebird intake manifold",
+      "raw_extraction": "Bluebird intake manifold set",
+      "source_template_family": "dependency_chain, location_chain, ownership_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Curlew relay unit",
+      "raw_extraction": "Curlew relay unit uses",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, numeric_chain, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Dunlin sensor array",
+      "raw_extraction": "Dunlin sensor array uses",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Heron pressure assembly",
+      "raw_extraction": "Heron pressure assembly uses",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, numeric_chain, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Raven relay unit",
+      "raw_extraction": "Raven relay unit set",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Sparrow sensor array",
+      "raw_extraction": "Sparrow sensor array as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain, procedural_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Dunlin relay unit",
+      "raw_extraction": "Dunlin relay unit set",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Egret control module",
+      "raw_extraction": "Egret control module\n  value",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, procedural_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Teal relay unit",
+      "raw_extraction": "Teal relay unit resolves",
+      "source_template_family": "dependency_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Gannet pressure assembly",
+      "raw_extraction": "Gannet pressure assembly uses",
+      "source_template_family": "dependency_chain, distractor_heavy, location_chain, numeric_chain, temporal_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Egret pressure assembly",
+      "raw_extraction": "Egret pressure assembly set",
+      "source_template_family": "distractor_heavy, location_chain, numeric_chain, ownership_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Pelican control module",
+      "raw_extraction": "Pelican control module uses",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Jacana drive cluster",
+      "raw_extraction": "Jacana drive cluster as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Bittern control module",
+      "raw_extraction": "Bittern control module\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Bittern relay unit",
+      "raw_extraction": "Bittern relay unit as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Teal control module",
+      "raw_extraction": "Teal control module uses",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, ownership_chain, temporal_update",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Osprey relay unit",
+      "raw_extraction": "Osprey relay unit resolves",
+      "source_template_family": "configuration_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Bluebird pressure assembly",
+      "raw_extraction": "Bluebird pressure assembly resolves",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Osprey control module",
+      "raw_extraction": "Osprey control module set",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Marlin control module",
+      "raw_extraction": "Marlin control module as",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain, procedural_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Ibis relay unit",
+      "raw_extraction": "Ibis relay unit set",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain, temporal_update",
+      "trailing_token": "set"
+    },
+    {
+      "count": 7,
+      "expected_entity": "Gannet sensor array",
+      "raw_extraction": "Gannet sensor array uses",
+      "source_template_family": "dependency_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Egret sensor array",
+      "raw_extraction": "Egret sensor array set",
+      "source_template_family": "configuration_chain, dependency_chain, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Bittern control module",
+      "raw_extraction": "Bittern control module resolves",
+      "source_template_family": "dependency_chain, location_chain, ownership_chain, procedural_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Curlew drive cluster",
+      "raw_extraction": "Curlew drive cluster resolves",
+      "source_template_family": "dependency_chain, distractor_heavy, location_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Kestrel pressure assembly",
+      "raw_extraction": "Kestrel pressure assembly as",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Finch relay unit",
+      "raw_extraction": "Finch relay unit uses",
+      "source_template_family": "configuration_chain, distractor_heavy, ownership_chain, temporal_update",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Curlew control module",
+      "raw_extraction": "Curlew control module\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, ownership_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Bluebird intake manifold",
+      "raw_extraction": "Bluebird intake manifold as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Ibis intake manifold",
+      "raw_extraction": "Ibis intake manifold\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Ibis control module",
+      "raw_extraction": "Ibis control module\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Wren drive cluster",
+      "raw_extraction": "Wren drive cluster set",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Osprey control module",
+      "raw_extraction": "Osprey control module uses",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Kestrel intake manifold",
+      "raw_extraction": "Kestrel intake manifold set",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Curlew pressure assembly",
+      "raw_extraction": "Curlew pressure assembly\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Raven sensor array",
+      "raw_extraction": "Raven sensor array set",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Finch drive cluster",
+      "raw_extraction": "Finch drive cluster resolves",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Nimbus relay unit",
+      "raw_extraction": "Nimbus relay unit set",
+      "source_template_family": "distractor_heavy, numeric_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Heron control module",
+      "raw_extraction": "Heron control module set",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Bittern sensor array",
+      "raw_extraction": "Bittern sensor array\n  value",
+      "source_template_family": "dependency_chain, numeric_chain, temporal_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Quail pressure assembly",
+      "raw_extraction": "Quail pressure assembly set",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Raven drive cluster",
+      "raw_extraction": "Raven drive cluster\n  value",
+      "source_template_family": "dependency_chain, location_chain, ownership_chain, procedural_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Bittern intake manifold",
+      "raw_extraction": "Bittern intake manifold set",
+      "source_template_family": "dependency_chain, numeric_chain, ownership_chain, procedural_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Vireo control module",
+      "raw_extraction": "Vireo control module uses",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, ownership_chain, temporal_update",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Vireo pressure assembly",
+      "raw_extraction": "Vireo pressure assembly\n  value",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Bittern relay unit",
+      "raw_extraction": "Bittern relay unit set",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, numeric_chain, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Marlin pressure assembly",
+      "raw_extraction": "Marlin pressure assembly as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, procedural_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Bluebird relay unit",
+      "raw_extraction": "Bluebird relay unit set",
+      "source_template_family": "dependency_chain, distractor_heavy, entity_attribute, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Marlin control module",
+      "raw_extraction": "Marlin control module\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, ownership_chain, procedural_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Sparrow sensor array",
+      "raw_extraction": "Sparrow sensor array uses",
+      "source_template_family": "dependency_chain, numeric_chain, ownership_chain, temporal_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Bluebird control module",
+      "raw_extraction": "Bluebird control module as",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, ownership_chain, temporal_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Auk drive cluster",
+      "raw_extraction": "Auk drive cluster\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain, temporal_update",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Vireo pressure assembly",
+      "raw_extraction": "Vireo pressure assembly set",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Pelican pressure assembly",
+      "raw_extraction": "Pelican pressure assembly set",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Jacana intake manifold",
+      "raw_extraction": "Jacana intake manifold\n  value",
+      "source_template_family": "dependency_chain, location_chain, ownership_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Pelican pressure assembly",
+      "raw_extraction": "Pelican pressure assembly uses",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Teal pressure assembly",
+      "raw_extraction": "Teal pressure assembly\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain, procedural_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Pelican relay unit",
+      "raw_extraction": "Pelican relay unit resolves",
+      "source_template_family": "dependency_chain, distractor_heavy, location_chain, ownership_chain, temporal_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Teal control module",
+      "raw_extraction": "Teal control module\n  value",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain, temporal_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Gannet relay unit",
+      "raw_extraction": "Gannet relay unit\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Wren pressure assembly",
+      "raw_extraction": "Wren pressure assembly set",
+      "source_template_family": "dependency_chain, distractor_heavy, location_chain, numeric_chain, procedural_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Heron sensor array",
+      "raw_extraction": "Heron sensor array set",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, procedural_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Kestrel drive cluster",
+      "raw_extraction": "Kestrel drive cluster resolves",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, ownership_chain, procedural_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Auk drive cluster",
+      "raw_extraction": "Auk drive cluster resolves",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, temporal_update",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Nimbus pressure assembly",
+      "raw_extraction": "Nimbus pressure assembly resolves",
+      "source_template_family": "dependency_chain, distractor_heavy, numeric_chain, temporal_update",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Egret sensor array",
+      "raw_extraction": "Egret sensor array resolves",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Bittern pressure assembly",
+      "raw_extraction": "Bittern pressure assembly as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Gannet intake manifold",
+      "raw_extraction": "Gannet intake manifold set",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Nimbus pressure assembly",
+      "raw_extraction": "Nimbus pressure assembly uses",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Heron relay unit",
+      "raw_extraction": "Heron relay unit as",
+      "source_template_family": "configuration_chain, numeric_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Osprey pressure assembly",
+      "raw_extraction": "Osprey pressure assembly resolves",
+      "source_template_family": "configuration_chain, distractor_heavy, temporal_update",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Jacana sensor array",
+      "raw_extraction": "Jacana sensor array resolves",
+      "source_template_family": "configuration_chain, dependency_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Sparrow intake manifold",
+      "raw_extraction": "Sparrow intake manifold uses",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Gannet control module",
+      "raw_extraction": "Gannet control module\n  value",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Dunlin intake manifold",
+      "raw_extraction": "Dunlin intake manifold resolves",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Quail pressure assembly",
+      "raw_extraction": "Quail pressure assembly\n  value",
+      "source_template_family": "configuration_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Jacana drive cluster",
+      "raw_extraction": "Jacana drive cluster set",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Vireo drive cluster",
+      "raw_extraction": "Vireo drive cluster\n  value",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Curlew relay unit",
+      "raw_extraction": "Curlew relay unit resolves",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain, procedural_chain, temporal_update",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Quail drive cluster",
+      "raw_extraction": "Quail drive cluster uses",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, procedural_chain, temporal_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Sparrow drive cluster",
+      "raw_extraction": "Sparrow drive cluster set",
+      "source_template_family": "configuration_chain, dependency_chain, temporal_update",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Auk drive cluster",
+      "raw_extraction": "Auk drive cluster uses",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Sparrow control module",
+      "raw_extraction": "Sparrow control module uses",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, ownership_chain, temporal_update",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Auk control module",
+      "raw_extraction": "Auk control module resolves",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Sparrow sensor array",
+      "raw_extraction": "Sparrow sensor array resolves",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, numeric_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Ibis sensor array",
+      "raw_extraction": "Ibis sensor array\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Heron intake manifold",
+      "raw_extraction": "Heron intake manifold set",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, procedural_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Finch relay unit",
+      "raw_extraction": "Finch relay unit as",
+      "source_template_family": "dependency_chain, numeric_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Quail relay unit",
+      "raw_extraction": "Quail relay unit uses",
+      "source_template_family": "dependency_chain, entity_attribute, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Dunlin intake manifold",
+      "raw_extraction": "Dunlin intake manifold set",
+      "source_template_family": "dependency_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 6,
+      "expected_entity": "Raven pressure assembly",
+      "raw_extraction": "Raven pressure assembly resolves",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Osprey drive cluster",
+      "raw_extraction": "Osprey drive cluster set",
+      "source_template_family": "configuration_chain, entity_attribute, location_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Egret relay unit",
+      "raw_extraction": "Egret relay unit set",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Curlew control module",
+      "raw_extraction": "Curlew control module resolves",
+      "source_template_family": "configuration_chain, numeric_chain, ownership_chain, temporal_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Bittern control module",
+      "raw_extraction": "Bittern control module uses",
+      "source_template_family": "configuration_chain, numeric_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Jacana control module",
+      "raw_extraction": "Jacana control module uses",
+      "source_template_family": "configuration_chain, dependency_chain, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Egret relay unit",
+      "raw_extraction": "Egret relay unit\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Heron control module",
+      "raw_extraction": "Heron control module resolves",
+      "source_template_family": "configuration_chain, location_chain, ownership_chain, temporal_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Vireo drive cluster",
+      "raw_extraction": "Vireo drive cluster resolves",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Marlin pressure assembly",
+      "raw_extraction": "Marlin pressure assembly uses",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Bittern drive cluster",
+      "raw_extraction": "Bittern drive cluster as",
+      "source_template_family": "configuration_chain, location_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Osprey relay unit",
+      "raw_extraction": "Osprey relay unit set",
+      "source_template_family": "dependency_chain, numeric_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Osprey sensor array",
+      "raw_extraction": "Osprey sensor array resolves",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, temporal_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Vireo relay unit",
+      "raw_extraction": "Vireo relay unit set",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Ibis drive cluster",
+      "raw_extraction": "Ibis drive cluster resolves",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Heron control module",
+      "raw_extraction": "Heron control module as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Kestrel pressure assembly",
+      "raw_extraction": "Kestrel pressure assembly\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Curlew drive cluster",
+      "raw_extraction": "Curlew drive cluster set",
+      "source_template_family": "configuration_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Bittern sensor array",
+      "raw_extraction": "Bittern sensor array uses",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, numeric_chain, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Bluebird sensor array",
+      "raw_extraction": "Bluebird sensor array resolves",
+      "source_template_family": "distractor_heavy, location_chain, numeric_chain, temporal_update",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Pelican intake manifold",
+      "raw_extraction": "Pelican intake manifold resolves",
+      "source_template_family": "location_chain, numeric_chain, procedural_chain, temporal_update",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Marlin drive cluster",
+      "raw_extraction": "Marlin drive cluster uses",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Sparrow drive cluster",
+      "raw_extraction": "Sparrow drive cluster\n  value",
+      "source_template_family": "distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Finch sensor array",
+      "raw_extraction": "Finch sensor array resolves",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Pelican intake manifold",
+      "raw_extraction": "Pelican intake manifold set",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, procedural_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Pelican sensor array",
+      "raw_extraction": "Pelican sensor array uses",
+      "source_template_family": "dependency_chain, entity_attribute, location_chain, numeric_chain, temporal_update",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Jacana intake manifold",
+      "raw_extraction": "Jacana intake manifold resolves",
+      "source_template_family": "distractor_heavy, location_chain, ownership_chain, temporal_update",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Osprey relay unit",
+      "raw_extraction": "Osprey relay unit uses",
+      "source_template_family": "configuration_chain, location_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Nimbus intake manifold",
+      "raw_extraction": "Nimbus intake manifold as",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Finch pressure assembly",
+      "raw_extraction": "Finch pressure assembly uses",
+      "source_template_family": "dependency_chain, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Teal sensor array",
+      "raw_extraction": "Teal sensor array uses",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Bluebird pressure assembly",
+      "raw_extraction": "Bluebird pressure assembly set",
+      "source_template_family": "dependency_chain, distractor_heavy",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Marlin pressure assembly",
+      "raw_extraction": "Marlin pressure assembly resolves",
+      "source_template_family": "dependency_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Gannet relay unit",
+      "raw_extraction": "Gannet relay unit resolves",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Egret control module",
+      "raw_extraction": "Egret control module set",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Raven pressure assembly",
+      "raw_extraction": "Raven pressure assembly as",
+      "source_template_family": "dependency_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Teal relay unit",
+      "raw_extraction": "Teal relay unit uses",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Curlew intake manifold",
+      "raw_extraction": "Curlew intake manifold\n  value",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Bittern relay unit",
+      "raw_extraction": "Bittern relay unit resolves",
+      "source_template_family": "configuration_chain, numeric_chain, procedural_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Raven relay unit",
+      "raw_extraction": "Raven relay unit\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, temporal_update",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Pelican drive cluster",
+      "raw_extraction": "Pelican drive cluster\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, temporal_update",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Teal intake manifold",
+      "raw_extraction": "Teal intake manifold uses",
+      "source_template_family": "distractor_heavy, location_chain, temporal_update",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Bluebird sensor array",
+      "raw_extraction": "Bluebird sensor array\n  value",
+      "source_template_family": "dependency_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Marlin intake manifold",
+      "raw_extraction": "Marlin intake manifold uses",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Curlew relay unit",
+      "raw_extraction": "Curlew relay unit\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, procedural_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Gannet sensor array",
+      "raw_extraction": "Gannet sensor array resolves",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Nimbus drive cluster",
+      "raw_extraction": "Nimbus drive cluster set",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Auk sensor array",
+      "raw_extraction": "Auk sensor array\n  value",
+      "source_template_family": "configuration_chain, distractor_heavy, ownership_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Wren intake manifold",
+      "raw_extraction": "Wren intake manifold set",
+      "source_template_family": "configuration_chain, location_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Auk sensor array",
+      "raw_extraction": "Auk sensor array uses",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, temporal_update",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Quail drive cluster",
+      "raw_extraction": "Quail drive cluster as",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, temporal_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Teal relay unit",
+      "raw_extraction": "Teal relay unit set",
+      "source_template_family": "distractor_heavy, entity_attribute, location_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Finch drive cluster",
+      "raw_extraction": "Finch drive cluster uses",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Sparrow intake manifold",
+      "raw_extraction": "Sparrow intake manifold resolves",
+      "source_template_family": "distractor_heavy, location_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Heron pressure assembly",
+      "raw_extraction": "Heron pressure assembly set",
+      "source_template_family": "configuration_chain, distractor_heavy, ownership_chain, procedural_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Pelican control module",
+      "raw_extraction": "Pelican control module set",
+      "source_template_family": "location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Teal pressure assembly",
+      "raw_extraction": "Teal pressure assembly uses",
+      "source_template_family": "configuration_chain, numeric_chain, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Bluebird pressure assembly",
+      "raw_extraction": "Bluebird pressure assembly\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Egret drive cluster",
+      "raw_extraction": "Egret drive cluster\n  value",
+      "source_template_family": "distractor_heavy, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Wren sensor array",
+      "raw_extraction": "Wren sensor array uses",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Kestrel drive cluster",
+      "raw_extraction": "Kestrel drive cluster as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Gannet pressure assembly",
+      "raw_extraction": "Gannet pressure assembly set",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Marlin relay unit",
+      "raw_extraction": "Marlin relay unit\n  value",
+      "source_template_family": "configuration_chain, distractor_heavy, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Ibis control module",
+      "raw_extraction": "Ibis control module set",
+      "source_template_family": "configuration_chain, dependency_chain, entity_attribute, location_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Dunlin drive cluster",
+      "raw_extraction": "Dunlin drive cluster resolves",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, numeric_chain, temporal_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Bluebird drive cluster",
+      "raw_extraction": "Bluebird drive cluster uses",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Egret intake manifold",
+      "raw_extraction": "Egret intake manifold\n  value",
+      "source_template_family": "dependency_chain, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Egret sensor array",
+      "raw_extraction": "Egret sensor array\n  value",
+      "source_template_family": "dependency_chain, location_chain, temporal_update",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Quail relay unit",
+      "raw_extraction": "Quail relay unit\n  value",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Gannet intake manifold",
+      "raw_extraction": "Gannet intake manifold resolves",
+      "source_template_family": "location_chain, numeric_chain, temporal_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Finch control module",
+      "raw_extraction": "Finch control module uses",
+      "source_template_family": "dependency_chain, numeric_chain, procedural_chain, temporal_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Auk relay unit",
+      "raw_extraction": "Auk relay unit uses",
+      "source_template_family": "dependency_chain, location_chain, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Wren drive cluster",
+      "raw_extraction": "Wren drive cluster\n  value",
+      "source_template_family": "dependency_chain, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Marlin intake manifold",
+      "raw_extraction": "Marlin intake manifold set",
+      "source_template_family": "dependency_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Raven sensor array",
+      "raw_extraction": "Raven sensor array\n  value",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Curlew control module",
+      "raw_extraction": "Curlew control module uses",
+      "source_template_family": "dependency_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Jacana control module",
+      "raw_extraction": "Jacana control module\n  value",
+      "source_template_family": "dependency_chain, distractor_heavy",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Quail control module",
+      "raw_extraction": "Quail control module uses",
+      "source_template_family": "dependency_chain, numeric_chain, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Bittern pressure assembly",
+      "raw_extraction": "Bittern pressure assembly set",
+      "source_template_family": "dependency_chain, location_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Sparrow sensor array",
+      "raw_extraction": "Sparrow sensor array\n  value",
+      "source_template_family": "distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 5,
+      "expected_entity": "Wren intake manifold",
+      "raw_extraction": "Wren intake manifold as",
+      "source_template_family": "location_chain, numeric_chain, ownership_chain, procedural_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Jacana pressure assembly",
+      "raw_extraction": "Jacana pressure assembly set",
+      "source_template_family": "dependency_chain, entity_attribute, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Dunlin control module",
+      "raw_extraction": "Dunlin control module\n  value",
+      "source_template_family": "dependency_chain, entity_attribute, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Nimbus control module",
+      "raw_extraction": "Nimbus control module set",
+      "source_template_family": "configuration_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Vireo intake manifold",
+      "raw_extraction": "Vireo intake manifold set",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Heron intake manifold",
+      "raw_extraction": "Heron intake manifold resolves",
+      "source_template_family": "dependency_chain, numeric_chain, procedural_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Pelican pressure assembly",
+      "raw_extraction": "Pelican pressure assembly as",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Heron relay unit",
+      "raw_extraction": "Heron relay unit\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, ownership_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Auk pressure assembly",
+      "raw_extraction": "Auk pressure assembly as",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, procedural_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Vireo sensor array",
+      "raw_extraction": "Vireo sensor array uses",
+      "source_template_family": "dependency_chain, numeric_chain, temporal_update",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Heron relay unit",
+      "raw_extraction": "Heron relay unit set",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Egret intake manifold",
+      "raw_extraction": "Egret intake manifold uses",
+      "source_template_family": "dependency_chain, location_chain, temporal_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Bluebird sensor array",
+      "raw_extraction": "Bluebird sensor array uses",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, temporal_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Sparrow sensor array",
+      "raw_extraction": "Sparrow sensor array set",
+      "source_template_family": "distractor_heavy, ownership_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Heron drive cluster",
+      "raw_extraction": "Heron drive cluster resolves",
+      "source_template_family": "configuration_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Egret drive cluster",
+      "raw_extraction": "Egret drive cluster uses",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Nimbus control module",
+      "raw_extraction": "Nimbus control module uses",
+      "source_template_family": "dependency_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Pelican sensor array",
+      "raw_extraction": "Pelican sensor array resolves",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Ibis sensor array",
+      "raw_extraction": "Ibis sensor array set",
+      "source_template_family": "procedural_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Vireo drive cluster",
+      "raw_extraction": "Vireo drive cluster uses",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Ibis control module",
+      "raw_extraction": "Ibis control module as",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, procedural_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Jacana pressure assembly",
+      "raw_extraction": "Jacana pressure assembly\n  value",
+      "source_template_family": "dependency_chain, distractor_heavy, location_chain, temporal_update",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Kestrel relay unit",
+      "raw_extraction": "Kestrel relay unit resolves",
+      "source_template_family": "dependency_chain, distractor_heavy, location_chain, procedural_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Bittern intake manifold",
+      "raw_extraction": "Bittern intake manifold uses",
+      "source_template_family": "configuration_chain, distractor_heavy, numeric_chain, temporal_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Gannet pressure assembly",
+      "raw_extraction": "Gannet pressure assembly\n  value",
+      "source_template_family": "configuration_chain, entity_attribute",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Auk relay unit",
+      "raw_extraction": "Auk relay unit as",
+      "source_template_family": "location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Ibis intake manifold",
+      "raw_extraction": "Ibis intake manifold set",
+      "source_template_family": "configuration_chain, distractor_heavy, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Jacana intake manifold",
+      "raw_extraction": "Jacana intake manifold set",
+      "source_template_family": "dependency_chain, numeric_chain, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Finch control module",
+      "raw_extraction": "Finch control module set",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Wren control module",
+      "raw_extraction": "Wren control module resolves",
+      "source_template_family": "dependency_chain, distractor_heavy, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Gannet pressure assembly",
+      "raw_extraction": "Gannet pressure assembly as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Wren control module",
+      "raw_extraction": "Wren control module\n  value",
+      "source_template_family": "configuration_chain, dependency_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Teal pressure assembly",
+      "raw_extraction": "Teal pressure assembly set",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Marlin intake manifold",
+      "raw_extraction": "Marlin intake manifold as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Dunlin sensor array",
+      "raw_extraction": "Dunlin sensor array set",
+      "source_template_family": "dependency_chain, distractor_heavy, location_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Osprey sensor array",
+      "raw_extraction": "Osprey sensor array uses",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Sparrow relay unit",
+      "raw_extraction": "Sparrow relay unit set",
+      "source_template_family": "dependency_chain, location_chain, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Sparrow relay unit",
+      "raw_extraction": "Sparrow relay unit\n  value",
+      "source_template_family": "distractor_heavy, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Heron control module",
+      "raw_extraction": "Heron control module\n  value",
+      "source_template_family": "configuration_chain, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Quail relay unit",
+      "raw_extraction": "Quail relay unit as",
+      "source_template_family": "configuration_chain, location_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Ibis sensor array",
+      "raw_extraction": "Ibis sensor array uses",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Bluebird pressure assembly",
+      "raw_extraction": "Bluebird pressure assembly uses",
+      "source_template_family": "configuration_chain, location_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Finch drive cluster",
+      "raw_extraction": "Finch drive cluster as",
+      "source_template_family": "configuration_chain, location_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Sparrow relay unit",
+      "raw_extraction": "Sparrow relay unit resolves",
+      "source_template_family": "distractor_heavy, numeric_chain, temporal_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Auk intake manifold",
+      "raw_extraction": "Auk intake manifold uses",
+      "source_template_family": "numeric_chain, ownership_chain, temporal_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Marlin pressure assembly",
+      "raw_extraction": "Marlin pressure assembly\n  value",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Kestrel sensor array",
+      "raw_extraction": "Kestrel sensor array set",
+      "source_template_family": "dependency_chain, procedural_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Raven drive cluster",
+      "raw_extraction": "Raven drive cluster resolves",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain, procedural_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Kestrel drive cluster",
+      "raw_extraction": "Kestrel drive cluster\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, procedural_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Osprey pressure assembly",
+      "raw_extraction": "Osprey pressure assembly set",
+      "source_template_family": "configuration_chain, distractor_heavy, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Finch intake manifold",
+      "raw_extraction": "Finch intake manifold uses",
+      "source_template_family": "configuration_chain, location_chain, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Gannet sensor array",
+      "raw_extraction": "Gannet sensor array as",
+      "source_template_family": "configuration_chain, dependency_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Vireo relay unit",
+      "raw_extraction": "Vireo relay unit resolves",
+      "source_template_family": "configuration_chain, procedural_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Heron drive cluster",
+      "raw_extraction": "Heron drive cluster as",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Gannet drive cluster",
+      "raw_extraction": "Gannet drive cluster resolves",
+      "source_template_family": "configuration_chain, location_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Bittern pressure assembly",
+      "raw_extraction": "Bittern pressure assembly uses",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Vireo relay unit",
+      "raw_extraction": "Vireo relay unit as",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Bittern relay unit",
+      "raw_extraction": "Bittern relay unit\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Sparrow intake manifold",
+      "raw_extraction": "Sparrow intake manifold as",
+      "source_template_family": "configuration_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Vireo drive cluster",
+      "raw_extraction": "Vireo drive cluster set",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Dunlin relay unit",
+      "raw_extraction": "Dunlin relay unit uses",
+      "source_template_family": "configuration_chain, dependency_chain, ownership_chain, temporal_update",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Egret drive cluster",
+      "raw_extraction": "Egret drive cluster resolves",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Gannet intake manifold",
+      "raw_extraction": "Gannet intake manifold uses",
+      "source_template_family": "configuration_chain, dependency_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Teal relay unit",
+      "raw_extraction": "Teal relay unit\n  value",
+      "source_template_family": "location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Dunlin intake manifold",
+      "raw_extraction": "Dunlin intake manifold uses",
+      "source_template_family": "configuration_chain, numeric_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Finch pressure assembly",
+      "raw_extraction": "Finch pressure assembly as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Jacana drive cluster",
+      "raw_extraction": "Jacana drive cluster resolves",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Heron drive cluster",
+      "raw_extraction": "Heron drive cluster set",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Egret sensor array",
+      "raw_extraction": "Egret sensor array uses",
+      "source_template_family": "dependency_chain, distractor_heavy, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Marlin drive cluster",
+      "raw_extraction": "Marlin drive cluster\n  value",
+      "source_template_family": "dependency_chain, numeric_chain, temporal_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Quail sensor array",
+      "raw_extraction": "Quail sensor array set",
+      "source_template_family": "location_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Wren sensor array",
+      "raw_extraction": "Wren sensor array\n  value",
+      "source_template_family": "distractor_heavy, numeric_chain, temporal_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Osprey intake manifold",
+      "raw_extraction": "Osprey intake manifold\n  value",
+      "source_template_family": "distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Vireo pressure assembly",
+      "raw_extraction": "Vireo pressure assembly uses",
+      "source_template_family": "distractor_heavy, entity_attribute, location_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Teal control module",
+      "raw_extraction": "Teal control module as",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Pelican intake manifold",
+      "raw_extraction": "Pelican intake manifold uses",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain, temporal_update",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Dunlin intake manifold",
+      "raw_extraction": "Dunlin intake manifold\n  value",
+      "source_template_family": "dependency_chain, distractor_heavy, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Nimbus relay unit",
+      "raw_extraction": "Nimbus relay unit\n  value",
+      "source_template_family": "distractor_heavy, temporal_update",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Wren relay unit",
+      "raw_extraction": "Wren relay unit set",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Finch control module",
+      "raw_extraction": "Finch control module as",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Teal pressure assembly",
+      "raw_extraction": "Teal pressure assembly as",
+      "source_template_family": "configuration_chain, location_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Kestrel control module",
+      "raw_extraction": "Kestrel control module\n  value",
+      "source_template_family": "configuration_chain, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Teal intake manifold",
+      "raw_extraction": "Teal intake manifold\n  value",
+      "source_template_family": "configuration_chain, numeric_chain, temporal_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Gannet drive cluster",
+      "raw_extraction": "Gannet drive cluster set",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Auk intake manifold",
+      "raw_extraction": "Auk intake manifold as",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Wren pressure assembly",
+      "raw_extraction": "Wren pressure assembly resolves",
+      "source_template_family": "configuration_chain, numeric_chain, procedural_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Ibis drive cluster",
+      "raw_extraction": "Ibis drive cluster\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Ibis sensor array",
+      "raw_extraction": "Ibis sensor array resolves",
+      "source_template_family": "configuration_chain, dependency_chain, distractor_heavy, location_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Dunlin drive cluster",
+      "raw_extraction": "Dunlin drive cluster\n  value",
+      "source_template_family": "configuration_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Nimbus pressure assembly",
+      "raw_extraction": "Nimbus pressure assembly set",
+      "source_template_family": "configuration_chain, distractor_heavy, numeric_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Nimbus sensor array",
+      "raw_extraction": "Nimbus sensor array resolves",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Gannet control module",
+      "raw_extraction": "Gannet control module as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Kestrel sensor array",
+      "raw_extraction": "Kestrel sensor array as",
+      "source_template_family": "dependency_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Marlin drive cluster",
+      "raw_extraction": "Marlin drive cluster as",
+      "source_template_family": "location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Bluebird intake manifold",
+      "raw_extraction": "Bluebird intake manifold\n  value",
+      "source_template_family": "dependency_chain, location_chain, ownership_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Finch relay unit",
+      "raw_extraction": "Finch relay unit set",
+      "source_template_family": "configuration_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Auk sensor array",
+      "raw_extraction": "Auk sensor array as",
+      "source_template_family": "dependency_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Kestrel pressure assembly",
+      "raw_extraction": "Kestrel pressure assembly set",
+      "source_template_family": "dependency_chain, distractor_heavy, location_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Quail relay unit",
+      "raw_extraction": "Quail relay unit set",
+      "source_template_family": "distractor_heavy, location_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Ibis relay unit",
+      "raw_extraction": "Ibis relay unit uses",
+      "source_template_family": "distractor_heavy, location_chain, temporal_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Egret sensor array",
+      "raw_extraction": "Egret sensor array as",
+      "source_template_family": "dependency_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Kestrel relay unit",
+      "raw_extraction": "Kestrel relay unit uses",
+      "source_template_family": "dependency_chain, location_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Kestrel intake manifold",
+      "raw_extraction": "Kestrel intake manifold uses",
+      "source_template_family": "dependency_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Auk intake manifold",
+      "raw_extraction": "Auk intake manifold set",
+      "source_template_family": "dependency_chain, distractor_heavy, numeric_chain, ownership_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Finch sensor array",
+      "raw_extraction": "Finch sensor array\n  value",
+      "source_template_family": "dependency_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Bluebird sensor array",
+      "raw_extraction": "Bluebird sensor array as",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Bittern drive cluster",
+      "raw_extraction": "Bittern drive cluster resolves",
+      "source_template_family": "dependency_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Jacana pressure assembly",
+      "raw_extraction": "Jacana pressure assembly as",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Nimbus sensor array",
+      "raw_extraction": "Nimbus sensor array\n  value",
+      "source_template_family": "dependency_chain, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Dunlin pressure assembly",
+      "raw_extraction": "Dunlin pressure assembly\n  value",
+      "source_template_family": "dependency_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Quail sensor array",
+      "raw_extraction": "Quail sensor array resolves",
+      "source_template_family": "distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 4,
+      "expected_entity": "Bittern pressure assembly",
+      "raw_extraction": "Bittern pressure assembly\n  value",
+      "source_template_family": "location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Marlin sensor array",
+      "raw_extraction": "Marlin sensor array uses",
+      "source_template_family": "entity_attribute, numeric_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Finch intake manifold",
+      "raw_extraction": "Finch intake manifold\n  value",
+      "source_template_family": "configuration_chain, ownership_chain, procedural_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Osprey drive cluster",
+      "raw_extraction": "Osprey drive cluster resolves",
+      "source_template_family": "dependency_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Ibis sensor array",
+      "raw_extraction": "Ibis sensor array as",
+      "source_template_family": "location_chain, numeric_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Raven pressure assembly",
+      "raw_extraction": "Raven pressure assembly set",
+      "source_template_family": "configuration_chain, numeric_chain, procedural_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Raven intake manifold",
+      "raw_extraction": "Raven intake manifold set",
+      "source_template_family": "configuration_chain, dependency_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Dunlin sensor array",
+      "raw_extraction": "Dunlin sensor array as",
+      "source_template_family": "dependency_chain, location_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Osprey intake manifold",
+      "raw_extraction": "Osprey intake manifold uses",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Bluebird drive cluster",
+      "raw_extraction": "Bluebird drive cluster\n  value",
+      "source_template_family": "configuration_chain, dependency_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Kestrel sensor array",
+      "raw_extraction": "Kestrel sensor array resolves",
+      "source_template_family": "configuration_chain, dependency_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Curlew drive cluster",
+      "raw_extraction": "Curlew drive cluster uses",
+      "source_template_family": "dependency_chain, location_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Pelican drive cluster",
+      "raw_extraction": "Pelican drive cluster resolves",
+      "source_template_family": "dependency_chain, location_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Jacana drive cluster",
+      "raw_extraction": "Jacana drive cluster\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Finch drive cluster",
+      "raw_extraction": "Finch drive cluster\n  value",
+      "source_template_family": "location_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Jacana relay unit",
+      "raw_extraction": "Jacana relay unit\n  value",
+      "source_template_family": "location_chain, procedural_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Finch pressure assembly",
+      "raw_extraction": "Finch pressure assembly set",
+      "source_template_family": "location_chain, procedural_chain, temporal_update",
+      "trailing_token": "set"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Finch pressure assembly",
+      "raw_extraction": "Finch pressure assembly resolves",
+      "source_template_family": "configuration_chain, location_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Auk intake manifold",
+      "raw_extraction": "Auk intake manifold\n  value",
+      "source_template_family": "procedural_chain, temporal_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Kestrel control module",
+      "raw_extraction": "Kestrel control module as",
+      "source_template_family": "dependency_chain, numeric_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Egret drive cluster",
+      "raw_extraction": "Egret drive cluster as",
+      "source_template_family": "numeric_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Sparrow drive cluster",
+      "raw_extraction": "Sparrow drive cluster uses",
+      "source_template_family": "numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Bluebird sensor array",
+      "raw_extraction": "Bluebird sensor array set",
+      "source_template_family": "numeric_chain, ownership_chain, procedural_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Bittern intake manifold",
+      "raw_extraction": "Bittern intake manifold\n  value",
+      "source_template_family": "distractor_heavy, procedural_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Sparrow intake manifold",
+      "raw_extraction": "Sparrow intake manifold set",
+      "source_template_family": "distractor_heavy, numeric_chain, procedural_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Pelican pressure assembly",
+      "raw_extraction": "Pelican pressure assembly resolves",
+      "source_template_family": "dependency_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Gannet relay unit",
+      "raw_extraction": "Gannet relay unit set",
+      "source_template_family": "distractor_heavy, location_chain, temporal_update",
+      "trailing_token": "set"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Vireo control module",
+      "raw_extraction": "Vireo control module set",
+      "source_template_family": "configuration_chain, location_chain, procedural_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Marlin control module",
+      "raw_extraction": "Marlin control module resolves",
+      "source_template_family": "configuration_chain, dependency_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Nimbus intake manifold",
+      "raw_extraction": "Nimbus intake manifold resolves",
+      "source_template_family": "configuration_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Curlew drive cluster",
+      "raw_extraction": "Curlew drive cluster as",
+      "source_template_family": "dependency_chain, location_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Gannet intake manifold",
+      "raw_extraction": "Gannet intake manifold as",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Bluebird relay unit",
+      "raw_extraction": "Bluebird relay unit resolves",
+      "source_template_family": "dependency_chain, numeric_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Dunlin pressure assembly",
+      "raw_extraction": "Dunlin pressure assembly uses",
+      "source_template_family": "dependency_chain, numeric_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Marlin sensor array",
+      "raw_extraction": "Marlin sensor array as",
+      "source_template_family": "dependency_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Bluebird control module",
+      "raw_extraction": "Bluebird control module uses",
+      "source_template_family": "dependency_chain, numeric_chain, ownership_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Raven drive cluster",
+      "raw_extraction": "Raven drive cluster set",
+      "source_template_family": "location_chain, numeric_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Quail sensor array",
+      "raw_extraction": "Quail sensor array uses",
+      "source_template_family": "location_chain, temporal_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Osprey intake manifold",
+      "raw_extraction": "Osprey intake manifold resolves",
+      "source_template_family": "distractor_heavy, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Ibis control module",
+      "raw_extraction": "Ibis control module uses",
+      "source_template_family": "configuration_chain, dependency_chain, temporal_update",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Bluebird intake manifold",
+      "raw_extraction": "Bluebird intake manifold resolves",
+      "source_template_family": "configuration_chain, distractor_heavy, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Marlin relay unit",
+      "raw_extraction": "Marlin relay unit as",
+      "source_template_family": "configuration_chain, location_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Bluebird control module",
+      "raw_extraction": "Bluebird control module\n  value",
+      "source_template_family": "configuration_chain, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Pelican control module",
+      "raw_extraction": "Pelican control module resolves",
+      "source_template_family": "configuration_chain, location_chain, procedural_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Bluebird relay unit",
+      "raw_extraction": "Bluebird relay unit\n  value",
+      "source_template_family": "configuration_chain, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Osprey control module",
+      "raw_extraction": "Osprey control module\n  value",
+      "source_template_family": "configuration_chain, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Teal control module",
+      "raw_extraction": "Teal control module set",
+      "source_template_family": "configuration_chain, temporal_update",
+      "trailing_token": "set"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Bittern sensor array",
+      "raw_extraction": "Bittern sensor array as",
+      "source_template_family": "configuration_chain, ownership_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Curlew drive cluster",
+      "raw_extraction": "Curlew drive cluster\n  value",
+      "source_template_family": "configuration_chain, numeric_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Finch control module",
+      "raw_extraction": "Finch control module resolves",
+      "source_template_family": "configuration_chain, distractor_heavy, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Ibis pressure assembly",
+      "raw_extraction": "Ibis pressure assembly uses",
+      "source_template_family": "configuration_chain, location_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Bittern intake manifold",
+      "raw_extraction": "Bittern intake manifold resolves",
+      "source_template_family": "dependency_chain, location_chain, ownership_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Wren drive cluster",
+      "raw_extraction": "Wren drive cluster uses",
+      "source_template_family": "configuration_chain, location_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Finch pressure assembly",
+      "raw_extraction": "Finch pressure assembly\n  value",
+      "source_template_family": "configuration_chain, dependency_chain, location_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Jacana drive cluster",
+      "raw_extraction": "Jacana drive cluster uses",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Teal intake manifold",
+      "raw_extraction": "Teal intake manifold as",
+      "source_template_family": "dependency_chain, location_chain, numeric_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Nimbus drive cluster",
+      "raw_extraction": "Nimbus drive cluster resolves",
+      "source_template_family": "distractor_heavy, location_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Bluebird drive cluster",
+      "raw_extraction": "Bluebird drive cluster set",
+      "source_template_family": "distractor_heavy, temporal_chain, temporal_update",
+      "trailing_token": "set"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Egret control module",
+      "raw_extraction": "Egret control module resolves",
+      "source_template_family": "location_chain, numeric_chain",
+      "trailing_token": "resolves"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Gannet control module",
+      "raw_extraction": "Gannet control module uses",
+      "source_template_family": "distractor_heavy, procedural_chain",
+      "trailing_token": "uses"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Finch intake manifold",
+      "raw_extraction": "Finch intake manifold as",
+      "source_template_family": "location_chain, numeric_chain, procedural_chain",
+      "trailing_token": "as"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Pelican intake manifold",
+      "raw_extraction": "Pelican intake manifold\n  value",
+      "source_template_family": "distractor_heavy, procedural_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Gannet drive cluster",
+      "raw_extraction": "Gannet drive cluster\n  value",
+      "source_template_family": "dependency_chain, temporal_update",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Wren sensor array",
+      "raw_extraction": "Wren sensor array set",
+      "source_template_family": "configuration_chain, dependency_chain, temporal_chain",
+      "trailing_token": "set"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Sparrow intake manifold",
+      "raw_extraction": "Sparrow intake manifold\n  value",
+      "source_template_family": "configuration_chain, temporal_chain",
+      "trailing_token": "value"
+    },
+    {
+      "count": 3,
+      "expected_entity": "Kestrel intake manifold",
+      "raw_extraction": "Kestrel intake manifold resolves",
+      "source_template_family": "configuration_chain, dependency_chain, numeric_chain",
+      "trailing_token": "resolves"
+    }
+  ],
+  "generator_grammar": {
+    "alias_form": "head + role first word",
+    "alias_role_heads": [
+      "control",
+      "sensor",
+      "pressure",
+      "relay",
+      "intake",
+      "drive"
+    ],
+    "canonical_form": "head + two-word role",
+    "roles_two_word": [
+      "control module",
+      "sensor array",
+      "pressure assembly",
+      "relay unit",
+      "intake manifold",
+      "drive cluster"
+    ]
+  },
+  "total_boundary_failure_extractions": 2676,
+  "total_extractions_scanned": 15033,
+  "trailing_token_frequency": {
+    "active": 15,
+    "applicable": 5,
+    "as": 399,
+    "billing": 6,
+    "calibration": 15,
+    "former": 15,
+    "hosting": 8,
+    "operating": 20,
+    "ownership": 5,
+    "parameter": 3,
+    "proposed": 27,
+    "rate": 15,
+    "release": 5,
+    "required": 20,
+    "resolves": 511,
+    "routing": 17,
+    "service": 5,
+    "set": 540,
+    "uses": 524,
+    "value": 521
+  }
+}

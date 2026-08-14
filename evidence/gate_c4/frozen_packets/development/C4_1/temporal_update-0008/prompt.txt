@@ -1,0 +1,19 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to Dunlin relay unit?
+[EVIDENCE]
+[E1]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Revision applied — Dunlin relay unit operating tier changed to true.
+[E2]
+Revision 1 (effective 2030-01-01, since superseded) recorded: Engineering notes indicate Dunlin relay unit uses false as its operating tier.
+[E3]
+Revision 2 (effective 2031-06-01) supersedes revision 1: subject=Kestrel relay unit; operating tier=9088
+[E4]
+For Gannet relay unit, spare enclosure requires Dunlin intake manifold.
+[E5]
+mounted monitor:
+  subject: Dunlin relay unit
+  value: Marlin intake manifold
+[E6]
+- updated Dunlin relay unit: registered asset now Wren control module
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

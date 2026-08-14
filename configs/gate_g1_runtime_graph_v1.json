@@ -1,0 +1,649 @@
+{
+  "DECISION_RULE_FROZEN_BEFORE_RUN": {
+    "band_0_30_to_0_60": "PARTIAL. Reported as partial; G2 proceeds. Typed path is retained as G2's seed template rather than discarded.",
+    "below_0_30": "typed path does not carry the mechanism; G2 proceeds and the typed arm becomes a baseline only.",
+    "binary_decision": {
+      "typed_path_closes_enough": "NO graph substrate yet. Promote typed path as the middle layer and stop.",
+      "typed_path_leaves_large_unresolved_gap": "BUILD G2 runtime traversal."
+    },
+    "frozen_before_any_g1_arm_executed": true,
+    "frozen_utc": "2026-08-09T11:00:00Z",
+    "no_post_hoc_threshold": "This bound exists so that no numerical cutoff is invented after seeing results. If the observed fractions fall near a boundary, the rule stands as written and the outcome is reported as it lands.",
+    "quantitative_bound": "GapClosure_typed >= 0.60 at EVERY one of the five scales, at the same M, with the bridge conditional-retention bound (>= -0.05 vs G0) held at every scale. Consistency across scale is required: a mechanism that closes the gap at cal_700 and collapses at cal_3000 has not solved the scaling problem B3 identified.",
+    "reporting_obligation": "report GapClosure per scale per M regardless of which branch fires"
+  },
+  "G1_TYPED_PATH_RESULT": {
+    "WHY_it_degrades__the_diagnostic_that_matters": {
+      "filler_dominance": "At M50 only 3.9-9.2 of 50 slots are path participants; the other ~41-46 are retrieval-rank filler. That is how pressure re-enters the working set, and it is a concrete design constraint for G2.",
+      "path_pattern_absent": "RULED OUT. canonical subject found 1.00, relation extracted 1.00, typed path completed 0.86-0.94 at every scale.",
+      "preregistered_reading": "This is the second failure mode named in the protocol, and it SUPPORTS G2: the problem is no longer 'find a path' but 'choose among competing graph paths'.",
+      "too_many_competing_paths": "CONFIRMED. typed_paths_found 2.9 -> 5.7 and closing bridge entities 1.0 -> 2.7 as the corpus grows 700 -> 3000."
+    },
+    "arms_run": [
+      "G0_k50",
+      "G1_coarse_M{25,50,75}",
+      "G1_TYPED_PATH_M{25,50,75}",
+      "G3_oracle_M{25,50,75}"
+    ],
+    "artifact": "evidence/gate_g1/typed_path.json",
+    "decision_at_M_label_is_an_artifact": {
+      "artifact_left_unmodified": true,
+      "note": "The runner ranked M by worst-scale gap closure alone and printed M75. M75 typed BREACHES bridge safety at cal_700 (-0.091), so M50 is the operationally preferred configuration.",
+      "verdict_unchanged": "PARTIAL -> BUILD G2 either way; only the M label differs"
+    },
+    "g2_run": false,
+    "hrm_run": false,
+    "metric_trap_confirmed_in_REVERSE": {
+      "observation": "At cal_3000/M25 coarse posts conditional 0.785 on working-set CES 0.433, while typed posts conditional 0.495 on working-set CES 0.660. End-to-end they tie (0.340 vs 0.327).",
+      "why_it_matters": "Here the conditional metric PENALISES the mechanism with far better coverage. The permanent rule is load-bearing in both directions, not just against evidence-discarding compressors."
+    },
+    "next": "G2 runtime traversal is now earned rather than assumed. Typed path is retained as G2's seed template, not discarded.",
+    "packet_budget": 6,
+    "run_utc": "2026-08-09",
+    "s2_unchanged": true,
+    "status": "RUN_COMPLETE__VERDICT_PARTIAL__BUILD_G2",
+    "what_it_did_NOT_fix": {
+      "frozen_rule_outcome": {
+        "M25": "TYPED_PATH_INSUFFICIENT__BUILD_G2",
+        "M50": "PARTIAL__BUILD_G2__TYPED_PATH_RETAINED_AS_SEED_TEMPLATE",
+        "M75": "PARTIAL__BUILD_G2__TYPED_PATH_RETAINED_AS_SEED_TEMPLATE"
+      },
+      "gap_closure_per_scale": {
+        "M25": {
+          "cal_1000": 0.7778,
+          "cal_1500": 0.3157,
+          "cal_2200": -0.0359,
+          "cal_3000": -0.0998,
+          "cal_700": 0.8236
+        },
+        "M50": {
+          "cal_1000": 0.8337,
+          "cal_1500": 0.4997,
+          "cal_2200": 0.3054,
+          "cal_3000": 0.3548,
+          "cal_700": 0.8517
+        },
+        "M75": {
+          "cal_1000": 0.7692,
+          "cal_1500": 0.5675,
+          "cal_2200": 0.4241,
+          "cal_3000": 0.5314,
+          "cal_700": 0.7392
+        }
+      },
+      "pattern": "0.74-0.85 at cal_700/cal_1000, degrading to -0.10..0.53 at cal_2200/cal_3000. Scale-dependent, which is the exact property B3 identified as the problem."
+    },
+    "what_the_typed_path_FIXED": {
+      "bridge_safety": "typed passes the -0.05 bound at EVERY scale for M25 and M50; coarse breached it at cal_700 (M50,M75) and cal_1500 (M50,M75)",
+      "claim": "The closing-bridge constraint is a real repair of B4's P2 coverage collapse.",
+      "cost": "cheap -- 84-171 entity nodes, 13-101 edges traversed per task",
+      "working_set_ces_M25": {
+        "coarse": [
+          0.54,
+          0.52,
+          0.48,
+          0.507,
+          0.433
+        ],
+        "order": "cal_700,1000,1500,2200,3000",
+        "typed": [
+          0.747,
+          0.74,
+          0.7,
+          0.72,
+          0.66
+        ]
+      }
+    }
+  },
+  "G2_FROZEN_2026_08_09": {
+    "GAP_CLOSURE_METRICS": {
+      "never_conditional_alone": "Both formulas use END-TO-END CES. The permanent metric rule applies to every number in this gate.",
+      "vs_coarse": "GapClosure_G2 = (CES_G2 - CES_coarse) / (CES_oracle - CES_coarse)  -- reuses the already-frozen formula and PASS bound (>=0.60 every scale, same M) from the typed-path gate.",
+      "vs_typed__NEW": "IncrementalGraphClosure = (CES_G2 - CES_typed) / (CES_oracle - CES_typed)  -- answers what the graph bought beyond the much simpler typed-path mechanism."
+    },
+    "OUTCOME_TAXONOMY_FROZEN": {
+      "A_strong_close": {
+        "action": "freeze G2, proceed toward HRM integration",
+        "condition": "all SUCCESS_CRITERIA_FROZEN_BEFORE_RUN conditions hold"
+      },
+      "B_bridges_found_but_s2_drops_them": {
+        "action": "bottleneck has moved back into S2; do NOT build a larger graph",
+        "condition": "G2 bridge availability materially exceeds typed/coarse but conditional retention does not improve"
+      },
+      "C_cannot_preserve_bridge_availability": {
+        "action": "graph extraction/path generation is deficient; improve construction, not ranking",
+        "condition": "G2 bridge availability regresses vs typed path"
+      },
+      "D_paths_exist_but_wrong_ones_ranked": {
+        "action": "construction works, ranking is the problem; this is where a learned path ranker may eventually be justified -- NOT built in this sprint",
+        "condition": "paths_complete and paths_target_relation_compatible are high but end-to-end CES does not improve"
+      },
+      "E_typed_approx_g2": {
+        "action": "STOP; graph substrate does not justify its complexity; keep the simpler typed-path mechanism",
+        "condition": "IncrementalGraphClosure < 0.30 at multiple scales and no other criterion clearly fails"
+      },
+      "classification_is_mechanical": "computed from the frozen instrumentation, not narrated after the fact"
+    },
+    "REQUIRED_INSTRUMENTATION": [
+      "working_set_ces",
+      "selected_ces_end_to_end",
+      "bridge_availability",
+      "terminal_availability",
+      "identity_availability",
+      "temporal_availability",
+      "bridge_conditional_retention",
+      "terminal_conditional_retention",
+      "structural_competition_ratio",
+      "working_set_size",
+      "records_examined",
+      "paths_enumerated",
+      "paths_complete",
+      "paths_target_relation_compatible",
+      "paths_subject_anchored",
+      "paths_competing",
+      "paths_retained",
+      "unique_bridge_entities",
+      "records_per_retained_path",
+      "path_overlap_ratio",
+      "graph_nodes",
+      "graph_edges",
+      "construction_latency_ms"
+    ],
+    "SUCCESS_CRITERIA_FROZEN_BEFORE_RUN": {
+      "all_conditions_required_for_OUTCOME_A": true,
+      "bridge_non_regression_vs_typed": "delta bridge conditional retention (G2 minus typed) >= -0.02 at every scale -- tighter than the -0.05 bound vs G0 because typed path is now the baseline to beat, not the floor.",
+      "bridge_safety_vs_g0_bound": "unchanged, -0.05, still checked at every scale",
+      "competition_must_not_increase_vs_typed": "structural_competition_ratio(G2) <= structural_competition_ratio(typed) at every scale",
+      "frozen_utc": "2026-08-09T12:00:00Z",
+      "incremental_over_typed_MATERIAL_bound": "IncrementalGraphClosure >= 0.30 at EVERY scale. Chosen now, before any G2 arm is scored, so 'materially' cannot be redefined after seeing results. 0.30 was picked because it is half the primary pass bound -- if the graph cannot recover even half of typed path's own remaining headroom to oracle, added traversal complexity is not earning its cost.",
+      "no_leakage": "executable leakage scan over g2_paths.py and runtime_graph.py passes",
+      "primary": "GapClosure_G2 >= 0.60 at EVERY one of the five scales, at matched M (reuses the bound already frozen for typed path).",
+      "terminal_availability_safe": "terminal availability for G2 must not fall below the corresponding typed-path value by more than 0.02 at any scale"
+    },
+    "competition_and_dedup": {
+      "distinct_bridges_preserved_as_alternatives": "Different bridge entities reaching the same target relation are competing HYPOTHESES, not duplicates, and are ranked against each other rather than all admitted.",
+      "near_identical_paths_suppressed": "Paths sharing a signature compete as redundant evidence; a representative survives.",
+      "path_signature": "(anchor_entity, sorted relation-relevant hop entities, terminal_entity)"
+    },
+    "frozen_before_any_G2_code_scored": true,
+    "hypothesis": "H_G2: path-level structural discrimination closes a material fraction of the P3-P2 oracle-compression gap, via expanded retrieval + runtime graph + bounded path ranking, outperforming expanded+coarse and materially outperforming expanded+typed-path, without changing S2 or the six-record packet.",
+    "leakage_rule": {
+      "api_shape_requirement": "builder/enumerator functions accept (candidate_ids, texts, canonical_subject, relation, ...) -- never a task or evaluator object. Enforced by inspect.signature assertions plus the stripped-source scan.",
+      "forbidden": [
+        "record_kind",
+        "required_evidence_ids",
+        "proof_edges",
+        "latent_bridge",
+        "answer_node",
+        "oracle_bridge",
+        "oracle_evidence_ids",
+        "oracle metadata",
+        "generator labels",
+        "confirmation labels",
+        "gold_path"
+      ],
+      "permitted_inputs": [
+        "question",
+        "parsed target relation",
+        "runtime identity state",
+        "candidate ids",
+        "candidate text",
+        "retrieval ranks/scores",
+        "runtime entity extraction",
+        "runtime relation extraction",
+        "runtime-visible links"
+      ]
+    },
+    "path_enumeration": {
+      "hop_bound": "1-2 hops, MAX_HOPS already frozen at 2 in runtime_graph.py -- G2 may discover ARBITRARY valid local paths up to that bound, vs G1_TYPED_PATH's single fixed template. That is what separates the two hypotheses.",
+      "not_neighborhood_expansion": "The central improvement over the coarse prefilter is enumerating explicit PATH candidates, not scoring a flat neighborhood.",
+      "path_candidate_fields": [
+        "path_id",
+        "anchor_entity",
+        "terminal_entity",
+        "target_relation",
+        "hop_count",
+        "entity_ids",
+        "record_ids",
+        "edge_ids",
+        "retrieval_features",
+        "structural_features",
+        "provenance"
+      ],
+      "persist_full_candidates": "Diagnostic receipts keep PathCandidates, not just a reduced score, so a failure is attributable to construction vs ranking."
+    },
+    "ranking_is_lexicographic_not_a_weighted_sum": {
+      "frozen_before_run": true,
+      "no_evaluator_labels": true,
+      "no_learned_parameters": true,
+      "tiers_in_order": [
+        "subject anchored",
+        "reaches target relation",
+        "path complete (subject->bridge->relation closes)",
+        "fewer hops / fewer unsupported links",
+        "not a near-duplicate of an already-retained path (diversity)",
+        "retrieval rank/score as the FINAL tie-break only"
+      ],
+      "why": "P2 already failed by trusting a single scalar (retrieval score) after coarse structural filtering. A dozen hand-tuned weights would be the same mistake with more knobs."
+    },
+    "representation_deliberately_small": {
+      "deferred_node_types": [
+        "TIMESTAMP",
+        "ATTRIBUTE (only once safely/deterministically extracted)"
+      ],
+      "edge_types": [
+        "RECORD_MENTIONS_ENTITY",
+        "ENTITY_ALIASES_ENTITY",
+        "ENTITY_RESOLVES_TO_ENTITY",
+        "RECORD_EXPRESSES_RELATION",
+        "ENTITY_LINKED_TO_ENTITY"
+      ],
+      "no_richer_ontology_until_simple_graph_shows_value": true,
+      "node_provenance_required": [
+        "node_id",
+        "node_type",
+        "canonical_value",
+        "surface_value",
+        "source_record_ids",
+        "parser_version"
+      ],
+      "node_types": [
+        "ENTITY",
+        "RECORD",
+        "RELATION"
+      ]
+    },
+    "run_now": [
+      "G0",
+      "G1_coarse",
+      "G1_TYPED_PATH",
+      "G2",
+      "G3"
+    ],
+    "scales": [
+      "cal_700",
+      "cal_1000",
+      "cal_1500",
+      "cal_2200",
+      "cal_3000"
+    ],
+    "what_is_explicitly_not_done_this_sprint": [
+      "no HRM run",
+      "no change to S2",
+      "no change to packet size (fixed at 6)",
+      "no retrieval tuning from G2 results",
+      "no persistent graph memory",
+      "no agents/executive",
+      "no use of Confirmation #1 for tuning",
+      "no oracle metadata at runtime",
+      "no learned/trained ranker",
+      "no hand-tuned weighted scoring function"
+    ],
+    "working_set_is_a_ceiling_not_a_target": {
+      "correction_vs_g1_typed_path": "typed path filled the remainder of M with retrieval-rank filler (41-46 of 50 slots at M50). That is the wrong behavior and is NOT repeated in G2.",
+      "preferred_range_diagnostic_only": "~12-30 records is the qualitative target mentioned by the user; NOT a pass/fail gate, since S2 still needs headroom to do its own selection.",
+      "reported_diagnostic": "working_set_size actually returned, separately from the M ceiling that was configured",
+      "rule": "|working_set| <= M. If G2 justifies 17 records structurally, it returns 17, not M."
+    }
+  },
+  "G2_RESULT": {
+    "arms_run": [
+      "G0_k50",
+      "G1_coarse_M{25,50,75}",
+      "G1_TYPED_PATH_M{25,50,75}",
+      "G2_M{25,50,75}",
+      "G3_oracle_M{25,50,75}"
+    ],
+    "artifact": "evidence/gate_g1/g2_graph_traversal.json",
+    "candidate_repair_direction_NOT_IMPLEMENTED": "Broaden path completeness beyond literal relation-phrase substring match -- e.g. accept a record as completing a path if it is both bridge-linked AND passes the SAME admissibility signals G1_TYPED_PATH/coarse already use for 'preserved', rather than requiring the stricter relation-text match alone. This is a construction change, to be frozen and run as its own gate, not applied retroactively here.",
+    "headline_numbers": {
+      "e2e_ces_M50": {
+        "coarse": [
+          0.36,
+          0.313,
+          0.267,
+          0.22,
+          0.207
+        ],
+        "g2": [
+          0.393,
+          0.313,
+          0.227,
+          0.167,
+          0.187
+        ],
+        "oracle": [
+          0.54,
+          0.473,
+          0.44,
+          0.46,
+          0.413
+        ],
+        "scale_order": "700,1000,1500,2200,3000",
+        "typed": [
+          0.513,
+          0.447,
+          0.353,
+          0.293,
+          0.28
+        ]
+      },
+      "reading": "G2 underperforms typed path at every scale, and by cal_2200/cal_3000 falls BELOW even the coarse floor it was meant to beat."
+    },
+    "hrm_run": false,
+    "mechanical_classification": {
+      "by_M": {
+        "M25": "C_CANNOT_PRESERVE_BRIDGE_AVAILABILITY",
+        "M50": "C_CANNOT_PRESERVE_BRIDGE_AVAILABILITY",
+        "M75": "C_CANNOT_PRESERVE_BRIDGE_AVAILABILITY"
+      },
+      "note": "Computed from the frozen instrumentation by scripts/run_g2_graph_traversal.py:classify(), not narrated after the fact.",
+      "prescribed_action_per_frozen_taxonomy": "graph extraction/path generation is deficient; improve construction, not ranking. Do NOT build a larger graph on top of this construction, and do not tune this run's parameters post hoc."
+    },
+    "packet_budget": 6,
+    "root_cause_diagnosed": {
+      "bridge_availability_M50": {
+        "g2": [
+          0.642,
+          0.704,
+          0.743,
+          0.681,
+          0.554
+        ],
+        "typed": [
+          0.985,
+          0.93,
+          0.943,
+          0.931,
+          0.8
+        ]
+      },
+      "mechanism": "RECORD_EXPRESSES_RELATION is a substring match of the question's parsed relation phrase against record text -- the same weak completeness signal G1_TYPED_PATH and B4's coarse prefilter also use. Those two mechanisms survive its weakness because both degrade to filling remaining M capacity with retrieval-rank filler, which passively recovers many true terminal records that the relation-text match misses. G2 deliberately removes that filler (M is a ceiling, not a target -- the correction the user specified), which removes the safety net along with the padding: real working-set sizes collapsed to 7-25 records against a 25/50/75 ceiling, and paths_complete averaged only 1.6-3.1 per task against 9-39 enumerated, so most of what G2 found was structurally plausible but relation-incomplete, and got ranked below the tiny complete set without ever reaching the working set.",
+      "not_a_ranking_problem": "paths_enumerated and unique_bridge_entities both climb with scale (9.5->38.6 and 3.7->17.9), so the graph IS finding bridges. The defect is in classifying which records COMPLETE a path -- i.e. construction/labelling, exactly as Outcome C's prescribed reading states -- not in how complete paths are ranked once found.",
+      "terminal_availability_M50_DOMINANT_FAILURE": {
+        "g2": [
+          0.419,
+          0.487,
+          0.433,
+          0.401,
+          0.367
+        ],
+        "typed": [
+          0.966,
+          0.98,
+          0.98,
+          0.973,
+          0.953
+        ]
+      }
+    },
+    "run_utc": "2026-08-09",
+    "s2_unchanged": true,
+    "status": "RUN_COMPLETE__VERDICT_C__CANNOT_PRESERVE_BRIDGE_AVAILABILITY",
+    "what_survives_from_this_sprint": [
+      "runtime_graph.py node/edge provenance and leakage wall",
+      "g2_paths.py explicit PathCandidate representation, competition/dedup, lexicographic ranking, and the no-padding working-set rule -- all validated by 30 passing unit tests and structurally sound",
+      "the deficiency is isolated to ONE signal (relation completeness at construction time), not the ranking or representation machinery"
+    ],
+    "why_no_tuning_this_sprint": "The user's own instruction (#27): run the frozen mechanism once, then classify -- do not tune after seeing results. This diagnosis names a specific, falsifiable construction defect (the relation-completeness signal) rather than proposing an immediate fix; a repair belongs in a new frozen G2-v2 construction sprint, not a patch inside this one."
+  },
+  "PERMANENT_REPORTING_RULE": {
+    "form": "CES_end_to_end = P(required evidence survives the compressor) x P(S2 succeeds | it survived)",
+    "rule": "For ANY compression mechanism, never report conditional selector performance alone. Always pair coverage after compression with conditional performance, and report the end-to-end composition.",
+    "scope": "applies to G1_TYPED_PATH, G2, and every future compression or traversal mechanism",
+    "why": "B4 proved conditional metrics can lie. P2 at M=25 posted 0.785 selected-CES-given-working at cal_3000 -- the best single number in the table -- while having discarded half the required evidence before S2 ever saw it. End-to-end it merely matched plain k=50. The conditional metric RISES as a compressor throws evidence away, so reporting it alone rewards exactly the failure it should expose."
+  },
+  "architecture": "Question -> identity resolution -> SMALL global seed retrieval -> runtime evidence graph -> bounded relation-aware expansion -> working candidate set -> UNCHANGED S2 -> 6 records -> (HRM later)",
+  "created_utc": "2026-08-09T10:00:00Z",
+  "do_not_run_yet": [
+    "G2",
+    "G4 (needs no compute; oracle-evidence ceiling already known)"
+  ],
+  "edge_construction_rule": "every edge must be derivable from visible evidence text or an existing runtime parser",
+  "efficiency_metrics_required": [
+    "seed records retrieved",
+    "graph nodes visited",
+    "edges traversed",
+    "working-set size",
+    "unique entities reached",
+    "plausible bridges reaching S2",
+    "duplicate structural signatures"
+  ],
+  "eventual_division_of_labour": "dense/BM25 gets into the right neighbourhood; the graph moves through it; S2 decides what enters working memory; HRM reasons over the six records; an executive later decides whether another traversal is worth performing.",
+  "forbidden_absolutely": [
+    "required_evidence_ids",
+    "proof_edges",
+    "record_kind",
+    "latent_bridge",
+    "answer_node",
+    "oracle_bridge",
+    "gold_path",
+    "oracle_evidence_ids",
+    "_oracle_metadata",
+    "generator-only metadata",
+    "the evaluator proof graph in any form"
+  ],
+  "freeze_findings": {
+    "coarse_prefilter": "FAILS",
+    "expanded_pool_direct_to_s2": "FAILS",
+    "expanded_retrieval_availability": "PROVEN",
+    "fixed_k50_at_scale": "FAILS",
+    "hrm_uses_correct_evidence": "PROVEN",
+    "identity_resolution": "STRONG",
+    "oracle_compression": "STRONG_SUCCESS",
+    "required_evidence_rank_reachable": "PROVEN",
+    "runtime_graph_path_discrimination": "CURRENT_GATE",
+    "s2_frozen_reason": "Q_S2_given_complete_evidence ~= +0.175 dev / +0.177 fresh confirmation. S2 is not touched during G2.",
+    "s2_given_coherent_evidence": "WORKS",
+    "typed_path_compression": "PARTIAL_SUCCESS"
+  },
+  "gap_closure": {
+    "ces_definition": "END-TO-END selected CES = P(required evidence survives compression) x P(S2 succeeds | it survived). Never the conditional term alone.",
+    "formula": "GapClosure_typed = (CES_typed - CES_P2) / (CES_P3 - CES_P2)",
+    "purpose": "one number that makes the build/do-not-build decision easy",
+    "reported": "per scale AND per matched M -- comparison is only meaningful at equal working-set size"
+  },
+  "graph_scope_deliberately_small": {
+    "construction": "record -> entity extraction -> entities -> relation extraction -> typed edges, all from visible text via runtime parsers.",
+    "ephemeral_not_persistent": "Build the graph from the current corpus/evidence representation per run. No persistent memory substrate yet.",
+    "hop_limit": "1-2 hops in G1. No arbitrary graph walks."
+  },
+  "implementation_order": {
+    "1": "runtime graph primitives + leakage wall (infrastructure first)",
+    "2": "G1_TYPED_PATH as the FIRST scored structural arm",
+    "3": "G2 only if the typed-path result leaves a large unresolved gap"
+  },
+  "ladder": {
+    "G0": {
+      "pipeline": "k=50 -> S2",
+      "promotable": false,
+      "role": "low-pressure baseline"
+    },
+    "G1_TYPED_PATH": {
+      "closing_bridge_constraint": "A one-hop entity counts ONLY if the path closes: some record must mention that entity AND express the target relation. B4's P2 kept anything near any co-mentioned entity and then ranked by retrieval score, so it shrank the pool while preserving the retriever's original mistake. This single constraint is the whole difference between the two arms, which is what makes the comparison interpretable.",
+      "frozen_algorithm": [
+        "1. resolve canonical subject",
+        "2. extract target relation from the question",
+        "3. inspect candidate evidence for one-hop linked entities",
+        "4. keep records participating in subject -> linked entity -> target relation",
+        "5. fill remaining capacity by deterministic retrieval rank",
+        "6. bound the working set to frozen M",
+        "7. send the unchanged set to S2"
+      ],
+      "frozen_tiers": {
+        "0_DIRECT": "record mentions the subject and expresses the relation",
+        "1_ENDPOINT": "record mentions a CLOSING bridge and expresses the relation",
+        "2_LINK": "record mentions the subject and a closing bridge",
+        "3_FILLER": "deterministic retrieval rank",
+        "tier_0_is_required": "a task whose answer sits directly on the subject has no bridge to find; an arm that could not represent it would fail those tasks for a reason unrelated to the hypothesis"
+      },
+      "must_not_become": "graph-lite with a dozen heuristics. One explicit runtime-safe path pattern, one frozen template.",
+      "pipeline": "C2 expanded -> relation-typed path scorer -> bounded set -> S2",
+      "role": "CHEAP DIAGNOSTIC, run BEFORE declaring graph necessity",
+      "rule": "rank candidates by whether they form subject -> bridge -> target relation using only observable content: canonical subject, parsed target relation, runtime-visible one-hop entity",
+      "why_it_matters": "If this trivial deterministic path representation closes most of P3 - P2, then a graph substrate is not yet needed. If it does not, the graph earns its complexity. One frozen arm, NOT a tuning sprint."
+    },
+    "G1_coarse": {
+      "pipeline": "C2 expanded -> P2 coarse compressor -> S2",
+      "promotable": false,
+      "role": "failed-compressor baseline, the floor to beat"
+    },
+    "G2_graph": {
+      "distinguishing_hypothesis": "G1_TYPED_PATH walks ONE frozen structural template; G2 may discover ARBITRARY valid local paths up to the frozen hop bound. That difference is the hypothesis, not an implementation detail.",
+      "pipeline": "seed retrieval -> runtime graph expansion -> bounded set -> S2",
+      "role": "PRIMARY",
+      "status": "WITHHELD -- not to be built or run until G1_TYPED_PATH has reported"
+    },
+    "G3_oracle": {
+      "pipeline": "C2 expanded -> oracle compressor -> S2",
+      "promotable": false,
+      "role": "P3 CEILING, carried forward unchanged"
+    },
+    "G4_oracle_evidence": {
+      "pipeline": "oracle evidence",
+      "promotable": false,
+      "role": "system ceiling"
+    }
+  },
+  "leakage_enforcement": {
+    "also_rejects": "indirect access through task-metadata dictionaries -- reading task['required_evidence_ids'] is the same leak wearing a subscript",
+    "guard_the_guard": "a scan that silently matched nothing would pass vacuously, so the test asserts real code survives stripping",
+    "method": "executable test over docstring-and-comment-stripped source of every graph module",
+    "signature_check": "build_runtime_graph accepts record_ids, texts, relation only -- no task object",
+    "test": "tests/unit/test_c4_runtime_graph.py"
+  },
+  "measured_opportunity": {
+    "P2_end_to_end_selected_ces_cal3000": 0.34,
+    "P3_end_to_end_selected_ces_cal3000": 0.473,
+    "gap": 0.133,
+    "meaning": "That gap is what better structural discrimination is worth, with HRM, S2 and the six-record packet all unchanged. It is the budget any new middle layer must earn."
+  },
+  "minimal_first_version": {
+    "deferred_edge_types": [
+      "OWNED_BY",
+      "LOCATED_AT",
+      "DEPENDS_ON",
+      "UPDATED_BY",
+      "HAS_ATTRIBUTE"
+    ],
+    "edge_types": [
+      "RECORD_MENTIONS_ENTITY",
+      "ENTITY_ALIASES_ENTITY",
+      "ENTITY_RESOLVES_TO_ENTITY",
+      "RECORD_EXPRESSES_RELATION",
+      "ENTITY_LINKED_TO_ENTITY"
+    ],
+    "graph_never_contains": "a relation present merely because the evaluator knows it lies on the proof path",
+    "node_types": [
+      "ENTITY",
+      "RECORD",
+      "RELATION",
+      "TIMESTAMP (only if already extracted safely)",
+      "ATTRIBUTE (only if already extracted safely)"
+    ],
+    "rationale": "Richer ontology is NOT added until the simple graph demonstrates value. B4 established that adding structure without evidence it discriminates just produces a more elaborate way to fail.",
+    "required_edge_provenance": [
+      "edge_id",
+      "edge_type",
+      "source_record_id",
+      "extraction_method",
+      "source_span_hash",
+      "parser_version"
+    ],
+    "why_provenance": "So that 'why did traversal surface this record?' is answerable from the artifact alone, later."
+  },
+  "no_heuristic_grid": "The comparison is coarse P2 vs typed-path vs graph traversal vs oracle P3. No weight sweeps.",
+  "no_hrm_initially": true,
+  "objective": "Recover the structural discrimination P3 demonstrated, using ONLY runtime-observable relationships, while keeping the candidate set presented to S2 bounded.",
+  "path_hit_diagnostics_per_task": [
+    "canonical_subject_found",
+    "target_relation_extracted",
+    "one_hop_bridge_candidates",
+    "closing_bridge_entities",
+    "typed_paths_found",
+    "typed_path_completed",
+    "distinct_bridge_entities",
+    "path_participant_count",
+    "filler_count",
+    "working_set_size"
+  ],
+  "permitted_edge_types": [
+    "MENTIONS",
+    "ALIASES",
+    "RESOLVES_TO",
+    "LINKS_TO",
+    "HAS_RELATION",
+    "HAS_ATTRIBUTE",
+    "UPDATED_BY",
+    "DEPENDS_ON",
+    "LOCATED_AT",
+    "OWNED_BY"
+  ],
+  "permitted_node_types": [
+    "ENTITY",
+    "RECORD",
+    "RELATION",
+    "ATTRIBUTE",
+    "TIMESTAMP",
+    "DOCUMENT"
+  ],
+  "primary_metrics": [
+    "candidate CES",
+    "bridge availability",
+    "terminal availability",
+    "selected CES",
+    "P(bridge selected | bridge available)",
+    "structural competition ratio"
+  ],
+  "protocol_id": "g1_runtime_evidence_graph_v1",
+  "required_outputs_end_to_end_not_conditional_only": [
+    "working_set_ces",
+    "selected_ces_end_to_end",
+    "bridge_availability",
+    "terminal_availability",
+    "bridge_conditional_retention",
+    "terminal_conditional_retention",
+    "structural_competition_ratio",
+    "working_set_size",
+    "records_examined"
+  ],
+  "run_now": [
+    "G0",
+    "G1_coarse",
+    "G1_TYPED_PATH",
+    "G3"
+  ],
+  "sharp_question": "Is the missing middle layer really a graph substrate, or merely typed path discrimination?",
+  "stack_assessment": {
+    "candidate_availability_at_scale": "solvable with expansion",
+    "flat_runtime_safe_compressor": "insufficient",
+    "next_missing_capability": "RELATION-AWARE STRUCTURAL DISCRIMINATION",
+    "oracle_compression": "strong ceiling",
+    "retriever_reachability": "solved enough for now; zero unranked records at any scale",
+    "s2_under_extreme_pressure": "fails",
+    "s2_under_moderate_pressure": "works"
+  },
+  "status": "G2_RUN_COMPLETE__OUTCOME_C__NOT_PROMOTED",
+  "success_condition": "G2 must obtain the best of both failed regimes: P1's availability WITH P2's low pressure. Anything less is one of the two known failures wearing a new mechanism.",
+  "target_regime": {
+    "note": "A graph that returns 250 candidates has not solved the problem. Efficiency is part of the hypothesis, not a footnote.",
+    "packet": 6,
+    "seed_records": "20-50",
+    "working_set_into_S2": "25-75"
+  },
+  "the_question_the_graph_answers": "Given where I am in memory, which structurally relevant neighbourhood should I inspect next?",
+  "three_regimes_isolated_by_b4": {
+    "P1_expanded_direct": "availability good, pressure terrible -> FAIL",
+    "P2_expanded_coarse_compressor": "pressure fixed, availability destroyed -> FAIL",
+    "P3_expanded_oracle_compressor": "both preserved -> STRONG SUCCESS",
+    "conclusion": "The architecture works IF the middle layer can distinguish structurally useful evidence. That is a discrimination problem, not a retrieval or selector problem."
+  },
+  "unified_objective": "Retrieve broadly, compress structurally, select narrowly, reason on coherent evidence.",
+  "why_not_another_flat_heuristic": "P2's rule was 'keep what looks structurally plausible, then trust retrieval rank' -- and bridge retrieval rank is the known weak signal, so it reduced the pool while preserving the retriever's original mistake. Adding weights (subject +2, relation +3, one-hop +4, score x0.7) would be hand-tuned graph reasoning disguised as a scoring heuristic. Rejected on that basis, not on performance.",
+  "why_path_diagnostics_matter": {
+    "note": "these two failures point in opposite directions and must not be reported as one number",
+    "path_pattern_absent": "the typed representation cannot express these tasks -> a richer representation might, but that is a representation problem",
+    "too_many_plausible_typed_paths": "the problem is no longer 'find a path' but 'choose among competing graph paths' -- which itself SUPPORTS G2"
+  }
+}

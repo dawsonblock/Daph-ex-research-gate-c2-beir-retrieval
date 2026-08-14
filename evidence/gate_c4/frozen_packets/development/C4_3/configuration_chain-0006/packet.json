@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "071546d124c2410be36c421abcf017a4ebc1387a93c2a40da4f72b9dc47a3d68",
+  "canonical_subject": "Bluebird sensor array",
+  "ordered_selected_ids": [
+    "configuration_chain-0007/value",
+    "configuration_chain-0011/value",
+    "ownership_chain-0008/value",
+    "ownership_chain-0005/link",
+    "dependency_chain-0005/value",
+    "configuration_chain-0009/value"
+  ],
+  "ordered_text_sha256": [
+    "838befbbf2aa573d0c2d76a9e992862376fdcd83fc383d0cb3f33aee9953b67d",
+    "91edb3fe544109cf5201ade0888d8ca7e11f5b0b242ec853cb98eab1ed606be9",
+    "93b8d74b454a05f08750127fd1d401ec77c022cb573fa98a2c8b1458c691c8c4",
+    "924ef5baa4184712233562f21e0ec3732e47efae799ccc3d917ce6eff12a9b56",
+    "975ef108bce2f9689446babc6b30bdc970bf44236704405a429279364882238a",
+    "d8840e7435fd5d8ac3923d22c99f3d51fabf5832db93b539a3af5d57056e7931"
+  ],
+  "query_hash": "aadea933d230ca00917de24a06b8400f293d1d742d83a897e6de0be160b7ffc0",
+  "selector_policy_id": "s0",
+  "task_id": "configuration_chain-0006"
+}

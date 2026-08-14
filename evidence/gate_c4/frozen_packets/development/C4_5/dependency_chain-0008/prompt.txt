@@ -1,0 +1,9 @@
+[OBJECTIVE]
+For Finch relay unit, which release channel is recorded?
+[EVIDENCE]
+[E1]
+For Kestrel intake manifold, release channel requires 7729.
+[E2]
+Revision applied — Finch relay unit required dependency changed to Kestrel intake manifold.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

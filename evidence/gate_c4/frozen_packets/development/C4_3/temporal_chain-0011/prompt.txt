@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to GSA-3?
+[EVIDENCE]
+[E1]
+In shorthand, Gannet sensor array is written GSA-3.
+[E2]
+Revision 1 (effective 2030-01-01, since superseded) recorded: [operating tier] Auk intake manifold -> GAMMA-BLUE
+[E3]
+Revision 2 (effective 2031-06-01) supersedes revision 1: subject=Kestrel relay unit; operating tier=9088
+[E4]
+Revision 2 (effective 2031-06-01) supersedes revision 1: - updated Finch sensor array: operating tier now {"tier": "provisional"}
+[E5]
+Revision 2 (effective 2031-06-01) supersedes revision 1: [operating tier] Egret drive cluster -> accredited
+[E6]
+Revision 1 (effective 2030-01-01, since superseded) recorded: subject=Jacana intake manifold; operating tier=true
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

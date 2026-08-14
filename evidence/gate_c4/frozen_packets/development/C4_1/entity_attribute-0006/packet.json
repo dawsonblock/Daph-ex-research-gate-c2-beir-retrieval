@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "b1b90f5af20363c51e7901133cfe7f96ec9aa0824f6581083ea31bab11d01f24",
+  "canonical_subject": "",
+  "ordered_selected_ids": [
+    "entity_attribute-0006/fact",
+    "entity_attribute-0004/fact",
+    "dependency_chain-0007/value",
+    "entity_attribute-0008/fact",
+    "entity_attribute-0007/fact",
+    "configuration_chain-0011/direct"
+  ],
+  "ordered_text_sha256": [
+    "d7b53220877023d434f93873e19f1d1008f73634e7d43b9ce495cf4e31f8e6dc",
+    "cab653f21c59062280c29e217a4a929512f1c7615b7e2a735e68ba3c376fab10",
+    "17f33ee4e79fe1554014ef0ddfcc0842f3f8573b57e60acdb36c741ad5ec2828",
+    "a06f9f6b7f0cd3e3d881ec0d59630552a24592b3073239b997ff43fea4f1c74d",
+    "ed87c8fafec78a620332e2a957fa80c5fa169d270907d83547f5ed817ed02f18",
+    "4497f80268c25178cc60cf62d03c48e946b9512229de3d8e002b4fd7aac12dc7"
+  ],
+  "query_hash": "738d92ea5bb080c9248839432d5e4d99e1bad7af12b5bc301dc5661c209d85a8",
+  "selector_policy_id": "s0",
+  "task_id": "entity_attribute-0006"
+}

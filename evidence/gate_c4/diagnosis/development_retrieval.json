@@ -1,0 +1,3318 @@
+{
+  "arm": "C4_4",
+  "by_entity_regime": {
+    "abbreviation": {
+      "ces_at_budget": 0.6,
+      "ces_unbounded": 1.0,
+      "n": 60,
+      "recoverable_by_budget": 0.4
+    },
+    "canonical": {
+      "ces_at_budget": 0.9167,
+      "ces_unbounded": 1.0,
+      "n": 60,
+      "recoverable_by_budget": 0.0833
+    }
+  },
+  "by_family": {
+    "configuration_chain": {
+      "ces_at_budget": 0.6667,
+      "ces_unbounded": 1.0,
+      "n": 12,
+      "recoverable_by_budget": 0.3333
+    },
+    "dependency_chain": {
+      "ces_at_budget": 0.75,
+      "ces_unbounded": 1.0,
+      "n": 12,
+      "recoverable_by_budget": 0.25
+    },
+    "distractor_heavy": {
+      "ces_at_budget": 0.9167,
+      "ces_unbounded": 1.0,
+      "n": 12,
+      "recoverable_by_budget": 0.0833
+    },
+    "entity_attribute": {
+      "ces_at_budget": 1.0,
+      "ces_unbounded": 1.0,
+      "n": 12,
+      "recoverable_by_budget": 0.0
+    },
+    "location_chain": {
+      "ces_at_budget": 0.75,
+      "ces_unbounded": 1.0,
+      "n": 12,
+      "recoverable_by_budget": 0.25
+    },
+    "numeric_chain": {
+      "ces_at_budget": 0.75,
+      "ces_unbounded": 1.0,
+      "n": 12,
+      "recoverable_by_budget": 0.25
+    },
+    "ownership_chain": {
+      "ces_at_budget": 0.75,
+      "ces_unbounded": 1.0,
+      "n": 12,
+      "recoverable_by_budget": 0.25
+    },
+    "procedural_chain": {
+      "ces_at_budget": 0.75,
+      "ces_unbounded": 1.0,
+      "n": 12,
+      "recoverable_by_budget": 0.25
+    },
+    "temporal_chain": {
+      "ces_at_budget": 0.25,
+      "ces_unbounded": 1.0,
+      "n": 12,
+      "recoverable_by_budget": 0.75
+    },
+    "temporal_update": {
+      "ces_at_budget": 1.0,
+      "ces_unbounded": 1.0,
+      "n": 12,
+      "recoverable_by_budget": 0.0
+    }
+  },
+  "ces_curve_by_candidate_budget": {
+    "10": 0.3833,
+    "100": 0.8417,
+    "20": 0.5667,
+    "200": 0.8917,
+    "50": 0.7583,
+    "500": 1.0,
+    "unbounded": 1.0
+  },
+  "corpus_records": 534,
+  "diagnostic_only": "Re-runs the frozen retrieval (same query construction, backends and RRF) at a wider observation depth. No mechanism change, no HRM, writes no certified artifact.",
+  "frozen_candidate_budget": 50,
+  "headline_question": {
+    "missing_required_records": 29,
+    "not_ranked_at_all_within_probe": 0,
+    "question": "absent from ranking, or merely below the cutoff?",
+    "ranked_but_below_budget": 29,
+    "share_recoverable_by_budget_alone": 1.0
+  },
+  "missing_cause_by_role": {
+    "BRIDGE": {
+      "BELOW_BUDGET": 20,
+      "FUSION_DISPLACEMENT": 3
+    },
+    "TEMPORAL_CURRENT": {
+      "BELOW_BUDGET": 2,
+      "FUSION_DISPLACEMENT": 2
+    },
+    "TERMINAL_ANSWER": {
+      "FUSION_DISPLACEMENT": 2
+    }
+  },
+  "missing_cause_counts": {
+    "BELOW_BUDGET": 22,
+    "FUSION_DISPLACEMENT": 7
+  },
+  "per_task": [
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "entity_attribute",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "entity_attribute-0000/fact",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "entity_attribute-0000"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "entity_attribute",
+      "required": [
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "entity_attribute-0001/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 5,
+          "cause": null,
+          "dense_rank": 4,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "entity_attribute-0001/fact",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "entity_attribute-0001"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "entity_attribute",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "entity_attribute-0002/fact",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "entity_attribute-0002"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "entity_attribute",
+      "required": [
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "entity_attribute-0003/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 8,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "entity_attribute-0003/fact",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "entity_attribute-0003"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "entity_attribute",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "entity_attribute-0004/fact",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "entity_attribute-0004"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "entity_attribute",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "entity_attribute-0005/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 9,
+          "cause": null,
+          "dense_rank": 10,
+          "fusion_rank": 8,
+          "in_pool": true,
+          "record_id": "entity_attribute-0005/fact",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "entity_attribute-0005"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "entity_attribute",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "entity_attribute-0006/fact",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "entity_attribute-0006"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "entity_attribute",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "entity_attribute-0007/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 11,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "entity_attribute-0007/fact",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "entity_attribute-0007"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "entity_attribute",
+      "required": [
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 3,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "entity_attribute-0008/fact",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "entity_attribute-0008"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "entity_attribute",
+      "required": [
+        {
+          "bm25_rank": 3,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "entity_attribute-0009/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "entity_attribute-0009/fact",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "entity_attribute-0009"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "entity_attribute",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "entity_attribute-0010/fact",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "entity_attribute-0010"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "entity_attribute",
+      "required": [
+        {
+          "bm25_rank": 3,
+          "cause": null,
+          "dense_rank": 8,
+          "fusion_rank": 5,
+          "in_pool": true,
+          "record_id": "entity_attribute-0011/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 13,
+          "cause": null,
+          "dense_rank": 13,
+          "fusion_rank": 12,
+          "in_pool": true,
+          "record_id": "entity_attribute-0011/fact",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "entity_attribute-0011"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "ownership_chain",
+      "required": [
+        {
+          "bm25_rank": 16,
+          "cause": null,
+          "dense_rank": 29,
+          "fusion_rank": 19,
+          "in_pool": true,
+          "record_id": "ownership_chain-0000/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 12,
+          "cause": null,
+          "dense_rank": 12,
+          "fusion_rank": 8,
+          "in_pool": true,
+          "record_id": "ownership_chain-0000/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "ownership_chain-0000"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "ownership_chain",
+      "required": [
+        {
+          "bm25_rank": 3,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "ownership_chain-0001/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 106,
+          "fusion_rank": 113,
+          "in_pool": false,
+          "record_id": "ownership_chain-0001/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 13,
+          "cause": null,
+          "dense_rank": 13,
+          "fusion_rank": 12,
+          "in_pool": true,
+          "record_id": "ownership_chain-0001/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "ownership_chain-0001"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "ownership_chain",
+      "required": [
+        {
+          "bm25_rank": 8,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "ownership_chain-0002/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 13,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "ownership_chain-0002/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "ownership_chain-0002"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "ownership_chain",
+      "required": [
+        {
+          "bm25_rank": 12,
+          "cause": null,
+          "dense_rank": 6,
+          "fusion_rank": 8,
+          "in_pool": true,
+          "record_id": "ownership_chain-0003/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 9,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 6,
+          "in_pool": true,
+          "record_id": "ownership_chain-0003/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "ownership_chain-0003"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "ownership_chain",
+      "required": [
+        {
+          "bm25_rank": 11,
+          "cause": null,
+          "dense_rank": 3,
+          "fusion_rank": 5,
+          "in_pool": true,
+          "record_id": "ownership_chain-0004/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 22,
+          "cause": null,
+          "dense_rank": 187,
+          "fusion_rank": 44,
+          "in_pool": true,
+          "record_id": "ownership_chain-0004/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "ownership_chain-0004"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "ownership_chain",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "ownership_chain-0005/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 214,
+          "fusion_rank": 217,
+          "in_pool": false,
+          "record_id": "ownership_chain-0005/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 59,
+          "fusion_rank": 12,
+          "in_pool": true,
+          "record_id": "ownership_chain-0005/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "ownership_chain-0005"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "ownership_chain",
+      "required": [
+        {
+          "bm25_rank": 21,
+          "cause": null,
+          "dense_rank": 3,
+          "fusion_rank": 6,
+          "in_pool": true,
+          "record_id": "ownership_chain-0006/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 11,
+          "cause": null,
+          "dense_rank": 34,
+          "fusion_rank": 17,
+          "in_pool": true,
+          "record_id": "ownership_chain-0006/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "ownership_chain-0006"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "ownership_chain",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "ownership_chain-0007/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 19,
+          "cause": null,
+          "dense_rank": 4,
+          "fusion_rank": 8,
+          "in_pool": true,
+          "record_id": "ownership_chain-0007/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "ownership_chain-0007"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "ownership_chain",
+      "required": [
+        {
+          "bm25_rank": 15,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 5,
+          "in_pool": true,
+          "record_id": "ownership_chain-0008/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 12,
+          "cause": null,
+          "dense_rank": 56,
+          "fusion_rank": 24,
+          "in_pool": true,
+          "record_id": "ownership_chain-0008/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "ownership_chain-0008"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "ownership_chain",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "ownership_chain-0009/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "FUSION_DISPLACEMENT",
+          "dense_rank": 28,
+          "fusion_rank": 68,
+          "in_pool": false,
+          "record_id": "ownership_chain-0009/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 11,
+          "cause": null,
+          "dense_rank": 14,
+          "fusion_rank": 11,
+          "in_pool": true,
+          "record_id": "ownership_chain-0009/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "ownership_chain-0009"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "ownership_chain",
+      "required": [
+        {
+          "bm25_rank": 9,
+          "cause": null,
+          "dense_rank": 11,
+          "fusion_rank": 9,
+          "in_pool": true,
+          "record_id": "ownership_chain-0010/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "ownership_chain-0010/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "ownership_chain-0010"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "ownership_chain",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 3,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "ownership_chain-0011/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 3,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "ownership_chain-0011/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "ownership_chain-0011"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "configuration_chain",
+      "required": [
+        {
+          "bm25_rank": 13,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 6,
+          "in_pool": true,
+          "record_id": "configuration_chain-0000/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "configuration_chain-0000/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "configuration_chain-0000"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "configuration_chain",
+      "required": [
+        {
+          "bm25_rank": 9,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "configuration_chain-0001/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 217,
+          "fusion_rank": 217,
+          "in_pool": false,
+          "record_id": "configuration_chain-0001/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 10,
+          "fusion_rank": 5,
+          "in_pool": true,
+          "record_id": "configuration_chain-0001/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "configuration_chain-0001"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "configuration_chain",
+      "required": [
+        {
+          "bm25_rank": 11,
+          "cause": null,
+          "dense_rank": 3,
+          "fusion_rank": 5,
+          "in_pool": true,
+          "record_id": "configuration_chain-0002/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 9,
+          "cause": null,
+          "dense_rank": 126,
+          "fusion_rank": 22,
+          "in_pool": true,
+          "record_id": "configuration_chain-0002/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "configuration_chain-0002"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "configuration_chain",
+      "required": [
+        {
+          "bm25_rank": 9,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "configuration_chain-0003/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 19,
+          "cause": null,
+          "dense_rank": 21,
+          "fusion_rank": 18,
+          "in_pool": true,
+          "record_id": "configuration_chain-0003/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "configuration_chain-0003"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "configuration_chain",
+      "required": [
+        {
+          "bm25_rank": 11,
+          "cause": null,
+          "dense_rank": 4,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "configuration_chain-0004/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 76,
+          "fusion_rank": 11,
+          "in_pool": true,
+          "record_id": "configuration_chain-0004/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "configuration_chain-0004"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "configuration_chain",
+      "required": [
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 7,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "configuration_chain-0005/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 398,
+          "fusion_rank": 398,
+          "in_pool": false,
+          "record_id": "configuration_chain-0005/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 14,
+          "cause": null,
+          "dense_rank": 107,
+          "fusion_rank": 24,
+          "in_pool": true,
+          "record_id": "configuration_chain-0005/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "configuration_chain-0005"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "configuration_chain",
+      "required": [
+        {
+          "bm25_rank": 15,
+          "cause": null,
+          "dense_rank": 14,
+          "fusion_rank": 15,
+          "in_pool": true,
+          "record_id": "configuration_chain-0006/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 22,
+          "cause": null,
+          "dense_rank": 408,
+          "fusion_rank": 48,
+          "in_pool": true,
+          "record_id": "configuration_chain-0006/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "configuration_chain-0006"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "configuration_chain",
+      "required": [
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "configuration_chain-0007/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 3,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "configuration_chain-0007/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "configuration_chain-0007"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "canonical",
+      "family": "configuration_chain",
+      "required": [
+        {
+          "bm25_rank": 37,
+          "cause": null,
+          "dense_rank": 20,
+          "fusion_rank": 25,
+          "in_pool": true,
+          "record_id": "configuration_chain-0008/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 28,
+          "cause": "FUSION_DISPLACEMENT",
+          "dense_rank": 287,
+          "fusion_rank": 61,
+          "in_pool": false,
+          "record_id": "configuration_chain-0008/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "configuration_chain-0008"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "configuration_chain",
+      "required": [
+        {
+          "bm25_rank": 6,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "configuration_chain-0009/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 390,
+          "fusion_rank": 390,
+          "in_pool": false,
+          "record_id": "configuration_chain-0009/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 9,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 7,
+          "in_pool": true,
+          "record_id": "configuration_chain-0009/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "configuration_chain-0009"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "configuration_chain",
+      "required": [
+        {
+          "bm25_rank": 14,
+          "cause": null,
+          "dense_rank": 19,
+          "fusion_rank": 14,
+          "in_pool": true,
+          "record_id": "configuration_chain-0010/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "configuration_chain-0010/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "configuration_chain-0010"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "configuration_chain",
+      "required": [
+        {
+          "bm25_rank": 6,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "configuration_chain-0011/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 10,
+          "cause": null,
+          "dense_rank": 7,
+          "fusion_rank": 9,
+          "in_pool": true,
+          "record_id": "configuration_chain-0011/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "configuration_chain-0011"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "dependency_chain",
+      "required": [
+        {
+          "bm25_rank": 18,
+          "cause": null,
+          "dense_rank": 3,
+          "fusion_rank": 7,
+          "in_pool": true,
+          "record_id": "dependency_chain-0000/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 8,
+          "cause": null,
+          "dense_rank": 36,
+          "fusion_rank": 11,
+          "in_pool": true,
+          "record_id": "dependency_chain-0000/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "dependency_chain-0000"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "dependency_chain",
+      "required": [
+        {
+          "bm25_rank": 13,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "dependency_chain-0001/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 415,
+          "fusion_rank": 415,
+          "in_pool": false,
+          "record_id": "dependency_chain-0001/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 9,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "dependency_chain-0001/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "dependency_chain-0001"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "dependency_chain",
+      "required": [
+        {
+          "bm25_rank": 23,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "dependency_chain-0002/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 12,
+          "cause": null,
+          "dense_rank": 31,
+          "fusion_rank": 17,
+          "in_pool": true,
+          "record_id": "dependency_chain-0002/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "dependency_chain-0002"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "dependency_chain",
+      "required": [
+        {
+          "bm25_rank": 13,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "dependency_chain-0003/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 8,
+          "cause": null,
+          "dense_rank": 14,
+          "fusion_rank": 8,
+          "in_pool": true,
+          "record_id": "dependency_chain-0003/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "dependency_chain-0003"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "dependency_chain",
+      "required": [
+        {
+          "bm25_rank": 22,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "dependency_chain-0004/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 18,
+          "cause": null,
+          "dense_rank": 266,
+          "fusion_rank": 44,
+          "in_pool": true,
+          "record_id": "dependency_chain-0004/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "dependency_chain-0004"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "dependency_chain",
+      "required": [
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "dependency_chain-0005/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 63,
+          "fusion_rank": 67,
+          "in_pool": false,
+          "record_id": "dependency_chain-0005/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "dependency_chain-0005/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "dependency_chain-0005"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "dependency_chain",
+      "required": [
+        {
+          "bm25_rank": 14,
+          "cause": null,
+          "dense_rank": 4,
+          "fusion_rank": 6,
+          "in_pool": true,
+          "record_id": "dependency_chain-0006/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 15,
+          "cause": null,
+          "dense_rank": 158,
+          "fusion_rank": 34,
+          "in_pool": true,
+          "record_id": "dependency_chain-0006/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "dependency_chain-0006"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "dependency_chain",
+      "required": [
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "dependency_chain-0007/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 16,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 8,
+          "in_pool": true,
+          "record_id": "dependency_chain-0007/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "dependency_chain-0007"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "dependency_chain",
+      "required": [
+        {
+          "bm25_rank": 34,
+          "cause": null,
+          "dense_rank": 11,
+          "fusion_rank": 19,
+          "in_pool": true,
+          "record_id": "dependency_chain-0008/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 6,
+          "cause": null,
+          "dense_rank": 46,
+          "fusion_rank": 14,
+          "in_pool": true,
+          "record_id": "dependency_chain-0008/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "dependency_chain-0008"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "dependency_chain",
+      "required": [
+        {
+          "bm25_rank": 12,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "dependency_chain-0009/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 392,
+          "fusion_rank": 392,
+          "in_pool": false,
+          "record_id": "dependency_chain-0009/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 17,
+          "cause": null,
+          "dense_rank": 184,
+          "fusion_rank": 26,
+          "in_pool": true,
+          "record_id": "dependency_chain-0009/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "dependency_chain-0009"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "dependency_chain",
+      "required": [
+        {
+          "bm25_rank": 28,
+          "cause": null,
+          "dense_rank": 16,
+          "fusion_rank": 16,
+          "in_pool": true,
+          "record_id": "dependency_chain-0010/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 7,
+          "cause": null,
+          "dense_rank": 324,
+          "fusion_rank": 18,
+          "in_pool": true,
+          "record_id": "dependency_chain-0010/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "dependency_chain-0010"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "dependency_chain",
+      "required": [
+        {
+          "bm25_rank": 12,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "dependency_chain-0011/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 3,
+          "cause": null,
+          "dense_rank": 10,
+          "fusion_rank": 6,
+          "in_pool": true,
+          "record_id": "dependency_chain-0011/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "dependency_chain-0011"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "location_chain",
+      "required": [
+        {
+          "bm25_rank": 29,
+          "cause": null,
+          "dense_rank": 42,
+          "fusion_rank": 36,
+          "in_pool": true,
+          "record_id": "location_chain-0000/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 9,
+          "cause": null,
+          "dense_rank": 107,
+          "fusion_rank": 19,
+          "in_pool": true,
+          "record_id": "location_chain-0000/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "location_chain-0000"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "location_chain",
+      "required": [
+        {
+          "bm25_rank": 14,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "location_chain-0001/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 105,
+          "fusion_rank": 109,
+          "in_pool": false,
+          "record_id": "location_chain-0001/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 6,
+          "cause": null,
+          "dense_rank": 23,
+          "fusion_rank": 10,
+          "in_pool": true,
+          "record_id": "location_chain-0001/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "location_chain-0001"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "location_chain",
+      "required": [
+        {
+          "bm25_rank": 20,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 5,
+          "in_pool": true,
+          "record_id": "location_chain-0002/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 15,
+          "cause": null,
+          "dense_rank": 20,
+          "fusion_rank": 12,
+          "in_pool": true,
+          "record_id": "location_chain-0002/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "location_chain-0002"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "location_chain",
+      "required": [
+        {
+          "bm25_rank": 14,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "location_chain-0003/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 7,
+          "cause": null,
+          "dense_rank": 13,
+          "fusion_rank": 8,
+          "in_pool": true,
+          "record_id": "location_chain-0003/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "location_chain-0003"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "location_chain",
+      "required": [
+        {
+          "bm25_rank": 30,
+          "cause": null,
+          "dense_rank": 10,
+          "fusion_rank": 13,
+          "in_pool": true,
+          "record_id": "location_chain-0004/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 16,
+          "cause": null,
+          "dense_rank": 354,
+          "fusion_rank": 38,
+          "in_pool": true,
+          "record_id": "location_chain-0004/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "location_chain-0004"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "location_chain",
+      "required": [
+        {
+          "bm25_rank": 5,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "location_chain-0005/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 358,
+          "fusion_rank": 358,
+          "in_pool": false,
+          "record_id": "location_chain-0005/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 10,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "location_chain-0005/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "location_chain-0005"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "location_chain",
+      "required": [
+        {
+          "bm25_rank": 19,
+          "cause": null,
+          "dense_rank": 6,
+          "fusion_rank": 7,
+          "in_pool": true,
+          "record_id": "location_chain-0006/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 5,
+          "cause": null,
+          "dense_rank": 151,
+          "fusion_rank": 14,
+          "in_pool": true,
+          "record_id": "location_chain-0006/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "location_chain-0006"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "location_chain",
+      "required": [
+        {
+          "bm25_rank": 5,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "location_chain-0007/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 14,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 6,
+          "in_pool": true,
+          "record_id": "location_chain-0007/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "location_chain-0007"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "location_chain",
+      "required": [
+        {
+          "bm25_rank": 22,
+          "cause": null,
+          "dense_rank": 6,
+          "fusion_rank": 10,
+          "in_pool": true,
+          "record_id": "location_chain-0008/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 47,
+          "fusion_rank": 9,
+          "in_pool": true,
+          "record_id": "location_chain-0008/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "location_chain-0008"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "location_chain",
+      "required": [
+        {
+          "bm25_rank": 12,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "location_chain-0009/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 252,
+          "fusion_rank": 252,
+          "in_pool": false,
+          "record_id": "location_chain-0009/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 3,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "location_chain-0009/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "location_chain-0009"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "location_chain",
+      "required": [
+        {
+          "bm25_rank": 31,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 8,
+          "in_pool": true,
+          "record_id": "location_chain-0010/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 15,
+          "cause": null,
+          "dense_rank": 206,
+          "fusion_rank": 34,
+          "in_pool": true,
+          "record_id": "location_chain-0010/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "location_chain-0010"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "location_chain",
+      "required": [
+        {
+          "bm25_rank": 12,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "location_chain-0011/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 66,
+          "fusion_rank": 12,
+          "in_pool": true,
+          "record_id": "location_chain-0011/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "location_chain-0011"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "temporal_chain",
+      "required": [
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 7,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "temporal_chain-0000/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 5,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 5,
+          "in_pool": true,
+          "record_id": "temporal_chain-0000/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_chain-0000"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "temporal_chain",
+      "required": [
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "temporal_chain-0001/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": null,
+          "dense_rank": 17,
+          "fusion_rank": 48,
+          "in_pool": true,
+          "record_id": "temporal_chain-0001/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 30,
+          "cause": null,
+          "dense_rank": 22,
+          "fusion_rank": 24,
+          "in_pool": true,
+          "record_id": "temporal_chain-0001/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_chain-0001"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "canonical",
+      "family": "temporal_chain",
+      "required": [
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "temporal_chain-0002/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 28,
+          "cause": "FUSION_DISPLACEMENT",
+          "dense_rank": 110,
+          "fusion_rank": 51,
+          "in_pool": false,
+          "record_id": "temporal_chain-0002/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_chain-0002"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "temporal_chain",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_chain-0003/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 196,
+          "fusion_rank": 204,
+          "in_pool": false,
+          "record_id": "temporal_chain-0003/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 38,
+          "cause": null,
+          "dense_rank": 51,
+          "fusion_rank": 47,
+          "in_pool": true,
+          "record_id": "temporal_chain-0003/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_chain-0003"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "temporal_chain",
+      "required": [
+        {
+          "bm25_rank": 12,
+          "cause": null,
+          "dense_rank": 8,
+          "fusion_rank": 10,
+          "in_pool": true,
+          "record_id": "temporal_chain-0004/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 19,
+          "cause": null,
+          "dense_rank": 72,
+          "fusion_rank": 25,
+          "in_pool": true,
+          "record_id": "temporal_chain-0004/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_chain-0004"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "temporal_chain",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_chain-0005/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 104,
+          "fusion_rank": 112,
+          "in_pool": false,
+          "record_id": "temporal_chain-0005/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 26,
+          "fusion_rank": 9,
+          "in_pool": true,
+          "record_id": "temporal_chain-0005/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_chain-0005"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "canonical",
+      "family": "temporal_chain",
+      "required": [
+        {
+          "bm25_rank": 8,
+          "cause": null,
+          "dense_rank": 3,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "temporal_chain-0006/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 49,
+          "cause": "FUSION_DISPLACEMENT",
+          "dense_rank": 213,
+          "fusion_rank": 95,
+          "in_pool": false,
+          "record_id": "temporal_chain-0006/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_chain-0006"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "temporal_chain",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_chain-0007/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 68,
+          "fusion_rank": 89,
+          "in_pool": false,
+          "record_id": "temporal_chain-0007/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 6,
+          "cause": null,
+          "dense_rank": 13,
+          "fusion_rank": 7,
+          "in_pool": true,
+          "record_id": "temporal_chain-0007/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_chain-0007"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "canonical",
+      "family": "temporal_chain",
+      "required": [
+        {
+          "bm25_rank": 19,
+          "cause": null,
+          "dense_rank": 21,
+          "fusion_rank": 19,
+          "in_pool": true,
+          "record_id": "temporal_chain-0008/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 71,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 89,
+          "fusion_rank": 85,
+          "in_pool": false,
+          "record_id": "temporal_chain-0008/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_chain-0008"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "temporal_chain",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_chain-0009/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 86,
+          "fusion_rank": 106,
+          "in_pool": false,
+          "record_id": "temporal_chain-0009/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 47,
+          "cause": null,
+          "dense_rank": 48,
+          "fusion_rank": 49,
+          "in_pool": true,
+          "record_id": "temporal_chain-0009/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_chain-0009"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "canonical",
+      "family": "temporal_chain",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_chain-0010/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 82,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 113,
+          "fusion_rank": 108,
+          "in_pool": false,
+          "record_id": "temporal_chain-0010/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_chain-0010"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "temporal_chain",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 4,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_chain-0011/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 430,
+          "fusion_rank": 430,
+          "in_pool": false,
+          "record_id": "temporal_chain-0011/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 14,
+          "cause": null,
+          "dense_rank": 48,
+          "fusion_rank": 24,
+          "in_pool": true,
+          "record_id": "temporal_chain-0011/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_chain-0011"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "numeric_chain",
+      "required": [
+        {
+          "bm25_rank": 27,
+          "cause": null,
+          "dense_rank": 3,
+          "fusion_rank": 5,
+          "in_pool": true,
+          "record_id": "numeric_chain-0000/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 7,
+          "cause": null,
+          "dense_rank": 48,
+          "fusion_rank": 14,
+          "in_pool": true,
+          "record_id": "numeric_chain-0000/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "numeric_chain-0000"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "numeric_chain",
+      "required": [
+        {
+          "bm25_rank": 13,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 6,
+          "in_pool": true,
+          "record_id": "numeric_chain-0001/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 159,
+          "fusion_rank": 159,
+          "in_pool": false,
+          "record_id": "numeric_chain-0001/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 11,
+          "cause": null,
+          "dense_rank": 10,
+          "fusion_rank": 12,
+          "in_pool": true,
+          "record_id": "numeric_chain-0001/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "numeric_chain-0001"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "numeric_chain",
+      "required": [
+        {
+          "bm25_rank": 20,
+          "cause": null,
+          "dense_rank": 6,
+          "fusion_rank": 8,
+          "in_pool": true,
+          "record_id": "numeric_chain-0002/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 6,
+          "cause": null,
+          "dense_rank": 88,
+          "fusion_rank": 20,
+          "in_pool": true,
+          "record_id": "numeric_chain-0002/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "numeric_chain-0002"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "numeric_chain",
+      "required": [
+        {
+          "bm25_rank": 13,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 9,
+          "in_pool": true,
+          "record_id": "numeric_chain-0003/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 6,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "numeric_chain-0003/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "numeric_chain-0003"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "numeric_chain",
+      "required": [
+        {
+          "bm25_rank": 26,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 8,
+          "in_pool": true,
+          "record_id": "numeric_chain-0004/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 9,
+          "cause": null,
+          "dense_rank": 18,
+          "fusion_rank": 12,
+          "in_pool": true,
+          "record_id": "numeric_chain-0004/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "numeric_chain-0004"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "numeric_chain",
+      "required": [
+        {
+          "bm25_rank": 9,
+          "cause": null,
+          "dense_rank": 6,
+          "fusion_rank": 8,
+          "in_pool": true,
+          "record_id": "numeric_chain-0005/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "FUSION_DISPLACEMENT",
+          "dense_rank": 50,
+          "fusion_rank": 51,
+          "in_pool": false,
+          "record_id": "numeric_chain-0005/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 15,
+          "cause": null,
+          "dense_rank": 32,
+          "fusion_rank": 21,
+          "in_pool": true,
+          "record_id": "numeric_chain-0005/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "numeric_chain-0005"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "numeric_chain",
+      "required": [
+        {
+          "bm25_rank": 26,
+          "cause": null,
+          "dense_rank": 9,
+          "fusion_rank": 13,
+          "in_pool": true,
+          "record_id": "numeric_chain-0006/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 15,
+          "cause": null,
+          "dense_rank": 12,
+          "fusion_rank": 12,
+          "in_pool": true,
+          "record_id": "numeric_chain-0006/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "numeric_chain-0006"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "numeric_chain",
+      "required": [
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "numeric_chain-0007/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 19,
+          "cause": null,
+          "dense_rank": 15,
+          "fusion_rank": 17,
+          "in_pool": true,
+          "record_id": "numeric_chain-0007/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "numeric_chain-0007"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "numeric_chain",
+      "required": [
+        {
+          "bm25_rank": 30,
+          "cause": null,
+          "dense_rank": 16,
+          "fusion_rank": 23,
+          "in_pool": true,
+          "record_id": "numeric_chain-0008/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 13,
+          "cause": null,
+          "dense_rank": 35,
+          "fusion_rank": 21,
+          "in_pool": true,
+          "record_id": "numeric_chain-0008/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "numeric_chain-0008"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "numeric_chain",
+      "required": [
+        {
+          "bm25_rank": 17,
+          "cause": null,
+          "dense_rank": 19,
+          "fusion_rank": 17,
+          "in_pool": true,
+          "record_id": "numeric_chain-0009/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 245,
+          "fusion_rank": 246,
+          "in_pool": false,
+          "record_id": "numeric_chain-0009/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 5,
+          "cause": null,
+          "dense_rank": 3,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "numeric_chain-0009/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "numeric_chain-0009"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "numeric_chain",
+      "required": [
+        {
+          "bm25_rank": 26,
+          "cause": null,
+          "dense_rank": 26,
+          "fusion_rank": 24,
+          "in_pool": true,
+          "record_id": "numeric_chain-0010/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 5,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 5,
+          "in_pool": true,
+          "record_id": "numeric_chain-0010/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "numeric_chain-0010"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "numeric_chain",
+      "required": [
+        {
+          "bm25_rank": 11,
+          "cause": null,
+          "dense_rank": 19,
+          "fusion_rank": 16,
+          "in_pool": true,
+          "record_id": "numeric_chain-0011/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 16,
+          "cause": null,
+          "dense_rank": 10,
+          "fusion_rank": 13,
+          "in_pool": true,
+          "record_id": "numeric_chain-0011/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "numeric_chain-0011"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "procedural_chain",
+      "required": [
+        {
+          "bm25_rank": 12,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "procedural_chain-0000/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 5,
+          "cause": null,
+          "dense_rank": 125,
+          "fusion_rank": 10,
+          "in_pool": true,
+          "record_id": "procedural_chain-0000/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "procedural_chain-0000"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "procedural_chain",
+      "required": [
+        {
+          "bm25_rank": 10,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "procedural_chain-0001/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 461,
+          "fusion_rank": 461,
+          "in_pool": false,
+          "record_id": "procedural_chain-0001/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 104,
+          "fusion_rank": 11,
+          "in_pool": true,
+          "record_id": "procedural_chain-0001/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "procedural_chain-0001"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "procedural_chain",
+      "required": [
+        {
+          "bm25_rank": 22,
+          "cause": null,
+          "dense_rank": 4,
+          "fusion_rank": 10,
+          "in_pool": true,
+          "record_id": "procedural_chain-0002/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 14,
+          "cause": null,
+          "dense_rank": 239,
+          "fusion_rank": 30,
+          "in_pool": true,
+          "record_id": "procedural_chain-0002/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "procedural_chain-0002"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "procedural_chain",
+      "required": [
+        {
+          "bm25_rank": 10,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "procedural_chain-0003/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 6,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "procedural_chain-0003/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "procedural_chain-0003"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "procedural_chain",
+      "required": [
+        {
+          "bm25_rank": 14,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "procedural_chain-0004/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 23,
+          "cause": null,
+          "dense_rank": 166,
+          "fusion_rank": 46,
+          "in_pool": true,
+          "record_id": "procedural_chain-0004/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "procedural_chain-0004"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "procedural_chain",
+      "required": [
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "procedural_chain-0005/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "FUSION_DISPLACEMENT",
+          "dense_rank": 41,
+          "fusion_rank": 60,
+          "in_pool": false,
+          "record_id": "procedural_chain-0005/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 11,
+          "cause": null,
+          "dense_rank": 10,
+          "fusion_rank": 11,
+          "in_pool": true,
+          "record_id": "procedural_chain-0005/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "procedural_chain-0005"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "procedural_chain",
+      "required": [
+        {
+          "bm25_rank": 26,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "procedural_chain-0006/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 60,
+          "fusion_rank": 9,
+          "in_pool": true,
+          "record_id": "procedural_chain-0006/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "procedural_chain-0006"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "procedural_chain",
+      "required": [
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "procedural_chain-0007/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 18,
+          "cause": null,
+          "dense_rank": 104,
+          "fusion_rank": 22,
+          "in_pool": true,
+          "record_id": "procedural_chain-0007/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "procedural_chain-0007"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "procedural_chain",
+      "required": [
+        {
+          "bm25_rank": 42,
+          "cause": null,
+          "dense_rank": 19,
+          "fusion_rank": 25,
+          "in_pool": true,
+          "record_id": "procedural_chain-0008/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 9,
+          "cause": null,
+          "dense_rank": 91,
+          "fusion_rank": 21,
+          "in_pool": true,
+          "record_id": "procedural_chain-0008/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "procedural_chain-0008"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "procedural_chain",
+      "required": [
+        {
+          "bm25_rank": 10,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "procedural_chain-0009/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": null,
+          "cause": "BELOW_BUDGET",
+          "dense_rank": 338,
+          "fusion_rank": 342,
+          "in_pool": false,
+          "record_id": "procedural_chain-0009/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 8,
+          "cause": null,
+          "dense_rank": 8,
+          "fusion_rank": 5,
+          "in_pool": true,
+          "record_id": "procedural_chain-0009/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "procedural_chain-0009"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "procedural_chain",
+      "required": [
+        {
+          "bm25_rank": 39,
+          "cause": null,
+          "dense_rank": 25,
+          "fusion_rank": 30,
+          "in_pool": true,
+          "record_id": "procedural_chain-0010/link",
+          "role": "BRIDGE"
+        },
+        {
+          "bm25_rank": 11,
+          "cause": null,
+          "dense_rank": 91,
+          "fusion_rank": 26,
+          "in_pool": true,
+          "record_id": "procedural_chain-0010/value",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "procedural_chain-0010"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "procedural_chain",
+      "required": [
+        {
+          "bm25_rank": 10,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "procedural_chain-0011/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 3,
+          "cause": null,
+          "dense_rank": 13,
+          "fusion_rank": 5,
+          "in_pool": true,
+          "record_id": "procedural_chain-0011/direct",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "procedural_chain-0011"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "temporal_update",
+      "required": [
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 3,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "temporal_update-0000/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_update-0000"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "temporal_update",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_update-0001/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 16,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 7,
+          "in_pool": true,
+          "record_id": "temporal_update-0001/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_update-0001"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "temporal_update",
+      "required": [
+        {
+          "bm25_rank": 4,
+          "cause": null,
+          "dense_rank": 5,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "temporal_update-0002/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_update-0002"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "temporal_update",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_update-0003/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 18,
+          "cause": null,
+          "dense_rank": 9,
+          "fusion_rank": 11,
+          "in_pool": true,
+          "record_id": "temporal_update-0003/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_update-0003"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "temporal_update",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_update-0004/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_update-0004"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "temporal_update",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_update-0005/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 35,
+          "cause": null,
+          "dense_rank": 16,
+          "fusion_rank": 25,
+          "in_pool": true,
+          "record_id": "temporal_update-0005/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_update-0005"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "temporal_update",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_update-0006/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_update-0006"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "temporal_update",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_update-0007/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 26,
+          "cause": null,
+          "dense_rank": 11,
+          "fusion_rank": 19,
+          "in_pool": true,
+          "record_id": "temporal_update-0007/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_update-0007"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "temporal_update",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_update-0008/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_update-0008"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "temporal_update",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_update-0009/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 48,
+          "cause": null,
+          "dense_rank": 16,
+          "fusion_rank": 28,
+          "in_pool": true,
+          "record_id": "temporal_update-0009/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_update-0009"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "temporal_update",
+      "required": [
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_update-0010/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_update-0010"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "temporal_update",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "temporal_update-0011/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 46,
+          "cause": null,
+          "dense_rank": 10,
+          "fusion_rank": 21,
+          "in_pool": true,
+          "record_id": "temporal_update-0011/current",
+          "role": "TEMPORAL_CURRENT"
+        }
+      ],
+      "task_id": "temporal_update-0011"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "distractor_heavy",
+      "required": [
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 3,
+          "fusion_rank": 2,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0000/accepted",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "distractor_heavy-0000"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "distractor_heavy",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0001/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 29,
+          "cause": null,
+          "dense_rank": 69,
+          "fusion_rank": 38,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0001/accepted",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "distractor_heavy-0001"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "distractor_heavy",
+      "required": [
+        {
+          "bm25_rank": 3,
+          "cause": null,
+          "dense_rank": 9,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0002/accepted",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "distractor_heavy-0002"
+    },
+    {
+      "complete_at_budget": false,
+      "entity_regime": "abbreviation",
+      "family": "distractor_heavy",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0003/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 41,
+          "cause": "FUSION_DISPLACEMENT",
+          "dense_rank": 81,
+          "fusion_rank": 55,
+          "in_pool": false,
+          "record_id": "distractor_heavy-0003/accepted",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "distractor_heavy-0003"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "distractor_heavy",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0004/accepted",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "distractor_heavy-0004"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "distractor_heavy",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0005/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 3,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0005/accepted",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "distractor_heavy-0005"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "distractor_heavy",
+      "required": [
+        {
+          "bm25_rank": 2,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0006/accepted",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "distractor_heavy-0006"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "distractor_heavy",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0007/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 15,
+          "cause": null,
+          "dense_rank": 14,
+          "fusion_rank": 13,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0007/accepted",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "distractor_heavy-0007"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "distractor_heavy",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 6,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0008/accepted",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "distractor_heavy-0008"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "distractor_heavy",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0009/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 19,
+          "cause": null,
+          "dense_rank": 2,
+          "fusion_rank": 4,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0009/accepted",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "distractor_heavy-0009"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "canonical",
+      "family": "distractor_heavy",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 10,
+          "fusion_rank": 3,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0010/accepted",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "distractor_heavy-0010"
+    },
+    {
+      "complete_at_budget": true,
+      "entity_regime": "abbreviation",
+      "family": "distractor_heavy",
+      "required": [
+        {
+          "bm25_rank": 1,
+          "cause": null,
+          "dense_rank": 1,
+          "fusion_rank": 1,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0011/identity",
+          "role": "IDENTITY"
+        },
+        {
+          "bm25_rank": 50,
+          "cause": null,
+          "dense_rank": 16,
+          "fusion_rank": 26,
+          "in_pool": true,
+          "record_id": "distractor_heavy-0011/accepted",
+          "role": "TERMINAL_ANSWER"
+        }
+      ],
+      "task_id": "distractor_heavy-0011"
+    }
+  ],
+  "probe_depth": 534,
+  "retrieval_policy": "bm25_bge_fusion",
+  "role_recall_at_budget": {
+    "BRIDGE": {
+      "in_pool": 43,
+      "recall": 0.6515,
+      "required_instances": 66
+    },
+    "IDENTITY": {
+      "in_pool": 60,
+      "recall": 1.0,
+      "required_instances": 60
+    },
+    "TEMPORAL_CURRENT": {
+      "in_pool": 20,
+      "recall": 0.8333,
+      "required_instances": 24
+    },
+    "TERMINAL_ANSWER": {
+      "in_pool": 94,
+      "recall": 0.9792,
+      "required_instances": 96
+    }
+  },
+  "schema_version": "c4-retrieval-diagnosis-v1",
+  "split": "development",
+  "task_count": 120
+}

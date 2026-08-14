@@ -1,0 +1,17 @@
+{
+  "candidate_pool_hash": "8fbebbb75650baa90e46bf31be4600e3e3f8ae32d763cbb4e42d0344efd95437",
+  "canonical_subject": "Jacana drive cluster",
+  "ordered_selected_ids": [
+    "ownership_chain-0009/identity",
+    "ownership_chain-0009/link",
+    "ownership_chain-0009/value"
+  ],
+  "ordered_text_sha256": [
+    "9d1b7d1fac8e7d967eb2b063556993ce6a1a455320c8018c414dd37c40d06eb7",
+    "c2f11f3b4aa6e12fa03dac56e8df5bbc74c90357ec7f8439c5d97678dce2cfff",
+    "5161d4610b5f770ae6d242071eed39e90aaf029e553a7b45c76dabc1e4c6f21e"
+  ],
+  "query_hash": "e5fbc5e7f2eb698d0cb4f46a97f12cb26cd9130a9650c8f047652fdf2f49daec",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "ownership_chain-0009"
+}

@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "9210e4718988082d336b65a26aca785eeee7ce167cc9f56384ca7230c9e5a5ad",
+  "canonical_subject": "Egret relay unit",
+  "ordered_selected_ids": [
+    "distractor_heavy-0009/identity",
+    "distractor_heavy-0009/accepted"
+  ],
+  "ordered_text_sha256": [
+    "a673cc1ee839f5c73ae0b0373191a8b34e1ea251597686f242fe3f8ac71f3e33",
+    "84aa64b72446c3b303cf2e687cf41dd2ca0afc2020d2abb8bf65b8163de3e9b4"
+  ],
+  "query_hash": "75e2af270085dfd316bd89f7e050475228e60c68845afc3a20c7607af3e39219",
+  "selector_policy_id": "oracle",
+  "task_id": "distractor_heavy-0009"
+}

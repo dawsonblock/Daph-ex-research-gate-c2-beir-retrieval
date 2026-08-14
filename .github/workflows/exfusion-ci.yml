@@ -2,9 +2,9 @@ name: ExFusion validation
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, v2b-infrastructure]
   push:
-    branches: [main]
+    branches: [main, v2b-infrastructure]
   workflow_dispatch:
 
 permissions:
@@ -31,6 +31,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
@@ -39,7 +41,10 @@ jobs:
           cache: pip
 
       - name: Install package and test dependencies
-        run: python -m pip install -e ".[dev]"
+        run: python -m pip install -e ".[dev,pretrained]"
+
+      - name: Verify frozen V2A qualification boundary
+        run: python scripts/check_v2a_qualified_boundary.py
 
       - name: Run complete test suite
         run: python -m pytest -q
@@ -150,3 +155,35 @@ jobs:
           path: dist/*
           if-no-files-found: error
           retention-days: 14
+
+  # Qualification layer (point 4 of I3.3.3): the exhaustive I3.3.2 oracle
+  # regeneration is too expensive for every ordinary PR, so it only runs on
+  # manual dispatch. It verifies that the latent oracle and all seven
+  # sequential observable oracle sets regenerate to their frozen set hashes.
+  qualification:
+    name: Exhaustive I3.3.2 oracle regeneration
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: test
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Check out source with full history
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package and test dependencies
+        run: python -m pip install -e ".[dev]"
+
+      - name: Verify frozen V2A qualification boundary
+        run: python scripts/check_v2a_qualified_boundary.py
+
+      - name: Regenerate latent + all seven sequential oracle sets and compare set hashes
+        run: python -m pytest -q tests/qualification

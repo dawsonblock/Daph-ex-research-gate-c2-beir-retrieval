@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to Kestrel sensor array?
+[EVIDENCE]
+[E1]
+Revision 2 (effective 2031-06-01) supersedes revision 1: - updated Finch sensor array: operating tier now {"tier": "provisional"}
+[E2]
+[required action] Kestrel sensor array -> {"state": "provisional"}
+[E3]
+Revision 1 (effective 2030-01-01, since superseded) recorded: {"subject": "Auk sensor array", "operating tier": "5092"}
+[E4]
+Revision 1 (effective 2030-01-01, since superseded) recorded: {"subject": "Gannet sensor array", "operating tier": "6243"}
+[E5]
+Revision 2 (effective 2031-06-01) supersedes revision 1: subject=Kestrel relay unit; operating tier=9088
+[E6]
+{"subject": "Kestrel sensor array", "service region": "{"grade": "retired"}"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

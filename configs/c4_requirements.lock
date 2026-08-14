@@ -1,0 +1,19 @@
+{
+  "accelerator": {
+    "available": true,
+    "cuda": "12.8",
+    "gpu_name": "NVIDIA H100 80GB HBM3"
+  },
+  "note": "CAPTURED (not transcribed). Frozen via scripts/c4_freeze_environment.py on a Lightning AI Studio (NVIDIA H100 80GB HBM3) immediately before the qualification run. All packages recorded directly from the live environment; no null pins.",
+  "packages": {
+    "accelerate": "1.14.0",
+    "huggingface_hub": "1.27.0",
+    "numpy": "1.26.4",
+    "safetensors": "0.8.0",
+    "tokenizers": "0.22.2",
+    "torch": "2.8.0+cu128",
+    "transformers": "5.14.1"
+  },
+  "python": "3.12.11",
+  "schema_version": "c4-environment-lock-v1"
+}

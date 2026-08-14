@@ -1,0 +1,46 @@
+{
+  "authority_note": "Exact latent oracle, not generator intent, defines optimal actions.",
+  "budget_counts": {
+    "GENEROUS": 169,
+    "STANDARD": 336,
+    "STRUCTURE_HOLDOUT": 150,
+    "TIGHT": 95
+  },
+  "budget_sensitive_pair_count": 95,
+  "cognitive_channel_counts": {
+    "composition": 86,
+    "conflict": 33,
+    "conflict_alias": 26,
+    "history": 51,
+    "history_alias": 16,
+    "irreducible": 26,
+    "irreducible_alias": 28,
+    "provenance": 18,
+    "provenance_alias": 8,
+    "state_irrelevant": 153,
+    "temporal": 9,
+    "temporal_alias": 28,
+    "verification": 60,
+    "verification_alias": 18,
+    "verification_x_budget": 190
+  },
+  "designed_action_counts_non_authoritative": {
+    "ANSWER": 98,
+    "DEFER": 134,
+    "REASON_MORE": 86,
+    "RETRIEVE": 123,
+    "SEARCH_MORE": 118,
+    "STOP": 82,
+    "VERIFY": 109
+  },
+  "generator_output_sha256": "27fc68e20b96db13df7650d56ebd6fbaa053aedf614b86ff5645db0ca26d7460",
+  "schema": "DAPH_V2B_I3_3_BALANCE_REPORT_V1",
+  "split_counts": {
+    "development": 300,
+    "held_out_instance": 100,
+    "held_out_structure": 150,
+    "held_out_surface": 50,
+    "validation": 150
+  },
+  "task_count": 750
+}

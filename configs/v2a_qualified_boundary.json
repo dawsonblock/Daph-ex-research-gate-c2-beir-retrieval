@@ -1,0 +1,41 @@
+{
+  "schema": "DAPH_V2A_QUALIFIED_BOUNDARY_V2",
+  "schema_note": "Replaces V1. The V1 boundary required a local 'v2a-qualified' git tag and a dist/ tarball, neither of which is present on a clean checkout (the tag was never pushed and dist/ is gitignored). V2 derives the qualified boundary entirely from immutable, version-controlled evidence: the qualified commit/tree (an ancestor reachable with full history) and the committed qualification receipts whose component hashes bind the qualified commit's blobs.",
+  "commit": "77f348325352c0cd76d08514a60196fba61e4749",
+  "tree": "50e4bf0b2b17b06447c1c1d0dc72207834648d50",
+  "required_receipts": {
+    "pressure_1m": {
+      "path": "evidence/background_verification_v2a/pressure/pressure_full_1m.json",
+      "sha256": "18093d4c868a24774017f3e22e193b806d04fe87de856f8cf9e3bccbdd55958d"
+    },
+    "adversarial": {
+      "path": "evidence/background_verification_v2a/adversarial/adversarial.json",
+      "sha256": "9665e5a72aea24d741ef186b458e3aa1f6e2933e7cc31ce57f5b80ead5b7d2ef"
+    },
+    "network_smoke": {
+      "path": "evidence/background_verification_v2a/network_smoke/network_smoke.json",
+      "sha256": "8853721a0a5f42411ffb83f8b018305ca02140f63156d40f60c8c86c6a36e63b"
+    },
+    "full_suite": {
+      "path": "evidence/background_verification_v2a/tests/full_suite.json",
+      "sha256": "5f14a21251c2eda270791a8365f6458dc4253600aee8c4b41f3283d1014ee75f"
+    }
+  },
+  "qualification_inputs": [
+    "configs/background_verification_v2a_design.json",
+    "configs/v2a_qualification_requirements.lock",
+    "configs/certified_memory_v1.json",
+    "configs/c4_requirements.lock",
+    "hrm_adaptive_memory/external_verification/core.py",
+    "hrm_adaptive_memory/external_verification/qualification.py",
+    "hrm_adaptive_memory/memory_write/claim_store.py",
+    "hrm_adaptive_memory/memory_write/verification.py",
+    "tests/unit/test_background_verification_v2a.py",
+    "tests/unit/test_v2a_qualification.py"
+  ],
+  "required_v2b_declaration": {
+    "path": "configs/cognitive_control_v2b_design.json",
+    "protocol_id": "COGNITIVE_CONTROL_V2B",
+    "status": "DEVELOPMENT_NOT_QUALIFIED"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "candidate_pool_hash": "c98c02b17ac0120466a9a6a3c93c89e19f35296f82badee0310e6bbcaf7e9619",
+  "canonical_subject": "Marlin relay unit",
+  "ordered_selected_ids": [
+    "procedural_chain-0005/identity",
+    "procedural_chain-0005/link",
+    "procedural_chain-0005/value"
+  ],
+  "ordered_text_sha256": [
+    "12cc347a3abfc422f8fb2e4bcb837300ffcf35c5904a7c09be84a1fd5c84fd91",
+    "a633e53fb9b707b35b31ec3d56d48129ae8ca0f08bc4ae8e6ee86a8c0032a2b5",
+    "3cfcc2b76c82d8afd472702893bba3955d71395af207859d333d5a5740ff59ba"
+  ],
+  "query_hash": "22a200dfccf17d9120fc84798cd22c862520a28dcd63ca5dc13f2bd58a8bab84",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "procedural_chain-0005"
+}

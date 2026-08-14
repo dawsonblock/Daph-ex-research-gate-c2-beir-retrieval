@@ -1,0 +1,21 @@
+[OBJECTIVE]
+Which billing multiplier applies to JSA-3?
+[EVIDENCE]
+[E1]
+billing multiplier:
+  subject: Bittern control module
+  value: ZETA-CORAL
+[E2]
+Registry entry: Vireo pressure assembly — billing multiplier — 9659.
+[E3]
+billing multiplier:
+  subject: Finch control module
+  value: {"state": "provisional"}
+[E4]
+- updated Bluebird intake manifold: billing multiplier now suspended
+[E5]
+[change] Bluebird pressure assembly :: billing multiplier := quarantined
+[E6]
+JSA-3 is the short code for Jacana sensor array.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

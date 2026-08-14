@@ -1,0 +1,19 @@
+[OBJECTIVE]
+Which release channel applies to Sparrow pressure assembly?
+[EVIDENCE]
+[E1]
+- updated Pelican pressure assembly: release channel now {"grade": "quarantined"}
+[E2]
+release channel:
+  subject: Bittern pressure assembly
+  value: {"state": "accredited"}
+[E3]
+During setup, Kestrel pressure assembly was paired with {"category": "provisional"} for release channel.
+[E4]
+SPA-3 is the short code for Sparrow pressure assembly.
+[E5]
+Changelog: assigned unit for Sparrow pressure assembly set to Jacana intake manifold.
+[E6]
+[change] Osprey relay unit :: spare enclosure := Sparrow pressure assembly
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

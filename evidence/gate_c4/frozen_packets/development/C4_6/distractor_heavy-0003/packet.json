@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "4a49e48d69eb21a58309684e38b4f11ba02530d3f8edc6ca2ac681743fdf7b62",
+  "canonical_subject": "Dunlin sensor array",
+  "ordered_selected_ids": [
+    "distractor_heavy-0003/identity",
+    "distractor_heavy-0003/accepted"
+  ],
+  "ordered_text_sha256": [
+    "35b9373094096de4c08551712db51dac7d6951f9698c0bef0a4cecf1febbab9f",
+    "ebffdad5c60a171ddd6ee3ab556df65588550990ba598d0613819e322ff519ac"
+  ],
+  "query_hash": "b0fc96d44d1ca3c9cb55028f962eda87263e84ee29b0d78555d957885d630293",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "distractor_heavy-0003"
+}

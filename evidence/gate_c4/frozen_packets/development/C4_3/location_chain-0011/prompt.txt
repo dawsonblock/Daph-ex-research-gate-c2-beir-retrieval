@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For GCM-8, which service region is recorded?
+[EVIDENCE]
+[E1]
+[change] Auk relay unit :: service region := GAMMA-BLUE
+[E2]
+{"subject": "Bluebird intake manifold", "service region": "EPSILON-SLATE"}
+[E3]
+- updated Gannet pressure assembly: service region now 4305
+[E4]
+In shorthand, Gannet control module is written GCM-8.
+[E5]
+Registry entry: Egret sensor array — service region — THETA-OLIVE.
+[E6]
+{"subject": "Quail control module", "service region": "provisional"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

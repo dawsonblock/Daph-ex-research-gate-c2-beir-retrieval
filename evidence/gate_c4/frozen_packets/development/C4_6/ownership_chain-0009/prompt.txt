@@ -1,0 +1,11 @@
+[OBJECTIVE]
+For JDC-7, which ownership tier is recorded?
+[EVIDENCE]
+[E1]
+In shorthand, Jacana drive cluster is written JDC-7.
+[E2]
+{"subject": "Jacana drive cluster", "registered asset": "Heron intake manifold"}
+[E3]
+For Heron intake manifold, ownership tier requires ETA-INDIGO.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

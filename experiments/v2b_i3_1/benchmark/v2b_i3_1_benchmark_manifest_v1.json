@@ -1,0 +1,8 @@
+{
+  "schema": "DAPH_V2B_I3_BENCHMARK_MANIFEST_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "benchmark_id": "v2b_i3_1_information_bound_synthetic_v1",
+  "private_environment_path": "../../v2b/tasks/v2b_i3_metareasoning_benchmark_v1.json",
+  "controller_packets_path": "controller_packets/v2b_i3_1_controller_packets_v1.json",
+  "boundary": "I3.1 reuses frozen I3 latent dynamics. The private task ids and latent transitions remain in the environment; controllers receive only opaque instance identifiers and packets."
+}

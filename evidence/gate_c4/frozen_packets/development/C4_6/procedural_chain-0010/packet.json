@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "819e603336a89915a6e18525ddfe1aba2b317c57f0a33f7b4b7f941571c813d0",
+  "canonical_subject": "Ibis control module",
+  "ordered_selected_ids": [
+    "procedural_chain-0010/link",
+    "procedural_chain-0010/value"
+  ],
+  "ordered_text_sha256": [
+    "50992cc654ce37a6ad893078214bc8a92bd1af3207b9652735f13c3fc707a006",
+    "8831ad9883465848411e3e569f8d0c8f1225f5f2984b6a5693ab9a34b005a5ad"
+  ],
+  "query_hash": "1532116cd4fa3bd90a2bf5502b1e60dc0ccd09e3cfd703952ba3da2297320411",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "procedural_chain-0010"
+}

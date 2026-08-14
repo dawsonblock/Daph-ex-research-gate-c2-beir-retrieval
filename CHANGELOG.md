@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased — V2B-I3.3.2 scientific split hardening
+
+- Record the immutable I3.3.1 baseline at commit `4cdc024` / tree `61e9837`.
+- Add behavior-derived transition-topology identities that exclude task,
+  surface, split, channel, state-label, and budget-profile metadata.
+- Freeze 51 structure-held-out topologies with zero overlap against both
+  development and validation; preserve separate instance/surface claims.
+- Add conditional multistep benchmark dynamics with depth-3 validation and
+  depth-4+ final structural-control programs.
+- Populate frozen normalized Q-margin bands: 188 EASY, 409 MEDIUM, 58 HARD,
+  and 95 exact ties; retain zero regret for every tied-optimal action.
+- Freeze 190 same-state/different-budget tasks (25.3%) and require complete
+  controller-packet leakage, strict JSON, cache closure, and oracle parity.
+- Regenerate 750 latent oracle tables and all seven sequential observable
+  oracle sets. This is benchmark evidence only, not a model-executive result.
+
 ## 3.7.1 — Gate C measured; mechanism saturates, benchmark does not certify
 
 - Bounded two-pass retrieval + entity-anchored precision packing reaches the

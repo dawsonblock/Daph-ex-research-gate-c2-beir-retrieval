@@ -1,0 +1,450 @@
+{
+  "no_hrm": true,
+  "no_mechanism_change": true,
+  "no_s2": true,
+  "per_scale": {
+    "cal_1000": {
+      "bridge_r0_causes": {
+        "BELOW_BUDGET": 32,
+        "FUSION_DISPLACEMENT": 2
+      },
+      "corpus_size": 1000,
+      "identity_audit": {
+        "canonical_reachable_from_anchor": 81,
+        "in_pool": 81,
+        "link_emitted_bidirectional": 81,
+        "parse_correct": 81,
+        "parser_fired": 81
+      },
+      "overlap": {
+        "already_reachable": 84,
+        "bridge_only": 13,
+        "neither_suffices": 53
+      },
+      "q_2x2_counts": {
+        "I0_B0": 84,
+        "I0_B1": 97,
+        "I1_B0": 84,
+        "I1_B1": 97
+      },
+      "q_2x2_rates": {
+        "I0_B0": 0.56,
+        "I0_B1": 0.6467,
+        "I1_B0": 0.56,
+        "I1_B1": 0.6467
+      },
+      "role_stage_counts": {
+        "bridge": {
+          "S0_not_in_candidate_pool": 23,
+          "S2_disconnected_from_anchor": 10,
+          "S3_beyond_hop_bound": 4,
+          "S4_reachable_not_enumerated": 2,
+          "S6_ok": 46
+        },
+        "identity": {
+          "S5_identity_connected": 81
+        },
+        "terminal": {
+          "S2_disconnected_from_anchor": 60,
+          "S3_beyond_hop_bound": 5,
+          "S4_reachable_not_enumerated": 6,
+          "S5_enumerated_not_recognized": 13,
+          "S6_ok": 66
+        }
+      },
+      "tasks": 150,
+      "v4e_boundary_arms": {
+        "E0_bridge_connected": 48,
+        "E0_bridge_total": 62,
+        "E0_terminal_connected": 85,
+        "E0_terminal_total": 150,
+        "E1_bridge_connected": 62,
+        "E1_bridge_total": 62,
+        "E1_terminal_connected": 128,
+        "E1_terminal_total": 150,
+        "E2_bridge_connected": 62,
+        "E2_bridge_total": 62,
+        "E2_terminal_connected": 126,
+        "E2_terminal_total": 150
+      },
+      "v4e_task_reachability": {
+        "E0_all_required_reachable": 84,
+        "E1_all_required_reachable": 127,
+        "E2_all_required_reachable": 125
+      }
+    },
+    "cal_1500": {
+      "bridge_r0_causes": {
+        "BELOW_BUDGET": 22,
+        "UNRANKED": 13
+      },
+      "corpus_size": 1500,
+      "identity_audit": {
+        "canonical_reachable_from_anchor": 81,
+        "in_pool": 81,
+        "link_emitted_bidirectional": 81,
+        "parse_correct": 81,
+        "parser_fired": 81
+      },
+      "overlap": {
+        "already_reachable": 77,
+        "bridge_only": 12,
+        "neither_suffices": 61
+      },
+      "q_2x2_counts": {
+        "I0_B0": 77,
+        "I0_B1": 89,
+        "I1_B0": 77,
+        "I1_B1": 89
+      },
+      "q_2x2_rates": {
+        "I0_B0": 0.5133,
+        "I0_B1": 0.5933,
+        "I1_B0": 0.5133,
+        "I1_B1": 0.5933
+      },
+      "role_stage_counts": {
+        "bridge": {
+          "S0_not_in_candidate_pool": 21,
+          "S2_disconnected_from_anchor": 9,
+          "S3_beyond_hop_bound": 5,
+          "S4_reachable_not_enumerated": 3,
+          "S6_ok": 47
+        },
+        "identity": {
+          "S5_identity_connected": 81
+        },
+        "terminal": {
+          "S2_disconnected_from_anchor": 63,
+          "S3_beyond_hop_bound": 6,
+          "S4_reachable_not_enumerated": 9,
+          "S5_enumerated_not_recognized": 6,
+          "S6_ok": 66
+        }
+      },
+      "tasks": 150,
+      "v4e_boundary_arms": {
+        "E0_bridge_connected": 50,
+        "E0_bridge_total": 64,
+        "E0_terminal_connected": 81,
+        "E0_terminal_total": 150,
+        "E1_bridge_connected": 64,
+        "E1_bridge_total": 64,
+        "E1_terminal_connected": 131,
+        "E1_terminal_total": 150,
+        "E2_bridge_connected": 64,
+        "E2_bridge_total": 64,
+        "E2_terminal_connected": 129,
+        "E2_terminal_total": 150
+      },
+      "v4e_task_reachability": {
+        "E0_all_required_reachable": 77,
+        "E1_all_required_reachable": 129,
+        "E2_all_required_reachable": 127
+      }
+    },
+    "cal_2200": {
+      "bridge_r0_causes": {
+        "BELOW_BUDGET": 15,
+        "UNRANKED": 18
+      },
+      "corpus_size": 2200,
+      "identity_audit": {
+        "canonical_reachable_from_anchor": 83,
+        "in_pool": 83,
+        "link_emitted_bidirectional": 83,
+        "parse_correct": 83,
+        "parser_fired": 83
+      },
+      "overlap": {
+        "already_reachable": 69,
+        "bridge_only": 5,
+        "neither_suffices": 76
+      },
+      "q_2x2_counts": {
+        "I0_B0": 69,
+        "I0_B1": 74,
+        "I1_B0": 69,
+        "I1_B1": 74
+      },
+      "q_2x2_rates": {
+        "I0_B0": 0.46,
+        "I0_B1": 0.4933,
+        "I1_B0": 0.46,
+        "I1_B1": 0.4933
+      },
+      "role_stage_counts": {
+        "bridge": {
+          "S0_not_in_candidate_pool": 18,
+          "S2_disconnected_from_anchor": 7,
+          "S3_beyond_hop_bound": 14,
+          "S4_reachable_not_enumerated": 1,
+          "S6_ok": 45
+        },
+        "identity": {
+          "S5_identity_connected": 83
+        },
+        "terminal": {
+          "S0_not_in_candidate_pool": 3,
+          "S2_disconnected_from_anchor": 57,
+          "S3_beyond_hop_bound": 19,
+          "S4_reachable_not_enumerated": 6,
+          "S5_enumerated_not_recognized": 11,
+          "S6_ok": 54
+        }
+      },
+      "tasks": 150,
+      "v4e_boundary_arms": {
+        "E0_bridge_connected": 46,
+        "E0_bridge_total": 67,
+        "E0_terminal_connected": 71,
+        "E0_terminal_total": 147,
+        "E1_bridge_connected": 67,
+        "E1_bridge_total": 67,
+        "E1_terminal_connected": 132,
+        "E1_terminal_total": 147,
+        "E2_bridge_connected": 67,
+        "E2_bridge_total": 67,
+        "E2_terminal_connected": 128,
+        "E2_terminal_total": 147
+      },
+      "v4e_task_reachability": {
+        "E0_all_required_reachable": 69,
+        "E1_all_required_reachable": 129,
+        "E2_all_required_reachable": 125
+      }
+    },
+    "cal_3000": {
+      "bridge_r0_causes": {
+        "BELOW_BUDGET": 17,
+        "UNRANKED": 23
+      },
+      "corpus_size": 3000,
+      "identity_audit": {
+        "canonical_reachable_from_anchor": 85,
+        "in_pool": 85,
+        "link_emitted_bidirectional": 85,
+        "parse_correct": 85,
+        "parser_fired": 85
+      },
+      "overlap": {
+        "already_reachable": 76,
+        "bridge_only": 11,
+        "neither_suffices": 63
+      },
+      "q_2x2_counts": {
+        "I0_B0": 76,
+        "I0_B1": 87,
+        "I1_B0": 76,
+        "I1_B1": 87
+      },
+      "q_2x2_rates": {
+        "I0_B0": 0.5067,
+        "I0_B1": 0.58,
+        "I1_B0": 0.5067,
+        "I1_B1": 0.58
+      },
+      "role_stage_counts": {
+        "bridge": {
+          "S0_not_in_candidate_pool": 25,
+          "S2_disconnected_from_anchor": 6,
+          "S3_beyond_hop_bound": 7,
+          "S4_reachable_not_enumerated": 13,
+          "S6_ok": 34
+        },
+        "identity": {
+          "S5_identity_connected": 85
+        },
+        "terminal": {
+          "S2_disconnected_from_anchor": 53,
+          "S3_beyond_hop_bound": 15,
+          "S4_reachable_not_enumerated": 17,
+          "S5_enumerated_not_recognized": 6,
+          "S6_ok": 59
+        }
+      },
+      "tasks": 150,
+      "v4e_boundary_arms": {
+        "E0_bridge_connected": 47,
+        "E0_bridge_total": 60,
+        "E0_terminal_connected": 82,
+        "E0_terminal_total": 150,
+        "E1_bridge_connected": 60,
+        "E1_bridge_total": 60,
+        "E1_terminal_connected": 132,
+        "E1_terminal_total": 150,
+        "E2_bridge_connected": 60,
+        "E2_bridge_total": 60,
+        "E2_terminal_connected": 130,
+        "E2_terminal_total": 150
+      },
+      "v4e_task_reachability": {
+        "E0_all_required_reachable": 76,
+        "E1_all_required_reachable": 125,
+        "E2_all_required_reachable": 124
+      }
+    },
+    "cal_700": {
+      "bridge_r0_causes": {
+        "BELOW_BUDGET": 38,
+        "FUSION_DISPLACEMENT": 2
+      },
+      "corpus_size": 700,
+      "identity_audit": {
+        "canonical_reachable_from_anchor": 80,
+        "in_pool": 80,
+        "link_emitted_bidirectional": 80,
+        "parse_correct": 80,
+        "parser_fired": 80
+      },
+      "overlap": {
+        "already_reachable": 77,
+        "bridge_only": 9,
+        "neither_suffices": 64
+      },
+      "q_2x2_counts": {
+        "I0_B0": 77,
+        "I0_B1": 86,
+        "I1_B0": 77,
+        "I1_B1": 86
+      },
+      "q_2x2_rates": {
+        "I0_B0": 0.5133,
+        "I0_B1": 0.5733,
+        "I1_B0": 0.5133,
+        "I1_B1": 0.5733
+      },
+      "role_stage_counts": {
+        "bridge": {
+          "S0_not_in_candidate_pool": 25,
+          "S2_disconnected_from_anchor": 19,
+          "S3_beyond_hop_bound": 3,
+          "S6_ok": 38
+        },
+        "identity": {
+          "S5_identity_connected": 80
+        },
+        "terminal": {
+          "S0_not_in_candidate_pool": 2,
+          "S2_disconnected_from_anchor": 67,
+          "S3_beyond_hop_bound": 4,
+          "S4_reachable_not_enumerated": 3,
+          "S5_enumerated_not_recognized": 10,
+          "S6_ok": 64
+        }
+      },
+      "tasks": 150,
+      "v4e_boundary_arms": {
+        "E0_bridge_connected": 38,
+        "E0_bridge_total": 60,
+        "E0_terminal_connected": 77,
+        "E0_terminal_total": 148,
+        "E1_bridge_connected": 60,
+        "E1_bridge_total": 60,
+        "E1_terminal_connected": 123,
+        "E1_terminal_total": 148,
+        "E2_bridge_connected": 60,
+        "E2_bridge_total": 60,
+        "E2_terminal_connected": 122,
+        "E2_terminal_total": 148
+      },
+      "v4e_task_reachability": {
+        "E0_all_required_reachable": 77,
+        "E1_all_required_reachable": 123,
+        "E2_all_required_reachable": 122
+      }
+    }
+  },
+  "pooled": {
+    "bridge_r0_causes": {
+      "BELOW_BUDGET": 124,
+      "FUSION_DISPLACEMENT": 4,
+      "UNRANKED": 54
+    },
+    "factorial_2x2": {
+      "E_bridge": 0.0667,
+      "E_identity": 0.0,
+      "Q_I0_B0": 0.5107,
+      "Q_I0_B1": 0.5773,
+      "Q_I1_B0": 0.5107,
+      "Q_I1_B1": 0.5773,
+      "interaction": 0.0
+    },
+    "identity_audit_counts": {
+      "canonical_reachable_from_anchor": 410,
+      "in_pool": 410,
+      "link_emitted_bidirectional": 410,
+      "parse_correct": 410,
+      "parser_fired": 410
+    },
+    "identity_audit_rates": {
+      "R_attachment": 0.0,
+      "R_connectivity": 1.0,
+      "R_link": 1.0,
+      "R_parse": 1.0
+    },
+    "per_task_overlap": {
+      "already_reachable": 383,
+      "bridge_only": 50,
+      "neither_suffices": 317
+    },
+    "role_stage_counts": {
+      "bridge": {
+        "S0_not_in_candidate_pool": 112,
+        "S2_disconnected_from_anchor": 51,
+        "S3_beyond_hop_bound": 33,
+        "S4_reachable_not_enumerated": 19,
+        "S6_ok": 210
+      },
+      "identity": {
+        "S5_identity_connected": 410
+      },
+      "terminal": {
+        "S0_not_in_candidate_pool": 5,
+        "S2_disconnected_from_anchor": 300,
+        "S3_beyond_hop_bound": 49,
+        "S4_reachable_not_enumerated": 41,
+        "S5_enumerated_not_recognized": 46,
+        "S6_ok": 309
+      }
+    },
+    "tasks": 750,
+    "v4e_boundary_arms": {
+      "E0_bridge_connected": 229,
+      "E0_bridge_total": 313,
+      "E0_terminal_connected": 396,
+      "E0_terminal_total": 745,
+      "E1_bridge_connected": 313,
+      "E1_bridge_total": 313,
+      "E1_terminal_connected": 646,
+      "E1_terminal_total": 745,
+      "E2_bridge_connected": 313,
+      "E2_bridge_total": 313,
+      "E2_terminal_connected": 635,
+      "E2_terminal_total": 745
+    },
+    "v4e_gap_closure": {
+      "bridge": {
+        "BoundaryGapClosure": 1.0,
+        "E0_connected_rate": 0.7316,
+        "E1_connected_rate": 1.0,
+        "E2_oracle_ceiling_rate": 1.0,
+        "delta_E1_minus_E0": 0.2684
+      },
+      "terminal": {
+        "BoundaryGapClosure": 1.046,
+        "E0_connected_rate": 0.5315,
+        "E1_connected_rate": 0.8671,
+        "E2_oracle_ceiling_rate": 0.8523,
+        "delta_E1_minus_E0": 0.3356
+      }
+    },
+    "v4e_task_reachability": {
+      "E0_all_required_reachable": 0.5107,
+      "E1_all_required_reachable": 0.844,
+      "E2_all_required_reachable": 0.8307
+    }
+  },
+  "schema_version": "g2-v3.1-causal-decomposition-v1",
+  "supersedes": "original G2-v3 interpretation (VOID)"
+}

@@ -1,0 +1,33 @@
+{
+  "max_relative_gap_cold_vs_snapshot_validated": 0.09592325446236148,
+  "measurement": "restart/recovery, corrected",
+  "method": "truncate a copy of the canonical log to each scale; replaying a log prefix is what a restart at that scale would have done (C12 prefix stability)",
+  "rows": [
+    {
+      "active_records": 68080,
+      "all_three_paths_agree_on_state_hash": true,
+      "scale": 100000,
+      "t_cold_replay_s": 1.1990225840127096,
+      "t_snapshot_invalidated_rebuild_s": 1.2476357920095325,
+      "t_snapshot_validated_startup_s": 1.2107770839938894
+    },
+    {
+      "active_records": 338925,
+      "all_three_paths_agree_on_state_hash": true,
+      "scale": 500000,
+      "t_cold_replay_s": 7.428991916938685,
+      "t_snapshot_invalidated_rebuild_s": 7.633752209017985,
+      "t_snapshot_validated_startup_s": 7.432359874946997
+    },
+    {
+      "active_records": 678642,
+      "all_three_paths_agree_on_state_hash": true,
+      "scale": 1000000,
+      "t_cold_replay_s": 17.781893374980427,
+      "t_snapshot_invalidated_rebuild_s": 15.670622208039276,
+      "t_snapshot_validated_startup_s": 16.0761962919496
+    }
+  ],
+  "snapshot_does_not_accelerate_startup": true,
+  "supersedes": "the 'recovery' block in evidence/memory_write/pressure_test_v1.json, which reopened the same 1M store three times and mislabelled the rows by scale"
+}

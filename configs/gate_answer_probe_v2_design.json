@@ -1,0 +1,119 @@
+{
+  "ARTIFACT": "ANSWER_PROBE_GATE_V2",
+  "SUPERSEDES": "ANSWER_PROBE_GATE_V1 (evidence/gate_executive/exec_training_v1_execute.receipts.gate_result.json) -- V1 is kept PERMANENTLY as valid negative evidence, not deleted or overwritten. V1's own diagnosis (separation stop-gate CLEARED, trained gate FAILED to beat fixed baselines) is the reason this follow-up exists: the failure localizes to policy estimation on an under-powered, non-outcome-stratified 144-task split, not to absence of a routing signal. See RESEARCH_STATUS.json answer_probe_gate_v1 for the full V1 record.",
+
+  "ONE_DISCIPLINED_ATTEMPT_NOT_OPEN_ENDED_TUNING": "This is a single, fully specified follow-up. If V2 also fails to beat the fixed baselines despite a larger, outcome-stratified dataset and a policy objective aligned to the asymmetric cost, that closes the confidence-only-gating approach specifically (not the executive concept in general) -- the next avenue would be a richer but still-cheap decision state (e.g. a retrieval probe before the full graph/memory operation), which is out of scope for this protocol and would require its own separately frozen design.",
+
+  "WHAT_STAYS_UNCHANGED": "CERTIFIED_MEMORY_V1, the graph, the composer, retrieval, HRM, and the cheap ANSWER_NOW confidence probe (hrm_adaptive_memory/executive/confidence.py) itself are NOT modified. This protocol is scoped entirely to (a) a larger, outcome-balanced training pool and (b) a broader-but-still-simple model ladder with a policy-utility promotion test.",
+
+  "PHASE_1_SUITE_CONSTRUCTION": {
+    "rule": "Frozen BEFORE any scoring occurs -- task CONTENT is fixed by construction rules decided now, never selected or filtered based on a task's own measured outcome. Zero privileged-parsing bypass anywhere (same discipline as exec_training_v1): every task must round-trip through the REAL, unmodified extract_subject/extract_target_relation with zero synthetic identity injection.",
+    "do_not_reuse": "The consumed exec_training_v1 144-task split (data/hrm/exec_training_v1/) is NOT resampled, re-included, or merged into V2's training/calibration/eval pool under any circumstance. It remains available only as historical diagnostic evidence, per its own SPLIT_LINEAGE.json (training_consumed, diagnosis_only/hypothesis_generation_only).",
+    "families": {
+      "ANSWER_NOW_viable": {
+        "v1_baseline": "72 tasks (36 capitals + 36 element symbols). Diagnostic re-analysis of V1's own receipts shows this family produced ALL 5 of V1's ANSWER_strict_win cases (6.9% incidence within-family) and only 2 MEMORY_strict_win cases (2.8%) -- it is the near-exclusive source of the 'direct answer sufficient, memory would not help or would hurt' signal.",
+        "v2_target_count": 320,
+        "expansion_plan_for_build_phase": [
+          {"category": "capitals", "reused_from_v1": true, "count": 36},
+          {"category": "element_symbols", "reused_from_v1": true, "count": 36},
+          {"category": "element_atomic_number", "new": true, "count": 36, "note": "same 36 elements as element_symbols, distinct relation ('atomic number') -- a genuinely different (subject, relation) tuple, zero overlap with the existing element_symbols task set"},
+          {"category": "country_currency", "new": true, "count": 80, "note": "countries with a single, stable, unambiguous currency name -- excludes any country with disputed/recently-changed currency"},
+          {"category": "country_continent", "new": true, "count": 80, "note": "excludes transcontinental countries (e.g. Russia, Turkey) to avoid ambiguity"},
+          {"category": "us_state_capital", "new": true, "count": 50, "note": "all 50 US states -- stable, unambiguous, well-documented"},
+          {"category": "planet_order_from_sun", "new": true, "count": 8}
+        ],
+        "hand_verification_requirement": "Every new fact, in every new category, must be individually hand-verified true (not merely internally consistent) and pass verify_native_parsing() against the real extract_subject/extract_target_relation before acceptance -- same discipline as hrm_adaptive_memory/experiments/exec_training_dataset.py's existing tables. Ambiguous relations (e.g. official language, where many countries have multiple) are explicitly EXCLUDED from this expansion for that reason."
+      },
+      "MEMORY_required": {
+        "v1_baseline": "72 tasks sampled from data/hrm/b3_calibration_v1. Diagnostic re-analysis: 48.6% MEMORY_strict_win incidence within-family, 51.4% tie, 0% ANSWER_strict_win.",
+        "v2_target_count": 700,
+        "source": "data/hrm/b3_calibration_v1, same procedural sampling approach as V1/EOB-v1/EOB-v2/g2_confirmation_2, with FRESH seeds outside every previously consumed range (scale-namespaced per the fix already applied for EOB-v2's task_id collision, verified via a hard uniqueness assertion before any GPU run)",
+        "note": "Procedurally cheap to scale (unlike ANSWER_NOW_viable, which requires individual hand-verification) -- this is where most of V1's real statistical weakness lived: only 37 MEMORY_strict_win examples total, spread thin across a non-outcome-stratified 70/30 split. At 700 tasks and the same within-family incidence rate, expect roughly 340 MEMORY_strict_win examples pool-wide -- an order of magnitude more than V1."
+      }
+    },
+    "projected_pool_composition_extrapolated_from_v1_rates": {
+      "caveat": "Extrapolated from V1's small per-family base rates (72 each) -- treated as a planning estimate only, not a target to hit exactly. The realized rates at 320/700 scale are an empirical question this protocol's own Phase 2 collection answers.",
+      "MEMORY_strict_win_est": "~349 (17 from ANSWER_NOW_viable + 292 from MEMORY_required, ~34.2% of pool)",
+      "ANSWER_strict_win_est": "~22 (all from ANSWER_NOW_viable, ~2.2% of pool)",
+      "TIE_est": "~649 (~63.6% of pool)",
+      "total_target": 1020,
+      "honest_limitation": "ANSWER_strict_win is expected to remain the thin class even at this scale (~22 total vs V1's 5) -- its natural incidence is family-specific (only ANSWER_NOW_viable produces it) and further scaling is bottlenecked by hand-verification of genuinely unambiguous GK facts, not compute. This protocol compensates via disproportionate stratified allocation to eval/calibration for this specific class (PHASE_3) and via a class-weighted/value-regression model ladder (PHASE_4) rather than by pretending literal count-parity across the three outcome classes is achievable without reintroducing the privileged-parsing bypass this project has explicitly ruled out for training data. If ANSWER_strict_win representation is still the binding constraint after real collection, that is itself informative and must be classified via MINIMUM_CLASS_FLOOR_NOT_MET (PHASE_5), not silently absorbed."
+    },
+    "zero_overlap_required_against": [
+      "data/hrm/controlled_gate_a_v4/{development,qualification,ood,confirmation}",
+      "data/hrm/b3_calibration_v1/{cal_700,cal_1000,cal_1500,cal_2200,cal_3000}",
+      "data/hrm/g2_confirmation_2/confirm2_*",
+      "data/hrm/eob_v1/*", "data/hrm/eob_v2/*",
+      "data/hrm/exec_training_v1/*"
+    ],
+    "audit_discipline": "Independently re-verify zero overlap after the builder script's own audit, not merely trusting it -- same standing practice used for every prior split in this project."
+  },
+
+  "PHASE_2_COLLECTION": {
+    "rule": "Run the full 2-action collection (A0_ANSWER_NOW with confidence features, A1_USE_CERTIFIED_MEMORY via the unmodified certified pipeline) exactly once against the complete frozen pool. Freeze raw receipts immediately. This is the ONLY phase in which delta_u_i becomes known -- everything in PHASE_1 and PHASE_3's split RULE must be decided before this phase runs.",
+    "certified_memory_v1_identity_check": "Required live, before every task, exactly as V1 did -- fail-closed on any drift."
+  },
+
+  "PHASE_3_OUTCOME_STRATIFIED_SPLIT": {
+    "rule_frozen_before_phase_2_runs": "A mechanical, predetermined stratification rule -- applied automatically to whatever outcome labels Phase 2 produces, with zero human selection of which examples land where. This is stratified sampling by a measured outcome variable (standard practice for imbalanced classification), NOT cherry-picking: the population (Phase 1's task set) is fixed before any outcome exists, and the allocation percentages below are fixed before Phase 2 runs.",
+    "strata": ["MEMORY_strict_win (delta_u_i > 0)", "ANSWER_strict_win (delta_u_i < 0)", "TIE (delta_u_i == 0)"],
+    "per_stratum_allocation": {
+      "MEMORY_strict_win": {"train": 0.60, "calibration": 0.20, "eval": 0.20},
+      "TIE": {"train": 0.60, "calibration": 0.20, "eval": 0.20},
+      "ANSWER_strict_win": {"train": 0.40, "calibration": 0.25, "eval": 0.35, "why_different": "Deliberately shifts weight toward calibration+eval for this rarest, most statistically fragile class -- rather than spending the bulk of its scarce examples on training, since a class-weighted model can still learn a useful boundary from a modest but non-trivial train share, while the ONE-SHOT promotion test specifically needs enough eval representation to make P(ACCEPT | delta_u>0)-adjacent estimates non-degenerate. Not tuned to a target eval count after seeing Phase 2 data -- this ratio is fixed now."}
+    },
+    "seed": 9901,
+    "note": "Distinct from V1's plain 70/30-by-suite_family split (seed 9801) -- V2 stratifies by suite_family AND by realized outcome sign, addressing the exact defect V1's own diagnosis identified (thin, non-stratified minority-class representation in both train and eval)."
+  },
+
+  "PHASE_4_MODEL_LADDER": {
+    "rule": "Broader than V1's single logistic regression, but still deliberately simple -- no neural controller.",
+    "ladder": [
+      {"id": "V0", "name": "best_fixed_action", "description": "max(U(always_accept), U(always_escalate)) -- the baseline every learned policy must beat"},
+      {"id": "V1", "name": "frozen_confidence_threshold", "description": "single scalar cutoff on mean_token_confidence, fit on TRAIN only"},
+      {"id": "V2", "name": "ordinary_logistic_regression", "description": "unweighted, all 5 features, same fitting approach as ANSWER_PROBE_GATE_V1 -- kept as a direct replication check"},
+      {"id": "V3", "name": "cost_sensitive_logistic_regression", "description": "PRIMARY learned hypothesis. Class-weighted logistic regression: base weight = inverse TRAIN-partition class frequency (standard 'balanced' weighting, computed mechanically from the realized TRAIN split's own counts -- not hand-picked), with an ADDITIONAL frozen 2.0x multiplier applied specifically to the escalation-helps (delta_u>0) class on top of balanced weighting. Both the weighting RULE and the 2.0x multiplier are frozen in this document, before any V2 data exists -- only the resulting numeric weight value is a deterministic function of TRAIN's realized counts.", "cost_multiplier_justification": "V1's own asymmetric-error report showed the dangerous miss rate (P(ACCEPT|memory would improve)=0.7778) was catastrophically worse than the wasted-call rate (P(ESCALATE|direct sufficient)=0.1143) -- a real, observed asymmetry in the DIRECTION this multiplier corrects. 2.0x is a moderate, round, pre-registered correction in that direction; it is not solved-for to reproduce any specific target number."},
+      {"id": "V4", "name": "shallow_tree_diagnostic", "description": "small nonlinear diagnostic (max_depth<=3, e.g. simple axis-aligned decision tree over the 5 features) -- reported for comparison, NOT eligible for promotion on its own (per MODEL_LADDER discipline, complexity beyond logistic regression is diagnostic-only unless a documented, separately-frozen follow-up specifically escalates to it)"},
+      {"id": "V5", "name": "oracle_escalation", "description": "per-task argmax, tie->ACCEPT (same convention as V1/EOB-v1/EOB-v2) -- ceiling reference, not a candidate for promotion"},
+      {"id": "VR1", "name": "value_regression", "description": "regresses delta_u_i directly (continuous target, fit on TRAIN, squared-error loss) instead of a binary label -- escalates when predicted delta_u exceeds a frozen-on-CALIBRATION threshold. Evaluated alongside the classification ladder as a genuinely different hypothesis: that predicting the MAGNITUDE of expected gain, not just its sign, produces a better escalation boundary than any binary classifier in this ladder."}
+    ],
+    "primary_learned_hypothesis": "V3 (cost_sensitive_logistic_regression). VR1 is a co-primary secondary hypothesis reported with equal rigor, not a fallback -- if VR1 promotes and V3 does not, that is itself a real, reportable finding about which target formulation (binary vs continuous) carries more usable signal.",
+    "train_calibration_eval_separation": {
+      "train": "fit model parameters (weights/splits) ONLY",
+      "calibration": "freeze decision threshold (V1/V2/V3/VR1) and the realized V3 class-weight VALUE (the weighting rule is frozen in this document; its numeric value is computed from TRAIN counts; the resulting decision threshold is then chosen on CALIBRATION) -- never on TRAIN (overfits the threshold to training noise) or EVAL (invalidates the one-shot promotion test)",
+      "eval": "ONE-SHOT promotion test only. Computed exactly once, no iteration back to threshold/weight choices after seeing eval numbers."
+    }
+  },
+
+  "PHASE_5_PROMOTION_CRITERIA": {
+    "primary_metric": "Delta_U_gate = U(candidate) - max(U(E0/V0 always_accept), U(E1/V0 always_escalate)) on EVAL, same definition as V1",
+    "secondary_metric": "policy regret R = U(V5_oracle) - U(candidate)",
+    "utility_condition": "Delta_U_gate > 0 with a positive grouped-bootstrap LCB (resampled by suite_family, same convention as V1/EOB-v1/EOB-v2/HRM qualification)",
+    "hard_safety_bound": {
+      "metric": "P(ACCEPT | delta_u_i > 0) on EVAL",
+      "frozen_threshold": 0.30,
+      "rule": "must be <= 0.30 -- the candidate must correctly escalate on at least 70% of held-out cases where memory was actually needed",
+      "justification": "Chosen now, before any V2 data exists, independent of V1's observed 0.7778. Substantially stricter than V1's result (which this protocol exists to fix) but deliberately not near-zero (e.g. 0.05), since a bound that tight would force the gate to behave almost identically to always-escalate, defeating the purpose of having a gate. 0.30 leaves room for a real ACCEPT decision on the ~66-70% of low-risk cases while bounding the dangerous-miss rate to a level a research lead would consider acceptable for a system that still has always-escalate as a fallback comparator in every report."
+    },
+    "minimum_class_floor_for_a_trustworthy_eval": {
+      "ANSWER_strict_win_in_eval": 10,
+      "MEMORY_strict_win_in_eval": 40,
+      "rule": "If Phase 2's realized outcome counts, after the Phase 3 stratified split, leave EITHER floor unmet in the eval partition, the promotion test is NOT trustworthy regardless of its point estimate. Classify this outcome as MINIMUM_CLASS_FLOOR_NOT_MET (a new, distinct FailureClass, to be added to result_schema.py at the time this outcome is actually observed, per this project's standing practice of adding FailureClass values when a run produces them, not speculatively) -- explicitly NOT the same finding as 'the policy failed'; it means the promotion TEST itself lacked power, and is reported as inconclusive, not negative.",
+      "floors_chosen_because": "40 is roughly half of V1's ENTIRE pool-wide count of that class (37) -- a real, substantial improvement, not a token increase. 10 for ANSWER_strict_win is set lower given the disclosed hand-curation ceiling on that class (PHASE_1's honest_limitation note), but is still double V1's total eval-adjacent count (9)."
+    },
+    "promotion_requires_all_of": [
+      "utility_condition met for the primary hypothesis (V3) or the co-primary hypothesis (VR1)",
+      "hard_safety_bound met for whichever of V3/VR1 is being promoted",
+      "both minimum_class_floor entries met (otherwise: MINIMUM_CLASS_FLOOR_NOT_MET, inconclusive, not negative)"
+    ],
+    "if_promoted": "Generate a fresh, completely untouched executive-confirmation split (never before touched by any experiment in this project) and run the promoted policy exactly once, per the qualification-then-confirmation discipline already used for CERTIFIED_MEMORY_V1 and every gate in this project.",
+    "if_not_met_and_floors_were_met": "This closes the confidence-only escalation-gating approach specifically. Report as a second formal negative result with the same rigor as V1 -- do not attempt a V3 of this protocol without a new, separately justified change in kind (e.g. a richer but still-cheap decision state such as a retrieval probe), not merely more tuning of the same feature set."
+  },
+
+  "ASYMMETRIC_ERROR_METRICS_REQUIRED": {
+    "P_accept_given_memory_would_improve": "primary safety metric, see hard_safety_bound above -- never folded into aggregate accuracy",
+    "P_escalate_given_direct_sufficient": "wasted/harmful-memory-call rate, reported for every model in the ladder, same as V1"
+  },
+
+  "frozen_utc": "2026-08-10T12:15:00Z"
+}

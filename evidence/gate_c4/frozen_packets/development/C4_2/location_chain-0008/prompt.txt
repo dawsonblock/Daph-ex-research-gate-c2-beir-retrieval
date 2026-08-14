@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Heron relay unit, which service region is recorded?
+[EVIDENCE]
+[E1]
+subject=Heron relay unit; calibration routing class=7299
+[E2]
+[change] Auk relay unit :: service region := GAMMA-BLUE
+[E3]
+Note: the service region for Heron pressure assembly resolves to {"grade": "provisional"}.
+[E4]
+subject=Heron relay unit; mounted monitor=Kestrel drive cluster
+[E5]
+- updated Finch relay unit: active configuration now Heron relay unit
+[E6]
+subject=Heron relay unit; spare enclosure=Egret control module
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

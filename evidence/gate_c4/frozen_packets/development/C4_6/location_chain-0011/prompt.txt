@@ -1,0 +1,9 @@
+[OBJECTIVE]
+For GCM-8, which service region is recorded?
+[EVIDENCE]
+[E1]
+In shorthand, Gannet control module is written GCM-8.
+[E2]
+[service region] Gannet control module -> {"grade": "retired"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

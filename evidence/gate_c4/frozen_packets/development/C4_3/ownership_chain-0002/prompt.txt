@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which ownership tier applies to Pelican control module?
+[EVIDENCE]
+[E1]
+subject=Pelican control module; registered asset=Marlin control module
+[E2]
+- updated Finch control module: ownership tier now 3529
+[E3]
+Abbreviation table: PCM-8 = Pelican control module.
+[E4]
+- updated Marlin control module: ownership tier now suspended
+[E5]
+[former routing class] Pelican control module -> {"tier": "provisional"} This record is historical.
+[E6]
+Abbreviation table: PCM-5 = Pelican control module.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

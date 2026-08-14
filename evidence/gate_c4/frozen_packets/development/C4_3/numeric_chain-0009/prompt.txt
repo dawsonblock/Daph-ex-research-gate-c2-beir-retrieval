@@ -1,0 +1,23 @@
+[OBJECTIVE]
+For PCM-8, which billing multiplier is recorded?
+[EVIDENCE]
+[E1]
+Registry entry: Vireo pressure assembly — billing multiplier — 9659.
+[E2]
+[change] Bluebird pressure assembly :: billing multiplier := quarantined
+[E3]
+billing multiplier:
+  subject: Bittern control module
+  value: ZETA-CORAL
+[E4]
+Revision applied — Gannet control module billing multiplier changed to 3801.
+[E5]
+billing multiplier:
+  subject: Finch drive cluster
+  value: {"category": "provisional"}
+[E6]
+billing multiplier:
+  subject: Finch control module
+  value: {"state": "provisional"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

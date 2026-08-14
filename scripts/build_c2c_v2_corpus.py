@@ -75,7 +75,7 @@ def main() -> None:
         print("      VALID_CHAIN_V2 = true")
 
         print("[3/5] pytest")
-        r = subprocess.run([sys.executable, "-m", "pytest", "-q"], cwd=ROOT, capture_output=True, text=True)
+        r = subprocess.run([sys.executable, "-m", "pytest", "-q"], cwd=ROOT, capture_output=True, text=True, timeout=900)
         if r.returncode: print(r.stdout[-1200:]); raise SystemExit("pytest failed")
         print(f"      {r.stdout.strip().splitlines()[-1]}")
 

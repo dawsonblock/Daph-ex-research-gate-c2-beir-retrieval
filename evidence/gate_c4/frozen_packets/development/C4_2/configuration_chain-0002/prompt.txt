@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which parameter grade applies to Curlew sensor array?
+[EVIDENCE]
+[E1]
+Note: the parameter grade for Curlew relay unit resolves to {"state": "suspended"}.
+[E2]
+For Heron sensor array, parameter grade requires {"category": "accredited"}.
+[E3]
+subject=Curlew sensor array; applicable procedure=Gannet pressure assembly
+[E4]
+{"subject": "Curlew relay unit", "assigned unit": "Auk sensor array"}
+[E5]
+subject=Curlew sensor array; active configuration=Marlin intake manifold
+[E6]
+subject=Curlew pressure assembly; mounted monitor=Finch sensor array
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

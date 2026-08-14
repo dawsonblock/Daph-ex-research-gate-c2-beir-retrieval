@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "7dd5f74bff0e003930ce969cc3e7bd0d34ab1a7c8ed0ad9c8daf958448b4c852",
+  "canonical_subject": "Pelican drive cluster",
+  "ordered_selected_ids": [
+    "temporal_update-0001/identity",
+    "temporal_update-0001/current"
+  ],
+  "ordered_text_sha256": [
+    "38e6811390fd1d10f5baedef8dc3bee800a5b57fc2b988520beb123fe0eb2d14",
+    "b80d2b067913fdf88252213c1cd55666f7b88efc2213d98115f5d25e4d61715b"
+  ],
+  "query_hash": "6e245063eab44955affd93f4d0d4aa7d2165cdeb047c30502f188a997a07a512",
+  "selector_policy_id": "oracle",
+  "task_id": "temporal_update-0001"
+}

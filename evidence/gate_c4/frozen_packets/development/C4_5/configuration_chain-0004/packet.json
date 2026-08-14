@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "c9d32d2e057927bfbd7ceda5713ea63d45c06d20f0c2310f6f808a7628c393c8",
+  "canonical_subject": "Kestrel drive cluster",
+  "ordered_selected_ids": [
+    "configuration_chain-0004/link",
+    "configuration_chain-0004/value"
+  ],
+  "ordered_text_sha256": [
+    "24fe568e1092a0af77e789c49079581bb16a3aaddecc2865c1924160f9a727fe",
+    "6f31237c15c96bf728aef2eee0f1b7cc346824a7799525f201d798ba5f6bc6b3"
+  ],
+  "query_hash": "74ad3650bb2572775197ca1e98dd03f4b2a8f9b20a1cd55df1030199b6487041",
+  "selector_policy_id": "oracle",
+  "task_id": "configuration_chain-0004"
+}

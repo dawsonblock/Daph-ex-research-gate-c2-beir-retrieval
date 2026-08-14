@@ -22,7 +22,10 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
-import tomllib
+try:  # Python 3.11+ stdlib; 3.10 uses the tomli backport.
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - exercised on Python 3.10
+    import tomli as tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -42,7 +45,7 @@ def main(fast: bool = False) -> int:
     if not fast:
         print("[1] test suite")
         proc = subprocess.run([sys.executable, "-m", "pytest", "-q"], cwd=ROOT,
-                              capture_output=True, text=True)
+                              capture_output=True, text=True, timeout=900)
         tail = proc.stdout.strip().splitlines()[-1] if proc.stdout.strip() else ""
         results.append(check("pytest", proc.returncode == 0, tail))
 

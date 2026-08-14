@@ -1,0 +1,92 @@
+{
+  "ExecutiveOpportunity_lcb_2p5": 0.0264,
+  "ExecutiveOpportunity_quality_only": 0.1475,
+  "binding_assertion_failures": "all (fail-closed: a violation raises, not counts)",
+  "certified_memory_v1_identity_hash": "97b3b49cb95fa33b",
+  "decision": "EXPANSION_NOT_WARRANTED",
+  "diversity_ok_corrected": false,
+  "frozen_promotion_criteria_quality_only": {
+    "action_diversity_min_share": 0.15,
+    "lcb_must_exceed": 0.0,
+    "material_opportunity_margin": 0.05
+  },
+  "mode": "execute",
+  "pareto_dominance": {
+    "A0_dominates": 197,
+    "A1_dominates": 43,
+    "non_dominated_tradeoff": 160
+  },
+  "per_regime": {
+    "D0_direct_sufficient": {
+      "Q_A0": 0.76,
+      "Q_A1": 0.76,
+      "mean_latency_A0": 0.669,
+      "mean_latency_A1": 0.662,
+      "mean_tokens_A0": 93.2,
+      "mean_tokens_A1": 93.2,
+      "n": 100,
+      "strict_A0_wins": 0,
+      "strict_A1_wins": 0,
+      "ties": 100
+    },
+    "D1_memory_required": {
+      "Q_A0": 0.0,
+      "Q_A1": 0.48,
+      "mean_latency_A0": 0.57,
+      "mean_latency_A1": 0.679,
+      "mean_tokens_A0": 75.1,
+      "mean_tokens_A1": 172.7,
+      "n": 100,
+      "strict_A0_wins": 0,
+      "strict_A1_wins": 48,
+      "ties": 52
+    },
+    "D2_both_sufficient": {
+      "Q_A0": 0.76,
+      "Q_A1": 0.43,
+      "mean_latency_A0": 0.674,
+      "mean_latency_A1": 0.628,
+      "mean_tokens_A0": 93.2,
+      "mean_tokens_A1": 150.9,
+      "n": 100,
+      "strict_A0_wins": 44,
+      "strict_A1_wins": 11,
+      "ties": 45
+    },
+    "D3_memory_distractor": {
+      "Q_A0": 0.76,
+      "Q_A1": 0.12,
+      "mean_latency_A0": 0.67,
+      "mean_latency_A1": 0.639,
+      "mean_tokens_A0": 93.2,
+      "mean_tokens_A1": 151.0,
+      "n": 100,
+      "strict_A0_wins": 64,
+      "strict_A1_wins": 0,
+      "ties": 36
+    }
+  },
+  "pooled_quality": {
+    "E0_always_answer_now": 0.57,
+    "E1_always_use_memory": 0.4475,
+    "E3_oracle": 0.7175
+  },
+  "receipts_written": 800,
+  "regimes_run": [
+    "D0_direct_sufficient",
+    "D1_memory_required",
+    "D2_both_sufficient",
+    "D3_memory_distractor"
+  ],
+  "schema_version": "eob-v1-opportunity-v1",
+  "source_commit": "005a677bf4fb1d9bfa5b7078333e4643343e0ae2",
+  "strict_win_tie_distribution": {
+    "P_delta_U_eq_0": 0.5825,
+    "P_delta_U_gt_0": 0.1475,
+    "P_delta_U_lt_0": 0.27,
+    "answer_now_strict_wins": "108/400",
+    "memory_strict_wins": "59/400",
+    "ties": "233/400"
+  },
+  "tasks_total": 400
+}

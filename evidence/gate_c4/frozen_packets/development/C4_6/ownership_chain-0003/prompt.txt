@@ -1,0 +1,9 @@
+[OBJECTIVE]
+Which ownership tier applies to GRU-2?
+[EVIDENCE]
+[E1]
+GRU-2 is the short code for Gannet relay unit.
+[E2]
+[change] Gannet relay unit :: ownership tier := {"grade": "quarantined"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,225 @@
+{
+  "G2_V2_RESULT": {
+    "arms_run": [
+      "K0_M{25,50,75}",
+      "K1_M{25,50,75}",
+      "K3_M{25,50,75}"
+    ],
+    "artifact": "evidence/gate_g2_v2/construction_only.json",
+    "frozen_taxonomy_outcome": {
+      "condition_met": "K3 does not substantially beat K0 (headroom < 0.15 at every scale, actual 0.0-0.013)",
+      "letter": "D_topology_deficient",
+      "prescribed_action": "Endpoint semantics is not the primary problem. Reopen entity-link construction / relation attachment / path topology before touching ranking. Do not build a richer relation-semantics layer on top of this recognizer -- that was the wrong next step (Outcome C's action), and this run is what distinguishes C from D."
+    },
+    "headline_finding": {
+      "claim": "K3 (the oracle ceiling, restricted to records the SAME topology walk K0/K1 already reach) barely beats K0 at all.",
+      "headroom_K3_minus_K0_working_set_ces": {
+        "1000": 0.0067,
+        "1500": 0.0067,
+        "2200": 0.0,
+        "3000": 0.0133,
+        "700": 0.0
+      },
+      "meaning": "Even a PERFECT completion recognizer -- one that never mislabels a single record -- could not have closed more than 0.7-1.3 percentage points of working-set CES, because the records it would need to label correctly are usually not reachable by the graph's 1-2 hop co-mention walk in the first place. R_endpoint for K3 is 1.000 at every scale by construction (it always recognizes what it can reach); R_endpoint for K0/K1 is only 0.06-0.10. That gap looks large in isolation, but the DENOMINATOR it operates on (topology-reachable required records) is small and mostly overlaps with what K0's loose substring match already recovers through partial-tier admission -- G2 does not pad the working set, so partial (non-complete) records still enter it whenever total candidates are below M, which they almost always are here (working sets averaged 6-25 records against ceilings of 25-75)."
+    },
+    "hrm_run": false,
+    "next_diagnostic_question": "Why is the 1-2 hop co-mention topology so sparse relative to required evidence? Candidates: (a) the corpus's multi-hop chains route through bridges that are NOT co-mentioned with the subject in any single record (i.e. the true link is a chain of separate facts, not a shared record), (b) entity extraction (extract_v4_entities) fails to recognize the SAME entity across records due to surface-form variance, fragmenting what should be one node into several, or (c) the candidate pool depth (C2 expanded k) doesn't retrieve the specific bridge/endpoint records at all, independent of graph construction. This needs its own diagnostic pass over topology_reachable_records vs required_evidence_ids before any repair is attempted -- not assumed.",
+    "run_utc": "2026-08-09",
+    "s2_phase_run": false,
+    "status": "RUN_COMPLETE__STOP_GATE_FAILED__OUTCOME_D_TOPOLOGY_DEFICIENT",
+    "stop_gate": "FAILED at every scale -- no eligible M passed the frozen 0.50 construction-gap bound. decision_M=None (correctly, not 'least bad'), per the decision_at_M hard-gate fix applied in this sprint.",
+    "what_survives_from_this_sprint": [
+      "hrm_adaptive_memory/c4/relation_grammar.py: a working, tested entity-bound relation parser grounded in the actual generator grammar (11/13 real corpus samples bind correctly vs 0/4 for the pre-existing relational_state.py parser on similar samples) -- reusable when topology is eventually repaired",
+      "hrm_adaptive_memory/c4/endpoint_recognition.py: K0/K1/K2 with full provenance, 72 passing tests",
+      "hrm_adaptive_memory/c4/oracle_endpoint_ceiling.py: isolated K3 ceiling, import-boundary enforced",
+      "hrm_adaptive_memory/c4/decision_gate.py: fixes the decision_at_M hard-gate bug present in run_g1_typed_path.py and run_g2_graph_traversal.py (5 regression tests)",
+      "directed ENTITY_LINKED_TO_ENTITY edge pairs in runtime_graph.py (provenance repair)"
+    ],
+    "why_this_overturns_the_g2_v1_diagnosis": "G2-v1 attributed the failure to completion RECOGNITION (a record wasn't being labeled complete even though it should have been). This sprint's K3 arm falsifies that: recognition was never the binding constraint. The actual constraint is REACHABILITY -- required records frequently sit outside the 1-2 hop subject/bridge co-mention neighborhood the runtime graph walks at all, so no completion rule, however accurate, can recover them. K1's entity-bound recognizer IS more correct than K0 in isolation (see tests/unit/test_g2_endpoint_recognition.py -- it correctly rejects wrong-entity bindings K0 falsely accepts, and correctly recognizes value-shaped records the older relational_state.py parser missed entirely). Being more correct did not help end-to-end because the records it could have correctly labeled were mostly unreachable to begin with."
+  },
+  "OUTCOME_TAXONOMY_V2_FROZEN": {
+    "A_construction_repaired": {
+      "action": "freeze K1 construction; proceed (future sprint) to re-evaluate path-ranking discrimination with S2",
+      "condition": "K1 closes construction_gap_pass_bound at every scale"
+    },
+    "B_normalization_needed": {
+      "action": "freeze K2 if it independently satisfies the same success criteria",
+      "condition": "K1 improves over K0 but does not meet the bound; K2 does meet it"
+    },
+    "C_recognizer_inadequate": {
+      "action": "do not modify graph topology; next sprint is richer relation semantics (semantic matcher, small classifier, grammar expansion) -- NOT started this sprint",
+      "condition": "K3 succeeds strongly (large K3-K0 headroom) but K1/K2 fail to close it"
+    },
+    "D_topology_deficient": {
+      "action": "endpoint semantics is not the primary problem; reopen entity-link construction / relation attachment / path topology before touching ranking",
+      "condition": "K3 ALSO fails to substantially beat K0"
+    },
+    "E_construction_solved_selector_limits": {
+      "action": "construction is solved; selector/path-pressure interaction is again limiting -- justifies revisiting ranking or S2 in a future sprint",
+      "condition": "K1 repairs construction (passes STOP_GATE) but downstream S2 still loses evidence once run"
+    },
+    "classification_is_mechanical": true
+  },
+  "STOP_GATE": {
+    "order": "Run K0/K1/(K2)/K3 through graph construction and working-set materialization ONLY. Inspect endpoint recognition, complete paths, working-set CES, terminal survival BEFORE running S2.",
+    "rationale": "avoids spending effort evaluating a structurally failed intervention through the full S2 pipeline",
+    "rule": "IF K1 does not meet construction_gap_pass_bound at every scale: STOP. Do not apply S2. Classify per OUTCOME_TAXONOMY_V2 and end the sprint there."
+  },
+  "SUCCESS_CRITERIA_FROZEN_BEFORE_RUN": {
+    "construction_gap_pass_bound": 0.5,
+    "construction_gap_pass_bound_rationale": "Set below the 0.60 selected-CES bound used for G1/G2-v1 because this is a PRE-S2 construction-only metric with a narrower denominator (K3-K0 is a tighter ceiling than oracle-vs-coarse); chosen now, before K1 is scored, so it cannot be adjusted after seeing results.",
+    "frozen_before_endpoint_recognition_py_was_scored": true,
+    "reporting_obligation": "report per scale regardless of which branch fires; no post-hoc threshold invention",
+    "required_at_every_scale": {
+      "bridge_safety_vs_k0": "absolute_working_role_availability['bridge'](K1) >= (K0) - 0.05",
+      "endpoint_recognition_beats_k0": "R_endpoint(K1) > R_endpoint(K0)",
+      "k1_working_set_ces_beats_k0": "CES_K1(working-set) > CES_K0(working-set)",
+      "no_leakage": "leakage scan passes for endpoint_recognition.py and g2_paths.py",
+      "terminal_working_availability_beats_k0": "absolute_working_role_availability['terminal'](K1) > (K0)",
+      "working_set_bounded": "|working set| <= M at every task, unchanged from G2-v1 rule"
+    }
+  },
+  "construction_gap_closure": {
+    "formula_K1": "C_gap = (CES_K1 - CES_K0) / (CES_K3 - CES_K0), computed on WORKING-SET CES (pre-S2)",
+    "formula_K2": "C_gap_K2 = (CES_K2 - CES_K0) / (CES_K3 - CES_K0)",
+    "zero_denominator_rule": "report N/A, never 0, when CES_K3 == CES_K0 at a scale"
+  },
+  "decision_at_M_hard_gate_fix": {
+    "bug": "prior runners (run_g1_typed_path.py, run_g2_graph_traversal.py) selected decision_at_M by ranking utility/closure without first filtering to arms that pass hard safety gates.",
+    "fix": "eligible = all(hard_gates_passed); decision/best-M selection restricted to eligible arms; if none eligible, decision = NONE, never 'pick least bad'.",
+    "regression_test_required": true
+  },
+  "endpoint_recall_instrumentation": [
+    "terminal_required_record_available_in_candidate_pool",
+    "terminal_required_record_reachable_in_runtime_graph",
+    "terminal_required_record_inspected_as_endpoint",
+    "terminal_required_record_recognized_as_endpoint",
+    "complete_required_path_formed"
+  ],
+  "endpoint_recognition_object": {
+    "fields": [
+      "record_id",
+      "entity_id",
+      "requested_relation",
+      "canonical_relation",
+      "entity_bound",
+      "relation_surface_match",
+      "relation_family_match",
+      "completed",
+      "completion_reason",
+      "parser_version",
+      "source_span_hash"
+    ],
+    "rule": "every completion decision persists WHY, not just True/False, so a false closure can be audited."
+  },
+  "frozen_unchanged_this_sprint": [
+    "retrieval implementation",
+    "candidate pools",
+    "candidate budget C2",
+    "identity resolution",
+    "runtime graph node types",
+    "runtime graph edge types",
+    "maximum traversal depth = 2 (MAX_HOPS)",
+    "path ranking (rank_and_select_paths, tier/hop/score order)",
+    "path deduplication (signature-based merge)",
+    "path competition grouping",
+    "working-set ceiling semantics (M is a ceiling, never a target, no padding)",
+    "S2 implementation",
+    "S2 packet budget = 6",
+    "HRM = NOT RUN"
+  ],
+  "frozen_utc": "2026-08-09T14:00:00Z",
+  "g2_v1_diagnosis_this_sprint_repairs": {
+    "finding": "RECORD_EXPRESSES_RELATION was a substring match of the parsed relation phrase against raw record text -- not entity-bound. paths_enumerated and unique_bridge_entities climbed with scale, so the graph found bridges; paths_complete stayed low (1.6-3.1 of 9-39 enumerated) because completion recognition, not traversal or ranking, was the defect.",
+    "hypothesis_this_sprint_tests": "H1: a path endpoint can instantiate the requested relation even when the exact normalized relation phrase does not appear literally in the record, via entity-bound structured parsing. H0: even oracle-correct endpoint recognition does not substantially repair G2, implying graph topology/link structure itself is insufficient.",
+    "reference": "configs/gate_g1_runtime_graph_v1.json:G2_RESULT"
+  },
+  "ladder": {
+    "K0_literal": {
+      "definition": "unchanged G2-v1 behavior -- relation_norm substring anywhere in record text, no entity binding. This is exactly runtime_graph.py's existing RECORD_EXPRESSES_RELATION signal.",
+      "role": "CONTROL"
+    },
+    "K1_entity_bound": {
+      "definition": "entity-bound EXACT relation match. Reuses the already-frozen, already-tested hrm_adaptive_memory/c4/relational_state.py:parse_relation_edges to extract (source_entity, relation, target_entity) triples from record text via its existing template grammar (regex patterns matched against the corpus's own generator grammar -- Changelog:/Revision applied/registry entry/JSON kv/etc, all of which are visible surface forms, not oracle fields). A record completes a path for (entity, target_relation) iff some parsed RelationFact binds that specific entity (as source or target) to a relation that normalizes to an EXACT match of target_relation. This is 'record expresses relation about this bridge entity', not merely 'relation phrase occurs in record'.",
+      "role": "PRIMARY"
+    },
+    "K2_family_normalized": {
+      "definition": "identical to K1 but relation matching uses relational_state.py's existing _relation_matches (partial substring + a small frozen synonym table: assigned category<->category/assigned, ownership tier<->tier/ownership, calibration class<->calibration/class, routing class<->routing/class). This table already exists and is already covered by 19 passing tests in test_c4_relational_state.py -- K2 does NOT introduce a new alias table or config file; it reuses this exact frozen function verbatim. No alias is added because of anything observed in K1/K2 output.",
+      "role": "DIAGNOSTIC / OPTIONAL",
+      "source_file": "hrm_adaptive_memory/c4/relational_state.py",
+      "source_hash": "b8ad457995d4c3ae"
+    },
+    "K3_oracle_ceiling": {
+      "definition": "a record/entity pair is a correct endpoint iff the record_id is in task['required_evidence_ids'] AND the (entity, record_id) pair was ALREADY discovered by the shared K0/K1 topology pass (i.e. record_id in subject_records or in some bridge's bridge_records) -- K3 relabels completion, it does NOT add new bridges/entities/edges. Isolated in hrm_adaptive_memory/c4/oracle_endpoint_ceiling.py, evaluator-only, never imported by runtime endpoint_recognition.py or g2_paths.py.",
+      "role": "CONSTRUCTION CEILING"
+    },
+    "not_run_K2_default": "K2 runs only if K1 fails to close a material fraction of K3's gap; per instruction, do not let K2 become an open-ended synonym-tuning exercise."
+  },
+  "leakage_rule": {
+    "K1_K2_grammar_provenance": "parse_relation_edges' template patterns were authored against the V4 generator's visible sentence grammar during earlier (already-merged, already-tested) development work, not derived from Confirmation #1 or any oracle object. No new template is added in this sprint.",
+    "K3_isolation": "K3 lives in hrm_adaptive_memory/c4/oracle_endpoint_ceiling.py. Import-boundary tests assert (a) endpoint_recognition.py and g2_paths.py never import oracle_endpoint_ceiling, (b) oracle_endpoint_ceiling.py MAY import runtime_graph/g2_paths types, (c) dependency direction is runtime <- evaluator, never runtime -> evaluator.",
+    "forbidden": [
+      "required_evidence_ids",
+      "proof_edges",
+      "record_kind",
+      "latent_bridge",
+      "answer_node",
+      "oracle_bridge",
+      "oracle_evidence_ids",
+      "gold_path",
+      "_required",
+      "answer_key",
+      "_oracle_metadata"
+    ]
+  },
+  "new_metric_field_names_for_v2_receipts_only": {
+    "absolute_selected_role_availability": "role subset present in the final 6-record packet (unconditional)",
+    "absolute_working_role_availability": "role subset present in the final working set (unconditional)",
+    "candidate_role_availability": "role subset survives the C2 candidate pool",
+    "compressor_role_retention_given_candidate": "role subset survives the working-set compressor given it was in the candidate pool",
+    "graph_role_reachability": "role subset is reachable via the runtime graph topology (subject/bridge co-mention), independent of completion",
+    "note": "Applies ONLY to new G2-v2 receipts; historical G1/G2-v1 artifacts are left untouched, translated only in the v2 analyzer if compared.",
+    "s2_role_retention_given_working": "role subset selected by S2 given it was in the working set"
+  },
+  "objective": "Fix G2 path-completion semantics without changing traversal, ranking, S2, retrieval, or packet size.",
+  "only_treatment_variable": "path completion / endpoint recognition -- the predicate deciding whether a record COMPLETES a subject/bridge path for the requested relation",
+  "primary_construction_metrics": {
+    "R_endpoint": "P(required endpoint recognized | required endpoint available AND graph reachable)",
+    "R_path": "P(required complete path formed | required path topology exists)"
+  },
+  "protocol_id": "gate_g2_v2_path_completion_v1",
+  "provenance_repair": {
+    "directional_edges": "ENTITY_LINKED_TO_ENTITY co-mention edges become two directed GraphEdges (A->B and B->A) instead of one, so PathCandidate.edge_ids can reproduce the exact orientation traversal used, per instruction #25 (directed pair over an UNDIRECTED flag).",
+    "path_counting": "already correct in g2_paths.py -- PathCandidate identity already includes anchor+terminal+entity_ids+discriminator, not a len() sum. Verified, not changed."
+  },
+  "run_conditionally": [
+    "K2 (only if K1 fails construction_gap_pass_bound)"
+  ],
+  "run_now": [
+    "K0",
+    "K1",
+    "K3"
+  ],
+  "scales": [
+    "cal_700",
+    "cal_1000",
+    "cal_1500",
+    "cal_2200",
+    "cal_3000"
+  ],
+  "status": "RUN_COMPLETE__STOP_GATE_FAILED__OUTCOME_D",
+  "what_not_to_do_this_sprint": [
+    "change retrieval",
+    "increase candidate k",
+    "increase packet size",
+    "change S2",
+    "change graph hop depth",
+    "restore retrieval filler",
+    "train a path ranker",
+    "add graph embeddings",
+    "add an LLM endpoint classifier",
+    "use consumed Confirmation #1 labels",
+    "add persistent graph memory",
+    "run HRM"
+  ]
+}

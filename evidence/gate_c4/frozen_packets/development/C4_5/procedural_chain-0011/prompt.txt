@@ -1,0 +1,9 @@
+[OBJECTIVE]
+For KSA-6, which required action is recorded?
+[EVIDENCE]
+[E1]
+In shorthand, Kestrel sensor array is written KSA-6.
+[E2]
+[required action] Kestrel sensor array -> {"state": "provisional"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

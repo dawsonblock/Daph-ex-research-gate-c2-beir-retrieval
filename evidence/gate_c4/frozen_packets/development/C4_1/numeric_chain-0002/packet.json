@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "2ecd96042b8d52ff9d4a0f1f3d9346c469bbe2dfae5a26ebf6e0152ab08325e4",
+  "canonical_subject": "",
+  "ordered_selected_ids": [
+    "numeric_chain-0008/value",
+    "numeric_chain-0011/direct",
+    "numeric_chain-0007/direct",
+    "numeric_chain-0010/value",
+    "numeric_chain-0000/value",
+    "numeric_chain-0002/value"
+  ],
+  "ordered_text_sha256": [
+    "7e543e27ac240cc27991a760c3879f63a343313ba614b8da1ca3315eee75da54",
+    "422c5e9748e2eeb29c7910e5d444414fffd397bdeb7428d9727e098d6170028a",
+    "35923fc2a14fc7775319c114b36eac1cb1273096c3bb6da2c6ef532ea7ffed41",
+    "440433046bde29919e436e81db217c4c86355115fb62e3d104d6c9e6f5f8212b",
+    "61a469477e1bd6ec203d56f8345785d6e4b583478e095665aa3a5dc9210acadf",
+    "6f4f04ea9eb7f5d37359b5ee04d3f727ae49a4e867ade488395c0622219b5e06"
+  ],
+  "query_hash": "de5f71221b16ca29a8ce2fa33c1891755d410e8016dcfe4f9ee4a4000b692501",
+  "selector_policy_id": "s0",
+  "task_id": "numeric_chain-0002"
+}

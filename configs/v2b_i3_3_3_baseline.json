@@ -1,0 +1,100 @@
+{
+  "schema": "DAPH_V2B_I3_3_2_AUDITED_BASELINE_V1",
+  "schema_note": "Frozen, audited record of the I3.3.2 scientific benchmark exactly as it stands at the authoritative v2b-infrastructure head. This is the input to I3.3.3 release/qualification hardening; it is not a new benchmark identity and does not alter the 750 frozen tasks. Every binding is recorded by path and SHA-256 so a clean checkout can reproduce the benchmark closure. Per I3.3.3, the latent oracle, sequential observable oracle, action vocabulary, regret decomposition, and benchmark topology machinery are NOT to be redesigned.",
+  "source_commit": "810047cdf639b57d4e89f899f38f0de009511712",
+  "source_tree": "ce805a9ab5ac6816e9c81e5d32ab12d511e1273b",
+  "integrity_revision": "V2B-I3.3.2",
+  "benchmark_id": "v2b_i3_3_2_scientific_split_v1",
+  "status": "FROZEN_FOR_BENCHMARK_QUALIFICATION",
+  "claim_boundary": "Frozen scientific benchmark only; no model-controller or V2B scientific verdict.",
+  "bindings": {
+    "protocol": {"path": "configs/v2b_i3_2_2_protocol_v1.json", "sha256": "943f9dba101d883879484b51ac6db6679496d382bfceb5809d4b107baeaff874"},
+    "freeze_config": {"path": "experiments/v2b_i3_3/configs/v2b_i3_3_benchmark_freeze_v1.json", "sha256": "706e0d7ebcd3d015e168ed79122185a0eaa1b1d1dccc0ddca10323de387ee5a2"},
+    "benchmark_manifest": {"path": "experiments/v2b_i3_3/manifests/v2b_i3_3_benchmark_manifest_v1.json", "sha256": "5e28c409411842033334a66d44c2bda39596eb4900035785063bcf0b00c58b16"},
+    "private_environment": {"path": "experiments/v2b_i3_3/private/v2b_i3_3_tasks_v1.json", "sha256": "fcd7fcb1cde600a3c4ab75fca6549deeda7f6011db0d45275116a24612f048c4"},
+    "controller_packets": {"path": "experiments/v2b_i3_3/controller_packets/v2b_i3_3_controller_packets_v1.json", "sha256": "a99d121822d57c8daad98ef99030df8a238cf5bb0371c1bbf0883537c2bc38c3"},
+    "split_definitions": {"path": "experiments/v2b_i3_3/splits/v2b_i3_3_splits_v1.json", "sha256": "05e9e772328637f9b4918f57cb1fb623f844dc7ae95911fcb1b44747caf462a4"},
+    "topology_allocation": {"path": "experiments/v2b_i3_3/splits/topology_allocation_v1.json", "sha256": "72a7c8435bcb7ddadf7cb2f3f9ef19e4e6d3d3d0c66fe245800b5b0c48953524"},
+    "topology_diversity_report": {"path": "experiments/v2b_i3_3/reports/v2b_i3_3_2_topology_diversity_report_v1.json", "sha256": "b02bfbbd2715d19165d3df023b25e8bd1517ed26f4d8894ef408291c1488469c"},
+    "structural_diversity_report": {"path": "experiments/v2b_i3_3/reports/v2b_i3_3_1_structural_diversity_report_v1.json", "sha256": "d22a5972f9a1b50a3607222ba6dc409de663c8ed82cc243a37ffa521de2009c3"},
+    "difficulty_report": {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_difficulty_report_v1.json", "sha256": "1987290bb63d813218014bdd36619d9f02f5dec74917c35a14d3c0024c11ba92"},
+    "oracle_balance_report": {"path": "experiments/v2b_i3_3/reports/v2b_i3_3_1_oracle_balance_report_v1.json", "sha256": "42475544bd608138b743063a7cf52a66f8401fab988a97370b3bf8f809dbc955"},
+    "balance_report": {"path": "experiments/v2b_i3_3/reports/v2b_i3_3_balance_report_v1.json", "sha256": "a43f879e6d6222d336f088e484c5a3767ffcd674c7ab6c23c45f22672aebe39a"},
+    "policy": {"path": "configs/v2b_i3_policy_v1.json", "sha256": "258df0db5049be082814ace8e0ccd06c0462afa31a949bd13546a851ae545c68"},
+    "utility": {"path": "configs/v2b_i3_1_utility_v1.json", "sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07"},
+    "observation_masks": {"path": "configs/v2b_i3_observation_masks_v1.json", "sha256": "4b4ea5b125ffceefb92458d1c0cdfd926833efb42c08cbdc35ff84351a404103"},
+    "generator": {"path": "experiments/v2b_i3_3/generators/generate_v2b_i3_3.py", "sha256": "0c7d3c2280f2c126d871370fec8ae2c2ee51bef4f8095556200f10cb25ef7ad7"},
+    "surface_templates": {"path": "experiments/v2b_i3_3/surface_templates/v2b_i3_3_surface_templates_v1.json", "sha256": "689a6f8e915c95a68d74c38e5e0c98d998df799e03e738bdc212281ba14dbf54"},
+    "task_families": {"path": "experiments/v2b_i3_3/task_families/v2b_i3_3_families_v1.json", "sha256": "e442195d4b448ca16c1c7dbc3846cf1495a541e87f1ba72ecf09aa502d3895a5"},
+    "resource_profiles": {"path": "experiments/v2b/tasks/v2b_i3_metareasoning_benchmark_v1.json", "sha256": "a65fa506f0bad4d49937a8da9bdf1f1485f001b7af94fe50e1bd25c64181c566"},
+    "oracle_cache_manifest": {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_oracle_cache_manifest_v1.json", "sha256": "102c5883310dcbd71637d92fbc8b277493ddbd9aa1bc791860adcbe2e9be57ba"}
+  },
+  "benchmark_closure_sha256": "9f4255d61dbbac14dd768cb61ee3381ef493ccb7b88b5b365a027dbb1c2eca5e",
+  "budgets": {
+    "aggregate_priors": ["TASK_UNIFORM", "CLASS_UNIFORM"],
+    "primary_prior": "TASK_UNIFORM",
+    "oracle_limits": {
+      "max_latent_states_per_task": 20000,
+      "max_latent_transitions_per_task": 120000,
+      "max_information_states_per_condition": 500000,
+      "max_information_transitions_per_condition": 3000000,
+      "max_members_per_belief": 32
+    }
+  },
+  "required_conditions": [
+    "STATE_BLIND_CONTROLLER",
+    "STATE_AWARE_CONTROLLER",
+    "NO_VERIFICATION",
+    "NO_TEMPORAL",
+    "NO_PROVENANCE",
+    "NO_CONFLICT",
+    "NO_HISTORY"
+  ],
+  "latent_oracle_set": {
+    "table_count": 750,
+    "reachable_states": 227248,
+    "reachable_transitions": 880718,
+    "table_set_sha256": "5814c34f3f72c48ea4b81b18844d03ffa059c282e2d1e18be638670c4191ee9a",
+    "artifact_path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_latent_oracles_v1.jsonl.gz",
+    "artifact_sha256": "9b0dcf69bd5692b7190d5e12ac7f8a3ba074cf82307038db21d3371ac08fd05d"
+  },
+  "sequential_observable_oracle_sets": {
+    "STATE_AWARE_CONTROLLER": {"task_uniform_information_gap": 4.311493333333333, "set_sha256": "2e6bba2d2c63721e766fa25c537bda5ea4e90a583c943a3655c7cc1d76f35bed"},
+    "NO_TEMPORAL": {"task_uniform_information_gap": 4.312666666666666, "set_sha256": "3b0a777fc415e9e79a3b39d8e7658be54c6367e211ef1424b25225df5490a45e"},
+    "NO_PROVENANCE": {"task_uniform_information_gap": 4.317546666666667, "set_sha256": "4445ca2f095b3fc746cda640b387279f075d9fdeacd9cc4b459b98d0e5534235"},
+    "NO_VERIFICATION": {"task_uniform_information_gap": 4.327839999999999, "set_sha256": "3241abe9d3398295e5c58383d9b7b1e189ebdcea6dda6016fcdf852c8c47ef17"},
+    "NO_HISTORY": {"task_uniform_information_gap": 4.504746666666667, "set_sha256": "268bc55d9eaa8a44c0d5ca192803a4b180ecc419e14aa8a380528c96167cbe12"},
+    "NO_CONFLICT": {"task_uniform_information_gap": 4.827186666666666, "set_sha256": "a2d4b58ec75caa856f9ba176a774666947eeb61879d38f82deeea95e70551871"},
+    "STATE_BLIND_CONTROLLER": {"task_uniform_information_gap": 10.057626666666666, "set_sha256": "418a4b7c2e7333365857fd51f028c80973e1985819a98a038645ae073f064ff6"}
+  },
+  "representation_values_task_uniform_information_gap": {
+    "STATE_AWARE": 4.311493,
+    "NO_TEMPORAL": 4.312667,
+    "NO_PROVENANCE": 4.317547,
+    "NO_VERIFICATION": 4.327840,
+    "NO_HISTORY": 4.504747,
+    "NO_CONFLICT": 4.827187,
+    "STATE_BLIND": 10.057627,
+    "note": "Benchmark-identity properties (point 15). Must not be re-estimated or tuned after seeing model behavior."
+  },
+  "structural_held_out_composition": {
+    "split": "held_out_structure",
+    "task_count": 150,
+    "by_difficulty_band": {"EASY": 99, "MEDIUM": 51, "HARD": 0, "TIE": 0},
+    "by_topology_depth_band": {"DEPTH_1": 59, "DEPTH_4_PLUS": 91}
+  },
+  "qualification_runtime": {
+    "path": "tests/qualification/test_v2b_i3_3_full_oracle_regeneration.py",
+    "sha256": "6c7c1061b67df1610d7d981abbe63ab93893116f61eb83d47f840838186d2ed5",
+    "description": "Exhaustive regeneration of the latent oracle and all seven sequential observable oracle sets, comparing set hashes to the frozen oracle cache manifest."
+  },
+  "test_corpus": {
+    "i3_focused_unit_tests": [
+      {"path": "tests/unit/test_v2b_i3_metareasoning.py", "sha256": "9180642090702676ba9e9fd4772a74103a6077c5f4d16f4b775284f4e00df0b2"},
+      {"path": "tests/unit/test_v2b_i3_2_sequential_information.py", "sha256": "72f7f411172458a9c8f56df0a59f838bddbb4f3d7cf3b2d4523a310757a9ce1a"},
+      {"path": "tests/unit/test_v2b_i3_2_2_protocol.py", "sha256": "6644d8d80ca473ddcb11fa80d59ca2cf6c3413df60a12943f1e5ac7209b57174"},
+      {"path": "tests/unit/test_v2b_i3_1_oracle_efficiency.py", "sha256": "986682c11d2654cf5b2a511309552e12e5d546e74cb93f60e02a1a216a1e3223"},
+      {"path": "tests/unit/test_v2b_i3_3_benchmark.py", "sha256": "352dd8ffd1d1e6eeeb560797573615006498d9d83b4f27c66fdbc72ce752fcad"}
+    ]
+  }
+}

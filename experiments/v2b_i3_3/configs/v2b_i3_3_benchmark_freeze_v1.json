@@ -1,0 +1,60 @@
+{
+  "schema": "DAPH_V2B_I3_3_BENCHMARK_FREEZE_CONFIGURATION_V1",
+  "status": "FROZEN_SCIENTIFIC_BENCHMARK_NO_EXECUTIVE_RESULT",
+  "benchmark_manifest_path": "experiments/v2b_i3_3/manifests/v2b_i3_3_benchmark_manifest_v1.json",
+  "protocol_path": "configs/v2b_i3_2_2_protocol_v1.json",
+  "policy_path": "configs/v2b_i3_policy_v1.json",
+  "observation_masks_path": "configs/v2b_i3_observation_masks_v1.json",
+  "utility_path": "configs/v2b_i3_1_utility_v1.json",
+  "generator_path": "experiments/v2b_i3_3/generators/generate_v2b_i3_3.py",
+  "oracle_cache_manifest_path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_oracle_cache_manifest_v1.json",
+  "aggregate_priors": ["TASK_UNIFORM", "CLASS_UNIFORM"],
+  "primary_prior": "TASK_UNIFORM",
+  "oracle_limits": {
+    "max_latent_states_per_task": 20000,
+    "max_latent_transitions_per_task": 120000,
+    "max_information_states_per_condition": 500000,
+    "max_information_transitions_per_condition": 3000000,
+    "max_members_per_belief": 32
+  },
+  "split_counts": {
+    "development": 300,
+    "validation": 150,
+    "held_out_instance": 100,
+    "held_out_surface": 50,
+    "held_out_structure": 150
+  },
+  "structural_novelty_thresholds": {
+    "validation_exact_unseen_minimum": 30,
+    "held_out_structure_exact_unseen_minimum": 50,
+    "held_out_structure_task_fraction_minimum": 0.2
+  },
+  "topology_novelty_thresholds": {
+    "development_unique_minimum": 50,
+    "validation_unseen_from_development_minimum": 25,
+    "held_out_structure_unseen_from_pretest_minimum": 50,
+    "held_out_structure_overlap_with_development_and_validation_maximum": 0
+  },
+  "difficulty_band_thresholds": {
+    "required_bands": ["EASY", "MEDIUM", "HARD", "TIE"],
+    "minimum_fraction_per_band": 0.05,
+    "maximum_fraction_per_band": 0.55
+  },
+  "budget_sensitive_task_fraction_minimum": 0.25,
+  "oracle_balance_thresholds": {
+    "designed_oracle_agreement": 1.0,
+    "minimum_singleton_optimal_actions": 7,
+    "maximum_tied_task_fraction": 0.15,
+    "minimum_q_margin_bands": 2
+  },
+  "required_conditions": [
+    "STATE_BLIND_CONTROLLER",
+    "STATE_AWARE_CONTROLLER",
+    "NO_VERIFICATION",
+    "NO_TEMPORAL",
+    "NO_PROVENANCE",
+    "NO_CONFLICT",
+    "NO_HISTORY"
+  ],
+  "claim_boundary": "Frozen scientific benchmark only; no model-controller or V2B scientific verdict."
+}

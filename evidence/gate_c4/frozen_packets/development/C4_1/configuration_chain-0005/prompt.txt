@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the parameter grade for FRU-4?
+[EVIDENCE]
+[E1]
+{"subject": "Bluebird control module", "parameter grade": "{"grade": "provisional"}"}
+[E2]
+Abbreviation table: FRU-4 = Finch relay unit.
+[E3]
+[parameter grade] Dunlin pressure assembly -> THETA-OLIVE
+[E4]
+Changelog: parameter grade for Dunlin drive cluster set to {"grade": "provisional"}.
+[E5]
+{"subject": "Ibis intake manifold", "parameter grade": "7863"}
+[E6]
+[change] Raven pressure assembly :: parameter grade := provisional
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

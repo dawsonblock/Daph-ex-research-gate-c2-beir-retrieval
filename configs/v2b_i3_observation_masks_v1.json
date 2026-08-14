@@ -1,0 +1,13 @@
+{
+  "schema": "DAPH_V2B_I3_OBSERVATION_MASKS_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "masks": {
+    "STATE_BLIND_CONTROLLER": {"verification": false, "provenance": false, "temporal": false, "conflicts": false, "prior_outcomes": false, "composition": false},
+    "STATE_AWARE_CONTROLLER": {"verification": true, "provenance": true, "temporal": true, "conflicts": true, "prior_outcomes": true, "composition": true},
+    "NO_VERIFICATION": {"verification": false, "provenance": true, "temporal": true, "conflicts": true, "prior_outcomes": true, "composition": true},
+    "NO_PROVENANCE": {"verification": true, "provenance": false, "temporal": true, "conflicts": true, "prior_outcomes": true, "composition": true},
+    "NO_TEMPORAL": {"verification": true, "provenance": true, "temporal": false, "conflicts": true, "prior_outcomes": true, "composition": true},
+    "NO_CONFLICT": {"verification": true, "provenance": true, "temporal": true, "conflicts": false, "prior_outcomes": true, "composition": true},
+    "NO_HISTORY": {"verification": true, "provenance": true, "temporal": true, "conflicts": true, "prior_outcomes": false, "composition": true}
+  }
+}

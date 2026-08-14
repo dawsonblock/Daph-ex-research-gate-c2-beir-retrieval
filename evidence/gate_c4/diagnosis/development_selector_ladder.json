@@ -1,0 +1,965 @@
+{
+  "arms": {
+    "S0": {
+      "answer_retention": {
+        "ALL": 0.313,
+        "EXACT": 0.3158,
+        "EXACT_bridged": 0.1282,
+        "EXACT_unbridged": 0.7222,
+        "RESOLVED": 0.3103,
+        "RESOLVED_bridged": 0.0732,
+        "RESOLVED_unbridged": 0.8824
+      },
+      "bridge_retention": 0.5957,
+      "disconnected_in_packet": null,
+      "identity_retention": 1.0,
+      "max_packet_size": 6,
+      "promotable": false,
+      "selected_ces": 0.425
+    },
+    "S1": {
+      "answer_retention": {
+        "ALL": 0.5217,
+        "EXACT": 0.7368,
+        "EXACT_bridged": 0.6667,
+        "EXACT_unbridged": 0.8889,
+        "RESOLVED": 0.3103,
+        "RESOLVED_bridged": 0.0732,
+        "RESOLVED_unbridged": 0.8824
+      },
+      "bridge_retention": 0.5745,
+      "disconnected_in_packet": null,
+      "identity_retention": 1.0,
+      "max_packet_size": 6,
+      "promotable": true,
+      "selected_ces": 0.5667
+    },
+    "S2": {
+      "answer_retention": {
+        "ALL": 0.5043,
+        "EXACT": 0.7368,
+        "EXACT_bridged": 0.6667,
+        "EXACT_unbridged": 0.8889,
+        "RESOLVED": 0.2759,
+        "RESOLVED_bridged": 0.0244,
+        "RESOLVED_unbridged": 0.8824
+      },
+      "bridge_retention": 0.6596,
+      "disconnected_in_packet": 0,
+      "identity_retention": 1.0,
+      "max_packet_size": 6,
+      "promotable": true,
+      "selected_ces": 0.5833
+    },
+    "S3": {
+      "answer_retention": {
+        "ALL": 0.5043,
+        "EXACT": 0.7368,
+        "EXACT_bridged": 0.6667,
+        "EXACT_unbridged": 0.8889,
+        "RESOLVED": 0.2759,
+        "RESOLVED_bridged": 0.0244,
+        "RESOLVED_unbridged": 0.8824
+      },
+      "bridge_retention": 0.6596,
+      "disconnected_in_packet": 0,
+      "identity_retention": 1.0,
+      "max_packet_size": 6,
+      "promotable": true,
+      "selected_ces": 0.5833
+    },
+    "S4": {
+      "answer_retention": {
+        "ALL": 0.8435,
+        "EXACT": 1.0,
+        "EXACT_bridged": 1.0,
+        "EXACT_unbridged": 1.0,
+        "RESOLVED": 0.6897,
+        "RESOLVED_bridged": 0.561,
+        "RESOLVED_unbridged": 1.0
+      },
+      "bridge_retention": 0.9362,
+      "disconnected_in_packet": null,
+      "identity_retention": 1.0,
+      "max_packet_size": 3,
+      "promotable": false,
+      "selected_ces": 0.7833
+    }
+  },
+  "candidate_budget": 50,
+  "downstream_q": {
+    "S0": {
+      "correct": 0.3,
+      "q": 0.3604,
+      "q_by_entity_regime": {
+        "abbreviation": 0.4875,
+        "canonical": 0.2333
+      },
+      "q_by_family": {
+        "configuration_chain": 0.2917,
+        "dependency_chain": 0.2083,
+        "distractor_heavy": 0.7083,
+        "entity_attribute": 0.5833,
+        "location_chain": 0.2708,
+        "numeric_chain": 0.25,
+        "ownership_chain": 0.375,
+        "procedural_chain": 0.1667,
+        "temporal_chain": 0.0833,
+        "temporal_update": 0.6667
+      },
+      "q_delta_vs_S0": 0.0,
+      "worst_family_delta_vs_S0": [
+        "configuration_chain",
+        0.0
+      ],
+      "worst_regime_delta_vs_S0": [
+        "abbreviation",
+        0.0
+      ]
+    },
+    "S1": {
+      "correct": 0.4333,
+      "q": 0.4875,
+      "q_by_entity_regime": {
+        "abbreviation": 0.4875,
+        "canonical": 0.4875
+      },
+      "q_by_family": {
+        "configuration_chain": 0.5417,
+        "dependency_chain": 0.5625,
+        "distractor_heavy": 0.7917,
+        "entity_attribute": 0.625,
+        "location_chain": 0.4583,
+        "numeric_chain": 0.2917,
+        "ownership_chain": 0.4792,
+        "procedural_chain": 0.1875,
+        "temporal_chain": 0.1875,
+        "temporal_update": 0.75
+      },
+      "q_delta_vs_S0": 0.1271,
+      "worst_family_delta_vs_S0": [
+        "procedural_chain",
+        0.0208
+      ],
+      "worst_regime_delta_vs_S0": [
+        "abbreviation",
+        0.0
+      ]
+    },
+    "S2": {
+      "correct": 0.4833,
+      "q": 0.525,
+      "q_by_entity_regime": {
+        "abbreviation": 0.525,
+        "canonical": 0.525
+      },
+      "q_by_family": {
+        "configuration_chain": 0.5417,
+        "dependency_chain": 0.5625,
+        "distractor_heavy": 0.7917,
+        "entity_attribute": 0.7083,
+        "location_chain": 0.4375,
+        "numeric_chain": 0.375,
+        "ownership_chain": 0.4375,
+        "procedural_chain": 0.3542,
+        "temporal_chain": 0.25,
+        "temporal_update": 0.7917
+      },
+      "q_delta_vs_S0": 0.1646,
+      "worst_family_delta_vs_S0": [
+        "ownership_chain",
+        0.0625
+      ],
+      "worst_regime_delta_vs_S0": [
+        "abbreviation",
+        0.0375
+      ]
+    },
+    "S3": {
+      "correct": 0.4583,
+      "q": 0.5125,
+      "q_by_entity_regime": {
+        "abbreviation": 0.5167,
+        "canonical": 0.5083
+      },
+      "q_by_family": {
+        "configuration_chain": 0.5417,
+        "dependency_chain": 0.5625,
+        "distractor_heavy": 0.7917,
+        "entity_attribute": 0.7083,
+        "location_chain": 0.4375,
+        "numeric_chain": 0.375,
+        "ownership_chain": 0.4375,
+        "procedural_chain": 0.3542,
+        "temporal_chain": 0.25,
+        "temporal_update": 0.6667
+      },
+      "q_delta_vs_S0": 0.1521,
+      "worst_family_delta_vs_S0": [
+        "temporal_update",
+        0.0
+      ],
+      "worst_regime_delta_vs_S0": [
+        "abbreviation",
+        0.0292
+      ]
+    },
+    "S4": {
+      "correct": 0.8667,
+      "q": 0.7875,
+      "q_by_entity_regime": {
+        "abbreviation": 0.6667,
+        "canonical": 0.9083
+      },
+      "q_by_family": {
+        "configuration_chain": 0.8125,
+        "dependency_chain": 0.7917,
+        "distractor_heavy": 0.875,
+        "entity_attribute": 1.0,
+        "location_chain": 0.8125,
+        "numeric_chain": 0.7708,
+        "ownership_chain": 0.7917,
+        "procedural_chain": 0.7083,
+        "temporal_chain": 0.3958,
+        "temporal_update": 0.9167
+      },
+      "q_delta_vs_S0": 0.4271,
+      "worst_family_delta_vs_S0": [
+        "distractor_heavy",
+        0.1667
+      ],
+      "worst_regime_delta_vs_S0": [
+        "abbreviation",
+        0.1792
+      ]
+    }
+  },
+  "fusion": "R1_max_reciprocal",
+  "packet_budget": 6,
+  "primary_criterion_exact_bridged": {
+    "S1": {
+      "bootstrap_lcb": 0.359,
+      "exact_bridged_retention_delta_vs_S0": 0.5385,
+      "n_exact_bridged": 39
+    },
+    "S2": {
+      "bootstrap_lcb": 0.3571,
+      "exact_bridged_retention_delta_vs_S0": 0.5385,
+      "n_exact_bridged": 39
+    },
+    "S3": {
+      "bootstrap_lcb": 0.3571,
+      "exact_bridged_retention_delta_vs_S0": 0.5385,
+      "n_exact_bridged": 39
+    }
+  },
+  "protocol_id": "c4_selector_v1",
+  "s1_protection_receipts": [
+    {
+      "anchor_subject": "Nimbus sensor array",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "entity_attribute-0000/fact",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "assigned category",
+      "task_id": "entity_attribute-0000"
+    },
+    {
+      "anchor_subject": "Jacana pressure assembly",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "entity_attribute-0002/fact",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "assigned category",
+      "task_id": "entity_attribute-0002"
+    },
+    {
+      "anchor_subject": "Curlew intake manifold",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "entity_attribute-0004/fact",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "assigned category",
+      "task_id": "entity_attribute-0004"
+    },
+    {
+      "anchor_subject": "Pelican intake manifold",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "entity_attribute-0006/fact",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "assigned category",
+      "task_id": "entity_attribute-0006"
+    },
+    {
+      "anchor_subject": "Bluebird intake manifold",
+      "bridge_entity": null,
+      "fusion_score": 0.08333333333333333,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "entity_attribute-0008/fact",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 3,
+      "target_relation": "assigned category",
+      "task_id": "entity_attribute-0008"
+    },
+    {
+      "anchor_subject": "Teal drive cluster",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "entity_attribute-0010/fact",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "assigned category",
+      "task_id": "entity_attribute-0010"
+    },
+    {
+      "anchor_subject": "Sparrow intake manifold",
+      "bridge_entity": "Finch control module",
+      "fusion_score": 0.045454545454545456,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "ownership_chain-0000/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 17,
+      "target_relation": "ownership tier",
+      "task_id": "ownership_chain-0000"
+    },
+    {
+      "anchor_subject": "Pelican control module",
+      "bridge_entity": "Marlin control module",
+      "fusion_score": 0.08333333333333333,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "ownership_chain-0002/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 3,
+      "target_relation": "ownership tier",
+      "task_id": "ownership_chain-0002"
+    },
+    {
+      "anchor_subject": "Dunlin relay unit",
+      "bridge_entity": "Wren control module",
+      "fusion_score": 0.03125,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "ownership_chain-0004/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 33,
+      "target_relation": "ownership tier",
+      "task_id": "ownership_chain-0004"
+    },
+    {
+      "anchor_subject": "Ibis control module",
+      "bridge_entity": "Bluebird intake manifold",
+      "fusion_score": 0.0625,
+      "group": "EXACT_bridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "ownership_chain-0011/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 10,
+      "target_relation": "ownership tier",
+      "task_id": "ownership_chain-0006"
+    },
+    {
+      "anchor_subject": "Bluebird drive cluster",
+      "bridge_entity": "Osprey drive cluster",
+      "fusion_score": 0.08333333333333333,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "ownership_chain-0010/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 3,
+      "target_relation": "ownership tier",
+      "task_id": "ownership_chain-0010"
+    },
+    {
+      "anchor_subject": "Ibis relay unit",
+      "bridge_entity": "Auk relay unit",
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "configuration_chain-0000/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "parameter grade",
+      "task_id": "configuration_chain-0000"
+    },
+    {
+      "anchor_subject": "Curlew sensor array",
+      "bridge_entity": "Marlin intake manifold",
+      "fusion_score": 0.05263157894736842,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "configuration_chain-0002/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 15,
+      "target_relation": "parameter grade",
+      "task_id": "configuration_chain-0002"
+    },
+    {
+      "anchor_subject": "Kestrel drive cluster",
+      "bridge_entity": "Ibis intake manifold",
+      "fusion_score": 0.07142857142857142,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "configuration_chain-0004/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 8,
+      "target_relation": "parameter grade",
+      "task_id": "configuration_chain-0004"
+    },
+    {
+      "anchor_subject": "Bluebird sensor array",
+      "bridge_entity": "Registry entry",
+      "fusion_score": 0.05555555555555555,
+      "group": "EXACT_bridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "configuration_chain-0002/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 14,
+      "target_relation": "parameter grade",
+      "task_id": "configuration_chain-0006"
+    },
+    {
+      "anchor_subject": "Finch pressure assembly",
+      "bridge_entity": "Raven pressure assembly",
+      "fusion_score": 0.08333333333333333,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "configuration_chain-0010/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 3,
+      "target_relation": "parameter grade",
+      "task_id": "configuration_chain-0010"
+    },
+    {
+      "anchor_subject": "Sparrow pressure assembly",
+      "bridge_entity": "Ibis sensor array",
+      "fusion_score": 0.05555555555555555,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "dependency_chain-0000/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 14,
+      "target_relation": "release channel",
+      "task_id": "dependency_chain-0000"
+    },
+    {
+      "anchor_subject": "Vireo control module",
+      "bridge_entity": "Nimbus intake manifold",
+      "fusion_score": 0.045454545454545456,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "dependency_chain-0002/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 22,
+      "target_relation": "release channel",
+      "task_id": "dependency_chain-0002"
+    },
+    {
+      "anchor_subject": "Osprey intake manifold",
+      "bridge_entity": "Jacana pressure assembly",
+      "fusion_score": 0.03571428571428571,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "dependency_chain-0004/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 30,
+      "target_relation": "release channel",
+      "task_id": "dependency_chain-0004"
+    },
+    {
+      "anchor_subject": "Nimbus sensor array",
+      "bridge_entity": "Egret drive cluster",
+      "fusion_score": 0.04,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "dependency_chain-0006/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 24,
+      "target_relation": "release channel",
+      "task_id": "dependency_chain-0006"
+    },
+    {
+      "anchor_subject": "Finch relay unit",
+      "bridge_entity": "Kestrel intake manifold",
+      "fusion_score": 0.0625,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "dependency_chain-0008/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 12,
+      "target_relation": "release channel",
+      "task_id": "dependency_chain-0008"
+    },
+    {
+      "anchor_subject": "Heron control module",
+      "bridge_entity": "Bittern drive cluster",
+      "fusion_score": 0.058823529411764705,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "dependency_chain-0010/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 13,
+      "target_relation": "release channel",
+      "task_id": "dependency_chain-0010"
+    },
+    {
+      "anchor_subject": "Pelican relay unit",
+      "bridge_entity": "Gannet pressure assembly",
+      "fusion_score": 0.05263157894736842,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "location_chain-0000/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 16,
+      "target_relation": "service region",
+      "task_id": "location_chain-0000"
+    },
+    {
+      "anchor_subject": "Wren relay unit",
+      "bridge_entity": "Bittern drive cluster",
+      "fusion_score": 0.04,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "location_chain-0002/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 24,
+      "target_relation": "service region",
+      "task_id": "location_chain-0002"
+    },
+    {
+      "anchor_subject": "Pelican sensor array",
+      "bridge_entity": "Quail control module",
+      "fusion_score": 0.06666666666666667,
+      "group": "EXACT_bridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "location_chain-0006/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 10,
+      "target_relation": "service region",
+      "task_id": "location_chain-0004"
+    },
+    {
+      "anchor_subject": "Pelican sensor array",
+      "bridge_entity": "Quail control module",
+      "fusion_score": 0.06666666666666667,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "location_chain-0006/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 10,
+      "target_relation": "service region",
+      "task_id": "location_chain-0006"
+    },
+    {
+      "anchor_subject": "Dunlin drive cluster",
+      "bridge_entity": "Registry entry",
+      "fusion_score": 0.047619047619047616,
+      "group": "EXACT_bridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "location_chain-0001/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 21,
+      "target_relation": "service region",
+      "task_id": "location_chain-0010"
+    },
+    {
+      "anchor_subject": "Curlew relay unit",
+      "bridge_entity": "Kestrel relay unit",
+      "fusion_score": 0.06666666666666667,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "temporal_chain-0000/current",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 7,
+      "target_relation": "operating tier",
+      "task_id": "temporal_chain-0000"
+    },
+    {
+      "anchor_subject": "Quail relay unit",
+      "bridge_entity": "Marlin intake manifold",
+      "fusion_score": 0.037037037037037035,
+      "group": "EXACT_bridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "temporal_chain-0009/superseded",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 26,
+      "target_relation": "operating tier",
+      "task_id": "temporal_chain-0002"
+    },
+    {
+      "anchor_subject": "Pelican relay unit",
+      "bridge_entity": "Finch sensor array",
+      "fusion_score": 0.034482758620689655,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "temporal_chain-0004/current",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 23,
+      "target_relation": "operating tier",
+      "task_id": "temporal_chain-0004"
+    },
+    {
+      "anchor_subject": "Kestrel sensor array",
+      "bridge_entity": "Marlin intake manifold",
+      "fusion_score": 0.02702702702702703,
+      "group": "EXACT_bridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "temporal_chain-0009/superseded",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 34,
+      "target_relation": "operating tier",
+      "task_id": "temporal_chain-0006"
+    },
+    {
+      "anchor_subject": "Curlew relay unit",
+      "bridge_entity": "Kestrel relay unit",
+      "fusion_score": 0.06666666666666667,
+      "group": "EXACT_bridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "temporal_chain-0000/current",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 7,
+      "target_relation": "operating tier",
+      "task_id": "temporal_chain-0010"
+    },
+    {
+      "anchor_subject": "Finch intake manifold",
+      "bridge_entity": "Vireo pressure assembly",
+      "fusion_score": 0.058823529411764705,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "numeric_chain-0000/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 12,
+      "target_relation": "billing multiplier",
+      "task_id": "numeric_chain-0000"
+    },
+    {
+      "anchor_subject": "Auk sensor array",
+      "bridge_entity": "Bluebird intake manifold",
+      "fusion_score": 0.0625,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "numeric_chain-0002/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 10,
+      "target_relation": "billing multiplier",
+      "task_id": "numeric_chain-0002"
+    },
+    {
+      "anchor_subject": "Osprey relay unit",
+      "bridge_entity": "Vireo pressure assembly",
+      "fusion_score": 0.08333333333333333,
+      "group": "EXACT_bridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "numeric_chain-0000/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 3,
+      "target_relation": "billing multiplier",
+      "task_id": "numeric_chain-0004"
+    },
+    {
+      "anchor_subject": "Bluebird control module",
+      "bridge_entity": "Registry entry",
+      "fusion_score": 0.05,
+      "group": "EXACT_bridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "numeric_chain-0000/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 12,
+      "target_relation": "billing multiplier",
+      "task_id": "numeric_chain-0006"
+    },
+    {
+      "anchor_subject": "Pelican pressure assembly",
+      "bridge_entity": "Wren pressure assembly",
+      "fusion_score": 0.0625,
+      "group": "EXACT_bridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "numeric_chain-0005/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 9,
+      "target_relation": "billing multiplier",
+      "task_id": "numeric_chain-0008"
+    },
+    {
+      "anchor_subject": "Curlew sensor array",
+      "bridge_entity": "Finch drive cluster",
+      "fusion_score": 0.07692307692307693,
+      "group": "EXACT_bridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "procedural_chain-0001/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 6,
+      "target_relation": "required action",
+      "task_id": "procedural_chain-0000"
+    },
+    {
+      "anchor_subject": "Finch relay unit",
+      "bridge_entity": "Heron intake manifold",
+      "fusion_score": 0.041666666666666664,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "procedural_chain-0002/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 22,
+      "target_relation": "required action",
+      "task_id": "procedural_chain-0002"
+    },
+    {
+      "anchor_subject": "Bittern relay unit",
+      "bridge_entity": "Kestrel pressure assembly",
+      "fusion_score": 0.030303030303030304,
+      "group": "EXACT_bridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "procedural_chain-0004/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 39,
+      "target_relation": "required action",
+      "task_id": "procedural_chain-0004"
+    },
+    {
+      "anchor_subject": "Finch drive cluster",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_bridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "procedural_chain-0001/value",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "required action",
+      "task_id": "procedural_chain-0006"
+    },
+    {
+      "anchor_subject": "Osprey control module",
+      "bridge_entity": "Bluebird pressure assembly",
+      "fusion_score": 0.07692307692307693,
+      "group": "EXACT_bridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "procedural_chain-0006/value",
+      "protection_reason": "ONE_HOP_BRIDGE_TARGET",
+      "retrieval_rank": 6,
+      "target_relation": "required action",
+      "task_id": "procedural_chain-0008"
+    },
+    {
+      "anchor_subject": "Egret drive cluster",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "temporal_chain-0007/current",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "operating tier",
+      "task_id": "temporal_update-0000"
+    },
+    {
+      "anchor_subject": "Raven drive cluster",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "temporal_chain-0005/current",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "operating tier",
+      "task_id": "temporal_update-0002"
+    },
+    {
+      "anchor_subject": "Auk drive cluster",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "temporal_update-0004/current",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "operating tier",
+      "task_id": "temporal_update-0004"
+    },
+    {
+      "anchor_subject": "Raven control module",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "temporal_update-0006/current",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "operating tier",
+      "task_id": "temporal_update-0006"
+    },
+    {
+      "anchor_subject": "Dunlin relay unit",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "temporal_update-0008/current",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "operating tier",
+      "task_id": "temporal_update-0008"
+    },
+    {
+      "anchor_subject": "Gannet sensor array",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "temporal_update-0010/current",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "operating tier",
+      "task_id": "temporal_update-0010"
+    },
+    {
+      "anchor_subject": "Heron relay unit",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "distractor_heavy-0000/near-near_relation",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "routing class",
+      "task_id": "distractor_heavy-0000"
+    },
+    {
+      "anchor_subject": "Vireo intake manifold",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": false,
+      "protected_is_terminal": false,
+      "protected_record_id": "distractor_heavy-0002/near-near_relation",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "routing class",
+      "task_id": "distractor_heavy-0002"
+    },
+    {
+      "anchor_subject": "Quail pressure assembly",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "distractor_heavy-0004/accepted",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "routing class",
+      "task_id": "distractor_heavy-0004"
+    },
+    {
+      "anchor_subject": "Raven drive cluster",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "distractor_heavy-0006/accepted",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "routing class",
+      "task_id": "distractor_heavy-0006"
+    },
+    {
+      "anchor_subject": "Wren intake manifold",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "distractor_heavy-0008/accepted",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "routing class",
+      "task_id": "distractor_heavy-0008"
+    },
+    {
+      "anchor_subject": "Jacana sensor array",
+      "bridge_entity": null,
+      "fusion_score": 0.09090909090909091,
+      "group": "EXACT_unbridged",
+      "protected_is_required": true,
+      "protected_is_terminal": true,
+      "protected_record_id": "distractor_heavy-0010/accepted",
+      "protection_reason": "DIRECT_SUBJECT_TARGET",
+      "retrieval_rank": 1,
+      "target_relation": "routing class",
+      "task_id": "distractor_heavy-0010"
+    }
+  ],
+  "schema_version": "c4-selector-ladder-v1",
+  "selection_only": "No HRM. The PRIMARY frozen criterion (EXACT_bridged answer-support retention) is a selection property. Downstream Q remains a required safety gate and is NOT measured here.",
+  "split": "development",
+  "task_count": 120
+}

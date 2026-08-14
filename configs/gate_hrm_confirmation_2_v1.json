@@ -1,0 +1,99 @@
+{
+  "PURPOSE": "Fresh Confirmation #2 for the stack qualified in evidence/gate_hrm/qualification_execute.json (decision=FREEZE_GRAPH_PLUS_COMPOSITION_STACK__PROCEED_TOWARD_FRESH_CONFIRMATION, delta_HRM_graph_value=+0.0746, LCB2.5=+0.0253). This gate exists to test whether that result replicates on data that never informed ANY architecture, threshold, alias, or grammar decision -- not to re-derive or improve it.",
+
+  "EXPLICIT_NON_TIGHTENING_ASSERTION": "The frozen_promotion_margin and safety bound below are copied VERBATIM from configs/gate_hrm_qualification_v1.json, unchanged despite qualification's strong result. Confirmation uses the SAME 0.03 point margin, SAME LCB>0 requirement, SAME -0.10 subgroup bound established before qualification was run. Nothing is tightened because qualification happened to look good.",
+
+  "PRIMARY_METRIC": "delta_HRM_graph_value = Q(H2) - Q(H0). NOT H2-H1. H1 remains diagnostic only, exactly as in qualification, even though composition (H2-H1=+0.0813) now looks like the strongest internal signal -- the primary confirmation claim is about the graph+composition stack beating typed path, not about internal attribution.",
+
+  "SOURCE_LINEAGE": {
+    "source_commit": "b5798f13cbbf9a29be91ebe9d3b0f8d3e0a1f8f0",
+    "anchor_lineage": "b83886b (qualification result, pushed) -> 4d80441 (this protocol + confirmation-2 split, additive-only) -> b5798f1 (run_hrm_qualification.py: real source_commit instead of hardcoded 'pending' + inert --scale-root suite override)",
+    "remote_verified": "origin/c4-v2_1-prompt-order-conformance == b5798f13cbbf9a29be91ebe9d3b0f8d3e0a1f8f0 (confirmed via git rev-parse against both refs after push)",
+    "amendment_note": "the original freeze pinned b83886b and required zero changes to run_hrm_qualification.py; that file was subsequently touched to satisfy this SAME protocol's own DATA_LINEAGE/HASH_CHAIN requirement that source_commit be real, not a 'pending' placeholder. The change is provenance-only: source_commit resolution (git rev-parse HEAD, fail-open to a source-digest per the existing run_hrm_context_study.py pattern) and a --scale-root argument that is a no-op unless explicitly passed. No retrieval, selector, graph-construction, path-ranking, packet-composition, prompt-template, or generation-parameter code changed. Verified via matched --dry-run smoke runs before and after (b3_calibration_v1 default path byte-identical in structure; only the two new provenance fields and the previously-stubbed source_commit value differ).",
+    "working_tree": "clean at time of this amendment except the confirmation-2 suite, its builder script, and this protocol file itself (all additive)",
+    "requirement": "the H0-H4 execution for confirmation-2 MUST run from this exact commit (or a fast-forward of it with zero further changes to any file under hrm_adaptive_memory/, scripts/run_hrm_qualification.py, scripts/run_gate_c4.py, or configs/gate_hrm_qualification_v1.json), not from local-only uncommitted state."
+  },
+
+  "STACK_IDENTITY_FROZEN_UNCHANGED_FROM_QUALIFICATION": {
+    "entity_extractor_config_hash": "1c156a7ed8a487bd",
+    "verification": "recomputed live from current source tree via bridge_extraction.entity_extractor_config_hash() after set_default_boundary_policy('grammar_v4') -- matches qualification's recorded value exactly, confirming zero drift in the boundary policy, role-grammar tables, or stopword lists since qualification ran",
+    "boundary_policy": "grammar_v4 (G2-v4E arm E1 -- closed-grammar entity boundary repair), pinned via set_default_boundary_policy exactly as run_hrm_qualification.py:113 does",
+    "HRM_model_revision": "sapientinc/HRM-Text-1B @ 9f082d68b8cd0ebc56e33f1c88c45609174c272c",
+    "prompt_template": "compose_evidence_prompt, unmodified",
+    "packet_ordering_contract": "c4_packet_ordering_v1, C4_4 deterministic policy, reused verbatim",
+    "generation_parameters": "HRM_MAX_NEW_TOKENS=64, condition=DIRECT, greedy",
+    "packet_budget_M": 6,
+    "path_composer": "packet_composition.compose_path_coherent_packet, S4's frozen atomic-admission contract, unmodified",
+    "graph_construction": "runtime_graph.build_runtime_graph with boundary_policy=grammar_v4, unmodified since G2-v4E",
+    "path_ranking": "g2_paths frozen lexicographic tie-break (tier, hop_count, -retrieval_score, record_ids, path_id), unmodified",
+    "selector": "H0=typed_path->S2 (unchanged), H2=G2 graph->path-coherent composer (S4 contract), same as qualification's ladder",
+    "binding_assertion": "prompt consumed by HRM must be constructed from the exact ordered composed packet -- reuses _assert_prompt_binding(pre_hrm, hrm) verbatim from run_gate_c4.py; fail-closed, any mismatch is a hard run failure, not a warning",
+    "no_changes": "no selector redesign, no new path policy, no bridge acquisition changes, no threshold tuning, no alias/grammar mining performed on or informed by confirmation-2 data"
+  },
+
+  "HASH_CHAIN_REQUIRED_IN_EVERY_RECEIPT": [
+    "candidate_pool_hash", "graph_hash", "path_set_hash", "working_set_hash",
+    "composed_packet_hash", "membership_hash", "order_hash", "prompt_hash",
+    "generation_hash", "execution_identity_sha256 (covers source_commit, model_revision, all config hashes)"
+  ],
+
+  "DATA_LINEAGE": {
+    "suite": "data/hrm/g2_confirmation_2/",
+    "suite_manifest": "data/hrm/g2_confirmation_2/SUITE_MANIFEST.json",
+    "checksum_file": "data/hrm/g2_confirmation_2/CONFIRMATION_2.sha256",
+    "builder": "scripts/build_g2_confirmation2_suite.py",
+    "scales": {"confirm2_700": {"target": 700, "seed": 9301}, "confirm2_1000": {"target": 1000, "seed": 9302}, "confirm2_1500": {"target": 1500, "seed": 9303}, "confirm2_2200": {"target": 2200, "seed": 9304}, "confirm2_3000": {"target": 3000, "seed": 9305}},
+    "filler_seed": 9298,
+    "tasks_per_family": 15,
+    "families": 10,
+    "total_tasks": 750,
+    "distinct_lineage_from_confirmation_1": "data/hrm/controlled_gate_a_v4/confirmation/ (consumed, different mechanism, different generator seed range 9101-9104)",
+    "same_style_as": "data/hrm/b3_calibration_v1/ (the corpus this entire G2/S3/S4/HRM-qualification sprint was developed and calibrated on), but zero content or generator-seed overlap with it",
+    "verified_zero_overlap": {
+      "against": ["data/hrm/controlled_gate_a_v4/{development,qualification,ood,confirmation}", "data/hrm/b3_calibration_v1/{cal_700,cal_1000,cal_1500,cal_2200,cal_3000}"],
+      "question_level_overlap": 0,
+      "evidence_content_level_overlap": 0,
+      "verification_method": "independent re-derivation outside the builder script: rebuilt the merged consumed-content ledger from scratch, normalized-question and normalized-evidence-content set intersection against all 750 confirmation-2 tasks / 8400 evidence records, all hash-chain files re-hashed and compared against CONFIRMATION_2.sha256"
+    },
+    "untouched_guarantee": "generated and frozen before any scoring; no architecture decisions were made from it; no threshold tuning against it; no alias or grammar mining against it; no failure inspection has occurred (or will occur) before the primary verdict is frozen"
+  },
+
+  "FROZEN_PROMOTION_MARGIN": {
+    "material_point_margin": 0.03,
+    "lcb_must_exceed": 0.0,
+    "lcb_method": "grouped_lcb (bootstrap, resampled by GROUP/family, not by task) -- reused verbatim from scripts/diagnose_c5_confirmation_stopgate.py, same as qualification",
+    "promoted_iff": "delta_HRM_graph_value >= 0.03 AND lcb_2p5_grouped_by_family > 0.0",
+    "copied_from": "configs/gate_hrm_qualification_v1.json HRM_QUALIFICATION_RESULT.PRIMARY_RESULT.frozen_promotion_margin, byte-for-byte identical values"
+  },
+
+  "SAFETY_GATES_FROZEN": {
+    "no_family_regime_subgroup_regression": "no family or entity_regime stratum may regress worse than -0.10 Q vs H0",
+    "no_pathological_latency_blowup": "H2 mean latency/tokens must not exceed 2x H0's",
+    "copied_from": "configs/gate_hrm_qualification_v1.json SAFETY_GATES_FROZEN, unchanged"
+  },
+
+  "RUN_VALID_PRECONDITIONS": [
+    "zero task/evidence content overlap with any consumed split (verified above, before run)",
+    "no arm crashed",
+    "full hash-chain present and internally consistent in every receipt",
+    "binding assertion held for every task/arm (no prompt/packet mismatch)",
+    "entity_extractor_config_hash in every receipt equals 1c156a7ed8a487bd",
+    "source commit for the run equals b5798f13cbbf9a29be91ebe9d3b0f8d3e0a1f8f0 (or a zero-diff fast-forward of it)"
+  ],
+
+  "PROCESSING_ORDER_AFTER_RUN": [
+    "1. RUN_VALID check (preconditions above)",
+    "2. primary gate: delta_HRM_graph_value (H2-H0) >= 0.03",
+    "3. bootstrap LCB: grouped_lcb > 0.0",
+    "4. subgroup safety: worst family/regime stratum >= -0.10 vs H0",
+    "5. freeze scientific verdict (PASS/NEGATIVE) -- BEFORE any diagnostic/failure inspection",
+    "6. only then, diagnostic inspection is permitted"
+  ],
+
+  "VERDICT_NAMING": {
+    "if_PASS": "status changes from PROVISIONAL/DEVELOPMENT-PROMOTED to CONFIRMED_GRAPH_PLUS_PATH_COMPOSITION, bounded explicitly to this benchmark/protocol (grammar_v4 -> C2 retrieval -> G2 runtime graph -> path-coherent composition -> HRM-Text-1B on the b3-calibration-style synthetic multi-hop benchmark family). Not a general memory-solved claim.",
+    "if_NEGATIVE": "do NOT reopen development immediately. Classify the failure mode first (RUN_VALID failure vs margin-not-met vs LCB-not-met vs subgroup-safety failure vs latency blowup), exactly as was done for the original confirmation_1 negative result (CONFIRMATION_1_NEGATIVE_RESULT.md), before any further action."
+  },
+
+  "frozen_utc": "2026-08-10T06:15:00Z"
+}

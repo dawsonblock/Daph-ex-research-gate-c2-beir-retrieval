@@ -1,0 +1,241 @@
+{
+  "artifact": "BACKGROUND_VERIFICATION_V2A_ADVERSARIAL_REGRESSIONS",
+  "branch": "background-verification-v2a",
+  "cases": [
+    {
+      "case": "tamper_canonical_log",
+      "detail": "canonical event log hash differs from the committed manifest; refusing to replay unauthenticated history",
+      "observed": "IntegrityError",
+      "passed": true
+    },
+    {
+      "case": "tamper_record_content_retain_id_resealed_manifest",
+      "detail": "INGEST record_id does not authenticate its content: expected 'vmw-0eb699b9e3ef71701a83', got 'vmw-bcf7a0514f8044d9556b'",
+      "observed": "IntegrityError",
+      "passed": true
+    },
+    {
+      "case": "unknown_event_type",
+      "detail": "unknown canonical event type 'BOGUS'",
+      "observed": "IntegrityError",
+      "passed": true
+    },
+    {
+      "case": "retry_after_committed_verification",
+      "event_count": 1,
+      "event_id": "vfy-6f76f6d6699b0e1c1e70",
+      "passed": true
+    },
+    {
+      "case": "same_source_repeated_twice",
+      "evidence_ids": [],
+      "observed_result": "INCONCLUSIVE",
+      "passed": true
+    },
+    {
+      "case": "same_upstream_through_two_mirrors",
+      "independent_lineage_count": 1,
+      "lineage_id": "lin-one-upstream",
+      "mirror_evidence_ids": [
+        "evd-24ac0f742b132f2fd2a7",
+        "evd-70a33a3cb51b19dc9502"
+      ],
+      "passed": true
+    },
+    {
+      "case": "cross_claim_supersession_attempt",
+      "detail": "supersedes must target the same canonical entity and relation",
+      "observed": "ValueError",
+      "passed": true,
+      "prior_state_after_attempt": "ACTIVE"
+    },
+    {
+      "after": "UNVERIFIED",
+      "before": "SUPPORTED",
+      "case": "withdraw_all_supporting_evidence",
+      "historical_event_count": 1,
+      "passed": true
+    },
+    {
+      "case": "mid_log_corruption",
+      "detail": "Expecting value: line 2 column 1 (char 10)",
+      "observed": "JSONDecodeError",
+      "passed": true
+    },
+    {
+      "case": "torn_final_append",
+      "passed": true,
+      "state_hash_equal": true,
+      "truncated_tail": true
+    }
+  ],
+  "completed_at": "2026-08-12T20:32:56.535224+00:00",
+  "elapsed_s": 0.04266450006980449,
+  "mechanism_status": "REGRESSION_EVIDENCE_RECORDED",
+  "qualification_identity": {
+    "component_hashes": {
+      "c4_h100_lock": {
+        "path": "configs/c4_requirements.lock",
+        "sha256": "296265d740855d8156af5f471a93d32453351d8c6615e18de112b897a8765ec4"
+      },
+      "certified_memory_v1": {
+        "path": "configs/certified_memory_v1.json",
+        "sha256": "8b714fac36f0c044ff29d064bfd6dc48354d9c80d4e465c2407faaaa534bbc18"
+      },
+      "claim_store": {
+        "path": "hrm_adaptive_memory/memory_write/claim_store.py",
+        "sha256": "d7a2077935601236e63942ede22b11fc2babab12f004c91e6db0933b2563dd10"
+      },
+      "external_evidence_runtime": {
+        "path": "hrm_adaptive_memory/external_verification/core.py",
+        "sha256": "c7f64e4f3436b83dda79050deaffe10f0c0ba1a4557f742967e97106bb4d9f6b"
+      },
+      "protocol": {
+        "path": "configs/background_verification_v2a_design.json",
+        "sha256": "ff824267d2f7dbefdcdb44afbdb9e6518bcd2f4e700fc46aae3a7a49ddd9f88a"
+      },
+      "qualification_identity_runtime": {
+        "path": "hrm_adaptive_memory/external_verification/qualification.py",
+        "sha256": "a31870ba4269cc8e765662c1ef9acc62823f5fb29301a3eb84a6ae5ded580148"
+      },
+      "verification_event": {
+        "path": "hrm_adaptive_memory/memory_write/verification.py",
+        "sha256": "b32cdcd78bdabec9a03d19cb6162d2f8c31fbcf41d26900732fa1948838597f4"
+      }
+    },
+    "dependency_environment": {
+      "distributions": {
+        "accelerate": {
+          "metadata_hashes": {
+            "METADATA": "513a92b6951d259a4db9cb17dc41618e9525302d950bb2eecd6885df48e4224f",
+            "RECORD": "5d05bfa4633fc49accbd9f3a35a9b42693a06b96a60af036984e365dfa8c427d",
+            "WHEEL": "95353a07a7887d8a224094d935cf9fc9a47a0692fa7a14f3537c466319f69fc9"
+          },
+          "version": "1.13.0"
+        },
+        "huggingface-hub": {
+          "metadata_hashes": {
+            "METADATA": "bffb30169387448de414622252d6cca44bb4a901f59ef44fdd845f88da69add8",
+            "RECORD": "3eb1a9affe518c5187687625ecfb651ff23c713fefc1b1a583e069ca5dfb4e72",
+            "WHEEL": "2b6eb4118ce7cd7b09601406aa623c553c4476265836f0d9c16f5c061f7efcc0"
+          },
+          "version": "1.26.1"
+        },
+        "lightning-sdk": {
+          "metadata_hashes": {
+            "METADATA": "4c67aa13f9054e05c0d9b641d0b19feaaee08455b6421fc53667527c517e1f97",
+            "RECORD": "c870e5f1335df1fd0877d2ccc29bd1be9fdc689b62ce41b5474f94c4e4beb910",
+            "WHEEL": "69e6228a0d35958183cc1812f07c565ce837b95eb51bd8a33acba9fa4f68d6c9"
+          },
+          "version": "2026.6.30"
+        },
+        "litlogger": {
+          "metadata_hashes": {
+            "METADATA": "4d3e20cf0333d60d0077ccbae7515ab862efbbf106d421d0fdfa0a48942f1797",
+            "RECORD": "5a891b86ef673cbfdf9da7376c0a3f6ddd12d3127fe23ffcc27531d6cc9adaec",
+            "WHEEL": "04d44c0f2ccb92472696fd09f29a434249365440f7dd27ac243ca7afd103d607"
+          },
+          "version": "2026.6.25"
+        },
+        "numpy": {
+          "metadata_hashes": {
+            "METADATA": "b082c52ccbe3b880bae177c35171b52ed6c947f3ad71e3762f2723f60a411de0",
+            "RECORD": "6c33959baa1504e7b94c7a076e6e8da88c4ff1a353dd0ed2ec9c58888d86c785",
+            "WHEEL": "26726246f91715a154e07973ca8a82029674ee3cba86914a77f2e47c1a566739"
+          },
+          "version": "2.4.6"
+        },
+        "pip": {
+          "metadata_hashes": {
+            "METADATA": "17832de47b5dc23e46253ba16462520036f28d9a27d5c30157784952ca4e69b2",
+            "RECORD": "9a6a5add05e4cab445f2c4890980e9341ca902b94c25267856918dd5c4a4fdd4",
+            "WHEEL": "1b68144734c4b66791f27add5d425f3620775585718a03d0f9b110ba3a4d88db"
+          },
+          "version": "26.1.2"
+        },
+        "psutil": {
+          "metadata_hashes": {
+            "METADATA": "525f8ba78523cf7bc3759d62a105e7c57fd679ea702402b9449fb0746aa0217f",
+            "RECORD": "f77fa9663ea8dacb667c7f5f57c001d7eba8e974d98d9e88ee25a66e44e96c5a",
+            "WHEEL": "51e27ab3fc49cf96c9613fae02157c7539c5fb5cff359293443ce280e85e4bf0"
+          },
+          "version": "7.2.2"
+        },
+        "pytest": {
+          "metadata_hashes": {
+            "METADATA": "93d6c5ef0a9714d53716243035037b77fa7d5f970596c48433887cf57f7f675a",
+            "RECORD": "aa391c1b81bb93463a94a15564c2d8931db9faa8d3c900c374cd10816e9f8640",
+            "WHEEL": "ff309ddcdd65ebd02bc724dbf2bcc4a0ff53a5b61792a44548d383e4ebb19d3b"
+          },
+          "version": "8.4.2"
+        },
+        "setuptools": {
+          "metadata_hashes": {
+            "METADATA": "75683f40e1121ebccbbca4d679ae2dbf8a0be0ba91531df285b28abe927a43f8",
+            "RECORD": "9edda38abf9e41c44b355161b36969b4363bf9477a33ed160f9ac2c0cf8cae9d",
+            "WHEEL": "69e6228a0d35958183cc1812f07c565ce837b95eb51bd8a33acba9fa4f68d6c9"
+          },
+          "version": "82.0.1"
+        },
+        "torch": {
+          "metadata_hashes": {
+            "METADATA": "4b0f1217de69037355b4e582905cdb303a56a488ac6fd172f148d88fed634f54",
+            "RECORD": "a42568ca6df57499d0c327b9e99d323c0ae7673b5f1bfbd52fa93454eadfad70",
+            "WHEEL": "29d9da686c1260684d7454c4edac4e2dc5a14da0b7ab0fbf1767f6b5a0022e41"
+          },
+          "version": "2.10.0"
+        },
+        "transformers": {
+          "metadata_hashes": {
+            "METADATA": "be47444bbcf63c6813decf9509d4076972f261699bbddd8c0fdf53fb73b09307",
+            "RECORD": "f9f2a099273b75eaa4f5a9f38484407122003e22e781d01cfd4cc8319df80ddd",
+            "WHEEL": "2b6eb4118ce7cd7b09601406aa623c553c4476265836f0d9c16f5c061f7efcc0"
+          },
+          "version": "5.14.1"
+        },
+        "wheel": {
+          "metadata_hashes": {
+            "METADATA": "d6e8cbbfa21513ed46be4027e61784b131b12c5cafacbde6913ce5ad01767643",
+            "RECORD": "aeb6219c659b20890d81a2a16979798ee04c2c3abd5d99bb16166ff8ae5777ef",
+            "WHEEL": "1b68144734c4b66791f27add5d425f3620775585718a03d0f9b110ba3a4d88db"
+          },
+          "version": "0.47.0"
+        }
+      },
+      "interpreter_sha256": "efe0b62c1dcb8cd0e1e0e4da544d1b34be216727d706f55bd9c55f2f0cefe606",
+      "os": {
+        "libc": [
+          "",
+          ""
+        ],
+        "machine": "arm64",
+        "platform_tag": "macosx-26.2-arm64",
+        "release": "25.2.0",
+        "system": "Darwin",
+        "version": "Darwin Kernel Version 25.2.0: Tue Nov 18 21:07:05 PST 2025; root:xnu-12377.61.12~1/RELEASE_ARM64_T6020"
+      },
+      "python_abi": "cpython-312-darwin",
+      "python_build": [
+        "main",
+        "Apr 26 2026 15:36:24"
+      ],
+      "python_cache_tag": "cpython-312",
+      "python_compiler": "Clang 21.0.0 (clang-2100.0.123.102)",
+      "python_implementation": "CPython",
+      "python_version": "3.12.0",
+      "sha256": "6e01a5b84dd1b314fb9a432b990242f3796b08c1f2ada51a631444d6048ef389"
+    },
+    "identity_version": "BACKGROUND_VERIFICATION_V2A_QUALIFICATION_IDENTITY_V1",
+    "qualification_lock": {
+      "path": "configs/v2a_qualification_requirements.lock",
+      "sha256": "6259f2c0a050302a80ddec71a7c9291cdd1fd65c2a1c7c7a7954895e9c508a4b"
+    },
+    "source_commit": "77f348325352c0cd76d08514a60196fba61e4749",
+    "source_tree_hash": "50e4bf0b2b17b06447c1c1d0dc72207834648d50",
+    "test_corpus_sha256": "3e0f8e56391be04ceff0ab44d5cc7f07ed6370080e9f5fce37688b48c0527491"
+  },
+  "run_valid": true,
+  "scientific_verdict": "PASS",
+  "source_commit": "77f348325352c0cd76d08514a60196fba61e4749",
+  "source_tree_hash": "50e4bf0b2b17b06447c1c1d0dc72207834648d50"
+}

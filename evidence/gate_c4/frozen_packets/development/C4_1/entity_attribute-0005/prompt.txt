@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the assigned category for MSA-5?
+[EVIDENCE]
+[E1]
+Abbreviation table: MSA-5 = Marlin sensor array.
+[E2]
+- updated Raven control module: assigned category now {"category": "quarantined"}
+[E3]
+[assigned category] Curlew intake manifold -> 8563
+[E4]
+{"subject": "Marlin pressure assembly", "assigned category": "THETA-OLIVE"}
+[E5]
+The assigned category registry records that Quail control module is assigned THETA-OLIVE.
+[E6]
+Changelog: assigned category for Jacana pressure assembly set to suspended.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

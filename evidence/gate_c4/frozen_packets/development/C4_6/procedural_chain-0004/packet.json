@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "1443d61b2c1198194669432c5d8a7fb5764c415b53c16393da7066201dba8ebc",
+  "canonical_subject": "Bittern relay unit",
+  "ordered_selected_ids": [
+    "procedural_chain-0004/link",
+    "procedural_chain-0004/value"
+  ],
+  "ordered_text_sha256": [
+    "aabfaec26d06b1c5eeabaae14ce22cf0646537e3c2a4718dfe17abaacbb49a79",
+    "94421db368d5672327c3aa0a9b7a703776eaa8443894159b6f55950bf422b555"
+  ],
+  "query_hash": "8b5a6694df54fb59bb06d8487953649287ac3470d1f1d9ac24a2671a13bb7786",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "procedural_chain-0004"
+}

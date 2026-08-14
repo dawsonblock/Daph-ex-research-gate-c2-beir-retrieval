@@ -1,0 +1,9 @@
+[OBJECTIVE]
+For HRU-2, which service region is recorded?
+[EVIDENCE]
+[E1]
+[change] Auk relay unit :: service region := GAMMA-BLUE
+[E2]
+In shorthand, Heron relay unit is written HRU-2.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

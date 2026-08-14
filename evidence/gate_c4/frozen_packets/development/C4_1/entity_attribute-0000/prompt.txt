@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which assigned category applies to Nimbus sensor array?
+[EVIDENCE]
+[E1]
+During setup, Nimbus sensor array was paired with 1424 for assigned category.
+[E2]
+Changelog: assigned category for Auk sensor array set to {"grade": "quarantined"}.
+[E3]
+Note: the assigned category for Marlin sensor array resolves to ZETA-CORAL.
+[E4]
+Per the assigned category register, {"state": "suspended"} is allocated to Raven sensor array.
+[E5]
+- updated Raven control module: assigned category now {"category": "quarantined"}
+[E6]
+[assigned category] Curlew intake manifold -> 8563
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

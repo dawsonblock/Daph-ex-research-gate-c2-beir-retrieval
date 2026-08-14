@@ -1,0 +1,19 @@
+[OBJECTIVE]
+For Teal drive cluster, which assigned category is recorded?
+[EVIDENCE]
+[E1]
+Revision applied — Teal drive cluster assigned category changed to retired.
+[E2]
+- updated Teal pressure assembly: assigned unit now Raven drive cluster
+[E3]
+{"subject": "Teal drive cluster", "ownership tier": "retired"}
+[E4]
+- updated Ibis control module: registered asset now Teal drive cluster
+[E5]
+billing multiplier:
+  subject: Finch drive cluster
+  value: {"category": "provisional"}
+[E6]
+For Teal drive cluster, proposed ownership tier requires suspended. This proposal was rejected.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

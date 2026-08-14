@@ -1,0 +1,18 @@
+{
+  "schema": "DAPH_V2B_I3_2_BASELINE_V1",
+  "milestone": "V2B-I3.2 Sequential Information-State Oracle",
+  "i3_1_baseline_source_commit": "f30036a5a9890bb58d729d4247f5dbc9db52502f",
+  "i3_1_baseline_source_tree": "00a96d19a2ebecee31b5b85cff08097816ed87f2",
+  "i3_1_baseline_tag": "v2b-i3-1-development-baseline",
+  "i3_1_artifacts": {
+    "benchmark_manifest_sha256": "716171588892bf9264f491904e71fb6295ab26105808032cce68558839fb6393",
+    "controller_packets_sha256": "ae1067a6d7323c04fe26dc918c7f750a1a8cc6a5ac8dc05ca3d0a6c734dc1ba6",
+    "policy_sha256": "82d8572a51321c3237925b4f32ee765d8db597a7055e49af633cb82b9b4f43d7",
+    "utility_sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07",
+    "observation_masks_sha256": "4b4ea5b125ffceefb92458d1c0cdfd926833efb42c08cbdc35ff84351a404103",
+    "latent_transition_table_sha256": "6464ed87aa1c1dcd26d5da98fa4f20fafa56a9b070f957a408975651e75e9e14",
+    "opening_observable_oracle_sha256": "9e683c3d23eb2c02cdbd6cc0e250a3facd1eb22084c9fa73d8ef2fe61f7204fe",
+    "test_corpus_sha256": "f7e3e7a9683cce8dc904502a0ece5de9b9783699b60a3a66ecf21a68408d5d7e"
+  },
+  "status": "RECORDED_DEVELOPMENT_BASELINE_NOT_QUALIFIED"
+}

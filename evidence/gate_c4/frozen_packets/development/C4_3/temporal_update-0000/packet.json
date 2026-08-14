@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "9ae08c3a6a51ad14abf4b8e7a431f3e4dc14254655f0ea9db676cc4cd9eaa953",
+  "canonical_subject": "Egret drive cluster",
+  "ordered_selected_ids": [
+    "temporal_chain-0007/current",
+    "temporal_update-0000/superseded",
+    "temporal_chain-0007/superseded",
+    "temporal_update-0000/current",
+    "temporal_chain-0005/current",
+    "dependency_chain-0006/link"
+  ],
+  "ordered_text_sha256": [
+    "7029489700ffcfff65741034aee9f71c6e7caa77d86b9969c8fdd671479b1e39",
+    "30615f1ffa2b6629c816796528a3b6f3308922b37d1e46726b1029242fdbb64b",
+    "a8a7c27909792241712268779d6a1c9900573385378483f0604e54a83a9d3227",
+    "341aff1164f3ad949044ceaaf22786719607fc8f4ebb017a70aba94909102653",
+    "dea012221ad4038d9dfb464efd7e178514e194936bca94a3d090409733f2f7e2",
+    "8edfdc90abcbb2c03d89f5ef0ae3bcd8b891644eacf9d1b9d28519e19dd30bcf"
+  ],
+  "query_hash": "975314fa4698ecebb997186ee1c75477875d2ae149f75903932123b7e9e950fc",
+  "selector_policy_id": "s0",
+  "task_id": "temporal_update-0000"
+}

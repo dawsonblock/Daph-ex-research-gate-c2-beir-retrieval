@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "66b51af4b801ecbc788c16316003fed76a12a80d61429f641e6b9d6b056073b5",
+  "canonical_subject": "",
+  "ordered_selected_ids": [
+    "temporal_update-0004/current",
+    "temporal_update-0004/superseded",
+    "dependency_chain-0001/value",
+    "temporal_chain-0005/current",
+    "temporal_chain-0007/current",
+    "temporal_chain-0006/superseded"
+  ],
+  "ordered_text_sha256": [
+    "90d254f3d45a865ccf4284fc33874c42162c06dc824297e5da4836661ffe4d3d",
+    "dd8cd05da904267268d63849e88f9bf48366995727a834cd0834ab8a9627649c",
+    "b856767ce1f1b095442b51afbe649adb9573561424e8ae2252d06fe2ce78199a",
+    "dea012221ad4038d9dfb464efd7e178514e194936bca94a3d090409733f2f7e2",
+    "7029489700ffcfff65741034aee9f71c6e7caa77d86b9969c8fdd671479b1e39",
+    "888364346adf69386878e4203ef76051f3b0e7149888bc27fdd3a4e7cd3b2642"
+  ],
+  "query_hash": "2d87d0f9e8732c7a24c9b279aa14acbc8d2797cce21512d58b1bf86ddfd70a63",
+  "selector_policy_id": "s0",
+  "task_id": "temporal_update-0004"
+}

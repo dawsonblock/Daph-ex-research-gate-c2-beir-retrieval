@@ -1,0 +1,11 @@
+[OBJECTIVE]
+For PCM-4, which parameter grade is recorded?
+[EVIDENCE]
+[E1]
+In shorthand, Pelican control module is written PCM-4.
+[E2]
+parameter grade:
+  subject: Sparrow control module
+  value: GAMMA-BLUE
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

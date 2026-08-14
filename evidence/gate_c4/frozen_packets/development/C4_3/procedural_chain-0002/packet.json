@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "aa70d86d473304cb4b4009caf8719caac99f0382aca2ebfc3081c88ba1bc91f3",
+  "canonical_subject": "Finch relay unit",
+  "ordered_selected_ids": [
+    "dependency_chain-0008/link",
+    "procedural_chain-0010/value",
+    "procedural_chain-0008/value",
+    "distractor_heavy-0004/near-near_entity",
+    "procedural_chain-0001/value",
+    "dependency_chain-0008/dead-end-1"
+  ],
+  "ordered_text_sha256": [
+    "f70a19ffe7c9525b7ae86cf43036669efa1e7c280b83cb84cf5ee0c31bb70096",
+    "8831ad9883465848411e3e569f8d0c8f1225f5f2984b6a5693ab9a34b005a5ad",
+    "1e5e66d1a82754e5c6b6a5adcca2204654282b45094901cc712bf8fb6b7b2e72",
+    "d82c30a93673d70175f13550a063e60531de9257501291809866da45696fcd4a",
+    "ef225590760f45bae6767bb0c8f8f1d8428314ec2c722a25c6dbbf7efffb00bc",
+    "bb9064041b8539eec8ba458dc3986fe05b9c2540e66cb2cb5a053306d2040ca6"
+  ],
+  "query_hash": "3420a76f02cda67e36e58c5035998f1f0dc0a4f10f7fd6ae3c9ef26f61da3630",
+  "selector_policy_id": "s0",
+  "task_id": "procedural_chain-0002"
+}

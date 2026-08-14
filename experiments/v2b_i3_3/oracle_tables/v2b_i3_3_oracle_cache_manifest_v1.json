@@ -1,0 +1,134 @@
+{
+  "benchmark_closure_artifacts": {
+    "balance_report": "experiments/v2b_i3_3/reports/v2b_i3_3_balance_report_v1.json",
+    "benchmark_manifest": "experiments/v2b_i3_3/manifests/v2b_i3_3_benchmark_manifest_v1.json",
+    "controller_packets": "experiments/v2b_i3_3/controller_packets/v2b_i3_3_controller_packets_v1.json",
+    "observation_masks": "configs/v2b_i3_observation_masks_v1.json",
+    "policy": "configs/v2b_i3_policy_v1.json",
+    "private_environment": "experiments/v2b_i3_3/private/v2b_i3_3_tasks_v1.json",
+    "protocol": "configs/v2b_i3_2_2_protocol_v1.json",
+    "resource_profiles": "experiments/v2b/tasks/v2b_i3_metareasoning_benchmark_v1.json",
+    "split_definitions": "experiments/v2b_i3_3/splits/v2b_i3_3_splits_v1.json",
+    "structural_diversity_report": "experiments/v2b_i3_3/reports/v2b_i3_3_1_structural_diversity_report_v1.json",
+    "surface_templates": "experiments/v2b_i3_3/surface_templates/v2b_i3_3_surface_templates_v1.json",
+    "task_families": "experiments/v2b_i3_3/task_families/v2b_i3_3_families_v1.json",
+    "utility": "configs/v2b_i3_1_utility_v1.json"
+  },
+  "benchmark_closure_sha256": "9f4255d61dbbac14dd768cb61ee3381ef493ccb7b88b5b365a027dbb1c2eca5e",
+  "benchmark_manifest_sha256": "5e28c409411842033334a66d44c2bda39596eb4900035785063bcf0b00c58b16",
+  "claim_boundary": "Precomputed deterministic oracle ground truth only; no executive result.",
+  "difficulty_report": {
+    "path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_difficulty_report_v1.json",
+    "sha256": "1987290bb63d813218014bdd36619d9f02f5dec74917c35a14d3c0024c11ba92"
+  },
+  "latent_optimal_action_counts_with_ties": {
+    "ANSWER": 98,
+    "DEFER": 134,
+    "REASON_MORE": 86,
+    "RETRIEVE": 123,
+    "SEARCH_MORE": 118,
+    "STOP": 177,
+    "VERIFY": 109
+  },
+  "latent_oracles": {
+    "path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_latent_oracles_v1.jsonl.gz",
+    "reachable_states": 227248,
+    "reachable_transitions": 880718,
+    "sha256": "9b0dcf69bd5692b7190d5e12ac7f8a3ba074cf82307038db21d3371ac08fd05d",
+    "table_count": 750,
+    "table_set_sha256": "5814c34f3f72c48ea4b81b18844d03ffa059c282e2d1e18be638670c4191ee9a"
+  },
+  "limits": {
+    "max_information_states_per_condition": 500000,
+    "max_information_transitions_per_condition": 3000000,
+    "max_latent_states_per_task": 20000,
+    "max_latent_transitions_per_task": 120000,
+    "max_members_per_belief": 32
+  },
+  "oracle_balance_report": {
+    "path": "experiments/v2b_i3_3/reports/v2b_i3_3_1_oracle_balance_report_v1.json",
+    "sha256": "42475544bd608138b743063a7cf52a66f8401fab988a97370b3bf8f809dbc955"
+  },
+  "schema": "DAPH_V2B_I3_3_ORACLE_CACHE_MANIFEST_V1",
+  "sequential_observable_oracles": {
+    "NO_CONFLICT": {
+      "class_uniform_information_gap": 2.615888728323699,
+      "information_states": 169178,
+      "information_transitions": 760704,
+      "path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_conflict_v1.jsonl.gz",
+      "set_sha256": "a2d4b58ec75caa856f9ba176a774666947eeb61879d38f82deeea95e70551871",
+      "sha256": "df69464ac1e56e09452ea8f2805718eca326a72ef13e248d7c7c9cf7a6c7bd68",
+      "table_count": 692,
+      "task_uniform_information_gap": 4.827186666666666
+    },
+    "NO_HISTORY": {
+      "class_uniform_information_gap": 2.4132571428571428,
+      "information_states": 169660,
+      "information_transitions": 762892,
+      "path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_history_v1.jsonl.gz",
+      "set_sha256": "268bc55d9eaa8a44c0d5ca192803a4b180ecc419e14aa8a380528c96167cbe12",
+      "sha256": "cbe7c68e5ece5f08cb1f181b00549fe1405fdbf4f94d3d22b499dabe61f2e7dc",
+      "table_count": 700,
+      "task_uniform_information_gap": 4.504746666666667
+    },
+    "NO_PROVENANCE": {
+      "class_uniform_information_gap": 2.306381766381766,
+      "information_states": 169224,
+      "information_transitions": 761228,
+      "path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_provenance_v1.jsonl.gz",
+      "set_sha256": "4445ca2f095b3fc746cda640b387279f075d9fdeacd9cc4b459b98d0e5534235",
+      "sha256": "310c3b07c41cd4fdb5a82c7a066e80c62a59d2eb715ec631679c60aa70b996d5",
+      "table_count": 702,
+      "task_uniform_information_gap": 4.317546666666667
+    },
+    "NO_TEMPORAL": {
+      "class_uniform_information_gap": 2.323635057471264,
+      "information_states": 168789,
+      "information_transitions": 759378,
+      "path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_temporal_v1.jsonl.gz",
+      "set_sha256": "3b0a777fc415e9e79a3b39d8e7658be54c6367e211ef1424b25225df5490a45e",
+      "sha256": "e3d48e1d5ae634802267e8a771eb753f17ed4ad39d56541b59448acf9dc8066b",
+      "table_count": 696,
+      "task_uniform_information_gap": 4.312666666666666
+    },
+    "NO_VERIFICATION": {
+      "class_uniform_information_gap": 2.321802575107296,
+      "information_states": 169212,
+      "information_transitions": 761185,
+      "path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_verification_v1.jsonl.gz",
+      "set_sha256": "3241abe9d3398295e5c58383d9b7b1e189ebdcea6dda6016fcdf852c8c47ef17",
+      "sha256": "0c54cfbea6f00186764410d48083b6b4d88914ef3da6059bc75443e8172138e2",
+      "table_count": 699,
+      "task_uniform_information_gap": 4.327839999999999
+    },
+    "STATE_AWARE_CONTROLLER": {
+      "class_uniform_information_gap": 2.2966051136363634,
+      "information_states": 169255,
+      "information_transitions": 761416,
+      "path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_state_aware_controller_v1.jsonl.gz",
+      "set_sha256": "2e6bba2d2c63721e766fa25c537bda5ea4e90a583c943a3655c7cc1d76f35bed",
+      "sha256": "d64285431698eb78bc5eae097d7f5c327cf5bfd3032e7d62df8e30104c4e516a",
+      "table_count": 704,
+      "task_uniform_information_gap": 4.311493333333333
+    },
+    "STATE_BLIND_CONTROLLER": {
+      "class_uniform_information_gap": 6.832626811594202,
+      "information_states": 157168,
+      "information_transitions": 701735,
+      "path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_state_blind_controller_v1.jsonl.gz",
+      "set_sha256": "418a4b7c2e7333365857fd51f028c80973e1985819a98a038645ae073f064ff6",
+      "sha256": "411f29173c2f54cd3301dd2ea8a2c7a5af7d721eb41bc8aa2bb840e58b23d79d",
+      "table_count": 552,
+      "task_uniform_information_gap": 10.057626666666666
+    }
+  },
+  "status": "FROZEN_BENCHMARK_NOT_A_SCIENTIFIC_RESULT",
+  "topology_allocation": {
+    "path": "experiments/v2b_i3_3/splits/topology_allocation_v1.json",
+    "sha256": "72a7c8435bcb7ddadf7cb2f3f9ef19e4e6d3d3d0c66fe245800b5b0c48953524"
+  },
+  "topology_diversity_report": {
+    "path": "experiments/v2b_i3_3/reports/v2b_i3_3_2_topology_diversity_report_v1.json",
+    "sha256": "b02bfbbd2715d19165d3df023b25e8bd1517ed26f4d8894ef408291c1488469c"
+  }
+}

@@ -1,0 +1,368 @@
+{
+  "no_hrm": true,
+  "per_scale": {
+    "cal_1000": {
+      "arms": {
+        "S0_current": {
+          "bridge_retention": 0.2394,
+          "complete_path_retention": 0.2,
+          "mean_redundancy": 0.613,
+          "mean_role_coverage": 2.367,
+          "selected_ces": 0.3933,
+          "tasks": 150,
+          "terminal_retention": 0.5917
+        },
+        "S1_diversity": {
+          "bridge_retention": 0.2394,
+          "complete_path_retention": 0.2167,
+          "mean_redundancy": 0.0,
+          "mean_role_coverage": 2.267,
+          "selected_ces": 0.3533,
+          "tasks": 150,
+          "terminal_retention": 0.5417
+        },
+        "S2_role_reserved": {
+          "bridge_retention": 0.2254,
+          "complete_path_retention": 0.2,
+          "mean_redundancy": 0.6,
+          "mean_role_coverage": 2.447,
+          "selected_ces": 0.4333,
+          "tasks": 150,
+          "terminal_retention": 0.6417
+        },
+        "S3_path_coherent": {
+          "bridge_retention": 0.507,
+          "complete_path_retention": 0.5333,
+          "mean_redundancy": 0.68,
+          "mean_role_coverage": 2.413,
+          "selected_ces": 0.5733,
+          "tasks": 150,
+          "terminal_retention": 0.6917
+        },
+        "S4_oracle": {
+          "bridge_retention": 0.9718,
+          "complete_path_retention": 1.0,
+          "mean_redundancy": 0.627,
+          "mean_role_coverage": 2.427,
+          "selected_ces": 0.8,
+          "tasks": 150,
+          "terminal_retention": 0.9667
+        }
+      },
+      "failure_attribution": {
+        "F0_SELECTED": 164,
+        "F1_DROPPED_BY_CAPACITY": 8,
+        "F2_REDUNDANCY_COLLISION": 10,
+        "F3_WRONG_PATH_PREFERRED": 63,
+        "F5_ROLE_IMBALANCE": 13,
+        "F6_TIE_OR_ORDER": 5
+      },
+      "mean_working_set": 10.9
+    },
+    "cal_1500": {
+      "arms": {
+        "S0_current": {
+          "bridge_retention": 0.0714,
+          "complete_path_retention": 0.1667,
+          "mean_redundancy": 0.367,
+          "mean_role_coverage": 2.273,
+          "selected_ces": 0.2667,
+          "tasks": 150,
+          "terminal_retention": 0.4333
+        },
+        "S1_diversity": {
+          "bridge_retention": 0.0714,
+          "complete_path_retention": 0.2167,
+          "mean_redundancy": 0.0,
+          "mean_role_coverage": 2.207,
+          "selected_ces": 0.26,
+          "tasks": 150,
+          "terminal_retention": 0.4167
+        },
+        "S2_role_reserved": {
+          "bridge_retention": 0.0429,
+          "complete_path_retention": 0.1667,
+          "mean_redundancy": 0.353,
+          "mean_role_coverage": 2.487,
+          "selected_ces": 0.3867,
+          "tasks": 150,
+          "terminal_retention": 0.575
+        },
+        "S3_path_coherent": {
+          "bridge_retention": 0.3571,
+          "complete_path_retention": 0.5,
+          "mean_redundancy": 0.42,
+          "mean_role_coverage": 2.447,
+          "selected_ces": 0.5333,
+          "tasks": 150,
+          "terminal_retention": 0.6583
+        },
+        "S4_oracle": {
+          "bridge_retention": 0.9286,
+          "complete_path_retention": 1.0,
+          "mean_redundancy": 0.367,
+          "mean_role_coverage": 2.453,
+          "selected_ces": 0.8,
+          "tasks": 150,
+          "terminal_retention": 0.9583
+        }
+      },
+      "failure_attribution": {
+        "F0_SELECTED": 137,
+        "F1_DROPPED_BY_CAPACITY": 7,
+        "F2_REDUNDANCY_COLLISION": 6,
+        "F3_WRONG_PATH_PREFERRED": 92,
+        "F5_ROLE_IMBALANCE": 18,
+        "F6_TIE_OR_ORDER": 5
+      },
+      "mean_working_set": 15.9
+    },
+    "cal_2200": {
+      "arms": {
+        "S0_current": {
+          "bridge_retention": 0.1111,
+          "complete_path_retention": 0.1667,
+          "mean_redundancy": 0.6,
+          "mean_role_coverage": 2.247,
+          "selected_ces": 0.2133,
+          "tasks": 150,
+          "terminal_retention": 0.3814
+        },
+        "S1_diversity": {
+          "bridge_retention": 0.1111,
+          "complete_path_retention": 0.2,
+          "mean_redundancy": 0.0,
+          "mean_role_coverage": 2.187,
+          "selected_ces": 0.22,
+          "tasks": 150,
+          "terminal_retention": 0.4068
+        },
+        "S2_role_reserved": {
+          "bridge_retention": 0.0972,
+          "complete_path_retention": 0.1667,
+          "mean_redundancy": 0.533,
+          "mean_role_coverage": 2.473,
+          "selected_ces": 0.3533,
+          "tasks": 150,
+          "terminal_retention": 0.5593
+        },
+        "S3_path_coherent": {
+          "bridge_retention": 0.3333,
+          "complete_path_retention": 0.4167,
+          "mean_redundancy": 0.62,
+          "mean_role_coverage": 2.4,
+          "selected_ces": 0.42,
+          "tasks": 150,
+          "terminal_retention": 0.5254
+        },
+        "S4_oracle": {
+          "bridge_retention": 0.9444,
+          "complete_path_retention": 1.0,
+          "mean_redundancy": 0.553,
+          "mean_role_coverage": 2.453,
+          "selected_ces": 0.7867,
+          "tasks": 150,
+          "terminal_retention": 0.9576
+        }
+      },
+      "failure_attribution": {
+        "F0_SELECTED": 137,
+        "F1_DROPPED_BY_CAPACITY": 12,
+        "F2_REDUNDANCY_COLLISION": 11,
+        "F3_WRONG_PATH_PREFERRED": 70,
+        "F5_ROLE_IMBALANCE": 21,
+        "F6_TIE_OR_ORDER": 17
+      },
+      "mean_working_set": 19.3
+    },
+    "cal_3000": {
+      "arms": {
+        "S0_current": {
+          "bridge_retention": 0.0154,
+          "complete_path_retention": 0.1333,
+          "mean_redundancy": 0.373,
+          "mean_role_coverage": 2.26,
+          "selected_ces": 0.2333,
+          "tasks": 150,
+          "terminal_retention": 0.3583
+        },
+        "S1_diversity": {
+          "bridge_retention": 0.0154,
+          "complete_path_retention": 0.2,
+          "mean_redundancy": 0.0,
+          "mean_role_coverage": 2.213,
+          "selected_ces": 0.24,
+          "tasks": 150,
+          "terminal_retention": 0.3667
+        },
+        "S2_role_reserved": {
+          "bridge_retention": 0.0154,
+          "complete_path_retention": 0.1333,
+          "mean_redundancy": 0.367,
+          "mean_role_coverage": 2.547,
+          "selected_ces": 0.3667,
+          "tasks": 150,
+          "terminal_retention": 0.5333
+        },
+        "S3_path_coherent": {
+          "bridge_retention": 0.2308,
+          "complete_path_retention": 0.3833,
+          "mean_redundancy": 0.453,
+          "mean_role_coverage": 2.46,
+          "selected_ces": 0.46,
+          "tasks": 150,
+          "terminal_retention": 0.5667
+        },
+        "S4_oracle": {
+          "bridge_retention": 0.9231,
+          "complete_path_retention": 1.0,
+          "mean_redundancy": 0.42,
+          "mean_role_coverage": 2.48,
+          "selected_ces": 0.7933,
+          "tasks": 150,
+          "terminal_retention": 0.9583
+        }
+      },
+      "failure_attribution": {
+        "F0_SELECTED": 130,
+        "F1_DROPPED_BY_CAPACITY": 4,
+        "F2_REDUNDANCY_COLLISION": 10,
+        "F3_WRONG_PATH_PREFERRED": 91,
+        "F5_ROLE_IMBALANCE": 16,
+        "F6_TIE_OR_ORDER": 14
+      },
+      "mean_working_set": 26.7
+    },
+    "cal_700": {
+      "arms": {
+        "S0_current": {
+          "bridge_retention": 0.4776,
+          "complete_path_retention": 0.4167,
+          "mean_redundancy": 0.907,
+          "mean_role_coverage": 2.333,
+          "selected_ces": 0.5067,
+          "tasks": 150,
+          "terminal_retention": 0.7203
+        },
+        "S1_diversity": {
+          "bridge_retention": 0.4776,
+          "complete_path_retention": 0.4333,
+          "mean_redundancy": 0.0,
+          "mean_role_coverage": 2.24,
+          "selected_ces": 0.4667,
+          "tasks": 150,
+          "terminal_retention": 0.678
+        },
+        "S2_role_reserved": {
+          "bridge_retention": 0.4627,
+          "complete_path_retention": 0.4167,
+          "mean_redundancy": 0.88,
+          "mean_role_coverage": 2.393,
+          "selected_ces": 0.5267,
+          "tasks": 150,
+          "terminal_retention": 0.7627
+        },
+        "S3_path_coherent": {
+          "bridge_retention": 0.6866,
+          "complete_path_retention": 0.6833,
+          "mean_redundancy": 0.9,
+          "mean_role_coverage": 2.367,
+          "selected_ces": 0.6533,
+          "tasks": 150,
+          "terminal_retention": 0.8305
+        },
+        "S4_oracle": {
+          "bridge_retention": 0.9851,
+          "complete_path_retention": 1.0,
+          "mean_redundancy": 0.833,
+          "mean_role_coverage": 2.373,
+          "selected_ces": 0.7867,
+          "tasks": 150,
+          "terminal_retention": 0.9915
+        }
+      },
+      "failure_attribution": {
+        "F0_SELECTED": 193,
+        "F1_DROPPED_BY_CAPACITY": 11,
+        "F2_REDUNDANCY_COLLISION": 4,
+        "F3_WRONG_PATH_PREFERRED": 42,
+        "F5_ROLE_IMBALANCE": 9,
+        "F6_TIE_OR_ORDER": 1
+      },
+      "mean_working_set": 8.2
+    }
+  },
+  "pooled": {
+    "arms": {
+      "S0_current": {
+        "bridge_retention": 0.1826,
+        "complete_path_retention": 0.2167,
+        "mean_redundancy": 0.572,
+        "mean_role_coverage": 2.296,
+        "oracle_gap_closure": 0.0,
+        "selected_ces": 0.3227,
+        "terminal_retention": 0.4966
+      },
+      "S1_diversity": {
+        "bridge_retention": 0.1826,
+        "complete_path_retention": 0.2533,
+        "mean_redundancy": 0.0,
+        "mean_role_coverage": 2.223,
+        "oracle_gap_closure": -0.0312,
+        "selected_ces": 0.308,
+        "terminal_retention": 0.4815
+      },
+      "S2_role_reserved": {
+        "bridge_retention": 0.1681,
+        "complete_path_retention": 0.2167,
+        "mean_redundancy": 0.547,
+        "mean_role_coverage": 2.469,
+        "oracle_gap_closure": 0.1925,
+        "selected_ces": 0.4133,
+        "terminal_retention": 0.6141
+      },
+      "S3_path_coherent": {
+        "bridge_retention": 0.4232,
+        "complete_path_retention": 0.5033,
+        "mean_redundancy": 0.615,
+        "mean_role_coverage": 2.417,
+        "oracle_gap_closure": 0.4363,
+        "selected_ces": 0.528,
+        "terminal_retention": 0.6544
+      },
+      "S4_oracle": {
+        "bridge_retention": 0.9507,
+        "complete_path_retention": 1.0,
+        "mean_redundancy": 0.56,
+        "mean_role_coverage": 2.437,
+        "oracle_gap_closure": 1.0,
+        "selected_ces": 0.7933,
+        "terminal_retention": 0.9664
+      }
+    },
+    "failure_attribution": {
+      "F0_SELECTED": 761,
+      "F1_DROPPED_BY_CAPACITY": 42,
+      "F2_REDUNDANCY_COLLISION": 41,
+      "F3_WRONG_PATH_PREFERRED": 358,
+      "F5_ROLE_IMBALANCE": 77,
+      "F6_TIE_OR_ORDER": 42
+    },
+    "failure_shares": {
+      "F0_SELECTED": 0.5761,
+      "F1_DROPPED_BY_CAPACITY": 0.0318,
+      "F2_REDUNDANCY_COLLISION": 0.031,
+      "F3_WRONG_PATH_PREFERRED": 0.271,
+      "F5_ROLE_IMBALANCE": 0.0583,
+      "F6_TIE_OR_ORDER": 0.0318
+    },
+    "mean_working_set": 16.2
+  },
+  "schema_version": "s3-selector-competition-v1",
+  "upstream_pinned": {
+    "M": 50,
+    "compressor": "G2",
+    "extractor": "grammar_v4",
+    "packet": 6
+  }
+}

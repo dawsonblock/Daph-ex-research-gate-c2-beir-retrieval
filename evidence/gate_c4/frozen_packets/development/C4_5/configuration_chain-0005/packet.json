@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "2c3a2f1d110f12dedc3fe8bd5d0dff20a5d760b819adb9e634ec75d0047872f6",
+  "canonical_subject": "Finch relay unit",
+  "ordered_selected_ids": [
+    "configuration_chain-0005/identity",
+    "configuration_chain-0005/value"
+  ],
+  "ordered_text_sha256": [
+    "97b412073e0e0b6ad9c4d2f4515629f43fa22d6c9602e04467b10ee61a07c414",
+    "699d2555495d168fb4c06877c19c0f663c2ad3325f4d12f2c9db98e40df97e7b"
+  ],
+  "query_hash": "c2df662b74facc6d54fa5b70daa966d7052288e4a2dc8e2902cedf65ca74be48",
+  "selector_policy_id": "oracle",
+  "task_id": "configuration_chain-0005"
+}

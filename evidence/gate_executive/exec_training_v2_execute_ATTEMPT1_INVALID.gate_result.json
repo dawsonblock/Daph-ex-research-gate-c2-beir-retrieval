@@ -1,0 +1,25 @@
+{
+  "eval_strata_counts": {
+    "ANSWER_strict_win": 5,
+    "MEMORY_strict_win": 28,
+    "TIE": 172
+  },
+  "formal_gate_result": {
+    "failure_class": "MINIMUM_CLASS_FLOOR_NOT_MET",
+    "mechanism_status": "PENDING_FURTHER_EVIDENCE",
+    "run_valid": true,
+    "scientific_verdict": "NOT_COMPUTABLE",
+    "split_status": "CONSUMED"
+  },
+  "min_eval_floor": {
+    "ANSWER_strict_win": 10,
+    "MEMORY_strict_win": 40
+  },
+  "n_calibration": 203,
+  "n_eval": 205,
+  "n_total": 1015,
+  "n_train": 607,
+  "outcome": "INCONCLUSIVE_INSUFFICIENT_EVAL_CLASS_SUPPORT",
+  "promoted": false,
+  "split_seed": 9901
+}

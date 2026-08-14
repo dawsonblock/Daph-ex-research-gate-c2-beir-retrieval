@@ -1,0 +1,19 @@
+[OBJECTIVE]
+For Wren intake manifold, which routing class is recorded?
+[EVIDENCE]
+[E1]
+Revision applied — Wren intake manifold proposed routing class changed to 4220. Status: rejected.
+[E2]
+Engineering notes indicate Wren intake manifold uses 8458 as its former routing class. This record is historical.
+[E3]
+Per the routing class register, 7050 is allocated to Wren intake manifold.
+[E4]
+Per the calibration routing class register, 9170 is allocated to Wren intake manifold.
+[E5]
+- updated Wren intake manifold: parameter grade now {"category": "accredited"}
+[E6]
+required action:
+  subject: Wren intake manifold
+  value: THETA-OLIVE
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

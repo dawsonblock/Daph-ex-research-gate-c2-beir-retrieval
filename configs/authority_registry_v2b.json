@@ -1,0 +1,24 @@
+{
+  "schema": "DAPH_AUTHORITY_REGISTRY_V2",
+  "registry_version": "1.0.0-development",
+  "status": "DEVELOPMENT_ONLY",
+  "definitions": [
+    {
+      "authority_id": "world_bank_country_v1",
+      "publisher": "World Bank",
+      "domains": ["api.worldbank.org"],
+      "relations": ["capital_city"],
+      "endpoint_patterns": ["/v2/country/??"],
+      "allowed_query_keys": ["format"],
+      "required_query_values": {"format": "json"},
+      "source_type": "AUTHORITATIVE_STRUCTURED_DATA",
+      "extractor_id": "world_bank_country_v1",
+      "extractor_module": "hrm_adaptive_memory/external_verification/authority_extractors.py",
+      "extractor_symbol": "world_bank_country_v1",
+      "extractor_sha256": "bc722711690a297e40c94f349457dc625ce8406a8916e69bdc875b9d3aac6b13",
+      "schema_id": "world_bank_country_schema_v1",
+      "content_types": ["application/json"],
+      "version": "1"
+    }
+  ]
+}

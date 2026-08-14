@@ -1,0 +1,9 @@
+[OBJECTIVE]
+Which parameter grade applies to MCM-5?
+[EVIDENCE]
+[E1]
+MCM-5 is the short code for Marlin control module.
+[E2]
+It is recorded in the parameter grade registry that Marlin control module holds {"state": "suspended"}.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

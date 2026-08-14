@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "effdc293aabf28a4f3e6207ed960a49a90cfecd38ad55c691eafc4722632267d",
+  "canonical_subject": "Raven sensor array",
+  "ordered_selected_ids": [
+    "entity_attribute-0011/identity",
+    "entity_attribute-0011/fact"
+  ],
+  "ordered_text_sha256": [
+    "477903582d9bd7acfa6a4a67333d11ff9b8924e77bd1cfbc4b6b5a48e47e20cd",
+    "d6bd511bbcffba3e79f91351b2414f46c5e9018f1e5b0cb91c1018970e906bb7"
+  ],
+  "query_hash": "d1f702b4d36efc631a31c77ea4a65d06e43593df69edc7f31eb411857888695f",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "entity_attribute-0011"
+}

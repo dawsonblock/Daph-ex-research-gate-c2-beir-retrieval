@@ -1,0 +1,59 @@
+{
+  "ARTIFACT": "VERIFIED_MEMORY_CONSOLIDATION_V1",
+  "ONE_LINE": "Consolidation REORGANIZES memory; it does not decide truth.",
+
+  "SCOPE_DISCIPLINE": {
+    "authoritative": "The append-only event log written by VERIFIED_MEMORY_WRITE_V1 remains the ONLY authoritative state. Consolidation reads it and produces DERIVED state.",
+    "derived_only": ["duplicate clusters", "entity/alias clusters", "support groups", "contradiction groups", "current-state projection", "retrieval index"],
+    "explicitly_forbidden": "Consolidation may NOT resolve a contradiction, pick a winner among conflicting values, infer supersession from timestamps, delete or rewrite a canonical record, or change any verification state. Those are truth decisions; this milestone is reorganization. A consolidation that 'cleans up' a disagreement has destroyed information the memory is supposed to carry.",
+    "pipeline": "event log -> deterministic replay -> derived consolidated state -> retrieval index"
+  },
+
+  "HEADLINE_INVARIANT": {
+    "statement": "incremental consolidation == full replay consolidation",
+    "why_it_matters": "If a store can ingest N events incrementally, have all derived state discarded, replay the immutable log from scratch, and produce an IDENTICAL consolidated-state hash, then derived state is provably a pure function of the log. That is the foundation continuous learning needs: it means no derived artifact can silently drift away from the canonical history.",
+    "how_it_is_tested_honestly": "Two GENUINELY DIFFERENT implementations are compared, not one function called twice. (a) ConsolidationIndex is maintained INCREMENTALLY, one event at a time, with its own indexes. (b) consolidate_from_scratch() computes every group by a fresh full scan over the replayed record map, using no incremental structure. C9 asserts their state hashes are equal. The bug classes this actually catches: retraction failing to dissolve a group, mutation aliasing between snapshots, non-deterministic iteration order, stale index entries, and missed invalidation."
+  },
+
+  "ACCEPTANCE_TESTS": {
+    "C1_deterministic_replay": "Replaying the same log twice yields identical consolidated-state hashes; hashing is canonical (sorted, no set/dict iteration order dependence, no wall-clock input).",
+    "C2_derived_state_fully_rebuildable": "Deleting every derived artifact (snapshot, indexes) and rebuilding from the log alone reproduces the same state hash.",
+    "C3_canonical_records_never_mutated": "Consolidation never writes to the event log and never alters a ClaimRecord's canonical fields; asserted by hashing the log before and after.",
+    "C4_contradictions_preserved": "Conflicting claims remain BOTH active and BOTH grouped as a contradiction; consolidation never reduces a contradiction group to one member.",
+    "C5_explicit_supersession_only": "No supersession is inferred. A later observed_at with no explicit link leaves both records active and contradicting.",
+    "C6_retractions_removed_from_active_retrieval": "Retracted records are absent from the current-state projection and from the retrieval index, while remaining in the log and in all_records().",
+    "C7_provenance_survives_duplicate_clustering": "Clustering duplicates never collapses provenance: every member's source_id, observed_at_utc and record_id remain individually recoverable from the cluster.",
+    "C8_certified_reader_unchanged": "assert_certified_memory_v1_unchanged() holds across consolidation, and consolidation imports nothing from the certified reasoning path.",
+    "C9_incremental_equals_full_rebuild": "THE HEADLINE. See HEADLINE_INVARIANT.",
+    "C10_cache_invalidation_follows_state_hash": "The retrieval index is bound to the consolidated-state hash; any change to active membership changes that hash and therefore the reader's backend cache key. Includes a demonstration that a stale index WOULD have served removed records.",
+    "C11_crash_restart_recovery": "A process dying at any stage of the commit sequence must leave canonical state recoverable and derived state reconstructible.",
+    "C12_event_order_replay_invariants": "Events replay in log order; the log is append-only (a prefix of the log at version N is byte-identical to the log as it stood at version N)."
+  },
+
+  "C11_CRASH_SAFETY_PROTOCOL": {
+    "commit_sequence": ["1. append canonical event to the log", "2. fsync the log", "3. derive the new consolidated snapshot", "4. atomically publish the snapshot (write temp -> fsync -> os.replace)"],
+    "recovery_rule": "If the process dies between ANY two stages, the canonical event log alone is sufficient. A snapshot is only ever an accelerator: it is validated against the log it claims to describe (corpus_version + log hash) and DISCARDED on any mismatch, then rebuilt.",
+    "why_atomic_publish": "os.replace is atomic on POSIX, so a snapshot is either fully present or absent -- never half-written. Without it, a crash mid-write would leave a corrupt snapshot that a naive reader would trust.",
+    "failure_modes_tested": ["crash after append but before snapshot (stale/missing snapshot)", "crash mid-snapshot-write (partial temp file must never be published)", "snapshot describing a DIFFERENT log (hash mismatch -> discard and rebuild)", "truncated final log line (partial append) -- must not corrupt replay"]
+  },
+
+  "ALIAS_HANDLING": {
+    "scope": "Aliases are clustered from EXPLICIT alias claims only (relation 'alias_of'). No alias is inferred from string similarity, co-occurrence, or embedding proximity -- inference is a truth decision and is out of scope.",
+    "effect": "Alias clusters allow consolidation to group support/contradiction across names that explicit evidence says are the same entity. This is REORGANIZATION: it changes how records are grouped and reported, never which records are active and never a verification state.",
+    "separation_from_ingest": "Ingest-time conflict detection stays LOCAL and cheap (raw claim key). Alias-aware grouping is GLOBAL and happens only in consolidation. The two are allowed to disagree, and that is by design -- a later alias claim can reveal a contradiction that was invisible at ingest time."
+  },
+
+  "PRESSURE_TEST": {
+    "when": "Only after C1-C12 pass. Correctness first.",
+    "workload": "100k-1M synthetic events mixing new claims, exact duplicates, aliases, conflicts, supersessions and retractions.",
+    "measure": ["full replay time", "incremental update latency (per-event, and its distribution)", "active record count", "derived index size", "peak memory", "retrieval correctness on a sample", "consolidation drift (incremental vs rebuild hash at checkpoints)", "cache invalidation correctness"],
+    "purpose": "Begin answering how much this living memory can ingest and what hardware it actually needs. Results are reported as measurements, not as a pass/fail gate -- there is no frozen performance threshold, and inventing one after seeing the numbers would be exactly the post-hoc move this project avoids.",
+    "honest_expectation": "A full O(n) replay is expected to become the dominant cost as the log grows. If it does, that is a finding to report and the motivation for a later checkpoint/compaction design -- not something to hide behind a snapshot that is never validated."
+  },
+
+  "GPU_REQUIRED": "NONE. This milestone is entirely CPU-bound. The Lightning balance blocker is irrelevant to it, and no top-up is warranted until a GPU-dependent experiment actually exists.",
+
+  "NOT_A_QUALITY_CLAIM": "Like MILESTONE_1, this is a CAPABILITY and CORRECTNESS milestone. No quality gate is run and none is implied.",
+
+  "frozen_utc": "2026-08-11T02:30:00Z"
+}

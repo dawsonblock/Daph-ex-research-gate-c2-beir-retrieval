@@ -1,0 +1,55 @@
+{
+  "schema": "DAPH_V2B_I3_2_2_PROTOCOL_V1",
+  "status": "FROZEN_FOR_METHODOLOGY_QUALIFICATION",
+  "protocol_id": "v2b_i3_2_2_metareasoning_protocol_v1",
+  "action_space": [
+    "ANSWER",
+    "RETRIEVE",
+    "VERIFY",
+    "SEARCH_MORE",
+    "REASON_MORE",
+    "DEFER",
+    "STOP"
+  ],
+  "aggregate_priors": {
+    "scientific_primary": "TASK_UNIFORM",
+    "diagnostic": "CLASS_UNIFORM",
+    "TASK_UNIFORM": "Each frozen task has probability 1/N; an initial information class has mass proportional to its member count.",
+    "CLASS_UNIFORM": "Each initial information class has probability 1/K regardless of member count."
+  },
+  "utility_semantics": {
+    "step_net_utility": "immediate_reward - action_cost + terminal_reward_if_any",
+    "action_cost_nonnegative": true,
+    "immediate_reward_separate": true,
+    "terminal_actions": {
+      "ANSWER": "assert a final answer",
+      "DEFER": "return an explicit insufficient-evidence result",
+      "STOP": "terminate without asserting or deferring"
+    }
+  },
+  "policy_feedback": {
+    "visible_fields": ["effect", "required_action", "coarse_reason_class"],
+    "detailed_reason_codes_visible": false,
+    "rejection_consumes_control_step": true
+  },
+  "one_step_full_resolution_rate": "Fraction of root actions for which every public outcome is nonterminal and has a singleton posterior belief.",
+  "regret": {
+    "information_gap": "expected_latent_upper_bound - observable_upper_bound",
+    "decision_gap": "observable_upper_bound - controller_value",
+    "total_regret": "expected_latent_upper_bound - controller_value",
+    "required_identity": "total_regret = information_gap + decision_gap"
+  },
+  "observation_masks_path": "configs/v2b_i3_observation_masks_v1.json",
+  "policy_path": "configs/v2b_i3_policy_v1.json",
+  "utility_path": "configs/v2b_i3_1_utility_v1.json",
+  "resource_profiles_path": "experiments/v2b/tasks/v2b_i3_metareasoning_benchmark_v1.json",
+  "benchmark_manifest_path": "experiments/v2b_i3_2/benchmark/v2b_i3_2_benchmark_manifest_v1.json",
+  "forbidden": [
+    "learned_controller",
+    "new_executive_action",
+    "sub_agent_spawning",
+    "critic",
+    "skills",
+    "scientific_v2b_verdict"
+  ]
+}

@@ -1,0 +1,21 @@
+[OBJECTIVE]
+Which billing multiplier applies to Finch intake manifold?
+[EVIDENCE]
+[E1]
+- updated Bluebird intake manifold: billing multiplier now suspended
+[E2]
+Revision applied — Bluebird intake manifold proposed billing multiplier changed to provisional. This proposal was rejected.
+[E3]
+billing multiplier:
+  subject: Finch control module
+  value: {"state": "provisional"}
+[E4]
+billing multiplier:
+  subject: Finch drive cluster
+  value: {"category": "provisional"}
+[E5]
+Changelog: rate record for Finch intake manifold set to Vireo pressure assembly.
+[E6]
+Changelog: spare enclosure for Finch relay unit set to Bittern intake manifold.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

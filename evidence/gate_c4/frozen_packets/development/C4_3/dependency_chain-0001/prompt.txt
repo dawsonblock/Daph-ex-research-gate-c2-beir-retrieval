@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which release channel applies to ICM-8?
+[EVIDENCE]
+[E1]
+Registry entry: Ibis sensor array — release channel — 6392.
+[E2]
+[release channel] Auk drive cluster -> BETA-GREEN
+[E3]
+ICM-8 is the short code for Ibis control module.
+[E4]
+- updated Pelican pressure assembly: release channel now {"grade": "quarantined"}
+[E5]
+{"subject": "Bluebird sensor array", "release channel": "DELTA-AMBER"}
+[E6]
+[release channel] Osprey control module -> {"state": "accredited"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

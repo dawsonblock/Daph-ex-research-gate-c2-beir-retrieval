@@ -1,0 +1,9 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to Quail sensor array?
+[EVIDENCE]
+[E1]
+Per the assigned unit register, Bluebird pressure assembly is allocated to Quail sensor array.
+[E2]
+Revision 2 (effective 2031-06-01) supersedes revision 1: Per the operating tier register, false is allocated to Bluebird pressure assembly.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

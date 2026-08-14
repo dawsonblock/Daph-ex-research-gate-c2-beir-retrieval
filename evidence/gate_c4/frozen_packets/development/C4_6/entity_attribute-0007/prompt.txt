@@ -1,0 +1,9 @@
+[OBJECTIVE]
+What is the assigned category for RCM-3?
+[EVIDENCE]
+[E1]
+Abbreviation table: RCM-3 = Raven control module.
+[E2]
+- updated Raven control module: assigned category now {"category": "quarantined"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

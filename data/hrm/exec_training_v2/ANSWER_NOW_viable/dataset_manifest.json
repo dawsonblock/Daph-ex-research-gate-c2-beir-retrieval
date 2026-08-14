@@ -1,0 +1,16 @@
+{
+  "domains": [
+    "atomic_number",
+    "continent",
+    "currency",
+    "planet_order",
+    "state_capital"
+  ],
+  "evidence_count": 0,
+  "evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "family": "ANSWER_NOW_viable",
+  "generator": "hrm_adaptive_memory.experiments.exec_training_v2_dataset",
+  "native_parser_verified": true,
+  "task_count": 265,
+  "task_sha256": "fb4a7bbe27513c8cdb0f3b0557749a51f395ecc055652fd9460ecc4070115a5d"
+}

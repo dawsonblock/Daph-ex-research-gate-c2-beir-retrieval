@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which ownership tier applies to Sparrow intake manifold?
+[EVIDENCE]
+[E1]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E2]
+Registry entry: Nimbus intake manifold — ownership tier — {"tier": "suspended"}.
+[E3]
+For Heron intake manifold, ownership tier requires ETA-INDIGO.
+[E4]
+- updated Teal intake manifold: ownership tier now {"grade": "quarantined"}
+[E5]
+{"subject": "Sparrow intake manifold", "mounted monitor": "Ibis intake manifold"}
+[E6]
+{"subject": "Sparrow intake manifold", "spare enclosure": "Raven sensor array"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

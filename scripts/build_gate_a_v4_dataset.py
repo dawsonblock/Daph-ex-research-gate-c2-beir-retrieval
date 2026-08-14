@@ -225,7 +225,7 @@ def main() -> None:
     if not args.skip_pytest:
         print("[3/6] running full test suite")
         result = subprocess.run([sys.executable, "-m", "pytest", "-q"], cwd=ROOT,
-                                capture_output=True, text=True)
+                                capture_output=True, text=True, timeout=900)
         if result.returncode != 0:
             print(result.stdout[-2000:])
             raise SystemExit("pytest failed; refusing to freeze. No files written.")

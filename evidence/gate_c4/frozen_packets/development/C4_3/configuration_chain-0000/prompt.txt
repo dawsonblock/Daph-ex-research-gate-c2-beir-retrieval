@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which parameter grade applies to Ibis relay unit?
+[EVIDENCE]
+[E1]
+- updated Auk relay unit: parameter grade now 1101
+[E2]
+{"subject": "Ibis intake manifold", "parameter grade": "7863"}
+[E3]
+Note: the parameter grade for Curlew relay unit resolves to {"state": "suspended"}.
+[E4]
+Revision applied — Ibis relay unit spare enclosure changed to Osprey relay unit.
+[E5]
+Engineering notes indicate Heron relay unit uses ALPHA-RED as its parameter grade.
+[E6]
+Changelog: active configuration for Ibis relay unit set to Auk relay unit.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "ea586400ef24fb553b8e3170cc5f917ca9aeb17e0c7a6493e56f712c77b60372",
+  "canonical_subject": "Finch control module",
+  "ordered_selected_ids": [
+    "numeric_chain-0003/direct",
+    "numeric_chain-0003/identity"
+  ],
+  "ordered_text_sha256": [
+    "397bdd9c891a07da710c4f9ae1df4bb2e38eceff9b3db945d4e01dc1291ef670",
+    "c43ac31e5bb2e30b8671d0c5eecb6e0c47db99c1c25b98c124ed915efc61bdb1"
+  ],
+  "query_hash": "8974c634f6f61a61a65df4791f2a4acc658cf9dbe18802433bd7b67ec5e39260",
+  "selector_policy_id": "oracle",
+  "task_id": "numeric_chain-0003"
+}

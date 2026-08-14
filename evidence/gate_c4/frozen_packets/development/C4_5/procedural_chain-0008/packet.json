@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "d885e0f0c230aa9204d5c23df41b7a5c20d4305eb995578d00bf87c4ea5ca7c9",
+  "canonical_subject": "Osprey control module",
+  "ordered_selected_ids": [
+    "procedural_chain-0008/link",
+    "procedural_chain-0008/value"
+  ],
+  "ordered_text_sha256": [
+    "7c6506c6d49e13434317e1a19ed88318a9387e649de9b65b900a7f429a8097d0",
+    "1e5e66d1a82754e5c6b6a5adcca2204654282b45094901cc712bf8fb6b7b2e72"
+  ],
+  "query_hash": "2ed89eeb771c311d13af4c5900c663bf05b65634b7ea7860f2a54ac49039966d",
+  "selector_policy_id": "oracle",
+  "task_id": "procedural_chain-0008"
+}

@@ -1,0 +1,19 @@
+[OBJECTIVE]
+What is the required action for Finch drive cluster?
+[EVIDENCE]
+[E1]
+[required action] Finch drive cluster -> BETA-GREEN
+[E2]
+It is recorded in the required action registry that Finch drive cluster holds {"state": "provisional"}.
+[E3]
+For Finch pressure assembly, required action requires 9926.
+[E4]
+Registry entry: Finch drive cluster — applicable procedure — Bluebird pressure assembly.
+[E5]
+spare enclosure:
+  subject: Kestrel drive cluster
+  value: Finch relay unit
+[E6]
+[change] Finch drive cluster :: spare enclosure := Ibis sensor array
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

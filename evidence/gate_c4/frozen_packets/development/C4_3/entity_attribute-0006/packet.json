@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hash": "b18f70eee71154420d1e389284323421ae3190239cfb42b8cb2ab2d296fd322c",
+  "canonical_subject": "Pelican intake manifold",
+  "ordered_selected_ids": [
+    "entity_attribute-0006/fact",
+    "dependency_chain-0007/value",
+    "entity_attribute-0004/fact",
+    "ownership_chain-0005/dead-end-1",
+    "distractor_heavy-0007/near-near_relation",
+    "configuration_chain-0011/direct"
+  ],
+  "ordered_text_sha256": [
+    "d7b53220877023d434f93873e19f1d1008f73634e7d43b9ce495cf4e31f8e6dc",
+    "17f33ee4e79fe1554014ef0ddfcc0842f3f8573b57e60acdb36c741ad5ec2828",
+    "cab653f21c59062280c29e217a4a929512f1c7615b7e2a735e68ba3c376fab10",
+    "75ccfa53b10409f73057f794416975f2a2a47690e4e4d50c88f74a21cc581b23",
+    "e0f24df2b23aa9e40ce0a3ff78763a514a12a37abb77c75462bbf73aa6ecba69",
+    "4497f80268c25178cc60cf62d03c48e946b9512229de3d8e002b4fd7aac12dc7"
+  ],
+  "query_hash": "738d92ea5bb080c9248839432d5e4d99e1bad7af12b5bc301dc5661c209d85a8",
+  "selector_policy_id": "s0",
+  "task_id": "entity_attribute-0006"
+}

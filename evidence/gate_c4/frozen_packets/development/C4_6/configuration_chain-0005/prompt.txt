@@ -1,0 +1,11 @@
+[OBJECTIVE]
+What is the parameter grade for FRU-4?
+[EVIDENCE]
+[E1]
+Abbreviation table: FRU-4 = Finch relay unit.
+[E2]
+- updated Finch relay unit: active configuration now Heron relay unit
+[E3]
+Engineering notes indicate Heron relay unit uses ALPHA-RED as its parameter grade.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

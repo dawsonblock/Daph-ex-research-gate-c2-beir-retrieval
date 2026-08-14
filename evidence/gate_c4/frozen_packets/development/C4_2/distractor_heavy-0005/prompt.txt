@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the routing class for OSA-3?
+[EVIDENCE]
+[E1]
+Abbreviation table: OSA-3 = Osprey sensor array.
+[E2]
+[routing class] Finch relay unit -> 2392
+[E3]
+[routing class] Osprey sensor array -> ZETA-CORAL
+[E4]
+{"subject": "Osprey drive cluster", "routing class": "4470"}
+[E5]
+{"subject": "Bittern control module", "routing class": "retired"}
+[E6]
+[calibration routing class] Osprey sensor array -> DELTA-AMBER
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

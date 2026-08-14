@@ -1,0 +1,98 @@
+{
+  "ARTIFACT": "VERIFIED_MEMORY_WRITE_V1",
+  "ONE_LINE": "Move DAPH from a static external memory it reasons OVER to a living external memory it continuously ingests into, verifies, versions, and consolidates -- then reasons over the updated state.",
+
+  "PIPELINE": "NEW INFORMATION -> ingestion -> claim/entity extraction -> provenance -> verification -> conflict detection -> persistent write -> consolidation -> CERTIFIED_MEMORY retrieval",
+
+  "WHY_NOW": "The executive line is closed as INSTRUMENT_LIMITED (RESEARCH_STATUS.json executive_line_closed): two independent branches returned OBSERVABILITY_LIMITED, and the benchmark has been shown to test corpus-construction artifacts rather than the executive. A third cheap-signal attempt on the same instrument is not warranted. This program is valuable independently of whether an executive is ever built: a memory that can continuously ingest, verify, version and retrieve is useful on its own, and it is a larger architectural advance than another routing classifier.",
+
+  "ARCHITECTURAL_BOUNDARY": {
+    "rule": "This program does NOT modify CERTIFIED_MEMORY_V1. The write path is a NEW layer that PRODUCES a corpus; CERTIFIED_MEMORY_V1 remains the frozen, unmodified reader over whatever corpus state exists at query time.",
+    "why_this_matters": "CERTIFIED_MEMORY_V1 is qualified and confirmed. Its identity is asserted live before every task in every gate. If the write layer changed it, every prior confirmation would be invalidated and the whole evidential chain would need re-establishing. The seam is: write layer owns corpus STATE; certified memory owns RETRIEVAL AND REASONING over it.",
+    "enforcement": "The existing assert_certified_memory_v1_unchanged() check must pass before and after every write-layer operation exercised in a gate run, and a test must assert the write layer imports nothing from the certified reasoning path that it could mutate.",
+    "parser_boundary": "MILESTONE_1 uses b3-shaped record content, which the existing grammar_v4 entity extractor already handles natively. This is deliberate: it keeps the first milestone small and avoids the privileged-parsing trap that scoped EOB-v1/v2 (see PRIVILEGED_PARSING_SCOPE_CAVEAT). Ingesting natural-language documents requires a next-generation input contract and is explicitly DEFERRED."
+  },
+
+  "MILESTONE_1_DELIBERATELY_SMALL": {
+    "steps": [
+      "1. ingest a new record",
+      "2. canonicalize entity/claim identity",
+      "3. detect duplicate / support / conflict / supersession against existing memory",
+      "4. attach provenance and timestamp",
+      "5. assign an explicit verification state",
+      "6. write to persistent storage",
+      "7. rebuild/update retrieval",
+      "8. PROVE a later query can retrieve the new knowledge",
+      "9. PROVE that retracting or superseding it changes future retrieval correctly"
+    ],
+    "steps_8_and_9_are_the_real_milestone": "Steps 1-7 are machinery; they can all be implemented and still be useless. Steps 8 and 9 are the falsifiable claims -- that a write actually becomes reachable, and that a retraction/supersession actually becomes unreachable-or-superseded from the reader's point of view. The milestone PASSES only if 8 and 9 both hold end-to-end through the UNMODIFIED certified retrieval path.",
+    "explicitly_not_in_milestone_1": [
+      "background/asynchronous verification",
+      "consolidation across many records",
+      "natural-language document ingestion",
+      "learned extraction of any kind",
+      "multi-agent or concurrent writers"
+    ]
+  },
+
+  "VERIFICATION_STATE_MACHINE": {
+    "states": {
+      "UNVERIFIED": "written and retrievable, but nothing has corroborated it. The honest default for a single unsupported observation.",
+      "SUPPORTED": "at least one independent existing record corroborates the same (entity, relation, value) claim.",
+      "CONTRADICTED": "an existing record asserts a DIFFERENT value for the same (entity, relation) and neither supersedes the other. Both are retained; neither is silently deleted.",
+      "SUPERSEDED": "a newer record asserts a different value for the same (entity, relation) AND carries an explicit supersession relationship or a strictly later timestamp under a declared temporal policy.",
+      "RETRACTED": "explicitly withdrawn by an operator action. Retained for audit, excluded from retrieval."
+    },
+    "hard_rule_never_silently_delete": "No state transition removes a record's bytes. Retraction and supersession change RETRIEVABILITY and STATE, never history. This mirrors the discipline already applied to invalid experiment runs (kept and marked, e.g. exec_training_v2_execute_ATTEMPT1_INVALID.md) rather than deleted.",
+    "conflict_is_not_an_error": "CONTRADICTED is a legitimate terminal state, not a failure. A memory that cannot represent 'two sources disagree and nothing resolves it' is lying about what it knows."
+  },
+
+  "CONFLICT_TAXONOMY": {
+    "keyed_on": "(canonical_entity, canonical_relation) -- the same identity notion the certified reader already uses, so the write layer and the reader agree on what 'the same claim' means",
+    "outcomes": {
+      "DUPLICATE": "same entity, same relation, same value -> increment corroboration, do not add a redundant record",
+      "SUPPORT": "same entity, same relation, same value, DIFFERENT source -> corroboration, state may advance UNVERIFIED -> SUPPORTED",
+      "CONFLICT": "same entity, same relation, DIFFERENT value, no supersession basis -> both retained, both CONTRADICTED",
+      "SUPERSESSION": "same entity, same relation, different value, with an explicit supersession link or a later timestamp under the declared temporal policy -> older becomes SUPERSEDED",
+      "NOVEL": "no existing claim on this (entity, relation) -> written as UNVERIFIED"
+    },
+    "temporal_policy_must_be_declared_before_use": "Whether 'later timestamp wins' is a supersession basis is a POLICY choice with real failure modes (clock skew, backfill, corrections-vs-updates). MILESTONE_1 freezes the conservative option: a later timestamp ALONE is NOT sufficient for supersession; an explicit supersedes link is required. Timestamp-based supersession is a separately frozen follow-up."
+  },
+
+  "PROVENANCE_SCHEMA_REQUIRED_FIELDS": [
+    "record_id (stable, content-addressed)",
+    "content (the record text, in the b3-shaped form the certified extractor accepts)",
+    "canonical_entity / canonical_relation / value (as extracted, so conflict detection is inspectable)",
+    "source_id (where it came from)",
+    "ingested_at_utc",
+    "observed_at_utc (when the fact was true/observed, distinct from ingestion time)",
+    "extraction_method (which extractor and version produced the claim triple)",
+    "verification_state (the state machine above)",
+    "corroborating_record_ids / contradicting_record_ids / supersedes / superseded_by",
+    "corpus_version (monotonic; every write increments it)"
+  ],
+
+  "PERSISTENCE_AND_RETRIEVAL_REBUILD": {
+    "storage": "append-only JSONL claim store plus a manifest carrying corpus_version and a hash-of-hashes, matching the existing suite/manifest conventions so the store is inspectable and diffable rather than opaque.",
+    "retrieval_rebuild": "The reader must see the post-write state. CERTIFIED_MEMORY_V1's retrieval goes through hrm_adaptive_memory.c4.retrieval_stage.get_cached_backend, which CACHES backends -- so a naive write would leave the reader querying a stale index.",
+    "KNOWN_HAZARD_stale_backend_cache": "This is the single most likely way MILESTONE_1 produces a false PASS on step 8 or a false FAIL on step 9: the write succeeds, the store is correct, and retrieval silently answers from a cached pre-write index. The acceptance tests MUST therefore verify retrievability through a backend obtained AFTER the write, and a test must explicitly demonstrate that a stale cached backend does NOT reflect the write -- so the invalidation is proven to be doing work rather than assumed.",
+    "invalidation_rule": "Backends are keyed by corpus_version; any write increments it and thereby invalidates. Rebuild cost is measured and reported -- a write path whose rebuild cost grows unacceptably with corpus size is a real finding, not an implementation detail to hide."
+  },
+
+  "ACCEPTANCE_TESTS_FALSIFIABLE": {
+    "T1_write_becomes_retrievable": "A query whose answer depends on a newly written record must retrieve that record through the UNMODIFIED certified retrieval path, having failed to retrieve it before the write. Both directions asserted -- the pre-write failure is what makes the post-write success meaningful.",
+    "T2_retraction_removes_reachability": "After retracting the record, the same query must no longer retrieve it, while the record's bytes remain present in the store with state RETRACTED.",
+    "T3_supersession_returns_the_new_value": "After writing a superseding record, the query must retrieve the NEW value; the old record remains with state SUPERSEDED and an intact superseded_by link.",
+    "T4_conflict_is_represented_not_resolved": "Two contradicting records with no supersession basis must BOTH persist as CONTRADICTED, and the store must be able to report the disagreement rather than silently picking one.",
+    "T5_certified_memory_unchanged": "assert_certified_memory_v1_unchanged() passes before and after every operation above.",
+    "T6_stale_cache_would_have_lied": "An explicit demonstration that querying a pre-write cached backend does NOT reflect the write -- proving T1's pass is due to real invalidation, not luck."
+  },
+
+  "WHAT_A_MILESTONE_1_PASS_DOES_AND_DOES_NOT_LICENSE": {
+    "does": "That DAPH can ingest a claim, reason about its relationship to existing knowledge, persist it with provenance and an explicit verification state, and have the frozen certified reader retrieve the updated state -- including correct behaviour under retraction and supersession.",
+    "does_not": "Anything about natural-language ingestion, extraction quality on non-b3 text, scale, concurrency, background verification, consolidation, or answer quality improvements. Those are separate, later, separately frozen questions.",
+    "explicitly_not_a_quality_claim": "MILESTONE_1 is a CAPABILITY and CORRECTNESS milestone. It must not be reported as improving answer quality; no quality gate is run as part of it."
+  },
+
+  "frozen_utc": "2026-08-11T01:30:00Z"
+}

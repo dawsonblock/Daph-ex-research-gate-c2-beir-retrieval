@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the required action for MRU-7?
+[EVIDENCE]
+[E1]
+[required action] Finch drive cluster -> BETA-GREEN
+[E2]
+Abbreviation table: MRU-7 = Marlin relay unit.
+[E3]
+{"subject": "Bluebird pressure assembly", "required action": "retired"}
+[E4]
+[required action] Kestrel sensor array -> {"state": "provisional"}
+[E5]
+Registry entry: Gannet pressure assembly — required action — 7949.
+[E6]
+- updated Heron intake manifold: required action now accredited
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

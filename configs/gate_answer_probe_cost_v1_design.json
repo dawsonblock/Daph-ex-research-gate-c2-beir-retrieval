@@ -1,0 +1,103 @@
+{
+  "ARTIFACT": "ANSWER_PROBE_COST_GATE_V1",
+
+  "WHY_THIS_SUPERSEDES_THE_QUALITY_ONLY_FRAMING": "ANSWER_PROBE_GATE_V1 (NOT_PROMOTED) and V2 (INCONCLUSIVE_INSUFFICIENT_EVAL_CLASS_SUPPORT) both asked whether a confidence probe can route between ANSWER_NOW and CERTIFIED_MEMORY_V1 under a QUALITY-ONLY utility. A post-hoc diagnostic on the consumed V1/V2 receipts (RESEARCH_STATUS.json answer_probe_gate_v2.POST_HOC_DIAGNOSTIC_answer_strict_win_is_an_artifact, commit 0bf3de6) showed that objective is mis-specified for this instrument: in the ANSWER_NOW_viable family, A1 produced an EMPTY packet on 265/265 (V2) and 72/72 (V1) tasks, so CERTIFIED_MEMORY_V1 never executes and A1 is merely the same question re-rendered with an empty evidence block. Its strict-win events (13-vs-6, p=0.167; 5-vs-2, p=0.453) are prompt-format resampling noise. Meanwhile MEMORY_required is 262-to-0 in memory's favour. Under quality-only utility the optimal fixed policy is therefore 'always escalate' and there is nothing for a controller to beat. Adding a frozen cost term makes the question well-posed WITHOUT altering the certified memory system, weakening the parser boundary, or manufacturing statistical power around the noise class.",
+
+  "WHAT_STAYS_UNCHANGED": [
+    "CERTIFIED_MEMORY_V1 -- identity asserted live before every task, never modified",
+    "the real, unmodified extract_subject / extract_target_relation / grammar_v4 parser boundary -- zero bypass",
+    "the cheap ANSWER_NOW confidence probe (hrm_adaptive_memory/executive/confidence.py) and its 5 features",
+    "no D2/D3 privileged-parsing regimes are introduced",
+    "no parser modification of any kind",
+    "the existing clean native training families (ANSWER_NOW_viable, MEMORY_required)"
+  ],
+
+  "NOISY_LABELS_ARE_NOT_REUSED": "The quality-only ANSWER_strict_win class is NOT carried forward as a label. Action labels are recomputed from utility (see PHASE_0/PHASE_1). The 13 V2 GK 'ANSWER wins' are, under the new objective, simply members of the much larger and genuinely meaningful ANSWER-preferred class -- preferred because memory cost more and bought nothing, not because a coin came up heads.",
+
+  "PHASE_0_FROZEN_UTILITY": {
+    "frozen_before_any_label_was_recomputed": true,
+    "PRIMARY_lexicographic": {
+      "rule": [
+        "1. Maximize answer quality Q (binary, from the existing exact verifier -- unchanged).",
+        "2. If quality is tied at the verifier's exact scoring resolution, prefer the cheaper action."
+      ],
+      "scalar_realization": "U_i(a) = Q_i(a) - EPSILON * C_i(a) / C_REF, with EPSILON = 0.01 and C_REF = 1000 tokens, both frozen here. This is a faithful scalar encoding of the lexicographic rule on this instrument, not an invented exchange rate: the largest possible cost term is 0.01 * 294 / 1000 = 0.00294, versus a quality unit of 1.0 -- a 340x margin, so a single quality point strictly dominates the entire attainable cost range and the cost term can only ever break exact quality ties. Verified against the realized V2 token ranges BEFORE freezing (that is instrument capability, not an outcome).",
+      "why_lexicographic_is_primary": "It avoids inventing a dollar value for one quality point, per the research lead's explicit instruction. Only the ORDERING of costs is required, and that ordering is universal on this instrument: A1 total tokens exceeded A0 on 1015/1015 V2 tasks (strictly, min delta +5, mean +98), which is also structurally guaranteed since A1 performs everything A0 does plus retrieval, runtime-graph construction, path composition, and a strictly longer prompt."
+    },
+    "COST_DEFINITION": {
+      "C_i(a)": "prompt_tokens + completion_tokens for action a on task i",
+      "why_tokens_and_not_latency": "latency_seconds is instrumented on A1 (1015/1015) but ABSENT on A0 (0/1015) in the existing receipts -- a real instrumentation gap, verified, not assumed. Tokens are the only cost field present for BOTH actions, so a token-based cost is the only cost model computable from the already-collected development data without fabricating a value for A0. See INSTRUMENTATION_FIX_REQUIRED_FOR_EVAL.",
+      "honest_limitation": "Token count is a proxy for, not a measurement of, total operational cost. It omits A1's retrieval (BM25 + dense) and graph/composition compute entirely, so it UNDERSTATES the true cost of escalation. This biases the study CONSERVATIVELY: the real cost gap favours ANSWER_NOW more than this proxy shows, so a gate that wins under this cost model would win by at least as much under a fuller one. Stated as a bound on the claim, not hidden."
+    },
+    "SECONDARY_continuous_sensitivity_grid": {
+      "form": "U = Q - lambda_T * (total_tokens / 1000)",
+      "lambda_T_grid": [0.01, 0.05, 0.1, 0.25],
+      "status": "DIAGNOSTIC ONLY -- reported at every grid point as a robustness check, NEVER a promotion criterion. A grid is used deliberately instead of one hand-picked lambda so that no invented exchange rate between quality and compute can drive the verdict. The grid is frozen here, before any policy result exists.",
+      "latency_term_deferred": "A latency term (lambda_L * latency_seconds) is NOT included, because it is uncomputable for A0 on the development data. It is deferred to the evaluation split, where A0 latency will be instrumented (see INSTRUMENTATION_FIX_REQUIRED_FOR_EVAL), and would itself require a separately frozen coefficient before use."
+    }
+  },
+
+  "INSTRUMENTATION_FIX_REQUIRED_FOR_EVAL": "Before the fresh evaluation collection runs, the collection script MUST record latency_seconds for A0_ANSWER_NOW as well as A1 (it currently records it only for A1, via _run_hrm_batch; the A0 path goes through generate_with_confidence, which does not time itself). This is a pure instrumentation addition -- it changes no prompt, no model call, no decision logic, and cannot alter any measured quality. It is required so the evaluation receipts can support a wall-clock cost analysis alongside the token analysis, and so the deferred latency term becomes computable in any future study.",
+
+  "PHASE_1_DEVELOPMENT_LABELS": {
+    "data": "the CONSUMED exec_training_v2 receipts (evidence/gate_executive/exec_training_v2_execute.receipts.jsonl, 1015 tasks)",
+    "permitted_use": "diagnosis_only / hypothesis_generation_only, per data/hrm/exec_training_v2/SPLIT_LINEAGE.json. DESIGN USE ONLY.",
+    "hard_rule": "NO PROMOTION CLAIM MAY BE MADE FROM THIS DATA. It is used solely to (a) recompute utility-based labels, (b) check whether the confidence features carry any signal about Delta_U_cost at all, and (c) fit a candidate controller. Any promotion claim requires the fresh evaluation split in PHASE_4. Re-scoring a consumed split is not evidence of generalization.",
+    "label": "Delta_U_cost_i = U_i(MEMORY) - U_i(ANSWER). The gate predicts whether Delta_U_cost_i > 0.",
+    "label_reduces_to": "Under the frozen lexicographic utility and the universal cost ordering C(A1) > C(A0): Delta_U_cost_i > 0 if and only if Q_i(MEMORY) > Q_i(ANSWER). Exact quality ties resolve to ANSWER-preferred (memory cost more and bought nothing), and quality losses resolve to ANSWER-preferred a fortiori. This is stated as a derived consequence of the frozen definition, computed before looking at the resulting class counts."
+  },
+
+  "PHASE_2_SEPARATION_CHECK": {
+    "rule": "Same frozen criterion as ANSWER_PROBE_GATE_V1: for at least one of the 5 confidence features, EITHER |Cohen's d| >= 0.3 between the Delta_U_cost>0 and Delta_U_cost<=0 groups, OR the grouped bootstrap 95% CI (resampled by family) of the mean difference excludes zero.",
+    "if_not_met": "STOP. Report a negative result: the cheap confidence probe carries no information about cost-aware action value either. Do not proceed to fitting, and do not build an evaluation split."
+  },
+
+  "PHASE_3_CONTROLLER": {
+    "model_ladder": [
+      {"id": "P0", "name": "always_accept_direct", "role": "fixed baseline"},
+      {"id": "P1", "name": "always_escalate_to_memory", "role": "fixed baseline -- the policy that wins trivially under quality-only utility, and the one a cost-aware gate must actually beat"},
+      {"id": "P2", "name": "frozen_confidence_threshold", "role": "single scalar cutoff on mean_token_confidence"},
+      {"id": "P3", "name": "cost_sensitive_logistic", "role": "PRIMARY learned hypothesis -- class-weighted logistic regression over the 5 confidence features, balanced inverse-frequency weighting computed mechanically from the TRAIN partition, plus the same frozen 2.0x multiplier on the escalate-helps class carried over unchanged from configs/gate_answer_probe_v2_design.json (not re-tuned)"},
+      {"id": "P4", "name": "value_regression", "role": "CO-PRIMARY -- regresses continuous Delta_U_cost directly, escalates when predicted gain exceeds a calibration-frozen threshold"},
+      {"id": "P5", "name": "oracle", "role": "per-task argmax of the frozen utility -- ceiling reference, never promotable"}
+    ],
+    "train_calibration_eval_separation": "Model parameters fit on TRAIN only. Decision thresholds and any realized class-weight VALUE frozen on CALIBRATION only. EVAL is one-shot.",
+    "no_neural_controller": "unchanged from V1/V2 -- complexity beyond logistic/linear is diagnostic-only and requires a separately frozen follow-up."
+  },
+
+  "PHASE_4_FRESH_EVALUATION_SPLIT": {
+    "requirement": "A completely fresh, never-touched native split, built AFTER the controller and its threshold are frozen. Same two clean native families (ANSWER_NOW_viable GK + MEMORY_required), fresh generation seeds outside every previously used range, zero overlap independently re-verified against every consumed split including exec_training_v2, zero privileged parsing.",
+    "retrieval_scoping": "MEMORY_required retrieval MUST be scale-isolated (one scale's own evidence pool per task), per the RUN_VALID defect caught and fixed in commit a697cf5. Never pool scales into a shared candidate pool.",
+    "minimum_eval_class_floors": {"MEMORY_preferred": 40, "ANSWER_preferred": 40},
+    "floors_rationale": "Frozen here, before the evaluation split exists. These are floors on the NEW utility-based classes, which are structurally abundant on this instrument (unlike the quality-only ANSWER_strict_win class that stalled V2) -- so this is a genuine guard against an under-powered eval, not a relaxation engineered to be easy to pass. The V2 quality-only floors are NOT relaxed, reused, or reinterpreted; they governed a different label and that study remains INCONCLUSIVE on its own terms.",
+    "if_floors_unmet": "INCONCLUSIVE_INSUFFICIENT_EVAL_CLASS_SUPPORT, exactly as in V2. Do not reshuffle, do not relax."
+  },
+
+  "PHASE_5_PROMOTION_CRITERIA": {
+    "primary_metric": "Delta_U_gate = U(candidate) - max(U(P0), U(P1)) on the FRESH evaluation split, under the PRIMARY lexicographic utility",
+    "utility_condition": "Delta_U_gate > 0 with a positive grouped-bootstrap 2.5% LCB (resampled by family, same convention as every prior gate in this project)",
+    "hard_safety_bound": {
+      "metric": "P(ACCEPT | Q_memory > Q_direct) on eval",
+      "frozen_threshold": 0.30,
+      "note": "Carried over UNCHANGED from configs/gate_answer_probe_v2_design.json. It was frozen there before any V2 data existed and is not re-tuned here. The dangerous error is unchanged by the objective shift: withholding memory on a task where memory would genuinely have produced a correct answer."
+    },
+    "promotion_requires_all_of": [
+      "utility_condition met by P3 or P4 under the PRIMARY lexicographic utility",
+      "hard_safety_bound met by whichever candidate is being promoted",
+      "both minimum_eval_class_floors met",
+      "the mandatory per-family decomposition (see MANDATORY_DIAGNOSTICS) reported -- reported, not required to pass, but a promotion whose entire gain is cross-family discrimination must be described as such in the claim"
+    ],
+    "if_not_met": "Report as a formal negative result with the same rigor as V1/V2. Do not re-tune the cost model, the epsilon, the grid, or the floors after seeing the result."
+  },
+
+  "MANDATORY_DIAGNOSTICS": {
+    "per_family_decomposition": "Delta_U_gate MUST be reported separately for ANSWER_NOW_viable and MEMORY_required, in addition to pooled, on BOTH the development and evaluation analyses.",
+    "why": "See KNOWN_LIMITATION_family_label_correlation -- this decomposition is the instrument that reveals whether a headline gain is genuine within-family routing or merely cross-family discrimination.",
+    "cost_accounting": "Report realized mean tokens per policy alongside quality, so the compute actually saved (or spent) by each policy is visible rather than implicit in the utility scalar.",
+    "sensitivity_grid": "Report Delta_U_gate at every frozen lambda_T grid point."
+  },
+
+  "KNOWN_LIMITATION_family_label_correlation": "On this instrument the utility label correlates strongly with which synthetic family a task came from: memory can only help where evidence exists, so ANSWER_NOW_viable is overwhelmingly ANSWER-preferred and MEMORY_required supplies nearly all MEMORY-preferred cases. A gate could therefore achieve a good pooled Delta_U_gate by effectively learning 'is this a synthetic chain question' rather than 'is memory worth its cost for this question'. The confidence features are not themselves family-leaking by construction (they are properties any deployed system observes about its own generation, and satisfy the FEATURE_DISCIPLINE hard rule carried from configs/gate_exec_training_v1_design.json), and a fresh evaluation split drawn from the same two families would NOT detect this. This is a real bound on what a PASS here would license: it would establish that cost-aware confidence gating works on this two-family instrument, NOT that it generalizes to a deployment where the direct-answerable and memory-requiring questions are not drawn from two visibly different generators. The per-family decomposition in MANDATORY_DIAGNOSTICS is required precisely so this can be inspected rather than assumed, and any promotion claim must state this limitation explicitly.",
+
+  "frozen_utc": "2026-08-10T23:05:00Z"
+}

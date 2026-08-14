@@ -62,8 +62,87 @@ _NON_ANSWER_NUMBER = re.compile(
 )
 
 
-def extract_v4_entities(text: str) -> tuple[str, ...]:
-    """Extract V4-style entity names from text."""
+#: G2-v4E entity-boundary grammar, transcribed from the generator's CLOSED
+#: entity grammar in generalization_dataset_v4.py:
+#:     canonical = f"{head} {role}"                 role is one of these SIX
+#:     alias     = f"{alias_head} {role.split()[0]}"  i.e. the role's first word
+#: Because that grammar is closed, no legitimate entity name extends past a
+#: completed role suffix -- so anything after one is a grammatical tail, not
+#: part of the name. That makes boundary repair a precise grammar rule rather
+#: than an ever-growing list of English verbs (which is what _STOP_LAST is,
+#: and why it kept missing "resolves"/"uses"/"set"/"value"/"as").
+_V4_ROLE_FULL = ("control module", "sensor array", "pressure assembly",
+                 "relay unit", "intake manifold", "drive cluster")
+_V4_ROLE_HEAD = tuple(dict.fromkeys(r.split()[0] for r in _V4_ROLE_FULL))
+
+
+def normalize_v4_entity_boundary(phrase: str) -> str:
+    """Truncate ``phrase`` at the first complete V4 role suffix.
+
+    Returns the phrase unchanged when no role suffix is present, so non-entity
+    text is never truncated. This is deliberately corpus-grammar-specific: it
+    is sound for the V4 controlled corpus because that grammar is closed, and
+    it is NOT a general-purpose English NER boundary rule.
+    """
+    tokens = phrase.split()
+    for i in range(len(tokens) - 1):
+        if f"{tokens[i]} {tokens[i + 1]}".lower() in _V4_ROLE_FULL:
+            return " ".join(tokens[:i + 2])
+    for i, token in enumerate(tokens):
+        if i > 0 and token.lower() in _V4_ROLE_HEAD:
+            return " ".join(tokens[:i + 1])
+    return phrase
+
+
+BOUNDARY_POLICIES = ("legacy", "grammar_v4")
+
+#: Process-level default. Entity-boundary parsing has been MEASURED to move graph
+#: reachability by tens of percentage points (G2-v4E: 51.1% -> 84.4% per-task),
+#: so it is a scientific treatment variable applied to a whole pipeline run, not
+#: preprocessing hygiene -- and entity extraction happens in several modules
+#: (runtime_graph, prefilter/structural_signature, typed_path, selector_v2), so a
+#: run must set it ONCE rather than thread it through every call site and risk
+#: an inconsistent mixture. Defaults to "legacy" so nothing changes unless a
+#: runner explicitly opts in, and every receipt must record the active policy.
+_DEFAULT_BOUNDARY_POLICY = "legacy"
+
+
+def set_default_boundary_policy(policy: str) -> None:
+    if policy not in BOUNDARY_POLICIES:
+        raise ValueError(f"unknown boundary_policy {policy!r}; "
+                         f"expected one of {BOUNDARY_POLICIES}")
+    global _DEFAULT_BOUNDARY_POLICY
+    _DEFAULT_BOUNDARY_POLICY = policy
+
+
+def get_default_boundary_policy() -> str:
+    return _DEFAULT_BOUNDARY_POLICY
+
+
+def entity_extractor_config_hash() -> str:
+    """Hash of everything that determines extracted entity boundaries: the
+    active policy plus the grammar/stopword tables it consults. Belongs in every
+    graph receipt, for the same reason retrieval and selector config hashes do."""
+    import hashlib
+    payload = "|".join((
+        _DEFAULT_BOUNDARY_POLICY,
+        ",".join(sorted(_V4_ROLE_FULL)), ",".join(sorted(_V4_ROLE_HEAD)),
+        ",".join(sorted(_STOP_FIRST)), ",".join(sorted(_STOP_LAST)),
+        _V4_ENTITY.pattern))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
+
+
+def extract_v4_entities(text: str, boundary_policy: str | None = None) -> tuple[str, ...]:
+    """Extract V4-style entity names from text.
+
+    ``boundary_policy`` selects the G2-v4E treatment arm; None means "use the
+    process-level default" (itself "legacy" unless a runner opted in):
+
+        "legacy"     the historical _STOP_LAST trailing-token heuristic (arm E0)
+        "grammar_v4" additionally truncate at the closed role grammar (arm E1)
+    """
+    if boundary_policy is None:
+        boundary_policy = _DEFAULT_BOUNDARY_POLICY
     candidates = _V4_ENTITY.findall(text)
     result: list[str] = []
     for c in candidates:
@@ -76,6 +155,10 @@ def extract_v4_entities(text: str) -> tuple[str, ...]:
                 result.append(trimmed)
             continue
         result.append(c)
+    if boundary_policy == "grammar_v4":
+        result = [normalize_v4_entity_boundary(r) for r in result]
+    elif boundary_policy != "legacy":
+        raise ValueError(f"unknown boundary_policy {boundary_policy!r}")
     return tuple(dict.fromkeys(result))
 
 

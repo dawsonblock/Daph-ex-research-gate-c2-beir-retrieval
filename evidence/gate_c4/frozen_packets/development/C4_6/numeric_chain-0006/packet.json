@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "899c1ca5ae517476bb0156d3b7c48e26e23eb7c61d5738b9cf545076e0bddfc0",
+  "canonical_subject": "Bluebird control module",
+  "ordered_selected_ids": [
+    "numeric_chain-0006/link",
+    "numeric_chain-0006/value"
+  ],
+  "ordered_text_sha256": [
+    "d862eae9a707ecd5f6d7e93fae2debec0749fdd9453307af1266c1bc110e14ea",
+    "35287dc1dd5f7a16d22d265aff14f7cb2dc6d1e5835495d2e9155a128dfb63aa"
+  ],
+  "query_hash": "0b49dff305fff326a401f2ba498355e950a34940e09f27b51d00e7c9e54fbfb1",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "numeric_chain-0006"
+}

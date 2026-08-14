@@ -1,0 +1,47 @@
+{
+  "conclusion": "If the defect population is predominantly bridged while the rule fires only on unbridged tasks, the rule as specified cannot address the defect and must be corrected BEFORE freezing -- not after seeing arm results.",
+  "exact_defect_population_by_shape": {
+    "bridged": 34,
+    "unbridged": 5
+  },
+  "exact_defect_share_bridged": 0.8718,
+  "keep_rate_by_identity_and_shape": {
+    "EXACT_bridged": {
+      "dropped": 34,
+      "keep_rate": 0.1282,
+      "kept": 5
+    },
+    "EXACT_unbridged": {
+      "dropped": 5,
+      "keep_rate": 0.7222,
+      "kept": 13
+    },
+    "RESOLVED_bridged": {
+      "dropped": 1,
+      "keep_rate": 0.95,
+      "kept": 19
+    },
+    "RESOLVED_unbridged": {
+      "dropped": 2,
+      "keep_rate": 0.8824,
+      "kept": 15
+    }
+  },
+  "original_rule_fire_rate_by_shape": {
+    "bridged": {
+      "fire_rate": 0.2143,
+      "fires": 18,
+      "n": 84
+    },
+    "unbridged": {
+      "fire_rate": 1.0,
+      "fires": 36,
+      "n": 36
+    }
+  },
+  "pre_freeze": "Run before any selector arm exists, to decide whether the proposed eligibility rule can fire where the defect lives.",
+  "schema_version": "c4-selector-eligibility-feasibility-v1",
+  "split": "development",
+  "task_count": 120,
+  "tasks_with_unavailable_evidence_excluded": 26
+}

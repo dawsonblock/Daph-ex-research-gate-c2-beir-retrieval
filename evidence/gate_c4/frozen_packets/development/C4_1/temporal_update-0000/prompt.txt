@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to Egret drive cluster?
+[EVIDENCE]
+[E1]
+Revision 2 (effective 2031-06-01) supersedes revision 1: [operating tier] Egret drive cluster -> accredited
+[E2]
+Revision 1 (effective 2030-01-01, since superseded) recorded: Changelog: operating tier for Egret drive cluster set to 9498.
+[E3]
+Revision 1 (effective 2030-01-01, since superseded) recorded: Note: the operating tier for Egret drive cluster resolves to quarantined.
+[E4]
+Revision 2 (effective 2031-06-01) supersedes revision 1: The operating tier registry records that Egret drive cluster is assigned 6543.
+[E5]
+[required dependency] Nimbus sensor array -> Egret drive cluster
+[E6]
+Revision 2 (effective 2031-06-01) supersedes revision 1: [operating tier] Raven drive cluster -> 8249
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

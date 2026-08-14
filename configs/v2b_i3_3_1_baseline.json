@@ -1,0 +1,32 @@
+{
+  "artifacts": {
+    "balance_report": {"path": "experiments/v2b_i3_3/reports/v2b_i3_3_balance_report_v1.json", "sha256": "6fefd9e6dd24da2d62e88849a86c58a1a812848949b5baa0765de5b76736dce1"},
+    "benchmark_manifest": {"path": "experiments/v2b_i3_3/manifests/v2b_i3_3_benchmark_manifest_v1.json", "sha256": "4c0f8a71280b331629080cd0822f410873a0ee8c704f8a24278dcb5d4c908f79"},
+    "controller_packets": {"path": "experiments/v2b_i3_3/controller_packets/v2b_i3_3_controller_packets_v1.json", "sha256": "ad760cd00c609285ebf7a10f3926f392f5d850efefb9b68e3a2425ba2b2e0dc2"},
+    "difficulty_report": {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_difficulty_report_v1.json", "sha256": "5de90959dcb7e055ea02ab40c0149de0d065b8843ad6cca5ac02dc99669bee46"},
+    "generator": {"path": "experiments/v2b_i3_3/generators/generate_v2b_i3_3.py", "sha256": "828920392e8291e6c9f3141ac0ab01345d61a838a4e1da56e80e20b57e709ae4"},
+    "latent_oracle_cache": {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_latent_oracles_v1.jsonl.gz", "sha256": "ce0953238f1a6bfe485999fafe08f59d5f7057367dfbb9af879846a5733b529e"},
+    "observation_masks": {"path": "configs/v2b_i3_observation_masks_v1.json", "sha256": "4b4ea5b125ffceefb92458d1c0cdfd926833efb42c08cbdc35ff84351a404103"},
+    "oracle_cache_manifest": {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_oracle_cache_manifest_v1.json", "sha256": "05158b0a572590b4972bdbe52bbde76892d897b234598a54d50bd1ebd7fee882"},
+    "policy": {"path": "configs/v2b_i3_policy_v1.json", "sha256": "258df0db5049be082814ace8e0ccd06c0462afa31a949bd13546a851ae545c68"},
+    "private_corpus": {"path": "experiments/v2b_i3_3/private/v2b_i3_3_tasks_v1.json", "sha256": "756a454b04b03a33e086a675dd602b76559731fce39abeded94ce62bb85f3627"},
+    "protocol": {"path": "configs/v2b_i3_2_2_protocol_v1.json", "sha256": "943f9dba101d883879484b51ac6db6679496d382bfceb5809d4b107baeaff874"},
+    "resource_profile_and_freeze": {"path": "experiments/v2b_i3_3/configs/v2b_i3_3_benchmark_freeze_v1.json", "sha256": "70b15d6cf94c6cd20ee1019eca06abf25425eac1f232a92541c18b43b206764f"},
+    "sequential_no_conflict": {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_conflict_v1.jsonl.gz", "sha256": "d9e05b43846a2dbfe9e42c26d5a29c48ab265fd5870e27e6cccc49a0a596a421"},
+    "sequential_no_history": {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_history_v1.jsonl.gz", "sha256": "9ebb8f875559e5fcfb56d3f02f80679b5c7ab76930b34817713662cc70909876"},
+    "sequential_no_provenance": {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_provenance_v1.jsonl.gz", "sha256": "d30e8af1a566afb67c4ba218f91f2cb3408863739c51d12007200673491f52d5"},
+    "sequential_no_temporal": {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_temporal_v1.jsonl.gz", "sha256": "5ed94cb838845b47d8547b893b8f807415770e976d7f9e9262ef6c02cd163c31"},
+    "sequential_no_verification": {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_no_verification_v1.jsonl.gz", "sha256": "ab86498192b4b29b1e306fa1df9f4b1235575f7d2dec6e88538a5c8081ad4abe"},
+    "sequential_state_aware": {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_state_aware_controller_v1.jsonl.gz", "sha256": "b639468ed7145940b7f0d4a3a0c9024abe90f1b85fc97a1c51955acaef4ea41a"},
+    "sequential_state_blind": {"path": "experiments/v2b_i3_3/oracle_tables/v2b_i3_3_sequential_state_blind_controller_v1.jsonl.gz", "sha256": "21e5ab89c6c1760c502951a106899049e52998830f070e4824e00b273e80f823"},
+    "split_manifest": {"path": "experiments/v2b_i3_3/splits/v2b_i3_3_splits_v1.json", "sha256": "6504c7629ba1705f670c84279046c835be9903a8d84b1413681a15a36364a316"},
+    "surface_templates": {"path": "experiments/v2b_i3_3/surface_templates/v2b_i3_3_surface_templates_v1.json", "sha256": "0b1c181e7af592a4ab0143982d9b30a1b9c72efa8bf7cea8a048c18551525e04"},
+    "task_families": {"path": "experiments/v2b_i3_3/task_families/v2b_i3_3_families_v1.json", "sha256": "423902038830ea8ed7ad24e78119baf12e941bfe6d7e74913173385828270277"},
+    "utility": {"path": "configs/v2b_i3_1_utility_v1.json", "sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07"}
+  },
+  "claim_boundary": "Recorded I3.3 benchmark baseline for the I3.3.1 integrity pass; not an executive result.",
+  "schema": "DAPH_V2B_I3_3_BASELINE_V1",
+  "source_commit": "7155292ce4d27265299176bdbccb7089413cc9fe",
+  "source_tree_hash": "5271fcdbf1c6b354b1723945eb45b7f000310d30",
+  "status": "RECORDED_DEVELOPMENT_BASELINE_NOT_SCIENTIFICALLY_QUALIFIED"
+}

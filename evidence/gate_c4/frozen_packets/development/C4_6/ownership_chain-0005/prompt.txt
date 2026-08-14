@@ -1,0 +1,11 @@
+[OBJECTIVE]
+What is the ownership tier for PCM-8?
+[EVIDENCE]
+[E1]
+Abbreviation table: PCM-8 = Pelican control module.
+[E2]
+[registered asset] Pelican control module -> Bluebird sensor array
+[E3]
+{"subject": "Bluebird sensor array", "ownership tier": "GAMMA-BLUE"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "9d16445fc20f30ebcf3606b8522dcbe97d14fdff1794d72ce159063373c98b03",
+  "canonical_subject": "Sparrow intake manifold",
+  "ordered_selected_ids": [
+    "ownership_chain-0000/value",
+    "ownership_chain-0000/link"
+  ],
+  "ordered_text_sha256": [
+    "d7d7ff5d255454ac26b173f41ba3ac74325d557c6469d49af15c165c979177d7",
+    "2a6a14987ab21229b2c0995df919ef9a3d0c05b3c889b4be157c8d8be8287adb"
+  ],
+  "query_hash": "eb7c672e2ddb3855aaa06bb562fc1fe4b3c534fefeefb3d0a2bf71eb8830b038",
+  "selector_policy_id": "oracle",
+  "task_id": "ownership_chain-0000"
+}

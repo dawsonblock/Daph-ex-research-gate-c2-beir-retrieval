@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For Osprey control module, which required action is recorded?
+[EVIDENCE]
+[E1]
+Engineering notes indicate Osprey control module uses Bittern pressure assembly as its required dependency.
+[E2]
+[release channel] Osprey control module -> {"state": "accredited"}
+[E3]
+In shorthand, Osprey control module is written OCM-3.
+[E4]
+[change] Kestrel drive cluster :: spare enclosure := Osprey control module
+[E5]
+- updated Osprey intake manifold: required dependency now Jacana pressure assembly
+[E6]
+{"subject": "Bluebird pressure assembly", "required action": "retired"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

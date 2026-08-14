@@ -1,0 +1,17 @@
+[OBJECTIVE]
+What is the routing class for Raven drive cluster?
+[EVIDENCE]
+[E1]
+[proposed routing class] Raven drive cluster -> quarantined Status: rejected.
+[E2]
+Note: the routing class for Raven drive cluster resolves to retired.
+[E3]
+Note: the calibration routing class for Raven drive cluster resolves to accredited.
+[E4]
+- updated Raven drive cluster: former routing class now provisional This record is historical.
+[E5]
+{"subject": "Osprey drive cluster", "routing class": "4470"}
+[E6]
+Revision applied — Heron drive cluster routing class changed to {"state": "suspended"}.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

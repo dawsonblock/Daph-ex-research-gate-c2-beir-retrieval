@@ -1,0 +1,422 @@
+{
+  "budget_candidates_frozen_2026_08_09": {
+    "candidates": {
+      "C1_constant_300": {
+        "clears_all_targets": true,
+        "note": "Simplest possible policy, and it clears every target. Over-provisions small corpora roughly 3x.",
+        "per_scale": {
+          "1000": 300,
+          "1500": 300,
+          "2200": 300,
+          "3000": 300,
+          "700": 300
+        },
+        "policy": "k = 300",
+        "total_k_across_scales": 1500
+      },
+      "C2_capped_fraction_0.15": {
+        "clears_all_targets": true,
+        "note": "Smaller total budget (1080 vs 1500) and much smaller at low N (105 vs 300). PREFERRED under the 'smallest sufficient' rule.",
+        "per_scale": {
+          "1000": 150,
+          "1500": 225,
+          "2200": 300,
+          "3000": 300,
+          "700": 105
+        },
+        "policy": "k = clip(ceil(0.15 * N), 100, 300)",
+        "total_k_across_scales": 1080
+      }
+    },
+    "candidates_converge_at_large_N": "C2 saturates at its 300 cap for N >= 2000, so the two differ only in whether small corpora are over-provisioned. That is the real comparison the S2 evaluation will resolve.",
+    "form_correction": "The protocol's permitted linear k = ceil(rho*N) form is NOT supported by the measurement and is NOT used bare. Median k* grew only 1.25x while N grew 4.29x, median k*/N FALLS monotonically (0.0400 -> 0.0117), and CES vs k/N does not collapse. Both surviving candidates are therefore CAPPED rather than proportional.",
+    "next": "Apply UNCHANGED S2 to pools built by C1 and C2, measuring P(role selected | role available) -- especially bridge against its -0.05 safety bound -- before any HRM spend.",
+    "rejected_comparators_recorded": {
+      "constant_150": {
+        "result": "FAILS bridge at 1500, 2200, 3000 (0.694, 0.659, 0.612)"
+      },
+      "linear_0.05_uncapped": {
+        "per_scale": {
+          "1000": 50,
+          "1500": 75,
+          "2200": 110,
+          "3000": 150,
+          "700": 35
+        },
+        "result": "FAILS bridge at all five scales (0.588, 0.565, 0.612, 0.588, 0.612)"
+      },
+      "sublinear_power_0.72": {
+        "result": "FAILS bridge at 1000 and 1500 (0.671, 0.694) despite matching the aggregate scaling exponent -- an exponent fitted to the endpoints does not guarantee coverage at intermediate scales"
+      }
+    },
+    "rule": "label-free functions of corpus size N only; at most three; smallest that clears every target"
+  },
+  "calibration_requirements_not_yet_built": {
+    "frozen_before_mechanism_evaluation": true,
+    "independent_content": "no overlap with development, qualification_1 or confirmation_1 -- all of which are consumed or in use",
+    "success_shape": "stable downstream utility ACROSS N without hand-changing k per scale; not maximum CES at any single scale",
+    "target_scales_evidence_records": [
+      500,
+      1000,
+      1500,
+      2200,
+      3000
+    ],
+    "why_multi_scale": "The 120-task development corpus is a single scale and cannot test a function of N. Fitting a budget policy to one corpus size would be indistinguishable from fitting a constant."
+  },
+  "candidate_pressure_instrumentation": {
+    "also_track": [
+      "terminal evidence rank within the pool",
+      "protected-record eligibility count",
+      "connected candidate count",
+      "competing relation-match count"
+    ],
+    "examples": {
+      "k=200": 33.33,
+      "k=50": 8.33
+    },
+    "metric": "candidate_count / packet_size",
+    "why": "S2 operates under substantially more distractor competition as k grows; the bridge signal is the one most likely to degrade."
+  },
+  "closed_stop_gate": {
+    "OUTCOME": "OUTCOME_A_POSITIVE",
+    "evidence": {
+      "A_COMPLETE_tasks": 206,
+      "delta_q": 0.1772,
+      "grouped_lcb": 0.0977,
+      "q_J0": 0.3956,
+      "q_J1": 0.5728,
+      "selected_ces": "0.5485 -> 0.7233"
+    },
+    "gate": "B3-B",
+    "interpretation": "S2 remains strongly beneficial when required evidence is available.",
+    "primary_failure_locus": "upstream candidate availability",
+    "provenance": "Candidate pools were re-captured on the scoring platform (A100, torch 2.8.0+cu128, CUDA) and reproduce the scored run 500/500 exactly; the gate read that frozen artifact rather than reconstructing pools, so it does not depend on cross-platform bit-reproducibility. Decision rule frozen in 977d785 before the data existed.",
+    "status": "FROZEN, not provisional"
+  },
+  "closure_2026_08_09": {
+    "not_a_retrieval_failure": "C1 and C2 met every retrieval target. The failure is large candidate pool + current S2 as a composition.",
+    "successor": "configs/gate_b4_candidate_compression_v1.json",
+    "verdict": "B3 retrieval scaling increases availability but fails selector-pressure safety. No candidate-budget policy is promotable with the current S2."
+  },
+  "cost_is_descriptive_not_utility": {
+    "note": "U = Q - lambda*C is a future direction. For B3, cost is descriptive and safety-relevant, NOT preregistered into the objective.",
+    "record": [
+      "retrieval latency",
+      "dense-search latency",
+      "fusion latency",
+      "selector latency",
+      "peak memory",
+      "candidate count"
+    ]
+  },
+  "created_utc": "2026-08-09T07:00:00Z",
+  "determinism_contract": {
+    "cause": "Dense embeddings differ in the last bits between CUDA and CPU, permuting ranks at numerical ties.",
+    "certification_language": "Do not record a generic DETERMINISTIC=true. Record both fields separately with an environment fingerprint in every replay contract.",
+    "cross_platform_bit_reproducibility": "NOT_GUARANTEED",
+    "two_hashes_never_to_be_collapsed": {
+      "candidate_membership_hash": "set membership and availability analysis",
+      "candidate_order_hash": "treatment and order reproducibility"
+    },
+    "within_environment_determinism": "PASS"
+  },
+  "engineering_targets_frozen_2026_08_09": {
+    "caveat": "These targets are set on calibration data, which grows corpora with filler from unrelated tasks and therefore holds confusability density roughly constant. They will be OPTIMISTIC relative to a natively-scaled corpus such as confirmation #1.",
+    "frozen_before_any_S2_evaluation": true,
+    "must_hold": "at EVERY one of the five calibration scales, not on average",
+    "targets": {
+      "bridge_availability": 0.7,
+      "candidate_ces": 0.75,
+      "terminal_availability": 0.9
+    },
+    "why_0.70": "cal_700 -- the scale closest to the development corpus where S2 demonstrably worked -- has bridge availability 0.659 at the frozen k=50. Targeting 0.70 at EVERY scale restores availability to slightly better than the small-corpus level the mechanism was validated at, rather than to an arbitrary round number.",
+    "why_bridge_is_primary": "Bridge is the binding role. At k=50 identity is saturated (1.000 at every scale) and terminal is high and flat (0.917-0.958), while bridge availability collapses monotonically with N: 0.659, 0.565, 0.518, 0.459, 0.365. Confirmation #1 had bridge availability 0.3286, so bridge is both the measured bottleneck and the failure mode being repaired."
+  },
+  "explicitly_out_of_scope_for_v1": {
+    "candidate_compression": "large pool -> cheap structural prefilter -> S2. Only if scaled k proves S2 cannot tolerate larger pools.",
+    "learned_executive": "ANSWER / RETRIEVE_MORE / VERIFY / STOP. RETRIEVE itself is not yet scale-stable, so the executive would be receiving an unreliable primitive.",
+    "packet_size_increase": "forbidden as a response to selector strain; it would destroy attribution.",
+    "staged_expansion": "retrieve base k, inspect runtime state, expand if structurally incomplete. A second mechanism; prove deterministic scaling first."
+  },
+  "fail_closed_budget_invariants": {
+    "on_mismatch": "the run is INVALID",
+    "receipt_must_record": [
+      "corpus_size",
+      "rho",
+      "k_unclamped",
+      "k_min",
+      "k_max",
+      "k_final"
+    ],
+    "recompute_and_require": "k_expected = clip(ceil(rho * corpus_size), k_min, k_max); k_expected == k_actual"
+  },
+  "frozen_and_not_to_be_modified": {
+    "hrm_model_and_revision": "frozen",
+    "identity_stage": "frozen",
+    "packet_budget": 6,
+    "packet_budget_rationale": "Held fixed so any Q gain is attributable to availability rather than to a larger reasoning context. Increasing candidate depth and packet size together would destroy attribution.",
+    "query_construction": "frozen",
+    "retrieval_implementation": "authoritative BM25, dense and fusion paths only. No parallel B3 retriever; the sole treatment difference is budget policy.",
+    "selector": "S2, exactly as frozen in c4_selector_v1. No modification, no retuning."
+  },
+  "known_selector_safety_signal": {
+    "frozen_boundary": -0.05,
+    "metric": "bridge conditional retention, P(bridge selected | bridge available)",
+    "reading": "S2 is strongly useful overall conditional on availability but is NOT uniformly superior. Role-level effects: identity 0.0000, terminal +0.1348, temporal_current +0.3333, bridge -0.0435.",
+    "status": "PRIMARY SAFETY METRIC of candidate-budget scaling, tracked at every k",
+    "value": -0.0435,
+    "why_it_governs_B3": "B3 raises k, which increases distractor competition. Candidate expansion is exactly the intervention that could push -0.0435 past the -0.05 boundary. B3 is therefore NOT 'get more evidence into the pool' -- it is 'increase availability WITHOUT S2 increasingly sacrificing bridge structure'."
+  },
+  "ladder": {
+    "B3_0": {
+      "budget": "fixed k=50",
+      "role": "CONTROL",
+      "selector": "S2"
+    },
+    "B3_1": {
+      "budget": "corpus-scaled k",
+      "role": "PRIMARY",
+      "selector": "S2"
+    },
+    "B3_2": {
+      "budget": "corpus-scaled k",
+      "role": "DIAGNOSTIC: is the gain budget or selector?",
+      "selector": "S0"
+    },
+    "B3_3": {
+      "budget": "corpus-scaled k",
+      "role": "SELECTOR CEILING",
+      "selector": "oracle over pool"
+    },
+    "B3_4": {
+      "budget": "n/a",
+      "role": "SYSTEM CEILING",
+      "selector": "oracle evidence"
+    },
+    "B3_D1": {
+      "budget": "fixed LARGER k",
+      "promotable": false,
+      "role": "DIAGNOSTIC ONLY: separates 'more candidates' from 'scale-aware policy'",
+      "selector": "S2"
+    }
+  },
+  "mandatory_prerequisite_now_satisfied": {
+    "consequence": "Every later failure decomposition is artifact analysis, not model or retrieval replay.",
+    "persisted_per_task_per_arm": [
+      "candidate_ids_ordered",
+      "candidate_ranked (record_id, fusion_rank, fusion_score)",
+      "candidate_order_hash",
+      "candidate_membership_hash",
+      "retrieval_config_hash",
+      "selector_config_hash",
+      "environment_fingerprint"
+    ],
+    "requirement": "the runner must emit the candidate-pool artifact DURING the original run rather than reconstructing it later",
+    "status": "DONE"
+  },
+  "policy_form_only_no_values": {
+    "constrained_search": "At most three candidate rho values, derived from rank-distribution diagnostics rather than swept. A grid search over many values would convert this into hyperparameter fitting.",
+    "form": "k(N) = clip(ceil(rho * N), k_min, k_max)",
+    "how_rho_will_be_chosen": "On NEW multi-scale calibration data, never on confirmation #1 and never on the consumed qualification split. Confirmation #1 may motivate the FORM of the policy but must not select its values.",
+    "inputs_forbidden": [
+      "required evidence count",
+      "oracle proof depth",
+      "latent bridge label",
+      "answer availability",
+      "observed CES",
+      "record_kind",
+      "any evaluation label"
+    ],
+    "inputs_permitted": [
+      "corpus_size N"
+    ],
+    "label_free_requirement": "The policy must be deterministic and label-free. A budget that depends on the answer key is not a retrieval policy.",
+    "prefer_smallest_sufficient": "Choose the smallest policy that clears the coverage target rather than the one maximizing candidate CES. The optimal pool is not necessarily the largest, since expansion costs selector precision and compute.",
+    "rho_status": "NOT CHOSEN. Deliberately absent from this file."
+  },
+  "protocol_id": "b3_candidate_budget_v1",
+  "recorded_future_direction_graph_retrieval": {
+    "eventual_separation_of_concerns": "dense/BM25 chooses where to enter memory; graph traversal chooses where to move; S2 chooses what survives into working memory; HRM interprets; an executive decides whether another operation is worth doing.",
+    "observation": "The current architecture applies graph structure DOWNSTREAM of retrieval: BM25/dense rank mostly-flat records, take top-k, and only then does S2 reason over connections among whatever landed in the pool. So if the chain is A -> B -> C -> ANSWER and C ranks 87th at k=50, S2 can see A -> B but cannot traverse B -> C, because C never entered the pool. That is precisely the confirmation failure: bridge availability 0.3286 while identity availability is 1.000.",
+    "planned_comparison": "Once B3 gives the flat-scaling baseline, compare: k=50 fixed | corpus-scaled k | seed retrieval + bounded graph expansion -- on records searched, candidate CES, bridge availability, Q and cost. The graph result is only interpretable against a measured flat-scaling baseline, which is why B3 comes first.",
+    "status": "RECORDED, NOT STARTED. B3 must finish first so it provides the baseline to compare against.",
+    "the_key_leakage_constraint": {
+      "EVALUATOR_GRAPH": "proof_edges, answer_node, latent_bridge, required_evidence_ids. Ground-truth proof structure. NEVER visible to runtime -- handing it over would leak the answer structure.",
+      "RUNTIME_MEMORY_GRAPH": "constructed only from observable evidence: record mentions entity X, record says X aliases Y, record carries relation R about Y. Safe for retrieval.",
+      "already_enforced": "selector_v2 enforces exactly this asymmetry today -- its one-hop bridge anchor is built from candidate-pool CONTENT via the V4 entity extractor, and a test strips docstrings to assert no executable statement reads record_kind, proof_edges, latent_bridge, answer_node or required_evidence_ids. A runtime graph would extend the same discipline, not relax it."
+    },
+    "why_it_matters_for_scaling": "Flat corpus-fraction retrieval does not extrapolate. A 0.05 fraction of a million-record memory is 50,000 candidates, which is not viable. Seed retrieval plus bounded relation-aware graph expansion could reach a bridge in tens of records instead."
+  },
+  "research_question": "Can a corpus-aware candidate-budget policy keep S2's evidence precondition satisfied as external memory grows, without S2 increasingly sacrificing bridge structure?",
+  "retention_efficiency": {
+    "definition": "selected_CES / candidate_CES",
+    "watch_for": "candidate CES rising while selected CES falls -- candidate expansion overwhelming the selector"
+  },
+  "selector_pressure_criteria_frozen_2026_08_09": {
+    "PRIMARY_SAFETY": {
+      "bound": -0.05,
+      "metric": "delta P(bridge selected | bridge available) vs the k=50+S2 baseline",
+      "must_hold": "at EVERY scale independently, NOT pooled",
+      "why_bridge": "Confirmation #1 measured bridge conditional retention at -0.0435 against this same -0.05 bound. Bridge is the one role S2 degrades rather than improves, and candidate expansion is the intervention most likely to push it over.",
+      "why_per_scale": "A strong small-corpus result could otherwise hide selector overload at N=3000, which is precisely the regime the policy exists to serve."
+    },
+    "also_measured_per_scale_and_policy": [
+      "candidate CES",
+      "selected CES",
+      "P(role selected | role available) for identity / bridge / terminal / temporal_current",
+      "EXACT+bridged answer retention",
+      "disconnected packet rate",
+      "packet size"
+    ],
+    "baseline": "k=50 + S2 at the SAME scale (so the contrast isolates pool size, not selector version)",
+    "competition_diagnostics": {
+      "per_task": [
+        "candidate_count",
+        "connected_candidate_count",
+        "bridge_candidate_count",
+        "target_relation_candidate_count",
+        "protection_eligible_count"
+      ],
+      "purpose": "Explain any bridge degradation rather than merely observing it. If k=50 offers 2 plausible bridge records and k=300 offers 17, S2's local structural rule becomes under-specified and it starts choosing poorly. That is far more informative than a falling number."
+    },
+    "decision_rule": {
+      "C1_materially_better_than_C2": "small-scale over-provisioning is buying useful context; the cost tradeoff becomes real and must be weighed explicitly",
+      "C2_preserves_and_C1_merely_equal": "freeze C2 -- same retrieval adequacy at ~28% less aggregate depth",
+      "both_gain_availability_but_bridge_falls_below_-0.05": "STOP before HRM. B3 retrieval scaling works but S2 becomes the bottleneck under candidate pressure; open a selector-capacity or prefiltering sprint.",
+      "both_preserve_selector_quality": "proceed to HRM and test whether the retrieval gain converts to downstream Q"
+    },
+    "frozen_before_running": true,
+    "no_hrm_until_this_passes": true,
+    "question": "Not 'can the retriever surface enough evidence' -- that is answered and both candidates passed. Now: can UNCHANGED S2 still compress these larger candidate pools safely?",
+    "s2_unchanged": "S2 is applied exactly as frozen. No retuning, no adaptation to larger pools -- that would confound the pressure test with a selector change.",
+    "treatments": [
+      "C1 = k 300 + S2",
+      "C2 = clip(ceil(0.15N),100,300) + S2"
+    ]
+  },
+  "selector_pressure_result_2026_08_09": {
+    "WHY_the_competition_diagnostics_explain_it": {
+      "cal_3000_k300": {
+        "bridge_candidates": 23.6,
+        "connected_candidates": 103.8
+      },
+      "cal_700_k50_to_k300": {
+        "bridge_candidates": "4.8 -> 7.1 (x1.5)",
+        "connected_candidates": "10.0 -> 53.2 (x5.3)",
+        "target_relation_matches": "26.7 -> 36.4 (x1.4)"
+      },
+      "candidate_pressure": "k/packet rises from 8.3x at k=50 to 50x at k=300",
+      "mechanism": "S2's structural rule is LOCAL and under-specified once many candidates satisfy it. Connected candidates grow ~5x faster than the packet budget (which is fixed at 6), so the number of records that look structurally plausible explodes while the number S2 may keep does not. Protection eligibility barely moves (0.41 -> 0.45), meaning S2 still finds something to protect -- it simply cannot discriminate among many plausible bridges. This is candidate-pressure overload, not a coding defect.",
+      "purpose_served": "These counts were added specifically so a bridge drop could be explained rather than merely observed, and they do explain it."
+    },
+    "artifact": "evidence/gate_b3/calibration/selector_pressure.json",
+    "bridge_safety": {
+      "bound": -0.05,
+      "cal_1000": {
+        "C1": -0.0261,
+        "C2": 0.0854,
+        "verdict": "pass"
+      },
+      "cal_1500": {
+        "C1": -0.0925,
+        "C2": -0.1064,
+        "verdict": "FAIL"
+      },
+      "cal_2200": {
+        "C1": 0.0694,
+        "C2": 0.0694,
+        "verdict": "pass"
+      },
+      "cal_3000": {
+        "C1": -0.0149,
+        "C2": -0.0149,
+        "verdict": "pass"
+      },
+      "cal_700": {
+        "C1": -0.2865,
+        "C2": -0.1667,
+        "verdict": "FAIL"
+      },
+      "required": "at EVERY scale, not pooled",
+      "terminal_also_degrades": "terminal conditional retention falls at every scale too, e.g. cal_700 0.455 -> 0.293, cal_3000 0.311 -> 0.147. The damage is not bridge-specific.",
+      "the_passes_are_a_FLOOR_EFFECT_not_safety": "Where the delta passes, the k=50 BASELINE bridge retention is already near zero (0.140 at cal_1000, 0.000 at cal_2200, 0.030 at cal_3000), so there is almost nothing left to lose. Reading those as safety would be wrong. The per-scale requirement is what exposed this: a pooled average would have looked survivable."
+    },
+    "criteria_frozen_before_running": "configs/gate_b3_candidate_budget_v1.json selector_pressure_criteria_frozen_2026_08_09 (committed 110c73a)",
+    "decision_per_frozen_rule": "Outcome 3 of the preregistered decision rule: 'both improve candidate CES but bridge conditional retention falls beyond -0.05 -> STOP before HRM and open a selector-capacity or prefiltering sprint.' Neither C1 nor C2 may be frozen as a budget policy on this evidence.",
+    "headline": "Retrieval scaling works and S2 cannot use it. Candidate CES rises substantially at every scale (e.g. cal_700 0.713 -> 0.940, cal_3000 0.593 -> 0.833) while SELECTED CES given availability COLLAPSES (cal_700 0.692 -> 0.234, cal_3000 0.573 -> 0.144). This is precisely the 'candidate CES up / selected CES down' signature that was preregistered as the stop condition.",
+    "interpretation": "B3's retrieval hypothesis is CONFIRMED: bigger pools do carry the missing evidence, and availability targets were met. The blocking problem has MOVED downstream. S2 was validated on 50-candidate pools and does not survive 300-candidate pools; more availability without more discrimination makes the packet worse, not better.",
+    "next": "Open a selector-capacity sprint: either a cheap structural prefilter (large pool -> bounded working set -> S2 -> 6-record packet) or the runtime-graph expansion, both of which decouple availability from candidate pressure. B3 budget selection is BLOCKED until S2 can tolerate larger pools.",
+    "retention_efficiency_selected_over_candidate": {
+      "cal_1000": {
+        "C1": 0.22,
+        "C2": 0.409,
+        "k50": 0.851
+      },
+      "cal_1500": {
+        "C1": 0.184,
+        "C2": 0.216,
+        "k50": 0.925
+      },
+      "cal_2200": {
+        "C1": 0.216,
+        "C2": 0.216,
+        "k50": 0.815
+      },
+      "cal_3000": {
+        "C1": 0.173,
+        "C2": 0.173,
+        "k50": 0.966
+      },
+      "cal_700": {
+        "C1": 0.249,
+        "C2": 0.527,
+        "k50": 0.97
+      }
+    },
+    "status": "BRIDGE_SAFETY_FAIL. This is the preregistered STOP case. No HRM was run and none should be until selector capacity is addressed.",
+    "strongly_motivates": "Candidate compression / prefiltering between retrieval and S2, and the runtime-graph direction already recorded. A graph that reaches the bridge through relation-aware expansion would deliver availability WITHOUT handing S2 a 300-candidate pool -- which is now measured to be the harmful part, not a hypothetical.",
+    "what_must_NOT_be_done": [
+      "do not run HRM on these pools",
+      "do not weaken the -0.05 bound",
+      "do not raise the packet budget to relieve the strain (it would destroy attribution and was preregistered as forbidden)",
+      "do not pick C2 merely because it fails less"
+    ],
+    "what_was_tested": "UNCHANGED S2 applied to pools built by k=50 (baseline), C1 (k=300) and C2 (clip(ceil(0.15N),100,300)) at all five calibration scales. Packet budget fixed at 6. No HRM."
+  },
+  "split_lineage": {
+    "calibration_multi_scale": "to be built; B3 mechanism development",
+    "confirmation_1": "negative result, CONSUMED, diagnostics only",
+    "confirmation_2": "future untouched one-shot test, built and frozen before any result is seen",
+    "development": "mechanism development",
+    "qualification_1": "negative result, CONSUMED, diagnostics only"
+  },
+  "staged_gates_before_gpu": {
+    "gate_1_retrieval_only": "scaled budget must raise candidate availability across corpus scales. If it does not: STOP, no GPU.",
+    "gate_2_selector_only": "apply UNCHANGED S2 to the frozen pools. Require higher availability AND preserved selector retention -- especially bridge conditional retention above its boundary. If candidate CES rises while S2 retention collapses: STOP, address selector capacity before spending GPU.",
+    "gate_3_hrm": "only then measure Q, primary contrast B3-1 vs B3-0."
+  },
+  "status": "CLOSED__RETRIEVAL_SUFFICIENT_BUT_COMPOSITION_UNSAFE__NO_POLICY_PROMOTED",
+  "success_criteria_deferred": {
+    "explicitly_not_set_now": "Setting them before calibration exists would either be arbitrary or smuggle in confirmation #1's numbers.",
+    "must_include": [
+      "primary delta_Q(B3-1 - B3-0)",
+      "candidate CES improvement",
+      "family-grouped LCB > 0",
+      "cluster-grouped LCB > 0",
+      "family regression tolerance",
+      "entity_regime regression tolerance",
+      "EXACT_bridged retention safety",
+      "bridge conditional retention above its frozen boundary",
+      "selected-CES efficiency must not collapse"
+    ],
+    "status": "delta_Q threshold, grouped CI requirements and subgroup tolerances will be frozen BEFORE the B3 HRM run and AFTER calibration exists"
+  },
+  "three_budgets_are_separate": {
+    "candidate_pool_budget": "how many candidates survive fusion into the pool -- the B3 treatment variable",
+    "hrm_packet_budget": "how many records reach the reader; FIXED at 6",
+    "retriever_search_depth": "how deep each constituent retriever is asked to rank",
+    "why": "Conflating these is how a budget experiment silently becomes a context-length experiment. They are recorded and varied independently."
+  },
+  "why_this_and_not_general_retrieval_improvement": "Confirmation #1 established that S2 is not the defect. Conditional on complete candidate evidence its effect reproduces almost exactly across splits (+0.1750 development, +0.1772 confirmation). The failure is that a fixed k=50 stops delivering that precondition as the corpus grows. So the target is narrow: availability at scale, with S2 and the packet budget untouched."
+}

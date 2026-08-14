@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For MPA-5, which assigned category is recorded?
+[EVIDENCE]
+[E1]
+- updated Raven control module: assigned category now {"category": "quarantined"}
+[E2]
+[assigned category] Curlew intake manifold -> 8563
+[E3]
+In shorthand, Marlin pressure assembly is written MPA-5.
+[E4]
+{"subject": "Marlin pressure assembly", "assigned category": "THETA-OLIVE"}
+[E5]
+The assigned category registry records that Quail control module is assigned THETA-OLIVE.
+[E6]
+Changelog: assigned category for Jacana pressure assembly set to suspended.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

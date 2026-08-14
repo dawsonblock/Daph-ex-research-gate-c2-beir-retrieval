@@ -1,0 +1,29 @@
+{
+  "evidence_count": 1000,
+  "evidence_sha256": "5118689d140280ec26081e332da7c5e92e7282d93a0ee59dd6d3a8097ded0783",
+  "family_counts": {
+    "configuration_chain": 15,
+    "dependency_chain": 15,
+    "distractor_heavy": 15,
+    "entity_attribute": 15,
+    "location_chain": 15,
+    "numeric_chain": 15,
+    "ownership_chain": 15,
+    "procedural_chain": 15,
+    "temporal_chain": 15,
+    "temporal_update": 15
+  },
+  "generation_seed": 9402,
+  "generator_revision": "controlled-gate-a-v4",
+  "scale_conformance": {
+    "actual": 1000,
+    "ratio": 1.0,
+    "target": 1000,
+    "tolerance": 0.05
+  },
+  "split_id": "exec2_1000",
+  "target_evidence_count": 1000,
+  "task_count": 150,
+  "task_sha256": "3f607a4af9cdcfe39a281a9edee6473107e376839cb3d31586935a0537c717c6",
+  "tasks_per_family": 15
+}

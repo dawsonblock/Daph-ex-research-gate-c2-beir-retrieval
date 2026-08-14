@@ -1,0 +1,16 @@
+{
+  "schema": "DAPH_COGNITIVE_POLICY_V2",
+  "status": "SCHEMA_FROZEN_RULE_CORPUS_NOT_YET_FROZEN",
+  "allowed_heads": [
+    "deny(task, action, reason)",
+    "require(task, action, reason)"
+  ],
+  "validation": [
+    "unique_rule_ids",
+    "positive_finite_horn_clauses",
+    "range_restricted_variables",
+    "known_v2b_action",
+    "policy_conflict_denies"
+  ],
+  "mutable_runtime_rules_forbidden": true
+}

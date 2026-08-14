@@ -1,0 +1,12 @@
+{
+  "binding_assertion_failures": "all (fail-closed: a violation raises, not counts)",
+  "certified_memory_v1_identity_hash": "97b3b49cb95fa33b",
+  "families_run": [
+    "ANSWER_NOW_viable",
+    "MEMORY_required"
+  ],
+  "mode": "execute",
+  "receipts_written": 288,
+  "schema_version": "exec-training-v1-collection",
+  "source_commit": "f2a70affdcbe70de43e0f96fdbccaaf07b3c3d64"
+}

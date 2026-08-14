@@ -1,0 +1,17 @@
+{
+  "candidate_pool_hash": "d657528827470a75d9a6be1445218c4ed89b1db8046ddc6f4681cd3ebe20d190",
+  "canonical_subject": "Osprey relay unit",
+  "ordered_selected_ids": [
+    "ownership_chain-0001/identity",
+    "ownership_chain-0001/link",
+    "ownership_chain-0001/value"
+  ],
+  "ordered_text_sha256": [
+    "e511ee38287edbb5bfa637eb4899d90e4e3f028379511118ad3aea0b9f92db0c",
+    "9ea565892ce9f3b0f6184a47c089af0eb35d693c1cde378680f2a8254897eb1b",
+    "304ec075fe8a6a94baa0cfb56c28bd0925c097b309131769622d1413f7a9e8fa"
+  ],
+  "query_hash": "2c8ca5f5b5fab64caad0f8b33cb6e93909fe2cae8181057440c35a6c4ebede66",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "ownership_chain-0001"
+}

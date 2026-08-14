@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For WIM-5, which parameter grade is recorded?
+[EVIDENCE]
+[E1]
+{"subject": "Bluebird control module", "parameter grade": "{"grade": "provisional"}"}
+[E2]
+In shorthand, Wren intake manifold is written WIM-5.
+[E3]
+{"subject": "Ibis intake manifold", "parameter grade": "7863"}
+[E4]
+For Heron sensor array, parameter grade requires {"category": "accredited"}.
+[E5]
+Changelog: parameter grade for Dunlin drive cluster set to {"grade": "provisional"}.
+[E6]
+[parameter grade] Dunlin pressure assembly -> THETA-OLIVE
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

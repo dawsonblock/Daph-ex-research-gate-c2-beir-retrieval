@@ -126,10 +126,20 @@ def test_empty_batch_is_a_no_op():
     os.environ.get("HRM_EQUIVALENCE_TEST") != "1",
     reason="set HRM_EQUIVALENCE_TEST=1 to check against the real checkpoint",
 )
-def test_batched_matches_sequential_on_the_real_checkpoint():
-    """The gate: identical greedy completions, or batching is unusable."""
+@pytest.mark.parametrize("dtype", [torch.float16, torch.bfloat16], ids=["float16", "bfloat16"])
+def test_batched_matches_sequential_on_the_real_checkpoint(dtype):
+    """The gate: identical greedy completions, or batching is unusable.
 
-    adapter = HRMAdapter.from_pretrained(spec=HRMModelSpec(), dtype=torch.bfloat16,
+    float16 is included (not just bfloat16) because it is what run_gate_c4.py's
+    _load_hrm() actually selects on CUDA (dtype = torch.float16 for the ~2x GPU
+    speedup) -- the two dtypes round differently, and a batching bug could pass
+    under one and fail under the other. Prompts deliberately span a wide length
+    range (single evidence line to multi-item packet) since left-padding is
+    exactly where a batching bug would show up, and it would show up worst on
+    whichever prompt is shortest relative to the batch's longest member.
+    """
+
+    adapter = HRMAdapter.from_pretrained(spec=HRMModelSpec(), dtype=dtype,
                                          device_map="auto")
     prompts = [
         "[OBJECTIVE]\nWhich category applies to Atlas controller?\n[EVIDENCE]\n"
@@ -140,6 +150,17 @@ def test_batched_matches_sequential_on_the_real_checkpoint():
         "[RESPONSE REQUIREMENT]\nReturn only the answer.",
         "[OBJECTIVE]\nIdentify the grade for LAX-5.\n[EVIDENCE]\n"
         "[E1]\nLAX-5\tgrade\t{\"state\": \"retired\"}\n"
+        "[RESPONSE REQUIREMENT]\nReturn only the answer.",
+        # Much shorter than the others -- the case most exposed to left-padding.
+        "[OBJECTIVE]\nWhat is X?\n[EVIDENCE]\n[E1]\nX is Y.\n"
+        "[RESPONSE REQUIREMENT]\nReturn only the answer.",
+        # Much longer, multi-evidence packet.
+        "[OBJECTIVE]\nWhich subsystem depends on the Vega relay, and what is "
+        "its current status?\n[EVIDENCE]\n"
+        "[E1]\nThe Vega relay feeds telemetry to the Orion subsystem.\n"
+        "[E2]\nOrion subsystem status as of the last audit: DEGRADED.\n"
+        "[E3]\nThe Vega relay itself reports nominal power draw.\n"
+        "[E4]\nDegraded status on Orion has been open for 12 cycles.\n"
         "[RESPONSE REQUIREMENT]\nReturn only the answer.",
     ]
     sequential = [

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which service region applies to GRU-6?
+[EVIDENCE]
+[E1]
+[change] Auk relay unit :: service region := GAMMA-BLUE
+[E2]
+{"subject": "Bluebird intake manifold", "service region": "EPSILON-SLATE"}
+[E3]
+- updated Gannet pressure assembly: service region now 4305
+[E4]
+GRU-6 is the short code for Gannet relay unit.
+[E5]
+{"subject": "Kestrel sensor array", "service region": "{"grade": "retired"}"}
+[E6]
+{"subject": "Quail control module", "service region": "provisional"}
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

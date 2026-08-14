@@ -1,0 +1,17 @@
+[OBJECTIVE]
+For NIM-4, which ownership tier is recorded?
+[EVIDENCE]
+[E1]
+In shorthand, Nimbus intake manifold is written NIM-4.
+[E2]
+[change] Bluebird intake manifold :: ownership tier := {"tier": "suspended"}
+[E3]
+Registry entry: Nimbus intake manifold — ownership tier — {"tier": "suspended"}.
+[E4]
+{"subject": "Bluebird sensor array", "ownership tier": "GAMMA-BLUE"}
+[E5]
+{"subject": "Teal drive cluster", "ownership tier": "retired"}
+[E6]
+[change] Osprey drive cluster :: ownership tier := accredited
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

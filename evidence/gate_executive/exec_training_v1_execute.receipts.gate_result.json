@@ -1,0 +1,42 @@
+{
+  "P_accept_given_memory_would_improve": 0.7777777777777778,
+  "P_escalate_given_direct_sufficient": 0.11428571428571428,
+  "delta_u_gate": -0.1363636363636364,
+  "delta_u_gate_lcb_2p5": -0.3182,
+  "eval_utilities": {
+    "E0_always_accept_direct": 0.38636363636363635,
+    "E1_always_escalate_to_memory": 0.5681818181818182,
+    "E2_fixed_confidence_threshold": 0.5681818181818182,
+    "E3_logistic_value_predictor": 0.4318181818181818,
+    "E4_oracle_escalation": 0.5909090909090909
+  },
+  "fixed_confidence_threshold": 0.843299,
+  "logistic_bias": -1.4243567365088199,
+  "logistic_feature_mean": [
+    0.7061946300000002,
+    0.41307229,
+    0.6264564000000004,
+    1.8140057600000006,
+    3.34
+  ],
+  "logistic_feature_std": [
+    0.1753491138442767,
+    0.3187444789780458,
+    0.2269282533367319,
+    1.2706579129113718,
+    2.7394159961568465
+  ],
+  "logistic_weights": [
+    -0.23522851450193646,
+    -0.8341017126805,
+    -0.5304386450426033,
+    -0.1132782570322136,
+    0.20961833821438325
+  ],
+  "n_eval": 44,
+  "n_total": 144,
+  "n_train": 100,
+  "policy_regret": 0.15909090909090912,
+  "promoted": false,
+  "split_seed": 9801
+}

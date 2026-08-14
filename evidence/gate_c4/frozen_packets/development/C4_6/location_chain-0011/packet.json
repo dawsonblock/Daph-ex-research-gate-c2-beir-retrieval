@@ -1,0 +1,15 @@
+{
+  "candidate_pool_hash": "43739a9592ac8754a9b0ada245cb49684a4050b604ec436ee6313299606690e6",
+  "canonical_subject": "Gannet control module",
+  "ordered_selected_ids": [
+    "location_chain-0011/identity",
+    "location_chain-0011/direct"
+  ],
+  "ordered_text_sha256": [
+    "cf425adf6d6d79494f1114b3aa27f037aeac131fbecc4832fc94381009e8768d",
+    "a891021cdadbd3c2dc45a45568663162d6ec0e2c55b059be4dc7c400172ffa49"
+  ],
+  "query_hash": "c9d22f1e491cf00f315b4ddddec680fcc86fa55421d6ef8f2c45bfccc7fd477d",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "location_chain-0011"
+}

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+Which release channel applies to ICM-8?
+[EVIDENCE]
+[E1]
+[release channel] Auk drive cluster -> BETA-GREEN
+[E2]
+{"subject": "Bluebird sensor array", "release channel": "DELTA-AMBER"}
+[E3]
+[release channel] Osprey control module -> {"state": "accredited"}
+[E4]
+Registry entry: Ibis sensor array — release channel — 6392.
+[E5]
+{"subject": "Pelican intake manifold", "release channel": "{"category": "provisional"}"}
+[E6]
+For Kestrel intake manifold, release channel requires 7729.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to SPA-3?
+[EVIDENCE]
+[E1]
+SPA-3 is the short code for Sparrow pressure assembly.
+[E2]
+Revision 2 (effective 2031-06-01) supersedes revision 1: - updated Finch sensor array: operating tier now {"tier": "provisional"}
+[E3]
+Revision 2 (effective 2031-06-01) supersedes revision 1: [operating tier] Egret drive cluster -> accredited
+[E4]
+Revision 2 (effective 2031-06-01) supersedes revision 1: subject=Pelican drive cluster; operating tier=THETA-OLIVE
+[E5]
+Revision 2 (effective 2031-06-01) supersedes revision 1: [operating tier] Raven drive cluster -> 8249
+[E6]
+Revision 2 (effective 2031-06-01) supersedes revision 1: subject=Raven pressure assembly; operating tier=true
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,18 +1,61 @@
 {
-  "diffs": {
-    "42": {
-      "identity_canonical": 0,
-      "identity_status": 0,
-      "packet_hash": 0,
-      "query": 0,
-      "selected_ids": 0
+  "arms": [
+    "C4_4"
+  ],
+  "compared_fields": [
+    "query_text",
+    "candidate_ids",
+    "candidate_pool_hash",
+    "identity_status",
+    "identity_canonical",
+    "selected_ids",
+    "membership_hash",
+    "order_hash",
+    "ordered_selected_ids",
+    "packet_hash",
+    "prompt_hash"
+  ],
+  "per_arm": {
+    "C4_4": {
+      "diffs": {
+        "12345": {
+          "candidate_ids": 0,
+          "candidate_pool_hash": 0,
+          "identity_canonical": 0,
+          "identity_status": 0,
+          "membership_hash": 0,
+          "order_hash": 0,
+          "ordered_selected_ids": 0,
+          "packet_hash": 0,
+          "prompt_hash": 0,
+          "query_text": 0,
+          "selected_ids": 0
+        },
+        "42": {
+          "candidate_ids": 0,
+          "candidate_pool_hash": 0,
+          "identity_canonical": 0,
+          "identity_status": 0,
+          "membership_hash": 0,
+          "order_hash": 0,
+          "ordered_selected_ids": 0,
+          "packet_hash": 0,
+          "prompt_hash": 0,
+          "query_text": 0,
+          "selected_ids": 0
+        }
+      },
+      "result": "PASS",
+      "tasks": 120
     }
   },
   "result": "PASS",
-  "schema_version": "c4-determinism-qualification-v1",
+  "schema_version": "c4-determinism-qualification-v2",
   "seeds": [
     0,
-    42
+    42,
+    12345
   ],
-  "tasks": 20
+  "split": "development",
+  "tasks": 120
 }

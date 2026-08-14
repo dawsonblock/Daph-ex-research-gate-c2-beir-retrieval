@@ -1,0 +1,21 @@
+[OBJECTIVE]
+What is the service region for Pelican sensor array?
+[EVIDENCE]
+[E1]
+Registry entry: Egret sensor array — service region — THETA-OLIVE.
+[E2]
+mounted monitor:
+  subject: Pelican sensor array
+  value: Finch sensor array
+[E3]
+mounted monitor:
+  subject: Pelican sensor array
+  value: Marlin control module
+[E4]
+[change] Wren sensor array :: service region := {"grade": "provisional"}
+[E5]
+{"subject": "Kestrel sensor array", "service region": "{"grade": "retired"}"}
+[E6]
+[registered asset] Pelican control module -> Bluebird sensor array
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

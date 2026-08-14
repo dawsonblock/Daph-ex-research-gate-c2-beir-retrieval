@@ -1,0 +1,342 @@
+{
+  "arms": {
+    "R0_frozen_rrf": {
+      "ces_at_budget": 0.7583,
+      "ces_delta_ci_family": [
+        0.0,
+        0.0
+      ],
+      "ces_delta_ci_regime": [
+        0.0,
+        0.0
+      ],
+      "ces_delta_vs_R0": 0.0,
+      "displacement_residual": 7,
+      "mean_pool_symmetric_difference_vs_R0": 0.0,
+      "per_entity_regime_ces_delta": {
+        "abbreviation": 0.0,
+        "canonical": 0.0
+      },
+      "per_family_ces_delta": {
+        "configuration_chain": 0.0,
+        "dependency_chain": 0.0,
+        "distractor_heavy": 0.0,
+        "entity_attribute": 0.0,
+        "location_chain": 0.0,
+        "numeric_chain": 0.0,
+        "ownership_chain": 0.0,
+        "procedural_chain": 0.0,
+        "temporal_chain": 0.0,
+        "temporal_update": 0.0
+      },
+      "promotable": true,
+      "role_recall": {
+        "BRIDGE": 0.6515,
+        "IDENTITY": 1.0,
+        "TEMPORAL_CURRENT": 0.8333,
+        "TERMINAL_ANSWER": 0.9792
+      }
+    },
+    "R1_max_reciprocal": {
+      "ces_at_budget": 0.7833,
+      "ces_delta_ci_family": [
+        0.0,
+        0.05
+      ],
+      "ces_delta_ci_regime": [
+        0.0167,
+        0.0333
+      ],
+      "ces_delta_vs_R0": 0.025,
+      "displacement_residual": 5,
+      "mean_pool_symmetric_difference_vs_R0": 6.82,
+      "per_entity_regime_ces_delta": {
+        "abbreviation": 0.0167,
+        "canonical": 0.0333
+      },
+      "per_family_ces_delta": {
+        "configuration_chain": 0.0833,
+        "dependency_chain": 0.0,
+        "distractor_heavy": 0.0,
+        "entity_attribute": 0.0,
+        "location_chain": 0.0,
+        "numeric_chain": 0.0,
+        "ownership_chain": 0.0833,
+        "procedural_chain": 0.0,
+        "temporal_chain": 0.0833,
+        "temporal_update": 0.0
+      },
+      "promotable": true,
+      "role_recall": {
+        "BRIDGE": 0.6667,
+        "IDENTITY": 1.0,
+        "TEMPORAL_CURRENT": 0.8333,
+        "TERMINAL_ANSWER": 0.9896
+      }
+    },
+    "R2_reserved_slot_interleave": {
+      "ces_at_budget": 0.7833,
+      "ces_delta_ci_family": [
+        0.0,
+        0.05
+      ],
+      "ces_delta_ci_regime": [
+        0.0167,
+        0.0333
+      ],
+      "ces_delta_vs_R0": 0.025,
+      "displacement_residual": 5,
+      "mean_pool_symmetric_difference_vs_R0": 6.82,
+      "per_entity_regime_ces_delta": {
+        "abbreviation": 0.0167,
+        "canonical": 0.0333
+      },
+      "per_family_ces_delta": {
+        "configuration_chain": 0.0833,
+        "dependency_chain": 0.0,
+        "distractor_heavy": 0.0,
+        "entity_attribute": 0.0,
+        "location_chain": 0.0,
+        "numeric_chain": 0.0,
+        "ownership_chain": 0.0833,
+        "procedural_chain": 0.0,
+        "temporal_chain": 0.0833,
+        "temporal_update": 0.0
+      },
+      "promotable": true,
+      "role_recall": {
+        "BRIDGE": 0.6667,
+        "IDENTITY": 1.0,
+        "TEMPORAL_CURRENT": 0.8333,
+        "TERMINAL_ANSWER": 0.9896
+      }
+    },
+    "R3_oracle_fusion": {
+      "ces_at_budget": 1.0,
+      "ces_delta_ci_family": [
+        0.1333,
+        0.3667
+      ],
+      "ces_delta_ci_regime": [
+        0.0833,
+        0.4
+      ],
+      "ces_delta_vs_R0": 0.2417,
+      "displacement_residual": 0,
+      "mean_pool_symmetric_difference_vs_R0": 0.48,
+      "per_entity_regime_ces_delta": {
+        "abbreviation": 0.4,
+        "canonical": 0.0833
+      },
+      "per_family_ces_delta": {
+        "configuration_chain": 0.3333,
+        "dependency_chain": 0.25,
+        "distractor_heavy": 0.0833,
+        "entity_attribute": 0.0,
+        "location_chain": 0.25,
+        "numeric_chain": 0.25,
+        "ownership_chain": 0.25,
+        "procedural_chain": 0.25,
+        "temporal_chain": 0.75,
+        "temporal_update": 0.0
+      },
+      "promotable": false,
+      "role_recall": {
+        "BRIDGE": 1.0,
+        "IDENTITY": 1.0,
+        "TEMPORAL_CURRENT": 1.0,
+        "TERMINAL_ANSWER": 1.0
+      }
+    },
+    "R4_asymmetric_constituent_depth": {
+      "ces_at_budget": 0.7833,
+      "ces_delta_ci_family": [
+        0.0,
+        0.05
+      ],
+      "ces_delta_ci_regime": [
+        0.0167,
+        0.0333
+      ],
+      "ces_delta_vs_R0": 0.025,
+      "displacement_residual": 5,
+      "mean_pool_symmetric_difference_vs_R0": 7.8,
+      "per_entity_regime_ces_delta": {
+        "abbreviation": 0.0167,
+        "canonical": 0.0333
+      },
+      "per_family_ces_delta": {
+        "configuration_chain": 0.0833,
+        "dependency_chain": 0.0,
+        "distractor_heavy": 0.0,
+        "entity_attribute": 0.0,
+        "location_chain": 0.0,
+        "numeric_chain": 0.0,
+        "ownership_chain": 0.0833,
+        "procedural_chain": 0.0,
+        "temporal_chain": 0.0833,
+        "temporal_update": 0.0
+      },
+      "promotable": true,
+      "role_recall": {
+        "BRIDGE": 0.6667,
+        "IDENTITY": 1.0,
+        "TEMPORAL_CURRENT": 0.8333,
+        "TERMINAL_ANSWER": 0.9896
+      }
+    }
+  },
+  "candidate_budget": 50,
+  "constituent_depth": 534,
+  "corpus_records": 534,
+  "k_rrf": 10,
+  "protocol_id": "c4_retrieval_fusion_v1",
+  "r4_prospective_criteria": {
+    "all_passed": false,
+    "applies_to": "the R4 decision only; never retroactively to R0-R3",
+    "checks": {
+      "bootstrap_lcb_vs_R1_gt_0": {
+        "observed": 0.0,
+        "passed": false
+      },
+      "entity_regime_regression_not_worse_than_-0.05": {
+        "observed": {
+          "canonical": 0.0
+        },
+        "passed": true
+      },
+      "family_regression_not_worse_than_-0.05": {
+        "observed": {
+          "entity_attribute": 0.0
+        },
+        "passed": true
+      },
+      "primary_ces_delta_vs_R1_ge_0.025": {
+        "observed": 0.0,
+        "passed": false
+      },
+      "role_BRIDGE_ge_R1": {
+        "observed": [
+          0.6667,
+          0.6667
+        ],
+        "passed": true
+      },
+      "role_IDENTITY_ge_R1_minus_0.01": {
+        "observed": [
+          1.0,
+          1.0
+        ],
+        "passed": true
+      },
+      "role_TEMPORAL_CURRENT_ge_R1": {
+        "observed": [
+          0.8333,
+          0.8333
+        ],
+        "passed": true
+      },
+      "role_TERMINAL_ANSWER_ge_R1": {
+        "observed": [
+          0.9896,
+          0.9896
+        ],
+        "passed": true
+      }
+    },
+    "frozen_before_run": true,
+    "verdict": "R4_FAILS__FREEZE_R1_AS_MINIMAL_REPAIR"
+  },
+  "r4_rescue_accounting": {
+    "events": [
+      {
+        "bm25_rank": 1,
+        "bm25_rank_in_reserved_window": false,
+        "dense_rank": 1,
+        "in_r1_pool": true,
+        "in_r4_pool": true,
+        "origin": "both",
+        "record_id": "ownership_chain-0009/identity",
+        "task_id": "ownership_chain-0009",
+        "transition": "R0_miss_to_R4_hit"
+      },
+      {
+        "bm25_rank": null,
+        "bm25_rank_in_reserved_window": false,
+        "dense_rank": 28,
+        "in_r1_pool": true,
+        "in_r4_pool": true,
+        "origin": "dense_only",
+        "record_id": "ownership_chain-0009/link",
+        "task_id": "ownership_chain-0009",
+        "transition": "R0_miss_to_R4_hit"
+      },
+      {
+        "bm25_rank": 11,
+        "bm25_rank_in_reserved_window": false,
+        "dense_rank": 14,
+        "in_r1_pool": true,
+        "in_r4_pool": true,
+        "origin": "both",
+        "record_id": "ownership_chain-0009/value",
+        "task_id": "ownership_chain-0009",
+        "transition": "R0_miss_to_R4_hit"
+      },
+      {
+        "bm25_rank": 37,
+        "bm25_rank_in_reserved_window": true,
+        "dense_rank": 20,
+        "in_r1_pool": true,
+        "in_r4_pool": true,
+        "origin": "both",
+        "record_id": "configuration_chain-0008/link",
+        "task_id": "configuration_chain-0008",
+        "transition": "R0_miss_to_R4_hit"
+      },
+      {
+        "bm25_rank": 28,
+        "bm25_rank_in_reserved_window": true,
+        "dense_rank": 287,
+        "in_r1_pool": true,
+        "in_r4_pool": true,
+        "origin": "bm25_only",
+        "record_id": "configuration_chain-0008/value",
+        "task_id": "configuration_chain-0008",
+        "transition": "R0_miss_to_R4_hit"
+      },
+      {
+        "bm25_rank": 4,
+        "bm25_rank_in_reserved_window": false,
+        "dense_rank": 2,
+        "in_r1_pool": true,
+        "in_r4_pool": true,
+        "origin": "both",
+        "record_id": "temporal_chain-0002/link",
+        "task_id": "temporal_chain-0002",
+        "transition": "R0_miss_to_R4_hit"
+      },
+      {
+        "bm25_rank": 28,
+        "bm25_rank_in_reserved_window": true,
+        "dense_rank": 110,
+        "in_r1_pool": true,
+        "in_r4_pool": true,
+        "origin": "bm25_only",
+        "record_id": "temporal_chain-0002/current",
+        "task_id": "temporal_chain-0002",
+        "transition": "R0_miss_to_R4_hit"
+      }
+    ],
+    "interpretation_rule": "Gains concentrated in bm25_only records ranked 26-40 confirm the theorized mechanism. Gains elsewhere mean the arm worked for a different reason and the asymmetry rationale is NOT confirmed even if the primary criterion passes.",
+    "rescued_in_bm25_reserved_window_26_to_40": 0,
+    "rescued_record_origin": {},
+    "rescued_total": 0,
+    "transitions": {
+      "R0_miss_to_R4_hit": 7
+    }
+  },
+  "retrieval_only": "No HRM. CES measures whether required evidence REACHES the pool, not whether the selector keeps it or the reader answers correctly. Necessary, not sufficient.",
+  "schema_version": "c4-fusion-ladder-v1",
+  "split": "development",
+  "task_count": 120
+}

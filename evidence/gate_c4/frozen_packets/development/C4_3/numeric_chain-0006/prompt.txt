@@ -1,0 +1,21 @@
+[OBJECTIVE]
+What is the billing multiplier for Bluebird control module?
+[EVIDENCE]
+[E1]
+[change] Bluebird pressure assembly :: billing multiplier := quarantined
+[E2]
+- updated Bluebird intake manifold: billing multiplier now suspended
+[E3]
+billing multiplier:
+  subject: Finch control module
+  value: {"state": "provisional"}
+[E4]
+billing multiplier:
+  subject: Bittern control module
+  value: ZETA-CORAL
+[E5]
+Changelog: proposed billing multiplier for Bluebird pressure assembly set to suspended. This proposal was rejected.
+[E6]
+Revision applied — Gannet control module billing multiplier changed to 3801.
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,0 +1,17 @@
+{
+  "candidate_pool_hash": "28feda365e79a53918c2125199bab8985a91c6f79a27bb8f53898431b1d7bf1a",
+  "canonical_subject": "Kestrel relay unit",
+  "ordered_selected_ids": [
+    "temporal_chain-0001/identity",
+    "temporal_chain-0001/link",
+    "temporal_chain-0001/current"
+  ],
+  "ordered_text_sha256": [
+    "f1367fe386c3a65de9b92c8aad67e2e120bdd76c61b0673eb87ecd6a828ac6d2",
+    "015d9abe1c64be986e83f75df6854f936cc4e1381fe4f097f205a919bbb8f1b7",
+    "47c6dbfb3d73f11d05f643bbe602d2a274a89ae019d05636c3ea7f4c77aa50c1"
+  ],
+  "query_hash": "a011fda529a840984e78f41ef795fe70cd4b5b768e6e6b7cb6b86f60e186e4ff",
+  "selector_policy_id": "oracle_evidence",
+  "task_id": "temporal_chain-0001"
+}

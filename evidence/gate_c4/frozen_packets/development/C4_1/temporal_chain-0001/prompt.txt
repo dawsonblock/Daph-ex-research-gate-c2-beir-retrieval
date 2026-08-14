@@ -1,0 +1,17 @@
+[OBJECTIVE]
+As of the current revision, which operating tier applies to KRU-7?
+[EVIDENCE]
+[E1]
+Abbreviation table: KRU-7 = Kestrel relay unit.
+[E2]
+KRU-7 is the short code for Kestrel relay unit.
+[E3]
+Revision 2 (effective 2031-06-01) supersedes revision 1: - updated Finch sensor array: operating tier now {"tier": "provisional"}
+[E4]
+Revision 1 (effective 2030-01-01, since superseded) recorded: Revision applied — Marlin intake manifold operating tier changed to {"tier": "suspended"}.
+[E5]
+Revision 2 (effective 2031-06-01) supersedes revision 1: [operating tier] Raven drive cluster -> 8249
+[E6]
+Revision 1 (effective 2030-01-01, since superseded) recorded: [operating tier] Auk intake manifold -> GAMMA-BLUE
+[RESPONSE REQUIREMENT]
+Return only the answer. Use supplied evidence when helpful, but answer the task regardless.
