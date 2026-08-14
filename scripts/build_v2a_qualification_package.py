@@ -11,7 +11,7 @@ import os
 import subprocess
 import tarfile
 import tempfile
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from hrm_adaptive_memory.external_verification.qualification import validate_receipt_set
@@ -150,7 +150,7 @@ def main() -> int:
                 "SHA-256 of deterministic git archive for source_commit before "
                 "adding this generated BUILD_MANIFEST.json"),
             "final_archive_sha256_location": str(sidecar.relative_to(ROOT)),
-            "build_time": datetime.now(UTC).isoformat(),
+            "build_time": datetime.now(timezone.utc).isoformat(),
             "certified_memory_v1_identity": _certified_memory_identity(),
             "certified_memory_v1_config_sha256": _sha256(
                 ROOT / "configs/certified_memory_v1.json"),

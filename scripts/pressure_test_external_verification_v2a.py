@@ -18,7 +18,7 @@ import resource
 import subprocess
 import sys
 import time
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from hrm_adaptive_memory.external_verification.qualification import qualification_identity
@@ -211,7 +211,7 @@ def run(args) -> int:
         withdrawn: list[str] = []
         results = []
         completed = 0
-        started_at = datetime.now(UTC).isoformat()
+        started_at = datetime.now(timezone.utc).isoformat()
         run_started = time.perf_counter()
 
         for target in LADDER:
@@ -221,7 +221,7 @@ def run(args) -> int:
             while completed < target:
                 index = completed
                 created_at = (
-                    datetime(2026, 8, 11, tzinfo=UTC) + timedelta(seconds=index)
+                    datetime(2026, 8, 11, tzinfo=timezone.utc) + timedelta(seconds=index)
                 ).isoformat()
                 request = AcquisitionRequest(
                     source_uri=f"fixture://pressure/mirror/{index}",
@@ -394,7 +394,7 @@ def run(args) -> int:
             "qualification_identity": identity,
             "branch": _git("branch", "--show-current"),
             "started_at": started_at,
-            "completed_at": datetime.now(UTC).isoformat(),
+            "completed_at": datetime.now(timezone.utc).isoformat(),
             "ladder": list(LADDER),
             "max_events": args.max_events,
             "workload": {

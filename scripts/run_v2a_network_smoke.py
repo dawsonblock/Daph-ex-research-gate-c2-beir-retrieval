@@ -10,7 +10,7 @@ import sys
 import tempfile
 import urllib.error
 import urllib.request
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from hrm_adaptive_memory.external_verification.qualification import qualification_identity
@@ -89,7 +89,7 @@ class RecordedAuthoritativeAcquirer:
                     AcquisitionStatus.SUCCESS, request, raw_content=raw,
                     content_type=response.headers.get_content_type(),
                     character_encoding=response.headers.get_content_charset() or "utf-8",
-                    fetched_at=datetime.now(UTC).isoformat(),
+                    fetched_at=datetime.now(timezone.utc).isoformat(),
                     extracted_fields=fields, publisher=publisher,
                     publisher_domain=domain,
                     upstream_source_id=domain, source_lineage_id=lineage,
@@ -257,7 +257,7 @@ def main() -> int:
         "source_tree_hash": source_tree_hash,
         "qualification_identity": identity,
         "branch": _git("branch", "--show-current"),
-        "completed_at": datetime.now(UTC).isoformat(),
+        "completed_at": datetime.now(timezone.utc).isoformat(),
         "network_fetch_count": live.fetch_count,
         "network_sources": [WORLD_BANK, WORLD_BANK_JAPAN],
         "source_record_count": 2,
