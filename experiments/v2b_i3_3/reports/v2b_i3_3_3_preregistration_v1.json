@@ -1,0 +1,71 @@
+{
+  "schema": "DAPH_V2B_I3_3_3_PREREGISTRATION_V1",
+  "preregistered_at": "2026-08-13",
+  "preregistered_before": "V2B-I3.4 held-out model runs",
+  "source_baseline": "configs/v2b_i3_3_3_baseline.json",
+  "benchmark_identity": "v2b_i3_3_2_scientific_split_v1",
+  "choice": "A_preserve_I3_3_2_unchanged",
+  "choice_rationale": "The benchmark is already frozen. Altering the held-out structural split to add HARD/TIE tasks would be a post-hoc modification of the test set immediately before the model experiment. HARD/TIE structural generalization is deferred to a future benchmark identity rather than injected into I3.3.2 in place.",
+  "structural_held_out_limitation": {
+    "split": "held_out_structure",
+    "task_count": 150,
+    "by_difficulty_band": {"EASY": 99, "MEDIUM": 51, "HARD": 0, "TIE": 0},
+    "by_topology_depth_band": {"DEPTH_1": 59, "DEPTH_4_PLUS": 91},
+    "establishes": "Topology generalization at easy-to-moderate oracle decision margins on structurally novel topologies (zero exact-structure overlap with development/validation).",
+    "does_not_establish": [
+      "Topology generalization on near-threshold HARD decisions (q-margin band HARD absent from this split).",
+      "Topology generalization on exact ties (q-margin band TIE absent from this split).",
+      "Any claim about structural-OOD performance on HARD or TIE decisions."
+    ],
+    "deferred_to_future_benchmark": "HARD/TIE structural generalization, to be addressed by a new corpus and new benchmark identity (not by modifying I3.3.2)."
+  },
+  "preregistered_depth_stratified_analyses": [
+    {
+      "analysis_id": "STRUCTURE_SHALLOW_TOPOLOGY",
+      "selection": "held_out_structure intersect DEPTH_1",
+      "expected_n": 59,
+      "measures": "Novel topology generalization WITHOUT simultaneously extrapolating control horizon. Depth-1 tasks isolate the topology-novelty component because the planning horizon is minimal.",
+      "interpretation_rule": "A aware-vs-blind gap here attributes to exploiting novel topology, not to longer-horizon planning."
+    },
+    {
+      "analysis_id": "STRUCTURE_TOPOLOGY_PLUS_HORIZON",
+      "selection": "held_out_structure intersect DEPTH_4_PLUS",
+      "expected_n": 91,
+      "measures": "Novel topology generalization AND longer planning horizon extrapolation jointly. This conflates two extrapolation axes by design.",
+      "interpretation_rule": "Do not collapse this into a pure topology-generalization claim. A gap here may arise from either novel topology, longer horizon, or both."
+    }
+  ],
+  "interpretation_separation_rule": "STRUCTURE_SHALLOW_TOPOLOGY and STRUCTURE_TOPOLOGY_PLUS_HORIZON must be reported as two distinct analyses. They must not be collapsed into a single 'structural held-out' interpretation.",
+  "depth_stratified_reporting_required_for": ["held_out_structure"],
+  "depth_strata": [
+    {"stratum": "ALL_STRUCTURAL", "expected_n": 150},
+    {"stratum": "DEPTH_1", "expected_n": 59},
+    {"stratum": "DEPTH_4_PLUS", "expected_n": 91}
+  ],
+  "difficulty_stratified_reporting_required_for": ["development", "validation", "held_out_instance", "held_out_surface", "held_out_structure"],
+  "difficulty_bands": ["EASY", "MEDIUM", "HARD", "TIE"],
+  "difficulty_band_availability_by_split": {
+    "development": {"EASY": 46, "MEDIUM": 176, "HARD": 31, "TIE": 47},
+    "validation": {"EASY": 20, "MEDIUM": 89, "HARD": 17, "TIE": 24},
+    "held_out_instance": {"EASY": 16, "MEDIUM": 61, "HARD": 7, "TIE": 16},
+    "held_out_surface": {"EASY": 7, "MEDIUM": 32, "HARD": 3, "TIE": 8},
+    "held_out_structure": {"EASY": 99, "MEDIUM": 51, "HARD": 0, "TIE": 0}
+  },
+  "topology_x_depth_x_difficulty_reporting": {
+    "rule": "For the I3.4 scientific report, construct cells by topology-novelty x depth x difficulty. Report which cells exist and their n; statistical power is not required in every cell.",
+    "topology_dimension": ["known_topology", "novel_topology"],
+    "depth_dimension": ["DEPTH_1", "DEPTH_2", "DEPTH_3", "DEPTH_4_PLUS"],
+    "difficulty_dimension": ["EASY", "MEDIUM", "HARD", "TIE"],
+    "example_cells": [
+      "known_topology / depth_1 / EASY",
+      "known_topology / depth_2 / HARD",
+      "novel_topology / depth_1 / EASY",
+      "novel_topology / depth_4_plus / MEDIUM"
+    ],
+    "structural_hard_claim_prohibition": "No HARD or TIE structural-OOD cell exists; no HARD/TIE structural-generalization claim may be made from this benchmark."
+  },
+  "metrics_per_cell": ["success", "decision_gap", "total_regret", "action_regret", "cost", "premature_stop", "failure_to_stop"],
+  "primary_scientific_question": "DG_aware < DG_blind, where DG = V_O* - V^pi (decision gap: the value the controller forfeits versus the observable oracle).",
+  "secondary_scientific_question": "TR_aware < TR_blind (total regret).",
+  "efficiency_question": "C_aware <= C_blind, or at minimum no disproportionate cost increase."
+}
