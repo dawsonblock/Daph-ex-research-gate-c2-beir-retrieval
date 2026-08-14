@@ -13,6 +13,7 @@ from hrm_adaptive_memory.cognitive_control.core import (
 from hrm_adaptive_memory.cognitive_control.state import DecisionSummary
 
 from .actions import ActionProposal
+from .controller_protocol import ControllerProtocol
 from .metareasoning_benchmark import I3BenchmarkTask, MetareasoningBenchmark
 from .metareasoning_controller import (
     STATE_AWARE_MASK, STATE_BLIND_MASK, ControllerObservation, MatchedMetareasoningController,
@@ -194,7 +195,7 @@ class V2BMetareasoningExperiment:
             operation_id=f"{task.task_id}:{store.root.name}:outcome:{len(store.decisions)}")
 
     def _run_task(self, task: I3BenchmarkTask, *, condition: str,
-                  controller: MatchedMetareasoningController,
+                  controller: ControllerProtocol,
                   store: CognitiveControlStore, mask: ObservationMask) -> I3TaskRun:
         runtime = initial_i3_runtime(task, ResourceState(self.benchmark.budget_for(task)))
         oracle = ExactOptimalPolicyOracle(task=task, policy=self.policy,
@@ -322,7 +323,7 @@ class V2BMetareasoningExperiment:
                          max(0.0, initial_oracle.utility - realized_utility), tuple(rejected_actions),
                          "PROPOSAL_LIMIT")
 
-    def run_condition(self, *, condition: str, controller: MatchedMetareasoningController,
+    def run_condition(self, *, condition: str, controller: ControllerProtocol,
                       store_root: str | Path, mask: ObservationMask | None = None) -> I3ConditionRun:
         mask = OBSERVATION_MASKS.get(condition) if mask is None else mask
         if mask is None:

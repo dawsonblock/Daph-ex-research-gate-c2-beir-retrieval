@@ -1,0 +1,87 @@
+{
+  "schema": "DAPH_V2B_I3_4_PINNED_MODEL_CONFIG_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "milestone": "V2B-I3.4",
+  "description": "Pinned matched-model executive: same frozen AI model under blind and aware conditions. Condition differences arise only from observation masking, never from controller code branching.",
+  "model": {
+    "provider": "deepseek",
+    "name": "deepseek-v4-flash",
+    "api_base": "https://api.deepseek.com/v1",
+    "api_compatibility": "openai",
+    "revision": null,
+    "system_fingerprint_binding": "captured_per_call_in_model_output_store",
+    "api_key_environment_variable": "DEEPSEEK_API_KEY",
+    "note": "API key is never persisted in repository or identity files."
+  },
+  "generation_settings": {
+    "temperature": 0.0,
+    "max_tokens": 2048,
+    "top_p": 1.0,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0
+  },
+  "controller": {
+    "controller_id": "v2b_i3_4_pinned_model_controller_v1",
+    "algorithm_id": "v2b_i3_4_pinned_model_v1",
+    "module": "hrm_adaptive_memory.executive.pinned_model_controller",
+    "class": "PinnedModelController",
+    "condition_agnostic": true,
+    "fail_closed_action": "DEFER",
+    "fail_closed_reason_code": "MODEL_OUTPUT_INVALID"
+  },
+  "input_packet": {
+    "schema": "DAPH_V2B_I3_4_INPUT_PACKET_V1",
+    "schema_version": 1,
+    "serializer_module": "hrm_adaptive_memory.executive.model_packet",
+    "canonical_nulls": {
+      "verification_states": [],
+      "provenance_summaries": [],
+      "temporal_status": "UNKNOWN",
+      "unresolved_conflicts": [],
+      "prior_decisions": [],
+      "prior_outcomes": [],
+      "observation_signals": []
+    },
+    "forbidden_keys": [
+      "condition", "mask", "condition_name", "observation_mask",
+      "split", "difficulty", "topology", "oracle", "expected_terminal",
+      "latent_state", "benchmark_split"
+    ]
+  },
+  "output_schema": {
+    "schema": "DAPH_V2B_I3_4_OUTPUT_SCHEMA_V1",
+    "schema_version": 1,
+    "decoder_module": "hrm_adaptive_memory.executive.model_decoder",
+    "valid_actions": ["ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"],
+    "required_fields": ["action", "reason_code", "target_id"],
+    "fail_closed": true
+  },
+  "system_prompt": {
+    "prompt_id": "DAPH_V2B_I3_4_SYSTEM_PROMPT_V1",
+    "prompt_version": 1,
+    "module": "hrm_adaptive_memory.executive.model_prompt"
+  },
+  "infrastructure_references": {
+    "policy": {"path": "configs/v2b_i3_policy_v1.json"},
+    "utility": {"path": "configs/v2b_i3_1_utility_v1.json"},
+    "observation_masks": {"path": "configs/v2b_i3_observation_masks_v1.json"},
+    "benchmark_manifest": {"path": "experiments/v2b/benchmark/v2b_i3_benchmark_manifest_v1.json"},
+    "i3_3_3_baseline": {"path": "configs/v2b_i3_3_3_baseline.json"}
+  },
+  "conditions": [
+    "STATE_BLIND_CONTROLLER",
+    "STATE_AWARE_CONTROLLER"
+  ],
+  "ablation_conditions": [
+    "NO_VERIFICATION",
+    "NO_PROVENANCE",
+    "NO_TEMPORAL",
+    "NO_CONFLICT",
+    "NO_HISTORY"
+  ],
+  "repetition_policy": {
+    "repetitions_per_task": 1,
+    "note": "DeepSeek with temperature=0 is expected to be deterministic. If nondeterminism is observed, increase to 3-5 repetitions and store raw outputs for replay."
+  },
+  "claim_boundary": "No I3.4 scientific result has been produced. This config freezes the scaffold; held-out evaluation requires frozen scientific thresholds."
+}

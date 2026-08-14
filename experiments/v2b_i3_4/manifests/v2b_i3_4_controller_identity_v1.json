@@ -1,0 +1,69 @@
+{
+  "algorithm_id": "v2b_i3_4_pinned_model_v1",
+  "controller_code": {
+    "class": "PinnedModelController",
+    "module": "hrm_adaptive_memory.executive.pinned_model_controller",
+    "source_sha256": "1bde28a495c488698da30be17bd475cdfbbfa7639c6d42f9146390fc6f6ca486"
+  },
+  "controller_id": "v2b_i3_4_pinned_model_controller_v1",
+  "decoder": {
+    "function": "decode_output",
+    "module": "hrm_adaptive_memory.executive.model_decoder",
+    "source_sha256": "e58bff6b3ddfbe955209c5aa213140edbe8683c8e352322658c5f196f486b20a"
+  },
+  "generation_settings": {
+    "max_tokens": 2048,
+    "temperature": 0.0
+  },
+  "identity_sha256": "9dd40bab7736c7792f4ff7cd8c1352497dd9c20e3ee4c7be92b48795022b3d2f",
+  "input_schema": {
+    "schema": "DAPH_V2B_I3_4_INPUT_PACKET_V1",
+    "schema_version": 1,
+    "serializer_module": "hrm_adaptive_memory.executive.model_packet",
+    "serializer_sha256": "918c55ced1606318d4b33e723f5ffb56d926fe9483ec03917dc88c5b211aa022"
+  },
+  "model": {
+    "name": "deepseek-v4-flash",
+    "provider": "deepseek",
+    "revision": null,
+    "system_fingerprint": null
+  },
+  "observation_mask_reference": {
+    "path": "configs/v2b_i3_observation_masks_v1.json",
+    "sha256": "4b4ea5b125ffceefb92458d1c0cdfd926833efb42c08cbdc35ff84351a404103"
+  },
+  "output_schema": {
+    "decoder_module": "hrm_adaptive_memory.executive.model_decoder",
+    "decoder_sha256": "e58bff6b3ddfbe955209c5aa213140edbe8683c8e352322658c5f196f486b20a",
+    "schema": "DAPH_V2B_I3_4_OUTPUT_SCHEMA_V1",
+    "schema_version": 1
+  },
+  "policy_reference": {
+    "path": "configs/v2b_i3_policy_v1.json",
+    "sha256": "258df0db5049be082814ace8e0ccd06c0462afa31a949bd13546a851ae545c68"
+  },
+  "runtime_environment": {
+    "platform": "macOS-26.2-arm64-arm-64bit",
+    "python_version": "3.12.0"
+  },
+  "schema": "DAPH_V2B_I3_4_CONTROLLER_IDENTITY_V1",
+  "serializer": {
+    "function": "serialize_packet",
+    "module": "hrm_adaptive_memory.executive.model_packet",
+    "source_sha256": "918c55ced1606318d4b33e723f5ffb56d926fe9483ec03917dc88c5b211aa022"
+  },
+  "system_prompt": {
+    "char_count": 2259,
+    "prompt_id": "DAPH_V2B_I3_4_SYSTEM_PROMPT_V1",
+    "prompt_version": 1,
+    "sha256": "65e9bb4aeb2a2e469dab94816fdbcfa7ef6c07211439c6cbda6b614599d0de75"
+  },
+  "test_corpus_reference": {
+    "benchmark_manifest_path": "experiments/v2b/benchmark/v2b_i3_benchmark_manifest_v1.json",
+    "benchmark_manifest_sha256": "28b3ac08e92e94106bc473575815ee48b3cacc05ddbff00f0b2227f4bd417432"
+  },
+  "utility_reference": {
+    "path": "configs/v2b_i3_1_utility_v1.json",
+    "sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07"
+  }
+}
