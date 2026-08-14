@@ -3,7 +3,7 @@
 ### Auditable adaptive memory, external verification, and metareasoning research
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](pyproject.toml)
-[![Tests](https://img.shields.io/badge/tests-1%2C760%20passed-22C55E)](#verification)
+[![Tests](https://img.shields.io/badge/tests-1%2C771%20passed-22C55E)](#verification)
 [![License: MIT](https://img.shields.io/badge/license-MIT-64748B)](LICENSE)
 [![V2A](https://img.shields.io/badge/V2A-qualified-16A34A)](#scientific-status)
 [![V2B](https://img.shields.io/badge/V2B-I3.3.2-frozen%20benchmark-F59E0B)](#v2b-i332-scientific-split)
@@ -218,12 +218,17 @@ python -m pip install -e ".[hrm]"
 
 ### Verify the repository
 
+Test counts are reported as two separate fields and must never be conflated:
+a locally reported count is not clean-checkout CI evidence.
+
+**Local qualification result** (Python 3.12, development host):
+
 ```bash
 python -m pytest -q
-# 1,760 passed, 4 skipped
+# 1,771 passed, 4 skipped
 ```
 
-Run the focused I3 methodology and integrity suites:
+Focused I3 methodology and integrity suites:
 
 ```bash
 python -m pytest -q \
@@ -236,12 +241,30 @@ python -m pytest -q \
 # 59 passed
 ```
 
-The exhaustive cache-regeneration gate is intentionally explicit:
+The exhaustive cache-regeneration gate is intentionally explicit and is kept
+out of ordinary test runs (it regenerates the latent oracle and all seven
+sequential observable oracle sets and compares set hashes to the frozen
+cache manifest):
 
 ```bash
 python -m pytest -q \
   tests/qualification/test_v2b_i3_3_full_oracle_regeneration.py
 ```
+
+The I3.3.2 frozen-benchmark qualification bundle and its self-verifier:
+
+```bash
+python scripts/verify_v2b_i3_3_2_qualification.py
+# I3.3.2 qualification bundle VERIFIED. (QUALIFIED_FROZEN_BENCHMARK)
+```
+
+**Clean-checkout GitHub CI** (Python 3.10 / 3.11 / 3.12 matrix):
+
+Pending the first clean run after the V2A boundary repair lands. The
+release criterion is that all three environments reach and execute the
+full suite (not skipped) with the V2A frozen-boundary verification
+passing from a clean clone. Numbers will be recorded here only after
+that clean run exists.
 
 ### Run C4
 
