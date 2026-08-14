@@ -1,0 +1,14 @@
+{
+  "config_sha256": "3c41c463f3eacf8b5cd953e453854d6eb588579a57021caafb3e775959b65c5e",
+  "max_retries": 3,
+  "max_tokens": 2048,
+  "model": "deepseek-v4-flash",
+  "reasoning_effort": null,
+  "response_format": "json_object",
+  "retry_policy_id": "v2b_i3_4_retry_policy_v1",
+  "schema": "DAPH_V2B_I3_4_FROZEN_GENERATION_CONFIG_V1",
+  "schema_version": 1,
+  "temperature": 0.0,
+  "thinking_mode": "disabled",
+  "timeout_seconds": 120
+}
