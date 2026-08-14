@@ -1,9 +1,0 @@
-[OBJECTIVE]
-Which release channel applies to Vireo control module?
-[EVIDENCE]
-[E1]
-Changelog: required dependency for Vireo control module set to Nimbus intake manifold.
-[E2]
-Note: the release channel for Nimbus intake manifold resolves to suspended.
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

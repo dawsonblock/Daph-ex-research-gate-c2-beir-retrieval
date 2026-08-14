@@ -1,9 +1,0 @@
-[OBJECTIVE]
-For Finch pressure assembly, which parameter grade is recorded?
-[EVIDENCE]
-[E1]
-Per the active configuration register, Raven pressure assembly is allocated to Finch pressure assembly.
-[E2]
-[change] Raven pressure assembly :: parameter grade := provisional
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

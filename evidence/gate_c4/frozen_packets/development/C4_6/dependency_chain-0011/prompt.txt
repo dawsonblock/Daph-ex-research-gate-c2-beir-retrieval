@@ -1,9 +1,0 @@
-[OBJECTIVE]
-For OCM-3, which release channel is recorded?
-[EVIDENCE]
-[E1]
-In shorthand, Osprey control module is written OCM-3.
-[E2]
-[release channel] Osprey control module -> {"state": "accredited"}
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

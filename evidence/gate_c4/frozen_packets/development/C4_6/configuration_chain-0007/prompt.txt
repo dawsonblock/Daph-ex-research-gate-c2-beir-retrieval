@@ -1,9 +1,0 @@
-[OBJECTIVE]
-What is the parameter grade for DDC-8?
-[EVIDENCE]
-[E1]
-Abbreviation table: DDC-8 = Dunlin drive cluster.
-[E2]
-Changelog: parameter grade for Dunlin drive cluster set to {"grade": "provisional"}.
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

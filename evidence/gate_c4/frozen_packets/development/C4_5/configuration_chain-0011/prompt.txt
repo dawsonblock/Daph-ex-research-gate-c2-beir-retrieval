@@ -1,9 +1,0 @@
-[OBJECTIVE]
-For WIM-5, which parameter grade is recorded?
-[EVIDENCE]
-[E1]
-In shorthand, Wren intake manifold is written WIM-5.
-[E2]
-- updated Wren intake manifold: parameter grade now {"category": "accredited"}
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

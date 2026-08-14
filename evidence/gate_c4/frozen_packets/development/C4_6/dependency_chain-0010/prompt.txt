@@ -1,9 +1,0 @@
-[OBJECTIVE]
-For Heron control module, which release channel is recorded?
-[EVIDENCE]
-[E1]
-Per the required dependency register, Bittern drive cluster is allocated to Heron control module.
-[E2]
-For Bittern drive cluster, release channel requires quarantined.
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

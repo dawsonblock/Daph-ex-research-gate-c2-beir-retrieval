@@ -1,9 +1,0 @@
-[OBJECTIVE]
-What is the parameter grade for Kestrel drive cluster?
-[EVIDENCE]
-[E1]
-[active configuration] Kestrel drive cluster -> Ibis intake manifold
-[E2]
-{"subject": "Ibis intake manifold", "parameter grade": "7863"}
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

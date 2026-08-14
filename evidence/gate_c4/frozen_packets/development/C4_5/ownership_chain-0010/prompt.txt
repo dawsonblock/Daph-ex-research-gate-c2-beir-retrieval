@@ -1,9 +1,0 @@
-[OBJECTIVE]
-For Bluebird drive cluster, which ownership tier is recorded?
-[EVIDENCE]
-[E1]
-[change] Osprey drive cluster :: ownership tier := accredited
-[E2]
-{"subject": "Bluebird drive cluster", "registered asset": "Osprey drive cluster"}
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

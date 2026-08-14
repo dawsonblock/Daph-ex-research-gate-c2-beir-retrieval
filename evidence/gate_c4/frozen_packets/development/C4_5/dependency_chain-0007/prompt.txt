@@ -1,9 +1,0 @@
-[OBJECTIVE]
-What is the release channel for KPA-1?
-[EVIDENCE]
-[E1]
-Abbreviation table: KPA-1 = Kestrel pressure assembly.
-[E2]
-During setup, Kestrel pressure assembly was paired with {"category": "provisional"} for release channel.
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,9 +1,0 @@
-[OBJECTIVE]
-For Osprey sensor array, which parameter grade is recorded?
-[EVIDENCE]
-[E1]
-Engineering notes indicate Osprey sensor array uses Sparrow relay unit as its active configuration.
-[E2]
-It is recorded in the parameter grade registry that Sparrow relay unit holds 8120.
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

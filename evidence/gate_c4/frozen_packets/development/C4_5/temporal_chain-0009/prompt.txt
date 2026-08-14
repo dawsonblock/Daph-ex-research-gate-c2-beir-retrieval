@@ -1,9 +1,0 @@
-[OBJECTIVE]
-As of the current revision, which operating tier applies to VSA-6?
-[EVIDENCE]
-[E1]
-In shorthand, Vireo sensor array is written VSA-6.
-[E2]
-Revision 2 (effective 2031-06-01) supersedes revision 1: Per the operating tier register, {"state": "provisional"} is allocated to Marlin intake manifold.
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.
