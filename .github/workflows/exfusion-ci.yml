@@ -2,9 +2,9 @@ name: ExFusion validation
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, v2b-infrastructure]
   push:
-    branches: [main]
+    branches: [main, v2b-infrastructure]
   workflow_dispatch:
 
 permissions:
