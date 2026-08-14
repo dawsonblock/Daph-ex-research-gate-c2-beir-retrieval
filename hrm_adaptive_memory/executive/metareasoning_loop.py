@@ -85,6 +85,7 @@ class I3ActionTrace:
     model_finish_reason: str | None = None
     model_packet_sha256: str | None = None
     model_raw_output: str | None = None
+    model_backend_error: str | None = None
 
 
 @dataclass(frozen=True)
@@ -229,6 +230,7 @@ class V2BMetareasoningExperiment:
             "model_finish_reason": call.finish_reason if call else None,
             "model_packet_sha256": getattr(controller, "last_packet_sha256", None),
             "model_raw_output": outcome.raw_output if outcome else None,
+            "model_backend_error": getattr(controller, "last_backend_error", None),
         }
 
     def _run_task(self, task: I3BenchmarkTask, *, condition: str,
@@ -494,6 +496,9 @@ class V2BMetareasoningExperiment:
             "model_invalid_action_count": sum(
                 1 for trace in model_traces
                 if trace.model_rejection_code == "UNKNOWN_ACTION"),
+            "model_backend_error_count": sum(
+                1 for trace in model_traces
+                if trace.model_backend_error is not None),
             "model_mean_latency_ms": (sum(model_latencies) / len(model_latencies)
                                       if model_latencies else 0.0),
             "model_total_latency_ms": sum(model_latencies) if model_latencies else 0,

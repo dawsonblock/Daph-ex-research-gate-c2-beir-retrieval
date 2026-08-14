@@ -20,7 +20,6 @@ from dataclasses import dataclass
 from typing import Any
 
 from hrm_adaptive_memory.cognitive_control.actions import V2B_ACTIONS, validate_v2b_action
-from hrm_adaptive_memory.cognitive_control.core import DecisionAction
 
 from .actions import ActionProposal
 
@@ -96,12 +95,16 @@ def decode_output(raw_output: str) -> DecoderOutcome:
     if not _REASON_CODE_RE.match(reason_code):
         return _reject(raw_output, "INVALID_REASON_CODE", parsed)
 
-    # target_id field (optional but must be null or string if present)
-    target_id = parsed.get("target_id")
+    # target_id field (required by schema: exactly three fields)
+    if "target_id" not in parsed:
+        return _reject(raw_output, "MISSING_TARGET_ID", parsed)
+    target_id = parsed["target_id"]
     if target_id is not None and not isinstance(target_id, str):
         return _reject(raw_output, "INVALID_TARGET_ID", parsed)
-    if isinstance(target_id, str) and not target_id.strip():
-        return _reject(raw_output, "EMPTY_TARGET_ID", parsed)
+    if isinstance(target_id, str):
+        if not target_id.strip():
+            return _reject(raw_output, "EMPTY_TARGET_ID", parsed)
+        target_id = target_id.strip()
 
     action = validate_v2b_action(action_value)
     proposal = ActionProposal(action=action, reason_code=reason_code, target_id=target_id)

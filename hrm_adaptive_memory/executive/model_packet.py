@@ -11,12 +11,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import dataclass
 from typing import Any, Mapping
 
-from hrm_adaptive_memory.cognitive_control.core import DecisionAction
-from hrm_adaptive_memory.cognitive_control.state import (
-    CognitiveStateSnapshot, TemporalStatus, VerificationState)
+from hrm_adaptive_memory.cognitive_control.state import CognitiveStateSnapshot
 
 from .metareasoning_controller import ControllerObservation
 
@@ -24,6 +21,7 @@ PACKET_SCHEMA = "DAPH_V2B_I3_4_INPUT_PACKET_V1"
 PACKET_SCHEMA_VERSION = 1
 
 # Canonical null sentinels for masked cognitive-state fields.
+NULL_RELEVANT_MEMORIES: list[dict[str, Any]] = []
 NULL_VERIFICATION_STATES: list[dict[str, Any]] = []
 NULL_PROVENANCE_SUMMARIES: list[str] = []
 NULL_TEMPORAL_STATUS = "UNKNOWN"
@@ -99,7 +97,7 @@ def serialize_packet(observation: ControllerObservation) -> dict[str, Any]:
     snapshot = observation.cognitive_state
     if snapshot is None:
         cognitive_state = {
-            "relevant_memories": [],
+            "relevant_memories": NULL_RELEVANT_MEMORIES,
             "verification_states": NULL_VERIFICATION_STATES,
             "provenance_summaries": NULL_PROVENANCE_SUMMARIES,
             "temporal_status": NULL_TEMPORAL_STATUS,

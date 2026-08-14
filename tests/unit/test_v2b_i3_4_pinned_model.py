@@ -227,6 +227,20 @@ def test_decoder_rejects_non_string_target_id():
     assert outcome.rejection_code == "INVALID_TARGET_ID"
 
 
+def test_decoder_rejects_missing_target_id():
+    raw = json.dumps({"action": "ANSWER", "reason_code": "TEST"})
+    outcome = decode_output(raw)
+    assert not outcome.valid
+    assert outcome.rejection_code == "MISSING_TARGET_ID"
+
+
+def test_decoder_strips_whitespace_from_target_id():
+    raw = json.dumps({"action": "VERIFY", "reason_code": "TEST", "target_id": "  ver-1  "})
+    outcome = decode_output(raw)
+    assert outcome.valid
+    assert outcome.proposal.target_id == "ver-1"
+
+
 # --- PinnedModelController ---
 
 
@@ -243,7 +257,7 @@ def test_controller_returns_valid_proposal_with_stub():
 
 
 def test_controller_fail_closed_on_malformed_output():
-    from hrm_adaptive_memory.executive.model_backend import ModelCallResult, ModelBackend
+    from hrm_adaptive_memory.executive.model_backend import ModelCallResult
 
     class BadBackend:
         model_name = "bad-stub"
@@ -262,17 +276,47 @@ def test_controller_fail_closed_on_malformed_output():
     assert not controller.last_decoder_outcome.valid
 
 
+def test_controller_fail_closed_on_backend_error():
+    """API/network errors must not crash the loop; controller returns DEFER."""
+    from hrm_adaptive_memory.executive.pinned_model_controller import BACKEND_ERROR_PROPOSAL
+
+    class ErrorBackend:
+        model_name = "error-stub"
+        def generate(self, *, system_prompt, user_prompt, temperature, max_tokens):
+            raise ConnectionError("simulated network failure")
+
+    controller = PinnedModelController(backend=ErrorBackend())
+    proposal = controller.choose(_make_observation(None))
+    assert proposal is BACKEND_ERROR_PROPOSAL
+    assert proposal.action is DecisionAction.DEFER
+    assert proposal.reason_code == "MODEL_BACKEND_ERROR"
+    assert controller.last_backend_error is not None
+    assert "network failure" in controller.last_backend_error
+    assert controller.last_call_result is None
+    assert controller.last_decoder_outcome is None
+
+
 def test_controller_has_no_condition_branching():
     """The controller code must not reference condition names or masks."""
     import inspect
+    import re
     from hrm_adaptive_memory.executive import pinned_model_controller as pmc
     source = inspect.getsource(pmc)
-    forbidden = {"STATE_BLIND", "STATE_AWARE", "NO_VERIFICATION", "NO_PROVENANCE",
-                 "NO_TEMPORAL", "NO_CONFLICT", "NO_HISTORY", "cognitive_state is not None",
-                 "if.*aware", "if.*blind"}
-    for term in forbidden:
+    # Literal substrings that must never appear in the controller source.
+    forbidden_literals = {
+        "STATE_BLIND", "STATE_AWARE", "NO_VERIFICATION", "NO_PROVENANCE",
+        "NO_TEMPORAL", "NO_CONFLICT", "NO_HISTORY", "cognitive_state is not None",
+    }
+    for term in forbidden_literals:
         if term in source:
             pytest.fail(f"controller source contains forbidden term: {term}")
+    # Regex patterns that would indicate condition-specific branching.
+    forbidden_patterns = [
+        r"if\s+.*aware", r"if\s+.*blind", r"if\s+.*cognitive_state",
+    ]
+    for pattern in forbidden_patterns:
+        if re.search(pattern, source, re.IGNORECASE):
+            pytest.fail(f"controller source matches forbidden pattern: {pattern}")
 
 
 def test_controller_same_code_path_blind_and_aware():
@@ -582,6 +626,9 @@ def test_identity_binds_all_components():
     assert d["input_schema"]["schema"] == PACKET_SCHEMA
     assert d["output_schema"]["schema"] == OUTPUT_SCHEMA
     assert d["generation_settings"]["temperature"] == 0.0
+    assert "model_backend" in d
+    assert d["model_backend"]["deepseek_class"] == "DeepSeekBackend"
+    assert "source_sha256" in d["model_backend"]
 
 
 def test_identity_save_and_load_roundtrip(tmp_path):

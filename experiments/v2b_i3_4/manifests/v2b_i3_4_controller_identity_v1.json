@@ -3,24 +3,24 @@
   "controller_code": {
     "class": "PinnedModelController",
     "module": "hrm_adaptive_memory.executive.pinned_model_controller",
-    "source_sha256": "1bde28a495c488698da30be17bd475cdfbbfa7639c6d42f9146390fc6f6ca486"
+    "source_sha256": "36ccb1b142eca1d2ce139cb8a130f502d114d878d760b5462c97a95339732c80"
   },
   "controller_id": "v2b_i3_4_pinned_model_controller_v1",
   "decoder": {
     "function": "decode_output",
     "module": "hrm_adaptive_memory.executive.model_decoder",
-    "source_sha256": "e58bff6b3ddfbe955209c5aa213140edbe8683c8e352322658c5f196f486b20a"
+    "source_sha256": "ec9c96a0e2b763914eb4b4e1b6c08be432d8b3e7b069643f23239ab3f70a4c24"
   },
   "generation_settings": {
     "max_tokens": 2048,
     "temperature": 0.0
   },
-  "identity_sha256": "9dd40bab7736c7792f4ff7cd8c1352497dd9c20e3ee4c7be92b48795022b3d2f",
+  "identity_sha256": "3a1f4ec4fb6cdc3702305040b989fd22f2967e5f992a45a8ea5a41d12fef46f2",
   "input_schema": {
     "schema": "DAPH_V2B_I3_4_INPUT_PACKET_V1",
     "schema_version": 1,
     "serializer_module": "hrm_adaptive_memory.executive.model_packet",
-    "serializer_sha256": "918c55ced1606318d4b33e723f5ffb56d926fe9483ec03917dc88c5b211aa022"
+    "serializer_sha256": "a52116bf49f3412ee3823d8915012d4da4ae029bdb87384dea7db0965d7751fb"
   },
   "model": {
     "name": "deepseek-v4-flash",
@@ -28,13 +28,18 @@
     "revision": null,
     "system_fingerprint": null
   },
+  "model_backend": {
+    "deepseek_class": "DeepSeekBackend",
+    "module": "hrm_adaptive_memory.executive.model_backend",
+    "source_sha256": "e40ced9afa168d97a6aff76320ba84a093d92236447ceb08fa071f2f53818279"
+  },
   "observation_mask_reference": {
     "path": "configs/v2b_i3_observation_masks_v1.json",
     "sha256": "4b4ea5b125ffceefb92458d1c0cdfd926833efb42c08cbdc35ff84351a404103"
   },
   "output_schema": {
     "decoder_module": "hrm_adaptive_memory.executive.model_decoder",
-    "decoder_sha256": "e58bff6b3ddfbe955209c5aa213140edbe8683c8e352322658c5f196f486b20a",
+    "decoder_sha256": "ec9c96a0e2b763914eb4b4e1b6c08be432d8b3e7b069643f23239ab3f70a4c24",
     "schema": "DAPH_V2B_I3_4_OUTPUT_SCHEMA_V1",
     "schema_version": 1
   },
@@ -50,7 +55,7 @@
   "serializer": {
     "function": "serialize_packet",
     "module": "hrm_adaptive_memory.executive.model_packet",
-    "source_sha256": "918c55ced1606318d4b33e723f5ffb56d926fe9483ec03917dc88c5b211aa022"
+    "source_sha256": "a52116bf49f3412ee3823d8915012d4da4ae029bdb87384dea7db0965d7751fb"
   },
   "system_prompt": {
     "char_count": 2259,

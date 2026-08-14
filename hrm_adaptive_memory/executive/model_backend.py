@@ -15,9 +15,7 @@ import json
 import os
 import time
 from dataclasses import dataclass, field
-from typing import Any, Protocol, runtime_checkable
-
-from .model_prompt import SYSTEM_PROMPT
+from typing import Protocol, runtime_checkable
 
 
 @dataclass(frozen=True)
@@ -55,6 +53,9 @@ class DeepSeekBackend:
 
     model_name: str = "deepseek-v4-flash"
     base_url: str = "https://api.deepseek.com/v1"
+    timeout_seconds: int = 120
+    max_retries: int = 3
+    retry_backoff_seconds: float = 2.0
     _api_key: str | None = field(default=None, repr=False)
 
     def _get_api_key(self) -> str:
@@ -69,6 +70,7 @@ class DeepSeekBackend:
 
     def generate(self, *, system_prompt: str, user_prompt: str,
                  temperature: float, max_tokens: int) -> ModelCallResult:
+        import urllib.error
         import urllib.request
 
         payload = json.dumps({
@@ -80,31 +82,43 @@ class DeepSeekBackend:
             "temperature": temperature,
             "max_tokens": max_tokens,
         }).encode()
-        request = urllib.request.Request(
-            f"{self.base_url}/chat/completions",
-            data=payload,
-            headers={
-                "Authorization": f"Bearer {self._get_api_key()}",
-                "Content-Type": "application/json",
-            },
-            method="POST",
-        )
-        start = time.monotonic()
-        with urllib.request.urlopen(request, timeout=60) as response:
-            body = json.loads(response.read())
-        latency = int((time.monotonic() - start) * 1000)
-        choice = body["choices"][0]
-        usage = body.get("usage", {})
-        return ModelCallResult(
-            raw_output=choice["message"]["content"] or "",
-            prompt_tokens=usage.get("prompt_tokens", 0),
-            completion_tokens=usage.get("completion_tokens", 0),
-            reasoning_tokens=usage.get("completion_tokens_details", {}).get("reasoning_tokens", 0),
-            latency_ms=latency,
-            model_name=body.get("model", self.model_name),
-            system_fingerprint=body.get("system_fingerprint"),
-            finish_reason=choice.get("finish_reason"),
-        )
+        last_error: Exception | None = None
+        for attempt in range(self.max_retries):
+            request = urllib.request.Request(
+                f"{self.base_url}/chat/completions",
+                data=payload,
+                headers={
+                    "Authorization": f"Bearer {self._get_api_key()}",
+                    "Content-Type": "application/json",
+                },
+                method="POST",
+            )
+            start = time.monotonic()
+            try:
+                with urllib.request.urlopen(
+                        request, timeout=self.timeout_seconds) as response:
+                    body = json.loads(response.read())
+                latency = int((time.monotonic() - start) * 1000)
+                choice = body["choices"][0]
+                usage = body.get("usage", {})
+                return ModelCallResult(
+                    raw_output=choice["message"]["content"] or "",
+                    prompt_tokens=usage.get("prompt_tokens", 0),
+                    completion_tokens=usage.get("completion_tokens", 0),
+                    reasoning_tokens=usage.get("completion_tokens_details", {}).get("reasoning_tokens", 0),
+                    latency_ms=latency,
+                    model_name=body.get("model", self.model_name),
+                    system_fingerprint=body.get("system_fingerprint"),
+                    finish_reason=choice.get("finish_reason"),
+                )
+            except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError,
+                    ConnectionError, OSError) as exc:
+                last_error = exc
+                if attempt < self.max_retries - 1:
+                    time.sleep(self.retry_backoff_seconds * (attempt + 1))
+                continue
+        # All retries exhausted; raise so the controller can fail closed.
+        raise RuntimeError(f"DeepSeek API failed after {self.max_retries} retries: {last_error}")
 
 
 @dataclass

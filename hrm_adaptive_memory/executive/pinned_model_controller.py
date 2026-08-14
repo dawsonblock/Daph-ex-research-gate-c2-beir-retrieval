@@ -31,7 +31,7 @@ from .model_backend import ModelBackend, ModelCallResult, StubBackend
 from .model_decoder import DecoderOutcome, decode_output
 from .model_packet import (
     assert_no_condition_leakage, packet_json, packet_sha256, serialize_packet)
-from .model_prompt import SYSTEM_PROMPT, prompt_sha256
+from .model_prompt import SYSTEM_PROMPT
 
 CONTROLLER_ID = "v2b_i3_4_pinned_model_controller_v1"
 ALGORITHM_ID = "v2b_i3_4_pinned_model_v1"
@@ -39,6 +39,10 @@ ALGORITHM_ID = "v2b_i3_4_pinned_model_v1"
 # Fail-closed proposal for malformed model output.
 FAIL_CLOSED_PROPOSAL = ActionProposal(
     action=DecisionAction.DEFER, reason_code="MODEL_OUTPUT_INVALID", target_id=None)
+
+# Fail-closed proposal for backend/API errors (network, timeout, HTTP error).
+BACKEND_ERROR_PROPOSAL = ActionProposal(
+    action=DecisionAction.DEFER, reason_code="MODEL_BACKEND_ERROR", target_id=None)
 
 
 @dataclass
@@ -57,6 +61,7 @@ class PinnedModelController:
     last_decoder_outcome: DecoderOutcome | None = field(default=None, repr=False, init=False)
     last_call_result: ModelCallResult | None = field(default=None, repr=False, init=False)
     last_packet_sha256: str | None = field(default=None, repr=False, init=False)
+    last_backend_error: str | None = field(default=None, repr=False, init=False)
     _call_count: int = field(default=0, repr=False, init=False)
 
     controller_id: str = field(default=CONTROLLER_ID, init=False)
@@ -68,9 +73,19 @@ class PinnedModelController:
         assert_no_condition_leakage(packet)
         self.last_packet_sha256 = packet_sha256(packet)
         user_prompt = packet_json(packet)
-        call_result = self.backend.generate(
-            system_prompt=SYSTEM_PROMPT, user_prompt=user_prompt,
-            temperature=self.temperature, max_tokens=self.max_tokens)
+        try:
+            call_result = self.backend.generate(
+                system_prompt=SYSTEM_PROMPT, user_prompt=user_prompt,
+                temperature=self.temperature, max_tokens=self.max_tokens)
+        except Exception as exc:
+            # Fail closed on any backend error (network, timeout, HTTP, parse).
+            # The error is recorded for development metrics; the loop continues.
+            self.last_backend_error = str(exc)
+            self.last_call_result = None
+            self.last_decoder_outcome = None
+            self._call_count += 1
+            return BACKEND_ERROR_PROPOSAL
+        self.last_backend_error = None
         self.last_call_result = call_result
         self._call_count += 1
         outcome = decode_output(call_result.raw_output)
@@ -95,6 +110,7 @@ class PinnedModelController:
             "last_packet_sha256": self.last_packet_sha256,
             "last_valid": outcome.valid if outcome else None,
             "last_rejection_code": outcome.rejection_code if outcome else None,
+            "last_backend_error": self.last_backend_error,
             "last_prompt_tokens": call.prompt_tokens if call else None,
             "last_completion_tokens": call.completion_tokens if call else None,
             "last_reasoning_tokens": call.reasoning_tokens if call else None,

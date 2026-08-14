@@ -58,6 +58,7 @@ class ControllerIdentity:
     serializer: Mapping[str, Any] = field(default_factory=dict)
     decoder: Mapping[str, Any] = field(default_factory=dict)
     controller_code: Mapping[str, Any] = field(default_factory=dict)
+    model_backend: Mapping[str, Any] = field(default_factory=dict)
     generation_settings: Mapping[str, Any] = field(default_factory=dict)
 
     # Evaluation reproducibility (references to frozen I3.3.2 infrastructure)
@@ -79,6 +80,7 @@ class ControllerIdentity:
             "serializer": dict(self.serializer),
             "decoder": dict(self.decoder),
             "controller_code": dict(self.controller_code),
+            "model_backend": dict(self.model_backend),
             "generation_settings": dict(self.generation_settings),
             "policy_reference": dict(self.policy_reference),
             "utility_reference": dict(self.utility_reference),
@@ -100,7 +102,7 @@ def build_identity(
     model_revision: str | None = None,
     system_fingerprint: str | None = None,
     temperature: float = 0.0,
-    max_tokens: int = 256,
+    max_tokens: int = 2048,
     policy_path: str,
     policy_sha256: str,
     utility_path: str,
@@ -152,6 +154,11 @@ def build_identity(
             "module": "hrm_adaptive_memory.executive.pinned_model_controller",
             "class": "PinnedModelController",
             "source_sha256": _source_hash("hrm_adaptive_memory", "executive", "pinned_model_controller.py"),
+        },
+        model_backend={
+            "module": "hrm_adaptive_memory.executive.model_backend",
+            "deepseek_class": "DeepSeekBackend",
+            "source_sha256": _source_hash("hrm_adaptive_memory", "executive", "model_backend.py"),
         },
         generation_settings={
             "temperature": temperature,
