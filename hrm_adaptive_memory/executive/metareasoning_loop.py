@@ -13,6 +13,7 @@ from hrm_adaptive_memory.cognitive_control.core import (
 from hrm_adaptive_memory.cognitive_control.state import DecisionSummary
 
 from .actions import ActionProposal
+from .controller_protocol import ControllerProtocol
 from .metareasoning_benchmark import I3BenchmarkTask, MetareasoningBenchmark
 from .metareasoning_controller import (
     STATE_AWARE_MASK, STATE_BLIND_MASK, ControllerObservation, MatchedMetareasoningController,
@@ -73,6 +74,18 @@ class I3ActionTrace:
     action_cost: float | None
     answerable_before: bool
     success_reachable_before: bool
+    # Model-specific development metrics (None for deterministic controllers).
+    model_valid: bool | None = None
+    model_rejection_code: str | None = None
+    model_prompt_tokens: int | None = None
+    model_completion_tokens: int | None = None
+    model_reasoning_tokens: int | None = None
+    model_latency_ms: int | None = None
+    model_system_fingerprint: str | None = None
+    model_finish_reason: str | None = None
+    model_packet_sha256: str | None = None
+    model_raw_output: str | None = None
+    model_backend_error: str | None = None
 
 
 @dataclass(frozen=True)
@@ -102,7 +115,7 @@ class I3ConditionRun:
     controller_id: str
     controller_algorithm_id: str
     tasks: tuple[I3TaskRun, ...]
-    metrics: Mapping[str, float | int]
+    metrics: Mapping[str, float | int | dict[str, int]]
 
 
 class V2BMetareasoningExperiment:
@@ -193,8 +206,43 @@ class V2BMetareasoningExperiment:
             at=self._timestamp(),
             operation_id=f"{task.task_id}:{store.root.name}:outcome:{len(store.decisions)}")
 
+    @staticmethod
+    def _capture_model_metrics(controller: ControllerProtocol) -> dict[str, object]:
+        """Extract model-specific metrics from a controller after choose().
+
+        Uses duck typing so any controller exposing ``last_decoder_outcome``
+        and ``last_call_result`` (e.g. ``PinnedModelController``) contributes
+        model metrics.  Deterministic controllers return an empty dict, so
+        the corresponding trace fields remain ``None``.
+
+        In the backend-error case, ``last_decoder_outcome`` and
+        ``last_call_result`` are both None, but ``last_packet_sha256`` and
+        ``last_backend_error`` are set.  We detect model-controller calls by
+        checking ``last_packet_sha256``, which is set before the backend call.
+        """
+        packet_sha = getattr(controller, "last_packet_sha256", None)
+        outcome = getattr(controller, "last_decoder_outcome", None)
+        call = getattr(controller, "last_call_result", None)
+        backend_error = getattr(controller, "last_backend_error", None)
+        # If no packet hash was set, this is a deterministic controller.
+        if packet_sha is None and outcome is None and call is None and backend_error is None:
+            return {}
+        return {
+            "model_valid": outcome.valid if outcome else None,
+            "model_rejection_code": outcome.rejection_code if outcome else None,
+            "model_prompt_tokens": call.prompt_tokens if call else None,
+            "model_completion_tokens": call.completion_tokens if call else None,
+            "model_reasoning_tokens": call.reasoning_tokens if call else None,
+            "model_latency_ms": call.latency_ms if call else None,
+            "model_system_fingerprint": call.system_fingerprint if call else None,
+            "model_finish_reason": call.finish_reason if call else None,
+            "model_packet_sha256": packet_sha,
+            "model_raw_output": outcome.raw_output if outcome else None,
+            "model_backend_error": backend_error,
+        }
+
     def _run_task(self, task: I3BenchmarkTask, *, condition: str,
-                  controller: MatchedMetareasoningController,
+                  controller: ControllerProtocol,
                   store: CognitiveControlStore, mask: ObservationMask) -> I3TaskRun:
         runtime = initial_i3_runtime(task, ResourceState(self.benchmark.budget_for(task)))
         oracle = ExactOptimalPolicyOracle(task=task, policy=self.policy,
@@ -215,6 +263,7 @@ class V2BMetareasoningExperiment:
             observation = self._observation(runtime, mask=mask, traces=traces,
                                             decisions=tuple(decisions), outcomes=tuple(outcomes))
             proposal = controller.choose(observation)
+            model_metrics = self._capture_model_metrics(controller)
             pre_hash = runtime_state_hash(runtime)
             observation_hash = self._observation_hash(observation, mask)
             resources_before = runtime.resources.as_dict()
@@ -244,7 +293,8 @@ class V2BMetareasoningExperiment:
                     resources_after=runtime.resources.as_dict(), state_delta=None,
                     outcome_code="POLICY_REJECTED", task_success=None, action_regret=None,
                     action_cost=None,
-                    answerable_before=pre_answerable, success_reachable_before=reachable))
+                    answerable_before=pre_answerable, success_reachable_before=reachable,
+                    **model_metrics))
                 if policy_rejections >= max_policy_rejections:
                     realized_utility += self.utility.incorrect_defer
                     return I3TaskRun(
@@ -274,7 +324,8 @@ class V2BMetareasoningExperiment:
                     resources_after=runtime.resources.as_dict(), state_delta=None,
                     outcome_code="RESOURCE_REJECTED", task_success=None, action_regret=None,
                     action_cost=None,
-                    answerable_before=pre_answerable, success_reachable_before=reachable))
+                    answerable_before=pre_answerable, success_reachable_before=reachable,
+                    **model_metrics))
                 continue
             decision = self._record(
                 store, runtime, selected=selected, proposal=proposal,
@@ -307,7 +358,8 @@ class V2BMetareasoningExperiment:
                 resources_after=execution.runtime.resources.as_dict(), state_delta=delta,
                 outcome_code=execution.outcome_code, task_success=execution.task_success,
                 action_regret=regret, action_cost=action_cost, answerable_before=pre_answerable,
-                success_reachable_before=reachable))
+                success_reachable_before=reachable,
+                **model_metrics))
             runtime = execution.runtime
             if execution.terminal:
                 success = bool(execution.task_success)
@@ -322,7 +374,7 @@ class V2BMetareasoningExperiment:
                          max(0.0, initial_oracle.utility - realized_utility), tuple(rejected_actions),
                          "PROPOSAL_LIMIT")
 
-    def run_condition(self, *, condition: str, controller: MatchedMetareasoningController,
+    def run_condition(self, *, condition: str, controller: ControllerProtocol,
                       store_root: str | Path, mask: ObservationMask | None = None) -> I3ConditionRun:
         mask = OBSERVATION_MASKS.get(condition) if mask is None else mask
         if mask is None:
@@ -369,6 +421,37 @@ class V2BMetareasoningExperiment:
             if trace.answerable_before and trace.execution_status == "EXECUTED"
             and trace.action_cost is not None
         ]
+        # Model-specific development metrics (None/0 when controller is deterministic).
+        # Filter by model_packet_sha256: it is set on every model controller call,
+        # including backend errors (where model_valid is None).  This ensures
+        # backend error traces are counted in model_call_count and
+        # model_backend_error_count.
+        model_traces = tuple(trace for trace in traces if trace.model_packet_sha256 is not None)
+        model_valid_count = sum(1 for trace in model_traces if trace.model_valid is True)
+        model_malformed_count = sum(1 for trace in model_traces if trace.model_valid is False)
+        model_backend_error_count = sum(
+            1 for trace in model_traces if trace.model_backend_error is not None)
+        model_latencies = [trace.model_latency_ms for trace in model_traces
+                           if trace.model_latency_ms is not None]
+        model_prompt_tokens = [trace.model_prompt_tokens for trace in model_traces
+                               if trace.model_prompt_tokens is not None]
+        model_completion_tokens = [trace.model_completion_tokens for trace in model_traces
+                                   if trace.model_completion_tokens is not None]
+        model_reasoning_tokens = [trace.model_reasoning_tokens for trace in model_traces
+                                  if trace.model_reasoning_tokens is not None]
+        # Action distribution across executed actions.
+        action_distribution = {}
+        for action in (DecisionAction.ANSWER, DecisionAction.RETRIEVE, DecisionAction.VERIFY,
+                       DecisionAction.SEARCH_MORE, DecisionAction.REASON_MORE,
+                       DecisionAction.DEFER, DecisionAction.STOP):
+            action_distribution[action.value] = sum(
+                1 for trace in executed if trace.executed_action is action)
+        # Terminal outcome distribution.
+        terminal_results = {}
+        for task in tasks:
+            terminal_results[task.terminal_result] = terminal_results.get(task.terminal_result, 0) + 1
+        # Steps per task.
+        steps_per_task = [len(task.traces) for task in tasks]
         return {
             "tasks": len(tasks),
             "task_successes": sum(task.task_success for task in tasks),
@@ -418,4 +501,33 @@ class V2BMetareasoningExperiment:
             "executive_steps": sum(task.resources["executive_steps_used"] for task in tasks),
             "total_action_cost": sum(
                 trace.action_cost or 0.0 for trace in executed),
+            # --- Model-specific development metrics ---
+            "model_call_count": len(model_traces),
+            "model_valid_action_rate": (
+                model_valid_count / len(model_traces) if model_traces else 0.0),
+            "model_malformed_output_rate": (
+                model_malformed_count / len(model_traces) if model_traces else 0.0),
+            "model_invalid_action_count": sum(
+                1 for trace in model_traces
+                if trace.model_rejection_code == "UNKNOWN_ACTION"),
+            "model_backend_error_count": model_backend_error_count,
+            "model_mean_latency_ms": (sum(model_latencies) / len(model_latencies)
+                                      if model_latencies else 0.0),
+            "model_total_latency_ms": sum(model_latencies) if model_latencies else 0,
+            "model_total_prompt_tokens": sum(model_prompt_tokens) if model_prompt_tokens else 0,
+            "model_total_completion_tokens": sum(model_completion_tokens) if model_completion_tokens else 0,
+            "model_total_reasoning_tokens": sum(model_reasoning_tokens) if model_reasoning_tokens else 0,
+            "model_mean_prompt_tokens": (sum(model_prompt_tokens) / len(model_prompt_tokens)
+                                         if model_prompt_tokens else 0.0),
+            "model_mean_completion_tokens": (sum(model_completion_tokens) / len(model_completion_tokens)
+                                             if model_completion_tokens else 0.0),
+            # --- Action distribution ---
+            "action_distribution": action_distribution,
+            # --- Terminal outcomes ---
+            "terminal_outcome_distribution": terminal_results,
+            # --- Steps per task ---
+            "mean_steps_per_task": (sum(steps_per_task) / len(steps_per_task)
+                                    if steps_per_task else 0.0),
+            "max_steps_per_task": max(steps_per_task) if steps_per_task else 0,
+            "min_steps_per_task": min(steps_per_task) if steps_per_task else 0,
         }
