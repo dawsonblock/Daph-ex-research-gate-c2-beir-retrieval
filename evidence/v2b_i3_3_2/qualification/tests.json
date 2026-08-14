@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/Users/dawsonblock/.pyenv/versions/3.12.0/bin/python3",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/qualification"
+  ],
+  "elapsed_s": 1070.010740995407,
+  "ended_at": "2026-08-14T06:09:53.611444+00:00",
+  "output_tail": ".                                                                        [100%]\n1 passed in 1069.07s (0:17:49)",
+  "returncode": 0,
+  "schema": "DAPH_V2B_I3_3_2_REGENERATION_RESULT_V1",
+  "started_at": "2026-08-14T05:52:03.600272+00:00",
+  "stderr_sha256": "dd268c1f56e34bc55975f3ccebf8bd087f64d98210992bdf7c8857a483450b61",
+  "stdout_sha256": "dd268c1f56e34bc55975f3ccebf8bd087f64d98210992bdf7c8857a483450b61"
+}

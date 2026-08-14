@@ -1,0 +1,46 @@
+{
+  "bundle_sha256": "528d35ba711e3487ab0ad724ee12d3944a519afe3d6f3091cdcfacb9262c6473",
+  "files": [
+    {
+      "path": "benchmark_closure.json",
+      "sha256": "e211b888d4e45f810be1112d5f1f2fe99f56589234a35c3b9bd3e71d966f8a14"
+    },
+    {
+      "path": "environment.json",
+      "sha256": "c28b522c382a6bba9b3d563fdc21f9a4d4a37ebb55cec6f8bc2b7ac36e3c81ce"
+    },
+    {
+      "path": "identity.json",
+      "sha256": "6adfc9c5b0f5de74fc3144828470b2abf7b2bac80823af4300a95ad066f3099e"
+    },
+    {
+      "path": "oracle_set_hashes.json",
+      "sha256": "00de96edd17fe62b6f117535f19f898f9751eaf57f7e25ba9e13f04b5317dc10"
+    },
+    {
+      "path": "qualification_receipt.json",
+      "sha256": "fe461be4cf7a7070a9b7c3bb0bb0d60f4bdacd56d1781784847030bced692882"
+    },
+    {
+      "path": "regeneration_output.txt",
+      "sha256": "dd268c1f56e34bc55975f3ccebf8bd087f64d98210992bdf7c8857a483450b61"
+    },
+    {
+      "path": "source_identity.json",
+      "sha256": "1c159c77b8f68a437bfdfd2088735cb568025215a8eb0cb1d5eb0d72289fc33d"
+    },
+    {
+      "path": "stderr.sha256",
+      "sha256": "b0ba214ccc163a1ff3144123699f590519f617579337c801cb61adaff13791db"
+    },
+    {
+      "path": "stdout.sha256",
+      "sha256": "b0ba214ccc163a1ff3144123699f590519f617579337c801cb61adaff13791db"
+    },
+    {
+      "path": "tests.json",
+      "sha256": "8f099c99d85f0d8b66782f4f2085b7b58ca9a9562fa4946953b3ee1b276f7e57"
+    }
+  ],
+  "schema": "DAPH_EVIDENCE_BUNDLE_V1"
+}
