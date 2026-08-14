@@ -9,7 +9,7 @@ import subprocess
 import sys
 import tempfile
 import time
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from hrm_adaptive_memory.external_verification.qualification import qualification_identity
@@ -271,7 +271,7 @@ def main() -> int:
         "source_tree_hash": source_tree_hash,
         "qualification_identity": identity,
         "branch": _git("branch", "--show-current"),
-        "completed_at": datetime.now(UTC).isoformat(),
+        "completed_at": datetime.now(timezone.utc).isoformat(),
         "elapsed_s": time.perf_counter() - started,
         "cases": cases,
     }

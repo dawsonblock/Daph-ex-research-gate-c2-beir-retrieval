@@ -22,7 +22,10 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
-import tomllib
+try:  # Python 3.11+ stdlib; 3.10 uses the tomli backport.
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - exercised on Python 3.10
+    import tomli as tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]

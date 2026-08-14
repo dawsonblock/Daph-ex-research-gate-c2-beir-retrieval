@@ -9,7 +9,7 @@ import re
 import subprocess
 import sys
 import time
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from hrm_adaptive_memory.external_verification.qualification import qualification_identity
@@ -67,7 +67,7 @@ def main() -> int:
         "returncode": completed.returncode,
         "passed": passed, "failed": failed, "skipped": skipped,
         "elapsed_s": elapsed,
-        "completed_at": datetime.now(UTC).isoformat(),
+        "completed_at": datetime.now(timezone.utc).isoformat(),
         "output_sha256": hashlib.sha256(combined.encode()).hexdigest(),
         "output_tail": combined[-4000:],
     }

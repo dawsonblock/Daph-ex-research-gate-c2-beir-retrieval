@@ -12,7 +12,7 @@ import heapq
 import json
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Protocol
@@ -39,7 +39,7 @@ def _sha256(value: bytes | str) -> str:
 
 
 def _utc_now() -> str:
-    return datetime.now(UTC).isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 def _normalise_content(raw: bytes, encoding: str) -> str:
