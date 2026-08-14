@@ -55,8 +55,8 @@ Rules:
 
 - Examine the resource_state to understand which actions are still affordable.
 - The allowed_actions list shows which actions the resource budget permits.
-- If cognitive_state fields are present (non-null), use them to inform your decision.
-- If cognitive_state fields are null or empty, you must decide based on task_summary, resource_state, and action history alone.
+- If cognitive_state fields are populated (non-empty lists, non-UNKNOWN status), use them to inform your decision.
+- If cognitive_state fields are empty or UNKNOWN, you must decide based on task_summary, resource_state, and action history alone.
 - Do not repeat actions that have already been executed unless new information justifies it.
 - If evidence is sufficient, prefer ANSWER.  If evidence is insufficient and cannot be improved within budget, prefer DEFER.  If the task requests an internal stop, choose STOP.
 - Choose exactly one action per response.  Never output multiple actions.

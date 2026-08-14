@@ -112,7 +112,7 @@ class DeepSeekBackend:
                     finish_reason=choice.get("finish_reason"),
                 )
             except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError,
-                    ConnectionError, OSError) as exc:
+                    OSError) as exc:
                 last_error = exc
                 if attempt < self.max_retries - 1:
                     time.sleep(self.retry_backoff_seconds * (attempt + 1))

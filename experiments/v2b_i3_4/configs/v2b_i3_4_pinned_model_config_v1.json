@@ -16,9 +16,7 @@
   "generation_settings": {
     "temperature": 0.0,
     "max_tokens": 2048,
-    "top_p": 1.0,
-    "frequency_penalty": 0.0,
-    "presence_penalty": 0.0
+    "note": "Only temperature and max_tokens are sent to the API. DeepSeek-v4-flash does not expose top_p, frequency_penalty, or presence_penalty for the chat completions endpoint in the pinned configuration."
   },
   "controller": {
     "controller_id": "v2b_i3_4_pinned_model_controller_v1",
@@ -27,13 +25,14 @@
     "class": "PinnedModelController",
     "condition_agnostic": true,
     "fail_closed_action": "DEFER",
-    "fail_closed_reason_code": "MODEL_OUTPUT_INVALID"
+    "fail_closed_reason_codes": ["MODEL_OUTPUT_INVALID", "MODEL_BACKEND_ERROR"]
   },
   "input_packet": {
     "schema": "DAPH_V2B_I3_4_INPUT_PACKET_V1",
     "schema_version": 1,
     "serializer_module": "hrm_adaptive_memory.executive.model_packet",
     "canonical_nulls": {
+      "relevant_memories": [],
       "verification_states": [],
       "provenance_summaries": [],
       "temporal_status": "UNKNOWN",

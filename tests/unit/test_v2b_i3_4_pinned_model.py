@@ -241,6 +241,55 @@ def test_decoder_strips_whitespace_from_target_id():
     assert outcome.proposal.target_id == "ver-1"
 
 
+def test_decoder_extracts_json_after_reasoning_with_braces():
+    """The model may emit reasoning text containing braces before the JSON.
+    The decoder must extract the first balanced JSON object, not be confused
+    by brace characters inside string literals."""
+    raw = (
+        'I need to think about this {carefully}. '
+        'Here is my decision: '
+        '{"action": "ANSWER", "reason_code": "REASONED_ANSWER", "target_id": null}'
+    )
+    outcome = decode_output(raw)
+    assert outcome.valid
+    assert outcome.proposal.action is DecisionAction.ANSWER
+
+
+def test_decoder_rejects_trailing_garbage_after_json():
+    """If the model emits valid JSON followed by more text, the decoder
+    extracts the first JSON object and ignores the trailing text."""
+    raw = (
+        '{"action": "STOP", "reason_code": "DONE", "target_id": null}'
+        ' and some trailing commentary'
+    )
+    outcome = decode_output(raw)
+    assert outcome.valid
+    assert outcome.proposal.action is DecisionAction.STOP
+
+
+def test_packet_rejects_condition_identity_in_string_values():
+    """Condition identity substrings must not appear in any string value."""
+    from hrm_adaptive_memory.executive.model_packet import (
+        assert_no_condition_leakage, serialize_packet)
+    from hrm_adaptive_memory.executive.metareasoning_controller import (
+        ControllerObservation)
+    from hrm_adaptive_memory.executive.resources import ResourceState, ResourceBudget
+
+    obs = ControllerObservation(
+        task_id="STATE_AWARE_CONTROLLER-task-1",  # condition leak in task_id
+        task_summary="test",
+        resource_state=ResourceState(ResourceBudget()).as_dict(),
+        allowed_actions=(),
+        executed_actions=(),
+        rejected_actions=(),
+        policy_feedback=(),
+        cognitive_state=None,
+    )
+    packet = serialize_packet(obs)
+    with pytest.raises(ValueError, match="condition identity"):
+        assert_no_condition_leakage(packet)
+
+
 # --- PinnedModelController ---
 
 
@@ -493,6 +542,31 @@ def test_malformed_output_tracked_in_metrics():
     assert m["model_malformed_output_rate"] > 0.0
     # All model calls should be malformed.
     assert m["model_valid_action_rate"] == 0.0
+
+
+def test_backend_error_tracked_in_condition_metrics():
+    """Backend errors must be counted in model_backend_error_count, not
+    silently dropped by the model_traces filter."""
+    class ErrorBackend:
+        model_name = "error-stub"
+        def generate(self, *, system_prompt, user_prompt, temperature, max_tokens):
+            raise ConnectionError("simulated network failure")
+
+    benchmark = _small_benchmark(1)
+    policy = load_frozen_policy(POLICY_PATH)
+    experiment = V2BMetareasoningExperiment(benchmark=benchmark, policy=policy)
+    controller = PinnedModelController(backend=ErrorBackend())
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmpdir:
+        run = experiment.run_condition(
+            condition=STATE_BLIND, controller=controller, store_root=tmpdir)
+    m = run.metrics
+    # Backend error traces must be counted as model calls.
+    assert m["model_call_count"] > 0
+    assert m["model_backend_error_count"] > 0
+    # No valid or malformed decoder outcomes (backend never returned output).
+    assert m["model_valid_action_rate"] == 0.0
+    assert m["model_malformed_output_rate"] == 0.0
 
 
 # --- Scientific criteria ---

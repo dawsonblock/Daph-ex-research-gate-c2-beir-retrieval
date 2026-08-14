@@ -115,7 +115,7 @@ class I3ConditionRun:
     controller_id: str
     controller_algorithm_id: str
     tasks: tuple[I3TaskRun, ...]
-    metrics: Mapping[str, float | int]
+    metrics: Mapping[str, float | int | dict[str, int]]
 
 
 class V2BMetareasoningExperiment:
@@ -214,10 +214,18 @@ class V2BMetareasoningExperiment:
         and ``last_call_result`` (e.g. ``PinnedModelController``) contributes
         model metrics.  Deterministic controllers return an empty dict, so
         the corresponding trace fields remain ``None``.
+
+        In the backend-error case, ``last_decoder_outcome`` and
+        ``last_call_result`` are both None, but ``last_packet_sha256`` and
+        ``last_backend_error`` are set.  We detect model-controller calls by
+        checking ``last_packet_sha256``, which is set before the backend call.
         """
+        packet_sha = getattr(controller, "last_packet_sha256", None)
         outcome = getattr(controller, "last_decoder_outcome", None)
         call = getattr(controller, "last_call_result", None)
-        if outcome is None and call is None:
+        backend_error = getattr(controller, "last_backend_error", None)
+        # If no packet hash was set, this is a deterministic controller.
+        if packet_sha is None and outcome is None and call is None and backend_error is None:
             return {}
         return {
             "model_valid": outcome.valid if outcome else None,
@@ -228,9 +236,9 @@ class V2BMetareasoningExperiment:
             "model_latency_ms": call.latency_ms if call else None,
             "model_system_fingerprint": call.system_fingerprint if call else None,
             "model_finish_reason": call.finish_reason if call else None,
-            "model_packet_sha256": getattr(controller, "last_packet_sha256", None),
+            "model_packet_sha256": packet_sha,
             "model_raw_output": outcome.raw_output if outcome else None,
-            "model_backend_error": getattr(controller, "last_backend_error", None),
+            "model_backend_error": backend_error,
         }
 
     def _run_task(self, task: I3BenchmarkTask, *, condition: str,
@@ -414,9 +422,15 @@ class V2BMetareasoningExperiment:
             and trace.action_cost is not None
         ]
         # Model-specific development metrics (None/0 when controller is deterministic).
-        model_traces = tuple(trace for trace in traces if trace.model_valid is not None)
-        model_valid_count = sum(1 for trace in model_traces if trace.model_valid)
-        model_malformed_count = sum(1 for trace in model_traces if not trace.model_valid)
+        # Filter by model_packet_sha256: it is set on every model controller call,
+        # including backend errors (where model_valid is None).  This ensures
+        # backend error traces are counted in model_call_count and
+        # model_backend_error_count.
+        model_traces = tuple(trace for trace in traces if trace.model_packet_sha256 is not None)
+        model_valid_count = sum(1 for trace in model_traces if trace.model_valid is True)
+        model_malformed_count = sum(1 for trace in model_traces if trace.model_valid is False)
+        model_backend_error_count = sum(
+            1 for trace in model_traces if trace.model_backend_error is not None)
         model_latencies = [trace.model_latency_ms for trace in model_traces
                            if trace.model_latency_ms is not None]
         model_prompt_tokens = [trace.model_prompt_tokens for trace in model_traces
@@ -496,9 +510,7 @@ class V2BMetareasoningExperiment:
             "model_invalid_action_count": sum(
                 1 for trace in model_traces
                 if trace.model_rejection_code == "UNKNOWN_ACTION"),
-            "model_backend_error_count": sum(
-                1 for trace in model_traces
-                if trace.model_backend_error is not None),
+            "model_backend_error_count": model_backend_error_count,
             "model_mean_latency_ms": (sum(model_latencies) / len(model_latencies)
                                       if model_latencies else 0.0),
             "model_total_latency_ms": sum(model_latencies) if model_latencies else 0,

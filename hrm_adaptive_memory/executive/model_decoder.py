@@ -56,16 +56,24 @@ def decode_output(raw_output: str) -> DecoderOutcome:
         return _reject(raw_output, "EMPTY_OUTPUT")
 
     stripped = raw_output.strip()
-    # Extract the first JSON object from the output.  The model may emit
-    # reasoning text before or after the JSON; we only accept a single
-    # well-formed JSON object.
-    json_str = _extract_json(stripped)
-    if json_str is None:
+    # Extract candidate JSON objects from the output.  The model may emit
+    # reasoning text before or after the JSON; we try every brace-balanced
+    # substring and accept the first one that parses as a valid JSON object
+    # with the required structure.
+    candidates = _extract_json_candidates(stripped)
+    if not candidates:
         return _reject(raw_output, "NO_JSON_FOUND")
 
-    try:
-        parsed = json.loads(json_str)
-    except (json.JSONDecodeError, ValueError):
+    parsed: dict[str, Any] | None = None
+    for json_str in candidates:
+        try:
+            candidate = json.loads(json_str)
+        except (json.JSONDecodeError, ValueError):
+            continue
+        if isinstance(candidate, dict):
+            parsed = candidate
+            break
+    if parsed is None:
         return _reject(raw_output, "MALFORMED_JSON")
 
     if not isinstance(parsed, dict):
@@ -113,30 +121,44 @@ def decode_output(raw_output: str) -> DecoderOutcome:
         rejection_code=None, parsed_json=parsed)
 
 
-def _extract_json(text: str) -> str | None:
-    """Extract the first balanced ``{...}`` substring from *text*."""
-    start = text.find("{")
-    if start == -1:
-        return None
-    depth = 0
-    in_string = False
-    escape = False
-    for i in range(start, len(text)):
-        char = text[i]
-        if in_string:
-            if escape:
-                escape = False
-            elif char == "\\":
-                escape = True
-            elif char == '"':
-                in_string = False
+def _extract_json_candidates(text: str) -> list[str]:
+    """Extract all balanced ``{...}`` substrings from *text*.
+
+    The model may emit reasoning text containing braces before the actual
+    JSON object.  We scan for every opening brace and collect every
+    brace-balanced substring, ordered by start position.  The caller tries
+    each candidate until one parses as a valid JSON object.
+    """
+    candidates: list[str] = []
+    pos = 0
+    while True:
+        start = text.find("{", pos)
+        if start == -1:
+            break
+        depth = 0
+        in_string = False
+        escape = False
+        for i in range(start, len(text)):
+            char = text[i]
+            if in_string:
+                if escape:
+                    escape = False
+                elif char == "\\":
+                    escape = True
+                elif char == '"':
+                    in_string = False
+            else:
+                if char == '"':
+                    in_string = True
+                elif char == "{":
+                    depth += 1
+                elif char == "}":
+                    depth -= 1
+                    if depth == 0:
+                        candidates.append(text[start:i + 1])
+                        pos = i + 1
+                        break
         else:
-            if char == '"':
-                in_string = True
-            elif char == "{":
-                depth += 1
-            elif char == "}":
-                depth -= 1
-                if depth == 0:
-                    return text[start:i + 1]
-    return None
+            # Unbalanced braces from this start; advance past it.
+            pos = start + 1
+    return candidates

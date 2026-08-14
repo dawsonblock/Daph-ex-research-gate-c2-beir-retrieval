@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from typing import Any, Mapping
+from typing import Any
 
 from hrm_adaptive_memory.cognitive_control.state import CognitiveStateSnapshot
 
@@ -21,6 +21,8 @@ PACKET_SCHEMA = "DAPH_V2B_I3_4_INPUT_PACKET_V1"
 PACKET_SCHEMA_VERSION = 1
 
 # Canonical null sentinels for masked cognitive-state fields.
+# Each is wrapped in a function returning a fresh list so a caller cannot
+# mutate a shared alias and corrupt subsequent packets.
 NULL_RELEVANT_MEMORIES: list[dict[str, Any]] = []
 NULL_VERIFICATION_STATES: list[dict[str, Any]] = []
 NULL_PROVENANCE_SUMMARIES: list[str] = []
@@ -29,6 +31,24 @@ NULL_CONFLICTS: list[dict[str, Any]] = []
 NULL_PRIOR_DECISIONS: list[dict[str, Any]] = []
 NULL_PRIOR_OUTCOMES: list[str] = []
 NULL_OBSERVATION_SIGNALS: list[str] = []
+
+
+def _null_cognitive_state() -> dict[str, Any]:
+    """Return a fresh cognitive-state dict with canonical null values.
+
+    A fresh copy is returned each call so that downstream serialization
+    cannot mutate the module-level sentinels.
+    """
+    return {
+        "relevant_memories": list(NULL_RELEVANT_MEMORIES),
+        "verification_states": list(NULL_VERIFICATION_STATES),
+        "provenance_summaries": list(NULL_PROVENANCE_SUMMARIES),
+        "temporal_status": NULL_TEMPORAL_STATUS,
+        "unresolved_conflicts": list(NULL_CONFLICTS),
+        "prior_decisions": list(NULL_PRIOR_DECISIONS),
+        "prior_outcomes": list(NULL_PRIOR_OUTCOMES),
+        "observation_signals": list(NULL_OBSERVATION_SIGNALS),
+    }
 
 
 def _serialize_verification_states(
@@ -96,16 +116,7 @@ def serialize_packet(observation: ControllerObservation) -> dict[str, Any]:
     """
     snapshot = observation.cognitive_state
     if snapshot is None:
-        cognitive_state = {
-            "relevant_memories": NULL_RELEVANT_MEMORIES,
-            "verification_states": NULL_VERIFICATION_STATES,
-            "provenance_summaries": NULL_PROVENANCE_SUMMARIES,
-            "temporal_status": NULL_TEMPORAL_STATUS,
-            "unresolved_conflicts": NULL_CONFLICTS,
-            "prior_decisions": NULL_PRIOR_DECISIONS,
-            "prior_outcomes": NULL_PRIOR_OUTCOMES,
-            "observation_signals": NULL_OBSERVATION_SIGNALS,
-        }
+        cognitive_state = _null_cognitive_state()
     else:
         cognitive_state = {
             "relevant_memories": _serialize_relevant_memories(snapshot),
@@ -157,9 +168,19 @@ _FORBIDDEN_KEYS = frozenset({
     "latent_state", "benchmark_split",
 })
 
+# Forbidden substrings that would leak condition identity if they appeared
+# inside string values (e.g. task_summary, reason codes, memory ids).
+_FORBIDDEN_VALUE_SUBSTRINGS = (
+    "STATE_BLIND_CONTROLLER", "STATE_AWARE_CONTROLLER",
+    "NO_VERIFICATION", "NO_PROVENANCE", "NO_TEMPORAL",
+    "NO_CONFLICT", "NO_HISTORY",
+    "DEPTH_1", "DEPTH_4_PLUS",
+)
+
 
 def assert_no_condition_leakage(packet: dict[str, Any]) -> None:
-    """Fail-closed check that the packet contains no condition-identity keys."""
+    """Fail-closed check that the packet contains no condition-identity keys
+    or condition-identity substrings in string values."""
     _check_keys(packet)
 
 
@@ -172,3 +193,9 @@ def _check_keys(obj: Any) -> None:
     elif isinstance(obj, list):
         for item in obj:
             _check_keys(item)
+    elif isinstance(obj, str):
+        lowered = obj.upper()
+        for forbidden in _FORBIDDEN_VALUE_SUBSTRINGS:
+            if forbidden in lowered:
+                raise ValueError(
+                    f"packet leaks condition identity in string value: '{forbidden}'")
