@@ -1,9 +1,0 @@
-[OBJECTIVE]
-What is the billing multiplier for HSA-2?
-[EVIDENCE]
-[E1]
-Abbreviation table: HSA-2 = Heron sensor array.
-[E2]
-During setup, Heron sensor array was paired with {"tier": "retired"} for billing multiplier.
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

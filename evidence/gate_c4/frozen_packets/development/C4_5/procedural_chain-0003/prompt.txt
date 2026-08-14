@@ -1,9 +1,0 @@
-[OBJECTIVE]
-Which required action applies to JSA-7?
-[EVIDENCE]
-[E1]
-[change] Jacana sensor array :: required action := {"tier": "accredited"}
-[E2]
-JSA-7 is the short code for Jacana sensor array.
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

@@ -1,9 +1,0 @@
-[OBJECTIVE]
-What is the service region for SCM-1?
-[EVIDENCE]
-[E1]
-Abbreviation table: SCM-1 = Sparrow control module.
-[E2]
-{"subject": "Bluebird intake manifold", "service region": "EPSILON-SLATE"}
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.

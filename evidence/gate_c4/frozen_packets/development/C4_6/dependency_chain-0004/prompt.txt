@@ -1,9 +1,0 @@
-[OBJECTIVE]
-What is the release channel for Osprey intake manifold?
-[EVIDENCE]
-[E1]
-- updated Osprey intake manifold: required dependency now Jacana pressure assembly
-[E2]
-Per the release channel register, 8457 is allocated to Jacana pressure assembly.
-[RESPONSE REQUIREMENT]
-Return only the answer. Use supplied evidence when helpful, but answer the task regardless.
