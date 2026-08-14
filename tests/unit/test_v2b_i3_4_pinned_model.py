@@ -332,6 +332,199 @@ def test_loop_accepts_matched_deterministic_controller():
     assert run.controller_id == controller.controller_id
 
 
+# --- Development metrics ---
+
+
+def test_model_metrics_captured_in_traces():
+    """PinnedModelController traces must carry model-specific metrics."""
+    benchmark = _small_benchmark(2)
+    policy = load_frozen_policy(POLICY_PATH)
+    experiment = V2BMetareasoningExperiment(benchmark=benchmark, policy=policy)
+    controller = PinnedModelController(backend=StubBackend())
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmpdir:
+        run = experiment.run_condition(
+            condition=STATE_BLIND, controller=controller, store_root=tmpdir)
+    model_traces = [t for task in run.tasks for t in task.traces if t.model_valid is not None]
+    assert len(model_traces) > 0
+    for trace in model_traces:
+        assert trace.model_valid is True
+        assert trace.model_packet_sha256 is not None
+        assert trace.model_latency_ms is not None
+        assert trace.model_prompt_tokens is not None
+
+
+def test_deterministic_controller_traces_have_null_model_metrics():
+    """MatchedMetareasoningController traces must have None model metrics."""
+    benchmark = _small_benchmark(2)
+    policy = load_frozen_policy(POLICY_PATH)
+    experiment = V2BMetareasoningExperiment(benchmark=benchmark, policy=policy)
+    controller = MatchedMetareasoningController()
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmpdir:
+        run = experiment.run_condition(
+            condition=STATE_AWARE, controller=controller, store_root=tmpdir)
+    for task in run.tasks:
+        for trace in task.traces:
+            assert trace.model_valid is None
+            assert trace.model_latency_ms is None
+            assert trace.model_packet_sha256 is None
+
+
+def test_condition_run_metrics_include_model_fields():
+    """I3ConditionRun.metrics must include model-specific aggregations."""
+    benchmark = _small_benchmark(2)
+    policy = load_frozen_policy(POLICY_PATH)
+    experiment = V2BMetareasoningExperiment(benchmark=benchmark, policy=policy)
+    controller = PinnedModelController(backend=StubBackend())
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmpdir:
+        run = experiment.run_condition(
+            condition=STATE_BLIND, controller=controller, store_root=tmpdir)
+    m = run.metrics
+    assert "model_call_count" in m
+    assert "model_valid_action_rate" in m
+    assert "model_malformed_output_rate" in m
+    assert "model_mean_latency_ms" in m
+    assert "model_total_prompt_tokens" in m
+    assert "model_total_completion_tokens" in m
+    assert "model_total_reasoning_tokens" in m
+    assert "action_distribution" in m
+    assert "terminal_outcome_distribution" in m
+    assert "mean_steps_per_task" in m
+    assert m["model_call_count"] > 0
+    assert m["model_valid_action_rate"] == 1.0  # StubBackend always returns valid JSON
+
+
+def test_condition_run_metrics_include_action_distribution():
+    """Action distribution must cover all seven actions."""
+    benchmark = _small_benchmark(2)
+    policy = load_frozen_policy(POLICY_PATH)
+    experiment = V2BMetareasoningExperiment(benchmark=benchmark, policy=policy)
+    controller = PinnedModelController(backend=StubBackend())
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmpdir:
+        run = experiment.run_condition(
+            condition=STATE_BLIND, controller=controller, store_root=tmpdir)
+    dist = run.metrics["action_distribution"]
+    expected = {"ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"}
+    assert set(dist.keys()) == expected
+
+
+def test_deterministic_controller_metrics_have_zero_model_calls():
+    """Deterministic controller runs must report zero model calls."""
+    benchmark = _small_benchmark(2)
+    policy = load_frozen_policy(POLICY_PATH)
+    experiment = V2BMetareasoningExperiment(benchmark=benchmark, policy=policy)
+    controller = MatchedMetareasoningController()
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmpdir:
+        run = experiment.run_condition(
+            condition=STATE_AWARE, controller=controller, store_root=tmpdir)
+    assert run.metrics["model_call_count"] == 0
+    assert run.metrics["model_valid_action_rate"] == 0.0
+
+
+def test_malformed_output_tracked_in_metrics():
+    """Malformed model output must be tracked in development metrics."""
+    from hrm_adaptive_memory.executive.model_backend import ModelCallResult
+
+    class BadBackend:
+        model_name = "bad-stub"
+        def generate(self, *, system_prompt, user_prompt, temperature, max_tokens):
+            return ModelCallResult(
+                raw_output="I cannot decide", prompt_tokens=10, completion_tokens=5,
+                reasoning_tokens=0, latency_ms=1, model_name="bad-stub",
+                system_fingerprint=None, finish_reason="stop")
+
+    benchmark = _small_benchmark(1)
+    policy = load_frozen_policy(POLICY_PATH)
+    experiment = V2BMetareasoningExperiment(benchmark=benchmark, policy=policy)
+    controller = PinnedModelController(backend=BadBackend())
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmpdir:
+        run = experiment.run_condition(
+            condition=STATE_BLIND, controller=controller, store_root=tmpdir)
+    m = run.metrics
+    assert m["model_malformed_output_rate"] > 0.0
+    # All model calls should be malformed.
+    assert m["model_valid_action_rate"] == 0.0
+
+
+# --- Scientific criteria ---
+
+
+SCIENTIFIC_CRITERIA_PATH = ROOT / "experiments/v2b_i3_4/configs/v2b_i3_4_scientific_criteria_v1.json"
+
+
+def test_scientific_criteria_is_frozen():
+    raw = json.loads(SCIENTIFIC_CRITERIA_PATH.read_text())
+    assert raw["schema"] == "DAPH_V2B_I3_4_SCIENTIFIC_CRITERIA_V1"
+    assert raw["status"] == "FROZEN_BEFORE_HELD_OUT_EVALUATION"
+
+
+def test_scientific_criteria_defines_primary_hypothesis():
+    raw = json.loads(SCIENTIFIC_CRITERIA_PATH.read_text())
+    hyp = raw["primary_hypothesis"]
+    assert hyp["metric"] == "trajectory_regret"
+    assert hyp["direction"] == "aware < blind"
+
+
+def test_scientific_criteria_defines_distinct_claims():
+    raw = json.loads(SCIENTIFIC_CRITERIA_PATH.read_text())
+    claims = raw["distinct_claims"]
+    assert "information_without_exploitation" in claims
+    assert "executive_exploitation" in claims
+    assert "control_efficiency" in claims
+
+
+def test_scientific_criteria_defines_paired_statistics():
+    raw = json.loads(SCIENTIFIC_CRITERIA_PATH.read_text())
+    plan = raw["statistical_plan"]
+    assert plan["primary_test"].startswith("Paired")
+    assert plan["bootstrap"]["resampling_unit"] == "task"
+    assert plan["bootstrap"]["iterations"] >= 1000
+    assert plan["topology_grouping"]["variable"] == "topology_depth_band"
+
+
+def test_scientific_criteria_defines_evaluation_order():
+    raw = json.loads(SCIENTIFIC_CRITERIA_PATH.read_text())
+    order = raw["evaluation_order"]
+    assert order["phase_1"] == "held_out_instance"
+    assert order["phase_2"] == "held_out_surface"
+    assert order["phase_3"] == "held_out_structure_last"
+
+
+def test_scientific_criteria_records_structural_limitations():
+    raw = json.loads(SCIENTIFIC_CRITERIA_PATH.read_text())
+    comp = raw["structural_split_limitations"]["held_out_structure_composition"]
+    assert comp["task_count"] == 150
+    assert comp["by_difficulty_band"]["HARD"] == 0
+    assert comp["by_difficulty_band"]["TIE"] == 0
+    assert "DEPTH_1" in comp["by_topology_depth_band"]
+    assert "DEPTH_4_PLUS" in comp["by_topology_depth_band"]
+    restrictions = raw["structural_split_limitations"]["claim_restrictions"]
+    assert any("DEPTH_1" in r and "DEPTH_4_PLUS" in r for r in restrictions)
+
+
+def test_scientific_criteria_ablations_after_main():
+    raw = json.loads(SCIENTIFIC_CRITERIA_PATH.read_text())
+    assert raw["ablation_policy"]["order"] == "after_main_conditions"
+
+
+def test_scientific_criteria_references_frozen_benchmark():
+    raw = json.loads(SCIENTIFIC_CRITERIA_PATH.read_text())
+    refs = raw["frozen_references"]
+    assert refs["benchmark_identity"] == "v2b_i3_3_2_scientific_split_v1"
+    assert refs["qualification_status"] == "QUALIFIED_FROZEN_BENCHMARK"
+
+
+def test_scientific_criteria_has_prohibition_clause():
+    raw = json.loads(SCIENTIFIC_CRITERIA_PATH.read_text())
+    assert "prohibition" in raw
+    assert "held-out" in raw["prohibition"].lower() or "held out" in raw["prohibition"].lower()
+
+
 # --- System prompt ---
 
 

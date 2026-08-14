@@ -1,0 +1,146 @@
+{
+  "schema": "DAPH_V2B_I3_4_SCIENTIFIC_CRITERIA_V1",
+  "status": "FROZEN_BEFORE_HELD_OUT_EVALUATION",
+  "milestone": "V2B-I3.4",
+  "description": "Frozen scientific criteria, statistical plan, and claim boundaries for the I3.4 pinned-model executive experiment. These thresholds are fixed before any held-out model evaluation. They must not be re-tuned after seeing model behavior.",
+  "claim_boundary": "The central scientific question is whether the same pinned AI model makes better executive decisions when exposed to structured cognitive state. This is a question about executive decision quality, not merely about whether the state contains information.",
+  "primary_hypothesis": {
+    "statement": "The pinned model produces lower decision regret under the state-aware condition than under the state-blind condition: DG_aware < DG_blind.",
+    "metric": "trajectory_regret",
+    "direction": "aware < blind",
+    "primary_test": "paired_comparison"
+  },
+  "distinct_claims": {
+    "information_without_exploitation": {
+      "condition": "IG_aware < IG_blind but DG_aware ≈ DG_blind",
+      "interpretation": "State contains useful information, but the model executive does not exploit it effectively.",
+      "metric_IG": "information_gap (benchmark-identity property, not re-estimated)",
+      "metric_DG": "trajectory_regret"
+    },
+    "executive_exploitation": {
+      "condition": "DG_aware < DG_blind",
+      "interpretation": "Same model makes better executive decisions with structured state.",
+      "metric_DG": "trajectory_regret"
+    },
+    "control_efficiency": {
+      "condition": "DG_aware < DG_blind AND TR_aware < TR_blind AND cost_aware <= cost_blind",
+      "interpretation": "Structured cognitive state improves end-to-end control efficiency.",
+      "metric_DG": "trajectory_regret",
+      "metric_TR": "trajectory_regret (paired per-task delta)",
+      "metric_cost": "total_action_cost"
+    }
+  },
+  "metrics": {
+    "DG": {
+      "name": "decision_gap",
+      "definition": "trajectory_regret = max(0, optimal_utility - realized_utility)",
+      "level": "task",
+      "aggregation": "sum and mean across tasks"
+    },
+    "TR": {
+      "name": "trajectory_regret",
+      "definition": "Same as DG; used in paired per-task delta DG_blind,i - DG_aware,i",
+      "level": "task",
+      "aggregation": "paired per-task difference"
+    },
+    "IG": {
+      "name": "information_gap",
+      "definition": "Benchmark-identity property from I3.3.2 frozen oracle sets; NOT re-estimated after model evaluation",
+      "level": "condition",
+      "source": "configs/v2b_i3_3_3_baseline.json:sequential_observable_oracle_sets"
+    },
+    "action_regret": {
+      "name": "action_regret",
+      "definition": "Per-step regret from the exact optimal policy oracle",
+      "level": "step",
+      "aggregation": "mean across executed steps; NOT used as independent statistical sample"
+    },
+    "cost": {
+      "name": "total_action_cost",
+      "definition": "Sum of action costs across executed steps",
+      "level": "task",
+      "aggregation": "sum and mean across tasks"
+    },
+    "success_rate": {
+      "name": "task_success_rate",
+      "definition": "Fraction of tasks where the terminal outcome is successful",
+      "level": "condition",
+      "aggregation": "count / total"
+    }
+  },
+  "statistical_plan": {
+    "paired_design": "Blind and aware conditions share the same tasks. The paired difference is DG_blind,i - DG_aware,i for each task i.",
+    "primary_test": "Paired test on per-task trajectory regret differences (DG_blind,i - DG_aware,i).",
+    "significance_level": 0.05,
+    "bootstrap": {
+      "method": "paired_bootstrap",
+      "resampling_unit": "task",
+      "iterations": 10000,
+      "ci_level": 0.95,
+      "note": "Do NOT bootstrap individual transitions as independent observations. Resample at the task level."
+    },
+    "topology_grouping": {
+      "method": "Group tasks by topology depth band (DEPTH_1, DEPTH_4_PLUS). Report both task-level and topology-level aggregates.",
+      "variable": "topology_depth_band",
+      "note": "Treat topology as a grouping variable, not a covariate for post-hoc adjustment."
+    },
+    "multiple_comparisons": {
+      "correction": "Bonferroni",
+      "note": "Applied only if ablation conditions are tested beyond the primary blind-vs-aware comparison."
+    }
+  },
+  "evaluation_order": {
+    "phase_1": "held_out_instance",
+    "phase_2": "held_out_surface",
+    "phase_3": "held_out_structure_last",
+    "note": "Each phase must be evaluated and reported before proceeding to the next. Results from earlier phases inform whether later phases are warranted."
+  },
+  "ablation_policy": {
+    "order": "after_main_conditions",
+    "conditions": ["NO_VERIFICATION", "NO_PROVENANCE", "NO_TEMPORAL", "NO_CONFLICT", "NO_HISTORY"],
+    "purpose": "Attribute executive improvement to specific cognitive-state components.",
+    "note": "Ablations are exploratory and do not change the primary claim threshold."
+  },
+  "structural_split_limitations": {
+    "held_out_structure_composition": {
+      "task_count": 150,
+      "by_difficulty_band": {"EASY": 99, "MEDIUM": 51, "HARD": 0, "TIE": 0},
+      "by_topology_depth_band": {"DEPTH_1": 59, "DEPTH_4_PLUS": 91}
+    },
+    "claim_restrictions": [
+      "No HARD or TIE difficulty claims are possible (zero tasks in held-out structure).",
+      "DEPTH_1 claims are topology generalization within the same horizon class.",
+      "DEPTH_4_PLUS claims are topology+horizon extrapolation and must be reported separately.",
+      "Do not pool DEPTH_1 and DEPTH_4_PLUS into a single structural claim."
+    ],
+    "source": "configs/v2b_i3_3_3_baseline.json:structural_held_out_composition"
+  },
+  "repetition_policy": {
+    "default_repetitions": 1,
+    "nondeterminism_check": "If model output varies across repetitions with temperature=0, increase to 3-5 repetitions and store raw outputs for replay.",
+    "aggregation_with_repetitions": "Aggregate at the task-family level using mean across repetitions before computing paired statistics.",
+    "note": "DeepSeek deepseek-v4-flash at temperature=0 is expected to be deterministic. If nondeterminism is observed, the repetition policy is activated and raw outputs are preserved."
+  },
+  "replay_requirements": {
+    "model_output_reproducibility": "Store raw model outputs (raw_output, system_fingerprint, finish_reason) per step. Replay requires the same prompt, packet, and generation settings.",
+    "evaluation_reproducibility": "Given the same parsed action, the trajectory and scoring must be exactly reproducible using the deterministic policy/executor/oracle infrastructure.",
+    "separation": "Model-output nondeterminism is distinguished from deterministic evaluation replay. A failed model-output replay does not invalidate evaluation replay."
+  },
+  "reporting_requirements": {
+    "task_level": "Report paired DG differences, success rates, and costs per task.",
+    "topology_level": "Report DG, TR, and success rates grouped by DEPTH_1 and DEPTH_4_PLUS.",
+    "condition_level": "Report aggregate metrics for STATE_BLIND_CONTROLLER and STATE_AWARE_CONTROLLER.",
+    "structural_limitations": "Explicitly state the EASY/MEDIUM composition and the absence of HARD/TIE tasks in every structural claim.",
+    "development_metrics": "Report model valid-action rate, malformed-output rate, latency, and token usage as development metrics, NOT as scientific conclusions.",
+    "claim_boundary": "State explicitly which distinct claim is supported: information_without_exploitation, executive_exploitation, or control_efficiency."
+  },
+  "frozen_references": {
+    "benchmark_identity": "v2b_i3_3_2_scientific_split_v1",
+    "benchmark_closure_sha256": "9f4255d61dbbac14dd768cb61ee3381ef493ccb7b88b5b365a027dbb1c2eca5e",
+    "qualification_status": "QUALIFIED_FROZEN_BENCHMARK",
+    "i3_3_3_baseline": "configs/v2b_i3_3_3_baseline.json",
+    "controller_identity": "experiments/v2b_i3_4/manifests/v2b_i3_4_controller_identity_v1.json",
+    "pinned_model_config": "experiments/v2b_i3_4/configs/v2b_i3_4_pinned_model_config_v1.json"
+  },
+  "prohibition": "These thresholds, statistical tests, grouping variables, and claim boundaries must not be modified after any held-out model evaluation has been run. Any change constitutes a new experiment identity."
+}
