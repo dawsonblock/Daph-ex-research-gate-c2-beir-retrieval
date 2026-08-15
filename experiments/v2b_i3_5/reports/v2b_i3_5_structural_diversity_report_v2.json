@@ -1,8 +1,86 @@
 {
-  "exact_structure_overlap_matrix": {},
-  "novelty_against_development": {},
-  "schema": "DAPH_V2B_I3_3_1_STRUCTURAL_DIVERSITY_REPORT_V1",
+  "exact_structure_overlap_matrix": {
+    "structure_dev_v2_vs_development": 0,
+    "structure_dev_v2_vs_held_out_instance": 0,
+    "structure_dev_v2_vs_held_out_structure": 0,
+    "structure_dev_v2_vs_held_out_surface": 0,
+    "structure_dev_v2_vs_validation": 0,
+    "structure_held_out_v2_vs_development": 0,
+    "structure_held_out_v2_vs_held_out_instance": 0,
+    "structure_held_out_v2_vs_held_out_structure": 0,
+    "structure_held_out_v2_vs_held_out_surface": 0,
+    "structure_held_out_v2_vs_validation": 0,
+    "structure_validation_v2_vs_development": 0,
+    "structure_validation_v2_vs_held_out_instance": 0,
+    "structure_validation_v2_vs_held_out_structure": 0,
+    "structure_validation_v2_vs_held_out_surface": 0,
+    "structure_validation_v2_vs_validation": 0
+  },
+  "held_out_isolation_check": {
+    "dev_held_overlap": 0,
+    "is_isolated": true,
+    "requirement": "T_H \u2229 (T_D \u222a T_V) = \u2205",
+    "validation_held_overlap": 0
+  },
+  "novelty_against_i3_4": {
+    "structure_dev_v2": {
+      "novel_topologies": 87,
+      "novelty_rate": 1.0,
+      "total_topologies": 87
+    },
+    "structure_held_out_v2": {
+      "novel_topologies": 65,
+      "novelty_rate": 1.0,
+      "total_topologies": 65
+    },
+    "structure_validation_v2": {
+      "novel_topologies": 51,
+      "novelty_rate": 1.0,
+      "total_topologies": 51
+    }
+  },
+  "schema": "DAPH_V2B_I3_5_STRUCTURAL_DIVERSITY_REPORT_V2",
+  "schema_version": 2,
   "status": "FROZEN_BENCHMARK_NOT_EXECUTIVE_RESULT",
-  "unique_coarse_structures": {},
-  "unique_exact_structures": {}
+  "topology_definition": "behavior-derived transition_topology_sha256 from metareasoning_topology.py",
+  "unique_coarse_structures": {
+    "structure_dev_v2": {
+      "topology_count": 87
+    },
+    "structure_held_out_v2": {
+      "topology_count": 65
+    },
+    "structure_validation_v2": {
+      "topology_count": 51
+    }
+  },
+  "unique_exact_structures": {
+    "structure_dev_v2": {
+      "depth_distribution": {
+        "DEPTH_1": 124,
+        "DEPTH_4_PLUS": 176
+      },
+      "unique_transition_topologies": 87
+    },
+    "structure_held_out_v2": {
+      "depth_distribution": {
+        "DEPTH_1": 59,
+        "DEPTH_4_PLUS": 91
+      },
+      "unique_transition_topologies": 65
+    },
+    "structure_validation_v2": {
+      "depth_distribution": {
+        "DEPTH_1": 59,
+        "DEPTH_4_PLUS": 91
+      },
+      "unique_transition_topologies": 51
+    }
+  },
+  "v2_inter_split_overlap": {
+    "structure_dev_v2_vs_structure_held_out_v2": 0,
+    "structure_dev_v2_vs_structure_validation_v2": 2,
+    "structure_validation_v2_vs_structure_held_out_v2": 0
+  },
+  "v2_vs_i3_4_total_overlap": 0
 }
