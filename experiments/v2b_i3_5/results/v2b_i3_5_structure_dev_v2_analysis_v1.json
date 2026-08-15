@@ -1,0 +1,38 @@
+{
+  "aware_success_rate": 0.35,
+  "blind_success_rate": 0.27,
+  "cohen_d": 0.5424714711089158,
+  "conclusion": "Development experiment shows positive and significant \u0394DG. The governor-enhanced aware condition outperforms blind on development topologies. This is NOT held-out confirmation.",
+  "delta_dg_negative_count": 55,
+  "delta_dg_positive_count": 222,
+  "delta_dg_zero_count": 23,
+  "depth_band_analysis": {
+    "DEPTH_1": {
+      "mean_delta_dg": 36.60818548387096,
+      "n": 124,
+      "positive_count": 76
+    },
+    "DEPTH_4_PLUS": {
+      "mean_delta_dg": 53.67463068181817,
+      "n": 176,
+      "positive_count": 146
+    }
+  },
+  "experiment_id": "v2b_i3_5_dev_experiment_v1",
+  "mean_delta_dg": 46.62049999999999,
+  "n_paired_tasks": 300,
+  "schema": "DAPH_V2B_I3_5_DEV_ANALYSIS_V1",
+  "status": "DEVELOPMENT_NOT_HELD_OUT",
+  "task_bootstrap_ci": [
+    39.324433333333324,
+    54.384949999999996
+  ],
+  "topology_cluster_bootstrap": {
+    "ci_95": [
+      35.715802470517986,
+      67.74890289595461
+    ],
+    "mean_cluster_delta_dg": 51.218122611583816,
+    "n_clusters": 87
+  }
+}
