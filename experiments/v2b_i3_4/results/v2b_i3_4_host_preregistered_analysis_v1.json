@@ -1,4 +1,90 @@
 {
+  "by_cognitive_channel": {
+    "composition": {
+      "mean_delta_dg": -2.2193749999999963,
+      "mean_delta_ig": 1.5518749999999981,
+      "mean_delta_tr": -0.6675000000000004,
+      "task_count": 24
+    },
+    "conflict": {
+      "mean_delta_dg": -12.502000000000004,
+      "mean_delta_ig": 11.541999999999994,
+      "mean_delta_tr": -0.9600000000000023,
+      "task_count": 10
+    },
+    "conflict_alias": {
+      "mean_delta_dg": -33.32,
+      "mean_delta_ig": 32.527499999999996,
+      "mean_delta_tr": -0.792500000000004,
+      "task_count": 4
+    },
+    "history": {
+      "mean_delta_dg": -12.418437499999998,
+      "mean_delta_ig": 11.420937499999994,
+      "mean_delta_tr": -0.9975000000000023,
+      "task_count": 16
+    },
+    "history_alias": {
+      "mean_delta_dg": -4.589999999999989,
+      "mean_delta_ig": 3.7950000000000017,
+      "mean_delta_tr": -0.7950000000000017,
+      "task_count": 4
+    },
+    "irreducible": {
+      "mean_delta_dg": 0.0,
+      "mean_delta_ig": 0.0,
+      "mean_delta_tr": 0.0,
+      "task_count": 8
+    },
+    "irreducible_alias": {
+      "mean_delta_dg": -5.73333333333332,
+      "mean_delta_ig": 4.13333333333333,
+      "mean_delta_tr": -1.5999999999999943,
+      "task_count": 6
+    },
+    "provenance": {
+      "mean_delta_dg": -4.047499999999992,
+      "mean_delta_ig": 3.789999999999999,
+      "mean_delta_tr": -0.2575000000000003,
+      "task_count": 4
+    },
+    "provenance_alias": {
+      "mean_delta_dg": -60.245000000000005,
+      "mean_delta_ig": 61.31999999999999,
+      "mean_delta_tr": 1.0749999999999957,
+      "task_count": 2
+    },
+    "state_irrelevant": {
+      "mean_delta_dg": -11.49104651162791,
+      "mean_delta_ig": 14.070116279069767,
+      "mean_delta_tr": 2.57906976744186,
+      "task_count": 43
+    },
+    "temporal": {
+      "mean_delta_dg": -3.789999999999992,
+      "mean_delta_ig": 3.789999999999999,
+      "mean_delta_tr": 0.0,
+      "task_count": 3
+    },
+    "temporal_alias": {
+      "mean_delta_dg": -40.88,
+      "mean_delta_ig": 43.01499999999999,
+      "mean_delta_tr": 2.134999999999998,
+      "task_count": 6
+    },
+    "verification": {
+      "mean_delta_dg": -27.63781249999999,
+      "mean_delta_ig": 26.77593749999999,
+      "mean_delta_tr": -0.8618749999999995,
+      "task_count": 16
+    },
+    "verification_alias": {
+      "mean_delta_dg": -30.402500000000003,
+      "mean_delta_ig": 33.067499999999995,
+      "mean_delta_tr": 2.664999999999999,
+      "task_count": 4
+    }
+  },
   "by_difficulty_band": {
     "EASY": {
       "mean_delta_dg": -16.004040404040403,

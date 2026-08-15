@@ -1,0 +1,173 @@
+{
+  "created_at": "2026-08-15T06:23:28.375209+00:00",
+  "description": "Complete I3.4 qualification bundle. All five splits evaluated with frozen configuration. Preregistered topology-cluster bootstrap and depth-stratified analysis completed for held_out_structure. Verdict declared.",
+  "evaluation_results": {
+    "development": {
+      "api_calls": 1340,
+      "ci_lower": 2.517,
+      "ci_method": "task_level_bootstrap",
+      "ci_upper": 16.278,
+      "delta_dg": 9.188,
+      "identity_check": "PASS",
+      "nonnegativity_check": "PASS",
+      "receipts_sha": "0841f9485450a53339985e0a79b75b35f69bf61d4ddbb234b50a2bcaf6559a65",
+      "report_sha": "0b549bc3ad74230cc45438a4498064f73e73b47420ffa330c90755a3fbb62332",
+      "results_sha": "91c95f44954e0152140874057fc3728eb28c136d2b3706624f68e46934500e5d",
+      "scoring_sha": "82d2e573caa24ff403bc41231b579f5fb0dd987d38441280d4d513b2c90acae6",
+      "split_purity_check": "PASS_NO_RECOMPUTATION_REQUIRED",
+      "task_count": 300,
+      "verdict": "SUPPORTED_ON_DEVELOPMENT"
+    },
+    "held_out_instance": {
+      "api_calls": 431,
+      "ci_lower": -1.509,
+      "ci_method": "task_level_bootstrap",
+      "ci_upper": 20.525,
+      "delta_dg": 9.346,
+      "identity_check": "PASS",
+      "nonnegativity_check": "PASS",
+      "receipts_sha": "4b16090530efb17300e5400bcd3efefdea1cad89129a7572141d593719409bb7",
+      "results_sha": "32e8a6d2a953d785fc6805f3b53c995f9c6db9257f3dec000a166034bd9a3ae5",
+      "scoring_sha": "5e8bf265f3f16aa81f5573b60802218d55015535c1306f44f94f74f3b5b8d0fa",
+      "task_count": 100,
+      "verdict": "INCONCLUSIVE_ON_HELD_OUT_INSTANCE"
+    },
+    "held_out_structure": {
+      "api_calls": 788,
+      "ci_lower_task_level": -17.284,
+      "ci_lower_topology_cluster": -15.826,
+      "ci_method_primary": "topology_cluster_bootstrap",
+      "ci_upper_task_level": -9.794,
+      "ci_upper_topology_cluster": -7.279,
+      "delta_dg_task_level": -13.429,
+      "delta_dg_topology_uniform": -11.403,
+      "delta_ig_ci": [
+        7.665,
+        16.696
+      ],
+      "delta_ig_topology_uniform": 12.033,
+      "depth_stratified": {
+        "DEPTH_1": {
+          "delta_dg": -13.454,
+          "task_count": 59,
+          "topo_ci": [
+            -14.444,
+            -3.357
+          ],
+          "topology_count": 30,
+          "verdict": "REJECTED"
+        },
+        "DEPTH_4_PLUS": {
+          "delta_dg": -13.412,
+          "task_count": 91,
+          "topo_ci": [
+            -22.184,
+            -9.424
+          ],
+          "topology_count": 21,
+          "verdict": "REJECTED"
+        }
+      },
+      "difficulty_composition": {
+        "EASY": 99,
+        "HARD": 0,
+        "MEDIUM": 51,
+        "TIE": 0
+      },
+      "held_out_report_sha": "97b5a7b73e3830ea45308d2c0f989d6425cc633003340e348601283fc43cfca8",
+      "identity_check": "PASS",
+      "nonnegativity_check": "PASS",
+      "preregistered_analysis_sha": "fd5e19766715c320f229eefe1d8df7f97a5b3cf6cc9cb3f6280e96132aa785c5",
+      "preregistered_report_sha": "7038c20cbb3e2f6c58180780b88f6060a3b604a8a5a68a5b9eba24c6959ea88f",
+      "receipts_sha": "6092e629553e8a7f8240ce0c5ee602bb6335f51e0e324591be86a7e309c0b0ab",
+      "results_sha": "6bc4e961126059b819a8cdc79c4db1a85c717145cde13dc39b8777ed10f31ded",
+      "scoring_sha": "58b71b3a646f4c15aa165afc7ecacc32d58320cb8ed1e948ec433df4f14237b6",
+      "task_count": 150,
+      "topology_count": 51,
+      "verdict": "REJECTED_ON_HELD_OUT_STRUCTURE"
+    },
+    "held_out_surface": {
+      "api_calls": 217,
+      "ci_lower": -7.621,
+      "ci_method": "task_level_bootstrap",
+      "ci_upper": 22.028,
+      "delta_dg": 6.808,
+      "identity_check": "PASS",
+      "nonnegativity_check": "PASS",
+      "receipts_sha": "ef516c720457f3b0eb4eef8f958a35932ffb28cbe62bb72370da1f900723471b",
+      "results_sha": "4f74efe9d11be67b6bcc35c272c1a31e5cbcf5a956a31d315f80c236028048f7",
+      "scoring_sha": "0a1e19cb40d884f66640121e0a66044073129c7ff9c9463beef034223f427a7f",
+      "task_count": 50,
+      "verdict": "INCONCLUSIVE_ON_HELD_OUT_SURFACE"
+    },
+    "validation": {
+      "api_calls": 754,
+      "ci_lower": -1.116,
+      "ci_method": "task_level_bootstrap",
+      "ci_upper": 12.505,
+      "delta_dg": 5.165,
+      "identity_check": "PASS",
+      "nonnegativity_check": "PASS",
+      "receipts_sha": "bdcddf78ac6dd0f228fc09dc2dd1f313dbf2ee20a3d858c1c5aebf8ddcfe192e",
+      "report_sha": "8176e9ccc9a4f98a2be6a78daaf1dc1f1770053f0f2e3a7e461fe77e6b33b9de",
+      "results_sha": "ae38b5ad57b317693f43622040f7bbd6414241e67cedd11f32365fba49dcd6af",
+      "scoring_sha": "573f1bf3c495ff119c3483c78c4015bf691cf0a9cc7371197f6590b2c75acccb",
+      "task_count": 150,
+      "verdict": "INCONCLUSIVE_ON_VALIDATION"
+    }
+  },
+  "frozen_code": {
+    "full_runner": "023d2ff5f6853bb3dc6ed2f24ab16636fe68eb9e77d3fc9b73ef14dff796131e",
+    "observable_oracle_views": "1c46e3b96855ab2f2e7d0cc237e3cec7e4f79a401e0639c45921f0ab3eaad66a",
+    "pinned_model_controller": "156c68bab4c3b91f77a3052adb36a51dadd79928efe4c0c2525cb61f7414e916",
+    "scientific_scoring": "71129a5df6b8e4fdcf2ca3d35b347c44004e987168ba05a694bd4a16fef91c0a",
+    "statistical_analysis": "e5984f9087917bcc7601ec08dd2c42fab4481c1566f5c14202e4891add905708"
+  },
+  "frozen_configuration": {
+    "controller_identity": "15d40dc3784018906a2de7de8c47117e671e22ccca0f329213797a4a2893d7ed",
+    "experiment_identity": "182ac1949b19982e400e83e997b86b07c6f51ca046e926d23f9f87856cb589ea",
+    "generation_config": "4699037908812e883fb958341d9c8381655128489c526ec9b2d49b9d88ba42fc",
+    "observable_oracle_views_v2": "8f6a2abb7000518338cdfa8cfcf87640f6f5fedc3ac5fec9987eb893631880cb",
+    "pre_held_out_freeze": "ee8b9196dd3272a5119922b656de0237798e4424be22b98f43fddf19ba3d518b",
+    "scientific_criteria_v2": "9ffc876f3a06e480ed171989fe50b7e825e006d3aa94144f2667a5554df06002"
+  },
+  "model_config": {
+    "max_tokens": 2048,
+    "model": "deepseek-v4-flash",
+    "response_format": "json_object",
+    "temperature": 0.0,
+    "thinking_mode": "disabled"
+  },
+  "prohibition": "This bundle is immutable. Any change to controller, prompt, policy, scoring, or oracle views constitutes a new experiment identity. The I3.4 experiment is complete.",
+  "schema": "DAPH_V2B_I3_4_COMPLETE_QUALIFICATION_BUNDLE_V1",
+  "schema_version": 1,
+  "source_branch": "i3.4.1-scientific-protocol-repair",
+  "source_commit": "cc8b144",
+  "status": "COMPLETE_EXPERIMENT_VERDICT_DECLARED",
+  "total_api_calls": 3530,
+  "total_task_pairs": 750,
+  "validity_gates": {
+    "G13_fingerprint_policy": "PASS (750/750 pairs fingerprint-valid)",
+    "G14_call_receipts_complete": "PASS (3530/3530 receipts)",
+    "G17_tr_equals_ig_plus_dg": "PASS (all splits, all contributions)",
+    "G18_class_ig_nonneg": "PASS (all splits)",
+    "G19_class_dg_nonneg": "PASS (all splits)",
+    "G20_no_held_out_config_mutation": "PASS (frozen at 7af42ed)",
+    "G22_full_test_suite": "PASS (1768 passed, 3 skipped)"
+  },
+  "verdict": {
+    "control_efficiency": "NOT_SUPPORTED (requires \u0394DG > 0 on held-out)",
+    "development": "SUPPORTED_ON_DEVELOPMENT (\u0394DG=+9.19, CI=[+2.52, +16.28])",
+    "diagnosis": "DAPH improves what the model can know (IG), but the current fixed DeepSeek executive cannot reliably generalize how to use it (DG) to unseen control topologies. Both DEPTH_1 and DEPTH_4_PLUS are rejected, indicating the failure is topology-specific rather than horizon-specific.",
+    "executive_exploitation": "SUPPORTED on development, REJECTED on held_out_structure",
+    "general_executive_metareasoning_capability": "NOT_SUPPORTED",
+    "held_out_instance": "INCONCLUSIVE_ON_HELD_OUT_INSTANCE (\u0394DG=+9.35, CI=[-1.51, +20.53])",
+    "held_out_structure": "REJECTED_ON_HELD_OUT_STRUCTURE (topology-cluster \u0394DG=-11.40, CI=[-15.83, -7.28])",
+    "held_out_surface": "INCONCLUSIVE_ON_HELD_OUT_SURFACE (\u0394DG=+6.81, CI=[-7.62, +22.03])",
+    "next_milestone": "V2B-I3.5: Structure-General Executive \u2014 move toward model-based metareasoning where the executive reasons about action consequences rather than reacting to state labels.",
+    "overall": "EXPERIMENT_COMPLETE_VERDICT_DECLARED",
+    "primary_hypothesis": "The pinned model produces lower decision gap under the state-aware condition than under the state-blind condition (DG_aware < DG_blind).",
+    "representation_advantage": "SUPPORTED on all splits (\u0394IG > 0 everywhere)",
+    "validation": "INCONCLUSIVE_ON_VALIDATION (\u0394DG=+5.16, CI=[-1.12, +12.51])"
+  }
+}
