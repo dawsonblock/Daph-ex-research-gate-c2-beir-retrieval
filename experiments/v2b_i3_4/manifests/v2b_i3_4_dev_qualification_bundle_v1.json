@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-08-15T04:31:21.870233+00:00",
+  "description": "Immutable development qualification bundle. The controller, scoring, and identity are frozen at this commit. No further tuning against development data is permitted.",
+  "development_result": {
+    "aware_DG": 72.4318,
+    "aware_IG": 0.4657,
+    "aware_TR": 72.8975,
+    "aware_success_rate": 0.48,
+    "backend_errors": 0,
+    "blind_DG": 81.6193,
+    "blind_IG": 4.6303,
+    "blind_TR": 86.2497,
+    "blind_success_rate": 0.42,
+    "ci_excludes_zero": true,
+    "decoder_failures": 0,
+    "delta_DG": 9.1875,
+    "delta_DG_ci_lower": 2.5174,
+    "delta_DG_ci_upper": 16.2781,
+    "delta_IG": 4.1646,
+    "delta_TR": 13.3522,
+    "fingerprint_valid_pairs": 300,
+    "hypothesis_dg_positive": "SUPPORTED_ON_DEVELOPMENT",
+    "identity_check": "PASS",
+    "mean_aware_utility": -6.69,
+    "mean_blind_utility": -20.04,
+    "nonnegativity_check": "PASS",
+    "split_purity_check": "PASS_NO_RECOMPUTATION_REQUIRED",
+    "task_count": 300,
+    "total_api_calls": 1340
+  },
+  "frozen_artifacts": {
+    "controller_identity": {
+      "path": "experiments/v2b_i3_4/manifests/v2b_i3_4_controller_identity_v1.json",
+      "sha256": "15d40dc3784018906a2de7de8c47117e671e22ccca0f329213797a4a2893d7ed"
+    },
+    "dev_corrected_scoring": {
+      "path": "experiments/v2b_i3_4/results/v2b_i3_4_dev_scoring_v2_corrected.json",
+      "sha256": "82d2e573caa24ff403bc41231b579f5fb0dd987d38441280d4d513b2c90acae6"
+    },
+    "dev_raw_results": {
+      "path": "experiments/v2b_i3_4/results/v2b_i3_4_dev_full_v1.json",
+      "sha256": "91c95f44954e0152140874057fc3728eb28c136d2b3706624f68e46934500e5d"
+    },
+    "dev_receipts": {
+      "path": "experiments/v2b_i3_4/receipts/v2b_i3_4_dev_full_receipts_v1.jsonl",
+      "sha256": "0841f9485450a53339985e0a79b75b35f69bf61d4ddbb234b50a2bcaf6559a65"
+    },
+    "dev_report_v2_corrected": {
+      "path": "experiments/v2b_i3_4/reports/v2b_i3_4_dev_full_report_v2_corrected.md",
+      "sha256": "0b549bc3ad74230cc45438a4498064f73e73b47420ffa330c90755a3fbb62332"
+    },
+    "experiment_identity": {
+      "path": "experiments/v2b_i3_4/manifests/v2b_i3_4_experiment_identity_v1.json",
+      "sha256": "182ac1949b19982e400e83e997b86b07c6f51ca046e926d23f9f87856cb589ea"
+    },
+    "generation_config": {
+      "path": "experiments/v2b_i3_4/configs/v2b_i3_4_frozen_generation_config_v1.json",
+      "sha256": "4699037908812e883fb958341d9c8381655128489c526ec9b2d49b9d88ba42fc"
+    },
+    "observable_oracle_views": {
+      "path": "experiments/v2b_i3_4/oracle_views/v2b_i3_4_observable_oracle_views_v1.json",
+      "schema": "DAPH_V2B_I3_4_OBSERVABLE_ORACLE_VIEW_V2",
+      "sha256": "8f6a2abb7000518338cdfa8cfcf87640f6f5fedc3ac5fec9987eb893631880cb"
+    },
+    "scientific_criteria": {
+      "path": "experiments/v2b_i3_4/configs/v2b_i3_4_scientific_criteria_v2.json",
+      "sha256": "9ffc876f3a06e480ed171989fe50b7e825e006d3aa94144f2667a5554df06002"
+    },
+    "v1_scoring_voided": {
+      "path": "experiments/v2b_i3_4/results/v2b_i3_4_dev_scoring_v1.json",
+      "status": "VOID_PENDING_RESCORING"
+    }
+  },
+  "git_branch": "i3.4.1-scientific-protocol-repair",
+  "git_commit": "18b81739dc4612f97255705b00328b28a267a957",
+  "prohibition": "No changes to controller, prompt, policy, generation config, retry policy, scoring, or observable oracle views after this point. Validation and held-out splits must use the exact same configuration.",
+  "schema": "DAPH_V2B_I3_4_DEV_QUALIFICATION_BUNDLE_V1",
+  "schema_version": 1,
+  "status": "FROZEN_DEVELOPMENT_QUALIFIED"
+}
