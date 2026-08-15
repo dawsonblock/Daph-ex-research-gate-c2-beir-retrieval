@@ -435,18 +435,33 @@ def score_results(
     latent_oracle_path: str | Path,
     utility_weights: Mapping[str, float],
 ) -> tuple[list[I34ScientificTaskContribution], list[I34PairedDelta]]:
-    """Score paired results using the observable oracle views and latent oracle.
+    """Score paired results using per-task observable oracle values and latent oracle.
+
+    Loads V_O^*(B_i) for each task from the V2 view artifact's per-task
+    entries, and V_L^*(s_i) from the latent oracle.  This is the correct
+    per-task mapping — not a split-level scalar.
 
     Returns (all_contributions, paired_deltas).
     """
-    # Load observable oracle views
+    # Load observable oracle views — per-task V_O from V2 view structure
     views_data = json.loads(Path(oracle_views_path).read_text())
-    views_by_split_cond: dict[tuple[str, str], float] = {}
+    # Map (task_id, condition) -> (observable_optimal_value, information_class_id,
+    #   observable_oracle_set_sha256)
+    task_vo: dict[tuple[str, str], tuple[float, str, str]] = {}
     for v in views_data["views"]:
-        views_by_split_cond[(v["split_name"], v["condition"])] = v["observable_optimal_value"]
+        condition = v["condition"]
+        oracle_set_sha = v.get("observable_oracle_set_sha256", "")
+        for entry in v.get("task_entries", []):
+            tid = entry["task_id"]
+            task_vo[(tid, condition)] = (
+                entry["observable_optimal_value"],
+                entry.get("information_class_id", ""),
+                oracle_set_sha,
+            )
 
     # Load latent oracle values (per-task V_L^*)
     latent_values: dict[str, float] = {}
+    latent_table_shas: dict[str, str] = {}
     with gzip.open(latent_oracle_path, "rt") as f:
         for line in f:
             entry = json.loads(line)
@@ -456,12 +471,12 @@ def score_results(
             init_id = entry.get("initial_state_id") or table.get("initial_state_id")
             if init_id and init_id in state_values:
                 latent_values[task_id] = float(state_values[init_id])
+            latent_table_shas[task_id] = table.get("identity_sha256", "")
 
     # Build task lookup
     task_by_id = {t.task_id: t for t in benchmark.tasks}
 
     # Compute controller values from trajectory utility
-    # V_π^M(s) = realized_utility (from the deterministic executor)
     blind_contributions: dict[str, I34ScientificTaskContribution] = {}
     aware_contributions: dict[str, I34ScientificTaskContribution] = {}
     all_contributions: list[I34ScientificTaskContribution] = []
@@ -470,34 +485,38 @@ def score_results(
         task = task_by_id.get(result.task_id)
         if task is None:
             continue
-        split = task.split
 
-        # Get observable values for this split
-        v_o_blind = views_by_split_cond.get((split, "STATE_BLIND_CONTROLLER"), 0.0)
-        v_o_aware = views_by_split_cond.get((split, "STATE_AWARE_CONTROLLER"), 0.0)
+        # Get per-task observable values
+        vo_blind_entry = task_vo.get((result.task_id, "STATE_BLIND_CONTROLLER"))
+        vo_aware_entry = task_vo.get((result.task_id, "STATE_AWARE_CONTROLLER"))
+        if vo_blind_entry is None or vo_aware_entry is None:
+            continue
+        v_o_blind, blind_class_id, blind_oracle_sha = vo_blind_entry
+        v_o_aware, aware_class_id, aware_oracle_sha = vo_aware_entry
 
         # Get latent value
         v_l = latent_values.get(result.task_id, 0.0)
+        latent_sha = latent_table_shas.get(result.task_id, "")
 
         # Controller values (realized utility from executor)
         v_pi_blind = result.blind.realized_utility
         v_pi_aware = result.aware.realized_utility
 
-        # Compute contributions
+        # Compute contributions with real per-task V_O and class IDs
         blind_contrib = compute_task_contribution(
             task_id=result.task_id, condition="STATE_BLIND_CONTROLLER",
             latent_optimal_value=v_l, observable_optimal_value=v_o_blind,
             controller_value=v_pi_blind,
-            information_class_hash="",
-            observable_oracle_set_sha256="",
-            latent_oracle_table_sha256="")
+            information_class_hash=blind_class_id,
+            observable_oracle_set_sha256=blind_oracle_sha,
+            latent_oracle_table_sha256=latent_sha)
         aware_contrib = compute_task_contribution(
             task_id=result.task_id, condition="STATE_AWARE_CONTROLLER",
             latent_optimal_value=v_l, observable_optimal_value=v_o_aware,
             controller_value=v_pi_aware,
-            information_class_hash="",
-            observable_oracle_set_sha256="",
-            latent_oracle_table_sha256="")
+            information_class_hash=aware_class_id,
+            observable_oracle_set_sha256=aware_oracle_sha,
+            latent_oracle_table_sha256=latent_sha)
 
         blind_contributions[result.task_id] = blind_contrib
         aware_contributions[result.task_id] = aware_contrib

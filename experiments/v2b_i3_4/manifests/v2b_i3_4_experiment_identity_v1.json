@@ -6,7 +6,7 @@
   },
   "controller": {
     "controller_id": "v2b_i3_4_pinned_model_controller_v1",
-    "identity_sha256": ""
+    "identity_sha256": "b55608a2453348046affce61f361ae3cd90d9da2881d410541ae72801980ebd5"
   },
   "evaluation_subset": {
     "splits": [
@@ -22,7 +22,7 @@
   "generation_config": {
     "sha256": "3c41c463f3eacf8b5cd953e453854d6eb588579a57021caafb3e775959b65c5e"
   },
-  "identity_sha256": "31a57b086184007ed1c6f937010ca40179a97be12065a764f8c1587ef2d66df2",
+  "identity_sha256": "a90f4f0fb1021c312120c03aaa1ce1cd39c7a508fffe65b1ad8d9648ec00caf7",
   "observable_oracle_views": {
     "sha256": "15f952af10817b38563c5cb9a83082d667acdfca8ae5241417f27e1027f69103",
     "view_count": 34
@@ -48,7 +48,7 @@
   "schema": "DAPH_V2B_I3_4_EXPERIMENT_IDENTITY_V1",
   "schema_version": 1,
   "scientific_criteria": {
-    "sha256": "",
+    "sha256": "ba723e1e9fb0b68cd089ccf3c1ef96bfb11e2ec5374195ccaa3a888dbd2bf511",
     "version": "V2"
   },
   "statistical_implementation": {

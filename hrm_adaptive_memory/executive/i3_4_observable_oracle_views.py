@@ -4,14 +4,16 @@ The observable optimum V_O^M(B_M(s)) depends on the prior over latent states.
 The evaluation distribution differs between development, validation,
 held_out_instance, held_out_surface, and held_out_structure.
 
-This module computes per-split observable oracle values by:
+This module computes per-task observable oracle values by:
 1. Loading the frozen I3.3.2 sequential oracle tables.
-2. Mapping each oracle entry to its task_id via the controller packets.
-3. Filtering to the tasks in each evaluation split.
-4. Computing the task-uniform mean observable value for each split/condition.
-5. Producing a canonical, SHA-256-identified view artifact.
+2. Reading the ``members`` field of each table's initial information state
+   to determine which tasks belong to which information class.
+3. Looking up ``belief_values[initial_state_id]`` for each class to get
+   V_O^*(B) for that class.
+4. Mapping each task to its information class's V_O^*(B).
+5. Producing per-task, per-class, and per-split view artifacts.
 
-Schema identity: ``DAPH_V2B_I3_4_OBSERVABLE_ORACLE_VIEW_V1`` (frozen).
+Schema identity: ``DAPH_V2B_I3_4_OBSERVABLE_ORACLE_VIEW_V2`` (frozen).
 """
 from __future__ import annotations
 
@@ -22,8 +24,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Mapping
 
-VIEW_SCHEMA = "DAPH_V2B_I3_4_OBSERVABLE_ORACLE_VIEW_V1"
-VIEW_VERSION = 1
+VIEW_SCHEMA = "DAPH_V2B_I3_4_OBSERVABLE_ORACLE_VIEW_V2"
+VIEW_VERSION = 2
 
 # Condition names matching the I3.3.2 sequential oracle sets.
 CONDITIONS = (
@@ -54,19 +56,69 @@ LATENT_ORACLE_PATH = f"{ORACLE_DIR}/v2b_i3_3_latent_oracles_v1.jsonl.gz"
 
 
 @dataclass(frozen=True)
-class ObservableOracleView:
-    """One evaluation-specific observable-oracle view for one condition.
+class InformationClass:
+    """One information class from the sequential observable oracle.
 
-    The observable_optimal_value is the task-uniform mean of V_O^M(B_M(s))
-    over the tasks in this split under this condition.
+    All tasks in the same class share the same initial public observation
+    packet under the given observation mask, and therefore share the same
+    V_O^*(B).
+    """
+
+    class_id: str  # initial_information_state_id
+    observable_optimal_value: float  # belief_values[initial_id]
+    member_task_ids: tuple[str, ...]
+    posterior_weights: tuple[str, ...]
+    table_identity_sha256: str
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "class_id": self.class_id,
+            "observable_optimal_value": self.observable_optimal_value,
+            "member_task_ids": list(self.member_task_ids),
+            "posterior_weights": list(self.posterior_weights),
+            "table_identity_sha256": self.table_identity_sha256,
+        }
+
+
+@dataclass(frozen=True)
+class TaskObservableEntry:
+    """Per-task observable oracle value for one condition."""
+
+    task_id: str
+    condition: str
+    information_class_id: str
+    observable_optimal_value: float
+    table_identity_sha256: str
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "task_id": self.task_id,
+            "condition": self.condition,
+            "information_class_id": self.information_class_id,
+            "observable_optimal_value": self.observable_optimal_value,
+            "table_identity_sha256": self.table_identity_sha256,
+        }
+
+
+@dataclass(frozen=True)
+class ObservableOracleView:
+    """Evaluation-specific observable-oracle view for one split/condition.
+
+    Contains per-task V_O^*(B_i) values, per-class structure, and split-level
+    summary statistics.
     """
 
     split_name: str
     condition: str
     task_ids: tuple[str, ...]
     task_count: int
-    observable_optimal_value: float  # E[V_O^M] over this split
-    information_class_hash: str
+    # Per-task entries
+    task_entries: tuple[TaskObservableEntry, ...]
+    # Per-class structure
+    information_classes: tuple[InformationClass, ...]
+    # Split-level summary (task-uniform mean of per-task V_O)
+    observable_optimal_value: float
+    # Provenance
     observable_oracle_set_sha256: str
     latent_oracle_table_sha256: str
     view_sha256: str
@@ -79,19 +131,13 @@ class ObservableOracleView:
             "condition": self.condition,
             "task_ids": list(self.task_ids),
             "task_count": self.task_count,
+            "task_entries": [e.as_dict() for e in self.task_entries],
+            "information_classes": [c.as_dict() for c in self.information_classes],
             "observable_optimal_value": self.observable_optimal_value,
-            "information_class_hash": self.information_class_hash,
             "observable_oracle_set_sha256": self.observable_oracle_set_sha256,
             "latent_oracle_table_sha256": self.latent_oracle_table_sha256,
             "view_sha256": self.view_sha256,
         }
-
-
-def _load_task_order(root: str | Path) -> list[str]:
-    """Load the 750 task_ids in canonical order from controller packets."""
-    path = Path(root) / CONTROLLER_PACKETS_PATH
-    data = json.loads(path.read_text())
-    return [p["task_id"] for p in data["packets"]]
 
 
 def _load_split_task_ids(root: str | Path) -> dict[str, list[str]]:
@@ -105,54 +151,90 @@ def _load_split_task_ids(root: str | Path) -> dict[str, list[str]]:
     return splits
 
 
-def _load_observable_values(root: str | Path, condition: str) -> list[float | None]:
-    """Load the initial-state belief values (V_O^M) for all 750 tasks.
+def load_task_to_observable(
+    root: str | Path, condition: str
+) -> dict[str, TaskObservableEntry]:
+    """Load per-task V_O^*(B_i) for one condition by reading information-class
+    membership from the sequential oracle tables.
 
-    Returns a list of 750 values (or None for tasks without a reachable
-    information state under this condition).
+    This is the correct mapping: each table line in the JSONL.gz file is one
+    information class. The ``members`` field of the initial information state
+    lists which tasks belong to that class. The ``belief_values`` at the
+    initial state ID gives V_O^*(B) for that class.
+
+    Returns a dict mapping task_id -> TaskObservableEntry.
     """
-    path = Path(root) / ORACLE_FILES[condition]
-    values: list[float | None] = []
+    root = Path(root)
+    path = root / ORACLE_FILES[condition]
+    task_map: dict[str, TaskObservableEntry] = {}
+
     with gzip.open(path, "rt") as f:
         for line in f:
             entry = json.loads(line)
             table = entry["table"]
             init_id = entry["initial_information_state_id"]
-            belief_value = table["belief_values"].get(init_id)
-            values.append(belief_value)
-    return values
+            vo = table["belief_values"].get(init_id)
+            if vo is None:
+                continue
+            table_identity = table.get("identity_sha256", "")
+            init_state = table["information_states"].get(init_id, {})
+            members = init_state.get("members", [])
+            for member in members:
+                task_id = member["task_id"]
+                task_map[task_id] = TaskObservableEntry(
+                    task_id=task_id,
+                    condition=condition,
+                    information_class_id=init_id,
+                    observable_optimal_value=vo,
+                    table_identity_sha256=table_identity,
+                )
+
+    return task_map
 
 
-def _load_latent_optimal_values(root: str | Path) -> list[float | None]:
-    """Load the latent optimal values (V_L^*) for all 750 tasks."""
-    path = Path(root) / LATENT_ORACLE_PATH
-    values: list[float | None] = []
+def load_information_classes(
+    root: str | Path, condition: str
+) -> list[InformationClass]:
+    """Load all information classes for one condition."""
+    root = Path(root)
+    path = root / ORACLE_FILES[condition]
+    classes: list[InformationClass] = []
+
     with gzip.open(path, "rt") as f:
         for line in f:
             entry = json.loads(line)
-            # The latent oracle has state_values; the initial state value
-            # is V_L^*(s).
-            table = entry.get("table", entry)
-            state_values = table.get("state_values", {})
-            init_id = entry.get("initial_state_id") or table.get("initial_state_id")
-            if init_id and init_id in state_values:
-                values.append(state_values[init_id])
-            else:
-                # Fallback: use the first state value
-                if state_values:
-                    values.append(next(iter(state_values.values())))
-                else:
-                    values.append(None)
-    return values
+            table = entry["table"]
+            init_id = entry["initial_information_state_id"]
+            vo = table["belief_values"].get(init_id)
+            if vo is None:
+                continue
+            table_identity = table.get("identity_sha256", "")
+            init_state = table["information_states"].get(init_id, {})
+            members = init_state.get("members", [])
+            member_task_ids = tuple(
+                sorted(m["task_id"] for m in members)
+            )
+            posterior_weights = tuple(
+                m["posterior_weight"] for m in sorted(members, key=lambda x: x["task_id"])
+            )
+            classes.append(InformationClass(
+                class_id=init_id,
+                observable_optimal_value=vo,
+                member_task_ids=member_task_ids,
+                posterior_weights=posterior_weights,
+                table_identity_sha256=table_identity,
+            ))
+
+    return classes
 
 
 def _compute_view_sha256(
     *,
     split_name: str,
     condition: str,
-    task_ids: tuple[str, ...],
+    task_entries: tuple[TaskObservableEntry, ...],
+    information_classes: tuple[InformationClass, ...],
     observable_optimal_value: float,
-    information_class_hash: str,
     observable_oracle_set_sha256: str,
     latent_oracle_table_sha256: str,
 ) -> str:
@@ -161,9 +243,9 @@ def _compute_view_sha256(
         "schema": VIEW_SCHEMA,
         "split_name": split_name,
         "condition": condition,
-        "task_ids": list(task_ids),
+        "task_entries": [e.as_dict() for e in task_entries],
+        "information_classes": [c.as_dict() for c in information_classes],
         "observable_optimal_value": observable_optimal_value,
-        "information_class_hash": information_class_hash,
         "observable_oracle_set_sha256": observable_oracle_set_sha256,
         "latent_oracle_table_sha256": latent_oracle_table_sha256,
     }, sort_keys=True, separators=(",", ":")).encode()
@@ -178,16 +260,15 @@ def build_observable_oracle_views(
                                "held_out_structure"),
     conditions: tuple[str, ...] = CONDITIONS,
 ) -> list[ObservableOracleView]:
-    """Build evaluation-specific observable-oracle views.
+    """Build evaluation-specific observable-oracle views with per-task V_O.
 
-    For each split and condition, computes the task-uniform mean of
-    V_O^M(B_M(s)) over the tasks in that split.
-
-    This is the correct way to feed observable_optimal_value into the
-    IG/DG/TR decomposition for each evaluation population.
+    For each split and condition:
+    1. Load the sequential oracle tables for that condition.
+    2. Read information-class membership to map each task to its V_O^*(B_i).
+    3. Filter to tasks in the given split.
+    4. Produce per-task entries, per-class structure, and split-level summary.
     """
     root = Path(root)
-    task_order = _load_task_order(root)
     split_task_ids = _load_split_task_ids(root)
 
     # Load the I3.3.2 baseline for oracle set hashes.
@@ -200,36 +281,40 @@ def build_observable_oracle_views(
 
     views: list[ObservableOracleView] = []
     for condition in conditions:
-        # Load observable values for all 750 tasks (positional).
-        all_observable = _load_observable_values(root, condition)
-        # Map task_id -> observable value.
-        task_to_observable = {}
-        for i, task_id in enumerate(task_order):
-            if i < len(all_observable) and all_observable[i] is not None:
-                task_to_observable[task_id] = all_observable[i]
+        # Load per-task V_O via information-class membership.
+        task_map = load_task_to_observable(root, condition)
+        all_classes = load_information_classes(root, condition)
 
         for split_name in splits:
             if split_name not in split_task_ids:
                 continue
             split_tasks = split_task_ids[split_name]
-            # Filter to tasks that have observable values.
-            valid_observables = [
-                task_to_observable[t] for t in split_tasks
-                if t in task_to_observable
-            ]
-            if not valid_observables:
+
+            # Per-task entries for this split
+            task_entries: list[TaskObservableEntry] = []
+            for task_id in sorted(split_tasks):
+                if task_id in task_map:
+                    task_entries.append(task_map[task_id])
+
+            if not task_entries:
                 continue
-            # Task-uniform mean observable value.
-            mean_observable = sum(valid_observables) / len(valid_observables)
-            # Information class hash: hash of the sorted task_ids in this split.
-            info_class_hash = hashlib.sha256(
-                json.dumps(sorted(split_tasks), separators=(",", ":")).encode()
-            ).hexdigest()
+
+            # Per-class structure: only classes that have members in this split
+            split_task_set = set(split_tasks)
+            split_classes = [
+                cls for cls in all_classes
+                if any(tid in split_task_set for tid in cls.member_task_ids)
+            ]
+
+            # Split-level summary: task-uniform mean of per-task V_O
+            mean_observable = sum(e.observable_optimal_value for e in task_entries) / len(task_entries)
+
             view_sha = _compute_view_sha256(
-                split_name=split_name, condition=condition,
-                task_ids=tuple(sorted(split_tasks)),
+                split_name=split_name,
+                condition=condition,
+                task_entries=tuple(task_entries),
+                information_classes=tuple(split_classes),
                 observable_optimal_value=mean_observable,
-                information_class_hash=info_class_hash,
                 observable_oracle_set_sha256=oracle_set_hashes[condition],
                 latent_oracle_table_sha256=latent_table_sha,
             )
@@ -237,9 +322,10 @@ def build_observable_oracle_views(
                 split_name=split_name,
                 condition=condition,
                 task_ids=tuple(sorted(split_tasks)),
-                task_count=len(split_tasks),
+                task_count=len(task_entries),
+                task_entries=tuple(task_entries),
+                information_classes=tuple(split_classes),
                 observable_optimal_value=mean_observable,
-                information_class_hash=info_class_hash,
                 observable_oracle_set_sha256=oracle_set_hashes[condition],
                 latent_oracle_table_sha256=latent_table_sha,
                 view_sha256=view_sha,
