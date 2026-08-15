@@ -36,6 +36,7 @@ class GovernorDecisionFrame:
     candidates: tuple[CandidateActionAssessment, ...]
     governor_top_action: str  # for diagnostic only, not forced on the model
     governor_reason_code: str
+    chain_progress: dict | None = None  # chain tracking info for the model
 
     def as_dict(self) -> dict:
         return {
@@ -43,11 +44,12 @@ class GovernorDecisionFrame:
             "candidates": [c.as_dict() for c in self.candidates],
             "governor_top_action": self.governor_top_action,
             "governor_reason_code": self.governor_reason_code,
+            "chain_progress": self.chain_progress,
         }
 
     def as_model_packet(self) -> dict:
         """Compact representation for the model prompt."""
-        return {
+        packet = {
             "current_bottlenecks": [
                 {"kind": b.kind, "severity": b.severity}
                 for b in self.active_bottlenecks
@@ -70,6 +72,9 @@ class GovernorDecisionFrame:
                 for c in self.candidates
             ],
         }
+        if self.chain_progress:
+            packet["chain_progress"] = self.chain_progress
+        return packet
 
 
 class GeneralGovernor:
@@ -123,11 +128,18 @@ class GeneralGovernor:
         top_action = candidates[0].action if candidates else "DEFER"
         reason_code = self._build_reason_code(candidates, bottlenecks)
 
+        # Build chain progress info for the model packet
+        chain = state.chain_progress
+        chain_info = None
+        if chain.is_started or chain.is_poisoned or chain.total_steps > 0:
+            chain_info = chain.as_dict()
+
         return GovernorDecisionFrame(
             active_bottlenecks=bottlenecks,
             candidates=tuple(candidates),
             governor_top_action=top_action,
             governor_reason_code=reason_code,
+            chain_progress=chain_info,
         )
 
     def _build_reason_code(
@@ -142,6 +154,12 @@ class GeneralGovernor:
         active = bottlenecks[0] if bottlenecks else None
         if active and active.kind == "READY_TO_ANSWER":
             return "READY_TO_ANSWER"
+        if active and active.kind == "CHAIN_DISCOVERY":
+            return "CHAIN_DISCOVERY_NEEDED"
+        if active and active.kind == "CHAIN_INCOMPLETE":
+            return "CHAIN_CONTINUATION_NEEDED"
+        if active and active.kind == "IRREDUCIBLE_UNCERTAINTY":
+            return "TASK_UNSOLVABLE_DEFER"
         if top.recently_failed:
             return "AVOID_REPEATED_FAILURE"
         if top.targets_current_blocker:

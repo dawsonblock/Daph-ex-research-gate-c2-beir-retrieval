@@ -40,6 +40,15 @@ decision situation.  It includes:
 
 - current_bottlenecks: What is preventing task completion right now, with severity.
 - candidate_actions: Each legal action assessed on consequence-aware dimensions.
+- chain_progress: (when available) Composition chain status — how many stages
+  have been completed, which actions advanced the chain, and whether the chain
+  is complete or poisoned.
+
+When chain_progress shows the chain is not started, you must try different
+composable actions (RETRIEVE, VERIFY, SEARCH_MORE, REASON_MORE) to discover
+which one starts the chain.  Avoid repeating actions that already failed to
+advance the chain.  When the chain is partially complete, continue with
+actions that haven't been tried yet or that advanced the chain before.
 
 For each candidate action, the governor provides:
 - targets_blocker: Whether the action can address the current bottleneck.

@@ -107,9 +107,25 @@ def predict_outcome(
             # Can resolve only if not already tried and failed
             if not _action_already_tried_without_gain(state, action):
                 can_resolve = True
+        # Chain discovery: action targets chain bottleneck
+        if active_bottleneck.kind in ("CHAIN_DISCOVERY", "CHAIN_INCOMPLETE"):
+            # Check if this action already failed to advance the chain
+            chain = state.chain_progress
+            if action in chain.actions_that_failed:
+                can_resolve = False
+                targets_bottleneck = False
+            elif action in chain.actions_that_advanced:
+                # This action advanced before — might advance again
+                can_resolve = True
+                targets_bottleneck = True
 
     # May repeat failed strategy?
     may_repeat = _action_already_tried_without_gain(state, action)
+
+    # Chain-aware: action was tried but didn't advance the chain
+    chain = state.chain_progress
+    if action in chain.actions_that_failed and chain.is_started:
+        may_repeat = True
 
     # Terminal?
     terminal = semantics.is_terminal

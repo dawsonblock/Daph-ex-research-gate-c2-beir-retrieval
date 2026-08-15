@@ -8,10 +8,12 @@ This is critical: the governor must not leak evaluator information.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from hrm_adaptive_memory.executive.metareasoning_controller import ControllerObservation
 from hrm_adaptive_memory.executive.governor.resources import (
     GovernorResourceState, normalize_resources)
+from hrm_adaptive_memory.executive.governor.chain_progress import (
+    ChainProgress, extract_chain_progress, untried_composable_actions)
 
 
 GOVERNOR_STATE_SCHEMA = "DAPH_V2B_I3_5_GOVERNOR_STATE_V1"
@@ -78,6 +80,26 @@ class GovernorState:
         if len(outcomes_for_action) >= 2:
             return outcomes_for_action[-1] == outcomes_for_action[-2]
         return False
+
+    @property
+    def chain_progress(self) -> ChainProgress:
+        """Chain progression from V2_STAGE_N outcomes in prior_outcomes.
+
+        Extracted from the cognitive_state's prior_outcomes (aware condition)
+        or from the governor's own prior_outcomes tracking.
+        """
+        # Try cognitive_state first (aware condition)
+        cs = self.observation.cognitive_state
+        if cs is not None and cs.prior_outcomes:
+            return extract_chain_progress(
+                tuple(cs.prior_outcomes), self.prior_actions)
+        # Fall back to governor's own tracking
+        return extract_chain_progress(
+            self.prior_outcomes, self.prior_actions)
+
+    def untried_composable(self) -> tuple[str, ...]:
+        """Composable actions not yet tried, for chain discovery."""
+        return untried_composable_actions(self.prior_actions, self.legal_actions)
 
 
 def build_governor_state(

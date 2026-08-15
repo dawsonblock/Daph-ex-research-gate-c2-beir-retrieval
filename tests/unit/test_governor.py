@@ -653,3 +653,249 @@ class TestNoGainDetection:
             prior_actions=("VERIFY", "VERIFY"),
             prior_outcomes=("VERIFIED", "CONFLICT_FOUND"))
         assert compute_redundancy(state_diff, "VERIFY") == MEDIUM
+
+
+# ─── Chain Progress Tracking Tests ───
+
+class TestChainProgress:
+    """Tests for V2_STAGE_N chain progression tracking."""
+
+    def test_no_chain_progress_on_empty_history(self):
+        """ChainProgress should show no progress when no actions executed."""
+        from hrm_adaptive_memory.executive.governor.chain_progress import (
+            extract_chain_progress)
+        cp = extract_chain_progress((), ())
+        assert cp.stages_completed == 0
+        assert not cp.is_started
+        assert not cp.is_complete
+        assert not cp.is_poisoned
+        assert cp.needs_discovery  # needs discovery but only after steps
+
+    def test_chain_progress_detects_stage_outcomes(self):
+        """ChainProgress should count V2_STAGE_N outcomes."""
+        from hrm_adaptive_memory.executive.governor.chain_progress import (
+            extract_chain_progress)
+        cp = extract_chain_progress(
+            ("V2_STAGE_1", "V2_STAGE_2", "V2_STAGE_3"),
+            ("RETRIEVE", "SEARCH_MORE", "REASON_MORE"))
+        assert cp.stages_completed == 3
+        assert cp.is_started
+        assert cp.is_complete  # >= 3 stages and not poisoned
+        assert not cp.is_poisoned
+        assert cp.actions_that_advanced == ("RETRIEVE", "SEARCH_MORE", "REASON_MORE")
+
+    def test_chain_progress_detects_poisoned(self):
+        """ChainProgress should detect CONTROL_POISONED."""
+        from hrm_adaptive_memory.executive.governor.chain_progress import (
+            extract_chain_progress)
+        cp = extract_chain_progress(
+            ("CONTROL_POISONED",),
+            ("RETRIEVE",))
+        assert cp.is_poisoned
+        assert not cp.is_complete
+
+    def test_chain_progress_partial_chain(self):
+        """ChainProgress should detect partial chain (started, not complete)."""
+        from hrm_adaptive_memory.executive.governor.chain_progress import (
+            extract_chain_progress)
+        cp = extract_chain_progress(
+            ("V2_STAGE_1",),
+            ("RETRIEVE",))
+        assert cp.is_started
+        assert not cp.is_complete
+        assert cp.needs_continuation
+
+    def test_chain_progress_tracks_failed_actions(self):
+        """Actions tried without advancing the chain should be tracked."""
+        from hrm_adaptive_memory.executive.governor.chain_progress import (
+            extract_chain_progress)
+        cp = extract_chain_progress(
+            ("VERIFY_COMPLETED", "RETRIEVE_COMPLETED", "V2_STAGE_1"),
+            ("VERIFY", "RETRIEVE", "SEARCH_MORE"))
+        # VERIFY and RETRIEVE didn't advance (no V2_STAGE_N from them)
+        assert "VERIFY" in cp.actions_that_failed
+        assert "RETRIEVE" in cp.actions_that_failed
+        assert "SEARCH_MORE" in cp.actions_that_advanced
+
+    def test_untried_composable_actions(self):
+        """Should return composable actions not yet tried."""
+        from hrm_adaptive_memory.executive.governor.chain_progress import (
+            untried_composable_actions)
+        untried = untried_composable_actions(
+            ("RETRIEVE",),
+            ("RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE", "ANSWER"))
+        assert "RETRIEVE" not in untried
+        assert "VERIFY" in untried
+        assert "SEARCH_MORE" in untried
+        assert "REASON_MORE" in untried
+
+
+class TestChainDiscoveryBottleneck:
+    """Tests for chain discovery and chain incomplete bottlenecks."""
+
+    def test_chain_discovery_fires_after_failed_first_action(self):
+        """CHAIN_DISCOVERY should fire when actions tried but chain not started."""
+        cs = _make_cognitive_state(
+            verification_state=VerificationState.MISSING,
+            prior_outcomes=("VERIFY_COMPLETED",))
+        obs = _make_observation(
+            cognitive_state=cs,
+            executed_actions=(DecisionAction.VERIFY,))
+        state = build_governor_state(
+            obs, remaining_steps=10,
+            prior_actions=("VERIFY",),
+            prior_outcomes=("VERIFY_COMPLETED",))
+        bottlenecks = detect_bottlenecks(state)
+        kinds = [b.kind for b in bottlenecks]
+        assert "CHAIN_DISCOVERY" in kinds
+
+    def test_chain_discovery_does_not_fire_on_first_step(self):
+        """CHAIN_DISCOVERY should NOT fire when no actions tried yet."""
+        cs = _make_cognitive_state(
+            verification_state=VerificationState.MISSING,
+            prior_outcomes=())
+        obs = _make_observation(cognitive_state=cs)
+        state = build_governor_state(obs, remaining_steps=10)
+        bottlenecks = detect_bottlenecks(state)
+        kinds = [b.kind for b in bottlenecks]
+        # Should be NO_EVIDENCE, not CHAIN_DISCOVERY
+        assert "CHAIN_DISCOVERY" not in kinds
+        assert "NO_EVIDENCE" in kinds
+
+    def test_chain_incomplete_fires_for_partial_chain(self):
+        """CHAIN_INCOMPLETE should fire when chain started but not complete."""
+        cs = _make_cognitive_state(
+            verification_state=VerificationState.MISSING,
+            prior_outcomes=("V2_STAGE_1",))
+        obs = _make_observation(
+            cognitive_state=cs,
+            executed_actions=(DecisionAction.RETRIEVE,))
+        state = build_governor_state(
+            obs, remaining_steps=10,
+            prior_actions=("RETRIEVE",),
+            prior_outcomes=("V2_STAGE_1",))
+        bottlenecks = detect_bottlenecks(state)
+        kinds = [b.kind for b in bottlenecks]
+        assert "CHAIN_INCOMPLETE" in kinds
+
+    def test_chain_complete_no_chain_bottleneck(self):
+        """No chain bottleneck when chain is complete (>= 3 stages)."""
+        cs = _make_cognitive_state(
+            verification_state=VerificationState.SUFFICIENT,
+            prior_outcomes=("V2_STAGE_1", "V2_STAGE_2", "V2_STAGE_3"))
+        obs = _make_observation(
+            cognitive_state=cs,
+            executed_actions=(
+                DecisionAction.RETRIEVE, DecisionAction.SEARCH_MORE,
+                DecisionAction.REASON_MORE))
+        state = build_governor_state(
+            obs, remaining_steps=10,
+            prior_actions=("RETRIEVE", "SEARCH_MORE", "REASON_MORE"),
+            prior_outcomes=("V2_STAGE_1", "V2_STAGE_2", "V2_STAGE_3"))
+        bottlenecks = detect_bottlenecks(state)
+        kinds = [b.kind for b in bottlenecks]
+        assert "CHAIN_INCOMPLETE" not in kinds
+        assert "CHAIN_DISCOVERY" not in kinds
+
+
+class TestPrematureAnswerGuard:
+    """Tests for the premature-answer prevention fix."""
+
+    def test_no_ready_to_answer_when_verification_missing(self):
+        """READY_TO_ANSWER must not fire when verification_state is MISSING."""
+        cs = _make_cognitive_state(
+            verification_state=VerificationState.MISSING,
+            prior_outcomes=())
+        obs = _make_observation(cognitive_state=cs)
+        state = build_governor_state(obs, remaining_steps=10)
+        bottlenecks = detect_bottlenecks(state)
+        kinds = [b.kind for b in bottlenecks]
+        assert "READY_TO_ANSWER" not in kinds
+
+    def test_no_ready_to_answer_when_chain_incomplete(self):
+        """READY_TO_ANSWER must not fire when chain is started but incomplete."""
+        cs = _make_cognitive_state(
+            verification_state=VerificationState.SUFFICIENT,
+            prior_outcomes=("V2_STAGE_1",))
+        obs = _make_observation(
+            cognitive_state=cs,
+            executed_actions=(DecisionAction.RETRIEVE,))
+        state = build_governor_state(
+            obs, remaining_steps=10,
+            prior_actions=("RETRIEVE",),
+            prior_outcomes=("V2_STAGE_1",))
+        bottlenecks = detect_bottlenecks(state)
+        kinds = [b.kind for b in bottlenecks]
+        assert "READY_TO_ANSWER" not in kinds
+
+    def test_ready_to_answer_when_chain_complete_and_verified(self):
+        """READY_TO_ANSWER should fire when chain is complete and verified."""
+        cs = _make_cognitive_state(
+            verification_state=VerificationState.SUFFICIENT,
+            prior_outcomes=("V2_STAGE_1", "V2_STAGE_2", "V2_STAGE_3"))
+        obs = _make_observation(
+            cognitive_state=cs,
+            executed_actions=(
+                DecisionAction.RETRIEVE, DecisionAction.SEARCH_MORE,
+                DecisionAction.REASON_MORE))
+        state = build_governor_state(
+            obs, remaining_steps=10,
+            prior_actions=("RETRIEVE", "SEARCH_MORE", "REASON_MORE"),
+            prior_outcomes=("V2_STAGE_1", "V2_STAGE_2", "V2_STAGE_3"))
+        bottlenecks = detect_bottlenecks(state)
+        kinds = [b.kind for b in bottlenecks]
+        assert "READY_TO_ANSWER" in kinds
+
+    def test_poisoned_chain_blocks_answer(self):
+        """Poisoned chain should not allow READY_TO_ANSWER."""
+        cs = _make_cognitive_state(
+            verification_state=VerificationState.SUFFICIENT,
+            prior_outcomes=("CONTROL_POISONED",))
+        obs = _make_observation(
+            cognitive_state=cs,
+            executed_actions=(DecisionAction.RETRIEVE,))
+        state = build_governor_state(
+            obs, remaining_steps=10,
+            prior_actions=("RETRIEVE",),
+            prior_outcomes=("CONTROL_POISONED",))
+        bottlenecks = detect_bottlenecks(state)
+        kinds = [b.kind for b in bottlenecks]
+        assert "READY_TO_ANSWER" not in kinds
+
+
+class TestChainProgressInModelPacket:
+    """Tests that chain progress is surfaced in the model packet."""
+
+    def test_chain_progress_in_frame(self):
+        """GovernorDecisionFrame should include chain_progress when available."""
+        cs = _make_cognitive_state(
+            verification_state=VerificationState.MISSING,
+            prior_outcomes=("V2_STAGE_1",))
+        obs = _make_observation(
+            cognitive_state=cs,
+            executed_actions=(DecisionAction.RETRIEVE,))
+        governor = GeneralGovernor()
+        frame = governor.assess(
+            obs, remaining_steps=10,
+            prior_actions=("RETRIEVE",),
+            prior_outcomes=("V2_STAGE_1",))
+        assert frame.chain_progress is not None
+        assert frame.chain_progress["stages_completed"] == 1
+        assert frame.chain_progress["is_started"] is True
+
+    def test_chain_progress_in_model_packet(self):
+        """as_model_packet should include chain_progress when available."""
+        cs = _make_cognitive_state(
+            verification_state=VerificationState.MISSING,
+            prior_outcomes=("V2_STAGE_1",))
+        obs = _make_observation(
+            cognitive_state=cs,
+            executed_actions=(DecisionAction.RETRIEVE,))
+        governor = GeneralGovernor()
+        frame = governor.assess(
+            obs, remaining_steps=10,
+            prior_actions=("RETRIEVE",),
+            prior_outcomes=("V2_STAGE_1",))
+        packet = frame.as_model_packet()
+        assert "chain_progress" in packet
+        assert packet["chain_progress"]["stages_completed"] == 1

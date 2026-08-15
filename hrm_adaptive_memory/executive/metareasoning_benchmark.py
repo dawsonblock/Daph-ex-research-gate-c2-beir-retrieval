@@ -24,8 +24,10 @@ I3_2_TASK_EXTENSION_SCHEMA = "DAPH_V2B_I3_2_TASK_EXTENSION_V1"
 I3_2_CONTROLLER_PACKETS_SCHEMA = "DAPH_V2B_I3_2_CONTROLLER_PACKETS_V1"
 I3_3_BENCHMARK_MANIFEST_SCHEMA = "DAPH_V2B_I3_3_BENCHMARK_MANIFEST_V1"
 I3_3_CONTROLLER_PACKETS_SCHEMA = "DAPH_V2B_I3_3_CONTROLLER_PACKETS_V1"
+I3_5_CONTROLLER_PACKETS_SCHEMA = "DAPH_V2B_I3_5_CONTROLLER_PACKETS_V2"
 FROZEN_DEVELOPMENT_STATUS = "FROZEN_FOR_DEVELOPMENT"
 FROZEN_BENCHMARK_STATUS = "FROZEN_FOR_BENCHMARK_QUALIFICATION"
+FROZEN_I3_5_STATUS = "FROZEN_FOR_I3_5"
 
 
 @dataclass(frozen=True)
@@ -178,9 +180,10 @@ def _load_payloads(path: Path, *, verify_oracle_cache: bool = True
         raise ValueError("V2B-I3 private environment has an unsupported schema")
     packet_schema = packet_payload.get("schema")
     if packet_schema not in {CONTROLLER_PACKETS_SCHEMA, I3_1_CONTROLLER_PACKETS_SCHEMA,
-                             I3_2_CONTROLLER_PACKETS_SCHEMA, I3_3_CONTROLLER_PACKETS_SCHEMA}:
+                             I3_2_CONTROLLER_PACKETS_SCHEMA, I3_3_CONTROLLER_PACKETS_SCHEMA,
+                             I3_5_CONTROLLER_PACKETS_SCHEMA}:
         raise ValueError("V2B-I3 controller packets have an unsupported schema")
-    if packet_payload.get("status") != FROZEN_DEVELOPMENT_STATUS:
+    if packet_payload.get("status") not in {FROZEN_DEVELOPMENT_STATUS, FROZEN_I3_5_STATUS}:
         raise ValueError("V2B-I3 controller packets must be frozen for development")
     packets = packet_payload.get("packets")
     extension_path = None
@@ -216,7 +219,7 @@ def _load_payloads(path: Path, *, verify_oracle_cache: bool = True
         if set(packet) != expected_fields or not isinstance(packet["task_summary"], str):
             raise ValueError("V2B-I3 controller packet fields do not match the frozen schema")
         if (packet_schema in {I3_1_CONTROLLER_PACKETS_SCHEMA, I3_2_CONTROLLER_PACKETS_SCHEMA,
-                              I3_3_CONTROLLER_PACKETS_SCHEMA}
+                              I3_3_CONTROLLER_PACKETS_SCHEMA, I3_5_CONTROLLER_PACKETS_SCHEMA}
                 and (not isinstance(packet["instance_id"], str) or not packet["instance_id"])):
             raise ValueError("V2B-I3 controller packets require opaque instance ids")
         if any(token in packet["task_summary"].lower() for token in forbidden):
