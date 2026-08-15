@@ -1,0 +1,22 @@
+{
+  "schema": "DAPH_V2B_I3_CONTROLLER_PACKETS_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "packets": [
+    {"task_id": "i3_immediate_answer", "task_summary": "Current independently verified evidence is already available."},
+    {"task_id": "i3_retrieval_required", "task_summary": "Relevant evidence may exist but is not in the current working set."},
+    {"task_id": "i3_verification_required", "task_summary": "A high-stakes relevant memory is plausible but has not been checked."},
+    {"task_id": "i3_conflict", "task_summary": "Available authoritative evidence remains contradictory."},
+    {"task_id": "i3_stale", "task_summary": "A once-supported fact needs a current refresh."},
+    {"task_id": "i3_falsified_memory", "task_summary": "The relevant memory is explicitly falsified; another evidence path may exist."},
+    {"task_id": "i3_search_after_retrieval", "task_summary": "Initial working evidence is incomplete and may need one bounded expansion."},
+    {"task_id": "i3_composition", "task_summary": "Evidence is available but the answer composition is not complete."},
+    {"task_id": "i3_insufficient", "task_summary": "No bounded evidence action resolves the available uncertainty."},
+    {"task_id": "i3_tight_budget", "task_summary": "Relevant evidence is absent; resource profile determines whether bounded expansion is viable."},
+    {"task_id": "i3_generous_search", "task_summary": "Relevant evidence is absent; resource profile determines whether bounded expansion is viable."},
+    {"task_id": "i3_ambiguous_retrieve", "task_summary": "The current answer path is incomplete; choose one bounded evidence action."},
+    {"task_id": "i3_ambiguous_verify", "task_summary": "The current answer path is incomplete; choose one bounded evidence action."},
+    {"task_id": "i3_hidden_transition_retrieve", "task_summary": "Two bounded evidence actions are available; their utility is uncertain until an observation."},
+    {"task_id": "i3_hidden_transition_verify", "task_summary": "Two bounded evidence actions are available; their utility is uncertain until an observation."},
+    {"task_id": "i3_stop_without_assertion", "task_summary": "NO_FINAL_ASSERTION_REQUESTED: terminate the internal process without making an answer claim."}
+  ]
+}

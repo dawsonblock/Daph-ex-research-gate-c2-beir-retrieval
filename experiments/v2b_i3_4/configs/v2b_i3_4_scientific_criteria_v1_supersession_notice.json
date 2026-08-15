@@ -1,0 +1,12 @@
+{
+  "schema": "DAPH_V2B_I3_4_CRITERIA_SUPERSESSION_NOTICE_V1",
+  "superseded_file": "experiments/v2b_i3_4/configs/v2b_i3_4_scientific_criteria_v1.json",
+  "superseded_file_sha256": "dc347bbedd14fd9f3ee078d68a03aafc43753e00dd826dc9e18045284c4f15c9",
+  "original_status": "FROZEN_BEFORE_HELD_OUT_EVALUATION",
+  "new_status": "SUPERSEDED_BEFORE_HELD_OUT_EVALUATION",
+  "superseded_by": "experiments/v2b_i3_4/configs/v2b_i3_4_scientific_criteria_v2.json",
+  "reason": "V1 defined DG as max(0, optimal_utility - realized_utility), which is TR (total regret), not DG (decision gap). The proper I3.2.2 decomposition TR = IG + DG was not implemented. V2 restores the correct decomposition.",
+  "preservation_policy": "V1 is preserved as historical evidence. It must not be edited or deleted. All scientific evaluation must use V2.",
+  "superseded_at_commit": "I3.4.1-01",
+  "baseline_reference": "experiments/v2b_i3_4/baselines/v2b_i3_4_pre_scientific_repair_baseline_v1.json"
+}

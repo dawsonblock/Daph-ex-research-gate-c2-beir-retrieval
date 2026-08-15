@@ -1,0 +1,10 @@
+{
+  "schema": "DAPH_V2B_I3_2_BENCHMARK_MANIFEST_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "benchmark_id": "v2b_i3_2_sequential_information_synthetic_v1",
+  "private_environment_path": "../../v2b/tasks/v2b_i3_metareasoning_benchmark_v1.json",
+  "controller_packets_path": "../../v2b_i3_1/benchmark/controller_packets/v2b_i3_1_controller_packets_v1.json",
+  "task_extension_path": "../tasks/v2b_i3_2_information_state_extension_v1.json",
+  "controller_packets_extension_path": "controller_packets/v2b_i3_2_controller_packets_extension_v1.json",
+  "boundary": "The base I3 private environment and I3.2 extension remain environment-only. Controllers receive opaque public packets and frozen policy feedback only."
+}

@@ -1,0 +1,6 @@
+{
+  "source_uri": "fixture://authority/network/failure",
+  "status": "NETWORK_ERROR",
+  "detail": "offline fixture simulates acquisition failure"
+}
+

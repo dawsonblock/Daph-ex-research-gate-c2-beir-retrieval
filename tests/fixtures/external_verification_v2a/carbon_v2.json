@@ -1,0 +1,12 @@
+{
+  "source_uri": "fixture://authority/chemistry/carbon-v2",
+  "canonical_source_uri": "fixture://authority/chemistry/carbon-correction",
+  "status": "SUCCESS",
+  "fetched_at": "2026-08-12T00:00:00+00:00",
+  "publisher": "Fixture Chemistry Authority",
+  "publisher_domain": "fixture.authority",
+  "source_lineage_id": "lin-carbon-v2",
+  "raw_content": {"atomic_number": 8, "entity": "Carbon atom", "symbol": "C"},
+  "extracted_fields": {"atomic_number": 8, "entity": "Carbon atom", "symbol": "C"}
+}
+

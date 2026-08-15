@@ -1,0 +1,57 @@
+{
+  "benchmark": {
+    "benchmark_closure_sha256": "9f4255d61dbbac14dd768cb61ee3381ef493ccb7b88b5b365a027dbb1c2eca5e",
+    "benchmark_id": "v2b_i3_3_2_scientific_split_v1",
+    "benchmark_status": "FROZEN_FOR_BENCHMARK_QUALIFICATION"
+  },
+  "controller": {
+    "controller_id": "v2b_i3_4_pinned_model_controller_v1",
+    "identity_sha256": ""
+  },
+  "evaluation_subset": {
+    "splits": [
+      "development",
+      "validation",
+      "held_out_instance",
+      "held_out_surface",
+      "held_out_structure"
+    ],
+    "task_count": 750
+  },
+  "experiment_id": "v2b_i3_4_experiment_v1",
+  "generation_config": {
+    "sha256": "3c41c463f3eacf8b5cd953e453854d6eb588579a57021caafb3e775959b65c5e"
+  },
+  "identity_sha256": "31a57b086184007ed1c6f937010ca40179a97be12065a764f8c1587ef2d66df2",
+  "observable_oracle_views": {
+    "sha256": "15f952af10817b38563c5cb9a83082d667acdfca8ae5241417f27e1027f69103",
+    "view_count": 34
+  },
+  "paired_scheduler": {
+    "scheduler_id": "v2b_i3_4_pair_scheduler_v1",
+    "sha256": "4897cd589cdc4e19df1354589a666d48bd2fc40f811ad7699a014d51564a93e6"
+  },
+  "provider_model_policy": {
+    "frozen_model": "deepseek-v4-flash",
+    "frozen_provider": "deepseek",
+    "identity_policy_sha256": "0431ad7418c088677fd3a50d292c2566586a43419d72129bb70c06b51effc861"
+  },
+  "retry_policy": {
+    "id": "v2b_i3_4_retry_policy_v1",
+    "sha256": "f4f0e74bca69c237ccf7c6445efa53c87130f8523fb4ca60a85226fccfa42c26"
+  },
+  "runtime_environment": {
+    "created_at": "2026-08-14T21:50:59.395209+00:00",
+    "platform": "macOS-26.2-arm64-arm-64bit",
+    "python_version": "3.12.0 (main, Apr 26 2026, 15:36:24) [Clang 21.0.0 (clang-2100.0.123.102)]"
+  },
+  "schema": "DAPH_V2B_I3_4_EXPERIMENT_IDENTITY_V1",
+  "schema_version": 1,
+  "scientific_criteria": {
+    "sha256": "",
+    "version": "V2"
+  },
+  "statistical_implementation": {
+    "module_sha256": "e5984f9087917bcc7601ec08dd2c42fab4481c1566f5c14202e4891add905708"
+  }
+}

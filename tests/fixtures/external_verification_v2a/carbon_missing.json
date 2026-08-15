@@ -1,0 +1,10 @@
+{
+  "source_uri": "fixture://authority/chemistry/carbon-missing",
+  "status": "SUCCESS",
+  "fetched_at": "2026-08-11T00:00:00+00:00",
+  "publisher": "Fixture Chemistry Authority",
+  "publisher_domain": "fixture.authority",
+  "raw_content": {"entity": "Carbon atom", "symbol": "C"},
+  "extracted_fields": {"entity": "Carbon atom", "symbol": "C"}
+}
+

@@ -1,0 +1,68 @@
+{
+  "schema": "DAPH_V2B_I2_BENCHMARK_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "benchmark_id": "v2b_i2_resource_allocation_synthetic_v1",
+  "scope": "Synthetic deterministic infrastructure corpus; not scientific qualification evidence.",
+  "tasks": [
+    {
+      "task_id": "v2b_i2_immediate_answer", "category": "immediate_answer",
+      "task_summary": "Current independently verified evidence is already sufficient.",
+      "high_stakes": false, "initial_verification_state": "SUFFICIENT", "initial_temporal_status": "CURRENT",
+      "unresolved_conflict": false, "reasoning_required": false, "expected_terminal": "ANSWER", "action_effects": {}
+    },
+    {
+      "task_id": "v2b_i2_retrieval_required", "category": "retrieval_required",
+      "task_summary": "Relevant evidence exists but has not yet been retrieved.",
+      "high_stakes": false, "initial_verification_state": "MISSING", "initial_temporal_status": "UNKNOWN",
+      "unresolved_conflict": false, "reasoning_required": false, "expected_terminal": "ANSWER",
+      "action_effects": {"RETRIEVE": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "v2b_i2_verification_required", "category": "verification_required",
+      "task_summary": "A high-stakes relevant memory is plausible but unverified.",
+      "high_stakes": true, "initial_verification_state": "UNVERIFIED", "initial_temporal_status": "CURRENT",
+      "unresolved_conflict": false, "reasoning_required": false, "expected_terminal": "ANSWER",
+      "action_effects": {"VERIFY": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "v2b_i2_conflict", "category": "conflict",
+      "task_summary": "Independent authoritative evidence remains unresolved and contradictory.",
+      "high_stakes": true, "initial_verification_state": "UNVERIFIED", "initial_temporal_status": "CURRENT",
+      "unresolved_conflict": true, "reasoning_required": false, "expected_terminal": "DEFER", "action_effects": {}
+    },
+    {
+      "task_id": "v2b_i2_stale", "category": "stale_temporal",
+      "task_summary": "A once-supported fact is temporally stale and requires refresh.",
+      "high_stakes": false, "initial_verification_state": "STALE", "initial_temporal_status": "STALE",
+      "unresolved_conflict": false, "reasoning_required": false, "expected_terminal": "ANSWER",
+      "action_effects": {"VERIFY": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "v2b_i2_falsified_memory", "category": "false_memory",
+      "task_summary": "The initially relevant memory is explicitly falsified; retrieval can find supported evidence.",
+      "high_stakes": false, "initial_verification_state": "FALSIFIED", "initial_temporal_status": "CURRENT",
+      "unresolved_conflict": false, "reasoning_required": false, "expected_terminal": "ANSWER",
+      "action_effects": {"RETRIEVE": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "v2b_i2_search_required", "category": "search_more_required",
+      "task_summary": "Initial retrieval is insufficient; one bounded evidence expansion resolves it.",
+      "high_stakes": false, "initial_verification_state": "MISSING", "initial_temporal_status": "UNKNOWN",
+      "unresolved_conflict": false, "reasoning_required": false, "expected_terminal": "ANSWER",
+      "action_effects": {"SEARCH_MORE": {"verification_state": "SUFFICIENT", "temporal_status": "CURRENT"}}
+    },
+    {
+      "task_id": "v2b_i2_reasoning_required", "category": "reason_more_required",
+      "task_summary": "Evidence is sufficient but one additional bounded reasoning cycle is required to compose an answer.",
+      "high_stakes": false, "initial_verification_state": "SUFFICIENT", "initial_temporal_status": "CURRENT",
+      "unresolved_conflict": false, "reasoning_required": true, "expected_terminal": "ANSWER",
+      "action_effects": {"REASON_MORE": {"reasoning_complete": "true"}}
+    },
+    {
+      "task_id": "v2b_i2_insufficient", "category": "insufficient_evidence",
+      "task_summary": "No bounded retrieval, verification, or search action yields sufficient evidence.",
+      "high_stakes": true, "initial_verification_state": "MISSING", "initial_temporal_status": "UNKNOWN",
+      "unresolved_conflict": false, "reasoning_required": false, "expected_terminal": "DEFER", "action_effects": {}
+    }
+  ]
+}

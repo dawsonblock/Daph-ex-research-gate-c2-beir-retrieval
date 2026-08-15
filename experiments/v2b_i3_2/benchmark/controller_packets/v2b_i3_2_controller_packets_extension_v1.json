@@ -1,0 +1,18 @@
+{
+  "schema": "DAPH_V2B_I3_2_CONTROLLER_PACKETS_V1",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "packets": [
+    {"task_id": "i3_2_aware_sufficient", "instance_id": "opaque-aware-gap", "task_summary": "A bounded evidence decision is required before any final response."},
+    {"task_id": "i3_2_aware_missing", "instance_id": "opaque-aware-gap", "task_summary": "A bounded evidence decision is required before any final response."},
+    {"task_id": "i3_2_verify_supported", "instance_id": "opaque-verify-gain", "task_summary": "A bounded check can reveal whether the current claim is usable."},
+    {"task_id": "i3_2_verify_irreducible", "instance_id": "opaque-verify-gain", "task_summary": "A bounded check can reveal whether the current claim is usable."},
+    {"task_id": "i3_2_retrieve_resolved", "instance_id": "opaque-retrieve-gain", "task_summary": "One bounded retrieval can distinguish a usable evidence path from an empty one."},
+    {"task_id": "i3_2_retrieve_irreducible", "instance_id": "opaque-retrieve-gain", "task_summary": "One bounded retrieval can distinguish a usable evidence path from an empty one."},
+    {"task_id": "i3_2_policy_probe_sufficient", "instance_id": "opaque-policy-probe", "task_summary": "A bounded expansion request may reveal whether additional search is permitted."},
+    {"task_id": "i3_2_policy_probe_missing", "instance_id": "opaque-policy-probe", "task_summary": "A bounded expansion request may reveal whether additional search is permitted."},
+    {"task_id": "i3_2_two_step_supported", "instance_id": "opaque-two-step", "task_summary": "Two bounded evidence operations may be needed before a final decision is possible."},
+    {"task_id": "i3_2_two_step_irreducible", "instance_id": "opaque-two-step", "task_summary": "Two bounded evidence operations may be needed before a final decision is possible."},
+    {"task_id": "i3_2_permanent_alias_answer", "instance_id": "opaque-permanent-alias", "task_summary": "Available bounded evidence cannot distinguish the remaining alternatives."},
+    {"task_id": "i3_2_permanent_alias_defer", "instance_id": "opaque-permanent-alias", "task_summary": "Available bounded evidence cannot distinguish the remaining alternatives."}
+  ]
+}
