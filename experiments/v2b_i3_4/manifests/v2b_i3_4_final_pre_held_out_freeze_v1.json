@@ -1,0 +1,127 @@
+{
+  "created_at": "2026-08-15T05:26:53.101699+00:00",
+  "development_result_summary": {
+    "ci_lower": 2.517,
+    "ci_upper": 16.278,
+    "delta_dg": 9.188,
+    "status": "SUPPORTED_ON_DEVELOPMENT"
+  },
+  "evaluation_order": [
+    "held_out_instance",
+    "held_out_surface",
+    "held_out_structure"
+  ],
+  "evaluation_rule": "Each phase is reported before the next with no configuration changes between phases. The primary success criterion for each held-out split is LCB_95(DG_blind - DG_aware) > 0.",
+  "frozen_code": {
+    "full_runner": {
+      "path": "hrm_adaptive_memory/executive/i3_4_full_runner.py",
+      "sha256": "023d2ff5f6853bb3dc6ed2f24ab16636fe68eb9e77d3fc9b73ef14dff796131e"
+    },
+    "generation_config_module": {
+      "path": "hrm_adaptive_memory/executive/i3_4_generation_config.py",
+      "sha256": "31e21cbcd02e13eaede79a34261a279254406b38398dcecc5061b2c83d162d82"
+    },
+    "model_backend": {
+      "path": "hrm_adaptive_memory/executive/model_backend.py",
+      "sha256": "5d28799258b9dfba2447066f4cac1396970d8591063b2c1586cc65949cbff3fa"
+    },
+    "model_decoder_module": {
+      "path": "hrm_adaptive_memory/executive/model_decoder.py",
+      "sha256": "64687df823c44ca9633a79b4fa00555e447874135bbd0288c3a694d50b8595b8"
+    },
+    "model_identity_policy_module": {
+      "path": "hrm_adaptive_memory/executive/i3_4_model_identity_policy.py",
+      "sha256": "329b9a75d87fdb7db3ccfe72e5f55022269f43573f8d2f9e92dd71a89767e321"
+    },
+    "model_packet_module": {
+      "path": "hrm_adaptive_memory/executive/model_packet.py",
+      "sha256": "f3aa37d15555ffebcdc35d8ac31f5f9aeb53deeebd3edd984b8da2922c9a5705"
+    },
+    "observable_oracle_views_module": {
+      "path": "hrm_adaptive_memory/executive/i3_4_observable_oracle_views.py",
+      "sha256": "1c46e3b96855ab2f2e7d0cc237e3cec7e4f79a401e0639c45921f0ab3eaad66a"
+    },
+    "pair_scheduler_module": {
+      "path": "hrm_adaptive_memory/executive/i3_4_pair_scheduler.py",
+      "sha256": "4897cd589cdc4e19df1354589a666d48bd2fc40f811ad7699a014d51564a93e6"
+    },
+    "pinned_model_controller": {
+      "path": "hrm_adaptive_memory/executive/pinned_model_controller.py",
+      "sha256": "156c68bab4c3b91f77a3052adb36a51dadd79928efe4c0c2525cb61f7414e916"
+    },
+    "scientific_scoring_module": {
+      "path": "hrm_adaptive_memory/executive/i3_4_scientific_scoring.py",
+      "sha256": "71129a5df6b8e4fdcf2ca3d35b347c44004e987168ba05a694bd4a16fef91c0a"
+    },
+    "statistical_analysis_module": {
+      "path": "hrm_adaptive_memory/executive/i3_4_statistical_analysis.py",
+      "sha256": "e5984f9087917bcc7601ec08dd2c42fab4481c1566f5c14202e4891add905708"
+    }
+  },
+  "frozen_components": {
+    "controller_identity": {
+      "path": "experiments/v2b_i3_4/manifests/v2b_i3_4_controller_identity_v1.json",
+      "sha256": "15d40dc3784018906a2de7de8c47117e671e22ccca0f329213797a4a2893d7ed"
+    },
+    "deepseek_generation_config": {
+      "path": "experiments/v2b_i3_4/configs/v2b_i3_4_frozen_generation_config_v1.json",
+      "sha256": "4699037908812e883fb958341d9c8381655128489c526ec9b2d49b9d88ba42fc"
+    },
+    "dev_corrected_scoring": {
+      "path": "experiments/v2b_i3_4/results/v2b_i3_4_dev_scoring_v2_corrected.json",
+      "sha256": "82d2e573caa24ff403bc41231b579f5fb0dd987d38441280d4d513b2c90acae6"
+    },
+    "dev_qualification_bundle": {
+      "path": "experiments/v2b_i3_4/manifests/v2b_i3_4_dev_qualification_bundle_v1.json",
+      "sha256": "546d056593f9f9981bc94e36d2556dd19fb29a78aafdc7d32b17407c774bfce9"
+    },
+    "dev_report_v2": {
+      "path": "experiments/v2b_i3_4/reports/v2b_i3_4_dev_full_report_v2_corrected.md",
+      "sha256": "0b549bc3ad74230cc45438a4498064f73e73b47420ffa330c90755a3fbb62332"
+    },
+    "experiment_identity": {
+      "path": "experiments/v2b_i3_4/manifests/v2b_i3_4_experiment_identity_v1.json",
+      "sha256": "182ac1949b19982e400e83e997b86b07c6f51ca046e926d23f9f87856cb589ea"
+    },
+    "observable_oracle_views_v2": {
+      "path": "experiments/v2b_i3_4/oracle_views/v2b_i3_4_observable_oracle_views_v1.json",
+      "schema": "DAPH_V2B_I3_4_OBSERVABLE_ORACLE_VIEW_V2",
+      "sha256": "8f6a2abb7000518338cdfa8cfcf87640f6f5fedc3ac5fec9987eb893631880cb"
+    },
+    "scientific_criteria_v2": {
+      "path": "experiments/v2b_i3_4/configs/v2b_i3_4_scientific_criteria_v2.json",
+      "sha256": "9ffc876f3a06e480ed171989fe50b7e825e006d3aa94144f2667a5554df06002"
+    },
+    "val_report": {
+      "path": "experiments/v2b_i3_4/reports/v2b_i3_4_val_full_report_v1.md",
+      "sha256": "8176e9ccc9a4f98a2be6a78daaf1dc1f1770053f0f2e3a7e461fe77e6b33b9de"
+    },
+    "val_scoring": {
+      "path": "experiments/v2b_i3_4/results/v2b_i3_4_val_scoring_v1.json",
+      "sha256": "573f1bf3c495ff119c3483c78c4015bf691cf0a9cc7371197f6590b2c75acccb"
+    }
+  },
+  "frozen_model_config": {
+    "fingerprint_policy": "require_fingerprint=True",
+    "max_tokens": 2048,
+    "model": "deepseek-v4-flash",
+    "pair_scheduler": "alternating_condition_order",
+    "repetition_count": 1,
+    "response_format": "json_object",
+    "temperature": 0.0,
+    "thinking_mode": "disabled"
+  },
+  "prohibition": "No changes to controller, prompt, policy, generation config, retry policy, scoring, oracle views, bootstrap, or any scientific component after this point. A hard validity defect would void the run and require a new identity. A disappointing result is a valid failure/inconclusive result.",
+  "schema": "DAPH_V2B_I3_4_FINAL_PRE_HELD_OUT_FREEZE_V1",
+  "schema_version": 1,
+  "source_branch": "i3.4.1-scientific-protocol-repair",
+  "source_commit": "7af42ed5bd4e19223cb51d9d25e419cb3f982038",
+  "source_tree": "f41388ca2ef66ba82a417fd7ee2982ffff76b48c",
+  "status": "FROZEN_NO_CHANGES_PERMITTED",
+  "validation_result_summary": {
+    "ci_lower": -1.116,
+    "ci_upper": 12.505,
+    "delta_dg": 5.165,
+    "status": "INCONCLUSIVE_ON_VALIDATION"
+  }
+}
