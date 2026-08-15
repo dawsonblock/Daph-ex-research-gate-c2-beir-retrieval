@@ -1,0 +1,13 @@
+{
+  "mean_delta_dg": 46.62049999999999,
+  "n_paired_tasks": 300,
+  "task_level_bootstrap": {
+    "ci_level": 0.95,
+    "ci_lower": 39.324433333333324,
+    "ci_upper": 54.384949999999996,
+    "iterations": 10000,
+    "point_estimate": 46.62049999999999
+  },
+  "topology_population_bootstrap": null,
+  "topology_uniform_bootstrap": null
+}
