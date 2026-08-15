@@ -37,7 +37,18 @@ def _make_observation(
             DecisionAction.ANSWER, DecisionAction.DEFER,
         )
     if resource_state is None:
-        resource_state = {"retrieval": 2, "verification": 2, "search": 2, "reasoning": 2}
+        resource_state = {
+            "retrieval_calls_remaining": 5,
+            "verification_calls_remaining": 5,
+            "search_calls_remaining": 5,
+            "reasoning_tokens_remaining": 512,
+            "executive_steps_remaining": 8,
+            "retrieval_calls_used": 0,
+            "verification_calls_used": 0,
+            "search_calls_used": 0,
+            "reasoning_tokens_used": 0,
+            "executive_steps_used": 0,
+        }
     return ControllerObservation(
         task_id="test_001",
         task_summary="Test task",
@@ -70,7 +81,13 @@ def _make_cognitive_state(
         unresolved_conflicts=conflicts,
         prior_decisions=(),
         prior_outcomes=prior_outcomes,
-        resource_state={"retrieval": 2, "verification": 2, "search": 2, "reasoning": 2},
+        resource_state={
+            "retrieval_calls_remaining": 5,
+            "verification_calls_remaining": 5,
+            "search_calls_remaining": 5,
+            "reasoning_tokens_remaining": 512,
+            "executive_steps_remaining": 8,
+        },
         policy_facts=(),
         observation_signals=observation_signals,
     )
@@ -79,10 +96,19 @@ def _make_cognitive_state(
 # ─── Action Semantics Tests ───
 
 class TestActionSemantics:
-    def test_all_actions_have_semantics(self):
-        """Every DecisionAction must have frozen semantics."""
-        for action in DecisionAction:
-            assert action.value in FROZEN_ACTION_SEMANTICS, f"Missing semantics for {action.value}"
+    def test_v1_actions_have_semantics(self):
+        """Every V1 executive action must have frozen semantics."""
+        v1_actions = ("ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
+                      "REASON_MORE", "DEFER", "STOP")
+        for action in v1_actions:
+            assert action in FROZEN_ACTION_SEMANTICS, f"Missing semantics for {action}"
+
+    def test_no_dormant_actions_in_v1_semantics(self):
+        """V1 semantics must not include unavailable future actions."""
+        dormant = ("VERIFY_ALTERNATE_SOURCE", "SPAWN_SPECIALIST",
+                   "SWITCH_STRATEGY", "ABANDON_STRATEGY")
+        for action in dormant:
+            assert action not in FROZEN_ACTION_SEMANTICS, f"Dormant action {action} should not be in V1"
 
     def test_semantics_are_frozen(self):
         """ActionSemantics must be frozen dataclasses."""
@@ -156,13 +182,24 @@ class TestGovernorState:
         assert state.action_count("SEARCH_MORE") == 0
 
     def test_repeated_no_gain_detection(self):
-        """Repeated same action triggers repeated_no_gain."""
+        """Repeated same action with same outcome triggers repeated_no_gain."""
         obs = _make_observation(
             executed_actions=(DecisionAction.VERIFY, DecisionAction.VERIFY))
         state = build_governor_state(
             obs, remaining_steps=22,
-            prior_actions=("VERIFY", "VERIFY"))
+            prior_actions=("VERIFY", "VERIFY"),
+            prior_outcomes=("NO_CHANGE", "NO_CHANGE"))
         assert state.repeated_no_gain
+
+    def test_repeated_different_outcome_not_no_gain(self):
+        """Repeated same action with different outcomes does NOT trigger no-gain."""
+        obs = _make_observation(
+            executed_actions=(DecisionAction.VERIFY, DecisionAction.VERIFY))
+        state = build_governor_state(
+            obs, remaining_steps=22,
+            prior_actions=("VERIFY", "VERIFY"),
+            prior_outcomes=("VERIFIED", "CONFLICT_FOUND"))
+        assert not state.repeated_no_gain
 
     def test_legal_actions_from_observation(self):
         """Legal actions come from observation.allowed_actions."""
@@ -267,8 +304,8 @@ class TestTransitionModel:
         outcome = predict_outcome(state, "ANSWER", bottlenecks)
         assert outcome.terminal
 
-    def test_repeated_action_may_repeat_failure(self):
-        """Action tried 2+ times → may_repeat_failed_strategy=True."""
+    def test_repeated_action_same_outcome_may_repeat_failure(self):
+        """Action tried 2+ times with same outcome → may_repeat_failed_strategy=True."""
         cs = _make_cognitive_state(verification_state=VerificationState.UNVERIFIED)
         obs = _make_observation(
             cognitive_state=cs,
@@ -276,10 +313,26 @@ class TestTransitionModel:
         )
         state = build_governor_state(
             obs, remaining_steps=22,
-            prior_actions=("VERIFY", "VERIFY"))
+            prior_actions=("VERIFY", "VERIFY"),
+            prior_outcomes=("NO_CHANGE", "NO_CHANGE"))
         bottlenecks = detect_bottlenecks(state)
         outcome = predict_outcome(state, "VERIFY", bottlenecks)
         assert outcome.may_repeat_failed_strategy
+
+    def test_repeated_action_different_outcome_not_failure(self):
+        """Action tried 2+ times with different outcomes → NOT may_repeat."""
+        cs = _make_cognitive_state(verification_state=VerificationState.UNVERIFIED)
+        obs = _make_observation(
+            cognitive_state=cs,
+            executed_actions=(DecisionAction.VERIFY, DecisionAction.VERIFY),
+        )
+        state = build_governor_state(
+            obs, remaining_steps=22,
+            prior_actions=("VERIFY", "VERIFY"),
+            prior_outcomes=("VERIFIED", "CONFLICT_FOUND"))
+        bottlenecks = detect_bottlenecks(state)
+        outcome = predict_outcome(state, "VERIFY", bottlenecks)
+        assert not outcome.may_repeat_failed_strategy
 
 
 # ─── Redundancy Tests ───
@@ -300,23 +353,34 @@ class TestRedundancy:
             prior_actions=("VERIFY", "RETRIEVE"))
         assert compute_redundancy(state, "VERIFY") == LOW
 
-    def test_medium_redundancy_for_last_action(self):
-        """Action tried once, is last → MEDIUM."""
+    def test_low_redundancy_for_single_attempt_as_last(self):
+        """Action tried once, is last → LOW (not MEDIUM; outcome-based now)."""
         obs = _make_observation(
             executed_actions=(DecisionAction.RETRIEVE, DecisionAction.VERIFY))
         state = build_governor_state(
             obs, remaining_steps=23,
             prior_actions=("RETRIEVE", "VERIFY"))
-        assert compute_redundancy(state, "VERIFY") == MEDIUM
+        assert compute_redundancy(state, "VERIFY") == LOW
 
-    def test_high_redundancy_for_repeated_action(self):
-        """Action tried 2+ times → HIGH."""
+    def test_high_redundancy_for_repeated_same_outcome(self):
+        """Action tried 2+ times with same outcome → HIGH."""
         obs = _make_observation(
             executed_actions=(DecisionAction.VERIFY, DecisionAction.VERIFY))
         state = build_governor_state(
             obs, remaining_steps=22,
-            prior_actions=("VERIFY", "VERIFY"))
+            prior_actions=("VERIFY", "VERIFY"),
+            prior_outcomes=("NO_CHANGE", "NO_CHANGE"))
         assert compute_redundancy(state, "VERIFY") == HIGH
+
+    def test_medium_redundancy_for_repeated_different_outcome(self):
+        """Action tried 2+ times with different outcomes → MEDIUM."""
+        obs = _make_observation(
+            executed_actions=(DecisionAction.VERIFY, DecisionAction.VERIFY))
+        state = build_governor_state(
+            obs, remaining_steps=22,
+            prior_actions=("VERIFY", "VERIFY"),
+            prior_outcomes=("VERIFIED", "CONFLICT_FOUND"))
+        assert compute_redundancy(state, "VERIFY") == MEDIUM
 
 
 # ─── Governor Assessor Tests ───
@@ -344,7 +408,13 @@ class TestGovernorAssessor:
             executed_actions=(DecisionAction.RETRIEVE, DecisionAction.VERIFY),
             allowed_actions=(DecisionAction.SEARCH_MORE, DecisionAction.REASON_MORE,
                              DecisionAction.ANSWER, DecisionAction.DEFER),
-            resource_state={"retrieval": 0, "verification": 0, "search": 2, "reasoning": 2},
+            resource_state={
+                "retrieval_calls_remaining": 0,
+                "verification_calls_remaining": 0,
+                "search_calls_remaining": 2,
+                "reasoning_tokens_remaining": 512,
+                "executive_steps_remaining": 5,
+            },
         )
         governor = GeneralGovernor()
         frame = governor.assess(
@@ -353,7 +423,7 @@ class TestGovernorAssessor:
         assert frame.governor_top_action == "SEARCH_MORE"
 
     def test_governor_penalizes_repeated_verify(self):
-        """VERIFY tried twice gets HIGH redundancy and ranks below SEARCH_MORE."""
+        """VERIFY tried twice with same outcome gets HIGH redundancy."""
         cs = _make_cognitive_state(
             verification_state=VerificationState.UNVERIFIED,
             conflicts=(ConflictSummary(
@@ -365,15 +435,22 @@ class TestGovernorAssessor:
             executed_actions=(DecisionAction.RETRIEVE, DecisionAction.VERIFY, DecisionAction.VERIFY),
             allowed_actions=(DecisionAction.VERIFY, DecisionAction.SEARCH_MORE,
                              DecisionAction.REASON_MORE, DecisionAction.ANSWER, DecisionAction.DEFER),
-            resource_state={"retrieval": 0, "verification": 1, "search": 2, "reasoning": 2},
+            resource_state={
+                "retrieval_calls_remaining": 0,
+                "verification_calls_remaining": 1,
+                "search_calls_remaining": 2,
+                "reasoning_tokens_remaining": 512,
+                "executive_steps_remaining": 5,
+            },
         )
         governor = GeneralGovernor()
         frame = governor.assess(
             obs, remaining_steps=21,
-            prior_actions=("RETRIEVE", "VERIFY", "VERIFY"))
+            prior_actions=("RETRIEVE", "VERIFY", "VERIFY"),
+            prior_outcomes=("EVIDENCE_ADDED", "NO_CHANGE", "NO_CHANGE"))
         # VERIFY should not be the top action
         assert frame.governor_top_action != "VERIFY"
-        # VERIFY should have HIGH repeat penalty
+        # VERIFY should have HIGH repeat penalty (same outcome twice)
         verify_candidate = next(c for c in frame.candidates if c.action == "VERIFY")
         assert verify_candidate.repeat_penalty == HIGH
 
@@ -451,3 +528,128 @@ class TestGovernorIdentity:
         assert "scoring_weights" in identity["configuration"]
         weights = identity["configuration"]["scoring_weights"]
         assert set(weights.keys()) == {"progress", "information", "cost", "risk", "redundancy", "options"}
+
+
+# ─── Resource Normalization Integration Tests ───
+
+class TestResourceNormalization:
+    """Integration tests using actual ResourceState.as_dict() keys."""
+
+    def test_governor_works_with_real_resource_state(self):
+        """Governor must work with keys from ResourceState.as_dict()."""
+        from hrm_adaptive_memory.executive.resources import ResourceState, ResourceBudget
+        budget = ResourceBudget(
+            max_executive_steps=8, max_reasoning_tokens=512,
+            max_retrieval_calls=5, max_verification_calls=5,
+            max_search_calls=5, max_elapsed_ms=10000,
+            max_monetary_cost_microusd=0)
+        rs = ResourceState(budget)
+        real_dict = rs.as_dict()
+
+        obs = ControllerObservation(
+            task_id="test_real",
+            task_summary="Test with real resources",
+            resource_state=real_dict,
+            allowed_actions=(DecisionAction.RETRIEVE, DecisionAction.VERIFY,
+                             DecisionAction.SEARCH_MORE, DecisionAction.REASON_MORE,
+                             DecisionAction.ANSWER, DecisionAction.DEFER),
+            executed_actions=(),
+            rejected_actions=(),
+            cognitive_state=None,
+            policy_feedback=(),
+        )
+        governor = GeneralGovernor()
+        frame = governor.assess(obs, remaining_steps=8)
+        # Governor should detect NO_EVIDENCE and recommend RETRIEVE
+        bottleneck_kinds = [b.kind for b in frame.active_bottlenecks]
+        assert "NO_EVIDENCE" in bottleneck_kinds
+        assert frame.governor_top_action == "RETRIEVE"
+
+    def test_typed_resources_detect_depletion(self):
+        """GovernorResourceState must correctly detect resource depletion."""
+        from hrm_adaptive_memory.executive.governor.resources import normalize_resources
+        res = normalize_resources({
+            "retrieval_calls_remaining": 0,
+            "verification_calls_remaining": 1,
+            "search_calls_remaining": 3,
+            "reasoning_tokens_remaining": 512,
+            "executive_steps_remaining": 5,
+        })
+        assert not res.has_retrieval
+        assert res.has_verification
+        assert res.is_last_resource("verification")
+        assert not res.is_last_resource("search")
+        assert not res.any_useful_remaining is False
+
+    def test_governor_detects_resource_exhaustion(self):
+        """When all useful resources are gone, governor detects exhaustion."""
+        # Use aware condition with SUFFICIENT verification so no other bottleneck fires
+        cs = _make_cognitive_state(
+            verification_state=VerificationState.SUFFICIENT,
+            temporal_status=TemporalStatus.CURRENT,
+            conflicts=(),
+            observation_signals=(),
+        )
+        obs = _make_observation(
+            cognitive_state=cs,
+            resource_state={
+                "retrieval_calls_remaining": 0,
+                "verification_calls_remaining": 0,
+                "search_calls_remaining": 0,
+                "reasoning_tokens_remaining": 0,
+                "executive_steps_remaining": 2,
+            },
+        )
+        governor = GeneralGovernor()
+        frame = governor.assess(obs, remaining_steps=2)
+        kinds = [b.kind for b in frame.active_bottlenecks]
+        # With no useful resources and no other bottleneck, should detect exhaustion
+        assert any(k in ("RESOURCE_EXHAUSTION", "READY_TO_ANSWER") for k in kinds)
+
+
+# ─── No-Gain Detection Tests ───
+
+class TestNoGainDetection:
+    """Tests for outcome-based no-gain detection."""
+
+    def test_repeated_same_outcome_is_no_gain(self):
+        """Same action twice with same outcome → no-gain."""
+        obs = _make_observation()
+        state = build_governor_state(
+            obs, remaining_steps=5,
+            prior_actions=("SEARCH_MORE", "SEARCH_MORE"),
+            prior_outcomes=("NO_CHANGE", "NO_CHANGE"))
+        assert state.repeated_no_gain is True
+
+    def test_repeated_different_outcome_not_no_gain(self):
+        """Same action twice with different outcomes → NOT no-gain."""
+        obs = _make_observation()
+        state = build_governor_state(
+            obs, remaining_steps=5,
+            prior_actions=("SEARCH_MORE", "SEARCH_MORE"),
+            prior_outcomes=("EVIDENCE_ADDED", "CONFLICT_RESOLVED"))
+        assert state.repeated_no_gain is False
+
+    def test_different_actions_not_no_gain(self):
+        """Different actions → never no-gain regardless of outcomes."""
+        obs = _make_observation()
+        state = build_governor_state(
+            obs, remaining_steps=5,
+            prior_actions=("RETRIEVE", "VERIFY"),
+            prior_outcomes=("SAME", "SAME"))
+        assert state.repeated_no_gain is False
+
+    def test_redundancy_high_for_same_outcome_repeat(self):
+        """Redundancy should be HIGH only for same-outcome repetition."""
+        obs = _make_observation()
+        state_same = build_governor_state(
+            obs, remaining_steps=5,
+            prior_actions=("VERIFY", "VERIFY"),
+            prior_outcomes=("NO_CHANGE", "NO_CHANGE"))
+        assert compute_redundancy(state_same, "VERIFY") == HIGH
+
+        state_diff = build_governor_state(
+            obs, remaining_steps=5,
+            prior_actions=("VERIFY", "VERIFY"),
+            prior_outcomes=("VERIFIED", "CONFLICT_FOUND"))
+        assert compute_redundancy(state_diff, "VERIFY") == MEDIUM

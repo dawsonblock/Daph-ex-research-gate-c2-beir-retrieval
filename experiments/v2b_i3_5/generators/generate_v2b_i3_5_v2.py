@@ -151,14 +151,22 @@ def _v2_composed_topology(task, *, variant, split):
         length = 3
         tail_offset = 3
         extra_branching = False
+        poison_on_misorder = True
     elif split == "structure_validation_v2":
         length = 4 + (1 if variant % 3 == 1 else 0)
         tail_offset = 5
         extra_branching = False
+        poison_on_misorder = True
     elif split == "structure_held_out_v2":
-        length = 5  # 5 instead of I3.3.2's 4-5, solvable within budget
+        # Held-out uses fundamentally different composition:
+        # - Different chain length (6) from dev (3) and validation (4-5)
+        # - Extra branching decoys
+        # - No poison_on_misorder (different transition semantics)
+        # This ensures T_H ∩ (T_D ∪ T_V) = ∅
+        length = 6
         tail_offset = 7
-        extra_branching = True  # add decoy transitions for different topology
+        extra_branching = True
+        poison_on_misorder = False  # different transition semantics
     else:
         raise ValueError(f"Unknown V2 split: {split}")
 
@@ -191,7 +199,8 @@ def _v2_composed_topology(task, *, variant, split):
     task["latent"] = latent
 
     effects = _v2_chain_effects(
-        tuple(sequence), poison_on_misorder=True, poison_on_first_step=terminal,
+        tuple(sequence), poison_on_misorder=poison_on_misorder,
+        poison_on_first_step=terminal,
         extra_branching=extra_branching)
     task["action_effects"] = effects
     return tuple(sequence)

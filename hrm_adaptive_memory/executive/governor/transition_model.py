@@ -137,21 +137,18 @@ def predict_outcome(
 
 
 def _action_already_tried_without_gain(state: GovernorState, action: str) -> bool:
-    """Whether an action was already tried and the task is still ongoing.
+    """Whether an action was already tried without observable gain.
 
-    If the action was executed and we're still here (not terminated),
-    it didn't fully resolve the bottleneck.
+    Uses outcome-based detection rather than mere repetition:
+    - Action tried 2+ times with the SAME outcome code → true no-gain
+    - Action tried 2+ times with DIFFERENT outcomes → not no-gain (state may be changing)
+    - Action tried once as the last action → not no-gain (we haven't seen if it helped yet)
+
+    Multi-step topologies legitimately require repeated SEARCH_MORE or REASON_MORE,
+    so mere repetition is NOT sufficient to declare no-gain.
     """
     count = state.action_count(action)
-    if count == 0:
+    if count < 2:
         return False
-    # If the action was tried once, it might still help on a different aspect
-    # If tried 2+ times, it's likely a failed strategy
-    if count >= 2:
-        return True
-    # If tried once and the same bottleneck persists, it didn't work
-    # We can check this by seeing if the action was the last action
-    if state.last_action == action and state.remaining_steps < 24:
-        # The action was just tried and we're still going
-        return True
-    return False
+    # Check if the last two executions of this action produced the same outcome
+    return state.outcome_sequence_unchanged(action)

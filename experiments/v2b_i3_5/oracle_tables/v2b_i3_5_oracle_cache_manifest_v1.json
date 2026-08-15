@@ -3,15 +3,15 @@
   "claim_boundary": "Precomputed deterministic oracle ground truth only; no executive result.",
   "difficulty_report": {
     "path": "experiments/v2b_i3_5/oracle_tables/v2b_i3_5_difficulty_report_v1.json",
-    "sha256": "23ac40770c94bfa96151aa0822ca03e183627dbf28daff6fdc370bbe5929d63e"
+    "sha256": "3781c0054461beb900b403fd1a87808e2158b09588e5894534727f87342d31c3"
   },
   "latent_oracles": {
     "path": "experiments/v2b_i3_5/oracle_tables/v2b_i3_5_latent_oracles_v1.jsonl.gz",
-    "reachable_states": 1220336,
-    "reachable_transitions": 4970205,
-    "sha256": "492520417c10058294ca859e8152e16e0f12b35146c0f2b6edfe229b1a75cf77",
+    "reachable_states": 1038788,
+    "reachable_transitions": 4405717,
+    "sha256": "df4a0113b2976a6fc2f791173951a18aae142d68329529620f731bc16f3984d0",
     "table_count": 600,
-    "table_set_sha256": "c10789ba400c66c8b66d6cc9fe93b65438c92d33f057c0a24e18abe654593660"
+    "table_set_sha256": "003a8ac9a32742e8c427dcbc663dece3265785a27f2f865f16de6c216f00c7c2"
   },
   "limits": {
     "max_information_states_per_condition": 500000,
@@ -23,29 +23,29 @@
   "schema": "DAPH_V2B_I3_3_ORACLE_CACHE_MANIFEST_V1",
   "sequential_observable_oracles": {
     "STATE_AWARE_CONTROLLER": {
-      "information_states": 239888,
-      "information_transitions": 739313,
+      "information_states": 231731,
+      "information_transitions": 775488,
       "path": "experiments/v2b_i3_5/oracle_tables/v2b_i3_5_sequential_state_aware_controller_v1.jsonl.gz",
-      "set_sha256": "052d56e7be48ba0e3e9b8c4e8ba142f26bdd87550f663927655ab3f6b93caa83",
-      "sha256": "7b10ee96eb1570ea1ac0bc16f7c5abc5010a3c0ef0d94b7ff24d9b693978fd6e",
+      "set_sha256": "46e6384a860c7a5db99420b7a7ebf6693b0a174f96a72a1b1cb202e2fa29b498",
+      "sha256": "42685186733493b2d3b789c09000ec996f77f3ba017c095705f8d533c0364cbc",
       "table_count": 515
     },
     "STATE_BLIND_CONTROLLER": {
-      "information_states": 218940,
-      "information_transitions": 694430,
+      "information_states": 222471,
+      "information_transitions": 781136,
       "path": "experiments/v2b_i3_5/oracle_tables/v2b_i3_5_sequential_state_blind_controller_v1.jsonl.gz",
-      "set_sha256": "a4bbc0b9414f74c7111604be793785135d6e740bd847819389c27118719ee05a",
-      "sha256": "ac58c445b4b29fd0004f41978c1d97bbc432144ca484cac8fc32c91524d4ddad",
+      "set_sha256": "229b6a065a80d30002392235cf83771fc4f3e9533c8a986519a8775a7da1edf4",
+      "sha256": "3d9a77a6b4a64ed90ec340f5c2f2d3653eade356485cc5967f7e6424862d9c61",
       "table_count": 398
     }
   },
   "status": "FROZEN_BENCHMARK_NOT_A_SCIENTIFIC_RESULT",
   "topology_allocation": {
     "path": "experiments/v2b_i3_5/splits/topology_allocation_v2.json",
-    "sha256": "6d3553876c845b9944f0d03dc04fd91ab9afa1c793a4238d7be6816201d54e4c"
+    "sha256": "9b55fcad017ae65d316e9259331cea5a0acd784528f5f3251d3de04f0a26258b"
   },
   "topology_diversity_report": {
     "path": "experiments/v2b_i3_5/reports/v2b_i3_5_topology_diversity_report_v1.json",
-    "sha256": "55f4cb1d24ea50c0d471ca4d3f260d36507f5d47042941894a7498a07bdae311"
+    "sha256": "fc36cb188dc5b23a81f654f424df14de5c50e2f1cda0dbeac4bedba6bac955bd"
   }
 }

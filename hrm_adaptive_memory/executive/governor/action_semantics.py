@@ -57,7 +57,11 @@ class ActionSemantics:
         }
 
 
-# Frozen semantic contracts for all executive actions
+# Frozen semantic contracts for the V1 seven-action executive vocabulary.
+# Only actions the controller can actually select are included.
+# Future-action extensions (VERIFY_ALTERNATE_SOURCE, SPAWN_SPECIALIST,
+# SWITCH_STRATEGY, ABANDON_STRATEGY) are deliberately excluded from V1
+# to avoid mixing dormant capabilities into the current decision model.
 FROZEN_ACTION_SEMANTICS: dict[str, ActionSemantics] = {
     "ANSWER": ActionSemantics(
         action="ANSWER",
@@ -98,19 +102,6 @@ FROZEN_ACTION_SEMANTICS: dict[str, ActionSemantics] = {
         internal_compute=False,
         is_terminal=False,
     ),
-    "VERIFY_ALTERNATE_SOURCE": ActionSemantics(
-        action="VERIFY_ALTERNATE_SOURCE",
-        cost_channels=("verification", "steps"),
-        can_add_evidence=True,
-        can_change_verification=True,
-        can_reduce_conflict=True,
-        can_change_reasoning_state=False,
-        can_change_temporal_status=True,
-        can_terminate=False,
-        external_information=True,
-        internal_compute=False,
-        is_terminal=False,
-    ),
     "SEARCH_MORE": ActionSemantics(
         action="SEARCH_MORE",
         cost_channels=("search", "steps"),
@@ -127,45 +118,6 @@ FROZEN_ACTION_SEMANTICS: dict[str, ActionSemantics] = {
     "REASON_MORE": ActionSemantics(
         action="REASON_MORE",
         cost_channels=("reasoning", "steps"),
-        can_add_evidence=False,
-        can_change_verification=False,
-        can_reduce_conflict=False,
-        can_change_reasoning_state=True,
-        can_change_temporal_status=False,
-        can_terminate=False,
-        external_information=False,
-        internal_compute=True,
-        is_terminal=False,
-    ),
-    "SPAWN_SPECIALIST": ActionSemantics(
-        action="SPAWN_SPECIALIST",
-        cost_channels=("specialist", "steps"),
-        can_add_evidence=True,
-        can_change_verification=True,
-        can_reduce_conflict=True,
-        can_change_reasoning_state=True,
-        can_change_temporal_status=True,
-        can_terminate=False,
-        external_information=True,
-        internal_compute=True,
-        is_terminal=False,
-    ),
-    "SWITCH_STRATEGY": ActionSemantics(
-        action="SWITCH_STRATEGY",
-        cost_channels=("steps",),
-        can_add_evidence=False,
-        can_change_verification=False,
-        can_reduce_conflict=False,
-        can_change_reasoning_state=True,
-        can_change_temporal_status=False,
-        can_terminate=False,
-        external_information=False,
-        internal_compute=True,
-        is_terminal=False,
-    ),
-    "ABANDON_STRATEGY": ActionSemantics(
-        action="ABANDON_STRATEGY",
-        cost_channels=("steps",),
         can_add_evidence=False,
         can_change_verification=False,
         can_reduce_conflict=False,

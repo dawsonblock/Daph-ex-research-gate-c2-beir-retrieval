@@ -19,17 +19,17 @@
   "topology_overlap_matrix": {
     "structure_dev_v2": {
       "structure_dev_v2": 87,
-      "structure_held_out_v2": 2,
+      "structure_held_out_v2": 0,
       "structure_validation_v2": 2
     },
     "structure_held_out_v2": {
-      "structure_dev_v2": 2,
+      "structure_dev_v2": 0,
       "structure_held_out_v2": 65,
-      "structure_validation_v2": 14
+      "structure_validation_v2": 0
     },
     "structure_validation_v2": {
       "structure_dev_v2": 2,
-      "structure_held_out_v2": 14,
+      "structure_held_out_v2": 0,
       "structure_validation_v2": 51
     }
   },

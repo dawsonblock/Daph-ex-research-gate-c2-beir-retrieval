@@ -19,7 +19,13 @@ def _make_observation(cognitive_state=None):
     return ControllerObservation(
         task_id="test_001",
         task_summary="Test task",
-        resource_state={"retrieval": 2, "verification": 2, "search": 2, "reasoning": 2},
+        resource_state={
+            "retrieval_calls_remaining": 5,
+            "verification_calls_remaining": 5,
+            "search_calls_remaining": 5,
+            "reasoning_tokens_remaining": 512,
+            "executive_steps_remaining": 8,
+        },
         allowed_actions=(DecisionAction.RETRIEVE, DecisionAction.VERIFY,
                          DecisionAction.SEARCH_MORE, DecisionAction.REASON_MORE,
                          DecisionAction.ANSWER, DecisionAction.DEFER),
@@ -43,7 +49,13 @@ def _make_cognitive_state(verification_state=VerificationState.UNVERIFIED):
         unresolved_conflicts=(),
         prior_decisions=(),
         prior_outcomes=(),
-        resource_state={"retrieval": 2, "verification": 2, "search": 2, "reasoning": 2},
+        resource_state={
+            "retrieval_calls_remaining": 5,
+            "verification_calls_remaining": 5,
+            "search_calls_remaining": 5,
+            "reasoning_tokens_remaining": 512,
+            "executive_steps_remaining": 8,
+        },
         policy_facts=(),
         observation_signals=(),
     )

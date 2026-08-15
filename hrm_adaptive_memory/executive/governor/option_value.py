@@ -32,7 +32,6 @@ def estimate_option_value(state: GovernorState, action: str) -> str:
         return NONE
 
     # Check if the action consumes the last remaining resource of its type
-    resources = state.resource_state
     cost_channels = semantics.cost_channels
 
     # If any cost channel has only 1 remaining, option value drops
@@ -40,8 +39,7 @@ def estimate_option_value(state: GovernorState, action: str) -> str:
     for channel in cost_channels:
         if channel == "steps":
             continue
-        remaining = resources.get(channel, 0)
-        if remaining <= 1:
+        if state.resources.is_last_resource(channel):
             scarce = True
             break
 

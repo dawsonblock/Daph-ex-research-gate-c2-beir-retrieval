@@ -11,7 +11,7 @@ Bottleneck classes:
     UNRESOLVED_CONFLICT: conflicting evidence needs resolution
     INSUFFICIENT_REASONING: composition/reasoning incomplete
     RESOURCE_EXHAUSTION: no resources for useful actions
-    REPEATED_NO_GAIN: same actions tried without progress
+    REPEATED_NO_GAIN: same actions tried without progress (outcome-based)
     READY_TO_ANSWER: no bottleneck detected
     IRREDUCIBLE_UNCERTAINTY: cannot resolve with available actions
 """
@@ -57,19 +57,21 @@ def detect_bottlenecks(state: GovernorState) -> tuple[DecisionBottleneck, ...]:
     """
     bottlenecks: list[DecisionBottleneck] = []
 
-    # Check for resource exhaustion
-    resources = state.resource_state
-    has_retrieval = resources.get("retrieval", 0) > 0
-    has_verification = resources.get("verification", 0) > 0
-    has_search = resources.get("search", 0) > 0
-    has_reasoning = resources.get("reasoning", 0) > 0
+    # Use typed resources
+    res = state.resources
+    has_retrieval = res.has_retrieval
+    has_verification = res.has_verification
+    has_search = res.has_search
+    has_reasoning = res.has_reasoning
 
-    # Check for repeated no-gain
+    # Check for repeated no-gain (now outcome-based, not just action-based)
     if state.repeated_no_gain:
         bottlenecks.append(DecisionBottleneck(
             kind="REPEATED_NO_GAIN",
             severity=HIGH,
-            evidence=(f"last_action={state.last_action}", "repeated_without_progress"),
+            evidence=(f"last_action={state.last_action}",
+                      f"last_outcome={state.last_outcome}",
+                      "repeated_same_action_and_outcome"),
             targetable_by=_actions_that_add_new_information(state),
         ))
 
@@ -87,7 +89,7 @@ def detect_bottlenecks(state: GovernorState) -> tuple[DecisionBottleneck, ...]:
                     kind="NO_EVIDENCE" if vs_val == "MISSING" else "FALSIFIED_EVIDENCE",
                     severity=sev,
                     evidence=(f"verification_state={vs_val}",),
-                    targetable_by=_actions_for_evidence_gap(has_retrieval, has_search, has_verification),
+                    targetable_by=_actions_for_evidence_gap(has_retrieval, has_search),
                 ))
             elif vs_val in ("UNVERIFIED", "STALE"):
                 sev = HIGH if has_verification else MEDIUM
@@ -161,8 +163,7 @@ def detect_bottlenecks(state: GovernorState) -> tuple[DecisionBottleneck, ...]:
             ))
 
     # Check for resource exhaustion
-    useful_actions_available = has_retrieval or has_verification or has_search or has_reasoning
-    if not useful_actions_available and not bottlenecks:
+    if not res.any_useful_remaining and not bottlenecks:
         bottlenecks.append(DecisionBottleneck(
             kind="RESOURCE_EXHAUSTION",
             severity=HIGH,
@@ -187,24 +188,25 @@ def detect_bottlenecks(state: GovernorState) -> tuple[DecisionBottleneck, ...]:
 
 def _actions_that_add_new_information(state: GovernorState) -> tuple[str, ...]:
     """Actions that can break a no-gain cycle by adding new information."""
-    resources = state.resource_state
+    res = state.resources
     result = []
-    if resources.get("search", 0) > 0 and "SEARCH_MORE" in state.legal_actions:
+    if res.has_search and "SEARCH_MORE" in state.legal_actions:
         result.append("SEARCH_MORE")
-    if resources.get("retrieval", 0) > 0 and "RETRIEVE" in state.legal_actions:
+    if res.has_retrieval and "RETRIEVE" in state.legal_actions:
         result.append("RETRIEVE")
     return tuple(result)
 
 
-def _actions_for_evidence_gap(has_retrieval: bool, has_search: bool, has_verification: bool) -> tuple[str, ...]:
-    """Actions that can address an evidence gap."""
+def _actions_for_evidence_gap(has_retrieval: bool, has_search: bool) -> tuple[str, ...]:
+    """Actions that can address an evidence gap.
+
+    Only actions in the current V1 seven-action vocabulary.
+    """
     result = []
     if has_retrieval:
         result.append("RETRIEVE")
     if has_search:
         result.append("SEARCH_MORE")
-    if has_verification:
-        result.append("VERIFY_ALTERNATE_SOURCE")
     return tuple(result)
 
 

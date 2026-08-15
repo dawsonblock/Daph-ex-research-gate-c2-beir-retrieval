@@ -22,26 +22,27 @@ def compute_redundancy(state: GovernorState, action: str) -> str:
 
     Returns: NONE, LOW, MEDIUM, or HIGH
 
-    Rules:
+    Rules (outcome-based, not merely repetition-based):
     - Action never tried: NONE
-    - Action tried once, not the last action: LOW (might help on different aspect)
-    - Action tried once, was the last action: MEDIUM (just tried, didn't resolve)
-    - Action tried 2+ times: HIGH (clearly not working)
-    - Action tried 2+ times with same outcome: HIGH (strongly penalize)
+    - Action tried once: LOW (might help on a different aspect)
+    - Action tried 2+ times with SAME outcome: HIGH (true no-gain)
+    - Action tried 2+ times with DIFFERENT outcomes: MEDIUM (state may be changing)
+
+    Multi-step topologies legitimately require repeated SEARCH_MORE or REASON_MORE.
+    Mere repetition is NOT sufficient for HIGH penalty — the outcome must be unchanged.
     """
     count = state.action_count(action)
     if count == 0:
         return NONE
 
     if count >= 2:
-        return HIGH
-
-    # count == 1
-    if state.last_action == action:
-        # Was just tried and we're still here
+        # Check if outcomes were identical (true no-gain)
+        if state.outcome_sequence_unchanged(action):
+            return HIGH
+        # Different outcomes — state may be changing, but still repeated
         return MEDIUM
 
-    # Tried once but not the last action — might still help
+    # count == 1 — tried once, might still help
     return LOW
 
 

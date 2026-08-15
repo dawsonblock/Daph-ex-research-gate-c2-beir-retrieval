@@ -4,9 +4,9 @@
   "views": [
     {
       "condition": "STATE_AWARE_CONTROLLER",
-      "latent_oracle_table_sha256": "c10789ba400c66c8b66d6cc9fe93b65438c92d33f057c0a24e18abe654593660",
+      "latent_oracle_table_sha256": "003a8ac9a32742e8c427dcbc663dece3265785a27f2f865f16de6c216f00c7c2",
       "observable_optimal_value": 66.26929999999999,
-      "observable_oracle_set_sha256": "052d56e7be48ba0e3e9b8c4e8ba142f26bdd87550f663927655ab3f6b93caa83",
+      "observable_oracle_set_sha256": "46e6384a860c7a5db99420b7a7ebf6693b0a174f96a72a1b1cb202e2fa29b498",
       "schema": "DAPH_V2B_I3_5_OBSERVABLE_ORACLE_VIEW_V2",
       "schema_version": 2,
       "split_name": "structure_dev_v2",
@@ -2415,13 +2415,13 @@
         "i3_3_structure_dev_v2_0298",
         "i3_3_structure_dev_v2_0299"
       ],
-      "view_sha256": "823bdd44e409f4119395fb41329b1032bb4ced14ecdc23c195be6116e15ba068"
+      "view_sha256": "4aa4ec2a082b3035d659de994feadbff810365704614f9b73cfb28c98e130d12"
     },
     {
       "condition": "STATE_AWARE_CONTROLLER",
-      "latent_oracle_table_sha256": "c10789ba400c66c8b66d6cc9fe93b65438c92d33f057c0a24e18abe654593660",
+      "latent_oracle_table_sha256": "003a8ac9a32742e8c427dcbc663dece3265785a27f2f865f16de6c216f00c7c2",
       "observable_optimal_value": 57.56386666666667,
-      "observable_oracle_set_sha256": "052d56e7be48ba0e3e9b8c4e8ba142f26bdd87550f663927655ab3f6b93caa83",
+      "observable_oracle_set_sha256": "46e6384a860c7a5db99420b7a7ebf6693b0a174f96a72a1b1cb202e2fa29b498",
       "schema": "DAPH_V2B_I3_5_OBSERVABLE_ORACLE_VIEW_V2",
       "schema_version": 2,
       "split_name": "structure_validation_v2",
@@ -3630,13 +3630,13 @@
         "i3_3_structure_validation_v2_0148",
         "i3_3_structure_validation_v2_0149"
       ],
-      "view_sha256": "f30c40ae96127bdc37abbfeac9e95eebb41850f2ecdc52cc4b223a7a1b5844af"
+      "view_sha256": "853a7a55e40fa8291c0cd9c8e8ee03c4abe4796099a9eb922b0ff008ce5fb45a"
     },
     {
       "condition": "STATE_AWARE_CONTROLLER",
-      "latent_oracle_table_sha256": "c10789ba400c66c8b66d6cc9fe93b65438c92d33f057c0a24e18abe654593660",
-      "observable_optimal_value": 57.65273333333333,
-      "observable_oracle_set_sha256": "052d56e7be48ba0e3e9b8c4e8ba142f26bdd87550f663927655ab3f6b93caa83",
+      "latent_oracle_table_sha256": "003a8ac9a32742e8c427dcbc663dece3265785a27f2f865f16de6c216f00c7c2",
+      "observable_optimal_value": 73.47473333333333,
+      "observable_oracle_set_sha256": "46e6384a860c7a5db99420b7a7ebf6693b0a174f96a72a1b1cb202e2fa29b498",
       "schema": "DAPH_V2B_I3_5_OBSERVABLE_ORACLE_VIEW_V2",
       "schema_version": 2,
       "split_name": "structure_held_out_v2",
@@ -3644,1052 +3644,1052 @@
       "task_entries": [
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "75197c7265b530fc282e4165ab4ca704b4cd0a8f72dd8db06c7caaf42d20c65d",
+          "information_class_id": "1079c182991bd4460fa11780686e4e32fe568bb9f73911bbc8e097954db0718d",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "c918c057e09f47eb198dcbfface2ae9b93d9748c91885d2376e54cf2ee5e3b8d",
+          "table_identity_sha256": "bc0748217f94e1760e59dba5ff8038565a1cae128a3a66d1c0ea3064d6672e72",
           "task_id": "i3_3_structure_held_out_v2_0000"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "054a01018fdb4b0e4fba386ce8661ad402e55e628ce5453fe9f4a7b3aac775d2",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "083f70ea9a1bb823d39c000733dfb6a1ca487e1e077104e4098864982219c22c",
+          "information_class_id": "a55cb474535771950c8105445ef4b49f84223a6269eb36e22b90c1e04365cb85",
+          "observable_optimal_value": 84.92999999999998,
+          "table_identity_sha256": "d49a7a4afd85a88e09b6631ea2884b2f89643bf774a503a1810c2df51074e30e",
           "task_id": "i3_3_structure_held_out_v2_0001"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "17c941fcee2c3b117dbcf8d0db4d9f753554becf2df71f941dc5af6e64572e3f",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "234a49e40a306281bf73131000cad31eeb5f0f43fab899694e7be173f789eb95",
+          "information_class_id": "e56b9c865570bbbc45afe054860b7401184a6611e4228cdc13a2370bdc2e2864",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "b5309a93753b1ed3a71d69e4c5e826848da7827f2a61190934adbb3a637ba316",
           "task_id": "i3_3_structure_held_out_v2_0002"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "e237fd02aef2507f1e65d3eba52fbe2f21742a8cf152b8016e1ca3cb7065bcfe",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "00bb417034eb423461e7e73916143bc4b98640f077e01d2f0038f0a08e66fcf8",
+          "information_class_id": "81b6d69d64ad336bc596b122fcd96b638d12a60c52d8399ba1c6cab75082fcf7",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "ecc32d1fc65597ad245847c37ccc922c89e2c0fc37de96956927e616c6259e7e",
           "task_id": "i3_3_structure_held_out_v2_0003"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "689e54eaa5d0ed664e6f895e9171f880c37ff385434c82405b9e1d9b8a27ecbf",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "c8cc91e94feabdbe6f1699a0b8c35c4c491b6fa085b991e851f86f5b61003b9a",
+          "information_class_id": "c3d6808b5908a6a25e15d4d9d5a8b9c3edf0ae032f506e5952c5038f04c9bb57",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "0872afb18b0e1b6a85ded82269dae1ceb5cf60d41e46d057cfee39245daf9cc5",
           "task_id": "i3_3_structure_held_out_v2_0004"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "a01f3dadb8e83c42972907ba474ced013815ee27f152d405de9db2e416569bef",
+          "information_class_id": "71b6f72f7b7a7c4c9a98a0413f1a366981ed116df2d1077d7c0f5a400927212e",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "f0d1de7ee57753fb8fbb52c07df1778ead9267d448cfef1f3bbbaaad5cd15ee6",
+          "table_identity_sha256": "1dc7be28dabd94a2f37fba11ca5c64331f6040b0fad23ec64b0f0280e158788a",
           "task_id": "i3_3_structure_held_out_v2_0005"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "e18f55adebd1c1cf4d3ee89f674cf1468857156e5caea4caa96f3b3468c09334",
+          "information_class_id": "32cb8919417daa7f20d10c6070ea4888e7234a8e35a6ee6e8d490ccb8d9e1665",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "c533a22eb309ce861d46e7956f18deeffda9bbcf7eb781d8767632ea685ea484",
+          "table_identity_sha256": "375082aa9217a866adcb48885ffc0b88f6be8de7825ad36799df9515af445589",
           "task_id": "i3_3_structure_held_out_v2_0006"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "bdd4a123f40b0d0b685c696b42a821031662774045a5b808954c650f0b72f5b5",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "5b0bc68e054c38444f9e717bfac7498c8f48d76483a7bf64966faee163305e70",
+          "information_class_id": "a07afdfaea1fa441077adac6a3698feeff564d9f395d111308c6f7da8d01e27c",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "4936cc9590c76d445edbde01745e725969eabe4527e627196f945ee3d693464c",
           "task_id": "i3_3_structure_held_out_v2_0007"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "7e946ab530abd6ff67aa8a860162bcc56454f9b0043f807a5afbc8cf12c718b0",
-          "observable_optimal_value": 27.929999999999993,
-          "table_identity_sha256": "c5ea3a51169532a6e136b5b5a29efb8d6ba527a1a810e48b7c80d0f4185dd251",
+          "information_class_id": "ce08e3031c80d5451b0d5d8ad98c7fd505da94fd72356cac3786d5b8b5ea74b0",
+          "observable_optimal_value": 83.85999999999999,
+          "table_identity_sha256": "f82fc400852fa047ae6eaa1c6334f64be032a2cb6e0cfdbe779cda5dea467d7d",
           "task_id": "i3_3_structure_held_out_v2_0008"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "7e946ab530abd6ff67aa8a860162bcc56454f9b0043f807a5afbc8cf12c718b0",
-          "observable_optimal_value": 27.929999999999993,
-          "table_identity_sha256": "c5ea3a51169532a6e136b5b5a29efb8d6ba527a1a810e48b7c80d0f4185dd251",
+          "information_class_id": "ce08e3031c80d5451b0d5d8ad98c7fd505da94fd72356cac3786d5b8b5ea74b0",
+          "observable_optimal_value": 83.85999999999999,
+          "table_identity_sha256": "f82fc400852fa047ae6eaa1c6334f64be032a2cb6e0cfdbe779cda5dea467d7d",
           "task_id": "i3_3_structure_held_out_v2_0009"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "88a5de9b93cc0c7b576a7b923ef7d35c63489f069b6a018c59406675a45762a0",
+          "information_class_id": "4f6c16712181378fed509c9de7a8f6572fe9cee13fbfc522fcd00c9cc8b993d1",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "2c60622834ec4c4dcc91dd18862448bd7abd308717e59ac2e255ea9ef24de023",
+          "table_identity_sha256": "51f8052bbfb22c7ee0c676df725faf445afc3adcbdb690d5859ab7321c8fe024",
           "task_id": "i3_3_structure_held_out_v2_0010"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "2633a0ac3aef6c9922009f8b71eb5daf2d7b6fd10fc47b34f1443811133494f8",
+          "information_class_id": "7b6c6fbec2d91ba400696ec368d0b66f3709848ad610ec4e0585687e25616daa",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "5a4f9334e034467aa09fcca057b46c1af67e5769c8feab7e4a0df3edbbcd2ea8",
+          "table_identity_sha256": "8a58e5c7829653f98128c40203458c9cab51031268c9504526a63f51010d9943",
           "task_id": "i3_3_structure_held_out_v2_0011"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "858441d827127555d0de2e5dad5fc78017db1b6f2f96676e414e1ec45f54cfdd",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "da195bfd6b6c47dec4625f9f709681603430832782d3c908460c7bd759ef6ada",
+          "information_class_id": "4881b41fe4b6b07d0af65c08feb5f0708c4197d8547f0d22890d3936306d5089",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "f7c2663bcb44e8f122189d9118ad07de7427b382f1920f5ca3aa793acd3d952e",
           "task_id": "i3_3_structure_held_out_v2_0012"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "7d203b88406324d191ac183c4a420b0d00721107b03414a408fb4752183f719c",
+          "information_class_id": "e412efcb2b36d2a69d93db1c1cae0cc9855cdffa126a461afb5341aa8b277315",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "c6775fb613e51d5ef6fd46d499932ce7728c0580197bd5e36b140aa280a936f7",
+          "table_identity_sha256": "025386a8f3181b4676c1e8ff6c61af2d2f539121855bca77748cf83d011ecb6c",
           "task_id": "i3_3_structure_held_out_v2_0013"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "1b942ec2383d07e29b5ac8fb0a7e6b545ecc92fb0d6c65179bc097a6481ac889",
+          "information_class_id": "4c3825596bc65f76d4d537e84ea6f19eeaf629a9b3d090c951134368c3c5de62",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "5e98f6d4a41795d69182606e6715b3a82e37785521c7e98bff97a3490c238707",
+          "table_identity_sha256": "cc805b03a3647b2f24c77081487b5a819bdee1559a8c3a0a943c2a078939f7de",
           "task_id": "i3_3_structure_held_out_v2_0014"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "844e2bfb9f10bf22fc9140848f6570264ddf52a363ed59402a10416cc3240442",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "fc0d9e2d2bd9583dddbeb7ad5759a2368635c7c3548376e4486e44241cf5af8e",
+          "information_class_id": "7a46ddb5d49cf210ee1095ce13c314ba60111232b2244b3770b109693d2646c4",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "4e7219e5747f59b35ec4b64b22bea86a5c0f16336cc428cc9970fbb7c4d2e4f8",
           "task_id": "i3_3_structure_held_out_v2_0015"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "da04068b2c3a8aa096ada05ad9ec1704944846fbb55ee3b7744547b1a6edff4e",
-          "observable_optimal_value": 27.919999999999995,
-          "table_identity_sha256": "657ddfa55e3fe8e6b442a7eabf29751d8093618359610905235f212a8c421679",
+          "information_class_id": "e1d93b00bdc002429bd48db8bbf33ab6b172cc82280474432acee9e920cd4ab6",
+          "observable_optimal_value": 83.84999999999998,
+          "table_identity_sha256": "65d801e21dd5fe835dca25261444ba17c662d525c884fa1789fa0efd0f8b2adb",
           "task_id": "i3_3_structure_held_out_v2_0016"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "da04068b2c3a8aa096ada05ad9ec1704944846fbb55ee3b7744547b1a6edff4e",
-          "observable_optimal_value": 27.919999999999995,
-          "table_identity_sha256": "657ddfa55e3fe8e6b442a7eabf29751d8093618359610905235f212a8c421679",
+          "information_class_id": "e1d93b00bdc002429bd48db8bbf33ab6b172cc82280474432acee9e920cd4ab6",
+          "observable_optimal_value": 83.84999999999998,
+          "table_identity_sha256": "65d801e21dd5fe835dca25261444ba17c662d525c884fa1789fa0efd0f8b2adb",
           "task_id": "i3_3_structure_held_out_v2_0017"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "f38003ee3345cdedc03580c70324f74a0fece0845c6ee0797d52012bcd48599e",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "a856757dfa8db263ae2b65e13527e8bab059f8a94ae92db01d0f3e4e6d0e9a3e",
+          "information_class_id": "5545177e02b69e46de0a583db7320397be9ddc2c5ccece59a9bcf821e2cb427e",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "5ec5eb2fe23971f95fbb4b1a935e5e1ae33883f6b6db2c197beb17df88aaf144",
           "task_id": "i3_3_structure_held_out_v2_0018"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "f26bbdea92b8a0710eeaec1e84ebb3ba6865ab68951662cf5aa72cc9dfcf292b",
+          "information_class_id": "00bfa44bc8512ce930d836f90322d9c9c86c19b572f5c5ba2b32b984920b6f2b",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "ad8780ff66c83f4b56de201ea707cbeff3fac1e538b0294987330923ac234b71",
+          "table_identity_sha256": "1af4b1cec4d254365b4961ef4e5d43e052cb4a3062828623d1f678480cd60e15",
           "task_id": "i3_3_structure_held_out_v2_0019"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "0a152e1d3660159d291d4d4d7c490aac8890057ef425e73a10ae8b056d2c0b7e",
+          "information_class_id": "3ce1e4316c78e8f433b2516a5ae906af442c46a9eb0e232795155b45823c8d9b",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "25af1e604748dc56c37202454922dac83d51abce612d5950dbb6fa5bf85c4cb0",
+          "table_identity_sha256": "73c08d041a72d853bfb8dd23bfdf8105539351157b88fad4a40d91a40e222d20",
           "task_id": "i3_3_structure_held_out_v2_0020"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "57ee97f6af6dea8a916c7d4d12b6f82a538d62469f75941c8929eda1089a0f70",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "205f9d478916b9a079b2170953704e8f3c39568f75665d07f4f19d13417a404f",
+          "information_class_id": "41133b0a866db429dd9ae221fc4d29231f10621cd8eaafe8934772447ac64efb",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "509094d34f07985a54dc439abd80146a2d1730a43d2c3f2e7e56baa1c71ccbe4",
           "task_id": "i3_3_structure_held_out_v2_0021"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "d32ba08908f7b655f3169175ea7c6826d1bbec2cf6e236eae6a972840a246559",
-          "observable_optimal_value": 27.934999999999995,
-          "table_identity_sha256": "1d5c8ed3dd8ce217046ca6a3c0465255024658fb6ed5ab91e96d7224124530b7",
+          "information_class_id": "4e69ad7cece7c7d9948cfa05c27d112d9df1c01aec21513c0054d826c55e5611",
+          "observable_optimal_value": 84.37999999999998,
+          "table_identity_sha256": "ec0e1f789828fa09487fbe5049ed02f27ce3485fda1d31511f4445fa48ad2ddf",
           "task_id": "i3_3_structure_held_out_v2_0022"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "d32ba08908f7b655f3169175ea7c6826d1bbec2cf6e236eae6a972840a246559",
-          "observable_optimal_value": 27.934999999999995,
-          "table_identity_sha256": "1d5c8ed3dd8ce217046ca6a3c0465255024658fb6ed5ab91e96d7224124530b7",
+          "information_class_id": "4e69ad7cece7c7d9948cfa05c27d112d9df1c01aec21513c0054d826c55e5611",
+          "observable_optimal_value": 84.37999999999998,
+          "table_identity_sha256": "ec0e1f789828fa09487fbe5049ed02f27ce3485fda1d31511f4445fa48ad2ddf",
           "task_id": "i3_3_structure_held_out_v2_0023"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "2f876b9a3ed1b2480808c42951bbd67d3ec15f868230000326d760ee204006cc",
+          "information_class_id": "18612d7e8198d795738ee978731e3742cef719b878aedf5f5f827c9a808182aa",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "84d275beab22830fb47c6aed3b24cdca7f5d10120f6e43d8685cef22786d64d3",
+          "table_identity_sha256": "63841742d2822a7bc2c6dadfdabb669fe19a5b7a8f5aeed9a47c3f5004d66740",
           "task_id": "i3_3_structure_held_out_v2_0024"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "65096282b1aadc76190b4e0920814a55a7d940ff2a4766d8121a0af2b5131202",
+          "information_class_id": "8294e1871cf0785480647d15d6a1ac62f9b8536b7bd6dc42d2b8e4f61defb4bb",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "f5e0bba39576e434f07b3d456ad08ff212b378e592abeb54088d85a3f9fa1488",
+          "table_identity_sha256": "120c79fc1fd07b5292db951982610ebf488a0bdf9dfad8af3e32917c7123516c",
           "task_id": "i3_3_structure_held_out_v2_0025"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "4d0cbb4a6e515565f9a4d00c4343e0bd01603bb768a37762f0a179f604f96543",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "5b8bbb9ed57b544e8df4564c5b6d61c83d42228a5c9971380e8d2b8822c30b52",
+          "information_class_id": "4c1c07ee7cb970a05085ccccaeb46382bf15d8fd929455632a94bdfc81b9997c",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "5207d1ca070f73966c4d5d0b8db53834cb75f9c8e27b1098b64ff6fec6260216",
           "task_id": "i3_3_structure_held_out_v2_0026"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "6eb67c996ef078845cc5f3a28ab389e5e3c870eadc503b18e3f8bb06c63e65b2",
+          "information_class_id": "3af824cf144fd34dbbf847f64f8b170700082025803c1c569be25bf33fc5e9f4",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "25274a669bc88ca4649985624482671ef9b58b34317dff72256cdabf98738948",
+          "table_identity_sha256": "0d21c621ef989300424633f9b14aa87580843e4f1bbb531498f389fc766abf74",
           "task_id": "i3_3_structure_held_out_v2_0027"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "6453e55eb4fce952a622e29c01063fada1d779aca1041566beb5315624ceff6c",
+          "information_class_id": "795c854586866b0653c4a5553aa316cdcb2b64c049f8ce9b0f275956847a2d94",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "81cdc11f8ca8d71477fcae9d9095ca99fd7959287fbaf072bb99acb1132f9bd2",
+          "table_identity_sha256": "2cc17fe7700fddcc75dd36220b33b79a56629182113c00ec69b8cf1a72e40398",
           "task_id": "i3_3_structure_held_out_v2_0028"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "1ac88203b74c64e4154b87b0559cdeaf6530adf24fbecc2093377019b26f60e2",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "abb7ce1c5b8334726c52304e49fa8df57cab48b6dd241c092b1f450213ee7e44",
+          "information_class_id": "f78ec11e575706325dc75650c86fb17e1e3a501187863f47d66d9e8c256251c4",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "bccc4f8811fd03b3ef5b4b54212768a5b8368f7361327dd3517a3f208aaf0944",
           "task_id": "i3_3_structure_held_out_v2_0029"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "fa39cd463b56ffb3db548e21e401fbb6b3cd9f6df28a00b39d5db928c8ba65da",
-          "observable_optimal_value": 27.924999999999997,
-          "table_identity_sha256": "1dab808110e3f2f9f8eb8ca241925b8330c83ecb131497101496eae09f4d6ba1",
+          "information_class_id": "ad54586bbf110d892c81257586c6d9d9ff6828edb66691466cc1a1654b220c5d",
+          "observable_optimal_value": 84.88999999999999,
+          "table_identity_sha256": "e2e5bc738bb5b9962b8d64c12776f606e0966280205f6117452d521b50770b07",
           "task_id": "i3_3_structure_held_out_v2_0030"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "fa39cd463b56ffb3db548e21e401fbb6b3cd9f6df28a00b39d5db928c8ba65da",
-          "observable_optimal_value": 27.924999999999997,
-          "table_identity_sha256": "1dab808110e3f2f9f8eb8ca241925b8330c83ecb131497101496eae09f4d6ba1",
+          "information_class_id": "ad54586bbf110d892c81257586c6d9d9ff6828edb66691466cc1a1654b220c5d",
+          "observable_optimal_value": 84.88999999999999,
+          "table_identity_sha256": "e2e5bc738bb5b9962b8d64c12776f606e0966280205f6117452d521b50770b07",
           "task_id": "i3_3_structure_held_out_v2_0031"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "15bd3dc198cab5ca94df224fa8e98299ed88e0764e1fe0bdbd27fd0b08fcb17a",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "37d7e38112659176b7413a370f888e373100d20b6c882807b5a09324310ed7f3",
+          "information_class_id": "4e9ab45e10245429ec99d28bf07ae885cdbce033aea3564d7e60fbefb3cc6556",
+          "observable_optimal_value": 84.92999999999998,
+          "table_identity_sha256": "bd87a26c2bb1cfd5d3983447461396a07b06bbf7f3a8fbb7cf18a4207d096e9b",
           "task_id": "i3_3_structure_held_out_v2_0032"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "20e563d9e13ce954057297e8269bb3f7c6ae6deefd22a1c177c7547ebde54b63",
+          "information_class_id": "c2d227511438e8ebd5112a1609e75ea28031e05a01243e1f6b613d35e283329c",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "4c5655894d7d1e8ed4cd676664ecb4894cf1ad3d29f0b913775d049256857de4",
+          "table_identity_sha256": "7d4f75f4eef5e7cd19cacbd5ae8d9895d4d5b57aee6b6909e49384ff400a964f",
           "task_id": "i3_3_structure_held_out_v2_0033"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "35841089d116e8e7cdf0f46140a50b9939e2e9d67be48f5af05e74ddc6366657",
-          "observable_optimal_value": 27.409999999999993,
-          "table_identity_sha256": "bb17f5a8249b065eeb4d9b27038f9752d40fd305114208577cd30068a44f2b16",
+          "information_class_id": "0ffea2397c504cbee3fa3c98ebeece760c37e5d7be88c4a11101559a03be6ef8",
+          "observable_optimal_value": 83.84499999999998,
+          "table_identity_sha256": "c3ecdbf0dfd4fd4b8c60899d2c00cc372d33fe554d84e955dbd6c62f97483de9",
           "task_id": "i3_3_structure_held_out_v2_0034"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "35841089d116e8e7cdf0f46140a50b9939e2e9d67be48f5af05e74ddc6366657",
-          "observable_optimal_value": 27.409999999999993,
-          "table_identity_sha256": "bb17f5a8249b065eeb4d9b27038f9752d40fd305114208577cd30068a44f2b16",
+          "information_class_id": "0ffea2397c504cbee3fa3c98ebeece760c37e5d7be88c4a11101559a03be6ef8",
+          "observable_optimal_value": 83.84499999999998,
+          "table_identity_sha256": "c3ecdbf0dfd4fd4b8c60899d2c00cc372d33fe554d84e955dbd6c62f97483de9",
           "task_id": "i3_3_structure_held_out_v2_0035"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "e22c1c597ee09c6da97d55cde2d86fedafee6a8292e6e9abd05b58ec8a6c5edf",
-          "observable_optimal_value": 27.924999999999997,
-          "table_identity_sha256": "6c969634c0dedaff66a1dbf0b939ff24a23fcff14c2f4bde6802cbcc9ac0383e",
+          "information_class_id": "cec50502bedd98cdf6f92253e9d788fd8d1272f137c944357acfee2c02f5e08c",
+          "observable_optimal_value": 84.88999999999999,
+          "table_identity_sha256": "f8578fd54ee8960a93a74aba249afa000b807acba663b9f9d327691ddb0e6fa8",
           "task_id": "i3_3_structure_held_out_v2_0036"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "e22c1c597ee09c6da97d55cde2d86fedafee6a8292e6e9abd05b58ec8a6c5edf",
-          "observable_optimal_value": 27.924999999999997,
-          "table_identity_sha256": "6c969634c0dedaff66a1dbf0b939ff24a23fcff14c2f4bde6802cbcc9ac0383e",
+          "information_class_id": "cec50502bedd98cdf6f92253e9d788fd8d1272f137c944357acfee2c02f5e08c",
+          "observable_optimal_value": 84.88999999999999,
+          "table_identity_sha256": "f8578fd54ee8960a93a74aba249afa000b807acba663b9f9d327691ddb0e6fa8",
           "task_id": "i3_3_structure_held_out_v2_0037"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "e4b5215849440baefe1735ad7cad24b2bec760ddc24b2b93e246008177641cc6",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "5cd45bad07483ac24c940fe131ef76e412df6df681b2a87148c078d48ec66a61",
+          "information_class_id": "6c089cf273ec6599da6bb63c2cddacedff5c5e490c862c8dff87ac3a8ae27998",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "2364d6b420908d13c124ecb32c6d06e7ca6d010cb1dde0182f9a162feeb3d450",
           "task_id": "i3_3_structure_held_out_v2_0038"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "2c8aba9003c45581ff1f430c3d03a3de28e5340cb9a3e225fefd9be149fc8ced",
+          "information_class_id": "740e2b0319011a4b604c101227ec0150925e788a5ace884cce2f8244f484388d",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "2020d9ae227f6318c785c4c0f9562179bc2ed5637d1a0d1f080cf054e39f4282",
+          "table_identity_sha256": "99f9702c28c0be0de94a138b66b7ce145825b52114f352907b1359dd5c8c24d0",
           "task_id": "i3_3_structure_held_out_v2_0039"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "3b788cad7b11029695fcaf27357426efaecae551b641ae1a232bad2850b25eb6",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "778ba5467d2693cd8035cf526d0b7c6f3b81fe55eea34201a4b155f9e1117225",
+          "information_class_id": "8fb31c28e18be3d28cc480a5c42e588821e9b5002a699858c772d1bda77d5ce0",
+          "observable_optimal_value": 84.92999999999998,
+          "table_identity_sha256": "cb3fd146d726f424347e8544918ec2c0bb7ad5589b73375b2eb69b352da827df",
           "task_id": "i3_3_structure_held_out_v2_0040"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "09d6d894bc6f922f3412a315221f2d6e2395a16407a9d1ae27a130274ee837b7",
+          "information_class_id": "a244ea73d4756c9969aa3944a50e6a253385b4a2bcbfb53a6bf2dea1431c65da",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "6ee90c7d8351e1dd2d57a582ca5b88b0279a06bd411106fb1b55c5dafa686cfe",
+          "table_identity_sha256": "e08a9bea07df1edbca5d35ff560e201d055d0fe540a36f5e0bd8bfba35cf35b3",
           "task_id": "i3_3_structure_held_out_v2_0041"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "24eaed16653a868459c554abbde717d74f0d0333024cb8916a844c635a89e011",
+          "information_class_id": "192e5a3bc3fc544ffaf1147368868a872024ab62aab19be3e22d3a0a2d302e3b",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "899d9090367517f4924325ae1b1573783f6d834e4350c2bdd6546f11cf3497fa",
+          "table_identity_sha256": "49bbd004970114f82ff8e5da9cedc7bf3d27444cf44c063d8e385295578e8e53",
           "task_id": "i3_3_structure_held_out_v2_0042"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "9fbc0463ced7cddb6b8bca2ee4b39272edd7536612cc172b5f6b694934325b3e",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "84594d8b66fbd632b9671bfb51c56b4460ce8924b52c86a1ccf044c7484c4ce4",
+          "information_class_id": "f518bd1b36a9f61ee1cbaeda2aa0c72a179e9ccd4b20fec70252d7b0902b9c9a",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "8262e1b62ae7b9ebdc9a580cd6d53e9fa923ead7476e09d1784e8da798f6cadc",
           "task_id": "i3_3_structure_held_out_v2_0043"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "85e3666cbe736f2f448a2c4d8a23bc50d5bf82290af4f2ddd34bd49c44b069d1",
-          "observable_optimal_value": 27.915,
-          "table_identity_sha256": "35ef0b68e86a1a4054364153dbf204c2c1357a84888ec4c706a76d4eac0e305d",
+          "information_class_id": "88515565905c0d620179b0b18cf8ffa80164e15a63de1c4ab51ab777b95c42d2",
+          "observable_optimal_value": 84.88499999999999,
+          "table_identity_sha256": "c8cf94bdcee29383a6a8762c546f31bf83a06b0c2d9c647c7e9f5380fc2d9d70",
           "task_id": "i3_3_structure_held_out_v2_0044"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "85e3666cbe736f2f448a2c4d8a23bc50d5bf82290af4f2ddd34bd49c44b069d1",
-          "observable_optimal_value": 27.915,
-          "table_identity_sha256": "35ef0b68e86a1a4054364153dbf204c2c1357a84888ec4c706a76d4eac0e305d",
+          "information_class_id": "88515565905c0d620179b0b18cf8ffa80164e15a63de1c4ab51ab777b95c42d2",
+          "observable_optimal_value": 84.88499999999999,
+          "table_identity_sha256": "c8cf94bdcee29383a6a8762c546f31bf83a06b0c2d9c647c7e9f5380fc2d9d70",
           "task_id": "i3_3_structure_held_out_v2_0045"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "60ff1e89fb0a951fb73ea908c9709d01b3f6cd3bed3e64c108a2516041978d75",
+          "information_class_id": "4cb1775ba0795e46645dedda29f5ab22df3c4e1f8c0cdbf21e2db69a4b0c6fd6",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "a8114632f05ebf81e24bf09bd28b8b0ba78c5e790f2b660e7dc1bc418a631990",
+          "table_identity_sha256": "f7ebca74379ec557ee8727c980a6631b810ffd779015ce897d7d9706941b4816",
           "task_id": "i3_3_structure_held_out_v2_0046"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "70eaf6ab97f59690e61dbb6564e2ae4d916f42d3a30d9008a92fef626424fced",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "8d3756ff4f1877695269c701ae68a27b5cd19b5fd147c4bb5aa748ff518e072f",
+          "information_class_id": "e962e85ce3b44298c42023e01871c2ebdfd9dfaa13f8ddeab06666dda67ad4ac",
+          "observable_optimal_value": 84.92999999999998,
+          "table_identity_sha256": "25ddb732e2bb55d8fc496d24487f3dace4ec2accf6233b32267c117ed1e0e15e",
           "task_id": "i3_3_structure_held_out_v2_0047"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "68cbcb379ab5040d7266350f7a2d700c7979c01f9bde42bafa1be9b95c343dca",
+          "information_class_id": "297dd51416f5390bfc88103bfedd09caf84396b084f8b8679e0c9385094c506e",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "1703c5608003616c6a984cf56e1eb203353d417ee1779c3a2239af919e38e10e",
+          "table_identity_sha256": "26235b85805d3f7c3bdb4c93468f7d69bbf99b2a880e3206a135d3597ef31534",
           "task_id": "i3_3_structure_held_out_v2_0048"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "45782b502e406692246abff393480969ec736e93c49799bafd5905043b113e42",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "279a1a01575544ff0cf05ee02a8e40008c8a9de709fc63252d93f55e106df9b5",
+          "information_class_id": "358953815ec5483e0afe392555a365fbec0f5a90499d3c18cd25d04793ebedf6",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "509475a4b3cd8313a1cdc1089763166f06504cbf829a059a601101fd80f9248e",
           "task_id": "i3_3_structure_held_out_v2_0049"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "0da741e3f77f63528139d72ba2e8302dd4f608f3de3947d129b41212763654ea",
-          "observable_optimal_value": 27.924999999999997,
-          "table_identity_sha256": "24146937f13fb6bd79495726bb0300f7c5112d510dca58afee33e90cda0a56d5",
+          "information_class_id": "fd1ba56eb79ebb7173de078a46682b5d8ab60411317c874d0523e800110b69cf",
+          "observable_optimal_value": 84.36999999999999,
+          "table_identity_sha256": "4a3f792ea4fa40ec220c69b3d582e84c5879de686d27c6dc49d5e0838db4a419",
           "task_id": "i3_3_structure_held_out_v2_0050"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "0da741e3f77f63528139d72ba2e8302dd4f608f3de3947d129b41212763654ea",
-          "observable_optimal_value": 27.924999999999997,
-          "table_identity_sha256": "24146937f13fb6bd79495726bb0300f7c5112d510dca58afee33e90cda0a56d5",
+          "information_class_id": "fd1ba56eb79ebb7173de078a46682b5d8ab60411317c874d0523e800110b69cf",
+          "observable_optimal_value": 84.36999999999999,
+          "table_identity_sha256": "4a3f792ea4fa40ec220c69b3d582e84c5879de686d27c6dc49d5e0838db4a419",
           "task_id": "i3_3_structure_held_out_v2_0051"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "534b4d061aaeb5f1519d6e47f7c3986b1f2c0bece55fdcedb67d9392e626c124",
+          "information_class_id": "25f3b95808425136e7bd1d4ed8395c5b9a9fe6ecea21364c93df2b6d86f154c2",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "0ab5626145d891a53137f308411443cdc71fed453fd81e93ff23a2f760cc1ae5",
+          "table_identity_sha256": "a169dae9002179d2f75a4324845c5a0dcc5e790cd86f103fded525a7e56d9e60",
           "task_id": "i3_3_structure_held_out_v2_0052"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "5720f0b06a721ddafe761005d7727073d627d00db5dd435aaef5df63c9c46da8",
+          "information_class_id": "99e46d78d6624cfd14b109c5e7950a8b4bbc06db2f3c7a6ea02cdf9b383806e0",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "3a370100d0f8bded82c55fbc0eb7451a66c5649ac3f73f3d7cc2d4df0d7cc7e2",
+          "table_identity_sha256": "1d4ac6d8b26ebdcef170d97fa02e2f7acbe38383bb67d09c2065de54e86db697",
           "task_id": "i3_3_structure_held_out_v2_0053"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "d8bd825c4ceb7a3c126c883d968fe73ef71abdc6854632743d429e21a2562616",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "36305803729f97d03f3e12a12e5e1df989ec21b5c5a0b955431743793930b4b8",
+          "information_class_id": "9b6185a831ed800b9b7b094056253091814d51cb02b8970aa95155fdd0c5de13",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "bd66e2ccdff87fd8955ece9aa78b1a3bb30985d728d030760e1dbadfd29fe289",
           "task_id": "i3_3_structure_held_out_v2_0054"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "5e71825001c6c8c0632b3947ec9c6fcdad9821ae6b0b3d4b9707e89ee98adf51",
+          "information_class_id": "b5bb81f8e2322b436c0b0e61071c19ac3dfc3011f621dad98a21900867a7b805",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "d388110c04c3ed8505db63354581900089e0fd084a7905f06cdf5b33da9c6643",
+          "table_identity_sha256": "630f39a29154134faa2283bbce1f38fdbf4c931868370e39c49fb4449b555bfd",
           "task_id": "i3_3_structure_held_out_v2_0055"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "8be0b93319b64a4474dcb88e6c7e8b98d16cfdd4261216c1cca4024388092a7e",
+          "information_class_id": "28b9775becb2c3344fdedc58d0890da70acd99a8b27a6b7406fe95ff931b19c2",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "1af43c62d70927d05aa098da412d33568f03a8c48a277c23f097f074985e59b2",
+          "table_identity_sha256": "410782d788ccb0ecd0d5aaf4fa9b3dbb2c957118ced2c2da842060514dd1270e",
           "task_id": "i3_3_structure_held_out_v2_0056"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "e2f9c03fc13b0e0db05b770398dfce598b8ca31b51ea73c5a8b1a914137b4057",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "aefe3839944381bda634c83792729973d8e42529a4e6ebc2383a748e5826084c",
+          "information_class_id": "94106d41063de485e0f6c464530a711dcceb0d683c98d083d2e7cda5984ea206",
+          "observable_optimal_value": 84.92999999999998,
+          "table_identity_sha256": "69db6dd7b8e1726cb4dae3c452984780a5f2ab17856c153884c83a738dfeb53c",
           "task_id": "i3_3_structure_held_out_v2_0057"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "6bd3f9da7a3575d9a6f4f3de622100549d36b303ebe3d2b7563003bf47382cc8",
+          "information_class_id": "4e715e793745c761d25db7e7f5b4635aa24517bb3aaf31945361d9f4f09d82a6",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "7da5457032afa9db70b2abb5d0fbe7fe21b1454315848cdf1645f39fecf7e259",
+          "table_identity_sha256": "f8cb34b24b2136b4bac7146a5d05e8c394175c0e17ac2eedc82e7e28a75a96f5",
           "task_id": "i3_3_structure_held_out_v2_0058"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "46f6d32df1122178c6c07b57e353c36e941df3e8671bf28e5b5b93d1a578d895",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "726b188e5650d5c8e44e349a331cc736df29f6d37fda6ae3245e3a4aa45bc259",
+          "information_class_id": "6439f1a778d42e3ab12010ed733ff7ce8b75b17bbf90eaa6f5c1800fc85b1130",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "efe5f36cc4d88d848f5dcc589a93cd7ec278b148af1463f55e92203c2832bd73",
           "task_id": "i3_3_structure_held_out_v2_0059"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "c493ed138f2f22babaab48c3ae9c3e2eefecc20077f6ca1c279432fa630143c7",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "8570df0aaa797f0b0529a879f96b30e7e3f828a34c413fb37013d638d153a6f3",
+          "information_class_id": "ec7c64ab78fd7e244cbf616c63e7610c69caca784bc7a523e6d84b5e4f6607c4",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "64921ac9a28d11dd1de1038f96a74d972167ff6ffbb674d736a3eaabc4724b3f",
           "task_id": "i3_3_structure_held_out_v2_0060"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "907b7acc34a9e0fc3862c01641e8a0c92fb1f517c2fd02a87e80bd53d5f20cb9",
+          "information_class_id": "a03a40d21da4422f686c6ed511b69845ff78373cd012efe43d7bf59ba9e07d88",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "168f38a3a0cb0cd321fe9c638cab81a3d76c57bc9684034cbb8064647b9b977e",
+          "table_identity_sha256": "af71f7f28ce834a285f1d2a9ddf347533846c000935ed0d8d28fcf7e7a932f7e",
           "task_id": "i3_3_structure_held_out_v2_0061"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "038d05c293873ef7a5acd8b718197d7ab114f75997a9fc7a0b4032fce3018703",
+          "information_class_id": "35b09124debc0ca90953a9c83eccebfd3cdbfe28f91ed8fa45a37f71ca956353",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "2641f5c75a576819167a152292a0f6e0050b3ac472c6738e5127cc6e7b9fbe90",
+          "table_identity_sha256": "f5979b4e6788d14bf2c706bd1be6f93f0061d39915d8f893538b85c5ff8b1e50",
           "task_id": "i3_3_structure_held_out_v2_0062"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "7400973109fca6f9ae76b96c5c7d428b401bdbe1f8e3c1b35b6aa6532f4c39c4",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "add7f24c19118f209674068fc84e7bc43991316c64b83b1d17695c1119c5e7b9",
+          "information_class_id": "bffc1efb0c0cea99a1e24ebab7cfe3ef93c6867c6c79850bfb81902bfeedc6d7",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "2ff8d4b6daea1a9de1f0c69bcc0562647b4563847a152b5a290a573b745ac6f9",
           "task_id": "i3_3_structure_held_out_v2_0063"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "aafa99281d0ed3f3acc1c7d3ba8695c119ac95984b0830ed6475b249378c32a1",
-          "observable_optimal_value": 27.929999999999993,
-          "table_identity_sha256": "8d4a8a990d228f0f2d72572d60e674441da662c09bd7a2ee0fcdf40118ea5a3b",
+          "information_class_id": "2f27da539e7e4ad91a3044d23a6c037ff5564f05732fca66ae8503599031d298",
+          "observable_optimal_value": 83.85999999999999,
+          "table_identity_sha256": "f9d652f1089240634c624e9c697b7f3dd6a996a03fc4b0a800a85df7b02ea09e",
           "task_id": "i3_3_structure_held_out_v2_0064"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "aafa99281d0ed3f3acc1c7d3ba8695c119ac95984b0830ed6475b249378c32a1",
-          "observable_optimal_value": 27.929999999999993,
-          "table_identity_sha256": "8d4a8a990d228f0f2d72572d60e674441da662c09bd7a2ee0fcdf40118ea5a3b",
+          "information_class_id": "2f27da539e7e4ad91a3044d23a6c037ff5564f05732fca66ae8503599031d298",
+          "observable_optimal_value": 83.85999999999999,
+          "table_identity_sha256": "f9d652f1089240634c624e9c697b7f3dd6a996a03fc4b0a800a85df7b02ea09e",
           "task_id": "i3_3_structure_held_out_v2_0065"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "c38da0a40f3881f87adbb3a512c965bcd3c7d487284a0d912cea8b9dd0e25a3e",
+          "information_class_id": "bd7b1b95cddb85c5d09941eb5d9f9914690e4cd10f9223eba8347b9531defed5",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "133a17b394f8b5cababf1a5a5393171daf138a288a0f99b4339e3529c3e16fa2",
+          "table_identity_sha256": "1a2af39721b74a807091471e5bc3f50761a7d2faac1ba124c78c04ead4680fb3",
           "task_id": "i3_3_structure_held_out_v2_0066"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "2796675e0403be96d7e5170dc0c065e042790750c57b104a5bb54e53ea32271c",
+          "information_class_id": "a694401b884c5fb7d33b6ea081b4ca52a84f1602d2115da5fb170aae7bbf960c",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "86dd9f0a1e621ae1e2c09c821ac0c064d40c4119520e558aa25f4e29d84b3f16",
+          "table_identity_sha256": "8fb754b121c708fb02afa71b45e04294aada99a09698a2e0d60184ff51c053da",
           "task_id": "i3_3_structure_held_out_v2_0067"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "e84e7a38abca206587a255a3179ea6527a417c67711091d0ead0c9882b438fc1",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "8e0fca277d66f4aa97e530e903acb70b763e1d3e4aad257fb90c33c5d0896342",
+          "information_class_id": "0448db307e55c1446cc0b284f85bfbfa9118f28ce24566e98080d49690be0f39",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "c5c2a98f4acc6a564eb746fc7a4fd9d07bbd24760812bc9fde2c6b01a03c0cc3",
           "task_id": "i3_3_structure_held_out_v2_0068"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "c97ce62a680f5eec52e3e58a6f3c55ad097ce01cb08030611f0b14d5b811e17d",
+          "information_class_id": "69252e554d1b649b8bea2747c52fc435d8ee977a4ec235582ea98b76e3b4493b",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "b71ab7cbb77432892531fbd5c27f683a94c857ee59ee023af75db6d828549da2",
+          "table_identity_sha256": "dc95558caf8123df23d91e037bbffe4982820a2e85089f8862537850be6cd8d1",
           "task_id": "i3_3_structure_held_out_v2_0069"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "6daf908fa465567a2061df988646d2470164b29d91d1b2f78ed5ba94abf143b0",
+          "information_class_id": "e62fe3305484dd9b9031c4ace7f521f0ea85393ae60dee5e1772fbe97f354e26",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "52ad9093d3169660cbdbb8302a40d80b905bb3e9c5730298737d77eb76d763f3",
+          "table_identity_sha256": "abeab058bb27035afb5e43df561e6a98b9f62750113ed0c0493d5757f5c97aaa",
           "task_id": "i3_3_structure_held_out_v2_0070"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "9ebd7adb5d7b841854c6eca3c1c1ce21828343fc9bb4f318a3d9d713cd7879ec",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "819154d8fc5a97fe154b3103bf1d64f6240f4ab21187789b4b26bc3853ea1d44",
+          "information_class_id": "941f68da0f48dfd612fb2b772307e55dc6d622143c80a87d30f7d8363304d510",
+          "observable_optimal_value": 84.92999999999998,
+          "table_identity_sha256": "65f5eb32e3193260b7f708b0957f00e701bb9617345fc835facb0ab4c2fc0608",
           "task_id": "i3_3_structure_held_out_v2_0071"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "9c9f8eda9ffd7ce31c0d7ed09f3c0885a6d0d758bbec9742cad9bf7e4b60f830",
-          "observable_optimal_value": 27.404999999999994,
-          "table_identity_sha256": "4403ee7a9025f87cd6f85057d97dbb78a3e6423993f33fdeb1f431c483269ba4",
+          "information_class_id": "55c396a6d226fed1ff8e181a70b0306d3e7388fc2ed03b8c761de6eb4808b4f8",
+          "observable_optimal_value": 83.83999999999999,
+          "table_identity_sha256": "4a3efc7870332367e63e4c723657529317438dcd0175c73a010111bdd399cce6",
           "task_id": "i3_3_structure_held_out_v2_0072"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "9c9f8eda9ffd7ce31c0d7ed09f3c0885a6d0d758bbec9742cad9bf7e4b60f830",
-          "observable_optimal_value": 27.404999999999994,
-          "table_identity_sha256": "4403ee7a9025f87cd6f85057d97dbb78a3e6423993f33fdeb1f431c483269ba4",
+          "information_class_id": "55c396a6d226fed1ff8e181a70b0306d3e7388fc2ed03b8c761de6eb4808b4f8",
+          "observable_optimal_value": 83.83999999999999,
+          "table_identity_sha256": "4a3efc7870332367e63e4c723657529317438dcd0175c73a010111bdd399cce6",
           "task_id": "i3_3_structure_held_out_v2_0073"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "de4f891281f613e7165e83058adb47f896af056dfcafdb04dc4b9414e99992dd",
-          "observable_optimal_value": 27.915,
-          "table_identity_sha256": "e2adbceca233bdb35f820c25e5adaa8f836eec625574b3df699fa9d57e2e1c77",
+          "information_class_id": "1ea95c04e84e23557ebcf231f893b8c3800e75f3d0644c38ae48797b7af9133c",
+          "observable_optimal_value": 84.36499999999998,
+          "table_identity_sha256": "4814f859eb388b33289419a68789f8aba02316dd6d723621640bdbe8c7ce7e3b",
           "task_id": "i3_3_structure_held_out_v2_0074"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "de4f891281f613e7165e83058adb47f896af056dfcafdb04dc4b9414e99992dd",
-          "observable_optimal_value": 27.915,
-          "table_identity_sha256": "e2adbceca233bdb35f820c25e5adaa8f836eec625574b3df699fa9d57e2e1c77",
+          "information_class_id": "1ea95c04e84e23557ebcf231f893b8c3800e75f3d0644c38ae48797b7af9133c",
+          "observable_optimal_value": 84.36499999999998,
+          "table_identity_sha256": "4814f859eb388b33289419a68789f8aba02316dd6d723621640bdbe8c7ce7e3b",
           "task_id": "i3_3_structure_held_out_v2_0075"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "a58fd088972ac1611248a187633a4992c6bbb4cf8835afdcaa01a6d899ea6503",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "fc9c9d0392c6ab7d2bd1aff0644f8bbd28984f941537c66b3a85000801c7a72a",
+          "information_class_id": "2b5ec3f6b8d341a11f4eb838cb1eee5498ad8fe3ed7330a2f8f8a593bae06010",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "68a8a1471fd0f6964da02eeb13c50978b51bb2a13e1e12170eb3a328c4ef9f2c",
           "task_id": "i3_3_structure_held_out_v2_0076"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "97da38d893c757a2faae2682703bfa904af3474efdbab95ed1fed327b9f1ad84",
+          "information_class_id": "b8a979e6bdff750e34a9533e3f7f7b17e6e29585c90cfc2836b2ff8548236737",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "c5ce748f28794f588fb5ed310b5b1516d2d43e7f6417d9d6f93e9f0659977235",
+          "table_identity_sha256": "073f2556c3aa138afcd4224651a783dc153dceb251707b7c3a476abee3410996",
           "task_id": "i3_3_structure_held_out_v2_0077"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "ef1ba603de759e79834310d0d566ffe448bc95994e79f71d375dbc901a473b61",
-          "observable_optimal_value": 27.934999999999995,
-          "table_identity_sha256": "a362adda0ca43e6c9bd5858ef86bc0e846dd29f0c6a476a894262fdf600135b1",
+          "information_class_id": "7ab18f492eff84defe4ad3b8532d6978100dcfe11fd89b64ffcb9f2c319100a5",
+          "observable_optimal_value": 84.89999999999998,
+          "table_identity_sha256": "81555b43a44379f9e66c7ae80800103d09cf4577874edf61c57a433b791d90c2",
           "task_id": "i3_3_structure_held_out_v2_0078"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "ef1ba603de759e79834310d0d566ffe448bc95994e79f71d375dbc901a473b61",
-          "observable_optimal_value": 27.934999999999995,
-          "table_identity_sha256": "a362adda0ca43e6c9bd5858ef86bc0e846dd29f0c6a476a894262fdf600135b1",
+          "information_class_id": "7ab18f492eff84defe4ad3b8532d6978100dcfe11fd89b64ffcb9f2c319100a5",
+          "observable_optimal_value": 84.89999999999998,
+          "table_identity_sha256": "81555b43a44379f9e66c7ae80800103d09cf4577874edf61c57a433b791d90c2",
           "task_id": "i3_3_structure_held_out_v2_0079"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "8f374082b1181a638bb7e83495bbb7be195001a7bab69aee8674f25de0958a21",
+          "information_class_id": "155b073c26d3a2017d0dd31d90cb377146e101dada5504c5d6dccb43f406f989",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "0dd52dea24ec8c4424da15ddac827d83b00acff2cb1247df49f0a21bd616ac2f",
+          "table_identity_sha256": "4577aee3d4cf77913ce4ba18bb9bc5a43047f2f4efa5343388617bf9fbb46d14",
           "task_id": "i3_3_structure_held_out_v2_0080"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "fa957f61bbc9f589111ef52d53bf67c7c1db1239fdc4d37b9dc577779bbe890a",
+          "information_class_id": "0c8643d796638178c307f867b5b8e9eb997a045d88feaa9e057779ec07e26622",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "c4fc68c366d858f3a71cf81aa31e5434c855bf774ec474d7e2fdf37293c186b1",
+          "table_identity_sha256": "cee818d5495a537f856fec40430124994864d1587d09c1f281a156f382ad8c2e",
           "task_id": "i3_3_structure_held_out_v2_0081"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "1c7e2b23e1f924da6ca11afb6cc654c2dc1bc20d9ab4276af516b7473b7bb03a",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "f12e63c21113bb85cc0ef1aab6fc6bcadde4f7f3b60178d879ceef8bcb71c618",
+          "information_class_id": "d133bcbe05e32b7954d6a0a15c6842c80da6a425fd93ca546c364d14d604181b",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "2438c58ccf3ce17aba980c40ee37b37932cb196906e4a6a11eda58f72ffd8448",
           "task_id": "i3_3_structure_held_out_v2_0082"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "cdd4242c63f9b5342d5837b31b8fc3b1555dd01eb7870e34471ac198fd4c3bc3",
+          "information_class_id": "015ba8b3056176a968a69a4f633a34c7dcc32affa2dbea540cfcf41ed5043ccc",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "2bb16ed22c402208b6d4fab63d0ab125e91be66b02d38dee406ba1d902157abb",
+          "table_identity_sha256": "11ca5b139f9b3e13b556ed4a803b32758f2873eac9fc31aaaf2c068b56876715",
           "task_id": "i3_3_structure_held_out_v2_0083"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "6eedd42c98920ebcc28681dc3d5f671394d94a3701424c356e2cf2028d587f33",
+          "information_class_id": "59488c70959c532202e07bf93a6f3d203b9464df8836673e552e47e26a07c215",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "62629c0debc23eb2ee7a03fee8b8cc6eb7e1eed7abdd2504b96294c4937e533b",
+          "table_identity_sha256": "6b0c8d3bcb47914e84a5f88ac2d32ebd5970097cc5e66bfcb2e4f002879d7a66",
           "task_id": "i3_3_structure_held_out_v2_0084"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "31fbe7ce97eddbd5c7ca1fbdafe47ed4b2a4b10a354de109477dc8c939d352cd",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "04fd9da563aa683a1d00f2148f81e7876c5fccc4c9bed994de1b933badd1020e",
+          "information_class_id": "73c2d6d12d04e57832448905496fbf8c6f8567265218eb5ec4bb25cf360290ac",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "f84a1a8f2ec262594517ef048686d29d7fc95207c72b74e8ec1a9f6146a70d57",
           "task_id": "i3_3_structure_held_out_v2_0085"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "bd9857bd13333cf5069974c9c3a953648c67c36abe7694b575f82453ea93ca54",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "73e66abc8bb995238cf65375d149b1e1afc004e0c55216d739e9c5bc4d079b02",
+          "information_class_id": "732eb4012fe3bda9cc85553f80b1803ab59f98b40c13fc5dc7149e3e09b36bd3",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "b3b4e6cbaa37b958be777b015f47dadb35e743d0f6e98a83aed25a16c5e63ef6",
           "task_id": "i3_3_structure_held_out_v2_0086"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "a359545b883492c0e45c831e9bd3e747cfc9a8a3c849b70f666f5a39d111d871",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "d264a5addd35d6c907a0a7bf8ae4da44ff9c29246e296469444f641c4f21ca00",
+          "information_class_id": "09387fe6910d14a81aa683b909e9f2b426c9e765abecc28d07e5c8a3b1a45daa",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "f08d625a1c156c1634d13ffc6860782856ec19c3b8bf7370c21649496e815341",
           "task_id": "i3_3_structure_held_out_v2_0087"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "277f49e1763818920d851abf9c9c43789398510fd2c134b70df933849af25ab9",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "a2a0142cbce83747543f2b2be29758d762f9899e5f512fe2ad56566a4170e28a",
+          "information_class_id": "2e96b41246773712fc6d40a24d8bc20b5ff89605312cb55e7db5d1137facd801",
+          "observable_optimal_value": 84.92999999999998,
+          "table_identity_sha256": "ad9e67e74ed80e101ae72b94d22d6347f30cfe5fdf310f84339f1448e6b5bc4a",
           "task_id": "i3_3_structure_held_out_v2_0088"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "96a714afdf00c9d9cca5df6b66ec2d68f959f7ba4ffbe5eaf818e99b9e8ffb4a",
+          "information_class_id": "0f3021ee8b17d4df8fcd50f5b66fbd1e038d2447af235a3ff3da2b0dcc529fd4",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "f3178e9c4c46863b812144961b7a784566588c82d8336248c8a9f41185a76231",
+          "table_identity_sha256": "33ed753a76c94695df51e2108e19132e04db87775715e91125973510afafdac4",
           "task_id": "i3_3_structure_held_out_v2_0089"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "7d0ce9fdd9ca72bbfb14ff225a864921288d0bc62afb1fabee85e1f93a8b4168",
+          "information_class_id": "060907dafac036f8b18c8769fe8b790b99e15d5d42584009af08033b296b059a",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "34746a73b4e344b23dbdd63b807aa715d0b7031334ccca1708379fa109d19028",
+          "table_identity_sha256": "ac119e9ecc4d03ec7847a6fb6f5eb6ac34e6f79d510944291637c37f395cf0c1",
           "task_id": "i3_3_structure_held_out_v2_0090"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "831b19548c14c8f4c53497aaa5a9dcc73aed614ed5126d946455140733567079",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "0c6a84c718e660f7d0921483e5e21c52a7799462c82f0bd1668dbe8f79aae08e",
+          "information_class_id": "6b345cfac3e687b3fe06db9ca1b1d805e09a3e8c13ad61062f705f90e2cc0d9f",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "38ac297a1d93fb4f0061daae502011d23756bae23369cc733d3ecf88115a4061",
           "task_id": "i3_3_structure_held_out_v2_0091"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "a15544d5cc65af9e55df8389ff7929f1ca5dbe429d2c476299de65da7bc77f32",
+          "information_class_id": "a60cd7345d0c974068eac886474522ede2d9b5ba90f4f62ae73d2ce4f9c08df1",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "cc080150f094c7d49018c43630e6f642eb7aacc7d59e1ce67c7c4d499e0c679b",
+          "table_identity_sha256": "4066762b2031bc3c9d17cad5864212172f4edd562238c117975a48580cfa0c34",
           "task_id": "i3_3_structure_held_out_v2_0092"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "e86e9fd6500f0d7395a446f214150f048f969bfce04f230dbb9c5088223619ef",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "ff0d31213233f343c9b244a208ad4289ac903f914d221e5cf5a507f57bb1a3a3",
+          "information_class_id": "ae8d5d3798f86777e138f2b9d040fa89e1335fcf48ae3cd970f0587f09be09ef",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "42f30bd18ba12e4dc50751812db6b15671fcd646b1c04a81c29bd51c2f5d950c",
           "task_id": "i3_3_structure_held_out_v2_0093"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "71501359f6cdbee0755dad7aa53c0e75294d0ab6b980e3c37baa25cfe9b7ff9c",
+          "information_class_id": "fb2b5223c4da537801c14c86187f3e08bd8cab1a75c0b2e735de237853f02255",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "aae5b05ece63020a350fa47252724aa470c49fd681e05beb41aeaf19de4aaf5a",
+          "table_identity_sha256": "2a055d46f63d59c0e08c2a639b279cd788889f6b8b8ae3ecfedc7ff5211719ab",
           "task_id": "i3_3_structure_held_out_v2_0094"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "6187b03a387686557c0b038ad20704e6047d829b1cb62e2a6012b9d8f60bd2af",
+          "information_class_id": "d14b628e295c43867806f530573a72857405a92e4b9666fd3e5f7074cbc21519",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "75bcec719c93d2e44528713dee173bbc785bfa9e8d0135ebbc3c1313f1060902",
+          "table_identity_sha256": "3234c35aef005b4ad1fee13f5e8318b69c3d23c5ac5a009b62c8d4cc6f9b2a4d",
           "task_id": "i3_3_structure_held_out_v2_0095"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "35db9cda18b98f9f0950916d63567791e88316bc02d0e2cbdf85c540d8da91a8",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "e627e24f070c944ef383c4fe0eb6faa4eef85ba1c6123866def6ce07b292bc83",
+          "information_class_id": "ce929355742638b29dd659766c39e437bfb09c3a2693ea032b266773cb20aecb",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "1e90bb3608b1974850bd0e21ccc5082587f4e01553f6ac6e4d7fddc72387d4d6",
           "task_id": "i3_3_structure_held_out_v2_0096"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "2046d7788d3d772752bb633650a1fff9e013d50ce78aca3ea6cd22917343a6c7",
+          "information_class_id": "7eb047625c236bcdc1b5c06e5ee77fbb98da6e14fe61080836013e63871c6d1f",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "d39b46779fe4b88133a6f89ffdade7b12e3510488be86c4656426877fae290b2",
+          "table_identity_sha256": "2fcb58d834157ecd73e4f0ca518fa7b9e1b5a6bd41909713e58afc40dc38f456",
           "task_id": "i3_3_structure_held_out_v2_0097"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "499b4d5e10e4fb8e2b5126d93045193ec18c9e11bfc11a682554b7562a6fdd95",
+          "information_class_id": "c3a97a99b15a942ab109bec36fb628f65f6c64926a9d955bba57f7978e7e590d",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "c88bc703879609570bbbce849e377fbfe5acd030cc42637750aceab89dafa053",
+          "table_identity_sha256": "423fdb0061bc840f2e9d77b59b2868ea27a78245dc4692a679fbfbce6c4445fa",
           "task_id": "i3_3_structure_held_out_v2_0098"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "f8f02ced4b215891f78a23bb45400c5a52bebecdb52faa7de792b929620e5f74",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "2713e83edc584fe6b676bfb55480784a29371c6ec4b24b742454edb79ff8b190",
+          "information_class_id": "82e7d0159e99be51388da1eb8bfa9cb9746705496cc43352b446694b5b3dec21",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "0c81141fd53e773d3f302009b3002b12fcc4e46b90d7fe6024871f63f6541a0d",
           "task_id": "i3_3_structure_held_out_v2_0099"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "f0e18bfbe4c93761b03e1f113fafbecfb1af45cb535a21559c4345c0c75821ac",
-          "observable_optimal_value": 27.915,
-          "table_identity_sha256": "8258610b9f225db694384b04bb7bdc897b2dd66badf9afb7e6ce0b8c23ca89c1",
+          "information_class_id": "7711c627638708ac5cb9ef79f76ab3951be9a3497ae62a4cc262833fe0a288be",
+          "observable_optimal_value": 84.88,
+          "table_identity_sha256": "ffd9d717fccc89ebbab5aafca77a0955438b580af77b193ed13c4a269299e54c",
           "task_id": "i3_3_structure_held_out_v2_0100"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "f0e18bfbe4c93761b03e1f113fafbecfb1af45cb535a21559c4345c0c75821ac",
-          "observable_optimal_value": 27.915,
-          "table_identity_sha256": "8258610b9f225db694384b04bb7bdc897b2dd66badf9afb7e6ce0b8c23ca89c1",
+          "information_class_id": "7711c627638708ac5cb9ef79f76ab3951be9a3497ae62a4cc262833fe0a288be",
+          "observable_optimal_value": 84.88,
+          "table_identity_sha256": "ffd9d717fccc89ebbab5aafca77a0955438b580af77b193ed13c4a269299e54c",
           "task_id": "i3_3_structure_held_out_v2_0101"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "fd323fb266d4f236d7c254771e9c4170eb0922ad2f3fdcb7e22168f5aba27e2a",
-          "observable_optimal_value": 27.929999999999996,
-          "table_identity_sha256": "a6e2d3844da741acf9f941b912edae41a6ed073b78fb9c425898356c0adfa8c7",
+          "information_class_id": "d57e4d980e3e396edba3685bcce1629309b327c07e8f94e4c3464c02b4f8066a",
+          "observable_optimal_value": 84.89499999999998,
+          "table_identity_sha256": "0128fefb6d4b8a7145546d96ea0cf4a72db898962c6e48e53052d417e8801f11",
           "task_id": "i3_3_structure_held_out_v2_0102"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "fd323fb266d4f236d7c254771e9c4170eb0922ad2f3fdcb7e22168f5aba27e2a",
-          "observable_optimal_value": 27.929999999999996,
-          "table_identity_sha256": "a6e2d3844da741acf9f941b912edae41a6ed073b78fb9c425898356c0adfa8c7",
+          "information_class_id": "d57e4d980e3e396edba3685bcce1629309b327c07e8f94e4c3464c02b4f8066a",
+          "observable_optimal_value": 84.89499999999998,
+          "table_identity_sha256": "0128fefb6d4b8a7145546d96ea0cf4a72db898962c6e48e53052d417e8801f11",
           "task_id": "i3_3_structure_held_out_v2_0103"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "b7a54224b28a1cf6dc00b23a723bc9fde22553049255095b884a14cd543e39f5",
+          "information_class_id": "c845ca6d1d910c3b56a452e158f946ca886cdf2110fdab4b12f3a70421264021",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "9561b1166808dc466cd435734cfade0c468acba539112e7522053fdc9f4e944e",
+          "table_identity_sha256": "5d7c0e4173bda499ffbb24079779d35196d42c566769556b8f4ad5532df6cce7",
           "task_id": "i3_3_structure_held_out_v2_0104"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "dd1b84ed69c0be3330c346964804c44b27895d65414fa8f6c3814bb6f090442e",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "bf529c5745da926176b58c5f511191168d9de3de13e48397f9f2dfb04c7360e9",
+          "information_class_id": "638c84fdc98d527f65dcedbc2e5ca6b74c7ede4850afbdaafc5586f066b8d6b4",
+          "observable_optimal_value": 84.92999999999998,
+          "table_identity_sha256": "fd17d7f1e7707618bb4147c667cb9ff720e81a610f22fdcaaa6eee469201c209",
           "task_id": "i3_3_structure_held_out_v2_0105"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "2e467d35ed0d3e31aeefea4b696828fc33a283e7acdf3f904a6cc66b0f7942bc",
-          "observable_optimal_value": 27.414999999999992,
-          "table_identity_sha256": "aef58b3ca0874f7d35f73e7b398c7c3f4197d8a7371283cfc40471dc6c5c3305",
+          "information_class_id": "56c3abd7840286abbcec0ffac3dedff6188d2b1a526ec7454699c5838c6052f2",
+          "observable_optimal_value": 83.85,
+          "table_identity_sha256": "3920bea968f82fd6344df0053efb97ba09d8a0ecc7d820dd1953978df947c98a",
           "task_id": "i3_3_structure_held_out_v2_0106"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "2e467d35ed0d3e31aeefea4b696828fc33a283e7acdf3f904a6cc66b0f7942bc",
-          "observable_optimal_value": 27.414999999999992,
-          "table_identity_sha256": "aef58b3ca0874f7d35f73e7b398c7c3f4197d8a7371283cfc40471dc6c5c3305",
+          "information_class_id": "56c3abd7840286abbcec0ffac3dedff6188d2b1a526ec7454699c5838c6052f2",
+          "observable_optimal_value": 83.85,
+          "table_identity_sha256": "3920bea968f82fd6344df0053efb97ba09d8a0ecc7d820dd1953978df947c98a",
           "task_id": "i3_3_structure_held_out_v2_0107"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "84e5319d926f999bb60f2d023a67200f39a5df2ebd8fe57a78ae5585e9cca60a",
+          "information_class_id": "c7bc51dd0781c46bd950c943a17518d6efdba2644702b4b71e6b13f5bdb10367",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "2820d8be688626eabf7aae7e89f0211adf1c1db7185ecb56b1b8fb0e021a7959",
+          "table_identity_sha256": "937e95536c3fa69b4aa4e737b6f70d091aae4d9dfda551d79c7ef0f760491508",
           "task_id": "i3_3_structure_held_out_v2_0108"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "5b79a9fc2a0a32cd2034726f3bc202523ce658d1b72d7af662a311e97d9f0d20",
+          "information_class_id": "fa0bedfe6a77bbdf824afce7f57f83d25c73843695c2bef4a725915cdbc88c6c",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "5813c516530126d87af5a6171c314fa57b1774ef87847955082e39d7a6880823",
+          "table_identity_sha256": "35c06ff0f399cf6bd1c733eb06c8000e2ce2237a0214a1c3e9f6054c295459aa",
           "task_id": "i3_3_structure_held_out_v2_0109"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "61351c3769f3c5eda27fae27ff86e69140d700e527b0ad2497d4daa6e26a87b4",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "39a3f36a328103416988df10a6135412f83253064e91dc9a9e6abc1e5f5a8217",
+          "information_class_id": "68ae031891c6305b7b8c4f2c3885a2c4a6dd5b5b724c47dfc5c05cb69f452207",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "291dc9d4bec5446c0dfae8de080d1cddc890f1c8b6feb111ce83a59177e9f07f",
           "task_id": "i3_3_structure_held_out_v2_0110"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "692f028ce2b4f9c793083b568bda5af737c4aa0c183009c10a4486075e8fde85",
+          "information_class_id": "8035dc54404733d6669a64e1737132f279f222fe8cb92ade0932252d6d9200ff",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "cf0aeabd226622a2712c6e96b4532f770680d9eaea7186278fcb3dfe14b302c9",
+          "table_identity_sha256": "e9c87cd429fe18fc496d28fe43c43ad5e66df4d4fe57507c7869463504078053",
           "task_id": "i3_3_structure_held_out_v2_0111"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "1e5330b7575b735b7f8e6f06846c573b24a5f000123ac33adc5ba6642e8cb867",
+          "information_class_id": "29679cb16dad58ed0b020bc306f6e7f4c1111f211c2e0f5af2e50ba4bcb440be",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "9ab4cda786d82a72ab4252a2926b17d12eeeda0112e84cbecd831e8d04e9f6e1",
+          "table_identity_sha256": "f1fe411d830a9ec3b516fc6eecd03c0ed34b59a31951f91efd49bfc58459f610",
           "task_id": "i3_3_structure_held_out_v2_0112"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "3a6e52e8d42912b9036e32c42ed1c376ca437c168aba4071d8618d0dce4fe21f",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "b62914a1b2f1e38824a6ab36cb1a4cf4125eb0e66c9099134e015f329358ad3e",
+          "information_class_id": "3b7915035724b24f070181b86d959d1ac24557d2f9aa17dc7c873b960ceaa7ca",
+          "observable_optimal_value": 84.92999999999998,
+          "table_identity_sha256": "1c952a68026eb5ffa615ed825528c38cbdf5a57a7f14a1c101111cad8ac7837c",
           "task_id": "i3_3_structure_held_out_v2_0113"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "73ca74ff30d8039c3cf95c832a366d2024d4bb8a521576aa447782338e8ec43e",
-          "observable_optimal_value": 27.404999999999994,
-          "table_identity_sha256": "8e5872b34b0dec706606d713416ceb0ac5c2dfb9eff1314afec55a46a00c23cd",
+          "information_class_id": "56e3ad65cbfbbc15111c88a4ecee5f4120207d02938359000070d9610481ab63",
+          "observable_optimal_value": 83.83999999999999,
+          "table_identity_sha256": "ae336337c7678fcc0313f2182a22059d91ff0d231e63cb320070220a5983fe6c",
           "task_id": "i3_3_structure_held_out_v2_0114"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "73ca74ff30d8039c3cf95c832a366d2024d4bb8a521576aa447782338e8ec43e",
-          "observable_optimal_value": 27.404999999999994,
-          "table_identity_sha256": "8e5872b34b0dec706606d713416ceb0ac5c2dfb9eff1314afec55a46a00c23cd",
+          "information_class_id": "56e3ad65cbfbbc15111c88a4ecee5f4120207d02938359000070d9610481ab63",
+          "observable_optimal_value": 83.83999999999999,
+          "table_identity_sha256": "ae336337c7678fcc0313f2182a22059d91ff0d231e63cb320070220a5983fe6c",
           "task_id": "i3_3_structure_held_out_v2_0115"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "2b80b34b4c0d28121fe1035fd5c924eae8304518d12913896ffeafed800fe15a",
+          "information_class_id": "29618a11aaa37b28380b934bd31bb31d2c9115d9c2f78901b16defae0e637315",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "8f377c01bbc38106299c6316f82d2be7aeb0e24d63fe100b876f5ee779dfd549",
+          "table_identity_sha256": "8a292b7fb43108c2143c2dc3e31aa5a0bace74baeedb98ba5cf00320bd907046",
           "task_id": "i3_3_structure_held_out_v2_0116"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "be877eb22944694b28e20961eaa6b7c382ac3347eb4bc648e85e65a50a6d2924",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "ca53aa95042d7d892f69cc296e1eefb659e7074c1f696b09f1a1244c334b0833",
+          "information_class_id": "85b6ffac113d28ba200ed50eafad796f7afb2513f8400540fd017cd5b512b650",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "149480507de86dcf996f2ad88145fe7c0fa3dc3ea9cc27653775645fe1e08df1",
           "task_id": "i3_3_structure_held_out_v2_0117"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "b0d52c572535a826932fa998c8f768c29374d0fbdd601cf52003743529397908",
+          "information_class_id": "3d5e81dbbad55c6780f533aeacfa847e279829a94d25324d6990ae1dfe1c02a1",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "d279345d62e77f03546ce52df4e9bac6a7ae3b3b8795bb790f5348cd8fccdd03",
+          "table_identity_sha256": "67f873feb856be511437edc22b3cc3a2ea004b09cc54bb23192df0b4a00bcddf",
           "task_id": "i3_3_structure_held_out_v2_0118"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "226ec7301ba73e7313e82716e1d7189bd1212414ba959d1ea04e2f5cf044ba08",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "c1acef5e790e415a1dbd38b16a86b6ad1815fa17b2de1e4159fab90d1c30f784",
+          "information_class_id": "eff37a41346446de61e0fd144368a1a3b319a5426c1794d3dc53d029e7d7bb67",
+          "observable_optimal_value": 84.92999999999998,
+          "table_identity_sha256": "345aa5faf2edc8509ceabab8296707a3ef5f6ba8241f68842b284d32aa872b7f",
           "task_id": "i3_3_structure_held_out_v2_0119"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "2a5483d9d46c7a775d732eb8e971c5797f49b75db8529613ec24be3096587bcb",
-          "observable_optimal_value": 27.924999999999994,
-          "table_identity_sha256": "82abe408eb1fbaf13ffe26bafbcb1235e131f529781dc7a1057fb4ae0069182c",
+          "information_class_id": "ea65545bfb3c267586da2779ebf3c0edfeae36754fc82ee714de3d829f597ec6",
+          "observable_optimal_value": 83.85499999999999,
+          "table_identity_sha256": "4aa744c0ee723050655a26d4969486a5ce375e8de36a31c44f025df188a1ed8e",
           "task_id": "i3_3_structure_held_out_v2_0120"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "2a5483d9d46c7a775d732eb8e971c5797f49b75db8529613ec24be3096587bcb",
-          "observable_optimal_value": 27.924999999999994,
-          "table_identity_sha256": "82abe408eb1fbaf13ffe26bafbcb1235e131f529781dc7a1057fb4ae0069182c",
+          "information_class_id": "ea65545bfb3c267586da2779ebf3c0edfeae36754fc82ee714de3d829f597ec6",
+          "observable_optimal_value": 83.85499999999999,
+          "table_identity_sha256": "4aa744c0ee723050655a26d4969486a5ce375e8de36a31c44f025df188a1ed8e",
           "task_id": "i3_3_structure_held_out_v2_0121"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "0528122037f47c88f2941f072e00f185b7a3e65641bb21aa865cc9edde48063e",
+          "information_class_id": "80d67e78f36a1836e8ae85c40d5f7924d9522188e6593e8f99f6254b9388be20",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "6568f2b88bf05a5dbb6e81930d87c5816711b6460077ed8852381b8067370519",
+          "table_identity_sha256": "374264150a1963b8aa7fde20358312e1e24357fac1acecc78e809a35d39caeaa",
           "task_id": "i3_3_structure_held_out_v2_0122"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "19edfba53145917cfdeacf333fc977c6b572faaaa786647350b343c1523a8441",
+          "information_class_id": "d33b624f7e37c88a99ad1196e26de6628bf68aa623b3ca62e47ada42ec91c338",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "90924879a3e82f458d7668349e398f8c5577fc90b989aefc3749b7f3ed286ecc",
+          "table_identity_sha256": "4de638cf4c469da26d2870ad329d122bb9d5b33105b8c297f90e1de32353ec7b",
           "task_id": "i3_3_structure_held_out_v2_0123"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "8aa1e3f72d15032e0b057d14b82cc92e79ab4dd7475ae7db56ca477bb9597700",
+          "information_class_id": "f0d277fbbacea0a28f1d8c1cd2bed410d882cfd8fd0e5fc858b2f8907f77ae3c",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "02c2a5fe3d48bf22ff1ec5bbc3aec7499f0cfb08d9783ca09a336fc10e1065f4",
+          "table_identity_sha256": "466a53ad29864c38a2a0de627516b847f2ba33cab9c87c03dca2f0a0bebd219a",
           "task_id": "i3_3_structure_held_out_v2_0124"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "10d7bfd5055e439e0b0d7fa1d376dd4dff6db0a75a25b875cb56c6be54c6dd80",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "89299af4cda653e783eacb32b274b1270dad427ffcd872b6c5393f6d7cf1386e",
+          "information_class_id": "07146649521d0a46b93ffa39da629d45826466801ba14055b1f9e4d246da78fe",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "d93e7a4016bac71bb11b9fdfe654939e695033fc28cf67961d846ba0f4275e3b",
           "task_id": "i3_3_structure_held_out_v2_0125"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "7dfc47f6357432ca17d881d4fe3bd3863bfb41f3166e1e1ec7fe539f33736f69",
+          "information_class_id": "1d6046620afbc033ce9e90b7041a2b29301ad6cebbf7603ea8231d76b09a00e3",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "3999a548437d235ed2d0f7ca1d520bc492295c4b85080b44196406cd8933bc03",
+          "table_identity_sha256": "9948d514228068abe38448ef96b8879c8daad90dd6e96e38a4b9e549babc71a6",
           "task_id": "i3_3_structure_held_out_v2_0126"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "e471c8168654c1d7c1e8ea44d5cf01ecfb2a22f8566494b3a0c15202f02617a8",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "560711d5a0b40961afd1c00f40ccd612c41e60cd97612e93b94916ad121df9c8",
+          "information_class_id": "36d2db48e64c19219566667d9986fe411965faa5468a68aacc8f00277188ae5e",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "2d8f5d7391f5e0a12be01335022662ee99c0600ffde64f72ab6469a01b71c8a6",
           "task_id": "i3_3_structure_held_out_v2_0127"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "44cb489090e008df2232936f32c56ecd2361c361e35f988f075a20f2565038b6",
-          "observable_optimal_value": 27.919999999999995,
-          "table_identity_sha256": "2e65cc3ea152d428f46c69d10570a77eee8100f5a4d8c49defe8a4b3c11f2433",
+          "information_class_id": "9e4a27ee5a22bacf7c7959f2633dc0f7d9d5c9c66831d8a818d72e3a3cff1b39",
+          "observable_optimal_value": 83.84999999999998,
+          "table_identity_sha256": "da9823bdf4745a6a68a4867fa78cfa50bade25d92abc2c79feb97f6ce6cac801",
           "task_id": "i3_3_structure_held_out_v2_0128"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "44cb489090e008df2232936f32c56ecd2361c361e35f988f075a20f2565038b6",
-          "observable_optimal_value": 27.919999999999995,
-          "table_identity_sha256": "2e65cc3ea152d428f46c69d10570a77eee8100f5a4d8c49defe8a4b3c11f2433",
+          "information_class_id": "9e4a27ee5a22bacf7c7959f2633dc0f7d9d5c9c66831d8a818d72e3a3cff1b39",
+          "observable_optimal_value": 83.84999999999998,
+          "table_identity_sha256": "da9823bdf4745a6a68a4867fa78cfa50bade25d92abc2c79feb97f6ce6cac801",
           "task_id": "i3_3_structure_held_out_v2_0129"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "207d26fdd0bab11c8eec1ce095907849f21b1b9bab947cb7baf83a1d2b8efb80",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "e1c86046d801ab4fe4753729b8ff52ef61041c3df4da7b59c1d2d8c0d4b81124",
+          "information_class_id": "a6e50ef01f73d91dbf83b88101c97b9adb9a3774db15c4bb93666bd692f0c417",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "7910526dcb8eb1601da4503179e4ae31bc832f2cb930b4cbdf6ca9b6fa7ec118",
           "task_id": "i3_3_structure_held_out_v2_0130"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "152a8b37ca9e06b36f296284c8e8533053155d347f6befd0a1df3a908affd3eb",
+          "information_class_id": "fe92c2e10676ac83322e8aa3fbe20857c8824c356c61df54209f5af65d9c7395",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "751daf861ba748fad42eb946dbf3e3ca819591f0733a164cf96f61061dd8fb11",
+          "table_identity_sha256": "3c438cec72a507139e37287ff0bea4298bdc23d0d5697f4898269cd1b4789c12",
           "task_id": "i3_3_structure_held_out_v2_0131"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "b46f345a1b94f3c01b3a77f8166a379eb354c25f3aabe7cb863d5e4dbae51fae",
+          "information_class_id": "f870424e9dcb58735da48811bc7ec210c44b2114125a3d7f3b38b1146105fa03",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "f0920a004a835f970d94182072de2f9098fb533d8b2906ebdf7265a17d53c12c",
+          "table_identity_sha256": "59e532d1cd4de7b2e8a5636ca9fe3c369a6a0e7a612def9a3ba47d6365ea5aa5",
           "task_id": "i3_3_structure_held_out_v2_0132"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "6e9475feee4cff37b4afaf08520ce26b5a7f8d1e0f0caf94dde4bc8ae6c5c160",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "412e3aef43e61f85dc391c648ec7df2a5108fbec56a54d953fc10e460b789270",
+          "information_class_id": "a50bc4a6f0bfffe3faf29935509c1b9c52b73aa3f02bf9bc60ef842729130eba",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "26cf6927e2746f30e64a75e7c9a95acfd1a3114017430a1582f613b46b1c6a40",
           "task_id": "i3_3_structure_held_out_v2_0133"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "2935a461364eb821b7b3fee6cca4921e643efe81728a56e89499e8213bd8ffad",
-          "observable_optimal_value": 27.934999999999995,
-          "table_identity_sha256": "7b23d95f2f6a08054269a2fed92c2d6377bffbf8be300470cf606109fcc3a1a3",
+          "information_class_id": "9aaba55ccbfb70e3947178378f5406e9704125be0c1cda6fb147bbeffe8e7d7a",
+          "observable_optimal_value": 84.89999999999998,
+          "table_identity_sha256": "8c62ef7d1beade22b2d1f0a082f513ed1ab6306ba0602b1eab15f48afbbe4ea3",
           "task_id": "i3_3_structure_held_out_v2_0134"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "2935a461364eb821b7b3fee6cca4921e643efe81728a56e89499e8213bd8ffad",
-          "observable_optimal_value": 27.934999999999995,
-          "table_identity_sha256": "7b23d95f2f6a08054269a2fed92c2d6377bffbf8be300470cf606109fcc3a1a3",
+          "information_class_id": "9aaba55ccbfb70e3947178378f5406e9704125be0c1cda6fb147bbeffe8e7d7a",
+          "observable_optimal_value": 84.89999999999998,
+          "table_identity_sha256": "8c62ef7d1beade22b2d1f0a082f513ed1ab6306ba0602b1eab15f48afbbe4ea3",
           "task_id": "i3_3_structure_held_out_v2_0135"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "0b9d146620cb0186d8ecd5fb4481390e54e1b87b58cb0e7f645677822ffb02dc",
-          "observable_optimal_value": 27.924999999999994,
-          "table_identity_sha256": "72ff4358390f90a9d9aaf36f0e36d7d4394182f0a17e42342f23b6b209889377",
+          "information_class_id": "bb22ad63980efcd4ef62e446c969eb01cfdda74dc0b60daa3ee2b05703e5fd4c",
+          "observable_optimal_value": 83.85499999999998,
+          "table_identity_sha256": "901bbf256b92b4740d928124ca9ab4350bc27358352a82d01e678ff13049a3bd",
           "task_id": "i3_3_structure_held_out_v2_0136"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "0b9d146620cb0186d8ecd5fb4481390e54e1b87b58cb0e7f645677822ffb02dc",
-          "observable_optimal_value": 27.924999999999994,
-          "table_identity_sha256": "72ff4358390f90a9d9aaf36f0e36d7d4394182f0a17e42342f23b6b209889377",
+          "information_class_id": "bb22ad63980efcd4ef62e446c969eb01cfdda74dc0b60daa3ee2b05703e5fd4c",
+          "observable_optimal_value": 83.85499999999998,
+          "table_identity_sha256": "901bbf256b92b4740d928124ca9ab4350bc27358352a82d01e678ff13049a3bd",
           "task_id": "i3_3_structure_held_out_v2_0137"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "aa3105199aa7f97e2e71646ddbf31b2084a1b3c54926097d0a29c1a400b27242",
+          "information_class_id": "932a28a534516796471e9757dfe366ffe11dec28aa3c6ecac8405aaf6381a4f9",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "abadcc78b6fb401bcea8500e6c875cf04530b1ac2a28623d31ec0fa7472ba290",
+          "table_identity_sha256": "5ac3a307b323aeb3cdfa791eb9e5de21b57f62faa202375a21796e6628fe96bd",
           "task_id": "i3_3_structure_held_out_v2_0138"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "ce307b23cb31d075489ee5dc3212d89d0c5b861d6d8f4d3d19da2713031857c1",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "0676367c8905b9a21166f0e3a4109a1a928509bd77b71a35d6a1cf90392624b3",
+          "information_class_id": "b58c7ce5ce5311baaf7ddfd1bee02c17da8ac9cb9561df37d5e784a4881f3d7c",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "569941258bf833114380ca03a9290bdb3e74b0fa8f5533d2ce160862e8a8c450",
           "task_id": "i3_3_structure_held_out_v2_0139"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "919808ecaac0cb2abc1c6b1e3fb33c7826abd9d7e7f6702303337cdfd4788ec1",
+          "information_class_id": "daf52d6e4bfe574bf2ddc5c58a40016b9f21999bc1ad0c16918d47596d1ec8bc",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "e1380c772ea70adeeb55e48319bb1620f8cb5fc8ff2dcf918fcd8d04c465d2ac",
+          "table_identity_sha256": "15f3b247a2540330c69e8a5b8c9e19ba1f6cfcb495a07f9bfa0648acb44cd4d3",
           "task_id": "i3_3_structure_held_out_v2_0140"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "12170bb28716c68c2d473440068d300b4aa33c1339a68de57873fefb0b688f9e",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "c37c7590ee7a5744e39f11760c0e9ff0cee33619f63cd01524867383e2b31792",
+          "information_class_id": "51e056f4bc2b3628fe53c8b68af9bb194bedcc7cd3acca683bc556f78e72ca22",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "4d6f88faa428b7d86578c1b8c6f994af4564147508d96b112da26f5ce8bfa83c",
           "task_id": "i3_3_structure_held_out_v2_0141"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "644cd638808f39c1b398c2de1140c98787f4e39d8df7a9fb8d71fe17db0da1e0",
-          "observable_optimal_value": 27.919999999999995,
-          "table_identity_sha256": "1e61f5a0c4b8ac0c4d1345d6831087805d4f40ed093b38ca8d9a8b7d45b8bbb4",
+          "information_class_id": "0d388210fcea3de2b4c4d5ff6b867f3ef02c044e17eb32686fbf717b8ed9f394",
+          "observable_optimal_value": 83.84999999999998,
+          "table_identity_sha256": "b381cae57fb0505ec9ad57ad689e72c0c01d9a49dc97c2c586e33973be041520",
           "task_id": "i3_3_structure_held_out_v2_0142"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "644cd638808f39c1b398c2de1140c98787f4e39d8df7a9fb8d71fe17db0da1e0",
-          "observable_optimal_value": 27.919999999999995,
-          "table_identity_sha256": "1e61f5a0c4b8ac0c4d1345d6831087805d4f40ed093b38ca8d9a8b7d45b8bbb4",
+          "information_class_id": "0d388210fcea3de2b4c4d5ff6b867f3ef02c044e17eb32686fbf717b8ed9f394",
+          "observable_optimal_value": 83.84999999999998,
+          "table_identity_sha256": "b381cae57fb0505ec9ad57ad689e72c0c01d9a49dc97c2c586e33973be041520",
           "task_id": "i3_3_structure_held_out_v2_0143"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "df7822c6019a6ee223b19feb72eea4561ed06bf040e8a286823a3d56f24b68ca",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "48d0d2fe5d26c843623c501a44b53242fe87a2af7ad7c92f08cb24f6f738b912",
+          "information_class_id": "8d98bac2b285eafd7b3a866fd81ade92a27222da18679d9aaf8b99e54076ecb9",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "a232906fa884f4ef75f7c431c12097685544979daf904bf1e29784bccdddff14",
           "task_id": "i3_3_structure_held_out_v2_0144"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "17b6e5db9ad5e609a03976cdfcaf9465ef9f31f5c69a18499e264a92fa7f62b5",
+          "information_class_id": "ce988d87cde4f293562d4da2f1fb67359d752171ecd02d6185078a636b7b1d03",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "8dbe9973ddee8e8cc2c920a3df8a7f1b3bf1b0c05bbda68908a01adde4ecbd5d",
+          "table_identity_sha256": "79d779b0f59827f01e8f57b17a9592b19193dd3d3f20002e328eb3665d97d932",
           "task_id": "i3_3_structure_held_out_v2_0145"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "8e8a66673f0b240fe27b0788b6ce2a42e15296ddd6cb9538e5761c6cd73a6a25",
+          "information_class_id": "70ac06275e6538f986716645d018e9f3b0cf7fa41175669c2826c78b194ea276",
           "observable_optimal_value": 99.89,
-          "table_identity_sha256": "1f70285c421a550e0690ec5e33f43631ff57cf0cc244b60e18189836b7f551b0",
+          "table_identity_sha256": "9e74728f8637263b2b8fc1d5a9bce67b99d3f57efe53fd9418aa90a0a541a9e1",
           "task_id": "i3_3_structure_held_out_v2_0146"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "ce6a9539a62276eb1f0db9c6d6d90880a7f51c022ed5c305681312af1d257d93",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "51bd7d6405ff5d5de59ae0aec48d5bbeee735112fee1c2193d798f1e5fd7b169",
+          "information_class_id": "bf094705278acc05896a6976182cf834ad008139c586e1256391b99423c7cffe",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "55f80e5ba0c28e0f770780d6f375985c53160ceffaf072845aceb38151ae2be3",
           "task_id": "i3_3_structure_held_out_v2_0147"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "f2271e4f3d4014fe9cf44e67d7cee244104f565dc5985543b8fbc8779af8ca0b",
-          "observable_optimal_value": 27.919999999999998,
-          "table_identity_sha256": "d39ed67d486de206df0ffab632ee2fa1a5380989e32491e5f9e6887aad858516",
+          "information_class_id": "55896bb739104fdeee896063041388a04d745be8e20a8dcee1e262334ffe8d56",
+          "observable_optimal_value": 84.88499999999999,
+          "table_identity_sha256": "e6cbb7c004beafe6b2031b096281b35129588c3ca57e98b244311585a60c5efd",
           "task_id": "i3_3_structure_held_out_v2_0148"
         },
         {
           "condition": "STATE_AWARE_CONTROLLER",
-          "information_class_id": "f2271e4f3d4014fe9cf44e67d7cee244104f565dc5985543b8fbc8779af8ca0b",
-          "observable_optimal_value": 27.919999999999998,
-          "table_identity_sha256": "d39ed67d486de206df0ffab632ee2fa1a5380989e32491e5f9e6887aad858516",
+          "information_class_id": "55896bb739104fdeee896063041388a04d745be8e20a8dcee1e262334ffe8d56",
+          "observable_optimal_value": 84.88499999999999,
+          "table_identity_sha256": "e6cbb7c004beafe6b2031b096281b35129588c3ca57e98b244311585a60c5efd",
           "task_id": "i3_3_structure_held_out_v2_0149"
         }
       ],
@@ -4845,13 +4845,13 @@
         "i3_3_structure_held_out_v2_0148",
         "i3_3_structure_held_out_v2_0149"
       ],
-      "view_sha256": "7134fa2fa0beae19c2da2335e21457cbedb23246fc18b8a53a268e8ab6f8687d"
+      "view_sha256": "ffe545bca6a40962c3e18aa7f1055ad896fea0940e4073aae256f3bd66384aed"
     },
     {
       "condition": "STATE_BLIND_CONTROLLER",
-      "latent_oracle_table_sha256": "c10789ba400c66c8b66d6cc9fe93b65438c92d33f057c0a24e18abe654593660",
+      "latent_oracle_table_sha256": "003a8ac9a32742e8c427dcbc663dece3265785a27f2f865f16de6c216f00c7c2",
       "observable_optimal_value": 57.2237,
-      "observable_oracle_set_sha256": "a4bbc0b9414f74c7111604be793785135d6e740bd847819389c27118719ee05a",
+      "observable_oracle_set_sha256": "229b6a065a80d30002392235cf83771fc4f3e9533c8a986519a8775a7da1edf4",
       "schema": "DAPH_V2B_I3_5_OBSERVABLE_ORACLE_VIEW_V2",
       "schema_version": 2,
       "split_name": "structure_dev_v2",
@@ -7260,13 +7260,13 @@
         "i3_3_structure_dev_v2_0298",
         "i3_3_structure_dev_v2_0299"
       ],
-      "view_sha256": "32040da1956239324c6c4d292b0c45d1bc61b1476ef37e88146584b3ac166549"
+      "view_sha256": "b25c69ea29382f7dd1886b61e2cc8aba54066a7563ee28fd8abe4f530e15c357"
     },
     {
       "condition": "STATE_BLIND_CONTROLLER",
-      "latent_oracle_table_sha256": "c10789ba400c66c8b66d6cc9fe93b65438c92d33f057c0a24e18abe654593660",
+      "latent_oracle_table_sha256": "003a8ac9a32742e8c427dcbc663dece3265785a27f2f865f16de6c216f00c7c2",
       "observable_optimal_value": 47.806799999999996,
-      "observable_oracle_set_sha256": "a4bbc0b9414f74c7111604be793785135d6e740bd847819389c27118719ee05a",
+      "observable_oracle_set_sha256": "229b6a065a80d30002392235cf83771fc4f3e9533c8a986519a8775a7da1edf4",
       "schema": "DAPH_V2B_I3_5_OBSERVABLE_ORACLE_VIEW_V2",
       "schema_version": 2,
       "split_name": "structure_validation_v2",
@@ -8475,13 +8475,13 @@
         "i3_3_structure_validation_v2_0148",
         "i3_3_structure_validation_v2_0149"
       ],
-      "view_sha256": "7af7dfefed41b8a7a3ff0b659078050d9852875501b59eaefc5c42173fd82f41"
+      "view_sha256": "eb4a486e5766e213116140e4054810d0d60c62e1fcd12561400c5aa113ef7acd"
     },
     {
       "condition": "STATE_BLIND_CONTROLLER",
-      "latent_oracle_table_sha256": "c10789ba400c66c8b66d6cc9fe93b65438c92d33f057c0a24e18abe654593660",
-      "observable_optimal_value": 47.6402,
-      "observable_oracle_set_sha256": "a4bbc0b9414f74c7111604be793785135d6e740bd847819389c27118719ee05a",
+      "latent_oracle_table_sha256": "003a8ac9a32742e8c427dcbc663dece3265785a27f2f865f16de6c216f00c7c2",
+      "observable_optimal_value": 59.389466666666664,
+      "observable_oracle_set_sha256": "229b6a065a80d30002392235cf83771fc4f3e9533c8a986519a8775a7da1edf4",
       "schema": "DAPH_V2B_I3_5_OBSERVABLE_ORACLE_VIEW_V2",
       "schema_version": 2,
       "split_name": "structure_held_out_v2",
@@ -8489,1052 +8489,1052 @@
       "task_entries": [
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "563bd93af9bfd8be5502fe7015d73675c661f1fd328fdf9581c735b59db78348",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "0a1da098fa60ad1531c736ca4f8e4d3623ef2ad310a9ea79e420f74dfcc401a3",
+          "information_class_id": "5874e5dba2e6072142f5ca5fabba5bbbabc15bbb5ce0c2995e13098d1c80fbc7",
+          "observable_optimal_value": 91.27499999999999,
+          "table_identity_sha256": "e231794f1efa73786307476fbb9fc6df22fecffe886af2c2684b0e5d22124c88",
           "task_id": "i3_3_structure_held_out_v2_0000"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "563bd93af9bfd8be5502fe7015d73675c661f1fd328fdf9581c735b59db78348",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "0a1da098fa60ad1531c736ca4f8e4d3623ef2ad310a9ea79e420f74dfcc401a3",
+          "information_class_id": "5874e5dba2e6072142f5ca5fabba5bbbabc15bbb5ce0c2995e13098d1c80fbc7",
+          "observable_optimal_value": 91.27499999999999,
+          "table_identity_sha256": "e231794f1efa73786307476fbb9fc6df22fecffe886af2c2684b0e5d22124c88",
           "task_id": "i3_3_structure_held_out_v2_0001"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "492069986c34be10103936023a3716e435741639da30a7782744118ef84fb4d5",
-          "observable_optimal_value": 23.044999999999998,
-          "table_identity_sha256": "3b2a322b85a94ab1524bcf69f706ab342bcce9a6b66045a00f88fdad513e3150",
+          "information_class_id": "9294d43c260fc09a43f5b8686b78ad2c00ee2476c6e11b7dc5dea967a587a9b1",
+          "observable_optimal_value": 20.905,
+          "table_identity_sha256": "9c45a14446c6c46b56cf0972c6ac3ddfb2cb73f9782681cc96925001316cc63b",
           "task_id": "i3_3_structure_held_out_v2_0002"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "492069986c34be10103936023a3716e435741639da30a7782744118ef84fb4d5",
-          "observable_optimal_value": 23.044999999999998,
-          "table_identity_sha256": "3b2a322b85a94ab1524bcf69f706ab342bcce9a6b66045a00f88fdad513e3150",
+          "information_class_id": "9294d43c260fc09a43f5b8686b78ad2c00ee2476c6e11b7dc5dea967a587a9b1",
+          "observable_optimal_value": 20.905,
+          "table_identity_sha256": "9c45a14446c6c46b56cf0972c6ac3ddfb2cb73f9782681cc96925001316cc63b",
           "task_id": "i3_3_structure_held_out_v2_0003"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "4db2b055dd5a7a614a486b2d302e21351c09d84c5319676b9f33c6beac01a235",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "39008ebf31f45f9c11ea5a7a0c3bf7d61bb78fdf11e944ab06a2d9aa587cb7e7",
+          "information_class_id": "c7d2ab65730346653ece1a62411fdaa1fe9d1441d0a20d6f0b0922deb7212a9d",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "bbe2f7fb5cb1c03ea8ed0570ac46c33d515eeb35a8cbd0679adafcd618e0d6d0",
           "task_id": "i3_3_structure_held_out_v2_0004"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "1223db8787a3ca102140924002d4ac52e58f4907af0d492d474feeb451221484",
+          "information_class_id": "0f0a3b81c06326d339f72d4cdb81088fdb6542be179286f786c4f82516cc8572",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "65418c2ee69722997ade9bf84c281aadbfa95ca7a6ed0ca2fcb746a1653a1d2d",
+          "table_identity_sha256": "c103b488dc4fec3712ca57e6cda561eaef318ac06a9521745818b4e939dfc4d1",
           "task_id": "i3_3_structure_held_out_v2_0005"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "9bd36ee996d82d6b9b97dba19c81102886f8a272c8288361a6c3324496b8e887",
-          "observable_optimal_value": 93.94999999999999,
-          "table_identity_sha256": "22b6b5d7f86465ec4e0c89d1c62321c9db77f6be4a1901b0bb4a0a806c8b4810",
+          "information_class_id": "724d32cd380d19857c8d0b499c510a1fc8f7667250ecd0d7b0bb80047dab4080",
+          "observable_optimal_value": 92.875,
+          "table_identity_sha256": "8935a435282d865ac4c59cc6b791726de8c6378b6758d8efed740a64a18e2cf6",
           "task_id": "i3_3_structure_held_out_v2_0006"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "9bd36ee996d82d6b9b97dba19c81102886f8a272c8288361a6c3324496b8e887",
-          "observable_optimal_value": 93.94999999999999,
-          "table_identity_sha256": "22b6b5d7f86465ec4e0c89d1c62321c9db77f6be4a1901b0bb4a0a806c8b4810",
+          "information_class_id": "724d32cd380d19857c8d0b499c510a1fc8f7667250ecd0d7b0bb80047dab4080",
+          "observable_optimal_value": 92.875,
+          "table_identity_sha256": "8935a435282d865ac4c59cc6b791726de8c6378b6758d8efed740a64a18e2cf6",
           "task_id": "i3_3_structure_held_out_v2_0007"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "476a7631091f37fbb006b705c8be9c4506dafa00009f24732886e60e623b1e1b",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "d1ae70967a2af2346e01b88b9929074ae99d8df19615a45953cd77bc6de18e9a",
+          "information_class_id": "829394f15864866aed4eef89284caaf3f0a91ec10407e295392eb68161ee5c59",
+          "observable_optimal_value": 19.875000000000004,
+          "table_identity_sha256": "498e19f058536087c2409758a3e60ab9a46d55e0c2f87d5a1f3c3ddda6816e36",
           "task_id": "i3_3_structure_held_out_v2_0008"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "476a7631091f37fbb006b705c8be9c4506dafa00009f24732886e60e623b1e1b",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "d1ae70967a2af2346e01b88b9929074ae99d8df19615a45953cd77bc6de18e9a",
+          "information_class_id": "829394f15864866aed4eef89284caaf3f0a91ec10407e295392eb68161ee5c59",
+          "observable_optimal_value": 19.875000000000004,
+          "table_identity_sha256": "498e19f058536087c2409758a3e60ab9a46d55e0c2f87d5a1f3c3ddda6816e36",
           "task_id": "i3_3_structure_held_out_v2_0009"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "04021c55810b62c916aeae4626a6d5a3b01b056cefd8b9e1e221c2cacfa2ce30",
+          "information_class_id": "87e5517a73a4b7ba752b91913c45f0b7da0f6c983b3e3a49e1e0c4a9bf91a249",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "f9707e21c8128bae7df0a541bbd06a05f4d61e414d10ca4c4ca9aafe0fdb62c6",
+          "table_identity_sha256": "1c84d08c098d1945bbefc47834474acc57f1765a6fe71943886ba9534c0ed455",
           "task_id": "i3_3_structure_held_out_v2_0010"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "b46c18ad7984b4dc5e7c66315b99d2ba556d6ab7a58758f346d55d3c0a583be8",
+          "information_class_id": "c8a76a5f4bb3a5345d13f1647fdac98375d8290e218243d3351cbc92a6435b1c",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "5c5f6ff78498ab73da1c22f5a385b1f576eceeb54b5e868fabd388bfccdcec21",
+          "table_identity_sha256": "77ff823b2699ba75f8e6749e8d506bb0aaad9b4e421ba733f35abb69c833cd89",
           "task_id": "i3_3_structure_held_out_v2_0011"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "bc4f2aa10df25f6bec947e0f721763200525eecb7deee95501939c1b3bf7f0bc",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "edcd314792a9e11624766bad0027a393888e7bd3b046ae4a959efaf04dde12a5",
+          "information_class_id": "4bef4695fb0f8e55d4056fa68210e5f5a059a6c39e7c1a7d09f42d3263ac0716",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "5422a3fc8aae4b40122ff448bc1ee800e9e2f57ca8d02ea196c24bc24fb21e10",
           "task_id": "i3_3_structure_held_out_v2_0012"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "66b2fab210112e3921041ab56cf753bee4e6b0a9e1d40bef6fc74ba2d539e214",
+          "information_class_id": "a9e8201a2f67ef4b50f17fbadfeba073e178529d98a435445205b623678e26c0",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "7d2eca528c712f7ce08d49928f87cfe4f94a56c7b09e8baee7260dc80055a1c0",
+          "table_identity_sha256": "8d5767d61a6c934e00f96f1ffcbc64e30ff4ad3de59af82f3a2fdb96cff0f458",
           "task_id": "i3_3_structure_held_out_v2_0013"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "746502ff37229a75f3ad5e936c78e02cf79e26e141ec7fb566d080be8effa820",
-          "observable_optimal_value": 93.94999999999999,
-          "table_identity_sha256": "df9ef0b6f2412af58631b6fc18e1f1fbb83e5b4503159f3780e5d2765eb064f4",
+          "information_class_id": "24d44693aa86610c0a8a5c73fc82312709a6eeb84d227c64c8a35bf5d20bef0f",
+          "observable_optimal_value": 92.875,
+          "table_identity_sha256": "97043f3c07b4ac5942565229d1491fa65dafb5951522c0ed2eddf98ed898cc84",
           "task_id": "i3_3_structure_held_out_v2_0014"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "746502ff37229a75f3ad5e936c78e02cf79e26e141ec7fb566d080be8effa820",
-          "observable_optimal_value": 93.94999999999999,
-          "table_identity_sha256": "df9ef0b6f2412af58631b6fc18e1f1fbb83e5b4503159f3780e5d2765eb064f4",
+          "information_class_id": "24d44693aa86610c0a8a5c73fc82312709a6eeb84d227c64c8a35bf5d20bef0f",
+          "observable_optimal_value": 92.875,
+          "table_identity_sha256": "97043f3c07b4ac5942565229d1491fa65dafb5951522c0ed2eddf98ed898cc84",
           "task_id": "i3_3_structure_held_out_v2_0015"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "aa744df18451352b4b3c7f549ac5bb92edeedb2fff383a9ff09542fdfb4cd325",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "82fb4788f6c4654da0b6c9a6f6706b5a04801c415106c36848e2e4585ace6dac",
+          "information_class_id": "186b915d5a48919ad50c4f6ac8258816c1596dc2c57c88b4f6cffb95c7d02bd1",
+          "observable_optimal_value": 18.795000000000005,
+          "table_identity_sha256": "906817b436656fc7257739eae21d3659e49ed70e10e92fb55e47ce989996a3a9",
           "task_id": "i3_3_structure_held_out_v2_0016"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "aa744df18451352b4b3c7f549ac5bb92edeedb2fff383a9ff09542fdfb4cd325",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "82fb4788f6c4654da0b6c9a6f6706b5a04801c415106c36848e2e4585ace6dac",
+          "information_class_id": "186b915d5a48919ad50c4f6ac8258816c1596dc2c57c88b4f6cffb95c7d02bd1",
+          "observable_optimal_value": 18.795000000000005,
+          "table_identity_sha256": "906817b436656fc7257739eae21d3659e49ed70e10e92fb55e47ce989996a3a9",
           "task_id": "i3_3_structure_held_out_v2_0017"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "d35bfd8d25fc70a8026a2cd99730e2978bf7363eaaa3f1711f98cb2be45b3d59",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "304876717c56886bd05b13bad033674c65745f1a29ecf834f9f32eb8f7e3f449",
+          "information_class_id": "38b02199c0365ea6878a19996680bd4233def626c606c633bb023b14e92ddfcf",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "c663d5ae38a01ccaaacbeb8e1a7c972665a0302545734d7b109d412437a96a5f",
           "task_id": "i3_3_structure_held_out_v2_0018"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "81a953b08f63e6b5dae7dcdd9f9fe4aa46b2688ba40be0c3589c16e811759983",
+          "information_class_id": "f2ff839f499894bc3ce69ccb8712884815634c709a140a2e99c6e2d1458c632b",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "5a8a7d1da705b127cc2ad38fad9cfd867f3dc0f7d121251498c939e2d5c7aea7",
+          "table_identity_sha256": "c5342b5af806d3ca698bec3b3b01e985ce973d441c57041e15b3205b801ea8b3",
           "task_id": "i3_3_structure_held_out_v2_0019"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "c2f79705c31d5f8ec92da76438455bb1448d2dbf9c9d9c1c6126231449e53954",
-          "observable_optimal_value": 93.94,
-          "table_identity_sha256": "9fe42cbef5eb755561f0a28848ec73ad85646a4b057f55aaa4cd9984fa72691a",
+          "information_class_id": "dfb6b2d60bd0b8ef91e02719c91abe7da913922df4f3ad4080e360e7687d8cc2",
+          "observable_optimal_value": 92.87,
+          "table_identity_sha256": "804cc37b60fffa6ee705dff0b26303084a21d15cb502ccbfa928da160ab66b88",
           "task_id": "i3_3_structure_held_out_v2_0020"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "c2f79705c31d5f8ec92da76438455bb1448d2dbf9c9d9c1c6126231449e53954",
-          "observable_optimal_value": 93.94,
-          "table_identity_sha256": "9fe42cbef5eb755561f0a28848ec73ad85646a4b057f55aaa4cd9984fa72691a",
+          "information_class_id": "dfb6b2d60bd0b8ef91e02719c91abe7da913922df4f3ad4080e360e7687d8cc2",
+          "observable_optimal_value": 92.87,
+          "table_identity_sha256": "804cc37b60fffa6ee705dff0b26303084a21d15cb502ccbfa928da160ab66b88",
           "task_id": "i3_3_structure_held_out_v2_0021"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "df6bdb4ec7321b7dd1d8dafe5684c2bf8efd23dd8180d74303e9064ce34b7d34",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "814a89a03aa4d23bf782fa23431f480b4d36d7cf49ba3ad3836286cccff784ac",
+          "information_class_id": "e0314858d25629a8ee354cf1d68b9c92d122c2ae3fe0986f1c5f010f40a9a159",
+          "observable_optimal_value": 82.78999999999998,
+          "table_identity_sha256": "d106241b712bea622728125640efba38fcbdd45b28473fd83422bfb1edcfe553",
           "task_id": "i3_3_structure_held_out_v2_0022"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "df6bdb4ec7321b7dd1d8dafe5684c2bf8efd23dd8180d74303e9064ce34b7d34",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "814a89a03aa4d23bf782fa23431f480b4d36d7cf49ba3ad3836286cccff784ac",
+          "information_class_id": "e0314858d25629a8ee354cf1d68b9c92d122c2ae3fe0986f1c5f010f40a9a159",
+          "observable_optimal_value": 82.78999999999998,
+          "table_identity_sha256": "d106241b712bea622728125640efba38fcbdd45b28473fd83422bfb1edcfe553",
           "task_id": "i3_3_structure_held_out_v2_0023"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "6dc773fda07da0e54e21a702e8879b7df1659614495bd898f706c52595946b4e",
+          "information_class_id": "9f0d855ef9c675482151afb4d58761b619927eade21d96d3b086d8c2fec53af3",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "57c01130d9c122bc3e05e12bae1bfeb5474c2ba4e5987bb0f52675f916536719",
+          "table_identity_sha256": "9fce6d014e0442f6051d83e3d44713cb3d3d65d9d79d2d73b0c55ec0a5bad2bd",
           "task_id": "i3_3_structure_held_out_v2_0024"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "dd6a79b9852f23352ab3a4d2ed16a1927b016c3fdfc51690ec7348fd04adfd45",
+          "information_class_id": "13ec096af18b2b886b3fcc3533c2d97cc749ffa33cd1636c238b31403ad31a58",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "878f158075232cd528744e828cd8a7fbdff02273d4482db6e7e83980fe6381ca",
+          "table_identity_sha256": "a3373afc03da6f85269791f62a540317c1c45017f10d1e021b816dd9908b1fc6",
           "task_id": "i3_3_structure_held_out_v2_0025"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "2f455a455fde6d0084ffcdc6f8abb3245366ba44f137c482720edf03425c461e",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "37eebbe14dcc7f84b81ee85871d7893e1199610526929f768e978190488a504d",
+          "information_class_id": "429dcd7ca7c26e6a560c2139b4df15b07fe958cf65a1427551036362fa28b850",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "1e3f46c457f369a3447d09ed5b1adb54fda29dfaf59e52611f136d2f1fd03928",
           "task_id": "i3_3_structure_held_out_v2_0026"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "987e7e72e4a0a078ab47d6ddbfaa0fc5bbc8f0123c971ddc01ebffd618edd4d5",
+          "information_class_id": "296470208e1cc92d85e12ac1e9962ef4d6a58dd0111648fd71ab4b8594c50e69",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "40eee30cd6a1f18c529808b293c88d23ff94f10d2d123c31d3900a98d5b36248",
+          "table_identity_sha256": "80cc01bc30d204c47ff821bd96abf4958eed43caa69979ca9be5567af81f976c",
           "task_id": "i3_3_structure_held_out_v2_0027"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "ae1d0eb9e2ce63951abe5823ebe406807802eeaa7a8ab6198f04c31237e9d65e",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "83c850f5840d5297c2181eb5e44fa1f7c3be58be67e2ab9abf31bf4192421a67",
+          "information_class_id": "55c640e83d0b664e6fbd9eb59b10ce6f54473919adcb1ef3824353e5781626d4",
+          "observable_optimal_value": 91.78999999999999,
+          "table_identity_sha256": "5741c529b01776547ddbadf8d276d675cce59d59b087959cf7bdeb42d622abf6",
           "task_id": "i3_3_structure_held_out_v2_0028"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "ae1d0eb9e2ce63951abe5823ebe406807802eeaa7a8ab6198f04c31237e9d65e",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "83c850f5840d5297c2181eb5e44fa1f7c3be58be67e2ab9abf31bf4192421a67",
+          "information_class_id": "55c640e83d0b664e6fbd9eb59b10ce6f54473919adcb1ef3824353e5781626d4",
+          "observable_optimal_value": 91.78999999999999,
+          "table_identity_sha256": "5741c529b01776547ddbadf8d276d675cce59d59b087959cf7bdeb42d622abf6",
           "task_id": "i3_3_structure_held_out_v2_0029"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "883b459cd7a70f3f5d07987c256f79090adc15e07555f62a59740f1bdff7a14d",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "8e91e7959b241454e10c731f67e4af0516bf0cee0f20e9929962a898e40221d8",
+          "information_class_id": "2b30f998937f16527bc064afd44d0662f7fd9627f83556f319280315eaa90b70",
+          "observable_optimal_value": 83.80999999999999,
+          "table_identity_sha256": "6dbc81112d691ec1af55afc0242ea07eebb00289eaec5fcf8bd96ae370d37879",
           "task_id": "i3_3_structure_held_out_v2_0030"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "883b459cd7a70f3f5d07987c256f79090adc15e07555f62a59740f1bdff7a14d",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "8e91e7959b241454e10c731f67e4af0516bf0cee0f20e9929962a898e40221d8",
+          "information_class_id": "2b30f998937f16527bc064afd44d0662f7fd9627f83556f319280315eaa90b70",
+          "observable_optimal_value": 83.80999999999999,
+          "table_identity_sha256": "6dbc81112d691ec1af55afc0242ea07eebb00289eaec5fcf8bd96ae370d37879",
           "task_id": "i3_3_structure_held_out_v2_0031"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "a7b8d474297400177b34817f76b10b999d82d09b6b91fe66fdc72fbbf28e1c74",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "b5acf3e17cff7d86d1a5d79a7bd2d7e40385bdac1d32b4b4192cace746dffdc2",
+          "information_class_id": "69aaa9b103de9f06ddef74d6b41afd8b590c3cf759b5a9b8f5e72dabc1acc196",
+          "observable_optimal_value": 84.92999999999998,
+          "table_identity_sha256": "8a20eb703da39b4eee21eeb12133914a99e3a394d745777cade6d50f2a12a539",
           "task_id": "i3_3_structure_held_out_v2_0032"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "1f6022d3adc84422c41c10b2323d5313c518484b1cbb025fe90be431241ef0d9",
+          "information_class_id": "3fac6137312b7475594ac683b9858ffec77f701fe50419eba78fa9f53518de41",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "9086393abca7bb21bd87da4d02114fdf8fcb9afde966875d0d7c56a13d15de41",
+          "table_identity_sha256": "13901475150edf37977dec467c627ac33dfc66d788b7c1fb7a580d0fb42c4237",
           "task_id": "i3_3_structure_held_out_v2_0033"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "a13387ec89c18503f5806d6777503a0f79dc99fa2e7d71780cfdbe9c454fb7bd",
-          "observable_optimal_value": 22.025000000000002,
-          "table_identity_sha256": "709dc50055a7f4495e5e0854a7d9d6624df5b116c4887ec01f7eb89c5ba34ee6",
+          "information_class_id": "a08954766b1f34a0d2166a893d3432aab98f533908eca95e8e5ae4b66fa37f3c",
+          "observable_optimal_value": 82.76999999999998,
+          "table_identity_sha256": "ef33d8a8c655bf1f8f772465605e19db39d9f5192a5834e593904269e5d76b48",
           "task_id": "i3_3_structure_held_out_v2_0034"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "a13387ec89c18503f5806d6777503a0f79dc99fa2e7d71780cfdbe9c454fb7bd",
-          "observable_optimal_value": 22.025000000000002,
-          "table_identity_sha256": "709dc50055a7f4495e5e0854a7d9d6624df5b116c4887ec01f7eb89c5ba34ee6",
+          "information_class_id": "a08954766b1f34a0d2166a893d3432aab98f533908eca95e8e5ae4b66fa37f3c",
+          "observable_optimal_value": 82.76999999999998,
+          "table_identity_sha256": "ef33d8a8c655bf1f8f772465605e19db39d9f5192a5834e593904269e5d76b48",
           "task_id": "i3_3_structure_held_out_v2_0035"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "56443f8c830d0575e6ef4c6970352091fd6014d9cbe43a48a9076e2dcc97acb5",
-          "observable_optimal_value": 23.044999999999998,
-          "table_identity_sha256": "e47b59dc921766e7f3de489a8d698b6567ef8ad5adf52308df044e41607b6143",
+          "information_class_id": "40eb13dcb3bc14827d1ef625757643f25195d2edc6f21bdb2ef300f226176693",
+          "observable_optimal_value": 19.825000000000003,
+          "table_identity_sha256": "465ba0c13913f23959e2f0d723ec5574c888913a15dbf2bf39cc7b5e88d3d6e6",
           "task_id": "i3_3_structure_held_out_v2_0036"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "56443f8c830d0575e6ef4c6970352091fd6014d9cbe43a48a9076e2dcc97acb5",
-          "observable_optimal_value": 23.044999999999998,
-          "table_identity_sha256": "e47b59dc921766e7f3de489a8d698b6567ef8ad5adf52308df044e41607b6143",
+          "information_class_id": "40eb13dcb3bc14827d1ef625757643f25195d2edc6f21bdb2ef300f226176693",
+          "observable_optimal_value": 19.825000000000003,
+          "table_identity_sha256": "465ba0c13913f23959e2f0d723ec5574c888913a15dbf2bf39cc7b5e88d3d6e6",
           "task_id": "i3_3_structure_held_out_v2_0037"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "fc1f1a1578b69ff08e0d979840f6adc2bd84dab924d71eafdc7cfd4b37b83738",
-          "observable_optimal_value": 73.065,
-          "table_identity_sha256": "cdc24ba51e25b97ae3e99339c22785593301d08d6b0ada6b0c283205af970b20",
+          "information_class_id": "89066f6d9ba00500c04865d1eb32523aa610f40a7bc45e6a8c478f600d6fbe41",
+          "observable_optimal_value": 70.91499999999999,
+          "table_identity_sha256": "f5108ed4ac384df7a7d00afa56afa665d1c14c94cb11085c843e3f10867f33ee",
           "task_id": "i3_3_structure_held_out_v2_0038"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "fc1f1a1578b69ff08e0d979840f6adc2bd84dab924d71eafdc7cfd4b37b83738",
-          "observable_optimal_value": 73.065,
-          "table_identity_sha256": "cdc24ba51e25b97ae3e99339c22785593301d08d6b0ada6b0c283205af970b20",
+          "information_class_id": "89066f6d9ba00500c04865d1eb32523aa610f40a7bc45e6a8c478f600d6fbe41",
+          "observable_optimal_value": 70.91499999999999,
+          "table_identity_sha256": "f5108ed4ac384df7a7d00afa56afa665d1c14c94cb11085c843e3f10867f33ee",
           "task_id": "i3_3_structure_held_out_v2_0039"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "e384c9e270789ccfbd7dd6a026baef149d77dedcdac0456ad60a0a944b67c252",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "7a0fb9587acf7b5910a171d44c788f2aadb2da4cdcb9af17c39577b56abbf409",
+          "information_class_id": "7736bfb8aa70180358e6bdf423c1323a736cc6f44b8538030ebfe9ee7b45037c",
+          "observable_optimal_value": 84.92999999999998,
+          "table_identity_sha256": "762aeb0369017602aaa184822d07c92eafbe572e3d648083cc55aac88b09dfb0",
           "task_id": "i3_3_structure_held_out_v2_0040"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "72e513058988a5f4926dd1ee6921791798886650d94127ddadde10fa34cf0991",
+          "information_class_id": "c3cd9fce12e0c78f975d33419ef28eb11cc65896b074e6fd6fc4b494cb4a2712",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "84004f967b177d39c8ad3e2dad13d3fe4bd5490477cfbcdf44afee9ee3fed525",
+          "table_identity_sha256": "ae75f0ff664724b26fe588b9b15bd742b31491181d20ef62bc6eb2b1ccc5252f",
           "task_id": "i3_3_structure_held_out_v2_0041"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "0bd92cec9e732297dffc78be44a66c60b03e76a7a93c93562ae4e2a76d6a343c",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "3e28728aeec1ac1700a9afecc8a775ea2e4588de90a2588d67245d256c1a6a49",
+          "information_class_id": "0755f40ac0644019812b4e0c276029ec3d086dff55b84c6d95fc65058d5f9481",
+          "observable_optimal_value": 91.79499999999999,
+          "table_identity_sha256": "9cdbb1cdf0263a0163a320891521c6fe2ac2dddd3029c2083a7f65dda973fb38",
           "task_id": "i3_3_structure_held_out_v2_0042"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "0bd92cec9e732297dffc78be44a66c60b03e76a7a93c93562ae4e2a76d6a343c",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "3e28728aeec1ac1700a9afecc8a775ea2e4588de90a2588d67245d256c1a6a49",
+          "information_class_id": "0755f40ac0644019812b4e0c276029ec3d086dff55b84c6d95fc65058d5f9481",
+          "observable_optimal_value": 91.79499999999999,
+          "table_identity_sha256": "9cdbb1cdf0263a0163a320891521c6fe2ac2dddd3029c2083a7f65dda973fb38",
           "task_id": "i3_3_structure_held_out_v2_0043"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "aab9e18ecc0d16bc81b511b0491ba09e7c711e696e07244a29b1a930c2537dd9",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "341f4acfce98474e77da859ad437a1992971b4f774a3c6902cc092da572f631e",
+          "information_class_id": "7364dff94750fca3b21031de0cc16738a3865805a2ae036657e38f979993b5c5",
+          "observable_optimal_value": 20.915000000000003,
+          "table_identity_sha256": "3ec8d3647ea502078728a297e52e3f110649759069282f78a007e95bec2f70c1",
           "task_id": "i3_3_structure_held_out_v2_0044"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "aab9e18ecc0d16bc81b511b0491ba09e7c711e696e07244a29b1a930c2537dd9",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "341f4acfce98474e77da859ad437a1992971b4f774a3c6902cc092da572f631e",
+          "information_class_id": "7364dff94750fca3b21031de0cc16738a3865805a2ae036657e38f979993b5c5",
+          "observable_optimal_value": 20.915000000000003,
+          "table_identity_sha256": "3ec8d3647ea502078728a297e52e3f110649759069282f78a007e95bec2f70c1",
           "task_id": "i3_3_structure_held_out_v2_0045"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "e74f29d3d5ef14de1116afc4ed1ef58a76509b80febf206ce831a0531893ae73",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "fc0e1443d17fb99735c8407909883bdf606af0f4d676a2007bcf077dddb0b46e",
+          "information_class_id": "47bdf7069d8ea57b0acd143d14a0bd1600fe656d82cf8247a7ae012bb4c7963a",
+          "observable_optimal_value": 91.27499999999999,
+          "table_identity_sha256": "ca25b4cc5fb01f6dd50ce26d88ee7b36dc522363ba9cc6a940222d8b952e4b7b",
           "task_id": "i3_3_structure_held_out_v2_0046"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "e74f29d3d5ef14de1116afc4ed1ef58a76509b80febf206ce831a0531893ae73",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "fc0e1443d17fb99735c8407909883bdf606af0f4d676a2007bcf077dddb0b46e",
+          "information_class_id": "47bdf7069d8ea57b0acd143d14a0bd1600fe656d82cf8247a7ae012bb4c7963a",
+          "observable_optimal_value": 91.27499999999999,
+          "table_identity_sha256": "ca25b4cc5fb01f6dd50ce26d88ee7b36dc522363ba9cc6a940222d8b952e4b7b",
           "task_id": "i3_3_structure_held_out_v2_0047"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "f34dcc11e2dee1840de5f659fbc250924dc943a9b3211cb61c8b484c252c836b",
-          "observable_optimal_value": 93.42999999999999,
-          "table_identity_sha256": "c782e33ef9d6c7ea31b9aef9e9f8531a94467b5b544f4de34ba341d0502a4a4d",
+          "information_class_id": "cec2691446904567d1ab12a0376747ef424cef43c8314c0c3f56c2a82325a46e",
+          "observable_optimal_value": 92.35,
+          "table_identity_sha256": "29440495ef641551e23f4cc35d5c9cb7b7ca0430e6e771e7749eb2ef7287e526",
           "task_id": "i3_3_structure_held_out_v2_0048"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "f34dcc11e2dee1840de5f659fbc250924dc943a9b3211cb61c8b484c252c836b",
-          "observable_optimal_value": 93.42999999999999,
-          "table_identity_sha256": "c782e33ef9d6c7ea31b9aef9e9f8531a94467b5b544f4de34ba341d0502a4a4d",
+          "information_class_id": "cec2691446904567d1ab12a0376747ef424cef43c8314c0c3f56c2a82325a46e",
+          "observable_optimal_value": 92.35,
+          "table_identity_sha256": "29440495ef641551e23f4cc35d5c9cb7b7ca0430e6e771e7749eb2ef7287e526",
           "task_id": "i3_3_structure_held_out_v2_0049"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "6f5cb31470c7a236956c8940ae632605cc48aa0e959fb2dcba645e0dcbe27ade",
-          "observable_optimal_value": 23.044999999999998,
-          "table_identity_sha256": "2b8361d1bb59fb4bec9dc0ae354bb543d02c4c0e82948f48d7c7259b1a281703",
+          "information_class_id": "e125ff79cdc52a123b5339bdad8a3b2eda186bce12c2ac950a5040f38b10f5b6",
+          "observable_optimal_value": 20.905,
+          "table_identity_sha256": "e00d31a2cc0ee1cf941aa145201f03cca61144147430e8ac858c0bf60fc686d1",
           "task_id": "i3_3_structure_held_out_v2_0050"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "6f5cb31470c7a236956c8940ae632605cc48aa0e959fb2dcba645e0dcbe27ade",
-          "observable_optimal_value": 23.044999999999998,
-          "table_identity_sha256": "2b8361d1bb59fb4bec9dc0ae354bb543d02c4c0e82948f48d7c7259b1a281703",
+          "information_class_id": "e125ff79cdc52a123b5339bdad8a3b2eda186bce12c2ac950a5040f38b10f5b6",
+          "observable_optimal_value": 20.905,
+          "table_identity_sha256": "e00d31a2cc0ee1cf941aa145201f03cca61144147430e8ac858c0bf60fc686d1",
           "task_id": "i3_3_structure_held_out_v2_0051"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "444a5fc9ce7b82e5d3eecb8d9d6382807e5ca4e4a936b2c0ab479f6a464d6bfc",
+          "information_class_id": "7b402813706bb2524924fa6a4fd4c20363811dc2ae4d7e7b0c64a9b864d69b3d",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "91e04ac45122a02398644e771c1c1d3fbe314d8999c549435c49dcc22a2fcd6c",
+          "table_identity_sha256": "f48ff02260e69336c9da0b98c41d3cbeab0add8938e8fd6fc45fc3fd7d1d6c14",
           "task_id": "i3_3_structure_held_out_v2_0052"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "6bad090e717cc5d0491a707942def1bd8139dd5f667d7584aa0270e9297ba1c0",
+          "information_class_id": "8537e050cdc16f0c442a762e55fe1ecce9597d014202c7d79a2ef3dc2bf7b8db",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "43d43e633f871adae0a7a5fe7201a982d31a66a80bbe9091ad120cbad8cbe4fc",
+          "table_identity_sha256": "26ce2e548fe7784b71f8373ffd029b31393c96db078c3d8081e01aba7c5bfaaa",
           "task_id": "i3_3_structure_held_out_v2_0053"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "28d1cdb13e658c55b1f4829f37eec75c18875bcee06b2e75b1741dc3696add56",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "0347cb1f454d63b6850c922950b4b8ebd01e6554d42bf958578bfe8fceb30aed",
+          "information_class_id": "fa2527c0a5fb869066b6d0d6ebbc2378b8ca83d772f9a8f69ce541034b0c7b01",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "548e81badc3b1a14a6c3e738be349ebfd10fd954f1fe8020630bf856b9541c51",
           "task_id": "i3_3_structure_held_out_v2_0054"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "811fdc617eb2512b3a1c04fde1132c75b0c4e2a0678553f1f9a70cc3a327c486",
+          "information_class_id": "7bae79e88aa766456657bf5afad6eb716ae069244e2d1a0c20658f34ddc1b635",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "709d9817a609709ad6d2688bbd11f5a071ed9f2cdd759fddb84d2aa8418d67c7",
+          "table_identity_sha256": "e1c60ccc320ad86b8d6f0fc0694c66549b9c9a9ec655f247ef132f1218eb88ce",
           "task_id": "i3_3_structure_held_out_v2_0055"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "1f3afdfd9daab922c950ed78794d4d33070b2e058c718eb404276f3fa30214e5",
-          "observable_optimal_value": 93.945,
-          "table_identity_sha256": "44dd8f66625b930a320a2575368d9c68e46681ca8c206e3cf01288ce3b913da2",
+          "information_class_id": "6796828b4c5579ea66347971d3adf2b5ba4b3a8ff445a70589857a54142e1699",
+          "observable_optimal_value": 92.35499999999999,
+          "table_identity_sha256": "b98a058026d41f6d4922a29dfe9dde3155b32c9fc242d536578f1629b29a057e",
           "task_id": "i3_3_structure_held_out_v2_0056"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "1f3afdfd9daab922c950ed78794d4d33070b2e058c718eb404276f3fa30214e5",
-          "observable_optimal_value": 93.945,
-          "table_identity_sha256": "44dd8f66625b930a320a2575368d9c68e46681ca8c206e3cf01288ce3b913da2",
+          "information_class_id": "6796828b4c5579ea66347971d3adf2b5ba4b3a8ff445a70589857a54142e1699",
+          "observable_optimal_value": 92.35499999999999,
+          "table_identity_sha256": "b98a058026d41f6d4922a29dfe9dde3155b32c9fc242d536578f1629b29a057e",
           "task_id": "i3_3_structure_held_out_v2_0057"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "9d9aa1c8770efa2f2e178dfd691bb3d5706919ec10e02abdf8c2c90adc919edf",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "c042e76c0fcfe35f02954d65d345bfe104153246a37fe5962deb120ee8bcc673",
+          "information_class_id": "6a4e2f5c2b6baddb8f73d86ea57bfb2fc1ebac440242de9ca473bcffba510abe",
+          "observable_optimal_value": 91.27,
+          "table_identity_sha256": "98f85f4e448ef8aca8c674b9b1ac875cae6cb1bd392f36d0f3fcff3c5780a24d",
           "task_id": "i3_3_structure_held_out_v2_0058"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "9d9aa1c8770efa2f2e178dfd691bb3d5706919ec10e02abdf8c2c90adc919edf",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "c042e76c0fcfe35f02954d65d345bfe104153246a37fe5962deb120ee8bcc673",
+          "information_class_id": "6a4e2f5c2b6baddb8f73d86ea57bfb2fc1ebac440242de9ca473bcffba510abe",
+          "observable_optimal_value": 91.27,
+          "table_identity_sha256": "98f85f4e448ef8aca8c674b9b1ac875cae6cb1bd392f36d0f3fcff3c5780a24d",
           "task_id": "i3_3_structure_held_out_v2_0059"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "e49dbb89298ebb73281f4191929ee90deff10e57f4d7fbc34a9485836148ac5e",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "35218f79efbe65688c6db98404f3872a6f0169666120b6c30455d759c2413a9e",
+          "information_class_id": "44bd624791ba5e3b8b69bb79894e2fb4f7e4de1a3b0055db1e195765427692c6",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "dd6497096a1ef35d427dca84a2cd07843d9152dad99eb47a3d84d61e81c43d1c",
           "task_id": "i3_3_structure_held_out_v2_0060"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "90f0f91e55069b17dad29ee6419ad1903fbe785cc66e25b5c8c86b3b6e83710f",
+          "information_class_id": "03780444a3c69fefeb523b31740d9a91bca5d50af28839ca58d4425087151e9d",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "6ebf01754b0fd9331b892ea76aa8e637cfb7758f9233a72bef9ee4c53660670c",
+          "table_identity_sha256": "200bb57b0fd91ac93c71d8b22a80880b25b5aa1b441a782db1cdc5acd0f612b7",
           "task_id": "i3_3_structure_held_out_v2_0061"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "306f9ee91ea98027493cd7fa8406322676a45756c333420da053876bc30ed900",
-          "observable_optimal_value": 93.94999999999999,
-          "table_identity_sha256": "4d20bffa5b6abe68ae273888b7e6c00540f3839c2def47cb6cf5a6a34a285ede",
+          "information_class_id": "73474b60468cda07471689507f4e5c9a14a9cb6cf6fdeee2afed3056d47d9e80",
+          "observable_optimal_value": 92.875,
+          "table_identity_sha256": "464338521b2d3f2976460c44787fbe21c4413702ccff637cac067bea7de3868c",
           "task_id": "i3_3_structure_held_out_v2_0062"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "306f9ee91ea98027493cd7fa8406322676a45756c333420da053876bc30ed900",
-          "observable_optimal_value": 93.94999999999999,
-          "table_identity_sha256": "4d20bffa5b6abe68ae273888b7e6c00540f3839c2def47cb6cf5a6a34a285ede",
+          "information_class_id": "73474b60468cda07471689507f4e5c9a14a9cb6cf6fdeee2afed3056d47d9e80",
+          "observable_optimal_value": 92.875,
+          "table_identity_sha256": "464338521b2d3f2976460c44787fbe21c4413702ccff637cac067bea7de3868c",
           "task_id": "i3_3_structure_held_out_v2_0063"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "c99a08e512959bb6174a4d58cceb7e44c7c276e9ed3e70619efc79cee2efe8e9",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "9dba38b57553651c96f4b1eb4dbc9ed627aad262f48e88fd4a98458e3e1fd782",
+          "information_class_id": "744a8a627a1df680b1dd33b8ac8524aaa71bbcdac5e0fbe27aad8758d009bf55",
+          "observable_optimal_value": 82.78999999999998,
+          "table_identity_sha256": "416b13670f2adcf7756245104bee9a556e2f74103146c1ed7f5fc4c749ff8bbf",
           "task_id": "i3_3_structure_held_out_v2_0064"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "c99a08e512959bb6174a4d58cceb7e44c7c276e9ed3e70619efc79cee2efe8e9",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "9dba38b57553651c96f4b1eb4dbc9ed627aad262f48e88fd4a98458e3e1fd782",
+          "information_class_id": "744a8a627a1df680b1dd33b8ac8524aaa71bbcdac5e0fbe27aad8758d009bf55",
+          "observable_optimal_value": 82.78999999999998,
+          "table_identity_sha256": "416b13670f2adcf7756245104bee9a556e2f74103146c1ed7f5fc4c749ff8bbf",
           "task_id": "i3_3_structure_held_out_v2_0065"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "2df46f8527dc59ceb2b0777e2549b43764d9e0040c7dbba2f7084172c74ac99a",
+          "information_class_id": "5329aaabad1a093a06135c9e4a8a5a15085399403ab6d8e9cb54e694e1f27b6b",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "ac6d6ca50bbb394b7cead01a90508f9cee86b04867c63ba2eaa98567ecd3e13b",
+          "table_identity_sha256": "7a8afbb1622da0d4a5b68c967dd5df8fa7f197f807420c7841cf6887aeb9f93a",
           "task_id": "i3_3_structure_held_out_v2_0066"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "faa3c0c2dbbbd459a1944ba1d436ffa43878f0b0c9d095ab809aa27d61560594",
+          "information_class_id": "eec0d113fc72269a6b94147561870b82b8a97ac443707ce763689c32f3476dee",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "2c23bb075df222a0a56ae27265f9321f5c7c4e58ad87effae1920f8b928c4d9d",
+          "table_identity_sha256": "9dfd189986c32f29f96265ce83aaca545e1833581b6b5db09865da666946f18e",
           "task_id": "i3_3_structure_held_out_v2_0067"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "dae0e0dd732dc7d89595ebb106aa9a3ceb1ceb6e9adc1ee210068669250854c5",
-          "observable_optimal_value": 88.1,
-          "table_identity_sha256": "c74a87e8112787944441732839527a8f8851e0401961b41da722c33c8e9e01cf",
+          "information_class_id": "512d56bc3b1cd7ead6e2a28dde165672578b05d007824774af646f6c4fb506b2",
+          "observable_optimal_value": 85.96,
+          "table_identity_sha256": "57c0e255897b36718e362a18b5eabf9948caf780fad25bcc5b032787656ac533",
           "task_id": "i3_3_structure_held_out_v2_0068"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "b27e7c4aa581772c5e5ecdbd88556bae2479421089e4c53c2aa0b52f97dac405",
+          "information_class_id": "e2d354da76e41bbe6ccdd0c219f78e369da99c43a8bef1b5c92f5a7f4bef84d7",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "101b6d4227487e7efd73665d8e6e065701177b871bc45be6c840e1eee8dfe642",
+          "table_identity_sha256": "0b331a368bad8f9b1cc18138d0cbde5d018b749f4504dd03111634e987365a16",
           "task_id": "i3_3_structure_held_out_v2_0069"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "73d914da64be8e740ba7d750e8e06564aa5127d3cf2355959f611baeec25adc1",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "6ca5d7e7c676d1bb4b669cb6886061aec8824629f7b9b8e7b5f6f0a03214dc0c",
+          "information_class_id": "cef78a895592aa6edc6fbd378b7b635b17443dd2b4f8ae253a23b5c90c6dab5d",
+          "observable_optimal_value": 91.27499999999999,
+          "table_identity_sha256": "cc41b5ded7b95ce9ba88bd78b7d25edc111c8ea010891de62f586be92c3d4d2d",
           "task_id": "i3_3_structure_held_out_v2_0070"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "73d914da64be8e740ba7d750e8e06564aa5127d3cf2355959f611baeec25adc1",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "6ca5d7e7c676d1bb4b669cb6886061aec8824629f7b9b8e7b5f6f0a03214dc0c",
+          "information_class_id": "cef78a895592aa6edc6fbd378b7b635b17443dd2b4f8ae253a23b5c90c6dab5d",
+          "observable_optimal_value": 91.27499999999999,
+          "table_identity_sha256": "cc41b5ded7b95ce9ba88bd78b7d25edc111c8ea010891de62f586be92c3d4d2d",
           "task_id": "i3_3_structure_held_out_v2_0071"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "b22794a29086a56aac6ee3b35bfcf076689f10c925bbf339a2de361707bc9737",
-          "observable_optimal_value": 22.025000000000002,
-          "table_identity_sha256": "b6f216297feec6027b535958c1c43fbc28aacea5c45c2fcf7d4d2c11f2b13bc8",
+          "information_class_id": "c59d7289ee96d8ee89a90c271f98b95d9a126c5e7a225ce6799de613bde9092d",
+          "observable_optimal_value": 82.75999999999999,
+          "table_identity_sha256": "50926085ba83152e1182d14cb96d2b0812faae6873b9c661c399c8a033577f5a",
           "task_id": "i3_3_structure_held_out_v2_0072"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "b22794a29086a56aac6ee3b35bfcf076689f10c925bbf339a2de361707bc9737",
-          "observable_optimal_value": 22.025000000000002,
-          "table_identity_sha256": "b6f216297feec6027b535958c1c43fbc28aacea5c45c2fcf7d4d2c11f2b13bc8",
+          "information_class_id": "c59d7289ee96d8ee89a90c271f98b95d9a126c5e7a225ce6799de613bde9092d",
+          "observable_optimal_value": 82.75999999999999,
+          "table_identity_sha256": "50926085ba83152e1182d14cb96d2b0812faae6873b9c661c399c8a033577f5a",
           "task_id": "i3_3_structure_held_out_v2_0073"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "305282eea0b51126797228a94f97b68be452897346b3d7528b46989aeac4b25d",
-          "observable_optimal_value": 23.044999999999998,
-          "table_identity_sha256": "781d18f438b2a88d9b459e8a9343400a4057f4a3bcfc1c81a4d1f0524d30b0b0",
+          "information_class_id": "379ce61c3c2259dd82319a3f24d4e6408f0483efd3a2189f3eecaa874081d988",
+          "observable_optimal_value": 20.905,
+          "table_identity_sha256": "ec8462cb439745d9f736cd258038106fc9a2cba46c3ba9b2ed988ff761bf0fcc",
           "task_id": "i3_3_structure_held_out_v2_0074"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "305282eea0b51126797228a94f97b68be452897346b3d7528b46989aeac4b25d",
-          "observable_optimal_value": 23.044999999999998,
-          "table_identity_sha256": "781d18f438b2a88d9b459e8a9343400a4057f4a3bcfc1c81a4d1f0524d30b0b0",
+          "information_class_id": "379ce61c3c2259dd82319a3f24d4e6408f0483efd3a2189f3eecaa874081d988",
+          "observable_optimal_value": 20.905,
+          "table_identity_sha256": "ec8462cb439745d9f736cd258038106fc9a2cba46c3ba9b2ed988ff761bf0fcc",
           "task_id": "i3_3_structure_held_out_v2_0075"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "5cc9e87ad9b669cc35cf882d18cf9e306ae3d16d14185e93c2e4ae0cb2c4bd82",
+          "information_class_id": "6af0bf7a6ce15ee38f0f641a0f5319b6edd0bb2608c635cf921427f004b90faf",
           "observable_optimal_value": 19.89,
-          "table_identity_sha256": "9a1335916bafdda2e011701a54b0d6b839be081f18cca2543fc38b6658eba02a",
+          "table_identity_sha256": "09ce301d546fad08b47218b267714680fd40dbc17462b20c2fd9d4f535624b44",
           "task_id": "i3_3_structure_held_out_v2_0076"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "5cc9e87ad9b669cc35cf882d18cf9e306ae3d16d14185e93c2e4ae0cb2c4bd82",
+          "information_class_id": "6af0bf7a6ce15ee38f0f641a0f5319b6edd0bb2608c635cf921427f004b90faf",
           "observable_optimal_value": 19.89,
-          "table_identity_sha256": "9a1335916bafdda2e011701a54b0d6b839be081f18cca2543fc38b6658eba02a",
+          "table_identity_sha256": "09ce301d546fad08b47218b267714680fd40dbc17462b20c2fd9d4f535624b44",
           "task_id": "i3_3_structure_held_out_v2_0077"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "7606a451854f09596a87788c3210783d29e878b2dc761964661e5eddee79295b",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "bf2d48f48d4fdbfcfd84c7a0c571650aa6e542d3bcf58adfe83e643f359fbe68",
+          "information_class_id": "18e9b5b0b200a036e5715a0f2771f21c8bc31c479b9e8a2f2b1975ec723d148c",
+          "observable_optimal_value": 19.835000000000004,
+          "table_identity_sha256": "131f910193cb5f6d603e0d2114aa6018e80798bc95c5ef2e115d3c01d771d303",
           "task_id": "i3_3_structure_held_out_v2_0078"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "7606a451854f09596a87788c3210783d29e878b2dc761964661e5eddee79295b",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "bf2d48f48d4fdbfcfd84c7a0c571650aa6e542d3bcf58adfe83e643f359fbe68",
+          "information_class_id": "18e9b5b0b200a036e5715a0f2771f21c8bc31c479b9e8a2f2b1975ec723d148c",
+          "observable_optimal_value": 19.835000000000004,
+          "table_identity_sha256": "131f910193cb5f6d603e0d2114aa6018e80798bc95c5ef2e115d3c01d771d303",
           "task_id": "i3_3_structure_held_out_v2_0079"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "c94b4a67f2c3de621d497a5c7a54f1ec90de783bd88aedf3f0e9954d6961fc32",
+          "information_class_id": "b2fcb97769e2dca6da423135c17b96061933da55d14855f71b169c06cba7b7cd",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "20b1b369c16b3049e2b4fff45287469f3bb7fc9b1627a0e9a10b1905b3af977c",
+          "table_identity_sha256": "614cbc99108c39c0c29eab0b5e3544b7b745ad7e4e11baf805b597b483214a2d",
           "task_id": "i3_3_structure_held_out_v2_0080"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "2381c3b9ac7508c6a25c77325c7a7dbf165a5cb69aeb4c4806709ed89a984898",
+          "information_class_id": "d6fa180fbea2dfde1adb277e5f55667c9cd4fbcb89b48c6f6b25ed46197a9a8e",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "9010610a62ac9cd3ad002c8669a7b56c9568346d88d40e115305f62f80a1e3a0",
+          "table_identity_sha256": "f9f96ecd5ab5769ba98817d469bafcbce11397980ffc549440f6c287d0478381",
           "task_id": "i3_3_structure_held_out_v2_0081"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "38f31d8ccea8e740b54183c7d56d9a5963308a9a8dafc7a88711c2a3a4ac7256",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "98f56654deb26c4a5f9c042b37e35e53fee0b1da77b8859997a224371cfb6639",
+          "information_class_id": "d691325dc65f17a13ee900448f61ae2560f835c35c573cb8c8fed0b75471df8f",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "c8daf96974c86cafd1a4789071813bf992a3b269b620258278ab69b1575118e5",
           "task_id": "i3_3_structure_held_out_v2_0082"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "8a648c3662f31a4d332b58dea25ca5541daa5752b5a624d42af184797008501d",
+          "information_class_id": "1c4f9942c2f52655cb848078e65a8d0b9a35486b0820f0a14c1f689875cc8adb",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "15c419eb1124e47010408555b8e873ee12f932f36525cd286a79aa1af5e998bd",
+          "table_identity_sha256": "806b6d88c2abb274ad350e5f4f001685e19d40c8a994275dcf0acbdb8480c44e",
           "task_id": "i3_3_structure_held_out_v2_0083"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "8cdf22604c4a7ebb1c0dee7041fdd08a2f62c1156d5f135de1344b5fec97b2c0",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "cdf7ccb76f02790c0a0d31ae5b8be42526796c780141f31a1b1eacff5ac31199",
+          "information_class_id": "8693fe32ce1c069c0291515843b25d3997d643b0b8d6e1ee2d0cb6b0c9ad5062",
+          "observable_optimal_value": 91.79499999999999,
+          "table_identity_sha256": "c805df5d0e42ccc1d7078d44f75ee5887b23aaf5be6da8242b6870bee633e172",
           "task_id": "i3_3_structure_held_out_v2_0084"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "8cdf22604c4a7ebb1c0dee7041fdd08a2f62c1156d5f135de1344b5fec97b2c0",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "cdf7ccb76f02790c0a0d31ae5b8be42526796c780141f31a1b1eacff5ac31199",
+          "information_class_id": "8693fe32ce1c069c0291515843b25d3997d643b0b8d6e1ee2d0cb6b0c9ad5062",
+          "observable_optimal_value": 91.79499999999999,
+          "table_identity_sha256": "c805df5d0e42ccc1d7078d44f75ee5887b23aaf5be6da8242b6870bee633e172",
           "task_id": "i3_3_structure_held_out_v2_0085"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "ac1b7ef1831ff92c688070b079ff6a95a4f67d50b9b9a438b91e7ddeec790db8",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "9d3497ca08e05da9644599a6f3fe51f958549628a1d6f46713442b5ccb57fe73",
+          "information_class_id": "76217e3029ced89ca633e18dd5135c6a477e5d8da5284ffee5f5ce89b8b2bcc3",
+          "observable_optimal_value": 20.915000000000003,
+          "table_identity_sha256": "e8e68f490b65b53f1f96b7ba0fdb2240b612db2bf5f46ac742492c87f1a1d656",
           "task_id": "i3_3_structure_held_out_v2_0086"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "ac1b7ef1831ff92c688070b079ff6a95a4f67d50b9b9a438b91e7ddeec790db8",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "9d3497ca08e05da9644599a6f3fe51f958549628a1d6f46713442b5ccb57fe73",
+          "information_class_id": "76217e3029ced89ca633e18dd5135c6a477e5d8da5284ffee5f5ce89b8b2bcc3",
+          "observable_optimal_value": 20.915000000000003,
+          "table_identity_sha256": "e8e68f490b65b53f1f96b7ba0fdb2240b612db2bf5f46ac742492c87f1a1d656",
           "task_id": "i3_3_structure_held_out_v2_0087"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "1e714806e1c9bc3c59179dadfe9bdc06768e1e296996f85ba23e60ded02c7e2b",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "8a81ca981d3ce6bea4c017731837322d60fdb0538856d18d66f9e9b28e847c41",
+          "information_class_id": "6222fca5e8ca694c5d73a8c8a14f627d6b4805084fc487fc5f699d003c3c5a77",
+          "observable_optimal_value": 84.92999999999998,
+          "table_identity_sha256": "c9bc2e35abec3b65760e4545fea31799165ef4e8a345d757472a0152ef51198e",
           "task_id": "i3_3_structure_held_out_v2_0088"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "968d1eedea5c358a680064952d1e343168536cf7e9d8c28292c21a21b9261a28",
+          "information_class_id": "0fe238e4e3a0ef830ffc58f9888567b606667d169ea30e3e549621ff9ca1aa27",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "328f4893c93bd16b4099059e5103abfdb0438f35099c9a31116d7a74b1a71808",
+          "table_identity_sha256": "0a8cca7f488c1e9fc4e3b7457adafb09ba5582e345e64292afb91ebc77eda4f8",
           "task_id": "i3_3_structure_held_out_v2_0089"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "10e474a80a8735d2166f12ac60e64a44f2251b28faa5a4d1aec4c8f00350527c",
-          "observable_optimal_value": 93.42999999999999,
-          "table_identity_sha256": "c9a594ec832b7afe1723fbc33a2f13a030e2ad920aa70febc9dafc5f07b5cd75",
+          "information_class_id": "7d824717272304e60a70a992b11e5ca5ecc99dd2a84fb17c36a8b016f61c996d",
+          "observable_optimal_value": 92.35,
+          "table_identity_sha256": "9c74c45819ec8976890ae6db895c6465b04592dc96460fb393c556e78f5c9ab7",
           "task_id": "i3_3_structure_held_out_v2_0090"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "10e474a80a8735d2166f12ac60e64a44f2251b28faa5a4d1aec4c8f00350527c",
-          "observable_optimal_value": 93.42999999999999,
-          "table_identity_sha256": "c9a594ec832b7afe1723fbc33a2f13a030e2ad920aa70febc9dafc5f07b5cd75",
+          "information_class_id": "7d824717272304e60a70a992b11e5ca5ecc99dd2a84fb17c36a8b016f61c996d",
+          "observable_optimal_value": 92.35,
+          "table_identity_sha256": "9c74c45819ec8976890ae6db895c6465b04592dc96460fb393c556e78f5c9ab7",
           "task_id": "i3_3_structure_held_out_v2_0091"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "96c0d4d436c23c5dd89e95fa187dccbceacb641fc57eac02a1523b0cd997a048",
-          "observable_optimal_value": 93.94999999999999,
-          "table_identity_sha256": "39015f67c5d25be226076723b6a5638898d612df501dbde39d5f122aed8804e6",
+          "information_class_id": "19b7dbf00b774fd7eed75b9bf97367ac1bc3eeae69d86e1f9bf3e27023abee36",
+          "observable_optimal_value": 92.875,
+          "table_identity_sha256": "c6147f5a6de425665ba47d46298e141a5ebcb376718004dfc2a86f8cc3c7b796",
           "task_id": "i3_3_structure_held_out_v2_0092"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "96c0d4d436c23c5dd89e95fa187dccbceacb641fc57eac02a1523b0cd997a048",
-          "observable_optimal_value": 93.94999999999999,
-          "table_identity_sha256": "39015f67c5d25be226076723b6a5638898d612df501dbde39d5f122aed8804e6",
+          "information_class_id": "19b7dbf00b774fd7eed75b9bf97367ac1bc3eeae69d86e1f9bf3e27023abee36",
+          "observable_optimal_value": 92.875,
+          "table_identity_sha256": "c6147f5a6de425665ba47d46298e141a5ebcb376718004dfc2a86f8cc3c7b796",
           "task_id": "i3_3_structure_held_out_v2_0093"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "fb2a495a7543b02d9db126af8330ce20483894779c022a446e998cbf1986ec6a",
+          "information_class_id": "8cb62fe63073b581005c9e6868bb4990869b124da660cc29f0b0dfcef09a448c",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "fd6e3c8f6bdd832e847b408e8f152eb241fef3ca49029be70b0f13a5bd4d2d25",
+          "table_identity_sha256": "ce294a6967c2ecfcf6364e8881045ba93ea0816ecbf79a0fdda371acdcdc4ac5",
           "task_id": "i3_3_structure_held_out_v2_0094"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "74b3fd00aefea1807f35f4db996d0cca950778c71c5bac421698298a1faf39de",
+          "information_class_id": "1df65c076b0fa8dfdeafa3b8d0d163dc4e530c6509f7246210557263f62d8cc9",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "4c72140982b611023015f6dbb95d01049546a01ab13993b6b017e098e03ddaeb",
+          "table_identity_sha256": "f63cf301188e971e732d2fd6305b0fdf1d5c70f3f09ce319248b6b83e6c77a30",
           "task_id": "i3_3_structure_held_out_v2_0095"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "8aa24868a8093491f442367230637b7d1a91d7f03dea1a6cf3fd289d6908ab32",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "c93a34acebf2e326a681615dde9d0bfe364b860234ca9aec9c5ebca27b636d5e",
+          "information_class_id": "2c86e56b15939e39edeaedf6c814e4044a1d6850e7086c34f2548e91ef7899fd",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "69468b92c0c5bde5a0f7b30c44c14a78d2251699494cfc20b1083cc59fc21ae6",
           "task_id": "i3_3_structure_held_out_v2_0096"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "a1280d371313affa4f42332a92b9da66241729ea04c213fb8c08d115945d13b5",
+          "information_class_id": "c332a921a56c4b9dab9df2501cdf6c5e7879c215852e0f2a7fdc290c5977d360",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "43a825971f20f195a46ae7b1ab9bacbe71cbe138e107368c030daa3f38f6013b",
+          "table_identity_sha256": "3fa311b1780619c3712af2f48627cdbec982294da69644a0217a37112d142806",
           "task_id": "i3_3_structure_held_out_v2_0097"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "215dbfa156fba8d958df9b5403f59bb407d3e848ed654de9553bffda2ebf34d1",
-          "observable_optimal_value": 93.42999999999999,
-          "table_identity_sha256": "cb8aed9393c99daf6c281a95fd312b6f69154004665016e4e0da39ae6046c81c",
+          "information_class_id": "896abe09b633b1117d1fec9e22e4b5a22c6706a473be7ca7df069d9da46f55b6",
+          "observable_optimal_value": 92.35,
+          "table_identity_sha256": "34b74eed9fc026de0934cc2b2a6cf4d855325c094b127d5f169a015ede820945",
           "task_id": "i3_3_structure_held_out_v2_0098"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "215dbfa156fba8d958df9b5403f59bb407d3e848ed654de9553bffda2ebf34d1",
-          "observable_optimal_value": 93.42999999999999,
-          "table_identity_sha256": "cb8aed9393c99daf6c281a95fd312b6f69154004665016e4e0da39ae6046c81c",
+          "information_class_id": "896abe09b633b1117d1fec9e22e4b5a22c6706a473be7ca7df069d9da46f55b6",
+          "observable_optimal_value": 92.35,
+          "table_identity_sha256": "34b74eed9fc026de0934cc2b2a6cf4d855325c094b127d5f169a015ede820945",
           "task_id": "i3_3_structure_held_out_v2_0099"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "9fba054b1505f1b10ee474f1e9f7744a861322cf36df232b9627a4bbc8652e72",
-          "observable_optimal_value": 23.044999999999998,
-          "table_identity_sha256": "55ee2b6426e9921360a0e2798003ae22de5922b6035a0e3daa1d82471c5313e8",
+          "information_class_id": "266d8a7309353990cdf98aaee308aeb5ac0eb55a52eb3e8c49029617bdbf5937",
+          "observable_optimal_value": 19.825000000000003,
+          "table_identity_sha256": "fea5a4b008fabafa621e2bac8cccbce33c04f4059b9a1b05c78e255d68e275b2",
           "task_id": "i3_3_structure_held_out_v2_0100"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "9fba054b1505f1b10ee474f1e9f7744a861322cf36df232b9627a4bbc8652e72",
-          "observable_optimal_value": 23.044999999999998,
-          "table_identity_sha256": "55ee2b6426e9921360a0e2798003ae22de5922b6035a0e3daa1d82471c5313e8",
+          "information_class_id": "266d8a7309353990cdf98aaee308aeb5ac0eb55a52eb3e8c49029617bdbf5937",
+          "observable_optimal_value": 19.825000000000003,
+          "table_identity_sha256": "fea5a4b008fabafa621e2bac8cccbce33c04f4059b9a1b05c78e255d68e275b2",
           "task_id": "i3_3_structure_held_out_v2_0101"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "f9ff7272c9cb6dcafc2040d321e4c3b0577c17a47ac62034a4c7d7a50060270d",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "8526d2ac0bf0c2273343e977eaa1ea4f663354d4fccb38c2752605ddba19222a",
+          "information_class_id": "f16aa5b2754b59dc6eb9533efc5d7eba31b239c0b7d5f53407fb31f0e137d164",
+          "observable_optimal_value": 19.835000000000004,
+          "table_identity_sha256": "67a3bc86c198908a18ed88e30e3fc8e37f1b9c5cc78f2ad8d29defbaaaef9ae9",
           "task_id": "i3_3_structure_held_out_v2_0102"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "f9ff7272c9cb6dcafc2040d321e4c3b0577c17a47ac62034a4c7d7a50060270d",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "8526d2ac0bf0c2273343e977eaa1ea4f663354d4fccb38c2752605ddba19222a",
+          "information_class_id": "f16aa5b2754b59dc6eb9533efc5d7eba31b239c0b7d5f53407fb31f0e137d164",
+          "observable_optimal_value": 19.835000000000004,
+          "table_identity_sha256": "67a3bc86c198908a18ed88e30e3fc8e37f1b9c5cc78f2ad8d29defbaaaef9ae9",
           "task_id": "i3_3_structure_held_out_v2_0103"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "98821444ee1f5be68137d8030ae2f1a13583257161678e58ae0c165e587f4846",
-          "observable_optimal_value": 93.945,
-          "table_identity_sha256": "d7b5afffe1417428cfef9e00ed8095a2f8d4e9ff48e2b3a47cc2d14535e4596d",
+          "information_class_id": "660747a8a72ae825e147804f602da6f0639bb3e47730d7750417402a241f78b0",
+          "observable_optimal_value": 92.35499999999999,
+          "table_identity_sha256": "9d9cd3a7be2d2c137900dcde0ad11732f307d4b5d9e2febd091c9116b89d894b",
           "task_id": "i3_3_structure_held_out_v2_0104"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "98821444ee1f5be68137d8030ae2f1a13583257161678e58ae0c165e587f4846",
-          "observable_optimal_value": 93.945,
-          "table_identity_sha256": "d7b5afffe1417428cfef9e00ed8095a2f8d4e9ff48e2b3a47cc2d14535e4596d",
+          "information_class_id": "660747a8a72ae825e147804f602da6f0639bb3e47730d7750417402a241f78b0",
+          "observable_optimal_value": 92.35499999999999,
+          "table_identity_sha256": "9d9cd3a7be2d2c137900dcde0ad11732f307d4b5d9e2febd091c9116b89d894b",
           "task_id": "i3_3_structure_held_out_v2_0105"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "d34cd9c8278cce79d5a4ef6cd97a88f383939da5d1d8ea61a1866842cc191190",
-          "observable_optimal_value": 22.025000000000002,
-          "table_identity_sha256": "0c9bfd91ad35c3951cdd49017a6297be7ad4e303d9aea43e0edfc71ad9d43812",
+          "information_class_id": "158d7fe0216e2c9440d7d36badcfb4da4f5d334d869151702c5b2b67877b2e0b",
+          "observable_optimal_value": 82.77999999999999,
+          "table_identity_sha256": "e4c3d2c661f0025ef8b008e94a9c2586253e67b0a2391d89a8a93240b4fcc6dc",
           "task_id": "i3_3_structure_held_out_v2_0106"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "d34cd9c8278cce79d5a4ef6cd97a88f383939da5d1d8ea61a1866842cc191190",
-          "observable_optimal_value": 22.025000000000002,
-          "table_identity_sha256": "0c9bfd91ad35c3951cdd49017a6297be7ad4e303d9aea43e0edfc71ad9d43812",
+          "information_class_id": "158d7fe0216e2c9440d7d36badcfb4da4f5d334d869151702c5b2b67877b2e0b",
+          "observable_optimal_value": 82.77999999999999,
+          "table_identity_sha256": "e4c3d2c661f0025ef8b008e94a9c2586253e67b0a2391d89a8a93240b4fcc6dc",
           "task_id": "i3_3_structure_held_out_v2_0107"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "b011d1029dcefe85195a31916c3851882a4cb7c41998f628281a8099c95b9179",
+          "information_class_id": "a406e1892e026500d03e2967bb04c5b340eb7cefc1019b1391173e6a9b0ee8d0",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "d04456abdf03b7643b160e9309ea86f4f88a63cbd8fb974d1f145d591793b873",
+          "table_identity_sha256": "37ba16e167da2641e716e8f3b52c2994bb81c12bd89afee8f21ea1c5ce8e4d67",
           "task_id": "i3_3_structure_held_out_v2_0108"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "c6281ceb6a2318d6cd73fb798d8a96d6950b177c12911c7b0484f9c534752dba",
+          "information_class_id": "bc673557d04026a1f884554f876bc21bbbb9280e117f795c2d12ba4faa37a6fd",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "6f1c1b48fe5ffdedd709691627bb17de137739e30c08cc31d2f9dea556f7ca1d",
+          "table_identity_sha256": "71fabc4cc7677524358c87ce8c230676a1aa7468cffb9a7022a5c78f948c35ee",
           "task_id": "i3_3_structure_held_out_v2_0109"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "cf581fa27bbb10a4c3c1135832aba0cc8428bbb6e011505d9b230eb32ad36f4f",
-          "observable_optimal_value": 88.11999999999999,
-          "table_identity_sha256": "4c279210d439ccad0ed3ba597045da36229837852c597bedb513a1f687f53d3b",
+          "information_class_id": "f24ec45f48bb92e3a7d989e9952bdbace774951dae4fad8fe77130a7f7484c59",
+          "observable_optimal_value": 85.96999999999998,
+          "table_identity_sha256": "3458d7c09a009d2906738321b53fa40071dbaf8fe4d3796dc69c797c86bfc23f",
           "task_id": "i3_3_structure_held_out_v2_0110"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "b4b96e13257ff1c1d326e55af1bd7b6dfea1d62e4a0992758bc55f85d0f3daef",
+          "information_class_id": "d444f430de64e39b5617424fd465c802fbc63fef05c76cadaff428c4feded1c0",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "8d16a48109842f5d97362c7198d761bc8daa8c54428acde0b1a096c324632e21",
+          "table_identity_sha256": "c6994818bdc7314467b4712ee496d1212153d53347d2785b3f014ab5254237e2",
           "task_id": "i3_3_structure_held_out_v2_0111"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "db9045640af1506bbf46b1bf364ac1fbbf73cca74ecf7783ad8c8b6947cab299",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "1c1814b65eb5018f72cf68bd3604956578038e7933e35826545e0261eef4c6a3",
+          "information_class_id": "c931d01f7633689ca51527e30bbf2b9194d2a0bb649bac82ebf0f92486150d1a",
+          "observable_optimal_value": 91.27499999999999,
+          "table_identity_sha256": "eaf6abbc1c5d2dfbf99e9f91256f1e12585174679446eb356ff770ef7738be6e",
           "task_id": "i3_3_structure_held_out_v2_0112"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "db9045640af1506bbf46b1bf364ac1fbbf73cca74ecf7783ad8c8b6947cab299",
-          "observable_optimal_value": 88.10999999999999,
-          "table_identity_sha256": "1c1814b65eb5018f72cf68bd3604956578038e7933e35826545e0261eef4c6a3",
+          "information_class_id": "c931d01f7633689ca51527e30bbf2b9194d2a0bb649bac82ebf0f92486150d1a",
+          "observable_optimal_value": 91.27499999999999,
+          "table_identity_sha256": "eaf6abbc1c5d2dfbf99e9f91256f1e12585174679446eb356ff770ef7738be6e",
           "task_id": "i3_3_structure_held_out_v2_0113"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "c85fd451b6c0897f3c1063e79f5fd86f8868c104a240a41dddb741be3b2844f2",
-          "observable_optimal_value": 22.025000000000002,
-          "table_identity_sha256": "3a06685786c424779a93ed4e17ac8e25ce144b8bc512826b0acf95d2f4e01023",
+          "information_class_id": "18601b73d311dc424c20bd784dfda674805bd0691fc737831a60e5590512499e",
+          "observable_optimal_value": 82.75999999999999,
+          "table_identity_sha256": "9b6dd168f7b2376a91fa7dc92851fc6ce8c552f6363e9e126812afceabc09269",
           "task_id": "i3_3_structure_held_out_v2_0114"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "c85fd451b6c0897f3c1063e79f5fd86f8868c104a240a41dddb741be3b2844f2",
-          "observable_optimal_value": 22.025000000000002,
-          "table_identity_sha256": "3a06685786c424779a93ed4e17ac8e25ce144b8bc512826b0acf95d2f4e01023",
+          "information_class_id": "18601b73d311dc424c20bd784dfda674805bd0691fc737831a60e5590512499e",
+          "observable_optimal_value": 82.75999999999999,
+          "table_identity_sha256": "9b6dd168f7b2376a91fa7dc92851fc6ce8c552f6363e9e126812afceabc09269",
           "task_id": "i3_3_structure_held_out_v2_0115"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "4e210765e3e9f5b48a8875913e2179c425823eef68387b8daf9c2418b6fe7ab7",
-          "observable_optimal_value": 93.94999999999999,
-          "table_identity_sha256": "426ae7f2947808f4190250e1ec7cd804d1dea3837d24a1b1f93f2a6b9157ae1f",
+          "information_class_id": "649ac0a6f2d7a97e987424b3ad1a33fae7f73854aada50817953e84be5741b2a",
+          "observable_optimal_value": 92.875,
+          "table_identity_sha256": "528a1b55348e8ca00a15ce1ca3e2059dd190c8fa4932329683744e03d67fad69",
           "task_id": "i3_3_structure_held_out_v2_0116"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "4e210765e3e9f5b48a8875913e2179c425823eef68387b8daf9c2418b6fe7ab7",
-          "observable_optimal_value": 93.94999999999999,
-          "table_identity_sha256": "426ae7f2947808f4190250e1ec7cd804d1dea3837d24a1b1f93f2a6b9157ae1f",
+          "information_class_id": "649ac0a6f2d7a97e987424b3ad1a33fae7f73854aada50817953e84be5741b2a",
+          "observable_optimal_value": 92.875,
+          "table_identity_sha256": "528a1b55348e8ca00a15ce1ca3e2059dd190c8fa4932329683744e03d67fad69",
           "task_id": "i3_3_structure_held_out_v2_0117"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "26a81f2eb4ab44258de00e373e457d849f7592ca9c417767ff7c6d902d568934",
-          "observable_optimal_value": 93.945,
-          "table_identity_sha256": "37e5bb685ff000df9e486585bf83e84e4f119d30e0d3477b74da269ee1b5ffcd",
+          "information_class_id": "17d06471a0e3a84d098f54eabd064da24ebb971c0c489a5f3afa70aa189bde7f",
+          "observable_optimal_value": 92.35499999999999,
+          "table_identity_sha256": "eb673ce393e6c6a1563df9855bbd0e1aa91f550e0729879645b93ac8b69057cf",
           "task_id": "i3_3_structure_held_out_v2_0118"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "26a81f2eb4ab44258de00e373e457d849f7592ca9c417767ff7c6d902d568934",
-          "observable_optimal_value": 93.945,
-          "table_identity_sha256": "37e5bb685ff000df9e486585bf83e84e4f119d30e0d3477b74da269ee1b5ffcd",
+          "information_class_id": "17d06471a0e3a84d098f54eabd064da24ebb971c0c489a5f3afa70aa189bde7f",
+          "observable_optimal_value": 92.35499999999999,
+          "table_identity_sha256": "eb673ce393e6c6a1563df9855bbd0e1aa91f550e0729879645b93ac8b69057cf",
           "task_id": "i3_3_structure_held_out_v2_0119"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "74278ba08900f22c847926f843ba8a103e428bc72812712c983b8b506f8a01f3",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "00b96032903df86e3f419a44d898e9b2a6ab86f5f960576f82e7f1a36d55bae4",
+          "information_class_id": "ec8446c87429b83095c32b9711ed90b01590fb545c0da7552caf5da048df7f6d",
+          "observable_optimal_value": 18.795000000000005,
+          "table_identity_sha256": "003fe5766dbe011fe1775fc8fc7deed920409bdc11441414a8e9571c93293b05",
           "task_id": "i3_3_structure_held_out_v2_0120"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "74278ba08900f22c847926f843ba8a103e428bc72812712c983b8b506f8a01f3",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "00b96032903df86e3f419a44d898e9b2a6ab86f5f960576f82e7f1a36d55bae4",
+          "information_class_id": "ec8446c87429b83095c32b9711ed90b01590fb545c0da7552caf5da048df7f6d",
+          "observable_optimal_value": 18.795000000000005,
+          "table_identity_sha256": "003fe5766dbe011fe1775fc8fc7deed920409bdc11441414a8e9571c93293b05",
           "task_id": "i3_3_structure_held_out_v2_0121"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "de0bfc4486d368348f43676ec572deb3449b8b914fee34acf853a9edb32b2d04",
+          "information_class_id": "b7c4e030f3ff8d6e3893b34620a8c2ce26aee1b012de77ee076f8226c3d5bac0",
           "observable_optimal_value": 69.89,
-          "table_identity_sha256": "2e8a38dbf0d4bffef3d3651f4bcbb731c0bf2a55b62cb74d466dde7670d18d0d",
+          "table_identity_sha256": "fb821331602c60a55d732966b26c680df4ea27a9f5949916485c4e9995310956",
           "task_id": "i3_3_structure_held_out_v2_0122"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "efb7eeeacc04c89659672bff7a2105d999ae0f86db4e84549592124311c01bbe",
+          "information_class_id": "dde47fd0fa02ab7c3f1dbf13def5c0dbe4e34b001a25a32d88382450031476c3",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "d23b41866c54c592d2bb4ccca55b8e13d487d8fd4b75e0de512189f6b3051e9d",
+          "table_identity_sha256": "c131bed546af8fd3a11e3c1425ce6a11a5dc2f55661171f6ced4e1fe228167e6",
           "task_id": "i3_3_structure_held_out_v2_0123"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "465c3ecf05e7f53e30ccbaac43068dc4841e35ff0bab6947e9c9d99759d676bb",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "0858585848e8928e038c6d4aae4349c32692afe13346bea9efeeedf6d63cd9f4",
+          "information_class_id": "708a12fbfd392a90f4ba5f65a0614b10a399888ca4fb3fddacabc9247b8301c7",
+          "observable_optimal_value": 91.78999999999999,
+          "table_identity_sha256": "e1a495c1e0a3f22a0468cd1ef7a48748e5e5a490a5d72e3d1fed84df09ef102a",
           "task_id": "i3_3_structure_held_out_v2_0124"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "465c3ecf05e7f53e30ccbaac43068dc4841e35ff0bab6947e9c9d99759d676bb",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "0858585848e8928e038c6d4aae4349c32692afe13346bea9efeeedf6d63cd9f4",
+          "information_class_id": "708a12fbfd392a90f4ba5f65a0614b10a399888ca4fb3fddacabc9247b8301c7",
+          "observable_optimal_value": 91.78999999999999,
+          "table_identity_sha256": "e1a495c1e0a3f22a0468cd1ef7a48748e5e5a490a5d72e3d1fed84df09ef102a",
           "task_id": "i3_3_structure_held_out_v2_0125"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "7d1da78dbc45150940476bf4ba65797e0e9cd9bebdfde4edd874b212c1d053ed",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "55247900929186b2200eb813b5ef0f64a4fdd2fa4b83b20b37eb18a269d0d11a",
+          "information_class_id": "c3e9671a0e3a5b010a9fac6e5d7065dd49e1dfa50a6a5cb349e1dfd88d3f9466",
+          "observable_optimal_value": 91.79999999999998,
+          "table_identity_sha256": "1a0bbfe497b1ceda162b2748d7668bbe697cd2615e9ca8596d229897d5b04470",
           "task_id": "i3_3_structure_held_out_v2_0126"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "7d1da78dbc45150940476bf4ba65797e0e9cd9bebdfde4edd874b212c1d053ed",
-          "observable_optimal_value": 33.755,
-          "table_identity_sha256": "55247900929186b2200eb813b5ef0f64a4fdd2fa4b83b20b37eb18a269d0d11a",
+          "information_class_id": "c3e9671a0e3a5b010a9fac6e5d7065dd49e1dfa50a6a5cb349e1dfd88d3f9466",
+          "observable_optimal_value": 91.79999999999998,
+          "table_identity_sha256": "1a0bbfe497b1ceda162b2748d7668bbe697cd2615e9ca8596d229897d5b04470",
           "task_id": "i3_3_structure_held_out_v2_0127"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "0287bc4b5191ce4775340acbd85aa7524510ceb12c8585f17104214733b20f0e",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "e71578afb3fcb892e19132cabbafddc37111ee206648d60eec7df9c45e0f9c9a",
+          "information_class_id": "2948f35e8a7ad5b47b8bd995ca7b88816046c7bf3f8ccacf755917b8862ec8ee",
+          "observable_optimal_value": 19.875000000000004,
+          "table_identity_sha256": "3a3e2fad934542f0a3e503ba5bc196500ed796d24d0ad18b2170d111a720a8e8",
           "task_id": "i3_3_structure_held_out_v2_0128"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "0287bc4b5191ce4775340acbd85aa7524510ceb12c8585f17104214733b20f0e",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "e71578afb3fcb892e19132cabbafddc37111ee206648d60eec7df9c45e0f9c9a",
+          "information_class_id": "2948f35e8a7ad5b47b8bd995ca7b88816046c7bf3f8ccacf755917b8862ec8ee",
+          "observable_optimal_value": 19.875000000000004,
+          "table_identity_sha256": "3a3e2fad934542f0a3e503ba5bc196500ed796d24d0ad18b2170d111a720a8e8",
           "task_id": "i3_3_structure_held_out_v2_0129"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "a823cd1f0da4af18aa456336594f50237947dbab22134ad979a45b0705fd3e98",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "457eb1f38b06c8c77a9d8ecf5da883d480fe3f364380e8eb1a1a20f349afdd8a",
+          "information_class_id": "9d4621325e6f6932fb4d6695828b72eb1163e819e0fd991c3da94a8de06ec126",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "68bcc9f80f7ef35ccd95a143e864db9b39fe990b0fa6c0497aaa44c81c646988",
           "task_id": "i3_3_structure_held_out_v2_0130"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "12acd84fb535bb8c1d162d9ce97bc326c50069e802c27ed19181bb1091ce2cd2",
+          "information_class_id": "27fbbb3da2bc98f62cb55e5fbc2f2304d53eaaf5ecaa7c53973d3fab0b613ac3",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "68ef7d70ce0fc70c1afb6f1b11b8d9b19e7114d6eee28b9da2b9e671025c818f",
+          "table_identity_sha256": "e81a1d8fba7a7576877fc8e2aed5989581b7550f6f4228efb35631567087cccf",
           "task_id": "i3_3_structure_held_out_v2_0131"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "a1a1850adc646af89c19606d13cf0ffa66cc12a598739bb200890c199bcc6aef",
-          "observable_optimal_value": 93.94,
-          "table_identity_sha256": "18eb8afa3c30ee90da8e371075faa86be77385cfc661e1bb02d54556aa206df6",
+          "information_class_id": "17731e50ea9ed7eaf80f256c100a729399ef228c248375813ac8f9e86b1de743",
+          "observable_optimal_value": 92.87,
+          "table_identity_sha256": "1af6c4dc174bc56462d25aa5179230e4e3bdf573162e6ac748657928b771dd14",
           "task_id": "i3_3_structure_held_out_v2_0132"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "a1a1850adc646af89c19606d13cf0ffa66cc12a598739bb200890c199bcc6aef",
-          "observable_optimal_value": 93.94,
-          "table_identity_sha256": "18eb8afa3c30ee90da8e371075faa86be77385cfc661e1bb02d54556aa206df6",
+          "information_class_id": "17731e50ea9ed7eaf80f256c100a729399ef228c248375813ac8f9e86b1de743",
+          "observable_optimal_value": 92.87,
+          "table_identity_sha256": "1af6c4dc174bc56462d25aa5179230e4e3bdf573162e6ac748657928b771dd14",
           "task_id": "i3_3_structure_held_out_v2_0133"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "a1bea017494ae26cb6d0a201ccec9a058ab6de562e41e55bd4c9ef76b2a03ab9",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "30b3c4441d4e4a40b0fc43e68d45043e698a5c1fe76c8ba225d6a45402105fc7",
+          "information_class_id": "1152aa77f10461a8d6f0acef0e43307e3e2ff557f7fa14189b117a33157b2595",
+          "observable_optimal_value": 20.915000000000003,
+          "table_identity_sha256": "2c3fd2743145ffcecfec567005efe13fc7ea8edc3058d0b083f298ed93b41415",
           "task_id": "i3_3_structure_held_out_v2_0134"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "a1bea017494ae26cb6d0a201ccec9a058ab6de562e41e55bd4c9ef76b2a03ab9",
-          "observable_optimal_value": 23.065,
-          "table_identity_sha256": "30b3c4441d4e4a40b0fc43e68d45043e698a5c1fe76c8ba225d6a45402105fc7",
+          "information_class_id": "1152aa77f10461a8d6f0acef0e43307e3e2ff557f7fa14189b117a33157b2595",
+          "observable_optimal_value": 20.915000000000003,
+          "table_identity_sha256": "2c3fd2743145ffcecfec567005efe13fc7ea8edc3058d0b083f298ed93b41415",
           "task_id": "i3_3_structure_held_out_v2_0135"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "c52abfcdd1eabd8ec3ad388bf3f78a86fe7d3e6980167273b8e0317aefa12429",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "bd10dd5dec9f8f1b571aea75806c59a02dd1121a0680a3b6bc84b575df802b33",
+          "information_class_id": "bea4baf57570cabfc29b9ec74baba7176729f39c476b4aa797326383662b3bd7",
+          "observable_optimal_value": 82.77999999999997,
+          "table_identity_sha256": "6a6a68ff6fbc1078696ff32216c61454b6826fb7dc15ee7f94cacb33d78dd488",
           "task_id": "i3_3_structure_held_out_v2_0136"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "c52abfcdd1eabd8ec3ad388bf3f78a86fe7d3e6980167273b8e0317aefa12429",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "bd10dd5dec9f8f1b571aea75806c59a02dd1121a0680a3b6bc84b575df802b33",
+          "information_class_id": "bea4baf57570cabfc29b9ec74baba7176729f39c476b4aa797326383662b3bd7",
+          "observable_optimal_value": 82.77999999999997,
+          "table_identity_sha256": "6a6a68ff6fbc1078696ff32216c61454b6826fb7dc15ee7f94cacb33d78dd488",
           "task_id": "i3_3_structure_held_out_v2_0137"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "6e23d993416a17298ebab10b3e1bd9a881fe4d310c933d477119bae46a4373d5",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "f6c9fd36dc38f842b124fc8f51b7155867488ea5d0b8268de676b55dddadc9f5",
+          "information_class_id": "16398b225b2f89748cc5d645869440f9281565c029330fab5d2d179b1dd4d179",
+          "observable_optimal_value": 91.27,
+          "table_identity_sha256": "7e7bfbe52485e7cfdc64ca78beeea6ac85f8f33b513bf60fa4119790cef25c43",
           "task_id": "i3_3_structure_held_out_v2_0138"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "6e23d993416a17298ebab10b3e1bd9a881fe4d310c933d477119bae46a4373d5",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "f6c9fd36dc38f842b124fc8f51b7155867488ea5d0b8268de676b55dddadc9f5",
+          "information_class_id": "16398b225b2f89748cc5d645869440f9281565c029330fab5d2d179b1dd4d179",
+          "observable_optimal_value": 91.27,
+          "table_identity_sha256": "7e7bfbe52485e7cfdc64ca78beeea6ac85f8f33b513bf60fa4119790cef25c43",
           "task_id": "i3_3_structure_held_out_v2_0139"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "18582e08404f82c95e1b43e5c4defef91133c55b35f8a2892ce5b634e078ce09",
-          "observable_optimal_value": 93.94999999999999,
-          "table_identity_sha256": "6b2608f23cfac075919bedb5e6ccb41b2241b2f64cf4d37556ec51e87cc75bf0",
+          "information_class_id": "36c799569f8c37b39b1f1b61f1401ba7a9145f418827987d4de0f7d37e647c4a",
+          "observable_optimal_value": 92.875,
+          "table_identity_sha256": "f0ec7035bb21fe6dee2de9c918b8d34b3513dce56f2bf708ffd1e153ae15250f",
           "task_id": "i3_3_structure_held_out_v2_0140"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "18582e08404f82c95e1b43e5c4defef91133c55b35f8a2892ce5b634e078ce09",
-          "observable_optimal_value": 93.94999999999999,
-          "table_identity_sha256": "6b2608f23cfac075919bedb5e6ccb41b2241b2f64cf4d37556ec51e87cc75bf0",
+          "information_class_id": "36c799569f8c37b39b1f1b61f1401ba7a9145f418827987d4de0f7d37e647c4a",
+          "observable_optimal_value": 92.875,
+          "table_identity_sha256": "f0ec7035bb21fe6dee2de9c918b8d34b3513dce56f2bf708ffd1e153ae15250f",
           "task_id": "i3_3_structure_held_out_v2_0141"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "ba3193bdac809ebfbc105d1adc98a85a337fb99d6ce20f5f9b616ab8e5e43d19",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "c79c7572fd19f8b7ef9a90c1d74eb20f4e12ac536ecf23722bc4b0639b182278",
+          "information_class_id": "e6f11f3bfacc875ecd93ac86755a51b5e00d113276ada015cc5da9cc6acaab6a",
+          "observable_optimal_value": 18.795000000000005,
+          "table_identity_sha256": "45601b3426605c89b7ac11b34be23e674ee33163e5059c6b383afadca99ac528",
           "task_id": "i3_3_structure_held_out_v2_0142"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "ba3193bdac809ebfbc105d1adc98a85a337fb99d6ce20f5f9b616ab8e5e43d19",
-          "observable_optimal_value": 23.055000000000003,
-          "table_identity_sha256": "c79c7572fd19f8b7ef9a90c1d74eb20f4e12ac536ecf23722bc4b0639b182278",
+          "information_class_id": "e6f11f3bfacc875ecd93ac86755a51b5e00d113276ada015cc5da9cc6acaab6a",
+          "observable_optimal_value": 18.795000000000005,
+          "table_identity_sha256": "45601b3426605c89b7ac11b34be23e674ee33163e5059c6b383afadca99ac528",
           "task_id": "i3_3_structure_held_out_v2_0143"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "379973f29fc2070fe040ef6649d4d824cc8e4912f4669d7ea80bf857033595fc",
-          "observable_optimal_value": 87.07999999999998,
-          "table_identity_sha256": "6db6e7a556c1a991d8a3cdba1c2b6280f35756147814200859320d72136ff00c",
+          "information_class_id": "16cc9a086679175074b45befbd7161d2e60a4503615a2451c45db7895d6aac16",
+          "observable_optimal_value": 84.91999999999999,
+          "table_identity_sha256": "a11237e7dc0eda53937c4b7087e043b6168b7c04cee1024f17aaf4785b5961a7",
           "task_id": "i3_3_structure_held_out_v2_0144"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "87a76361c2c9a2db7a4c245b17fea81a3ee05596bb68632e1f6808e3b4e5fdb2",
+          "information_class_id": "fb09d99cfc3b6c24f6537f9bbcf219b1282fb6ad0ffbdff497892cecc08c4fdc",
           "observable_optimal_value": -0.11,
-          "table_identity_sha256": "27151ee2d2eaab5192e5a1b33a0b6a0a1b77a91537cd5498a9089c8458d43fb0",
+          "table_identity_sha256": "34fdf8332df9564312a8d82b244aa2b03e700b417e8699db34fe1e5cae987961",
           "task_id": "i3_3_structure_held_out_v2_0145"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "19686adb628837b477247b984cf289d2c32a588769dca5f1afa0317557c2bbd1",
-          "observable_optimal_value": 93.94,
-          "table_identity_sha256": "44c1e91fd991768f68603caa2beb614a5c864decf3b5d0a59685403a198b608e",
+          "information_class_id": "fa40ce573f8db852dca52e867feebd02f35476d03b5f4e80b4a4ec676fad8f55",
+          "observable_optimal_value": 92.87,
+          "table_identity_sha256": "6f88ff5273adc9d99e0b599a883daf0e7139a0ddc0e6a5b1290f8717fd2b2c32",
           "task_id": "i3_3_structure_held_out_v2_0146"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "19686adb628837b477247b984cf289d2c32a588769dca5f1afa0317557c2bbd1",
-          "observable_optimal_value": 93.94,
-          "table_identity_sha256": "44c1e91fd991768f68603caa2beb614a5c864decf3b5d0a59685403a198b608e",
+          "information_class_id": "fa40ce573f8db852dca52e867feebd02f35476d03b5f4e80b4a4ec676fad8f55",
+          "observable_optimal_value": 92.87,
+          "table_identity_sha256": "6f88ff5273adc9d99e0b599a883daf0e7139a0ddc0e6a5b1290f8717fd2b2c32",
           "task_id": "i3_3_structure_held_out_v2_0147"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "dcffa6d2e743b10bbb38dc0e457123291013796c0d5f0c8c06a05d0843028e3b",
-          "observable_optimal_value": 23.044999999999998,
-          "table_identity_sha256": "2d45a8e5f8af6d75114a1afb960b2cdb67bca1482ab3f4facc7dc72fc8e59c84",
+          "information_class_id": "cb5e1e020a8c085870ef12a05e33bea64e288da2401312cc50cfedcfd4f5d764",
+          "observable_optimal_value": 83.8,
+          "table_identity_sha256": "2b97b50b368351a53b64d8aa801de5a541a3b21e4e837f7ca6837c34deef2e65",
           "task_id": "i3_3_structure_held_out_v2_0148"
         },
         {
           "condition": "STATE_BLIND_CONTROLLER",
-          "information_class_id": "dcffa6d2e743b10bbb38dc0e457123291013796c0d5f0c8c06a05d0843028e3b",
-          "observable_optimal_value": 23.044999999999998,
-          "table_identity_sha256": "2d45a8e5f8af6d75114a1afb960b2cdb67bca1482ab3f4facc7dc72fc8e59c84",
+          "information_class_id": "cb5e1e020a8c085870ef12a05e33bea64e288da2401312cc50cfedcfd4f5d764",
+          "observable_optimal_value": 83.8,
+          "table_identity_sha256": "2b97b50b368351a53b64d8aa801de5a541a3b21e4e837f7ca6837c34deef2e65",
           "task_id": "i3_3_structure_held_out_v2_0149"
         }
       ],
@@ -9690,7 +9690,7 @@
         "i3_3_structure_held_out_v2_0148",
         "i3_3_structure_held_out_v2_0149"
       ],
-      "view_sha256": "e8e1b90c5e7224dee307b75bb7e1cf2aa680441ffbade58a4e24e7659a173b50"
+      "view_sha256": "c68d053e31e9eb34c78d670f20bba0d0bab1eddc534291955d9b791600a006fb"
     }
   ]
 }

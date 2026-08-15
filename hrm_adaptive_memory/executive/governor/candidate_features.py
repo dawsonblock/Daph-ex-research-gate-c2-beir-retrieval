@@ -146,12 +146,12 @@ def assess_candidate(
     resource_cost = LOW
     if len(semantics.cost_channels) >= 2:
         resource_cost = MEDIUM
-    # Check if consuming last resource
+    # Check if consuming last resource using typed GovernorResourceState
     consumes_last = False
     for ch in semantics.cost_channels:
         if ch == "steps":
             continue
-        if state.resource_state.get(ch, 0) <= 1:
+        if state.resources.is_last_resource(ch):
             resource_cost = HIGH
             consumes_last = True
             break

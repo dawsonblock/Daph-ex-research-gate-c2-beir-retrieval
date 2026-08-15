@@ -27,7 +27,6 @@
     "00e4aa732b4d4f734468e8381965c061a8022940c1576750fd848537f8b6e199": {
       "roles": [
         "structure_dev_v2",
-        "structure_held_out_v2",
         "structure_validation_v2"
       ],
       "task_ids": [
@@ -36,14 +35,6 @@
         "i3_3_structure_dev_v2_0132",
         "i3_3_structure_dev_v2_0140",
         "i3_3_structure_dev_v2_0252",
-        "i3_3_structure_held_out_v2_0020",
-        "i3_3_structure_held_out_v2_0028",
-        "i3_3_structure_held_out_v2_0084",
-        "i3_3_structure_held_out_v2_0092",
-        "i3_3_structure_held_out_v2_0116",
-        "i3_3_structure_held_out_v2_0124",
-        "i3_3_structure_held_out_v2_0132",
-        "i3_3_structure_held_out_v2_0140",
         "i3_3_structure_validation_v2_0020",
         "i3_3_structure_validation_v2_0028",
         "i3_3_structure_validation_v2_0084",
@@ -54,21 +45,20 @@
         "i3_3_structure_validation_v2_0140"
       ]
     },
-    "02fa36e6fb88b742b8ed89499550212af5aa01383cd787a86b61489823f5db6d": {
+    "0402bda0f50d0dc8ffa2dc2eee9cf5c53b1ebd799f09dddce3780aab08b03d17": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0080"
+        "i3_3_structure_held_out_v2_0035",
+        "i3_3_structure_held_out_v2_0059"
       ]
     },
     "05134afd11c23d69cb37f85d7c14a5031c74f7f17b609b2ec72e4de630713c0c": {
       "roles": [
-        "structure_held_out_v2",
         "structure_validation_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0010",
         "i3_3_structure_validation_v2_0010"
       ]
     },
@@ -78,6 +68,16 @@
       ],
       "task_ids": [
         "i3_3_structure_dev_v2_0094"
+      ]
+    },
+    "0790804c9caefafbb03a8f287ef28b2bc2d81147e1b1b89bb7f0386a9b3aebfd": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0082",
+        "i3_3_structure_held_out_v2_0107",
+        "i3_3_structure_held_out_v2_0130"
       ]
     },
     "08fd5ee3a6603abdbef2d574bfbc0cb196614986af8cfa0dd9bf5019139c5e60": {
@@ -109,14 +109,33 @@
         "i3_3_structure_validation_v2_0023"
       ]
     },
-    "0b671f6152061aa4b0e45839749ee9a1a76e132b045ab9487eb0b828255971df": {
+    "0a8fe934902cc5a72bb77426721875c2563c5f4a9f25fe3a842df7383d1f6b7f": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0050",
-        "i3_3_structure_held_out_v2_0074",
-        "i3_3_structure_held_out_v2_0099"
+        "i3_3_structure_held_out_v2_0017",
+        "i3_3_structure_held_out_v2_0119",
+        "i3_3_structure_held_out_v2_0143"
+      ]
+    },
+    "0b41fc9d47cb81a742ff237f76ee7aea8887fe9959681d86f37aee963f7b4ab0": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0095"
+      ]
+    },
+    "0b6008f5718a1335c022a0f597011bfb3e55514c678ab6ac2138eaedd9b2ed50": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0049",
+        "i3_3_structure_held_out_v2_0073",
+        "i3_3_structure_held_out_v2_0091",
+        "i3_3_structure_held_out_v2_0115"
       ]
     },
     "0c1bcc95ee7bf6c0a51259b1feda1cd758585bf26107818b95aa7eea8219591a": {
@@ -128,15 +147,6 @@
         "i3_3_structure_dev_v2_0167",
         "i3_3_structure_dev_v2_0215",
         "i3_3_structure_dev_v2_0263"
-      ]
-    },
-    "0d0d13c06bd48beb49fb9b40a5e33d05ed95a0f427e2ed916424d8802dff59d3": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0006",
-        "i3_3_structure_held_out_v2_0126"
       ]
     },
     "0d72e174d9223e4c444fae4d21cd0fe6a52c6cecfff285a63b95067ec5feb933": {
@@ -178,6 +188,17 @@
         "i3_3_structure_dev_v2_0277"
       ]
     },
+    "11756a447433eae630c7d1d1386eca47a30d9ef3e78107183b8c3fe911e90599": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0044",
+        "i3_3_structure_held_out_v2_0086",
+        "i3_3_structure_held_out_v2_0093",
+        "i3_3_structure_held_out_v2_0117"
+      ]
+    },
     "11aaa298908b0ebc1f4a023451b706752d8c852c247f33bf517212b392f90449": {
       "roles": [
         "structure_dev_v2"
@@ -191,6 +212,25 @@
         "i3_3_structure_dev_v2_0283"
       ]
     },
+    "13850048bbdfadcc6c6ef80a4d9330bad96429e20d0763f376f203ef389bfc22": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0040",
+        "i3_3_structure_held_out_v2_0065",
+        "i3_3_structure_held_out_v2_0088"
+      ]
+    },
+    "14c14f12ac910ee068d0d44a6039dd0489ba3f82dfa7111605d4eb92f09e43bc": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0014",
+        "i3_3_structure_held_out_v2_0062"
+      ]
+    },
     "1514f7254d2a1075e6978ede643899aa1449f33269ee788a4fac63c9199a54e1": {
       "roles": [
         "structure_validation_v2"
@@ -199,13 +239,21 @@
         "i3_3_structure_validation_v2_0024"
       ]
     },
-    "167c05a089067ce3d29ce104c82a9acaffea9f783c03156f06b6d91964ad4587": {
+    "1597e90f117c1aee199b3832009ebc4304ff3079c40123e893a34db12048805e": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0004",
-        "i3_3_structure_held_out_v2_0023"
+        "i3_3_structure_held_out_v2_0058"
+      ]
+    },
+    "163cf0d068d33f6948fe82f8a90c356e6399253709aa2ced322454b359080d0a": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0033",
+        "i3_3_structure_held_out_v2_0081"
       ]
     },
     "1742e03741b0c701511d22a75d51a9541c294a290c6c4b7de66f5de269274d09": {
@@ -217,38 +265,14 @@
         "i3_3_structure_dev_v2_0146"
       ]
     },
-    "1820bc54420868625bf4015cb25f6ad28dad0f02157ad8726c415d49b138be6a": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0049",
-        "i3_3_structure_held_out_v2_0073",
-        "i3_3_structure_held_out_v2_0091",
-        "i3_3_structure_held_out_v2_0115"
-      ]
-    },
     "1ab4439a93006408e81ff48b63a3a2bae734f54f6bf5029104c06f49fec3a567": {
       "roles": [
-        "structure_held_out_v2",
         "structure_validation_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0011",
-        "i3_3_structure_held_out_v2_0083",
-        "i3_3_structure_held_out_v2_0131",
         "i3_3_structure_validation_v2_0011",
         "i3_3_structure_validation_v2_0083",
         "i3_3_structure_validation_v2_0131"
-      ]
-    },
-    "1b0d5b25e80fc45b0c8191cb08979f51d2c7b3eada1a7c018ff289e749469f47": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0100",
-        "i3_3_structure_held_out_v2_0125"
       ]
     },
     "1d053dccb3fc34ed81ca749399ca0ccb480f2fd2395455e3bf7cfde31984686d": {
@@ -295,6 +319,23 @@
         "i3_3_structure_validation_v2_0122"
       ]
     },
+    "26b6afe1e6ff22546848085036ca3aabbf7daa243957dde968b8b53793633d87": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0024"
+      ]
+    },
+    "2c2b9e9beffa7b20f077911a3e5727d8aee810c58db4a1b4e27e249871e228bc": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0056",
+        "i3_3_structure_held_out_v2_0104"
+      ]
+    },
     "2ce6f4f75204578f480d414ae547714111c313d33a8cb9702fe8876748cf5494": {
       "roles": [
         "structure_validation_v2"
@@ -302,6 +343,15 @@
       "task_ids": [
         "i3_3_structure_validation_v2_0014",
         "i3_3_structure_validation_v2_0062"
+      ]
+    },
+    "2d68501573dae77846378f5c603e62460e2b2f75f28ce2c7822d411b5885f1b6": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0105",
+        "i3_3_structure_held_out_v2_0129"
       ]
     },
     "2e1b37989bfaf03a48410264d3443bc716d59f8dcb3122d89c731d8de142dc48": {
@@ -323,6 +373,25 @@
         "i3_3_structure_dev_v2_0280"
       ]
     },
+    "2e6538f532f264f3e930d9ed594e9f95bcb75ccc76a86aa7de9028b22ef95180": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0015",
+        "i3_3_structure_held_out_v2_0134",
+        "i3_3_structure_held_out_v2_0141"
+      ]
+    },
+    "2ee341f0aa380137df48b594c4e8696c96d48296ff8af8480637ac989ca91464": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0110",
+        "i3_3_structure_held_out_v2_0135"
+      ]
+    },
     "2f6e82a18ce18520883e93d17dc1de2d8bee67050cff7156c4709fa41fab6036": {
       "roles": [
         "structure_dev_v2"
@@ -331,6 +400,15 @@
         "i3_3_structure_dev_v2_0048",
         "i3_3_structure_dev_v2_0168",
         "i3_3_structure_dev_v2_0216"
+      ]
+    },
+    "2f99490bf685ed82fcbfcc3ffdc58e33ab9a1447b6adc0a357e5515a9148daf3": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0054",
+        "i3_3_structure_held_out_v2_0079"
       ]
     },
     "3252f2b155747273da5801e5b50aa12dad23ae1666ace77924fe525bf18ca27b": {
@@ -363,25 +441,6 @@
         "i3_3_structure_dev_v2_0225"
       ]
     },
-    "355a36b87216dc0e4ca09450e399299532e7c875c423f38d417ac8f15358e48d": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0033",
-        "i3_3_structure_held_out_v2_0081"
-      ]
-    },
-    "35f5f26e23405a86a6208fa8a667bd70c58addf262ff154397eeb25a58b29f31": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0036",
-        "i3_3_structure_held_out_v2_0043",
-        "i3_3_structure_held_out_v2_0085"
-      ]
-    },
     "35fde601bebe6c9f52c9e87d32b533c4aaa4e529b0b53656d6dd609c8d251117": {
       "roles": [
         "structure_dev_v2"
@@ -392,13 +451,9 @@
     },
     "372e85b20a925836d46f23fe00f8b78733db442f3aafb96fc5a1a58cee188dcd": {
       "roles": [
-        "structure_held_out_v2",
         "structure_validation_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0017",
-        "i3_3_structure_held_out_v2_0119",
-        "i3_3_structure_held_out_v2_0143",
         "i3_3_structure_validation_v2_0119",
         "i3_3_structure_validation_v2_0143"
       ]
@@ -425,6 +480,16 @@
         "i3_3_structure_dev_v2_0248"
       ]
     },
+    "37b6748f137af33b27239e72b597dcde05def6b9da47ef8911c0ff2b83377105": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0078",
+        "i3_3_structure_held_out_v2_0102",
+        "i3_3_structure_held_out_v2_0127"
+      ]
+    },
     "381cccee65a6d73589ecfa4f1e2123330f6fd219302d17a6d77195277adcc119": {
       "roles": [
         "structure_validation_v2"
@@ -432,6 +497,16 @@
       "task_ids": [
         "i3_3_structure_validation_v2_0033",
         "i3_3_structure_validation_v2_0081"
+      ]
+    },
+    "382b07879df25b2ba2aea85636e2b4a8ba3b87821ad3a2b07cdfc3a2c75e1ec8": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0038",
+        "i3_3_structure_held_out_v2_0063",
+        "i3_3_structure_held_out_v2_0087"
       ]
     },
     "389d685591553c3622f22d33a26551089c7ff820d5176620d8c8bd47d161fd1c": {
@@ -451,6 +526,15 @@
         "i3_3_structure_validation_v2_0067"
       ]
     },
+    "3b6ec8c2d8055512a5224ba668c1f4e9afe80608fc1f02a3581f5276c23a4e5d": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0030",
+        "i3_3_structure_held_out_v2_0103"
+      ]
+    },
     "3b7df95538df324d6f02b97424b5b3e2f210b4d64bcc24bddf6ea42a02c93973": {
       "roles": [
         "structure_dev_v2"
@@ -465,6 +549,15 @@
       ],
       "task_ids": [
         "i3_3_structure_validation_v2_0066"
+      ]
+    },
+    "3d095743c2248c322bf1af2bb5308d887eb951bb74f314197aacf3de047c58ea": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0001",
+        "i3_3_structure_held_out_v2_0120"
       ]
     },
     "3e99d9ae73a07e4df06177a617f6326c7e4d180a168283afeba43315de16074e": {
@@ -489,33 +582,14 @@
         "i3_3_structure_dev_v2_0154"
       ]
     },
-    "3f249e53b656edc980d1c2365547e4993d241e380e027ee9280e7dea43cb0e99": {
+    "3f499c513c18ea3cc803968ff7bed3cb666cbf7b81256bba2add1a69fdd91f68": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0008",
-        "i3_3_structure_held_out_v2_0057"
-      ]
-    },
-    "3f27a2c7ad10ca316e11c1b05cb0c5c3414118ea39ecf7aa44d638dfa9f8ec24": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0040",
-        "i3_3_structure_held_out_v2_0065",
-        "i3_3_structure_held_out_v2_0088"
-      ]
-    },
-    "3faf9e410a5e7d3f66ed4dd03d7019a8b851a4a84f1730a67e6cb6f366198a86": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0026",
-        "i3_3_structure_held_out_v2_0051",
-        "i3_3_structure_held_out_v2_0068"
+        "i3_3_structure_held_out_v2_0036",
+        "i3_3_structure_held_out_v2_0043",
+        "i3_3_structure_held_out_v2_0085"
       ]
     },
     "404ffcc20bd5e3cb2b4cc703707633f2544036902f2607fa51fd55d28a336014": {
@@ -558,15 +632,6 @@
         "i3_3_structure_validation_v2_0133"
       ]
     },
-    "42ce698572fd82dc98532bcbaf72390f2ff37f886818930a28dff16e3d934d8a": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0000",
-        "i3_3_structure_held_out_v2_0048"
-      ]
-    },
     "432483bc73ff9100eabb8ba93591eaa65865a88010a68cf855a311498b4cfe51": {
       "roles": [
         "structure_dev_v2"
@@ -575,6 +640,14 @@
         "i3_3_structure_dev_v2_0008",
         "i3_3_structure_dev_v2_0099",
         "i3_3_structure_dev_v2_0218"
+      ]
+    },
+    "43f76bb85431dc603d9b646cf73062fd71c1a4e3defb667b17ddd6191bc78ff6": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0108"
       ]
     },
     "4417be7c8ce2257c9c0b68930277dbe84e9c54863dbd4fa8c8c1879feecba1ae": {
@@ -602,11 +675,9 @@
     },
     "4656bb8ebe9bd561cc334546f4118fa050e8c9878a925e0e9e8404668cf1f848": {
       "roles": [
-        "structure_held_out_v2",
         "structure_validation_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0112",
         "i3_3_structure_validation_v2_0112"
       ]
     },
@@ -645,6 +716,26 @@
         "i3_3_structure_dev_v2_0282"
       ]
     },
+    "4d58d2cf210407c3f5e3fd46c2c0718488729a2e7273d720c1552d6059d05c66": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0011",
+        "i3_3_structure_held_out_v2_0083",
+        "i3_3_structure_held_out_v2_0131"
+      ]
+    },
+    "4e75862fd09eb72eee444d7496d5d8fabd6473f8fae168cacc93d23ab72cf20e": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0076",
+        "i3_3_structure_held_out_v2_0101",
+        "i3_3_structure_held_out_v2_0149"
+      ]
+    },
     "4e98cf1622bc319ecf192484bd15da7ba6665bec54314c218845d0504ec73e28": {
       "roles": [
         "structure_dev_v2"
@@ -672,12 +763,37 @@
         "i3_3_structure_dev_v2_0287"
       ]
     },
+    "5311c966fbf83f9ffa27945751f57f2f6604592ba95faa4013fe04bb66d16b58": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0012",
+        "i3_3_structure_held_out_v2_0037",
+        "i3_3_structure_held_out_v2_0060"
+      ]
+    },
     "56fe8d502c427d8bea345b5c711c70e31c9f6bb213d0e329b07f2af491bfb8ad": {
       "roles": [
         "structure_dev_v2"
       ],
       "task_ids": [
         "i3_3_structure_dev_v2_0153"
+      ]
+    },
+    "5725e475cbbbdca07a054d2d9e6c9d7683605337c840ea485160a359ea59a819": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0020",
+        "i3_3_structure_held_out_v2_0028",
+        "i3_3_structure_held_out_v2_0084",
+        "i3_3_structure_held_out_v2_0092",
+        "i3_3_structure_held_out_v2_0116",
+        "i3_3_structure_held_out_v2_0124",
+        "i3_3_structure_held_out_v2_0132",
+        "i3_3_structure_held_out_v2_0140"
       ]
     },
     "5afe4f381828727542e5ab31d65e8a05e17d30d1d806a768dfd2d856da78f8b9": {
@@ -706,6 +822,15 @@
         "i3_3_structure_dev_v2_0295"
       ]
     },
+    "5bd1b2e6ae56deb8905abef9b9fbecb6e690eaed1e4a2383a5bcf23f48c377cd": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0019",
+        "i3_3_structure_held_out_v2_0067"
+      ]
+    },
     "5c1d4dce0d17a48baada487bcca8d465f969771179edfe71c88033d0145b2491": {
       "roles": [
         "structure_dev_v2"
@@ -718,33 +843,6 @@
         "i3_3_structure_dev_v2_0265"
       ]
     },
-    "62e1df36ec2b1d544ca67bac57ae30590694b866d20b8dd9db24e6ada750bb46": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0054",
-        "i3_3_structure_held_out_v2_0079"
-      ]
-    },
-    "635025c559dd13897ca7e42bcd73889f9296460180309b43457e8b24e2ccaeeb": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0019",
-        "i3_3_structure_held_out_v2_0067"
-      ]
-    },
-    "6390ec72673e5e2d29ce2c2cb67fa3fba23a9be835ad231cf26c44d002d90481": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0098",
-        "i3_3_structure_held_out_v2_0146"
-      ]
-    },
     "63bda4f4d63ee61e0e6e1e559acfda6edd20803ffdef8ff361039b100e9f7278": {
       "roles": [
         "structure_validation_v2"
@@ -752,6 +850,17 @@
       "task_ids": [
         "i3_3_structure_validation_v2_0098",
         "i3_3_structure_validation_v2_0146"
+      ]
+    },
+    "677232dc0d939e66ad3da2a95723fcded6075cda053e6026facbeb755c3ffda6": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0018",
+        "i3_3_structure_held_out_v2_0096",
+        "i3_3_structure_held_out_v2_0121",
+        "i3_3_structure_held_out_v2_0144"
       ]
     },
     "67cedc7469c70026eda124a4fd2f703fda130a1491efb4f16966e227b022e795": {
@@ -802,12 +911,16 @@
         "i3_3_structure_dev_v2_0014"
       ]
     },
-    "6bda17f23fa556a7b0496ee0552ff2238df63b1352d6a4751ce97b67f1e8c09a": {
+    "6c2ebfbdfd96c1cea78e7f2cfe5b71dfa5d9e6e27236d59d8f20a72e99566a63": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0066"
+        "i3_3_structure_held_out_v2_0022",
+        "i3_3_structure_held_out_v2_0064",
+        "i3_3_structure_held_out_v2_0071",
+        "i3_3_structure_held_out_v2_0113",
+        "i3_3_structure_held_out_v2_0136"
       ]
     },
     "6c694946fd7a3225cc4c880b686a135fdf85e36ff2c0668dfe1e6a72c679c504": {
@@ -825,13 +938,12 @@
         "i3_3_structure_dev_v2_0264"
       ]
     },
-    "6d84910203397903607cf2205c515081feade334c07497ba862010bad07821da": {
+    "6dc6ad0081f86807b1794b51db566459de0f596f3e60f16348170936fd32b578": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0034",
-        "i3_3_structure_held_out_v2_0106"
+        "i3_3_structure_held_out_v2_0002"
       ]
     },
     "6fbe97ac44aef91346af1fa3a281f7fe664a75dfed7450d33bce7baada6107c8": {
@@ -842,40 +954,12 @@
         "i3_3_structure_dev_v2_0055"
       ]
     },
-    "6fcda7a17ad6d4c220a10359c08dadfb25ff18eec415a0f5ec6e165fbe27d55e": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0122"
-      ]
-    },
-    "716875dc929c4d75ac24f30c82d52fa70b8a94380ff2256b482e1d11ae7f4fd3": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0014",
-        "i3_3_structure_held_out_v2_0062"
-      ]
-    },
     "7254ecc58822d1e641c25c9eaf0cf39aaf5e8a017a069328d2b5d6141c7a7d1e": {
       "roles": [
         "structure_dev_v2"
       ],
       "task_ids": [
         "i3_3_structure_dev_v2_0077"
-      ]
-    },
-    "733f16789683967022c6f66e644ed98ff5b01fb11b0eb62baa43b0a5722ef8d0": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0044",
-        "i3_3_structure_held_out_v2_0086",
-        "i3_3_structure_held_out_v2_0093",
-        "i3_3_structure_held_out_v2_0117"
       ]
     },
     "73ea5c1c18325a13ffe5387554bbe23d259c62fd1d4acfe40da643a4c012f496": {
@@ -887,22 +971,21 @@
         "i3_3_structure_dev_v2_0152"
       ]
     },
-    "785eaa20ec380c241e09f49e7082c6b64fa9b735341c4783711700e4932fc0dd": {
+    "77d5ff383128434df8a3f52b33943a982e1212ea7603bab9c09d1b1fba9985fa": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0001",
-        "i3_3_structure_held_out_v2_0120"
+        "i3_3_structure_held_out_v2_0072",
+        "i3_3_structure_held_out_v2_0114",
+        "i3_3_structure_held_out_v2_0139"
       ]
     },
     "798c5944e1f1afba63bf83df51766fb8708c0822bda5e9a43465ba5ed21fc09f": {
       "roles": [
-        "structure_held_out_v2",
         "structure_validation_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0052",
         "i3_3_structure_validation_v2_0052"
       ]
     },
@@ -937,6 +1020,23 @@
         "i3_3_structure_validation_v2_0130"
       ]
     },
+    "7d2cc2939f7e1b3135d371aef1a4ee695af9f2f88d86a5fd2684270b139b44f8": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0008",
+        "i3_3_structure_held_out_v2_0057"
+      ]
+    },
+    "7d3ecadc684ce05bb315996d10fb5f5a50ffb94288daf8f0baeec158d2f7ca91": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0010"
+      ]
+    },
     "7dfefdf57c11f5c3782c316f36d6e703374dc5c5911f2be84e0150f0b5b1bea4": {
       "roles": [
         "structure_dev_v2"
@@ -945,14 +1045,6 @@
         "i3_3_structure_dev_v2_0062",
         "i3_3_structure_dev_v2_0182",
         "i3_3_structure_dev_v2_0230"
-      ]
-    },
-    "7e278b247415d9d7a4032dab6d6eaf4f1e8f669cff5e341513a91d304260d6be": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0111"
       ]
     },
     "7f2528bfbb7eab6deec335d8d67d0992e0bb624e2f8fb4729220fec3cf32c272": {
@@ -999,12 +1091,32 @@
         "i3_3_structure_dev_v2_0298"
       ]
     },
+    "81683eb15576e8f23fac414ecaa20ce9fde4657b69647ae54cf9eeb415ec92cf": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0016",
+        "i3_3_structure_held_out_v2_0047",
+        "i3_3_structure_held_out_v2_0137",
+        "i3_3_structure_held_out_v2_0142"
+      ]
+    },
     "8373b01b7abc74fc830fd997b88c5278ffe2d23fc41bc7c60df15023967763c3": {
       "roles": [
         "structure_dev_v2"
       ],
       "task_ids": [
         "i3_3_structure_dev_v2_0039"
+      ]
+    },
+    "8548b130a12ac4a5bcab9cf1843ce577012212ed9f82e47eb45ee985a96fcf64": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0004",
+        "i3_3_structure_held_out_v2_0023"
       ]
     },
     "854a7afd668fde639f3cb505858b1d21dba576ebae2660aab5c7f36ecd8c12bc": {
@@ -1016,26 +1128,6 @@
         "i3_3_structure_dev_v2_0123",
         "i3_3_structure_dev_v2_0195",
         "i3_3_structure_dev_v2_0243"
-      ]
-    },
-    "86a73a519d8526c504c5cc0bd3cb009b25148c100b9afc1f0c5725c3a532e590": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0078",
-        "i3_3_structure_held_out_v2_0102",
-        "i3_3_structure_held_out_v2_0127"
-      ]
-    },
-    "86e1ae4f1ea6c20d9fec5479f1de2f8648ebef0135239dc9a57138a5a37a1cbe": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0038",
-        "i3_3_structure_held_out_v2_0063",
-        "i3_3_structure_held_out_v2_0087"
       ]
     },
     "88633415f4981d8016e5332efdc455e73b874a9bc9ed31dc371cbdb5efd6cc26": {
@@ -1070,35 +1162,12 @@
         "i3_3_structure_validation_v2_0144"
       ]
     },
-    "89d1268de1e8565db942198b4902e5d9fb81919277e50112f1a55bb052cd0f05": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0021",
-        "i3_3_structure_held_out_v2_0045",
-        "i3_3_structure_held_out_v2_0075"
-      ]
-    },
     "8a144f0a39cc1c001bb6cd971df866012e541b050f297f6a81b3b649f29af8d9": {
       "roles": [
-        "structure_held_out_v2",
         "structure_validation_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0076",
-        "i3_3_structure_held_out_v2_0101",
-        "i3_3_structure_held_out_v2_0149",
         "i3_3_structure_validation_v2_0076"
-      ]
-    },
-    "8b8f29a4998ec40c361edf602f99c41122c80a83404a1f17209f549e09c1ac8a": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0030",
-        "i3_3_structure_held_out_v2_0103"
       ]
     },
     "8b96d339d885313dd5599ba4eeb73e8ccfe349f63f0f5832105bdd8b60915c99": {
@@ -1122,6 +1191,15 @@
         "i3_3_structure_validation_v2_0139"
       ]
     },
+    "8c9de16dfc7b3db65f3a320aaad67210e269440630fd2566a256c3bc63f3b8c3": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0003",
+        "i3_3_structure_held_out_v2_0147"
+      ]
+    },
     "8cc1acd0d9c1af60b623072a8b64e57345a72a2643a4b6d319c547d9010556be": {
       "roles": [
         "structure_dev_v2"
@@ -1140,33 +1218,20 @@
         "i3_3_structure_dev_v2_0297"
       ]
     },
-    "8db5437a8de391cc80beb361559d2834419db252ddd889f15057f10e360fe08c": {
+    "8d54416e5d0d9ceb14fff2980dd4254b3f1abe75a9689f7ad40bd039f8a504f4": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0056",
-        "i3_3_structure_held_out_v2_0104"
+        "i3_3_structure_held_out_v2_0133"
       ]
     },
-    "90507a3a972b552b4d849091ce6e47a2aa420399efdb170357a2d44fb40a0275": {
+    "915fd4f15bd651c6ec44d4252c374dc107eeccb3d7e661d1a38df3039441bfd5": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0072",
-        "i3_3_structure_held_out_v2_0114",
-        "i3_3_structure_held_out_v2_0139"
-      ]
-    },
-    "90b16762ef73256ec4100071abccc0f820f62e3c6b66adf14baa7d73a874fabb": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0025",
-        "i3_3_structure_held_out_v2_0097",
-        "i3_3_structure_held_out_v2_0145"
+        "i3_3_structure_held_out_v2_0112"
       ]
     },
     "919888bbf9d1c9bc6539b0646d136949bc31e8223d78ead0338bebb4327f33c3": {
@@ -1178,29 +1243,16 @@
         "i3_3_structure_validation_v2_0126"
       ]
     },
-    "92127e8c3192238f6318bdede16bb9824d8d95ae6ca926602b53e0bf9c689fe0": {
+    "94a499a4fd2fcc766ac87169a0c22a930b8f9278f07e5b741fcaaf2910fd8061": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0022",
-        "i3_3_structure_held_out_v2_0064",
-        "i3_3_structure_held_out_v2_0071",
-        "i3_3_structure_held_out_v2_0113",
-        "i3_3_structure_held_out_v2_0136"
+        "i3_3_structure_held_out_v2_0098",
+        "i3_3_structure_held_out_v2_0146"
       ]
     },
-    "950f3849eb448588143150bcd2b4645c156ab81fa7532b3c76db6731a46c91a1": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0012",
-        "i3_3_structure_held_out_v2_0037",
-        "i3_3_structure_held_out_v2_0060"
-      ]
-    },
-    "9566830b22588c1c5645b19cced62058779b05ff2cdf845de122d4221c8f46a0": {
+    "95c2cad5268c2b0d52c9d0ea3e4183c342506a80bc813975c058e5df3e2ef412": {
       "roles": [
         "structure_held_out_v2"
       ],
@@ -1209,40 +1261,12 @@
         "i3_3_structure_held_out_v2_0031"
       ]
     },
-    "969d1dab583be78da84aecbb2aacbed7d4e96b32c84935fc6449b95eff44654a": {
+    "9909a6fe494f2ac6777ad09dd059ae90df8a92a9494289b85c4363f5b5d8baa7": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0082",
-        "i3_3_structure_held_out_v2_0107",
-        "i3_3_structure_held_out_v2_0130"
-      ]
-    },
-    "97de97231472fcbb39cdce36276f9b8b8c5d01087d6c34fadf6349701ddc288a": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0027",
-        "i3_3_structure_held_out_v2_0123"
-      ]
-    },
-    "98077d80f6ce8aaae2b9b07207c63616d73c828a4c813c5d288ad7c78babc4ea": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0024"
-      ]
-    },
-    "9809a666b6d41931314b8db5b79240868a83da5e867f5632bb46ba76724d3e64": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0110",
-        "i3_3_structure_held_out_v2_0135"
+        "i3_3_structure_held_out_v2_0122"
       ]
     },
     "9b334d5953de1aea0ef9b7f534826b6dfa0655d32eb10b873db85b8f1177f76c": {
@@ -1264,34 +1288,28 @@
         "i3_3_structure_dev_v2_0210"
       ]
     },
-    "9e19673b82895bbdb6fadb75ff8454d05e1015966e70155e8076b87458ba884c": {
-      "roles": [
-        "structure_held_out_v2",
-        "structure_validation_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0077",
-        "i3_3_structure_validation_v2_0077"
-      ]
-    },
-    "9f79f427b0dde61bd33b40ba15ca0ce7e03758c65bf8fd22324f5887e95c077a": {
+    "9b87c08247f0dcf5efdacdf15352bea9cd4be24432758eeca2d12867338a825d": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0042",
-        "i3_3_structure_held_out_v2_0090",
-        "i3_3_structure_held_out_v2_0138"
+        "i3_3_structure_held_out_v2_0034",
+        "i3_3_structure_held_out_v2_0106"
+      ]
+    },
+    "9e19673b82895bbdb6fadb75ff8454d05e1015966e70155e8076b87458ba884c": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0077"
       ]
     },
     "a0b7a40ad7138452c43d5aa163d727ecb35e4501e4b187af93c893c65e860356": {
       "roles": [
-        "structure_held_out_v2",
         "structure_validation_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0041",
-        "i3_3_structure_held_out_v2_0089",
         "i3_3_structure_validation_v2_0041",
         "i3_3_structure_validation_v2_0089"
       ]
@@ -1344,12 +1362,17 @@
         "i3_3_structure_dev_v2_0267"
       ]
     },
-    "a654bd5f454bf6a575e8cdc14fb95b44e205adb00b2b99be18763375e3fad6b9": {
+    "a85a711a96930f50ed81b21011db2ced7b3a933edf9ace356a9eedd09bff37c7": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0108"
+        "i3_3_structure_held_out_v2_0005",
+        "i3_3_structure_held_out_v2_0013",
+        "i3_3_structure_held_out_v2_0053",
+        "i3_3_structure_held_out_v2_0061",
+        "i3_3_structure_held_out_v2_0069",
+        "i3_3_structure_held_out_v2_0109"
       ]
     },
     "af76012759fb19215e77edb87282190b347cf51cc1932545215443dccbff6a62": {
@@ -1380,21 +1403,22 @@
         "i3_3_structure_validation_v2_0142"
       ]
     },
-    "b1c925276fb6174a8f08e1f1d5d3a4ea40cd7b80df0086c175b54e67986c591a": {
+    "b19a7791d129d67fdb17a2ea47e5a3294b294e4fbbab302987e1b92e731ac0ef": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0009",
-        "i3_3_structure_held_out_v2_0032"
+        "i3_3_structure_held_out_v2_0026",
+        "i3_3_structure_held_out_v2_0051",
+        "i3_3_structure_held_out_v2_0068"
       ]
     },
-    "b42226768f572aa066f54a5ba52b3c43ea51e75924a028638ccd76482b31362f": {
+    "b28f69b912603e7744c3e1cbed85750b0baee440a612c92f79f4cdb3fc935a72": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0002"
+        "i3_3_structure_held_out_v2_0111"
       ]
     },
     "b580ad864548f6c8196a1b698d013eb41334edc7a03440434baea8fd5f08b5c7": {
@@ -1426,15 +1450,6 @@
         "i3_3_structure_validation_v2_0093",
         "i3_3_structure_validation_v2_0117",
         "i3_3_structure_validation_v2_0128"
-      ]
-    },
-    "b8747f698719a4d980e17c2af2de9ffc53502ab0089a5b93b9727f8681346211": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0105",
-        "i3_3_structure_held_out_v2_0129"
       ]
     },
     "b9c444cb81856ab277de5cbbbfbb17f81fdea84d899dd437399c616fbe464f31": {
@@ -1515,17 +1530,6 @@
         "i3_3_structure_validation_v2_0138"
       ]
     },
-    "becb52831502bff439c932a7dbe2424229396257365a94443806c3b1b79725bf": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0016",
-        "i3_3_structure_held_out_v2_0047",
-        "i3_3_structure_held_out_v2_0137",
-        "i3_3_structure_held_out_v2_0142"
-      ]
-    },
     "c2e48a6b89c4f21b94ab41984eac153538c57f33758e9d9a5c7762eb18c2ba24": {
       "roles": [
         "structure_dev_v2"
@@ -1542,23 +1546,21 @@
         "i3_3_structure_dev_v2_0241"
       ]
     },
+    "c70a8aa5e7886766c8bc9455f98c400c58944488c65778384ad238ccbc5e5bb7": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0009",
+        "i3_3_structure_held_out_v2_0032"
+      ]
+    },
     "c77e0df6139f05b995cfda594f6eade31319c4e74f8e226e55a7d3c7d7c48df5": {
       "roles": [
         "structure_dev_v2"
       ],
       "task_ids": [
         "i3_3_structure_dev_v2_0229"
-      ]
-    },
-    "c7989c0c3b809dd13498d2ebbfb52b573a83d142dd9ea04526486165994db4a3": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0018",
-        "i3_3_structure_held_out_v2_0096",
-        "i3_3_structure_held_out_v2_0121",
-        "i3_3_structure_held_out_v2_0144"
       ]
     },
     "c88a1fce16bdc27a5e7f09c3f6319a0210c0a6fc8f89cb7a9c6d4c816a6f75f1": {
@@ -1584,6 +1586,31 @@
       ],
       "task_ids": [
         "i3_3_structure_validation_v2_0017"
+      ]
+    },
+    "cb35d35d4beee231736b87819f69980925c73d024656fc634871123dd2961128": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0094"
+      ]
+    },
+    "cb4d6cd9dc870091309135bf144c68b0731464d761ac569ed94125523d5a3439": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0000",
+        "i3_3_structure_held_out_v2_0048"
+      ]
+    },
+    "cbc8629e450180687e897eb4879e90fe98a24b361e2eb0e35629fc087377a98c": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0055"
       ]
     },
     "cd1eaa989bdaaaba9c1e9d75b533796c3fca0f18c1a63d5e1f90ace94ef156e5": {
@@ -1625,18 +1652,38 @@
         "i3_3_structure_dev_v2_0235"
       ]
     },
+    "d27914176513ed2e462a7c0708b8f40fad22c107154acf372f61619162892a5a": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0077"
+      ]
+    },
+    "d3701f2bc7d9475443195147faa4ee012ee980d283529cc30c604bf819392715": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0080"
+      ]
+    },
     "d3ccab4706a01d72729dd3aa7120cebfba454966c6465ae913c316535c87c597": {
       "roles": [
-        "structure_held_out_v2",
         "structure_validation_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0046",
-        "i3_3_structure_held_out_v2_0070",
-        "i3_3_structure_held_out_v2_0118",
         "i3_3_structure_validation_v2_0046",
         "i3_3_structure_validation_v2_0070",
         "i3_3_structure_validation_v2_0118"
+      ]
+    },
+    "d7e8c0fb369db19e561a3169ac2c5dacd00dee6d155353898ea6efac6bc6ce6c": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0039"
       ]
     },
     "d81c618af64ea595b41af58e1641d80b6ec6739884ada4a6373dbbe262c78e0c": {
@@ -1648,20 +1695,20 @@
         "i3_3_structure_validation_v2_0125"
       ]
     },
-    "d8d2efda87436939ad76356969ef92695cd548b72795600e3d808f78014dd89f": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0055"
-      ]
-    },
     "db59138d9e09f211b763b7af7dba615d77957d09a57052d2df62b3496b96518e": {
       "roles": [
         "structure_dev_v2"
       ],
       "task_ids": [
         "i3_3_structure_dev_v2_0033"
+      ]
+    },
+    "dceab3b1c4add6771f693a8d985ff786a0c8d8f1239417c97b3eaa8e211a4f51": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0066"
       ]
     },
     "dd04bfdcbbd13da23a83d2dbdf12e1271729b2fefbdcb145eb23e47a05a8ef26": {
@@ -1674,22 +1721,35 @@
         "i3_3_structure_dev_v2_0251"
       ]
     },
+    "dd5c6ad92373354537cba573d6599c953b41ff61b7a0faac2132ae193ff233aa": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0046",
+        "i3_3_structure_held_out_v2_0070",
+        "i3_3_structure_held_out_v2_0118"
+      ]
+    },
+    "ddcac9661f31c341db5cd3e26d95caf42f534b3495b61b82e61ab7bd6072394b": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0050",
+        "i3_3_structure_held_out_v2_0074",
+        "i3_3_structure_held_out_v2_0099"
+      ]
+    },
     "de212f32d81646d34e63970ebab1f49dd70211d4d670b5821077374b356e5137": {
       "roles": [
         "structure_dev_v2",
-        "structure_held_out_v2",
         "structure_validation_v2"
       ],
       "task_ids": [
         "i3_3_structure_dev_v2_0061",
         "i3_3_structure_dev_v2_0181",
         "i3_3_structure_dev_v2_0221",
-        "i3_3_structure_held_out_v2_0005",
-        "i3_3_structure_held_out_v2_0013",
-        "i3_3_structure_held_out_v2_0053",
-        "i3_3_structure_held_out_v2_0061",
-        "i3_3_structure_held_out_v2_0069",
-        "i3_3_structure_held_out_v2_0109",
         "i3_3_structure_validation_v2_0005",
         "i3_3_structure_validation_v2_0013",
         "i3_3_structure_validation_v2_0053",
@@ -1706,13 +1766,28 @@
         "i3_3_structure_validation_v2_0108"
       ]
     },
+    "e3d0fced5deeb2ec4f0d09ce716b83ab828f11cea06393da41ce88406d1d46f4": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0100",
+        "i3_3_structure_held_out_v2_0125"
+      ]
+    },
+    "e3e6be5ec5e4d0033e5911d7184103d56aaa1ea13e883f3f229a598273bbafaf": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0128"
+      ]
+    },
     "e405696f8ce8dfa81affcdfcb1a7045da349f1c86f4130d87fe52c6d08961093": {
       "roles": [
-        "structure_held_out_v2",
         "structure_validation_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0095",
         "i3_3_structure_validation_v2_0095"
       ]
     },
@@ -1743,12 +1818,32 @@
         "i3_3_structure_validation_v2_0145"
       ]
     },
-    "e714b1c8d204efa6dff0e3952a618180b3efaa78f9229d4a542ab56e5515ec02": {
+    "e60b9873057a6108372579f21a0316095efe0bbcf009b2d36ef2a09f89597a6a": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0133"
+        "i3_3_structure_held_out_v2_0029",
+        "i3_3_structure_held_out_v2_0148"
+      ]
+    },
+    "e68356d6d49971abc238a6310fc9d26925f16971fb18fd579b8ecba2f6d929ae": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0025",
+        "i3_3_structure_held_out_v2_0097",
+        "i3_3_structure_held_out_v2_0145"
+      ]
+    },
+    "e6e3d9550cf1fd90126201afad34d3a211acdc2e66d53ebb551b63c7b0919c9c": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0027",
+        "i3_3_structure_held_out_v2_0123"
       ]
     },
     "e75b7572321293171508d0a52776ab75447536382f7f33a1843a2d5968752c99": {
@@ -1759,22 +1854,22 @@
         "i3_3_structure_dev_v2_0202"
       ]
     },
-    "e83f32c5a938532e67174c0c24b573cf5f5452c520793ffeed23e398f63340df": {
+    "e8ac60a3f2ac81903ea0823f4df79e8d04ca8aa4d71800066e631be45e6a25d9": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0035",
-        "i3_3_structure_held_out_v2_0059"
+        "i3_3_structure_held_out_v2_0021",
+        "i3_3_structure_held_out_v2_0045",
+        "i3_3_structure_held_out_v2_0075"
       ]
     },
-    "e8e9a7acc6942be9da1691cc918763effa750127834defb5ed3201223cdf54c2": {
+    "e9c3f2f40c101a9f0c782d946bb28378d1417c02c853cc36063d3344f0c7b236": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0029",
-        "i3_3_structure_held_out_v2_0148"
+        "i3_3_structure_held_out_v2_0052"
       ]
     },
     "ea1795091ed56e81606a38fa2d015c9cd4e33ad0e695ba3e515c704f057a8b49": {
@@ -1801,11 +1896,9 @@
     },
     "eb14910b8b67979f38bab0ac87f4e49b0b35effa9b15cdda150551254444b3b1": {
       "roles": [
-        "structure_held_out_v2",
         "structure_validation_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0058",
         "i3_3_structure_validation_v2_0058"
       ]
     },
@@ -1827,14 +1920,13 @@
         "i3_3_structure_dev_v2_0281"
       ]
     },
-    "edc82b14e208fd874ed81c6a4fb4a759d009f3178cd0a3fbd632cd8812e7945c": {
+    "eebb13cebd04d2d99aad1406f78ed7648fc5c1027fbdb0c23230c56ffc976330": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0015",
-        "i3_3_structure_held_out_v2_0134",
-        "i3_3_structure_held_out_v2_0141"
+        "i3_3_structure_held_out_v2_0006",
+        "i3_3_structure_held_out_v2_0126"
       ]
     },
     "f04c55d9aef741a8eb2feabdddd587cb0d417a024fd8660c69315e04319811b4": {
@@ -1877,31 +1969,12 @@
         "i3_3_structure_dev_v2_0070"
       ]
     },
-    "f4c1a5608eab5254dea75bae90342d6af9639b89a8453af0c7166fd90e7a3055": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0039"
-      ]
-    },
     "f549d8b96ff47ef04a4c4f7f54e589aeec914d4048c60189c501f5e8c8937f3a": {
       "roles": [
-        "structure_held_out_v2",
         "structure_validation_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0094",
         "i3_3_structure_validation_v2_0094"
-      ]
-    },
-    "f72473521fd0ba57a847a5dd155b6ac6babc59761c62d9a254053e4f6bf20385": {
-      "roles": [
-        "structure_held_out_v2"
-      ],
-      "task_ids": [
-        "i3_3_structure_held_out_v2_0003",
-        "i3_3_structure_held_out_v2_0147"
       ]
     },
     "f768a8ab9cff176dabc99ab98024fd739d0687a74b9c3329ba6cb75fa688d3d2": {
@@ -1923,12 +1996,23 @@
         "i3_3_structure_validation_v2_0148"
       ]
     },
-    "ff08c6e46e85ff9da69ced1e80a7fbd8de53098f3933d32aea0a02d972c438f0": {
+    "fedc77a72bf6f37bf4f4df2b7bc90fd1507a313ee633dfe1aada0e086680add4": {
       "roles": [
         "structure_held_out_v2"
       ],
       "task_ids": [
-        "i3_3_structure_held_out_v2_0128"
+        "i3_3_structure_held_out_v2_0041",
+        "i3_3_structure_held_out_v2_0089"
+      ]
+    },
+    "ff2247b85f72c89ad668b8afbc92b531a39587da62fa506eca50a39e50cda6d8": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0042",
+        "i3_3_structure_held_out_v2_0090",
+        "i3_3_structure_held_out_v2_0138"
       ]
     }
   }

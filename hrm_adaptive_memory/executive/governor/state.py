@@ -10,6 +10,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from hrm_adaptive_memory.executive.metareasoning_controller import ControllerObservation
+from hrm_adaptive_memory.executive.governor.resources import (
+    GovernorResourceState, normalize_resources)
 
 
 GOVERNOR_STATE_SCHEMA = "DAPH_V2B_I3_5_GOVERNOR_STATE_V1"
@@ -30,6 +32,7 @@ class GovernorState:
         last_action: The most recent action, or None if no actions yet.
         last_outcome: The most recent outcome code, or None.
         repeated_no_gain: Whether the last action produced no gain and was repeated.
+        resources: Typed GovernorResourceState (normalized from runtime dict).
     """
     observation: ControllerObservation
     legal_actions: tuple[str, ...]
@@ -40,6 +43,7 @@ class GovernorState:
     last_action: str | None
     last_outcome: str | None
     repeated_no_gain: bool
+    resources: GovernorResourceState
 
     @property
     def task_id(self) -> str:
@@ -50,10 +54,6 @@ class GovernorState:
         """Whether the governor can see DAPH cognitive state (aware condition)."""
         return self.observation.cognitive_state is not None
 
-    @property
-    def resource_state(self) -> dict[str, int]:
-        return dict(self.observation.resource_state)
-
     def action_count(self, action: str) -> int:
         """How many times an action has been executed."""
         return self.prior_action_results.get(action, 0)
@@ -61,6 +61,23 @@ class GovernorState:
     def action_was_executed(self, action: str) -> bool:
         """Whether an action has been executed at least once."""
         return self.action_count(action) > 0
+
+    def outcome_sequence_unchanged(self, action: str) -> bool:
+        """Whether the last two outcomes for this action were identical.
+
+        This is a true no-gain signal: the action was repeated and produced
+        the same outcome code, meaning observable state likely didn't change.
+        """
+        if self.action_count(action) < 2:
+            return False
+        # Find the last two outcomes for this action
+        outcomes_for_action = []
+        for i, a in enumerate(self.prior_actions):
+            if a == action and i < len(self.prior_outcomes):
+                outcomes_for_action.append(self.prior_outcomes[i])
+        if len(outcomes_for_action) >= 2:
+            return outcomes_for_action[-1] == outcomes_for_action[-2]
+        return False
 
 
 def build_governor_state(
@@ -85,14 +102,19 @@ def build_governor_state(
         a.value if hasattr(a, "value") else str(a)
         for a in observation.allowed_actions)
 
-    # Detect repeated no-gain
+    # Detect repeated no-gain using outcome-based detection.
+    # A true no-gain is: same action repeated AND same outcome code,
+    # meaning observable state likely didn't change.
+    # Merely repeating an action is NOT no-gain — multi-step topologies
+    # legitimately require repeated SEARCH_MORE or REASON_MORE.
     repeated_no_gain = False
-    if len(prior_actions) >= 2:
-        if prior_actions[-1] == prior_actions[-2]:
-            # Same action repeated — check if outcome was no-gain
-            # We infer no-gain if the action didn't change the trajectory
-            # (i.e., the task is still ongoing)
+    if len(prior_actions) >= 2 and len(prior_outcomes) >= 2:
+        if (prior_actions[-1] == prior_actions[-2]
+                and prior_outcomes[-1] == prior_outcomes[-2]):
             repeated_no_gain = True
+
+    # Normalize resources from the real runtime dict
+    resources = normalize_resources(observation.resource_state)
 
     last_action = prior_actions[-1] if prior_actions else None
     last_outcome = prior_outcomes[-1] if prior_outcomes else None
@@ -107,4 +129,5 @@ def build_governor_state(
         last_action=last_action,
         last_outcome=last_outcome,
         repeated_no_gain=repeated_no_gain,
+        resources=resources,
     )
