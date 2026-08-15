@@ -1,0 +1,58 @@
+{
+  "contamination_notice": "This analysis uses held_out_structure results that are now visible. These 150 tasks are permanently contaminated for I3.5 model selection. New structural V2 splits are required.",
+  "generated_at": "2026-08-15T07:17:56.925201+00:00",
+  "governor_design_implications": [
+    "DEPTH_1: No intervention needed. Aware is already optimal.",
+    "DEPTH_4_PLUS: Governor must detect that VERIFY/REASON_MORE was already tried without resolving the bottleneck.",
+    "Governor must recognize that SEARCH_MORE targets conflict resolution while VERIFY does not.",
+    "Governor must penalize repeating actions that already failed to resolve the current blocker.",
+    "Governor must present action consequences (what changes, what does not change) to DeepSeek.",
+    "Governor must NOT map state labels directly to actions (UNVERIFIED \u2192 VERIFY is the failure pattern).",
+    "Governor must help DeepSeek ask: \"If I VERIFY again, what will change? If nothing, what else can I do?\""
+  ],
+  "key_findings": {
+    "DEPTH_1_failure_pattern": {
+      "description": "26 of 59 DEPTH_1 tasks: aware correctly answers immediately (1 step), blind does RETRIEVE\u2192VERIFY\u2192ANSWER (3 steps). The aware condition achieves perfect utility (V_pi = V_L = 99.89, DG = 0). The negative \u0394DG is NOT an executive failure \u2014 it is a consequence of information class structure. Blind aliases more tasks, so its class-average V_O is much lower (e.g., 33.76). When blind does well on a specific task, it exceeds its low V_O by a large margin, producing very negative DG. Aware is in a single-member class (V_O = V_L), so DG = 0 when it does well.",
+      "example": "task 0014: V_L=99.89, V_O_blind=33.76, V_pi_blind=94.56, V_O_aware=99.89, V_pi_aware=99.89. DG_blind=-60.80, DG_aware=0.00, \u0394DG=-60.80",
+      "governor_implication": "No governor intervention needed. Aware is already optimal on these tasks. The negative \u0394DG is a metric artifact of multi-member blind classes."
+    },
+    "DEPTH_4_PLUS_failure_pattern": {
+      "description": "Both conditions miss the optimal action (SEARCH_MORE in 23 tasks, REASON_MORE in 18-24 tasks). Both do RETRIEVE\u2192VERIFY\u2192ANSWER instead. Aware sometimes adds an extra VERIFY or REASON_MORE before ANSWER, increasing its cost and DG. The extra step does not help because the real bottleneck requires SEARCH_MORE, not more verification or reasoning.",
+      "governor_implication": "The governor must: (1) detect that VERIFY was already attempted without resolving the bottleneck, (2) penalize repeating VERIFY, (3) recognize that SEARCH_MORE targets conflict resolution while VERIFY does not, (4) present this consequence-aware reasoning to DeepSeek.",
+      "missed_optimal_actions": {
+        "REASON_MORE": 18,
+        "SEARCH_MORE": 23
+      },
+      "what_aware_did_extra": "Extra VERIFY or REASON_MORE before ANSWER (made things worse)",
+      "what_both_did": "RETRIEVE\u2192VERIFY\u2192ANSWER (wrong for these topologies)"
+    },
+    "action_distribution": {
+      "aware": {
+        "ANSWER": 127,
+        "REASON_MORE": 21,
+        "RETRIEVE": 100,
+        "STOP": 23,
+        "VERIFY": 111
+      },
+      "blind": {
+        "ANSWER": 127,
+        "REASON_MORE": 0,
+        "RETRIEVE": 133,
+        "STOP": 23,
+        "VERIFY": 123
+      },
+      "key_difference": "Aware uses REASON_MORE (21 times, blind never) and does fewer RETRIEVE (100 vs 133). Aware also starts with ANSWER 26 times (blind never does on this split)."
+    },
+    "worst_cognitive_channels": {
+      "conflict_alias": "\u0394DG=-33.32 (4 tasks)",
+      "note": "Alias channels are worst because they involve multi-member blind classes where blind can exceed its low V_O by a large margin.",
+      "provenance_alias": "\u0394DG=-60.25 (2 tasks)",
+      "temporal_alias": "\u0394DG=-40.88 (6 tasks)",
+      "verification": "\u0394DG=-27.64 (16 tasks)",
+      "verification_alias": "\u0394DG=-30.40 (4 tasks)"
+    }
+  },
+  "purpose": "Analyze I3.4 held_out_structure failures to inform I3.5 governor design. This data is contaminated for future model selection.",
+  "schema": "DAPH_V2B_I3_4_POSTMORTEM_V1",
+  "status": "DIAGNOSTIC_ONLY_NOT_FUTURE_HELD_OUT"
+}
