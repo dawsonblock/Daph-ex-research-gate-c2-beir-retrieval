@@ -67,7 +67,9 @@ class I3BenchmarkTask:
             raise ValueError("I3 tasks require lowercase ids, a category, and a summary")
         if self.split not in {"development", "validation", "held_out",
                               "held_out_instance", "held_out_surface",
-                              "held_out_structure"}:
+                              "held_out_structure",
+                              "structure_dev_v2", "structure_validation_v2",
+                              "structure_held_out_v2"}:
             raise ValueError("I3 task uses an unsupported benchmark split")
         if self.latent.expected_terminal not in {
                 DecisionAction.ANSWER, DecisionAction.DEFER, DecisionAction.STOP}:

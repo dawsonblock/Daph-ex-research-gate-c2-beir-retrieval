@@ -1,7 +1,7 @@
 {
   "authority_note": "Exact latent oracle, not generator intent, defines optimal actions.",
   "budget_counts": {
-    "STRUCTURE_HOLDOUT": 600
+    "STRUCTURE_HOLDOUT_V2": 600
   },
   "cognitive_channel_counts": {
     "composition": 98,
@@ -28,7 +28,7 @@
     "STOP": 98,
     "VERIFY": 74
   },
-  "generator_output_sha256": "4ec68c5dfab091e9ac610359845ceafb1f2eedb745ed6d7403893ca30374509a",
+  "generator_output_sha256": "37f7c1f17b5ac24c01b4363602de06e96901a4ad1787882718238270be0e032c",
   "schema": "DAPH_V2B_I3_5_BALANCE_REPORT_V2",
   "split_counts": {
     "structure_dev_v2": 300,

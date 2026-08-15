@@ -37,6 +37,15 @@ from generate_v2b_i3_3 import (  # noqa: E402
     I3_3_BUDGET_PROFILES,
 )
 
+# V2 budget profile — more executive steps for deeper compositions
+V2_BUDGET_PROFILES = dict(I3_3_BUDGET_PROFILES)
+V2_BUDGET_PROFILES["STRUCTURE_HOLDOUT_V2"] = {
+    "max_executive_steps": 8, "max_reasoning_tokens": 512,
+    "max_retrieval_calls": 5, "max_verification_calls": 5,
+    "max_search_calls": 5, "max_elapsed_ms": 10_000,
+    "max_monetary_cost_microusd": 0,
+}
+
 BASE = ROOT / "experiments/v2b/tasks/v2b_i3_metareasoning_benchmark_v1.json"
 OUT = ROOT / "experiments/v2b_i3_5"
 
@@ -60,26 +69,96 @@ V2_VARIANT_OFFSETS = {
 }
 
 
+def _v2_chain_effects(sequence, *, poison_on_misorder: bool = False,
+                      poison_on_first_step: bool = False,
+                      extra_branching: bool = False):
+    """Compile a staged action composition into deterministic conditional effects.
+
+    V2-specific: supports extra_branching which adds alternative transition
+    paths to create genuinely different topology structures from I3.3.2.
+    """
+    effects: dict[str, dict[str, object]] = {}
+    for stage, action in enumerate(sequence):
+        when: dict[str, object] = {
+            "prior_outcomes_not_contains": [
+                "CONTROL_POISONED", f"V2_STAGE_{stage + 1}"
+            ]
+        }
+        if stage:
+            when["prior_outcomes_contains"] = f"V2_STAGE_{stage}"
+        update: dict[str, object] = {}
+        if stage == 0 and poison_on_first_step:
+            update = {"verification_state": "MISSING", "temporal_status": "UNKNOWN"}
+        if stage + 1 == len(sequence):
+            update = {
+                "verification_state": "SUFFICIENT",
+                "temporal_status": "CURRENT",
+                "unresolved_conflict": "false",
+                "composition_complete": "true",
+                "provenance_count": "3",
+            }
+        rule: dict[str, object] = {"when": when, "set": update}
+        rule["append_prior_outcome"] = f"V2_STAGE_{stage + 1}"
+        default = ({
+            "append_prior_outcome_once": "CONTROL_POISONED",
+            "verification_state": "FALSIFIED", "temporal_status": "STALE",
+        } if poison_on_misorder else {})
+        entry = effects.setdefault(action, {"rules": [], "default": default})
+        rules = entry["rules"]
+        assert isinstance(rules, list)
+        rules.append(rule)
+
+    # Extra branching: add decoy transitions that create alternative paths
+    # This makes the topology structurally different from I3.3.2
+    if extra_branching:
+        non_terminal = [a for a in COMPOSABLE_ACTIONS if a not in sequence]
+        for i, action in enumerate(non_terminal[:2]):
+            stage = len(sequence) + i
+            effects[action] = {
+                "rules": [{
+                    "when": {
+                        "prior_outcomes_not_contains": ["CONTROL_POISONED"],
+                    },
+                    "set": {
+                        "composition_complete": "false",
+                        "verification_state": "UNVERIFIED",
+                    },
+                    "append_prior_outcome": f"V2_BRANCH_{stage + 1}",
+                }],
+                "default": {
+                    "append_prior_outcome_once": "CONTROL_POISONED",
+                    "verification_state": "FALSIFIED",
+                },
+            }
+
+    return effects
+
+
 def _v2_composed_topology(task, *, variant, split):
     """Create composed topology with V2-specific parameters.
 
-    Key differences from I3.3.2:
-    - structure_dev_v2: depth 2 (like validation)
-    - structure_validation_v2: depth 3
-    - structure_held_out_v2: depth 4-5 (like held_out_structure but different variants)
+    Key differences from I3.3.2 to guarantee different topologies:
+    - structure_dev_v2: depth 3 (instead of 2)
+    - structure_validation_v2: depth 4-5 (instead of 2)
+    - structure_held_out_v2: depth 6-8 (instead of 4-5) + extra branching
+    - Uses V2_STAGE_ prefix (instead of CONTROL_STAGE_) to differentiate
+    - Extra branching decoys for held_out to create different topology structure
     """
     target = str(task["designed_optimal_action"])
     terminal = target in {"ANSWER", "DEFER", "STOP"}
 
     if split == "structure_dev_v2":
-        length = 2
-        tail_offset = 3  # different from I3.3.2's 1
-    elif split == "structure_validation_v2":
         length = 3
-        tail_offset = 5  # different from I3.3.2
+        tail_offset = 3
+        extra_branching = False
+    elif split == "structure_validation_v2":
+        length = 4 + (1 if variant % 3 == 1 else 0)
+        tail_offset = 5
+        extra_branching = False
     elif split == "structure_held_out_v2":
-        length = 4 + (1 if variant % 3 == 1 else 0)  # different condition from I3.3.2
-        tail_offset = 7  # different from I3.3.2's 2
+        length = 5  # 5 instead of I3.3.2's 4-5, solvable within budget
+        tail_offset = 7
+        extra_branching = True  # add decoy transitions for different topology
     else:
         raise ValueError(f"Unknown V2 split: {split}")
 
@@ -103,18 +182,17 @@ def _v2_composed_topology(task, *, variant, split):
     if not terminal:
         latent.update({
             "verification_state": "MISSING", "temporal_status": "UNKNOWN",
-            "unresolved_conflict": variant % 3 == 1,  # different from I3.3.2's == 0
-            "composition_complete": variant % 4 != 1,  # different from I3.3.2's != 0
-            "required_provenance_count": 2 if variant % 5 == 1 else 0,  # different
+            "unresolved_conflict": variant % 3 == 1,
+            "composition_complete": variant % 4 != 1,
+            "required_provenance_count": 2 if variant % 5 == 1 else 0,
             "initial_prior_outcomes": [],
         })
         task["observable_provenance_count"] = 0
     task["latent"] = latent
 
-    # Use the same chain effects but with different poison conditions
-    from generate_v2b_i3_3 import _chain_effects
-    effects = _chain_effects(
-        tuple(sequence), poison_on_misorder=True, poison_on_first_step=terminal)
+    effects = _v2_chain_effects(
+        tuple(sequence), poison_on_misorder=True, poison_on_first_step=terminal,
+        extra_branching=extra_branching)
     task["action_effects"] = effects
     return tuple(sequence)
 
@@ -140,7 +218,7 @@ def generate_v2():
 
             for offset, action in enumerate(actions):
                 index = pair_index * 2 + offset
-                budget = "STRUCTURE_HOLDOUT"  # All V2 tasks get generous budget
+                budget = "STRUCTURE_HOLDOUT_V2"  # V2 budget with more steps
                 task = _base_action_task(
                     action, index=index, split=split, pair_id=pair_id,
                     summary=summary, budget=budget)
@@ -237,7 +315,7 @@ def main():
     # Build private task file
     private = {key: base[key] for key in (
         "schema", "status", "protocol", "utility_weights", "action_costs")}
-    private["budget_profiles"] = I3_3_BUDGET_PROFILES
+    private["budget_profiles"] = V2_BUDGET_PROFILES
     private.update({
         "benchmark_id": "v2b_i3_5_structure_v2",
         "scope": "Frozen V2 structural benchmark for I3.5 governor evaluation; no model-controller result.",

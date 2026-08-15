@@ -7,3 +7,7 @@ build/
 *.egg-info/
 runs/
 .claude/settings.local.json
+
+# V2 oracle tables — too large for git, regenerate with scripts/precompute_v2b_i3_5_oracles.py
+experiments/v2b_i3_5/oracle_tables/*.gz
+
