@@ -236,3 +236,49 @@ def test_saved_views_file_exists_and_is_valid_json():
         assert len(sha) == 64
     finally:
         os.unlink(path)
+
+
+@pytest.mark.skipif(not ORACLE_AVAILABLE,
+                    reason="Oracle tables not available in lite archive")
+def test_evaluation_view_prior_matches_split():
+    """Every information class in a split-specific view must be split-pure.
+
+    If any class contains members from multiple splits, the frozen
+    full-benchmark V_O^*(B) would not equal the split-conditioned
+    V_O^*(B | split) and the scoring would need recomputation.
+    """
+    import json
+    splits_data = json.loads((ROOT / "tests/../experiments/v2b_i3_3/splits/v2b_i3_3_splits_v1.json").read_text()
+                             if (ROOT / "tests/../experiments/v2b_i3_3/splits/v2b_i3_3_splits_v1.json").exists()
+                             else (ROOT / "experiments/v2b_i3_3/splits/v2b_i3_3_splits_v1.json").read_text())
+    task_to_split = {}
+    for split_name, entries in splits_data["splits"].items():
+        for entry in entries:
+            task_to_split[entry["task_id"]] = split_name
+
+    views = build_observable_oracle_views(root=ROOT)
+    for v in views:
+        for cls in v.information_classes:
+            member_splits = set(
+                task_to_split.get(tid, "UNKNOWN")
+                for tid in cls.member_task_ids
+            )
+            assert len(member_splits) == 1, (
+                f"Cross-split class in {v.split_name}/{v.condition}: "
+                f"class {cls.class_id[:16]}... has members from {member_splits}"
+            )
+
+
+@pytest.mark.skipif(not ORACLE_AVAILABLE,
+                    reason="Oracle tables not available in lite archive")
+def test_posterior_weights_sum_to_one():
+    """Posterior weights in every information class must sum to exactly 1."""
+    from fractions import Fraction
+    for condition in ("STATE_AWARE_CONTROLLER", "STATE_BLIND_CONTROLLER"):
+        classes = load_information_classes(ROOT, condition)
+        for cls in classes:
+            total = sum(Fraction(w) for w in cls.posterior_weights)
+            assert total == Fraction(1, 1), (
+                f"Class {cls.class_id[:16]}... under {condition}: "
+                f"weights sum to {total}, not 1"
+            )
