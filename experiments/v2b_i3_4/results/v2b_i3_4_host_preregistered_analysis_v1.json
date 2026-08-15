@@ -1,0 +1,118 @@
+{
+  "by_difficulty_band": {
+    "EASY": {
+      "mean_delta_dg": -16.004040404040403,
+      "mean_delta_ig": 15.639595959595958,
+      "mean_delta_tr": -0.3644444444444451,
+      "task_count": 99
+    },
+    "MEDIUM": {
+      "mean_delta_dg": -8.42901960784314,
+      "mean_delta_ig": 10.394705882352943,
+      "mean_delta_tr": 1.9656862745098034,
+      "task_count": 51
+    }
+  },
+  "by_optimal_action": {
+    "ANSWER": {
+      "mean_delta_dg": -28.81211538461539,
+      "mean_delta_ig": 34.3075,
+      "task_count": 26
+    },
+    "DEFER": {
+      "mean_delta_dg": -4.467499999999999,
+      "mean_delta_ig": 4.468500000000001,
+      "task_count": 10
+    },
+    "REASON_MORE": {
+      "mean_delta_dg": -2.2193749999999963,
+      "mean_delta_ig": 1.5518749999999981,
+      "task_count": 24
+    },
+    "RETRIEVE": {
+      "mean_delta_dg": -21.04739999999999,
+      "mean_delta_ig": 19.942999999999994,
+      "task_count": 25
+    },
+    "SEARCH_MORE": {
+      "mean_delta_dg": -10.027391304347827,
+      "mean_delta_ig": 9.009130434782605,
+      "task_count": 23
+    },
+    "STOP": {
+      "mean_delta_dg": 0.0,
+      "mean_delta_ig": 0.0,
+      "task_count": 23
+    },
+    "VERIFY": {
+      "mean_delta_dg": -21.600526315789466,
+      "mean_delta_ig": 20.986315789473686,
+      "task_count": 19
+    }
+  },
+  "depth_bands": {
+    "DEPTH_1": 59,
+    "DEPTH_4_PLUS": 91
+  },
+  "depth_stratified": {
+    "DEPTH_1": {
+      "aware_dg": -9.266271186440678,
+      "aware_ig": 0.0,
+      "blind_dg": -22.720338983050855,
+      "blind_ig": 15.875932203389832,
+      "delta_dg": -13.45406779661017,
+      "delta_ig": 15.875932203389832,
+      "task_ci_lower": -19.9771843220339,
+      "task_ci_upper": -7.491563559322037,
+      "task_count": 59,
+      "topo_ci_lower": -14.443991319444446,
+      "topo_ci_upper": -3.357024652777781,
+      "topo_point": -8.54290277777778,
+      "topology_count": 30
+    },
+    "DEPTH_4_PLUS": {
+      "aware_dg": 166.2989010989011,
+      "aware_ig": 29.5021978021978,
+      "blind_dg": 152.88692307692307,
+      "blind_ig": 42.04912087912086,
+      "delta_dg": -13.411978021978019,
+      "delta_ig": 12.546923076923074,
+      "task_ci_lower": -18.288983516483516,
+      "task_ci_upper": -8.930758241758237,
+      "task_count": 91,
+      "topo_ci_lower": -22.18380528155706,
+      "topo_ci_upper": -9.423695445956161,
+      "topo_point": -15.489343348450488,
+      "topology_count": 21
+    }
+  },
+  "difficulty_bands": {
+    "EASY": 99,
+    "MEDIUM": 51
+  },
+  "generated_at": "2026-08-15T06:02:57.305762+00:00",
+  "primary_analysis": {
+    "ci_excludes_zero": 1.0,
+    "ci_lower": -15.825960904917524,
+    "ci_upper": -7.278512266573302,
+    "delta_ig_ci_lower": 7.665246271008402,
+    "delta_ig_ci_upper": 16.696050040849673,
+    "delta_ig_point": 12.032718720821661,
+    "iterations": 10000,
+    "method": "topology_cluster_bootstrap",
+    "n_clusters": 51,
+    "point_estimate": -11.403201836290071,
+    "resampling_unit": "topology_cluster",
+    "verdict": "REJECTED_ON_HELD_OUT_STRUCTURE"
+  },
+  "schema": "DAPH_V2B_I3_4_HOST_PREREGISTERED_ANALYSIS_V1",
+  "split": "held_out_structure",
+  "task_count": 150,
+  "task_level_descriptive": {
+    "ci_lower": -17.283819166666664,
+    "ci_upper": -9.793935,
+    "method": "paired_bootstrap",
+    "point_estimate": -13.428533333333334
+  },
+  "topology_count": 51
+}
