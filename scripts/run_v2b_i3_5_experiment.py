@@ -19,7 +19,8 @@ if str(ROOT) not in sys.path:
 from hrm_adaptive_memory.executive.metareasoning_benchmark import load_metareasoning_benchmark
 from hrm_adaptive_memory.executive.i3_5_full_runner import (
     I35FullExperimentRunner, save_governor_results, save_governor_receipts,
-    score_governor_results, run_statistical_analysis)
+    score_governor_results)
+from hrm_adaptive_memory.executive.i3_4_full_runner import run_statistical_analysis
 from hrm_adaptive_memory.executive.model_backend import DeepSeekBackend
 from hrm_adaptive_memory.executive.metareasoning_utility import MetareasoningUtility
 from hrm_adaptive_memory.executive.i3_4_generation_config import FROZEN_CONFIG
@@ -50,16 +51,15 @@ def main():
     # Load utility
     utility = MetareasoningUtility.from_file(UTILITY_PATH)
 
-    # Create backend
+    # Create backend (reads DEEPSEEK_API_KEY from environment)
     api_key = os.environ.get("DEEPSEEK_API_KEY", "")
     if not api_key:
         print("ERROR: DEEPSEEK_API_KEY not set", file=sys.stderr)
         sys.exit(1)
 
     backend = DeepSeekBackend(
-        api_key=api_key,
-        model="deepseek-chat",
-        base_url="https://api.deepseek.com",
+        model_name="deepseek-chat",
+        base_url="https://api.deepseek.com/v1",
     )
 
     # Create runner
