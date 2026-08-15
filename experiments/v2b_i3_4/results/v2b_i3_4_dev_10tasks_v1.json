@@ -1,0 +1,1071 @@
+{
+  "results": [
+    {
+      "aware": {
+        "backend_errors": 0,
+        "condition": "AWARE",
+        "decoder_failures": 0,
+        "model_calls": 1,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": -100.11,
+        "resources": {
+          "elapsed_ms": 1,
+          "elapsed_ms_remaining": 2999,
+          "executive_steps_remaining": 2,
+          "executive_steps_used": 1,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 128,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 0,
+          "retrieval_calls_used": 0,
+          "search_calls_remaining": 0,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 0,
+          "verification_calls_used": 0
+        },
+        "steps": [
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_FAILURE",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT_FOR_SELECTION",
+            "step_id": 0,
+            "task_success": false,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": false,
+        "terminal_result": "TASK_FAILURE"
+      },
+      "blind": {
+        "backend_errors": 0,
+        "condition": "BLIND",
+        "decoder_failures": 0,
+        "model_calls": 1,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": -100.11,
+        "resources": {
+          "elapsed_ms": 1,
+          "elapsed_ms_remaining": 2999,
+          "executive_steps_remaining": 2,
+          "executive_steps_used": 1,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 128,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 0,
+          "retrieval_calls_used": 0,
+          "search_calls_remaining": 0,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 0,
+          "verification_calls_used": 0
+        },
+        "steps": [
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_FAILURE",
+            "proposed_action": "ANSWER",
+            "reason_code": "NO_RETRIEVAL_BUDGET_AND_SUFFICIENT_TASK_CONTEXT",
+            "step_id": 0,
+            "task_success": false,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": false,
+        "terminal_result": "TASK_FAILURE"
+      },
+      "fingerprint_match": true,
+      "pair_id": "v2b_i3_4_experiment_v1:i3_3_development_0000",
+      "pair_valid": true,
+      "task_id": "i3_3_development_0000"
+    },
+    {
+      "aware": {
+        "backend_errors": 0,
+        "condition": "AWARE",
+        "decoder_failures": 0,
+        "model_calls": 3,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": 94.56,
+        "resources": {
+          "elapsed_ms": 14,
+          "elapsed_ms_remaining": 8986,
+          "executive_steps_remaining": 4,
+          "executive_steps_used": 3,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 384,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 2,
+          "retrieval_calls_used": 1,
+          "search_calls_remaining": 3,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 2,
+          "verification_calls_used": 1
+        },
+        "steps": [
+          {
+            "executed_action": "RETRIEVE",
+            "outcome_code": "RETRIEVE_COMPLETED",
+            "proposed_action": "RETRIEVE",
+            "reason_code": "INITIAL_EVIDENCE_GATHERING",
+            "step_id": 0,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "VERIFY",
+            "outcome_code": "VERIFY_COMPLETED",
+            "proposed_action": "VERIFY",
+            "reason_code": "EVIDENCE_READY_FOR_VERIFICATION",
+            "step_id": 1,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_SUCCESS",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 2,
+            "task_success": true,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": true,
+        "terminal_result": "TASK_SUCCESS"
+      },
+      "blind": {
+        "backend_errors": 0,
+        "condition": "BLIND",
+        "decoder_failures": 0,
+        "model_calls": 3,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": 94.56,
+        "resources": {
+          "elapsed_ms": 14,
+          "elapsed_ms_remaining": 8986,
+          "executive_steps_remaining": 4,
+          "executive_steps_used": 3,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 384,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 2,
+          "retrieval_calls_used": 1,
+          "search_calls_remaining": 3,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 2,
+          "verification_calls_used": 1
+        },
+        "steps": [
+          {
+            "executed_action": "RETRIEVE",
+            "outcome_code": "RETRIEVE_COMPLETED",
+            "proposed_action": "RETRIEVE",
+            "reason_code": "INITIAL_EVIDENCE_GATHERING",
+            "step_id": 0,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "VERIFY",
+            "outcome_code": "VERIFY_COMPLETED",
+            "proposed_action": "VERIFY",
+            "reason_code": "EVIDENCE_RETRIEVED_NEEDS_VERIFICATION",
+            "step_id": 1,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_SUCCESS",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 2,
+            "task_success": true,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": true,
+        "terminal_result": "TASK_SUCCESS"
+      },
+      "fingerprint_match": true,
+      "pair_id": "v2b_i3_4_experiment_v1:i3_3_development_0001",
+      "pair_valid": true,
+      "task_id": "i3_3_development_0001"
+    },
+    {
+      "aware": {
+        "backend_errors": 0,
+        "condition": "AWARE",
+        "decoder_failures": 0,
+        "model_calls": 1,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": 99.89,
+        "resources": {
+          "elapsed_ms": 1,
+          "elapsed_ms_remaining": 5999,
+          "executive_steps_remaining": 4,
+          "executive_steps_used": 1,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 256,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 2,
+          "retrieval_calls_used": 0,
+          "search_calls_remaining": 2,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 2,
+          "verification_calls_used": 0
+        },
+        "steps": [
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_SUCCESS",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 0,
+            "task_success": true,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": true,
+        "terminal_result": "TASK_SUCCESS"
+      },
+      "blind": {
+        "backend_errors": 0,
+        "condition": "BLIND",
+        "decoder_failures": 0,
+        "model_calls": 3,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": -105.44,
+        "resources": {
+          "elapsed_ms": 14,
+          "elapsed_ms_remaining": 5986,
+          "executive_steps_remaining": 2,
+          "executive_steps_used": 3,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 256,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 1,
+          "retrieval_calls_used": 1,
+          "search_calls_remaining": 2,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 1,
+          "verification_calls_used": 1
+        },
+        "steps": [
+          {
+            "executed_action": "RETRIEVE",
+            "outcome_code": "RETRIEVE_COMPLETED",
+            "proposed_action": "RETRIEVE",
+            "reason_code": "INITIAL_EVIDENCE_GATHERING",
+            "step_id": 0,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "VERIFY",
+            "outcome_code": "VERIFY_COMPLETED",
+            "proposed_action": "VERIFY",
+            "reason_code": "EVIDENCE_RETRIEVED_NEEDS_VERIFICATION",
+            "step_id": 1,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_FAILURE",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 2,
+            "task_success": false,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": false,
+        "terminal_result": "TASK_FAILURE"
+      },
+      "fingerprint_match": true,
+      "pair_id": "v2b_i3_4_experiment_v1:i3_3_development_0002",
+      "pair_valid": true,
+      "task_id": "i3_3_development_0002"
+    },
+    {
+      "aware": {
+        "backend_errors": 0,
+        "condition": "AWARE",
+        "decoder_failures": 0,
+        "model_calls": 3,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": -105.44,
+        "resources": {
+          "elapsed_ms": 14,
+          "elapsed_ms_remaining": 5986,
+          "executive_steps_remaining": 2,
+          "executive_steps_used": 3,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 256,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 1,
+          "retrieval_calls_used": 1,
+          "search_calls_remaining": 2,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 1,
+          "verification_calls_used": 1
+        },
+        "steps": [
+          {
+            "executed_action": "VERIFY",
+            "outcome_code": "VERIFY_COMPLETED",
+            "proposed_action": "VERIFY",
+            "reason_code": "UNRESOLVED_CONFLICT_PRESENT",
+            "step_id": 0,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "RETRIEVE",
+            "outcome_code": "RETRIEVE_COMPLETED",
+            "proposed_action": "RETRIEVE",
+            "reason_code": "NEED_MORE_EVIDENCE_TO_RESOLVE_CONFLICT",
+            "step_id": 1,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_FAILURE",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT_AFTER_RETRIEVE",
+            "step_id": 2,
+            "task_success": false,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": false,
+        "terminal_result": "TASK_FAILURE"
+      },
+      "blind": {
+        "backend_errors": 0,
+        "condition": "BLIND",
+        "decoder_failures": 0,
+        "model_calls": 3,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": -105.44,
+        "resources": {
+          "elapsed_ms": 14,
+          "elapsed_ms_remaining": 5986,
+          "executive_steps_remaining": 2,
+          "executive_steps_used": 3,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 256,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 1,
+          "retrieval_calls_used": 1,
+          "search_calls_remaining": 2,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 1,
+          "verification_calls_used": 1
+        },
+        "steps": [
+          {
+            "executed_action": "RETRIEVE",
+            "outcome_code": "RETRIEVE_COMPLETED",
+            "proposed_action": "RETRIEVE",
+            "reason_code": "INITIAL_EVIDENCE_GATHERING",
+            "step_id": 0,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "VERIFY",
+            "outcome_code": "VERIFY_COMPLETED",
+            "proposed_action": "VERIFY",
+            "reason_code": "EVIDENCE_RETRIEVED_NEEDS_VERIFICATION",
+            "step_id": 1,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_FAILURE",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 2,
+            "task_success": false,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": false,
+        "terminal_result": "TASK_FAILURE"
+      },
+      "fingerprint_match": true,
+      "pair_id": "v2b_i3_4_experiment_v1:i3_3_development_0003",
+      "pair_valid": true,
+      "task_id": "i3_3_development_0003"
+    },
+    {
+      "aware": {
+        "backend_errors": 0,
+        "condition": "AWARE",
+        "decoder_failures": 0,
+        "model_calls": 1,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": -100.11,
+        "resources": {
+          "elapsed_ms": 1,
+          "elapsed_ms_remaining": 2999,
+          "executive_steps_remaining": 2,
+          "executive_steps_used": 1,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 128,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 0,
+          "retrieval_calls_used": 0,
+          "search_calls_remaining": 0,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 0,
+          "verification_calls_used": 0
+        },
+        "steps": [
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_FAILURE",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 0,
+            "task_success": false,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": false,
+        "terminal_result": "TASK_FAILURE"
+      },
+      "blind": {
+        "backend_errors": 0,
+        "condition": "BLIND",
+        "decoder_failures": 0,
+        "model_calls": 1,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": -100.11,
+        "resources": {
+          "elapsed_ms": 1,
+          "elapsed_ms_remaining": 2999,
+          "executive_steps_remaining": 2,
+          "executive_steps_used": 1,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 128,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 0,
+          "retrieval_calls_used": 0,
+          "search_calls_remaining": 0,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 0,
+          "verification_calls_used": 0
+        },
+        "steps": [
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_FAILURE",
+            "proposed_action": "ANSWER",
+            "reason_code": "NO_RETRIEVAL_BUDGET_AND_SUFFICIENT_TASK_SCOPE",
+            "step_id": 0,
+            "task_success": false,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": false,
+        "terminal_result": "TASK_FAILURE"
+      },
+      "fingerprint_match": true,
+      "pair_id": "v2b_i3_4_experiment_v1:i3_3_development_0004",
+      "pair_valid": true,
+      "task_id": "i3_3_development_0004"
+    },
+    {
+      "aware": {
+        "backend_errors": 0,
+        "condition": "AWARE",
+        "decoder_failures": 0,
+        "model_calls": 3,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": 94.56,
+        "resources": {
+          "elapsed_ms": 14,
+          "elapsed_ms_remaining": 8986,
+          "executive_steps_remaining": 4,
+          "executive_steps_used": 3,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 384,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 2,
+          "retrieval_calls_used": 1,
+          "search_calls_remaining": 3,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 2,
+          "verification_calls_used": 1
+        },
+        "steps": [
+          {
+            "executed_action": "RETRIEVE",
+            "outcome_code": "RETRIEVE_COMPLETED",
+            "proposed_action": "RETRIEVE",
+            "reason_code": "INITIAL_EVIDENCE_NEEDED",
+            "step_id": 0,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "VERIFY",
+            "outcome_code": "VERIFY_COMPLETED",
+            "proposed_action": "VERIFY",
+            "reason_code": "EVIDENCE_READY_FOR_VERIFICATION",
+            "step_id": 1,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_SUCCESS",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 2,
+            "task_success": true,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": true,
+        "terminal_result": "TASK_SUCCESS"
+      },
+      "blind": {
+        "backend_errors": 0,
+        "condition": "BLIND",
+        "decoder_failures": 0,
+        "model_calls": 3,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": 94.56,
+        "resources": {
+          "elapsed_ms": 14,
+          "elapsed_ms_remaining": 8986,
+          "executive_steps_remaining": 4,
+          "executive_steps_used": 3,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 384,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 2,
+          "retrieval_calls_used": 1,
+          "search_calls_remaining": 3,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 2,
+          "verification_calls_used": 1
+        },
+        "steps": [
+          {
+            "executed_action": "RETRIEVE",
+            "outcome_code": "RETRIEVE_COMPLETED",
+            "proposed_action": "RETRIEVE",
+            "reason_code": "INITIAL_EVIDENCE_GATHERING",
+            "step_id": 0,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "VERIFY",
+            "outcome_code": "VERIFY_COMPLETED",
+            "proposed_action": "VERIFY",
+            "reason_code": "EVIDENCE_RETRIEVED_NEEDS_CHECK",
+            "step_id": 1,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_SUCCESS",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 2,
+            "task_success": true,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": true,
+        "terminal_result": "TASK_SUCCESS"
+      },
+      "fingerprint_match": true,
+      "pair_id": "v2b_i3_4_experiment_v1:i3_3_development_0005",
+      "pair_valid": true,
+      "task_id": "i3_3_development_0005"
+    },
+    {
+      "aware": {
+        "backend_errors": 0,
+        "condition": "AWARE",
+        "decoder_failures": 0,
+        "model_calls": 1,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": 99.89,
+        "resources": {
+          "elapsed_ms": 1,
+          "elapsed_ms_remaining": 5999,
+          "executive_steps_remaining": 4,
+          "executive_steps_used": 1,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 256,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 2,
+          "retrieval_calls_used": 0,
+          "search_calls_remaining": 2,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 2,
+          "verification_calls_used": 0
+        },
+        "steps": [
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_SUCCESS",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 0,
+            "task_success": true,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": true,
+        "terminal_result": "TASK_SUCCESS"
+      },
+      "blind": {
+        "backend_errors": 0,
+        "condition": "BLIND",
+        "decoder_failures": 0,
+        "model_calls": 3,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": 94.56,
+        "resources": {
+          "elapsed_ms": 14,
+          "elapsed_ms_remaining": 5986,
+          "executive_steps_remaining": 2,
+          "executive_steps_used": 3,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 256,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 1,
+          "retrieval_calls_used": 1,
+          "search_calls_remaining": 2,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 1,
+          "verification_calls_used": 1
+        },
+        "steps": [
+          {
+            "executed_action": "RETRIEVE",
+            "outcome_code": "RETRIEVE_COMPLETED",
+            "proposed_action": "RETRIEVE",
+            "reason_code": "INITIAL_EVIDENCE_NEEDED",
+            "step_id": 0,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "VERIFY",
+            "outcome_code": "VERIFY_COMPLETED",
+            "proposed_action": "VERIFY",
+            "reason_code": "EVIDENCE_RETRIEVED_NEEDS_VERIFICATION",
+            "step_id": 1,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_SUCCESS",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 2,
+            "task_success": true,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": true,
+        "terminal_result": "TASK_SUCCESS"
+      },
+      "fingerprint_match": true,
+      "pair_id": "v2b_i3_4_experiment_v1:i3_3_development_0006",
+      "pair_valid": true,
+      "task_id": "i3_3_development_0006"
+    },
+    {
+      "aware": {
+        "backend_errors": 0,
+        "condition": "AWARE",
+        "decoder_failures": 0,
+        "model_calls": 2,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": 96.71,
+        "resources": {
+          "elapsed_ms": 9,
+          "elapsed_ms_remaining": 5991,
+          "executive_steps_remaining": 3,
+          "executive_steps_used": 2,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 256,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 2,
+          "retrieval_calls_used": 0,
+          "search_calls_remaining": 2,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 1,
+          "verification_calls_used": 1
+        },
+        "steps": [
+          {
+            "executed_action": "VERIFY",
+            "outcome_code": "VERIFY_COMPLETED",
+            "proposed_action": "VERIFY",
+            "reason_code": "UNRESOLVED_CONFLICT_PRESENT",
+            "step_id": 0,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_SUCCESS",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 1,
+            "task_success": true,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": true,
+        "terminal_result": "TASK_SUCCESS"
+      },
+      "blind": {
+        "backend_errors": 0,
+        "condition": "BLIND",
+        "decoder_failures": 0,
+        "model_calls": 3,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": 94.56,
+        "resources": {
+          "elapsed_ms": 14,
+          "elapsed_ms_remaining": 5986,
+          "executive_steps_remaining": 2,
+          "executive_steps_used": 3,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 256,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 1,
+          "retrieval_calls_used": 1,
+          "search_calls_remaining": 2,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 1,
+          "verification_calls_used": 1
+        },
+        "steps": [
+          {
+            "executed_action": "RETRIEVE",
+            "outcome_code": "RETRIEVE_COMPLETED",
+            "proposed_action": "RETRIEVE",
+            "reason_code": "INITIAL_EVIDENCE_NEEDED",
+            "step_id": 0,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "VERIFY",
+            "outcome_code": "VERIFY_COMPLETED",
+            "proposed_action": "VERIFY",
+            "reason_code": "EVIDENCE_RETRIEVED_NEEDS_VERIFICATION",
+            "step_id": 1,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_SUCCESS",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 2,
+            "task_success": true,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": true,
+        "terminal_result": "TASK_SUCCESS"
+      },
+      "fingerprint_match": true,
+      "pair_id": "v2b_i3_4_experiment_v1:i3_3_development_0007",
+      "pair_valid": true,
+      "task_id": "i3_3_development_0007"
+    },
+    {
+      "aware": {
+        "backend_errors": 0,
+        "condition": "AWARE",
+        "decoder_failures": 0,
+        "model_calls": 3,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": 94.56,
+        "resources": {
+          "elapsed_ms": 14,
+          "elapsed_ms_remaining": 5986,
+          "executive_steps_remaining": 2,
+          "executive_steps_used": 3,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 256,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 1,
+          "retrieval_calls_used": 1,
+          "search_calls_remaining": 2,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 1,
+          "verification_calls_used": 1
+        },
+        "steps": [
+          {
+            "executed_action": "RETRIEVE",
+            "outcome_code": "RETRIEVE_COMPLETED",
+            "proposed_action": "RETRIEVE",
+            "reason_code": "INITIAL_EVIDENCE_GATHERING",
+            "step_id": 0,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "VERIFY",
+            "outcome_code": "VERIFY_COMPLETED",
+            "proposed_action": "VERIFY",
+            "reason_code": "EVIDENCE_READY_FOR_VERIFICATION",
+            "step_id": 1,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_SUCCESS",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 2,
+            "task_success": true,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": true,
+        "terminal_result": "TASK_SUCCESS"
+      },
+      "blind": {
+        "backend_errors": 0,
+        "condition": "BLIND",
+        "decoder_failures": 0,
+        "model_calls": 3,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": 94.56,
+        "resources": {
+          "elapsed_ms": 14,
+          "elapsed_ms_remaining": 5986,
+          "executive_steps_remaining": 2,
+          "executive_steps_used": 3,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 256,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 1,
+          "retrieval_calls_used": 1,
+          "search_calls_remaining": 2,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 1,
+          "verification_calls_used": 1
+        },
+        "steps": [
+          {
+            "executed_action": "RETRIEVE",
+            "outcome_code": "RETRIEVE_COMPLETED",
+            "proposed_action": "RETRIEVE",
+            "reason_code": "INITIAL_EVIDENCE_GATHERING",
+            "step_id": 0,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "VERIFY",
+            "outcome_code": "VERIFY_COMPLETED",
+            "proposed_action": "VERIFY",
+            "reason_code": "EVIDENCE_RETRIEVED_NEEDS_VERIFICATION",
+            "step_id": 1,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_SUCCESS",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 2,
+            "task_success": true,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": true,
+        "terminal_result": "TASK_SUCCESS"
+      },
+      "fingerprint_match": true,
+      "pair_id": "v2b_i3_4_experiment_v1:i3_3_development_0008",
+      "pair_valid": true,
+      "task_id": "i3_3_development_0008"
+    },
+    {
+      "aware": {
+        "backend_errors": 0,
+        "condition": "AWARE",
+        "decoder_failures": 0,
+        "model_calls": 1,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": -100.11,
+        "resources": {
+          "elapsed_ms": 1,
+          "elapsed_ms_remaining": 5999,
+          "executive_steps_remaining": 4,
+          "executive_steps_used": 1,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 256,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 2,
+          "retrieval_calls_used": 0,
+          "search_calls_remaining": 2,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 2,
+          "verification_calls_used": 0
+        },
+        "steps": [
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_FAILURE",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 0,
+            "task_success": false,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": false,
+        "terminal_result": "TASK_FAILURE"
+      },
+      "blind": {
+        "backend_errors": 0,
+        "condition": "BLIND",
+        "decoder_failures": 0,
+        "model_calls": 3,
+        "model_name": "deepseek-v4-flash",
+        "realized_utility": -105.44,
+        "resources": {
+          "elapsed_ms": 14,
+          "elapsed_ms_remaining": 5986,
+          "executive_steps_remaining": 2,
+          "executive_steps_used": 3,
+          "monetary_cost_microusd": 0,
+          "monetary_cost_microusd_remaining": 0,
+          "policy_rejections_used": 0,
+          "reasoning_tokens_remaining": 256,
+          "reasoning_tokens_used": 0,
+          "retrieval_calls_remaining": 1,
+          "retrieval_calls_used": 1,
+          "search_calls_remaining": 2,
+          "search_calls_used": 0,
+          "verification_calls_remaining": 1,
+          "verification_calls_used": 1
+        },
+        "steps": [
+          {
+            "executed_action": "RETRIEVE",
+            "outcome_code": "RETRIEVE_COMPLETED",
+            "proposed_action": "RETRIEVE",
+            "reason_code": "INITIAL_EVIDENCE_GATHERING",
+            "step_id": 0,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "VERIFY",
+            "outcome_code": "VERIFY_COMPLETED",
+            "proposed_action": "VERIFY",
+            "reason_code": "EVIDENCE_RETRIEVED_NEEDS_VERIFICATION",
+            "step_id": 1,
+            "task_success": null,
+            "terminal": false
+          },
+          {
+            "executed_action": "ANSWER",
+            "outcome_code": "TASK_FAILURE",
+            "proposed_action": "ANSWER",
+            "reason_code": "EVIDENCE_SUFFICIENT",
+            "step_id": 2,
+            "task_success": false,
+            "terminal": true
+          }
+        ],
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+        "task_success": false,
+        "terminal_result": "TASK_FAILURE"
+      },
+      "fingerprint_match": true,
+      "pair_id": "v2b_i3_4_experiment_v1:i3_3_development_0009",
+      "pair_valid": true,
+      "task_id": "i3_3_development_0009"
+    }
+  ],
+  "schema": "DAPH_V2B_I3_4_FULL_RUNNER_V1",
+  "schema_version": 1
+}

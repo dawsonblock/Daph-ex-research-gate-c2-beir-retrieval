@@ -54,6 +54,7 @@ from .i3_4_pair_scheduler import (
     compute_pair_hash, is_blind_first, check_pair_fingerprints)
 from .i3_4_model_identity_policy import FROZEN_IDENTITY_POLICY
 from .i3_4_generation_config import FROZEN_CONFIG
+from .metareasoning_utility import MetareasoningUtility
 
 RUNNER_SCHEMA = "DAPH_V2B_I3_4_FULL_RUNNER_V1"
 RUNNER_VERSION = 1
@@ -114,6 +115,7 @@ class FullExperimentRunner:
 
     backend: DeepSeekBackend
     executor: DeterministicActionExecutor = field(default_factory=DeterministicActionExecutor)
+    utility: MetareasoningUtility | None = None
     experiment_id: str = "v2b_i3_4_experiment_v1"
     max_steps: int = MAX_STEPS
     strict_json: bool = True
@@ -193,7 +195,6 @@ class FullExperimentRunner:
                     temperature=self.temperature, max_tokens=self.max_tokens)
             except Exception:
                 backend_errors += 1
-                # Fail closed: DEFER on backend error
                 proposal = BACKEND_ERROR_PROPOSAL
                 call_result = None
             else:
@@ -208,11 +209,21 @@ class FullExperimentRunner:
 
             # Execute the action through the deterministic executor
             action = proposal.action
+            resources_before = runtime.resources
             try:
                 execution = self.executor.execute(runtime, action)
             except ResourceExhausted:
                 execution = ActionExecution(
                     DecisionAction.DEFER, runtime, True, False, "RESOURCE_EXHAUSTED")
+
+            # Compute utility for this step
+            if self.utility is not None:
+                resources_after = execution.runtime.resources
+                step_cost = self.utility.action_cost(resources_before, resources_after)
+                realized -= step_cost
+                if execution.terminal:
+                    realized += self.utility.terminal_reward(
+                        execution.action, bool(execution.task_success))
 
             steps.append(TrajectoryStep(
                 step_id=step_id,
