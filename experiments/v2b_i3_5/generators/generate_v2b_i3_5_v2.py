@@ -40,9 +40,9 @@ from generate_v2b_i3_3 import (  # noqa: E402
 # V2 budget profile — more executive steps for deeper compositions
 V2_BUDGET_PROFILES = dict(I3_3_BUDGET_PROFILES)
 V2_BUDGET_PROFILES["STRUCTURE_HOLDOUT_V2"] = {
-    "max_executive_steps": 12, "max_reasoning_tokens": 768,
-    "max_retrieval_calls": 8, "max_verification_calls": 8,
-    "max_search_calls": 8, "max_elapsed_ms": 15_000,
+    "max_executive_steps": 8, "max_reasoning_tokens": 512,
+    "max_retrieval_calls": 5, "max_verification_calls": 5,
+    "max_search_calls": 5, "max_elapsed_ms": 10_000,
     "max_monetary_cost_microusd": 0,
 }
 
