@@ -1,0 +1,39 @@
+{
+  "ci_gov_aware": [
+    -18.035633333333337,
+    -11.420900000000005
+  ],
+  "ci_gov_blind": [
+    -24.88103333333333,
+    -13.083333333333327
+  ],
+  "ci_interaction": [
+    -10.061466666666657,
+    1.1051333333333413
+  ],
+  "ci_state_gov": [
+    -10.650750000000002,
+    1.7147833333333298
+  ],
+  "ci_state_no_gov": [
+    -14.09941666666666,
+    -3.6330166666666606
+  ],
+  "experiment_identity_sha256": "e21f63ff4fa9e330f7c9edc5f153cab982154e3dc1a5cf8ed72634979e506cf2",
+  "mean_delta_dg_gov_aware": -14.59666666666667,
+  "mean_delta_dg_gov_blind": -18.99256666666666,
+  "mean_delta_dg_state_gov": -4.673033333333336,
+  "mean_delta_dg_state_no_gov": -9.068933333333328,
+  "mean_delta_interaction": -4.395899999999991,
+  "n_tasks": 300,
+  "schema": "DAPH_V2B_I3_5_1_STATISTICS_V1",
+  "schema_version": 1,
+  "source_results_sha256": "4cce625802d0b2bbb22db08b2c576920b438114c4ff3e70f9c3d58d45e166199",
+  "source_scores_sha256": "2f3b16b880c421841012e883b052efdeeae9c467ad3ee98d9034ac828931011c",
+  "statistics_implementation_sha256": "947e00bcbdec1d16deb8268340eec02c3f7806f7ccf0326d5368d6c0b52e2a15",
+  "topo_ci_gov_aware": [
+    -18.035633333333337,
+    -11.420900000000005
+  ],
+  "topo_mean_gov_aware": -14.59666666666667
+}

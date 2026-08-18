@@ -101,7 +101,7 @@ def replay_trajectory(
         step_id = step_data["step_id"]
         action = DecisionAction(step_data["executed_action"])
         expected_outcome = step_data["outcome_code"]
-        expected_terminal = step_data["terminal"]
+        expected_step_terminal = step_data["terminal"]
 
         resources_before = runtime.resources
         try:
@@ -119,7 +119,7 @@ def replay_trajectory(
                     execution.action, bool(execution.task_success))
 
         outcome_match = execution.outcome_code == expected_outcome
-        terminal_match = execution.terminal == expected_terminal
+        terminal_match = execution.terminal == expected_step_terminal
 
         replay_steps.append(ReplayStep(
             step_id=step_id,
@@ -157,9 +157,11 @@ def replay_all_trajectories(
     benchmark: MetareasoningBenchmark,
     *,
     utility: MetareasoningUtility | None = None,
+    split: str = "structure_dev_v2",
 ) -> dict[str, Any]:
     """Replay all trajectories from results and verify matches."""
     task_by_id = {t.task_id: t for t in benchmark.tasks}
+    split_benchmark = benchmark.for_split(split)
     total = 0
     utility_matches = 0
     terminal_matches = 0
@@ -171,7 +173,7 @@ def replay_all_trajectories(
         task = task_by_id.get(block["task_id"])
         if task is None:
             continue
-        budget = benchmark.for_split("development").budget_for(task)
+        budget = split_benchmark.budget_for(task)
         for cond_id, traj_data in block["trajectories"].items():
             total += 1
             replay = replay_trajectory(

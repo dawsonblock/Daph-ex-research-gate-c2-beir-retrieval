@@ -38,8 +38,20 @@ the available information.
 Respond with strict JSON:
 {
   "action": "<one of allowed_actions>",
-  "reason_code": "<short reason for your choice>"
+  "reason_code": "<UPPERCASE_SNAKE_CASE reason for this choice>",
+  "target_id": null
 }
+
+The reason_code must be a non-empty uppercase string using only
+letters, digits, and underscores. It must start with a letter.
+Examples: INITIAL_EVIDENCE_GATHERING, VERIFYING_EVIDENCE,
+INSUFFICIENT_INFORMATION, READY_TO_ANSWER, RESOURCE_LIMIT_REACHED.
+
+The target_id field is required. Use null when the action does not
+target a specific item. Use a string when targeting a specific
+evidence source or memory.
+
+Do not include any fields other than action, reason_code, and target_id.
 
 Action vocabulary:
 - ANSWER: Submit the current best answer

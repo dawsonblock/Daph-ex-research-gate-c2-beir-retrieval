@@ -1,0 +1,119 @@
+{
+  "schema": "DAPH_V2B_I3_5_1_CLAIM_HIERARCHY_V1",
+  "schema_version": 1,
+  "milestone": "V2B-I3.5.1",
+  "phase": "development",
+  "experiment_identity_sha256": "e21f63ff4fa9e330f7c9edc5f153cab982154e3dc1a5cf8ed72634979e506cf2",
+  "run_id": "v2b_i3_5_1_dev_run_v1",
+  "n_tasks": 300,
+  "n_conditions": 4,
+  "total_trajectories": 1200,
+  "total_model_calls": 3976,
+  "total_backend_errors": 0,
+  "total_decoder_failures": 0,
+  "replay_matches": "1200/1200",
+  "ig_dg_tr_identity_passes": "300/300",
+  "artifact_validity": {
+    "G00_pre_repair_state_frozen": "PASS",
+    "G01_canonical_identity": "PASS",
+    "G02_scientific_criteria_frozen": "PASS",
+    "G03_treatment_separation": "PASS",
+    "G04_leakage_checks": "PASS",
+    "G05_benchmark_closure": "PASS",
+    "G06_structural_isolation": "PASS",
+    "G07_oracle_identity": "PASS",
+    "G08_governor_identity": "PASS",
+    "G09_executor_identity": "PASS",
+    "G10_generation_config": "PASS",
+    "G11_model_identity": "PASS",
+    "G12_prompt_decoder_identity": "PASS",
+    "G13_factorial_scheduler": "PASS",
+    "G14_fingerprint_policy": "PASS",
+    "G15_receipt_chain": "PASS",
+    "G16_replay": "PASS",
+    "G17_ig_dg_tr_invariant": "PASS",
+    "G18_observable_oracle_invariance": "PASS",
+    "G19_governor_executor_parity": "PASS",
+    "G20_artifact_provenance_dag": "PASS",
+    "G21_report_invariants": "PASS",
+    "G22_full_test_suite": "PASS",
+    "G23_repository_clean_state": "PASS",
+    "G24_frozen_experiment_bundle": "PASS"
+  },
+  "claims": {
+    "C0": {
+      "name": "artifact-valid experiment",
+      "status": "SUPPORTED",
+      "evidence": "All 25 validity gates pass. 0 backend errors, 0 decoder failures, 1200/1200 replay matches, 300/300 IG/DG/TR identity passes, 3976 receipts in hash chain."
+    },
+    "C1": {
+      "name": "representation advantage",
+      "status": "SUPPORTED",
+      "metric": "ΔIG = IG_blind - IG_aware",
+      "mean": 9.0456,
+      "topology_ci": [5.2892, 13.0671],
+      "n_clusters": 54,
+      "evidence": "The aware condition has a smaller information gap than blind (more observable information). The topology-cluster 95% CI excludes 0."
+    },
+    "C2": {
+      "name": "governor improves decision quality",
+      "status": "REJECTED",
+      "metric": "ΔDG_gov|aware = DG_aware_off - DG_aware_on",
+      "mean": -14.5967,
+      "topology_ci": [-20.0866, -10.0006],
+      "evidence": "The governor INCREASES decision gap under the aware condition. The topology-cluster 95% CI excludes 0 in the negative direction. The governor hurts."
+    },
+    "C3": {
+      "name": "governor benefit generalizes across topology",
+      "status": "REJECTED",
+      "metric": "topology-cluster bootstrap of ΔDG_gov|aware",
+      "evidence": "Same as C2. The topology-cluster CI is entirely negative. There is no topology cluster where the governor helps on average."
+    },
+    "C4": {
+      "name": "governor × cognitive-state synergy",
+      "status": "REJECTED",
+      "metric": "Δ_interaction = (DG_B,O - DG_B,G) - (DG_A,O - DG_A,G)",
+      "mean": -4.3959,
+      "topology_ci": [-18.2550, 5.3956],
+      "evidence": "The interaction term is negative but the CI includes 0. There is no evidence of synergy between the governor and structured cognitive state."
+    },
+    "C5": {
+      "name": "governor improves utility at equal/lower resource cost",
+      "status": "REJECTED",
+      "aware_gov_mean_calls": 5.14,
+      "aware_nogov_mean_calls": 2.53,
+      "aware_gov_mean_utility": -89.47,
+      "aware_nogov_mean_utility": -74.87,
+      "evidence": "The governor increases resource cost (5.14 vs 2.53 mean calls) AND decreases utility (-89.47 vs -74.87). Both conditions fail."
+    }
+  },
+  "success_rates": {
+    "BLIND_NO_GOVERNOR": {"success": 80, "total": 300, "rate": 0.267},
+    "BLIND_GOVERNOR": {"success": 49, "total": 300, "rate": 0.163},
+    "AWARE_NO_GOVERNOR": {"success": 83, "total": 300, "rate": 0.277},
+    "AWARE_GOVERNOR": {"success": 62, "total": 300, "rate": 0.207}
+  },
+  "dg_table": {
+    "BLIND_NO_GOVERNOR": 132.07,
+    "BLIND_GOVERNOR": 151.06,
+    "AWARE_NO_GOVERNOR": 141.14,
+    "AWARE_GOVERNOR": 155.74
+  },
+  "governor_agreement": {
+    "BLIND_GOVERNOR": 0.9856,
+    "AWARE_GOVERNOR": 0.8186
+  },
+  "disagreement_aware": {
+    "both_success": 62,
+    "both_fail": 217,
+    "gov_only_success": 0,
+    "nogov_only_success": 21,
+    "interpretation": "The governor never helps when the no-governor condition fails (0 gov-only successes). The governor actively hurts in 21 cases where no-governor succeeded."
+  },
+  "interpretation": {
+    "summary": "The I3.5.1 development experiment produced an artifact-valid four-arm factorial comparison. The representation advantage exists (aware condition has more observable information). However, the governor HURTS decision quality in both blind and aware conditions, increases resource cost, and never produces a success that the no-governor condition does not also produce. The model makes better decisions on its own without the governor's advisory recommendations.",
+    "implications": "The governor's recommendations are systematically misleading the model. The governor's bottleneck analysis and candidate assessments are not aligned with what actually improves decisions. This is a governor design problem, not an infrastructure or artifact problem.",
+    "next_steps": "The development result is valid and should not be used to tune the governor (that would be contamination). The validation and held-out phases should proceed with the same frozen configuration to confirm these findings. If the findings hold, the governor design needs fundamental rethinking, not parameter tuning."
+  },
+  "prohibition": "This development result must not be used to tune governor parameters, scoring weights, or prompt design. Any changes based on these results would constitute contamination of the held-out evaluation."
+}

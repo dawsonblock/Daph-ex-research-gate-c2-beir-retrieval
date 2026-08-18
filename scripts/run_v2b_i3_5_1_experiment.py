@@ -19,7 +19,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from hrm_adaptive_memory.executive.metareasoning_benchmark import MetareasoningBenchmark
+from hrm_adaptive_memory.executive.metareasoning_benchmark import (
+    MetareasoningBenchmark, load_metareasoning_benchmark,
+)
 from hrm_adaptive_memory.executive.model_backend import DeepSeekBackend
 from hrm_adaptive_memory.executive.metareasoning_utility import MetareasoningUtility
 from hrm_adaptive_memory.executive.i3_5_1.trajectory_runner import (
@@ -44,7 +46,7 @@ from hrm_adaptive_memory.executive.i3_5_1.report import build_factorial_report, 
 
 def main():
     parser = argparse.ArgumentParser(description="Run I3.5.1 factorial experiment")
-    parser.add_argument("--split", default="development",
+    parser.add_argument("--split", default="structure_dev_v2",
                         help="Benchmark split to run")
     parser.add_argument("--max-tasks", type=int, default=None,
                         help="Limit number of tasks (for testing)")
@@ -61,7 +63,7 @@ def main():
 
     # Load benchmark
     print(f"Loading benchmark from {args.benchmark_manifest}...")
-    benchmark = MetareasoningBenchmark.load(args.benchmark_manifest)
+    benchmark = load_metareasoning_benchmark(args.benchmark_manifest, verify_oracle_cache=True)
     split_benchmark = benchmark.for_split(args.split)
     tasks = split_benchmark.tasks
     if args.max_tasks is not None:
@@ -111,14 +113,10 @@ def main():
         print("ERROR: DEEPSEEK_API_KEY not set")
         sys.exit(1)
 
-    backend = DeepSeekBackend(
-        api_key=api_key,
-        endpoint="https://api.deepseek.com/v1",
-        model="deepseek-chat",
-    )
+    backend = DeepSeekBackend()
 
     # Set up utility
-    utility = MetareasoningUtility()
+    utility = MetareasoningUtility.from_file(ROOT / "configs/v2b_i3_1_utility_v1.json")
 
     # Create runner
     runner = FactorialExperimentRunner(
@@ -223,7 +221,7 @@ def main():
 
     # Replay verification
     print("\nVerifying replay...")
-    replay_result = replay_all_trajectories(results, benchmark, utility=utility)
+    replay_result = replay_all_trajectories(results, benchmark, utility=utility, split=args.split)
     print(f"  Replay: {replay_result['full_matches']}/{replay_result['total_trajectories']} fully match")
     if not replay_result["all_match"]:
         print(f"  FAILURES: {len(replay_result['failures'])}")
