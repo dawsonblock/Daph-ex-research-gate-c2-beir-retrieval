@@ -1,0 +1,8 @@
+{
+  "delta_q_threshold": 5.0,
+  "gate_model_path": "experiments/v2b_i3_5_2/development/i352d/q_pib_gate_v1.pkl",
+  "gate_type": "QPiBInterventionPredictor",
+  "max_harm_probability": 0.15,
+  "min_confidence": 0.6,
+  "model_class": "GradientBoostingRegressor"
+}

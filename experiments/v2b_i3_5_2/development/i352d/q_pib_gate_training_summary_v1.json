@@ -1,0 +1,139 @@
+{
+  "actions": {
+    "ANSWER": 458,
+    "REASON_MORE": 6,
+    "RETRIEVE": 197,
+    "SEARCH_MORE": 259,
+    "STOP": 35,
+    "VERIFY": 262
+  },
+  "fold_results": [
+    {
+      "advantage_accuracy": 1.0,
+      "fold": 0,
+      "harm_rate": 0.0,
+      "mse": 1001.8636,
+      "n_test": 245,
+      "n_train": 972,
+      "r2": 0.4999
+    },
+    {
+      "advantage_accuracy": 1.0,
+      "fold": 1,
+      "harm_rate": 0.0,
+      "mse": 4048.7425,
+      "n_test": 236,
+      "n_train": 981,
+      "r2": 0.3533
+    },
+    {
+      "advantage_accuracy": 1.0,
+      "fold": 2,
+      "harm_rate": 0.0,
+      "mse": 1343.4466,
+      "n_test": 253,
+      "n_train": 964,
+      "r2": 0.4788
+    },
+    {
+      "advantage_accuracy": 1.0,
+      "fold": 3,
+      "harm_rate": 0.0,
+      "mse": 1114.5806,
+      "n_test": 241,
+      "n_train": 976,
+      "r2": 0.6446
+    },
+    {
+      "advantage_accuracy": 1.0,
+      "fold": 4,
+      "harm_rate": 0.0,
+      "mse": 1601.6414,
+      "n_test": 242,
+      "n_train": 975,
+      "r2": 0.4308
+    }
+  ],
+  "mean_advantage_accuracy": 1.0,
+  "mean_harm_rate": 0.0,
+  "mean_mse": 1822.0549,
+  "mean_r2": 0.4815,
+  "model_path": "experiments/v2b_i3_5_2/development/i352d/q_pib_gate_v1.pkl",
+  "n_features": 35,
+  "n_samples": 1217,
+  "n_tasks": 300,
+  "schema": "DAPH_V2B_I3_5_3_QPIB_GATE_TRAINING_V1",
+  "sources": {
+    "i352d_fork_a": 260,
+    "i352d_fork_b": 196,
+    "off_trajectory": 761
+  },
+  "target_stats": {
+    "max": 100.0,
+    "mean": -103.3793,
+    "min": -129.74,
+    "std": 58.3659
+  },
+  "top_features": [
+    {
+      "importance": 0.560398,
+      "name": "verif_SUFFICIENT"
+    },
+    {
+      "importance": 0.162686,
+      "name": "conflict_count"
+    },
+    {
+      "importance": 0.07916,
+      "name": "verified_count"
+    },
+    {
+      "importance": 0.056061,
+      "name": "temporal_CURRENT"
+    },
+    {
+      "importance": 0.042792,
+      "name": "act_ANSWER"
+    },
+    {
+      "importance": 0.01534,
+      "name": "temporal_STALE"
+    },
+    {
+      "importance": 0.014153,
+      "name": "verif_MISSING"
+    },
+    {
+      "importance": 0.010252,
+      "name": "verif_FALSIFIED"
+    },
+    {
+      "importance": 0.009971,
+      "name": "act_STOP"
+    },
+    {
+      "importance": 0.009897,
+      "name": "temporal_UNKNOWN"
+    },
+    {
+      "importance": 0.007818,
+      "name": "last_act_RETRIEVE"
+    },
+    {
+      "importance": 0.007482,
+      "name": "last_act_SEARCH_MORE"
+    },
+    {
+      "importance": 0.004421,
+      "name": "last_act_VERIFY"
+    },
+    {
+      "importance": 0.003846,
+      "name": "act_SEARCH_MORE"
+    },
+    {
+      "importance": 0.003665,
+      "name": "act_VERIFY"
+    }
+  ]
+}

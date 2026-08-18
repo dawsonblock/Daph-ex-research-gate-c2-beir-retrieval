@@ -1,0 +1,108 @@
+{
+  "acceptance_gates": {
+    "G1_validity": true,
+    "G2_nontrivial_intervention": false,
+    "G3_primary_dg": false,
+    "G4_primary_utility": false,
+    "G5_always_on_dominance": true,
+    "G6_no_catastrophic_harm": true,
+    "G7_sequential_stability": true
+  },
+  "cascade": {
+    "chain_length_distribution": {},
+    "max_consecutive": 0,
+    "total_chains": 0
+  },
+  "comparison_with_i352c": {
+    "i352c_delta_u": -3.2814,
+    "i352c_interventions": 536,
+    "i352c_success": 83,
+    "i353_delta_u": -0.025,
+    "i353_interventions": 0,
+    "i353_success": 83
+  },
+  "cost": {
+    "ALWAYS_ON": {
+      "calls": 5.11,
+      "steps": 5.11,
+      "tokens": 9679.0,
+      "utility": -90.2063
+    },
+    "OFF": {
+      "calls": 2.53,
+      "steps": 2.53,
+      "tokens": 2519.0,
+      "utility": -74.8885
+    },
+    "SELECTIVE_QPIB": {
+      "calls": 2.54,
+      "steps": 2.54,
+      "tokens": 2529.0,
+      "utility": -74.9135
+    },
+    "delta_steps": 0.01,
+    "delta_tokens": 11.0,
+    "delta_u": -0.025
+  },
+  "experiment_identity_sha256": "4fa944de33edc7c12acf4a5a4d48edd2776befc565d21af6849b1362cee9f22c",
+  "gate_model_path": "experiments/v2b_i3_5_2/development/i352d/q_pib_gate_v1.pkl",
+  "gate_type": "QPiBInterventionPredictor",
+  "hypothesis_results": {
+    "primary_dg_hypothesis": "NOT_SUPPORTED",
+    "primary_utility_hypothesis": "NOT_SUPPORTED"
+  },
+  "intervention_stats": {
+    "intervention_rate": 0.0,
+    "tasks_with_intervention": 0,
+    "total_interventions": 0
+  },
+  "mcnemar_always_vs_off": {
+    "b_off_only": 23,
+    "c_sel_only": 0,
+    "n_discordant": 23,
+    "p_value_exact": 0.0,
+    "statistic": 21.043478260869566
+  },
+  "mcnemar_sel_vs_off": {
+    "b": 0,
+    "c": 0,
+    "n_discordant": 0,
+    "p_value_exact": 1.0,
+    "statistic": 0.0
+  },
+  "n_gates_passed": 4,
+  "n_tasks": 300,
+  "schema": "DAPH_V2B_I3_5_3_ANALYSIS_V1",
+  "success_rates": {
+    "ALWAYS_ON": {
+      "rate": 0.2,
+      "success": 60,
+      "total": 300
+    },
+    "OFF": {
+      "rate": 0.2767,
+      "success": 83,
+      "total": 300
+    },
+    "SELECTIVE_QPIB": {
+      "rate": 0.2767,
+      "success": 83,
+      "total": 300
+    }
+  },
+  "utility": {
+    "U_ALWAYS_ON": -90.2063,
+    "U_OFF": -74.8885,
+    "U_SELECTIVE_QPIB": -74.9135,
+    "delta_U_always_vs_off": {
+      "lcb_95": -18.9313,
+      "mean": -15.3178,
+      "ucb_95": -11.9707
+    },
+    "delta_U_sel_vs_off": {
+      "lcb_95": -0.0749,
+      "mean": -0.025,
+      "ucb_95": 0.0108
+    }
+  }
+}
