@@ -427,7 +427,7 @@ def main():
     print(f"  both_fail:               {both_fail}")
     print(f"  off_only_success:        {off_only}")
     print(f"  selective_only_success:  {sel_only}")
-    print(f"  p-value (exact):         {mcnemar_sel['p_value_exact']}")
+    print(f"  p-value (exact):         {mcnemar_sel.get('p_value_exact', mcnemar_sel.get('p_value', 'N/A'))}")
 
     # McNemar's test (OFF vs ALWAYS)
     off_only_a = sum(1 for t in task_data if t["off_success"] and not t["always_success"])
@@ -437,7 +437,7 @@ def main():
     print(f"\n--- McNemar's Test (OFF vs ALWAYS_ON) ---")
     print(f"  off_only_success:        {off_only_a}")
     print(f"  always_only_success:     {always_only}")
-    print(f"  p-value (exact):         {mcnemar_always['p_value_exact']}")
+    print(f"  p-value (exact):         {mcnemar_always.get('p_value_exact', mcnemar_always.get('p_value', 'N/A'))}")
 
     # Intervention statistics
     total_interventions = sum(t["sel_interventions"] for t in task_data)

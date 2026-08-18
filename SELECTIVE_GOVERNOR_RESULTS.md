@@ -251,8 +251,8 @@ exploit the governor's ranking intelligence is the I3.5.2b question.
 ## 6. Corrected Milestone Status
 
 ```text
-V2B-I3.5.2a + I3.5.2b
-STATE-LEVEL GOVERNOR COMPETENCE DISCOVERY + PACKET TREATMENT
+V2B-I3.5.2a + I3.5.2b + I3.5.2c
+STATE-LEVEL COMPETENCE + PACKET TREATMENT + END-TO-END TRAJECTORY
 
   Oracle governor-ranking competence:     SUPPORTED
   Local positive competence region:       SUPPORTED
@@ -265,7 +265,14 @@ STATE-LEVEL GOVERNOR COMPETENCE DISCOVERY + PACKET TREATMENT
   Packet-level treatment benefit:         SUPPORTED (A_treatment ≈ A_ranking, +21.52)
   Model follows governor:                 98.0% (743/758)
   Model refuses harmful gov advice:       SUPPORTED (11/35 STOP->ANSWER refused)
-  Selective end-to-end improvement:       NOT YET ESTABLISHED
+  Selective end-to-end DG improvement:    NOT SUPPORTED (ΔDG = 0.0000)
+  Selective end-to-end utility improvement: NOT SUPPORTED (ΔU = -3.28)
+  SELECTIVE safe vs ALWAYS_ON:            SUPPORTED (83 vs 60 success, -78 vs -90 utility)
+  SELECTIVE no harm vs OFF:               SUPPORTED (zero discordant pairs)
+  Counterbalancing:                       IMPLEMENTED (HMAC-based, 6 permutations)
+  Experiment identity binding:            IMPLEMENTED (all component hashes)
+  Token/latency cost tracking:            IMPLEMENTED
+  Cascade diagnostics:                    IMPLEMENTED (max chain = 4, no runaway)
 ```
 
 ### What is Supported
@@ -416,18 +423,214 @@ The selective end-to-end trajectory run is the next experiment.
 
 ---
 
-## 8. Scientific Caveats
+## 8. V2B-I3.5.2c End-to-End Selective Governor Trajectory Experiment
 
-1. **The packet treatment experiment confirms state-level treatment benefit,
-   but end-to-end trajectory improvement has NOT been demonstrated.** The
-   counterfactual action was never executed, so sequential effects are not
-   measured.
+Script: `scripts/run_v2b_i3_5_2c_experiment.py`
+Output: `experiments/v2b_i3_5_2/development/i352c_55f93130e87c/`
+
+### Experimental Design
+
+Three arms run on all 300 `structure_dev_v2` development tasks:
+
+| Arm | Description |
+|---|---|
+| `OFF` | Base packet, no governor |
+| `ALWAYS_ON` | Governor packet always injected |
+| `SELECTIVE_FRAME` | Gate approves → governor advisory packet → model chooses |
+
+**Counterbalancing:** Arm ordering is deterministically counterbalanced using
+`HMAC(seed, task_id) % 6` across the 6 permutations of the three arms. This
+eliminates temporal/order confounds against the remote model backend.
+
+**Experiment identity:** Full component hashes bound:
+gate identity, system prompt, packet builder, governor assessor, governor
+serializer, utility, benchmark manifest, runner, modes, source commit.
+
+### Primary Results
+
+| Metric | OFF | ALWAYS_ON | SELECTIVE_FRAME |
+|---|---|---|---|
+| **Success rate** | **83/300 (27.7%)** | 60/300 (20.0%) | **83/300 (27.7%)** |
+| **Mean utility** | **-74.90** | -90.22 | -78.18 |
+| **Mean model calls** | 2.5 | 5.1 | 3.9 |
+| **Mean tokens** | 2,523 | 9,693 | 5,623 |
+
+### Hypothesis Tests
+
+| Hypothesis | Result | Detail |
+|---|---|---|
+| $H_1$: $\Delta DG_S > 0$ | **NOT SUPPORTED** | $\Delta DG = 0.0000$ (identical success) |
+| $H_2$: $\Delta U_S > 0$ | **NOT SUPPORTED** | $\Delta U = -3.28$, LCB$_{95} = -3.58$ |
+| $H_3$: $U_S > U_A$ | **SUPPORTED** | $-78.18 > -90.22$ |
+| Ideal ordering $U_S > U_0 > U_A$ | **PARTIAL** | $U_0 > U_S > U_A$ (SELECTIVE is between) |
+
+### McNemar's Test
+
+| Comparison | off_only | other_only | Discordant |
+|---|---|---|---|
+| OFF vs SELECTIVE | 0 | 0 | 0 |
+| OFF vs ALWAYS_ON | 23 | 0 | 23 |
+
+**Zero discordant pairs between OFF and SELECTIVE.** Every task that OFF
+succeeds on, SELECTIVE also succeeds on, and vice versa. The 23 discordant
+pairs for ALWAYS_ON are all cases where OFF succeeds but ALWAYS_ON fails.
+
+### Intervention Statistics
+
+- Total interventions: 536
+- Tasks with at least one intervention: 194/300 (64.7%)
+- Intervention rate per step: 45.3%
+- Rule firing: POST_VERIFY 268, POST_SEARCH 268 (evenly split)
+
+### Cascade Diagnostics
+
+| Chain length | Count |
+|---|---|
+| 2 | 120 |
+| 4 | 74 |
+
+Max consecutive interventions: 4. No runaway cascades.
+
+### Cost Accounting
+
+| Metric | OFF | ALWAYS_ON | SELECTIVE |
+|---|---|---|---|
+| Mean model calls | 2.5 | 5.1 | 3.9 |
+| Mean tokens | 2,523 | 9,693 | 5,623 |
+| $\Delta$ tokens vs OFF | — | +7,170 | +3,100 |
+| $\Delta U / \Delta$ tokens | — | — | -0.00106 |
+
+The SELECTIVE arm costs ~3,100 more tokens per task than OFF but produces
+no utility gain.
+
+### Scientific Interpretation
+
+**SELECTIVE_FRAME is a safe baseline, not an improvement.**
+
+The selective gate successfully prevents the harm caused by ALWAYS_ON:
+- Success: 83/300 (identical to OFF, vs 60/300 for ALWAYS_ON)
+- Utility: -78.18 (between OFF at -74.90 and ALWAYS_ON at -90.22)
+- Zero discordant pairs with OFF (no task is harmed by SELECTIVE)
+
+However, SELECTIVE_FRAME does not improve over OFF:
+- Identical success rate (83/300)
+- Slightly worse utility (-78.18 vs -74.90) due to token costs
+- 195/300 trajectories diverge (different actions taken) but 0 change outcomes
+
+**The local Q-advantage discovered in I3.5.2a does not translate to
+trajectory-level improvement.** The governor interventions change actions in
+194 tasks but do not change any task's success/failure outcome. This means:
+
+1. The positive intervention states (Step 2+ post-VERIFY/SEARCH_MORE) are in
+   tasks where the trajectory outcome is already determined by earlier
+   decisions.
+2. A better action at one step is not enough to rescue a trajectory that was
+   already heading toward failure.
+3. The governor's local competence is real but insufficient — it identifies
+   better actions at individual states, but those better actions don't
+   compound into trajectory-level success.
+
+### Development Acceptance Gates
+
+| Gate | Description | Result |
+|---|---|---|
+| G1: Validity | Receipt chain valid, all arms complete | **PASS** |
+| G2: Nontrivial intervention | intervention_rate > 0 | **PASS** (536 interventions) |
+| G3: Primary DG | mean(ΔDG_S) > 0 | **FAIL** (0.0000) |
+| G4: Primary utility | mean(ΔU_S) > 0 | **FAIL** (-3.28) |
+| G5: Always-on dominance | U_SEL > U_ALWAYS | **PASS** (-78.18 > -90.22) |
+| G6: No catastrophic harm | off_only ≤ sel_only | **PASS** (0 ≤ 0) |
+| G7: Sequential stability | max_consecutive ≤ 5 | **PASS** (4) |
+
+**5 of 7 gates passed.** The two primary hypothesis gates (DG improvement and
+utility improvement) failed. The safety gates all passed.
+
+### What This Means for the Causal Chain
+
+```text
+I3.5.1:  Always-on governor hurts                     CONFIRMED
+I3.5.2a: Governor contains local high-Q competence    CONFIRMED
+I3.5.2b: Model transmits that competence (98%)        CONFIRMED
+I3.5.2c: Gating those interventions improves trajectories?  NO
+```
+
+The causal chain breaks at the last step. The governor knows better actions
+locally, and the model follows those recommendations, but the trajectory-level
+outcome doesn't change because:
+
+1. **The positive intervention region is in already-determined trajectories.**
+   The Step 2+ post-VERIFY states where the governor helps are states the
+   trajectory reaches regardless of the governor. By that point, the task's
+   success or failure is often already determined by the Step 0 decision.
+
+2. **Single-step improvements don't compound.** The governor improves one
+   action at one state, but the trajectory has multiple steps. Unless the
+   improved action at Step 2 leads to a cascade of improved actions at
+   Steps 3, 4, etc., the single-step gain is absorbed by the trajectory's
+   existing momentum.
+
+3. **The gate approves interventions but they're neutral, not positive.**
+   The 536 interventions change actions but not outcomes. The governor's
+   recommended action is locally better (higher Q) but the trajectory-level
+   effect is zero.
+
+### What This Does NOT Mean
+
+1. **This does not disprove governor competence.** The state-level analysis
+   (I3.5.2a) and packet treatment (I3.5.2b) are valid. The governor does know
+   better actions at specific states.
+
+2. **This does not mean the architecture is wrong.** SELECTIVE_FRAME is
+   strictly better than ALWAYS_ON. The gate successfully filters harmful
+   interventions.
+
+3. **This does not mean the model can't use governor information.** The 98%
+   follow rate in I3.5.2b is real. The model does exploit governor information
+   when given it.
+
+4. **This means the current gate's positive region doesn't align with
+   trajectory-critical decision points.** The gate approves interventions at
+   states where better actions exist but where those better actions don't
+   change the final outcome.
+
+### Next Steps
+
+The development result suggests two directions:
+
+1. **Earlier intervention:** The gate currently intervenes at Step 2+. If the
+   trajectory-determining decisions are at Step 0-1, the gate needs to identify
+   positive intervention opportunities at those earlier steps. But I3.5.2a
+   showed Step 0 is a hazard region. This is a tension.
+
+2. **Multi-step lookahead:** The governor currently optimizes single-step Q.
+   If it could evaluate multi-step consequences, it might identify
+   interventions that compound. But this requires a different governor design.
+
+3. **Accept the result:** The governor has local competence that doesn't
+   translate to trajectory improvement on this benchmark. This is a valid
+   scientific finding. The selective architecture is safe (doesn't hurt) but
+   doesn't help on this task distribution.
+
+**This is a development result.** The rules were derived from this corpus.
+Even if the development result were positive, it would not be confirmatory.
+The negative development result is informative but not final — a different
+gate design or different benchmark might produce different results.
+
+---
+
+## 9. Scientific Caveats
+
+1. **The end-to-end SELECTIVE_FRAME experiment shows no trajectory-level
+   improvement over OFF.** The governor has local competence (I3.5.2a) and the
+   model transmits it (I3.5.2b), but the local Q-advantage does not compound
+   into trajectory-level success. SELECTIVE_FRAME is a safe baseline (identical
+   to OFF, better than ALWAYS_ON) but not an improvement.
 
 2. **The fold-isolated CV precision (48.1%) is the honest generalization
    estimate.** The global-rules precision (72.4%) overestimates performance
    because the rules were not discovered fold-isolated.
 
-3. **The Brier score is now calibrated** via isotonic regression. The raw Brier
+3. **The Brier score is calibrated** via isotonic regression. The raw Brier
    (0.2623) was worse than the base rate (0.0849). The calibrated Brier (0.0818)
    beats the base rate.
 
@@ -436,16 +639,14 @@ The selective end-to-end trajectory run is the next experiment.
    not present in the oracle). The fallback penalty of $-125.11$ represents the
    standard incorrect-answer penalty.
 
-5. **The model follows the governor 98% of the time.** This means the
-   advisory architecture is a near-perfect conduit for governor intelligence.
-   The `SELECTIVE_FRAME` arm should transmit the full benefit of selective
-   gating to the model.
+5. **The model follows the governor 98% of the time** at the state level, but
+   this does not guarantee trajectory-level improvement. The I3.5.2c result
+   shows that local action changes don't necessarily change outcomes.
 
-6. **The predictor must not be treated as frozen validation-ready policy** until:
-   - Feature schema is frozen
-   - Model class is frozen
-   - Predictor parameters/rules are frozen
-   - Thresholds are frozen
-   - Gate identity hash is frozen
-   - End-to-end development comparison is run
-   - Validation is run without further tuning
+6. **The predictor must not be treated as frozen validation-ready policy.**
+   The development result is negative on the primary hypotheses. Before
+   considering validation, the gate design must be reconsidered to identify
+   whether a different intervention strategy could produce trajectory-level
+   improvement, or whether the result should be accepted as a scientific
+   finding that local governor competence does not translate to trajectory
+   improvement on this benchmark.

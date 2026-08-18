@@ -1,0 +1,23 @@
+{
+  "benchmark_manifest_sha256": "11df18fd8b9d821d7b7cb2f63fabebb45716c11c45271812a759fefffc733598",
+  "delta_q_threshold": 5.0,
+  "experiment_identity_sha256": "55f93130e87cb6e482cba882220a096986f127410ff9d20a2ab8b868a735f019",
+  "features_sha256": "58668dc9c106a2ca4ed783747c670d5f1c6c9d889b06d0d583fd974725c8da04",
+  "gate_identity_sha256": "c2cec89aadf251c4b1caed06d794e4a4e884d34c670f89a9f6dfef4a8c99fb85",
+  "governor_assessor_sha256": "18f9999fe7c65aa1914cec3dde77427e3ecc904a3ba24a2c96a5cd123c7c2e56",
+  "governor_serializer_sha256": "db8043090c3d9e6da2b9bdfc8730cf8a03a03b315ebaa920ef5dc7220a530c0c",
+  "intervention_gate_sha256": "8bf13cab5f8954304eaa40ffa79d9e8109ff8f42631cde2241d7448e65a36994",
+  "max_harm_probability": 0.15,
+  "min_confidence": 0.6,
+  "model_sha256": "c93e9fe63c7ccb5ae77ffaa77a1ad08838c3a8b13e822f9fee3ab5b6fa6f6492",
+  "modes_sha256": "c21e36c458d634c7d0483c3a05fac2139fcc6efe54891701aee211c1cecb042f",
+  "packet_builder_sha256": "909a3e1041085ae7e05043ca3913cf63f345911474086e49eccd745fe7576947",
+  "policy_sha256": "258df0db5049be082814ace8e0ccd06c0462afa31a949bd13546a851ae545c68",
+  "predictor": "RuleBasedInterventionPredictor",
+  "runner_sha256": "171cfd0f82bc1e6c9a4b0803763d4fe106776237eff1e7e303fa2f543a8f8fa5",
+  "schema": "DAPH_V2B_I3_5_2_EXPERIMENT_IDENTITY_V1",
+  "schema_version": 1,
+  "source_commit": "c718bb762d6e57788d0380b826f4d4572b20ed34",
+  "system_prompt_sha256": "7477059afe3271ace7672ede1126fddf27bb7d1a15a3cc4c0cfe8618451e8afa",
+  "utility_sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07"
+}

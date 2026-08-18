@@ -1,0 +1,56 @@
+{
+  "experiment_identity_sha256": "55f93130e87cb6e482cba882220a096986f127410ff9d20a2ab8b868a735f019",
+  "hypothesis_results": {
+    "always_on_dominance": "SUPPORTED (U_SEL > U_ALWAYS: -78.18 > -90.22)",
+    "primary_dg_hypothesis": "NOT_SUPPORTED (\u0394DG = 0.0000, identical success)",
+    "primary_utility_hypothesis": "NOT_SUPPORTED (\u0394U = -3.28, LCB = -3.58)"
+  },
+  "mcnemar_always_vs_off": {
+    "always_only_success": 0,
+    "n_discordant": 23,
+    "off_only_success": 23
+  },
+  "mcnemar_sel_vs_off": {
+    "n_discordant": 0,
+    "off_only_success": 0,
+    "selective_only_success": 0
+  },
+  "n_tasks": 300,
+  "schema": "DAPH_V2B_I3_5_2C_ANALYSIS_V1",
+  "schema_version": 1,
+  "scientific_interpretation": "SELECTIVE_FRAME is a safe baseline: identical success to OFF (83/300), zero discordant pairs, but no improvement. The governor interventions change actions in 195/300 trajectories but do not change outcomes. The local Q-advantage does not translate to trajectory-level improvement. SELECTIVE_FRAME is strictly better than ALWAYS_ON (83 vs 60 success, -78.18 vs -90.22 utility).",
+  "success_rates": {
+    "ALWAYS_ON": {
+      "rate": 0.2,
+      "success": 60,
+      "total": 300
+    },
+    "OFF": {
+      "rate": 0.2767,
+      "success": 83,
+      "total": 300
+    },
+    "SELECTIVE_FRAME": {
+      "rate": 0.2767,
+      "success": 83,
+      "total": 300
+    }
+  },
+  "tasks_with_intervention": 194,
+  "total_interventions": 536,
+  "utility": {
+    "U_ALWAYS_ON": -90.217,
+    "U_OFF": -74.8957,
+    "U_SELECTIVE": -78.1771,
+    "delta_U_always_vs_off": {
+      "lcb_95": -18.903,
+      "mean": -15.3213,
+      "ucb_95": -11.9931
+    },
+    "delta_U_sel_vs_off": {
+      "lcb_95": -3.5848,
+      "mean": -3.2814,
+      "ucb_95": -2.9847
+    }
+  }
+}
