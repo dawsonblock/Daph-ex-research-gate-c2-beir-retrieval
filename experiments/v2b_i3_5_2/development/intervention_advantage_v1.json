@@ -1,0 +1,150 @@
+{
+  "schema": "DAPH_V2B_I3_5_2_INTERVENTION_ADVANTAGE_V1",
+  "schema_version": 1,
+  "split": "structure_dev_v2",
+  "total_tasks": 300,
+  "total_decision_states": 758,
+  "mean_trajectory_length": 2.53,
+  "outcome_distribution": {
+    "HELP": {
+      "count": 197,
+      "rate": 0.2599
+    },
+    "NEUTRAL": {
+      "count": 490,
+      "rate": 0.6464
+    },
+    "HARM": {
+      "count": 71,
+      "rate": 0.0937
+    }
+  },
+  "task_level_opportunity": {
+    "tasks_with_at_least_one_help_step": 193,
+    "tasks_with_at_least_one_help_step_rate": 0.6433,
+    "tasks_with_at_least_one_harm_step": 64,
+    "tasks_with_at_least_one_harm_step_rate": 0.2133
+  },
+  "substitution_matrix": [
+    {
+      "base_action": "VERIFY",
+      "governor_action": "VERIFY",
+      "count": 197,
+      "percentage": 0.2599,
+      "mean_delta_q": 0.0,
+      "min_delta_q": 0.0,
+      "max_delta_q": 0.0,
+      "help_count": 0,
+      "harm_count": 0,
+      "neutral_count": 197
+    },
+    {
+      "base_action": "RETRIEVE",
+      "governor_action": "RETRIEVE",
+      "count": 135,
+      "percentage": 0.1781,
+      "mean_delta_q": 0.0,
+      "min_delta_q": 0.0,
+      "max_delta_q": 0.0,
+      "help_count": 0,
+      "harm_count": 0,
+      "neutral_count": 135
+    },
+    {
+      "base_action": "ANSWER",
+      "governor_action": "SEARCH_MORE",
+      "count": 134,
+      "percentage": 0.1768,
+      "mean_delta_q": 122.8294,
+      "min_delta_q": 92.84,
+      "max_delta_q": 220.7,
+      "help_count": 134,
+      "harm_count": 0,
+      "neutral_count": 0
+    },
+    {
+      "base_action": "ANSWER",
+      "governor_action": "ANSWER",
+      "count": 65,
+      "percentage": 0.0858,
+      "mean_delta_q": 0.0,
+      "min_delta_q": 0.0,
+      "max_delta_q": 0.0,
+      "help_count": 0,
+      "harm_count": 0,
+      "neutral_count": 65
+    },
+    {
+      "base_action": "ANSWER",
+      "governor_action": "VERIFY",
+      "count": 64,
+      "percentage": 0.0844,
+      "mean_delta_q": 93.0034,
+      "min_delta_q": -133.18,
+      "max_delta_q": 219.68,
+      "help_count": 57,
+      "harm_count": 7,
+      "neutral_count": 0
+    },
+    {
+      "base_action": "SEARCH_MORE",
+      "governor_action": "SEARCH_MORE",
+      "count": 63,
+      "percentage": 0.0831,
+      "mean_delta_q": 0.0,
+      "min_delta_q": 0.0,
+      "max_delta_q": 0.0,
+      "help_count": 0,
+      "harm_count": 0,
+      "neutral_count": 63
+    },
+    {
+      "base_action": "RETRIEVE",
+      "governor_action": "VERIFY",
+      "count": 62,
+      "percentage": 0.0818,
+      "mean_delta_q": -50.8344,
+      "min_delta_q": -126.73,
+      "max_delta_q": 124.67,
+      "help_count": 4,
+      "harm_count": 29,
+      "neutral_count": 29
+    },
+    {
+      "base_action": "STOP",
+      "governor_action": "ANSWER",
+      "count": 35,
+      "percentage": 0.0462,
+      "mean_delta_q": -120.0,
+      "min_delta_q": -120.0,
+      "max_delta_q": -120.0,
+      "help_count": 0,
+      "harm_count": 35,
+      "neutral_count": 0
+    },
+    {
+      "base_action": "ANSWER",
+      "governor_action": "REASON_MORE",
+      "count": 2,
+      "percentage": 0.0026,
+      "mean_delta_q": 92.86,
+      "min_delta_q": 92.86,
+      "max_delta_q": 92.86,
+      "help_count": 2,
+      "harm_count": 0,
+      "neutral_count": 0
+    },
+    {
+      "base_action": "REASON_MORE",
+      "governor_action": "VERIFY",
+      "count": 1,
+      "percentage": 0.0013,
+      "mean_delta_q": -1.04,
+      "min_delta_q": -1.04,
+      "max_delta_q": -1.04,
+      "help_count": 0,
+      "harm_count": 0,
+      "neutral_count": 1
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "schema": "DAPH_V2B_I3_5_2_FEATURE_ANALYSIS_V1",
+  "schema_version": 1,
+  "split": "structure_dev_v2",
+  "total_states": 758,
+  "opportunity_map": {
+    "prior_action_count": [
+      {
+        "value": "0",
+        "n": 300,
+        "percentage_of_states": 0.3958,
+        "mean_delta_q": -22.5876,
+        "help_rate": 0.0233,
+        "harm_rate": 0.2133
+      },
+      {
+        "value": "1",
+        "n": 197,
+        "percentage_of_states": 0.2599,
+        "mean_delta_q": 0.0,
+        "help_rate": 0.0,
+        "harm_rate": 0.0
+      },
+      {
+        "value": "2",
+        "n": 197,
+        "percentage_of_states": 0.2599,
+        "mean_delta_q": 83.5489,
+        "help_rate": 0.6802,
+        "harm_rate": 0.0
+      },
+      {
+        "value": "3",
+        "n": 63,
+        "percentage_of_states": 0.0831,
+        "mean_delta_q": 86.8194,
+        "help_rate": 0.873,
+        "harm_rate": 0.1111
+      },
+      {
+        "value": "4",
+        "n": 1,
+        "percentage_of_states": 0.0013,
+        "mean_delta_q": 91.82,
+        "help_rate": 1.0,
+        "harm_rate": 0.0
+      }
+    ],
+    "verification_state": [
+      {
+        "value": "FALSIFIED",
+        "n": 68,
+        "percentage_of_states": 0.0897,
+        "mean_delta_q": 42.1297,
+        "help_rate": 0.4265,
+        "harm_rate": 0.0
+      },
+      {
+        "value": "MISSING",
+        "n": 578,
+        "percentage_of_states": 0.7625,
+        "mean_delta_q": 26.6931,
+        "help_rate": 0.2803,
+        "harm_rate": 0.0623
+      },
+      {
+        "value": "SUFFICIENT",
+        "n": 112,
+        "percentage_of_states": 0.1478,
+        "mean_delta_q": -27.2242,
+        "help_rate": 0.0536,
+        "harm_rate": 0.3125
+      }
+    ],
+    "temporal_status": [
+      {
+        "value": "CURRENT",
+        "n": 112,
+        "percentage_of_states": 0.1478,
+        "mean_delta_q": -27.2242,
+        "help_rate": 0.0536,
+        "harm_rate": 0.3125
+      },
+      {
+        "value": "STALE",
+        "n": 68,
+        "percentage_of_states": 0.0897,
+        "mean_delta_q": 42.1297,
+        "help_rate": 0.4265,
+        "harm_rate": 0.0
+      },
+      {
+        "value": "UNKNOWN",
+        "n": 578,
+        "percentage_of_states": 0.7625,
+        "mean_delta_q": 26.6931,
+        "help_rate": 0.2803,
+        "harm_rate": 0.0623
+      }
+    ],
+    "conflict_count": [
+      {
+        "value": "0",
+        "n": 496,
+        "percentage_of_states": 0.6544,
+        "mean_delta_q": 21.4661,
+        "help_rate": 0.25,
+        "harm_rate": 0.0706
+      },
+      {
+        "value": "1",
+        "n": 262,
+        "percentage_of_states": 0.3456,
+        "mean_delta_q": 17.5462,
+        "help_rate": 0.2786,
+        "harm_rate": 0.1374
+      }
+    ],
+    "last_action": [
+      {
+        "value": "None",
+        "n": 300,
+        "percentage_of_states": 0.3958,
+        "mean_delta_q": -22.5876,
+        "help_rate": 0.0233,
+        "harm_rate": 0.2133
+      },
+      {
+        "value": "REASON_MORE",
+        "n": 1,
+        "percentage_of_states": 0.0013,
+        "mean_delta_q": 91.82,
+        "help_rate": 1.0,
+        "harm_rate": 0.0
+      },
+      {
+        "value": "RETRIEVE",
+        "n": 197,
+        "percentage_of_states": 0.2599,
+        "mean_delta_q": 0.0,
+        "help_rate": 0.0,
+        "harm_rate": 0.0
+      },
+      {
+        "value": "SEARCH_MORE",
+        "n": 63,
+        "percentage_of_states": 0.0831,
+        "mean_delta_q": 86.8194,
+        "help_rate": 0.873,
+        "harm_rate": 0.1111
+      },
+      {
+        "value": "VERIFY",
+        "n": 197,
+        "percentage_of_states": 0.2599,
+        "mean_delta_q": 83.5489,
+        "help_rate": 0.6802,
+        "harm_rate": 0.0
+      }
+    ],
+    "repeated_no_gain": [
+      {
+        "value": "False",
+        "n": 758,
+        "percentage_of_states": 1.0,
+        "mean_delta_q": 20.1112,
+        "help_rate": 0.2599,
+        "harm_rate": 0.0937
+      }
+    ],
+    "remaining_steps_bracket": [
+      {
+        "value": "high (17-24)",
+        "n": 758,
+        "percentage_of_states": 1.0,
+        "mean_delta_q": 20.1112,
+        "help_rate": 0.2599,
+        "harm_rate": 0.0937
+      }
+    ]
+  }
+}

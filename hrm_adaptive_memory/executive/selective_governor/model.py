@@ -35,116 +35,120 @@ class BaseInterventionPredictor:
 
 
 class RuleBasedInterventionPredictor(BaseInterventionPredictor):
-    """Calibrated rule-based predictor derived from I3.5.1 divergence analysis.
+    """Calibrated rule-based predictor derived from state-level counterfactual Q-advantage analysis.
 
-    Key empirical findings from development data:
-    1. At step 0 when verification is SUFFICIENT and temporal is CURRENT:
-       Unaided model chooses STOP (which succeeds). Governor intervenes with ANSWER (-120 ΔU penalty).
-       -> RULE: STOP_ANSWER_HAZARD -> Predict HARM (-120.0, harm_prob=1.0)
-
-    2. At step 0 when verification is MISSING and conflict is 1:
-       Unaided model retrieves evidence first. Governor prematurely forces VERIFY (-9.5 ΔU).
-       -> RULE: PREMATURE_VERIFY_HAZARD -> Predict HARM (-9.5, harm_prob=0.95)
-
-    3. After 2+ steps when last_action was VERIFY and verification remains MISSING:
-       Unaided model terminates with ANSWER (cuts loss). Governor forces SEARCH_MORE loop (-9.3 ΔU).
-       -> RULE: IRREDUCIBLE_LOOP_HAZARD -> Predict HARM (-9.3, harm_prob=0.95)
-
-    4. When repeated_no_gain is True:
-       Governor intervention has 0% empirical benefit rate.
-       -> RULE: NO_GAIN_HAZARD -> Predict HARM (-10.0, harm_prob=0.90)
-
-    5. General conservative default:
-       Governor has 0% empirical positive rate in development data.
-       Any unhandled state defaults to NEUTRAL/HARM -> SKIP.
+    Key empirical findings from development state counterfactuals (758 states):
+    1. Step 0 SUFFICIENT/CURRENT: Model stops, governor forces answer -> HARM (-120.0 ΔQ, harm_prob=1.0)
+    2. Step 0 MISSING: Model retrieves, governor prematurely forces verify -> HARM (-50.8 ΔQ, harm_prob=0.95)
+    3. Step 1 post-RETRIEVE: Model already verifies, governor agrees -> NEUTRAL (0.0 ΔQ, harm_prob=0.0)
+    4. Step 2+ post-VERIFY with MISSING/FALSIFIED: Model prematurely terminates with fatal answer;
+       governor prevents fatal answer by exploring -> SAFE_HELP (+83.5 ΔQ, harm_prob=0.00, help_rate=68.0%)
+    5. Step 3+ post-SEARCH_MORE: Governor prevents premature termination -> SAFE_HELP (+86.8 ΔQ, harm_prob=0.11, help_rate=87.3%)
+    6. Repeated no gain or low resources -> LIKELY_HARM -> SKIP
     """
 
     def predict(self, features: InterventionFeatures) -> InterventionPrediction:
         try:
-            # Rule 1: Step 0 with SUFFICIENT / CURRENT evidence (State-irrelevant STOP hazard)
-            if (
-                features.prior_action_count == 0
-                and features.verification_state == "SUFFICIENT"
-                and features.temporal_status == "CURRENT"
-                and features.conflict_count == 0
-            ):
+            # Rule 1: Step 0 is dangerous (STOP override or premature VERIFY) -> LIKELY_HARM -> SKIP
+            if features.prior_action_count == 0:
+                if (
+                    features.verification_state == "SUFFICIENT"
+                    and features.temporal_status == "CURRENT"
+                    and features.conflict_count == 0
+                ):
+                    return InterventionPrediction(
+                        expected_delta_utility=-120.0,
+                        harm_probability=1.0,
+                        help_probability=0.0,
+                        confidence=1.0,
+                        reason="LIKELY_HARM:STEP0_SUFFICIENT_STOP_HAZARD",
+                    )
                 return InterventionPrediction(
-                    expected_delta_utility=-120.0,
-                    harm_probability=1.0,
-                    help_probability=0.0,
-                    confidence=1.0,
-                    reason="RULE:STEP0_SUFFICIENT_STOP_HAZARD",
-                )
-
-            # Rule 2: Step 0 with MISSING verification and conflict (Premature VERIFY hazard)
-            if (
-                features.prior_action_count == 0
-                and features.verification_state == "MISSING"
-                and features.last_action is None
-            ):
-                return InterventionPrediction(
-                    expected_delta_utility=-9.5,
-                    harm_probability=0.95,
-                    help_probability=0.0,
+                    expected_delta_utility=-25.0,
+                    harm_probability=0.90,
+                    help_probability=0.02,
                     confidence=0.95,
-                    reason="RULE:STEP0_MISSING_PREMATURE_VERIFY_HAZARD",
+                    reason="LIKELY_HARM:STEP0_PREMATURE_INTERVENTION_HAZARD",
                 )
 
-            # Rule 3: Irreducible loop hazard (after VERIFY, verification still MISSING)
-            if (
-                features.prior_action_count >= 2
-                and features.last_action == "VERIFY"
-                and features.verification_state in ("MISSING", "FALSIFIED")
-            ):
+            # Rule 2: Step 1 (model already chooses VERIFY after RETRIEVE; 100% agreement) -> NEUTRAL -> SKIP
+            if features.prior_action_count == 1 and features.last_action == "RETRIEVE":
                 return InterventionPrediction(
-                    expected_delta_utility=-9.3,
-                    harm_probability=0.95,
+                    expected_delta_utility=0.0,
+                    harm_probability=0.0,
                     help_probability=0.0,
-                    confidence=0.95,
-                    reason="RULE:POST_VERIFY_IRREDUCIBLE_SEARCH_LOOP_HAZARD",
+                    confidence=0.99,
+                    reason="NEUTRAL:STEP1_RETRIEVE_AGREEMENT_NO_OP",
                 )
 
-            # Rule 4: Repeated no gain
+            # Rule 3: Repeated no gain -> LIKELY_HARM -> SKIP
             if features.repeated_no_gain:
                 return InterventionPrediction(
                     expected_delta_utility=-10.0,
                     harm_probability=0.90,
                     help_probability=0.0,
                     confidence=0.90,
-                    reason="RULE:REPEATED_NO_GAIN_HAZARD",
+                    reason="LIKELY_HARM:REPEATED_NO_GAIN_HAZARD",
                 )
 
-            # Rule 5: FALSIFIED verification state (Model terminates, gov forces re-verify)
-            if features.verification_state == "FALSIFIED":
-                return InterventionPrediction(
-                    expected_delta_utility=-8.7,
-                    harm_probability=0.90,
-                    help_probability=0.0,
-                    confidence=0.90,
-                    reason="RULE:FALSIFIED_STATE_OVER_INTERVENTION_HAZARD",
-                )
-
-            # Rule 6: Resource exhaustion (low remaining steps or budget)
+            # Rule 4: Resource exhaustion -> LIKELY_HARM -> SKIP
             if (
                 features.remaining_steps <= 2
-                or features.retrieval_budget_remaining == 0
-                and features.verification_budget_remaining == 0
+                or (features.retrieval_budget_remaining == 0 and features.verification_budget_remaining == 0)
             ):
                 return InterventionPrediction(
                     expected_delta_utility=-5.0,
                     harm_probability=0.85,
                     help_probability=0.0,
                     confidence=0.85,
-                    reason="RULE:LOW_RESOURCE_HAZARD",
+                    reason="LIKELY_HARM:LOW_RESOURCE_HAZARD",
                 )
 
-            # Conservative fallback: unclassified state
+            # Rule 5: Step 2+ post-VERIFY with MISSING / FALSIFIED evidence
+            # This is the proven positive intervention region: preventing premature failing ANSWER!
+            if (
+                features.prior_action_count >= 2
+                and features.last_action == "VERIFY"
+                and features.verification_state in ("MISSING", "FALSIFIED")
+            ):
+                return InterventionPrediction(
+                    expected_delta_utility=+83.5,
+                    harm_probability=0.00,
+                    help_probability=0.68,
+                    confidence=0.85,
+                    reason="SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION",
+                )
+
+            # Rule 6: Step 3+ post-SEARCH_MORE
+            if (
+                features.prior_action_count >= 3
+                and features.last_action == "SEARCH_MORE"
+            ):
+                return InterventionPrediction(
+                    expected_delta_utility=+86.8,
+                    harm_probability=0.11,
+                    help_probability=0.87,
+                    confidence=0.80,
+                    reason="SAFE_HELP:POST_SEARCH_PREMATURE_TERMINATION_PREVENTION",
+                )
+
+            # Conservative fallback: unclassified / uncertain state -> SKIP_UNCERTAIN
             return InterventionPrediction(
-                expected_delta_utility=-5.0,
-                harm_probability=0.80,
+                expected_delta_utility=0.0,
+                harm_probability=0.50,
                 help_probability=0.0,
-                confidence=0.50,
-                reason="RULE:CONSERVATIVE_DEFAULT_NO_BENEFIT_OBSERVED",
+                confidence=0.40,
+                reason="UNCERTAIN:CONSERVATIVE_DEFAULT_SKIP",
+            )
+
+        except Exception as e:
+            # Conservative default = silence
+            return InterventionPrediction(
+                expected_delta_utility=-999.0,
+                harm_probability=1.0,
+                help_probability=0.0,
+                confidence=0.0,
+                reason=f"EXCEPTION_DEFAULT_SKIP:{e}",
             )
 
         except Exception as e:

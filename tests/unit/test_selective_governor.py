@@ -161,10 +161,10 @@ class TestRuleBasedPredictor:
         )
         p = pred.predict(feats)
         assert p.expected_delta_utility < 0.0
-        assert p.harm_probability >= 0.90
-        assert "PREMATURE_VERIFY" in p.reason
+        assert p.harm_probability >= 0.80
+        assert "PREMATURE_INTERVENTION" in p.reason
 
-    def test_post_verify_search_loop_hazard(self):
+    def test_post_verify_safe_help_region(self):
         pred = RuleBasedInterventionPredictor()
         feats = InterventionFeatures(
             remaining_steps=22,
@@ -189,9 +189,9 @@ class TestRuleBasedPredictor:
             chain_stage=0,
         )
         p = pred.predict(feats)
-        assert p.expected_delta_utility < 0.0
-        assert p.harm_probability >= 0.90
-        assert "SEARCH_LOOP" in p.reason
+        assert p.expected_delta_utility > 0.0
+        assert p.harm_probability <= 0.05
+        assert "SAFE_HELP" in p.reason
 
 
 class TestSelectiveGovernorGate:

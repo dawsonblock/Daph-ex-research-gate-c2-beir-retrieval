@@ -15,7 +15,11 @@ from .model import (
 )
 from .identity import compute_gate_identity
 from .serializer import serialize_decision, decision_sha256
-from .calibration import evaluate_gate_on_dataset, GateEvaluationMetrics
+from .calibration import (
+    evaluate_gate_on_counterfactual_states,
+    evaluate_gate_on_dataset,
+    GateEvaluationMetrics,
+)
 
 __all__ = [
     "InterventionFeatures",
@@ -30,6 +34,7 @@ __all__ = [
     "compute_gate_identity",
     "serialize_decision",
     "decision_sha256",
+    "evaluate_gate_on_counterfactual_states",
     "evaluate_gate_on_dataset",
     "GateEvaluationMetrics",
     "DEFAULT_DELTA_U_THRESHOLD",

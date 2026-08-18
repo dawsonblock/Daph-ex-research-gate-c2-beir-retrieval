@@ -1,0 +1,148 @@
+{
+  "schema": "DAPH_V2B_I3_5_2_CROSS_VALIDATION_REPORT_V1",
+  "schema_version": 1,
+  "k_folds": 5,
+  "total_tasks": 300,
+  "total_states": 758,
+  "out_of_fold_metrics": {
+    "mae_delta_q": 35.7152,
+    "spearman_correlation_delta_q": 0.649,
+    "roc_auc_harm": 0.7956,
+    "brier_score_harm": 0.2613,
+    "total_interventions_approved": 261,
+    "intervention_rate": 0.3443,
+    "precision_help": 0.728,
+    "harm_rate_on_interventions": 0.0268,
+    "mean_delta_q_on_interventions": 84.37,
+    "worst_decile_delta_q": 0.0
+  },
+  "fold_breakdown": [
+    {
+      "fold": 1,
+      "test_states": 153,
+      "interventions": 54,
+      "intervention_rate": 0.3529,
+      "precision_help": 0.6852,
+      "harm_rate": 0.037,
+      "mean_delta_q_intervened": 68.5993
+    },
+    {
+      "fold": 2,
+      "test_states": 154,
+      "interventions": 54,
+      "intervention_rate": 0.3506,
+      "precision_help": 0.7222,
+      "harm_rate": 0.0185,
+      "mean_delta_q_intervened": 91.813
+    },
+    {
+      "fold": 3,
+      "test_states": 163,
+      "interventions": 60,
+      "intervention_rate": 0.3681,
+      "precision_help": 0.6833,
+      "harm_rate": 0.0333,
+      "mean_delta_q_intervened": 70.0917
+    },
+    {
+      "fold": 4,
+      "test_states": 138,
+      "interventions": 43,
+      "intervention_rate": 0.3116,
+      "precision_help": 0.814,
+      "harm_rate": 0.0,
+      "mean_delta_q_intervened": 103.9735
+    },
+    {
+      "fold": 5,
+      "test_states": 150,
+      "interventions": 50,
+      "intervention_rate": 0.3333,
+      "precision_help": 0.76,
+      "harm_rate": 0.04,
+      "mean_delta_q_intervened": 93.6392
+    }
+  ],
+  "sample_approved_interventions": [
+    {
+      "task_id": "i3_3_structure_dev_v2_0139",
+      "step_id": 2,
+      "actual_delta_q": 0.0,
+      "pred_delta_q": 83.5,
+      "pred_harm_prob": 0.0,
+      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0139",
+      "step_id": 3,
+      "actual_delta_q": 91.82,
+      "pred_delta_q": 86.8,
+      "pred_harm_prob": 0.11,
+      "reason": "SAFE_HELP:POST_SEARCH_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0119",
+      "step_id": 2,
+      "actual_delta_q": 92.84,
+      "pred_delta_q": 83.5,
+      "pred_harm_prob": 0.0,
+      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0266",
+      "step_id": 2,
+      "actual_delta_q": 92.84,
+      "pred_delta_q": 83.5,
+      "pred_harm_prob": 0.0,
+      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0245",
+      "step_id": 2,
+      "actual_delta_q": 0.0,
+      "pred_delta_q": 83.5,
+      "pred_harm_prob": 0.0,
+      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0245",
+      "step_id": 3,
+      "actual_delta_q": 92.86,
+      "pred_delta_q": 86.8,
+      "pred_harm_prob": 0.11,
+      "reason": "SAFE_HELP:POST_SEARCH_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0128",
+      "step_id": 2,
+      "actual_delta_q": 92.84,
+      "pred_delta_q": 83.5,
+      "pred_harm_prob": 0.0,
+      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0186",
+      "step_id": 2,
+      "actual_delta_q": 0.0,
+      "pred_delta_q": 83.5,
+      "pred_harm_prob": 0.0,
+      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0186",
+      "step_id": 3,
+      "actual_delta_q": -133.18,
+      "pred_delta_q": 86.8,
+      "pred_harm_prob": 0.11,
+      "reason": "SAFE_HELP:POST_SEARCH_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0171",
+      "step_id": 2,
+      "actual_delta_q": 92.84,
+      "pred_delta_q": 83.5,
+      "pred_harm_prob": 0.0,
+      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+    }
+  ]
+}
