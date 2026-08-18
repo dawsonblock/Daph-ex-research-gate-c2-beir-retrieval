@@ -1,0 +1,21 @@
+{
+  "schema": "DAPH_V2B_I3_5_1_MODEL_POLICY_V1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_EVALUATION",
+  "frozen_model": "deepseek-chat",
+  "frozen_provider": "deepseek",
+  "frozen_endpoint": "https://api.deepseek.com/v1",
+  "require_fingerprint": true,
+  "invalid_fingerprint_handling": "mark_block_invalid",
+  "block_validity_check": true,
+  "all_arms_same_model": true,
+  "all_arms_same_endpoint": true,
+  "all_arms_same_temperature": true,
+  "all_arms_same_thinking_mode": true,
+  "all_arms_same_response_format": true,
+  "all_arms_same_max_tokens": true,
+  "all_arms_same_prompt": true,
+  "all_arms_same_generation_config": true,
+  "all_arms_same_retry_policy": true,
+  "prohibition": "Model identity must be identical across all four conditions. Any change constitutes a new experiment identity."
+}

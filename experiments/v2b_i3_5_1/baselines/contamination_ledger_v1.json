@@ -1,0 +1,71 @@
+{
+  "schema": "DAPH_V2B_I3_5_1_CONTAMINATION_LEDGER_V1",
+  "schema_version": 1,
+  "created_at": "2026-08-17T00:00:00Z",
+  "description": "Contamination ledger for I3.5.1. Documents whether each artifact was generated using prior experimental results that could bias governor design, scoring weights, prompt design, or model selection.",
+  "artifacts": [
+    {
+      "artifact": "v2b_i3_5_tasks_v2.json (V2 task corpus)",
+      "when_generated": "During I3.5 development, before I3.5.1 repair",
+      "prior_results_visible": "I3.4 held-out structure results were used diagnostically for governor design",
+      "governor_design_used_them": true,
+      "scoring_weights_used_them": false,
+      "prompt_design_used_them": true,
+      "model_selection_used_them": false,
+      "classification": "DEVELOPMENT",
+      "rationale": "V2 structural families were generated independently of I3.4 tasks, but I3.4 held-out structure was used diagnostically during governor development. The V2 tasks themselves are structurally independent. Governor design and prompt design were informed by I3.4 results, but the task corpus generation did not use result information."
+    },
+    {
+      "artifact": "governor_scoring_v1.json (governor weights)",
+      "when_generated": "During I3.5.1 repair",
+      "prior_results_visible": "I3.5 development experiment results (positive, then regressed)",
+      "governor_design_used_them": true,
+      "scoring_weights_used_them": true,
+      "prompt_design_used_them": false,
+      "model_selection_used_them": false,
+      "classification": "DEVELOPMENT",
+      "rationale": "Governor weights were frozen based on development experience. They must not be changed after validation or held-out evaluation."
+    },
+    {
+      "artifact": "v2b_i3_5_1_scientific_criteria_v1.json",
+      "when_generated": "During I3.5.1 repair, before any I3.5.1 model calls",
+      "prior_results_visible": "I3.5 development results (contradictory, invalid due to backend errors)",
+      "governor_design_used_them": false,
+      "scoring_weights_used_them": false,
+      "prompt_design_used_them": false,
+      "model_selection_used_them": false,
+      "classification": "FROZEN_BEFORE_CALLS",
+      "rationale": "Criteria were frozen before any I3.5.1 model calls. Prior I3.5 results were invalid and did not inform the criteria."
+    },
+    {
+      "artifact": "I3.4 held-out structure split",
+      "when_generated": "During I3.3.2 benchmark qualification",
+      "prior_results_visible": "None at generation time",
+      "governor_design_used_them": "N/A",
+      "scoring_weights_used_them": "N/A",
+      "prompt_design_used_them": "N/A",
+      "model_selection_used_them": "N/A",
+      "classification": "CONTAMINATED_FOR_I3_5_HELD_OUT",
+      "rationale": "I3.4 held-out structure was used diagnostically during I3.5 governor development. It cannot be used as I3.5.1 held-out structure. V2 structural families provide the held-out topologies for I3.5.1."
+    },
+    {
+      "artifact": "V2 structural families (held-out topologies)",
+      "when_generated": "During I3.5 development",
+      "prior_results_visible": "I3.4 results (used for governor design, not for V2 task generation)",
+      "governor_design_used_them": false,
+      "scoring_weights_used_them": false,
+      "prompt_design_used_them": false,
+      "model_selection_used_them": false,
+      "classification": "VALID_FOR_HELD_OUT",
+      "rationale": "V2 structural families were generated independently of I3.4 held-out topologies. They provide structurally isolated held-out topologies for I3.5.1."
+    }
+  ],
+  "split_classifications": {
+    "development": "VALID — used for governor design and parameter tuning",
+    "validation": "VALID — used for final engineering variant selection, not for governor tuning",
+    "held_out_instance": "VALID — V2 instances, not used in governor development",
+    "held_out_surface": "VALID — V2 surfaces, not used in governor development",
+    "held_out_structure": "VALID — V2 topologies, structurally isolated from I3.4 held-out and from development"
+  },
+  "policy": "Never upgrade questionable data into validation/held-out status. If uncertain about contamination, classify as development."
+}

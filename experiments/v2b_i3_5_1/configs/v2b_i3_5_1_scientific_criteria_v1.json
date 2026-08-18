@@ -1,0 +1,158 @@
+{
+  "schema": "DAPH_V2B_I3_5_1_SCIENTIFIC_CRITERIA_V1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_ANY_MODEL_CALLS",
+  "milestone": "V2B-I3.5.1",
+  "description": "Frozen scientific criteria for the I3.5.1 governor causal protocol experiment. Uses a 2x2 factorial design: cognitive-state visibility (BLIND/AWARE) x governor availability (OFF/ON). The primary scientific question is whether the governor reduces decision gap beyond what is explained by additional observable information.",
+  "claim_boundary": "The central scientific question is whether the governor — an advisory decision mechanism — improves executive decisions (DG) beyond what observable information alone provides. This is NOT a question about whether the state contains information (IG) or whether end-to-end regret improves (TR).",
+  "factorial_design": {
+    "factors": {
+      "S": {"name": "cognitive_state_visibility", "levels": ["BLIND", "AWARE"]},
+      "G": {"name": "governor_availability", "levels": ["OFF", "ON"]}
+    },
+    "conditions": {
+      "BLIND_NO_GOVERNOR": {"S": "BLIND", "G": "OFF"},
+      "BLIND_GOVERNOR": {"S": "BLIND", "G": "ON"},
+      "AWARE_NO_GOVERNOR": {"S": "AWARE", "G": "OFF"},
+      "AWARE_GOVERNOR": {"S": "AWARE", "G": "ON"}
+    }
+  },
+  "definitions": {
+    "V_L_star": "Latent optimal value: V_L^*(s) = optimal value from the full latent state.",
+    "V_O_S": "Observable optimal value: V_O^S(B_M(s)) = optimal value from observable information under state condition S. Does NOT depend on governor G.",
+    "V_pi_SG": "Controller value: V_pi^{S,G}(s) = realized value from controller under state S and governor G.",
+    "IG_S": "Information gap: IG_S(s) = V_L^*(s) - V_O^S(s). Depends on S only, NOT on G.",
+    "DG_SG": "Decision gap: DG_{S,G}(s) = V_O^S(s) - V_pi^{S,G}(s). Depends on both S and G.",
+    "TR_SG": "Total regret: TR_{S,G}(s) = V_L^*(s) - V_pi^{S,G}(s).",
+    "identity": "TR_{S,G}(s) = IG_S(s) + DG_{S,G}(s) algebraically.",
+    "oracle_invariance": "V_O(BLIND,OFF) == V_O(BLIND,ON) AND V_O(AWARE,OFF) == V_O(AWARE,ON). The governor does not change what information is observable.",
+    "no_clamping": "Individual task contributions to IG or DG are NOT clamped."
+  },
+  "primary_hypothesis": {
+    "statement": "The governor reduces decision gap under the aware condition: DG_{AWARE,OFF} > DG_{AWARE,ON}.",
+    "metric": "decision_gap",
+    "direction": "governor_on < governor_off (under aware)",
+    "improvement": "ΔDG_gov|aware = DG_{AWARE,OFF} - DG_{AWARE,ON} > 0",
+    "primary_test": "paired_bootstrap"
+  },
+  "secondary_hypotheses": {
+    "governor_effect_blind": {
+      "statement": "The governor also reduces DG under blind: ΔDG_gov|blind > 0",
+      "delta": "ΔDG_gov|blind = DG_{BLIND,OFF} - DG_{BLIND,ON}"
+    },
+    "state_effect_no_gov": {
+      "statement": "State visibility reduces DG without governor: ΔDG_state|no-gov > 0",
+      "delta": "ΔDG_state|no-gov = DG_{BLIND,OFF} - DG_{AWARE,OFF}"
+    },
+    "interaction": {
+      "statement": "Governor benefit depends on structured state: Δ_interaction > 0",
+      "delta": "Δ_interaction = (DG_{B,O} - DG_{B,G}) - (DG_{A,O} - DG_{A,G})"
+    }
+  },
+  "interpretation_matrix": {
+    "DG11_<<_DG10": "Governor helps with structured state (primary claim)",
+    "DG01_≈_DG00_AND_DG11_≈_DG10": "Governor isn't helping; apparent gain came from state visibility or confounding",
+    "DG01_<<_DG00_AND_DG11_<<_DG10": "Governor has a general metacontrol effect (not state-specific)",
+    "DG01_≈_DG00_AND_DG11_<<_DG10": "Governor's value specifically depends on structured cognitive state (synergy)"
+  },
+  "prohibition_on_substitution": "No scientific report may substitute TR for DG. TR = IG + DG, so if ΔIG > 0, then ΔTR > 0 does not imply ΔDG > 0. Reporting ΔTR as evidence of executive exploitation is prohibited.",
+  "statistical_plan": {
+    "paired_design": "All four conditions share the same tasks. For each task i, compute paired deltas.",
+    "primary_test": "Paired bootstrap on per-task ΔDG_gov|aware differences.",
+    "bootstrap": {
+      "method": "paired_bootstrap",
+      "resampling_unit": "task",
+      "iterations": 10000,
+      "ci_level": 0.95,
+      "random_seed": 42,
+      "note": "Do NOT bootstrap individual transitions as independent observations."
+    },
+    "primary_success_criterion": {
+      "condition": "LCB_95(ΔDG_gov|aware) > 0",
+      "description": "The lower bound of the 95% paired bootstrap CI of ΔDG_gov|aware must be strictly positive.",
+      "requires": "All run-validity gates must pass."
+    },
+    "topology_cluster_bootstrap": {
+      "method": "topology_cluster_bootstrap",
+      "cluster_variable": "transition_topology_sha256",
+      "resampling_unit": "topology_cluster",
+      "iterations": 10000,
+      "ci_level": 0.95,
+      "note": "For structural-generalization claims, resample topology clusters, not individual tasks."
+    },
+    "multiple_comparisons": {
+      "correction": "Bonferroni",
+      "note": "Applied to the secondary hypothesis family, not to the primary governor-aware comparison."
+    }
+  },
+  "evaluation_order": {
+    "phase_1": "development",
+    "phase_2": "validation",
+    "phase_3": "held_out_instance",
+    "phase_4": "held_out_surface",
+    "phase_5": "held_out_structure_last",
+    "note": "Each phase must be evaluated and reported before proceeding. No configuration changes between phases."
+  },
+  "repetition_policy": {
+    "default_repetitions": 1,
+    "nondeterminism_probe": "Before scientific evaluation, run a development repeatability probe with identical packets under identical settings.",
+    "probe_metrics": ["exact raw-output agreement", "parsed-action agreement", "reason-code agreement", "system-fingerprint agreement"],
+    "if_deterministic": "Retain 1 call per task per condition.",
+    "if_nondeterministic": "Activate 3-5 repetitions and freeze that count before validation.",
+    "note": "Never decide repetition count after held-out performance is visible."
+  },
+  "replay_requirements": {
+    "model_output_reproducibility": "Store raw model outputs per step. Replay requires the same prompt, packet, and generation settings.",
+    "evaluation_reproducibility": "Given the same parsed action, the trajectory and scoring must be exactly reproducible.",
+    "separation": "Model-output nondeterminism is distinguished from deterministic evaluation replay.",
+    "identity_check": "TR = IG + DG must hold for every task contribution within tolerance 1e-9.",
+    "utility_tolerance": 1e-9
+  },
+  "reporting_requirements": {
+    "factorial_table": "Report the 2x2 DG table: {BLIND/AWARE} x {GOV OFF/ON}.",
+    "governor_effects": "Report ΔDG_gov|aware and ΔDG_gov|blind with CIs.",
+    "state_effects": "Report ΔDG_state|no-gov and ΔDG_state|gov with CIs.",
+    "interaction": "Report Δ_interaction with CI.",
+    "success_rates": "Report success rates for all four conditions.",
+    "cost_efficiency": "Report model calls and utility per condition.",
+    "claim_boundary": "State explicitly which claim tier is supported.",
+    "no_tr_substitution": "Never report ΔTR as evidence of governor benefit without also reporting ΔDG."
+  },
+  "claim_hierarchy": {
+    "C0": "artifact-valid experiment (all gates pass)",
+    "C1": "representation advantage (ΔIG > 0)",
+    "C2": "governor improves decision quality (ΔDG_gov|aware > 0)",
+    "C3": "governor benefit generalizes across topology (topology-cluster CI excludes 0)",
+    "C4": "governor x cognitive-state synergy established (Δ_interaction > 0)",
+    "C5": "governor improves utility at equal/lower resource cost"
+  },
+  "validity_gates": {
+    "G00": "pre-repair state frozen",
+    "G01": "single canonical identity",
+    "G02": "scientific criteria frozen before calls",
+    "G03": "treatment packet separation (BASE vs GOVERNOR)",
+    "G04": "no evaluator leakage in packets",
+    "G05": "benchmark closure exact",
+    "G06": "structural isolation",
+    "G07": "oracle identity",
+    "G08": "governor identity",
+    "G09": "executor identity",
+    "G10": "generation config",
+    "G11": "model identity (same across all arms)",
+    "G12": "prompt/decoder identity",
+    "G13": "factorial scheduler (4-arm counterbalancing)",
+    "G14": "fingerprint policy",
+    "G15": "receipt chain (hash chain intact)",
+    "G16": "replay (100% match)",
+    "G17": "TR = IG + DG (tolerance 1e-9)",
+    "G18": "observable oracle invariance (V_O independent of G)",
+    "G19": "governor-executor parity",
+    "G20": "artifact provenance DAG",
+    "G21": "report invariants (count tables tie to N)",
+    "G22": "full test suite passes",
+    "G23": "repository clean-state policy",
+    "G24": "frozen experiment bundle",
+    "void_vs_fail": "Any hard-gate failure makes the scientific run VOID, not FAIL. FAIL means a valid experiment whose hypothesis was unsupported."
+  },
+  "prohibition": "These thresholds, statistical tests, grouping variables, claim boundaries, and validity gates must not be modified after any held-out model evaluation has been run. Any change constitutes a new experiment identity."
+}

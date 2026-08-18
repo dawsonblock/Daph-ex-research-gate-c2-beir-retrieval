@@ -1,0 +1,15 @@
+{
+  "schema": "DAPH_V2B_I3_5_1_GENERATION_CONFIG_V1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_EVALUATION",
+  "model": "deepseek-chat",
+  "provider": "deepseek",
+  "endpoint": "https://api.deepseek.com/v1",
+  "temperature": 0.0,
+  "max_tokens": 2048,
+  "response_format": "json_object",
+  "thinking_mode": "disabled",
+  "strict_json": true,
+  "max_steps": 24,
+  "prohibition": "These parameters must not be modified after any held-out evaluation. Any change constitutes a new experiment identity."
+}

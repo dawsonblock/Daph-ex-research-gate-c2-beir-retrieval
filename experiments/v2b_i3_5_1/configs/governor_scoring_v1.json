@@ -1,0 +1,37 @@
+{
+  "schema": "DAPH_V2B_I3_5_1_GOVERNOR_SCORING_V1",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_EVALUATION",
+  "description": "Governor scoring weights separated from mechanism code. No magic numeric constants in score(). Enables ablation without silently changing governor identity.",
+  "weights": {
+    "progress_weight": 1.0,
+    "information_weight": 1.0,
+    "option_value_weight": 0.3,
+    "resource_cost_weight": -0.5,
+    "policy_risk_weight": -0.5,
+    "redundancy_weight": -1.0
+  },
+  "ordinal_levels": ["NONE", "LOW", "MEDIUM", "HIGH"],
+  "bottleneck_kinds": [
+    "NO_EVIDENCE",
+    "FALSIFIED_EVIDENCE",
+    "UNVERIFIED_EVIDENCE",
+    "STALE_INFORMATION",
+    "UNRESOLVED_CONFLICT",
+    "INSUFFICIENT_REASONING",
+    "RESOURCE_EXHAUSTION",
+    "REPEATED_NO_GAIN",
+    "READY_TO_ANSWER",
+    "IRREDUCIBLE_UNCERTAINTY",
+    "CHAIN_DISCOVERY",
+    "CHAIN_INCOMPLETE"
+  ],
+  "transition_model": "deterministic_symbolic_v1",
+  "redundancy_rules": {
+    "0_attempts": "NONE",
+    "1_attempt_not_last": "LOW",
+    "1_attempt_is_last": "MEDIUM",
+    "2_plus_attempts": "HIGH"
+  },
+  "prohibition": "These weights must not be modified after any held-out evaluation. Any change constitutes a new experiment identity."
+}
