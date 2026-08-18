@@ -11,3 +11,6 @@ runs/
 # V2 oracle tables — too large for git, regenerate with scripts/precompute_v2b_i3_5_oracles.py
 experiments/v2b_i3_5/oracle_tables/*.gz
 
+# I3.3 oracle tables — too large for git, regenerate with scripts/precompute_v2b_i3_3_oracles.py
+experiments/v2b_i3_3/oracle_tables/*.gz
+
