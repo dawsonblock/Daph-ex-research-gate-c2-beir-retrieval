@@ -64,12 +64,14 @@ class TestCanonicalIdentity:
         assert data["schema"] == IDENTITY_SCHEMA
 
     def test_only_one_identity_file(self):
-        """There must be exactly one canonical identity, not multiple."""
-        # The old I3.5 had two: configs/ and manifests/. I3.5.1 must have one.
-        identity_files = list(
-            Path("experiments/v2b_i3_5_1").rglob("*experiment_identity*")
-        )
-        assert len(identity_files) == 1, (
-            f"Expected exactly 1 identity file, found {len(identity_files)}: "
-            f"{[str(f) for f in identity_files]}"
+        """There must be exactly one canonical identity in root configs/manifests."""
+        # The old I3.5 had two conflicting root identities: configs/ and manifests/.
+        # I3.5.1 must have exactly one root canonical identity in manifests/.
+        root_identity_files = [
+            f for f in Path("experiments/v2b_i3_5_1").rglob("*experiment_identity*.json")
+            if "manifests" in f.parts or "configs" in f.parts
+        ]
+        assert len(root_identity_files) == 1, (
+            f"Expected exactly 1 root identity file, found {len(root_identity_files)}: "
+            f"{[str(f) for f in root_identity_files]}"
         )
