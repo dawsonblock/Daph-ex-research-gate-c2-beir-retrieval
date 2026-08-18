@@ -216,6 +216,29 @@ For HRM execution:
 python -m pip install -e ".[hrm]"
 ```
 
+### Build pipeline
+
+The repository organizes build work into a staged pipeline so the ordinary PR path is fast and the research-qualification path remains explicit and manual.
+
+```bash
+make help
+make install
+make test
+make gate
+make package
+make qualification
+```
+
+The explicit contract is:
+
+- Stage 1: install / package setup (`make install`)
+- Stage 2: fast validation (`make test`)
+- Stage 3: architecture and parity gates (`make gate`)
+- Stage 4: packaging / distribution (`make package`)
+- Stage 5: research qualification (`make qualification`, manual-only)
+
+The script used for this contract is [`scripts/build_pipeline.py`](scripts/build_pipeline.py), which keeps the stage names, commands, and the fast-vs-heavy split in one place.
+
 ### Verify the repository
 
 Test counts are reported as two separate fields and must never be conflated:
