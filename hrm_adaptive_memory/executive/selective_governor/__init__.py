@@ -13,7 +13,7 @@ from .model import (
     RuleBasedInterventionPredictor,
     CalibratedLinearPredictor,
 )
-from .identity import compute_gate_identity
+from .identity import compute_gate_identity, compute_experiment_identity, save_gate_identity
 from .serializer import serialize_decision, decision_sha256
 from .calibration import (
     evaluate_gate_on_counterfactual_states,
@@ -32,6 +32,8 @@ __all__ = [
     "RuleBasedInterventionPredictor",
     "CalibratedLinearPredictor",
     "compute_gate_identity",
+    "compute_experiment_identity",
+    "save_gate_identity",
     "serialize_decision",
     "decision_sha256",
     "evaluate_gate_on_counterfactual_states",

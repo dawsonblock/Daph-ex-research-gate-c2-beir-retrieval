@@ -1,14 +1,23 @@
 """Trajectory runner for V2B-I3.5.2 Selective Governor Intervention.
 
-Supports four governor modes:
+Supports five governor modes:
   - OFF: Base packet only, governor never invoked.
   - ALWAYS_ON: Governor always invoked and injected into model packet.
   - SELECTIVE: SelectiveGovernorGate decides whether governor is injected.
+  - SELECTIVE_FRAME: Same as SELECTIVE — gate approves → governor advisory
+    packet → model chooses. Explicit name for the advisory architecture.
   - SHADOW_SELECTIVE: Gate evaluates silently, base packet sent to model.
+
+I3.5.2c additions:
+  - Token and latency tracking per step
+  - Detailed per-intervention instrumentation
+  - Counterbalancing support via deterministic arm ordering
+  - Cascade (consecutive intervention) tracking
 """
 from __future__ import annotations
 
 import hashlib
+import hmac
 import json
 import time
 from dataclasses import dataclass, field
@@ -35,6 +44,7 @@ from ..resources import ResourceBudget, ResourceState, ResourceExhausted
 from ..metareasoning_utility import MetareasoningUtility
 from ..governor.assessor import GeneralGovernor, GovernorDecisionFrame
 from ..governor.serializer import frame_sha256
+from ..selective_governor.features import extract_features
 
 from ..i3_5_1.conditions import ExperimentalCondition, ConditionID, get_condition
 from ..i3_5_1.observation_builder import build_observation
@@ -54,6 +64,25 @@ from .modes import GovernorMode
 
 RUNNER_SCHEMA = "DAPH_V2B_I3_5_2_TRAJECTORY_RUNNER_V1"
 RUNNER_VERSION = 1
+
+# The six permutations for counterbalancing
+ARM_PERMUTATIONS: tuple[tuple[GovernorMode, ...], ...] = (
+    (GovernorMode.OFF, GovernorMode.ALWAYS_ON, GovernorMode.SELECTIVE_FRAME),
+    (GovernorMode.OFF, GovernorMode.SELECTIVE_FRAME, GovernorMode.ALWAYS_ON),
+    (GovernorMode.ALWAYS_ON, GovernorMode.OFF, GovernorMode.SELECTIVE_FRAME),
+    (GovernorMode.ALWAYS_ON, GovernorMode.SELECTIVE_FRAME, GovernorMode.OFF),
+    (GovernorMode.SELECTIVE_FRAME, GovernorMode.OFF, GovernorMode.ALWAYS_ON),
+    (GovernorMode.SELECTIVE_FRAME, GovernorMode.ALWAYS_ON, GovernorMode.OFF),
+)
+
+
+def counterbalanced_order(seed: str, task_id: str) -> tuple[GovernorMode, ...]:
+    """Deterministically select arm ordering from HMAC(seed, task_id) % 6."""
+    key = seed.encode() if isinstance(seed, str) else seed
+    msg = task_id.encode()
+    h = hmac.new(key, msg, hashlib.sha256).digest()
+    idx = int.from_bytes(h[:4], "big") % 6
+    return ARM_PERMUTATIONS[idx]
 
 
 @dataclass(frozen=True)
@@ -79,6 +108,32 @@ class I352TrajectoryStep:
     # Packet info
     packet_sha256: str
     packet_schema: str
+    # Cost tracking (I3.5.2c)
+    prompt_tokens: int
+    completion_tokens: int
+    total_tokens: int
+    latency_ms: float
+    packet_byte_length: int
+
+
+@dataclass(frozen=True)
+class InterventionRecord:
+    """Detailed record of a single intervention event."""
+    task_id: str
+    step_id: int
+    gate_decision: str
+    gate_reason: str
+    expected_delta_q: float
+    predicted_harm_probability: float
+    predicted_confidence: float
+    model_action: str
+    governor_top_action: str
+    governor_model_agreement: bool
+    outcome: str
+    packet_schema: str
+    prompt_tokens: int
+    completion_tokens: int
+    latency_ms: float
 
 
 @dataclass(frozen=True)
@@ -89,6 +144,7 @@ class I352ConditionTrajectory:
     observation_mode: str
     governor_mode: str
     steps: tuple[I352TrajectoryStep, ...]
+    interventions: tuple[InterventionRecord, ...]
     terminal_result: str
     task_success: bool
     realized_utility: float
@@ -101,12 +157,19 @@ class I352ConditionTrajectory:
     governor_agreement_rate: float | None
     interventions_approved: int
     total_decisions: int
+    # Cost totals (I3.5.2c)
+    total_prompt_tokens: int
+    total_completion_tokens: int
+    total_tokens: int
+    total_latency_ms: float
+    # Cascade diagnostics (I3.5.2c)
+    max_consecutive_interventions: int
+    intervention_chain_lengths: tuple[int, ...]
 
 
 @dataclass
 class I352FactorialRunner:
     """Runs I3.5.2 trajectories with selective governor gating."""
-
     backend: DeepSeekBackend
     executor: DeterministicActionExecutor = field(default_factory=DeterministicActionExecutor)
     governor: GeneralGovernor = field(default_factory=GeneralGovernor)
@@ -126,12 +189,13 @@ class I352FactorialRunner:
         task: I3BenchmarkTask,
         budget: ResourceBudget,
         condition: ExperimentalCondition,
-        governor_mode: GovernorMode = GovernorMode.SELECTIVE,
+        governor_mode: GovernorMode = GovernorMode.SELECTIVE_FRAME,
     ) -> I352ConditionTrajectory:
         """Run a full multi-step trajectory with the specified governor mode."""
         resources = ResourceState(budget)
         runtime = initial_runtime(_I3TaskAdapter(task), resources)
         steps: list[I352TrajectoryStep] = []
+        interventions: list[InterventionRecord] = []
         prior_decisions: list[DecisionSummary] = []
         prior_outcomes: list[str] = []
         realized = 0.0
@@ -142,6 +206,17 @@ class I352FactorialRunner:
         last_model: str | None = None
         governor_agreements = 0
         interventions_approved = 0
+
+        # Cost totals
+        total_prompt_tokens = 0
+        total_completion_tokens = 0
+        total_tokens = 0
+        total_latency_ms = 0.0
+
+        # Cascade tracking
+        current_consecutive = 0
+        max_consecutive = 0
+        intervention_chain_lengths: list[int] = []
 
         trajectory_id = f"{self.experiment_id}:{task.task_id}:{condition.condition_id.value}:{governor_mode.value}"
 
@@ -179,7 +254,7 @@ class I352FactorialRunner:
                 gov_reason = governor_frame.governor_reason_code
                 gov_sha = frame_sha256(governor_frame)
 
-            elif governor_mode == GovernorMode.SELECTIVE:
+            elif governor_mode in (GovernorMode.SELECTIVE, GovernorMode.SELECTIVE_FRAME):
                 gate_decision = self.gate.assess(
                     observation=observation,
                     remaining_steps=self.max_steps - step_id,
@@ -212,7 +287,6 @@ class I352FactorialRunner:
                     prior_actions=prior_action_strs,
                     prior_outcomes=tuple(prior_outcomes),
                 )
-                # Shadow mode evaluates silently, sends base packet
                 packet = build_base_packet(observation)
                 packet_schema = packet["schema"]
                 gov_top, gov_reason, gov_sha = None, None, None
@@ -220,6 +294,7 @@ class I352FactorialRunner:
             assert_no_evaluator_leakage(packet)
             user_prompt = packet_json(packet)
             pkt_sha = packet_sha256(packet)
+            packet_bytes = len(user_prompt.encode())
 
             condition_sha = hashlib.sha256(
                 f"{condition.condition_id.value}:{governor_mode.value}".encode()).hexdigest()
@@ -232,6 +307,9 @@ class I352FactorialRunner:
             t_start = time.monotonic()
 
             model_calls += 1
+            prompt_tokens = 0
+            completion_tokens = 0
+            call_total_tokens = 0
             try:
                 call_result = self.backend.generate(
                     system_prompt=SYSTEM_PROMPT, user_prompt=user_prompt,
@@ -251,6 +329,9 @@ class I352FactorialRunner:
                 http_status = 200
                 reported_model = call_result.model_name
                 fingerprint = call_result.system_fingerprint
+                prompt_tokens = call_result.prompt_tokens
+                completion_tokens = call_result.completion_tokens
+                call_total_tokens = prompt_tokens + completion_tokens
                 outcome = decode_output(call_result.raw_output, strict=self.strict_json)
                 if outcome.valid and outcome.proposal:
                     proposal = outcome.proposal
@@ -261,6 +342,10 @@ class I352FactorialRunner:
             t_end = time.monotonic()
             ts_end = datetime.now(timezone.utc).isoformat()
             latency_ms = (t_end - t_start) * 1000.0
+            total_latency_ms += latency_ms
+            total_prompt_tokens += prompt_tokens
+            total_completion_tokens += completion_tokens
+            total_tokens += call_total_tokens
 
             # Record receipt
             receipt = make_receipt(
@@ -331,6 +416,54 @@ class I352FactorialRunner:
                 if gov_agrees:
                     governor_agreements += 1
 
+            # Cascade tracking
+            if actual_intervened:
+                current_consecutive += 1
+                max_consecutive = max(max_consecutive, current_consecutive)
+            else:
+                if current_consecutive > 0:
+                    intervention_chain_lengths.append(current_consecutive)
+                current_consecutive = 0
+
+            # Record intervention detail
+            if actual_intervened and gate_decision is not None:
+                interventions.append(InterventionRecord(
+                    task_id=task.task_id,
+                    step_id=step_id,
+                    gate_decision="INTERVENE",
+                    gate_reason=gate_decision.reason_code,
+                    expected_delta_q=gate_decision.expected_delta_utility,
+                    predicted_harm_probability=gate_decision.harm_probability,
+                    predicted_confidence=gate_decision.confidence,
+                    model_action=action.value,
+                    governor_top_action=gov_top or "",
+                    governor_model_agreement=gov_agrees or False,
+                    outcome=execution.outcome_code,
+                    packet_schema=packet_schema,
+                    prompt_tokens=prompt_tokens,
+                    completion_tokens=completion_tokens,
+                    latency_ms=latency_ms,
+                ))
+            elif actual_intervened and governor_mode == GovernorMode.ALWAYS_ON:
+                # Always-on interventions don't have gate_decision but still record
+                interventions.append(InterventionRecord(
+                    task_id=task.task_id,
+                    step_id=step_id,
+                    gate_decision="ALWAYS_ON",
+                    gate_reason=gov_reason or "ALWAYS_ON",
+                    expected_delta_q=0.0,
+                    predicted_harm_probability=0.0,
+                    predicted_confidence=1.0,
+                    model_action=action.value,
+                    governor_top_action=gov_top or "",
+                    governor_model_agreement=gov_agrees or False,
+                    outcome=execution.outcome_code,
+                    packet_schema=packet_schema,
+                    prompt_tokens=prompt_tokens,
+                    completion_tokens=completion_tokens,
+                    latency_ms=latency_ms,
+                ))
+
             steps.append(I352TrajectoryStep(
                 step_id=step_id,
                 condition_id=condition.condition_id.value,
@@ -349,6 +482,11 @@ class I352FactorialRunner:
                 governor_agrees=gov_agrees,
                 packet_sha256=pkt_sha,
                 packet_schema=packet_schema,
+                prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens,
+                total_tokens=call_total_tokens,
+                latency_ms=latency_ms,
+                packet_byte_length=packet_bytes,
             ))
 
             prior_decisions.append(DecisionSummary(
@@ -358,6 +496,9 @@ class I352FactorialRunner:
 
             runtime = execution.runtime
             if execution.terminal:
+                # Close any open cascade
+                if current_consecutive > 0:
+                    intervention_chain_lengths.append(current_consecutive)
                 total_steps = len(steps)
                 agreement_rate = (
                     governor_agreements / interventions_approved
@@ -370,6 +511,7 @@ class I352FactorialRunner:
                     observation_mode=condition.observation_mode.value,
                     governor_mode=governor_mode.value,
                     steps=tuple(steps),
+                    interventions=tuple(interventions),
                     terminal_result=execution.outcome_code,
                     task_success=bool(execution.task_success),
                     realized_utility=realized,
@@ -382,8 +524,17 @@ class I352FactorialRunner:
                     governor_agreement_rate=agreement_rate,
                     interventions_approved=interventions_approved,
                     total_decisions=total_steps,
+                    total_prompt_tokens=total_prompt_tokens,
+                    total_completion_tokens=total_completion_tokens,
+                    total_tokens=total_tokens,
+                    total_latency_ms=total_latency_ms,
+                    max_consecutive_interventions=max_consecutive,
+                    intervention_chain_lengths=tuple(intervention_chain_lengths),
                 )
 
+        # Close any open cascade
+        if current_consecutive > 0:
+            intervention_chain_lengths.append(current_consecutive)
         total_steps = len(steps)
         agreement_rate = (
             governor_agreements / interventions_approved
@@ -396,6 +547,7 @@ class I352FactorialRunner:
             observation_mode=condition.observation_mode.value,
             governor_mode=governor_mode.value,
             steps=tuple(steps),
+            interventions=tuple(interventions),
             terminal_result="STEP_LIMIT",
             task_success=False,
             realized_utility=realized,
@@ -408,6 +560,12 @@ class I352FactorialRunner:
             governor_agreement_rate=agreement_rate,
             interventions_approved=interventions_approved,
             total_decisions=total_steps,
+            total_prompt_tokens=total_prompt_tokens,
+            total_completion_tokens=total_completion_tokens,
+            total_tokens=total_tokens,
+            total_latency_ms=total_latency_ms,
+            max_consecutive_interventions=max_consecutive,
+            intervention_chain_lengths=tuple(intervention_chain_lengths),
         )
 
     def run_comparison_block_standalone(
@@ -417,17 +575,28 @@ class I352FactorialRunner:
         modes: tuple[GovernorMode, ...] = (
             GovernorMode.OFF,
             GovernorMode.ALWAYS_ON,
-            GovernorMode.SELECTIVE,
+            GovernorMode.SELECTIVE_FRAME,
         ),
+        counterbalance_seed: str = "",
     ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-        """Run comparison arms (AWARE under OFF / ALWAYS_ON / SELECTIVE) for one task block."""
+        """Run comparison arms for one task block with optional counterbalancing.
+
+        If counterbalance_seed is non-empty, uses HMAC(seed, task_id) % 6
+        to deterministically select arm ordering from the 6 permutations.
+        """
         saved_ledger = self.receipt_ledger
         self.receipt_ledger = ReceiptLedger(run_id=saved_ledger.run_id)
 
         cond = get_condition(ConditionID.AWARE_GOVERNOR)
         trajectories: dict[str, Any] = {}
 
-        for mode in modes:
+        # Determine execution order
+        if counterbalance_seed:
+            execution_order = counterbalanced_order(counterbalance_seed, task.task_id)
+        else:
+            execution_order = modes
+
+        for mode in execution_order:
             traj = self._run_trajectory(task, budget, cond, governor_mode=mode)
             trajectories[mode.value] = _serialize_i352_trajectory(traj)
 
@@ -437,6 +606,7 @@ class I352FactorialRunner:
         block_result = {
             "task_id": task.task_id,
             "block_id": f"{self.experiment_id}:{task.task_id}",
+            "execution_order": [m.value for m in execution_order],
             "trajectories": trajectories,
         }
         return block_result, receipts
@@ -474,6 +644,35 @@ def _serialize_i352_trajectory(traj: I352ConditionTrajectory) -> dict[str, Any]:
         "governor_agreement_rate": traj.governor_agreement_rate,
         "interventions_approved": traj.interventions_approved,
         "total_decisions": traj.total_decisions,
+        # Cost totals (I3.5.2c)
+        "total_prompt_tokens": traj.total_prompt_tokens,
+        "total_completion_tokens": traj.total_completion_tokens,
+        "total_tokens": traj.total_tokens,
+        "total_latency_ms": round(traj.total_latency_ms, 2),
+        # Cascade diagnostics (I3.5.2c)
+        "max_consecutive_interventions": traj.max_consecutive_interventions,
+        "intervention_chain_lengths": list(traj.intervention_chain_lengths),
+        # Detailed intervention records (I3.5.2c)
+        "interventions": [
+            {
+                "task_id": iv.task_id,
+                "step_id": iv.step_id,
+                "gate_decision": iv.gate_decision,
+                "gate_reason": iv.gate_reason,
+                "expected_delta_q": iv.expected_delta_q,
+                "predicted_harm_probability": iv.predicted_harm_probability,
+                "predicted_confidence": iv.predicted_confidence,
+                "model_action": iv.model_action,
+                "governor_top_action": iv.governor_top_action,
+                "governor_model_agreement": iv.governor_model_agreement,
+                "outcome": iv.outcome,
+                "packet_schema": iv.packet_schema,
+                "prompt_tokens": iv.prompt_tokens,
+                "completion_tokens": iv.completion_tokens,
+                "latency_ms": round(iv.latency_ms, 2),
+            }
+            for iv in traj.interventions
+        ],
         "steps": [
             {
                 "step_id": s.step_id,
@@ -493,6 +692,11 @@ def _serialize_i352_trajectory(traj: I352ConditionTrajectory) -> dict[str, Any]:
                 "governor_agrees": s.governor_agrees,
                 "packet_sha256": s.packet_sha256,
                 "packet_schema": s.packet_schema,
+                "prompt_tokens": s.prompt_tokens,
+                "completion_tokens": s.completion_tokens,
+                "total_tokens": s.total_tokens,
+                "latency_ms": round(s.latency_ms, 2),
+                "packet_byte_length": s.packet_byte_length,
             }
             for s in traj.steps
         ],

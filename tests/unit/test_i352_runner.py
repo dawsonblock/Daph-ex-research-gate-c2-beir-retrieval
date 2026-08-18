@@ -6,6 +6,8 @@ from hrm_adaptive_memory.cognitive_control.core import DecisionAction
 from hrm_adaptive_memory.executive.i3_5_2.modes import GovernorMode
 from hrm_adaptive_memory.executive.i3_5_2.trajectory_runner import (
     I352FactorialRunner,
+    counterbalanced_order,
+    ARM_PERMUTATIONS,
 )
 from hrm_adaptive_memory.executive.i3_5_1.conditions import ConditionID, get_condition
 from hrm_adaptive_memory.cognitive_control.state import (
@@ -75,7 +77,33 @@ class TestI352Modes:
         assert GovernorMode.OFF.value == "OFF"
         assert GovernorMode.ALWAYS_ON.value == "ALWAYS_ON"
         assert GovernorMode.SELECTIVE.value == "SELECTIVE"
+        assert GovernorMode.SELECTIVE_FRAME.value == "SELECTIVE_FRAME"
         assert GovernorMode.SHADOW_SELECTIVE.value == "SHADOW_SELECTIVE"
+
+    def test_counterbalancing_deterministic(self):
+        """Same seed + task_id always produces same ordering."""
+        order1 = counterbalanced_order("seed123", "task_001")
+        order2 = counterbalanced_order("seed123", "task_001")
+        assert order1 == order2
+        assert len(order1) == 3
+        assert set(order1) == {GovernorMode.OFF, GovernorMode.ALWAYS_ON, GovernorMode.SELECTIVE_FRAME}
+
+    def test_counterbalancing_different_tasks(self):
+        """Different tasks get different orderings (distribution over 6 perms)."""
+        orderings = set()
+        for i in range(100):
+            order = counterbalanced_order("seed123", f"task_{i:04d}")
+            orderings.add(order)
+        # With 100 tasks, we should see multiple different orderings
+        assert len(orderings) > 1
+
+    def test_counterbalancing_all_six_permutations_reachable(self):
+        """All 6 permutations should be reachable with enough tasks."""
+        orderings = set()
+        for i in range(1000):
+            order = counterbalanced_order("test_seed", f"task_{i:04d}")
+            orderings.add(tuple(m.value for m in order))
+        assert len(orderings) == 6
 
     def test_runner_off_mode_never_calls_governor(self):
         backend = MagicMock()
