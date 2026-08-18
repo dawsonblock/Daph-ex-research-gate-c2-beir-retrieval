@@ -1,0 +1,78 @@
+{
+  "dg_table": {
+    "AWARE_GOVERNOR": 164.03746666666666,
+    "AWARE_NO_GOVERNOR": 146.5069333333333,
+    "BLIND_GOVERNOR": 141.0961333333333,
+    "BLIND_NO_GOVERNOR": 126.93473333333333
+  },
+  "disagreement_aware": {
+    "both_fail": 108,
+    "both_success": 29,
+    "gov_only": 0,
+    "no_gov_only": 13
+  },
+  "experiment_identity_sha256": "925ed28742c83457cf56fb2b826fe74b88e49dc83ca6d4dd5ab43e1ad9fae0c4",
+  "governor_effect_aware": {
+    "ci": [
+      -23.101666666666674,
+      -12.73886666666667
+    ],
+    "mean_delta_dg": -17.530533333333334,
+    "topology_cluster_ci": [
+      -23.101666666666674,
+      -12.73886666666667
+    ],
+    "topology_cluster_mean": -17.530533333333334
+  },
+  "governor_effect_blind": {
+    "ci": [
+      -20.34786666666666,
+      -8.660533333333326
+    ],
+    "mean_delta_dg": -14.161399999999993
+  },
+  "interaction": {
+    "ci": [
+      -1.7169333333333252,
+      8.175866666666677
+    ],
+    "mean_delta": 3.369133333333343
+  },
+  "n_tasks": 150,
+  "schema": "DAPH_V2B_I3_5_1_REPORT_V1",
+  "schema_version": 1,
+  "sign_distribution_primary": {
+    "negative": 114,
+    "positive": 0,
+    "zero": 36
+  },
+  "source_results_sha256": "ff11a9699c2a9cefa54da9365fc57958f6040b02df2b7059b179c1c06fc94585",
+  "source_run_id": "run_0169b022-972c-4315-a41c-f023af0b4a4c",
+  "source_stats_sha256": "eca6059e63040195aa51dadb4e263934a44172f0f7345d37255d6a3e219bd28e",
+  "state_effect_gov": {
+    "ci": [
+      -28.2735,
+      -17.836166666666667
+    ],
+    "mean_delta_dg": -22.941333333333333
+  },
+  "state_effect_no_gov": {
+    "ci": [
+      -24.913366666666654,
+      -14.352799999999988
+    ],
+    "mean_delta_dg": -19.57219999999999
+  },
+  "success_counts": {
+    "AWARE_GOVERNOR": 29,
+    "AWARE_NO_GOVERNOR": 42,
+    "BLIND_GOVERNOR": 33,
+    "BLIND_NO_GOVERNOR": 46
+  },
+  "success_rates": {
+    "AWARE_GOVERNOR": 0.19333333333333333,
+    "AWARE_NO_GOVERNOR": 0.28,
+    "BLIND_GOVERNOR": 0.22,
+    "BLIND_NO_GOVERNOR": 0.30666666666666664
+  }
+}

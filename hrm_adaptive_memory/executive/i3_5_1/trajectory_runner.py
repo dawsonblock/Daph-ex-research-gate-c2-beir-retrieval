@@ -391,6 +391,47 @@ class FactorialExperimentRunner:
         self.results.append(block_result)
         return block_result
 
+    def run_block_standalone(
+        self,
+        task: I3BenchmarkTask,
+        budget: ResourceBudget,
+        condition_order: tuple[ConditionID, ...],
+    ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+        """Run a block without touching the shared receipt ledger.
+
+        Returns (block_result, receipts) where receipts is a list of
+        receipt dicts (not yet chained). The caller is responsible for
+        building the hash chain in deterministic order.
+        """
+        from .conditions import get_condition
+
+        # Save state, use a local ledger
+        saved_ledger = self.receipt_ledger
+        self.receipt_ledger = ReceiptLedger(run_id=saved_ledger.run_id)
+
+        trajectories: dict[str, ConditionTrajectory] = {}
+        for cid in condition_order:
+            cond = get_condition(cid)
+            traj = self._run_trajectory(task, budget, cond)
+            trajectories[cid.value] = traj
+
+        # Extract receipts
+        receipts = [r.as_dict() for r in self.receipt_ledger.receipts]
+
+        # Restore shared ledger
+        self.receipt_ledger = saved_ledger
+
+        block_result = {
+            "task_id": task.task_id,
+            "block_id": f"{self.experiment_id}:{task.task_id}",
+            "trajectories": {
+                cid.value: _serialize_trajectory(traj)
+                for cid, traj in zip(condition_order,
+                                     [trajectories[c.value] for c in condition_order])
+            },
+        }
+        return block_result, receipts
+
     def runner_summary(self) -> dict[str, Any]:
         from ..governor.identity import compute_governor_identity
         gov_id = compute_governor_identity()

@@ -1,0 +1,47 @@
+{
+  "schema": "DAPH_V2B_I3_5_1_ABLATION_V1",
+  "schema_version": 1,
+  "experiment_identity_sha256": "e21f63ff4fa9e330f7c9edc5f153cab982154e3dc1a5cf8ed72634979e506cf2",
+  "governor_mechanism_effect": {
+    "description": "Governor OFF vs ON, averaged over state visibility",
+    "contrast": "avg(DG_off) - avg(DG_on)",
+    "mean": -16.7947,
+    "interpretation": "Governor hurts decision quality by ~17 DG points on average"
+  },
+  "cognitive_state_representation_effect": {
+    "description": "BLIND vs AWARE, averaged over governor",
+    "contrast": "avg(DG_blind) - avg(DG_aware)",
+    "mean": -6.871,
+    "interpretation": "Aware state slightly hurts DG on average (more info but model doesn't exploit it well)"
+  },
+  "governor_x_state_interaction": {
+    "description": "Does governor benefit depend on structured state?",
+    "contrast": "\u0394DG_gov|blind - \u0394DG_gov|aware",
+    "mean": -4.3959,
+    "ci": [
+      -18.255,
+      5.3956
+    ],
+    "interpretation": "No synergy established. Governor hurts in both conditions."
+  },
+  "information_gap": {
+    "description": "Representation advantage of aware over blind",
+    "contrast": "IG_blind - IG_aware",
+    "mean": 9.0456,
+    "ci": [
+      5.2892,
+      13.0671
+    ],
+    "interpretation": "Aware condition has more observable information"
+  },
+  "cost_adjusted_utility": {
+    "aware_gov_mean_calls": 5.14,
+    "aware_nogov_mean_calls": 2.53,
+    "aware_gov_mean_utility": -89.47,
+    "aware_nogov_mean_utility": -74.87,
+    "governor_cost_overhead": 2.61,
+    "governor_utility_delta": -14.6,
+    "interpretation": "Governor increases cost AND decreases utility. Not cost-effective."
+  },
+  "conclusion": "The governor's advisory recommendations systematically mislead the model. The governor increases trajectory length (more calls), decreases utility, and never produces a success that the no-governor condition does not also produce. The problem is governor design, not infrastructure."
+}

@@ -240,6 +240,57 @@ class ReceiptLedger:
         return _sha256_bytes(path.read_bytes())
 
     @classmethod
+    def build_chain_from_receipts(
+        cls,
+        receipts: list[dict[str, Any]],
+        run_id: str,
+    ) -> "ReceiptLedger":
+        """Rebuild a hash chain from standalone receipts (from parallel runs).
+
+        Receipts are re-chained in the given order. Each receipt's
+        previous_receipt_sha256 and receipt_sha256 are recomputed.
+        """
+        ledger = cls(run_id=run_id)
+        for r_dict in receipts:
+            # Update run_id to the unified run_id before computing hash
+            r_dict = dict(r_dict, run_id=run_id)
+            # Recompute the receipt hash with the current chain root
+            new_sha = compute_receipt_sha256(r_dict, ledger._last_sha)
+            new_receipt = ReceiptEntry(
+                schema=r_dict["schema"],
+                schema_version=r_dict["schema_version"],
+                run_id=run_id,
+                experiment_identity_sha256=r_dict["experiment_identity_sha256"],
+                condition_identity_sha256=r_dict["condition_identity_sha256"],
+                task_id_hash=r_dict["task_id_hash"],
+                pair_or_block_id=r_dict["pair_or_block_id"],
+                trajectory_id=r_dict["trajectory_id"],
+                step_id=r_dict["step_id"],
+                attempt_index=r_dict["attempt_index"],
+                input_packet_sha256=r_dict["input_packet_sha256"],
+                system_prompt_sha256=r_dict["system_prompt_sha256"],
+                generation_config_sha256=r_dict["generation_config_sha256"],
+                request_sha256=r_dict["request_sha256"],
+                provider=r_dict["provider"],
+                requested_model=r_dict["requested_model"],
+                reported_model=r_dict["reported_model"],
+                system_fingerprint=r_dict["system_fingerprint"],
+                timestamp_start=r_dict["timestamp_start"],
+                timestamp_end=r_dict["timestamp_end"],
+                latency_ms=r_dict["latency_ms"],
+                http_status=r_dict["http_status"],
+                result_class=r_dict["result_class"],
+                raw_output_sha256=r_dict["raw_output_sha256"],
+                parsed_output_sha256=r_dict["parsed_output_sha256"],
+                decoder_status=r_dict["decoder_status"],
+                previous_receipt_sha256=ledger._last_sha,
+                receipt_sha256=new_sha,
+            )
+            ledger._receipts.append(new_receipt)
+            ledger._last_sha = new_sha
+        return ledger
+
+    @classmethod
     def load(cls, path: str | Path) -> "ReceiptLedger":
         """Load receipts from a JSONL file and verify the chain."""
         path = Path(path)

@@ -1,0 +1,186 @@
+{
+  "schema": "DAPH_V2B_I3_5_1_FINAL_CLAIM_HIERARCHY_V1",
+  "schema_version": 1,
+  "phases": {
+    "development": {
+      "n_tasks": 300,
+      "n_clusters": 54,
+      "success_rates": {
+        "AWARE_GOVERNOR": 62,
+        "AWARE_NO_GOVERNOR": 83,
+        "BLIND_NO_GOVERNOR": 80,
+        "BLIND_GOVERNOR": 49
+      },
+      "dg_table": {
+        "BLIND_NO_GOVERNOR": 132.07113333333334,
+        "BLIND_GOVERNOR": 151.06369999999998,
+        "AWARE_NO_GOVERNOR": 141.14006666666666,
+        "AWARE_GOVERNOR": 155.73673333333332
+      },
+      "topology_bootstrap": {
+        "\u0394DG_gov|aware": {
+          "mean": -14.596666666666671,
+          "ci_lower": -20.086645367412142,
+          "ci_upper": -10.000557768924306
+        },
+        "\u0394DG_gov|blind": {
+          "mean": -18.99256666666666,
+          "ci_lower": -34.97852589641434,
+          "ci_upper": -6.1456981132075414
+        },
+        "\u0394DG_state|no-gov": {
+          "mean": -9.068933333333328,
+          "ci_lower": -17.235315457413243,
+          "ci_upper": 1.917298657718125
+        },
+        "\u0394_interaction": {
+          "mean": -4.395899999999991,
+          "ci_lower": -18.255037593984955,
+          "ci_upper": 5.395596330275239
+        },
+        "\u0394IG (rep. adv.)": {
+          "mean": 9.045599999999999,
+          "ci_lower": 5.289188679245282,
+          "ci_upper": 13.06713276836158
+        }
+      },
+      "claims": {
+        "C0": true,
+        "C1": true,
+        "C2": false,
+        "C3": false,
+        "C4": false,
+        "C5": false
+      },
+      "cost": {
+        "gov_calls": 5.1433333333333335,
+        "nogov_calls": 2.526666666666667,
+        "gov_util": -89.46743333333333,
+        "nogov_util": -74.87076666666667
+      }
+    },
+    "validation": {
+      "n_tasks": 150,
+      "n_clusters": 9,
+      "success_rates": {
+        "AWARE_GOVERNOR": 34,
+        "AWARE_NO_GOVERNOR": 45,
+        "BLIND_GOVERNOR": 34,
+        "BLIND_NO_GOVERNOR": 43
+      },
+      "dg_table": {
+        "BLIND_NO_GOVERNOR": 117.27993333333333,
+        "BLIND_GOVERNOR": 128.71346666666668,
+        "AWARE_NO_GOVERNOR": 128.2174,
+        "AWARE_GOVERNOR": 144.14146666666664
+      },
+      "topology_bootstrap": {
+        "\u0394DG_gov|aware": {
+          "mean": -15.924066666666665,
+          "ci_lower": -33.089,
+          "ci_upper": -5.320000000000003
+        },
+        "\u0394DG_gov|blind": {
+          "mean": -11.43353333333333,
+          "ci_lower": -34.69744525547445,
+          "ci_upper": -1.1544827586206847
+        },
+        "\u0394DG_state|no-gov": {
+          "mean": -10.93746666666666,
+          "ci_lower": -15.489039999999996,
+          "ci_upper": -6.784599999999991
+        },
+        "\u0394_interaction": {
+          "mean": 4.490533333333335,
+          "ci_lower": -2.354472049689436,
+          "ci_upper": 9.421830357142856
+        },
+        "\u0394IG (rep. adv.)": {
+          "mean": 9.757066666666665,
+          "ci_lower": 3.8105592105263137,
+          "ci_upper": 16.500299539170506
+        }
+      },
+      "claims": {
+        "C0": true,
+        "C1": true,
+        "C2": false,
+        "C3": false,
+        "C4": false,
+        "C5": false
+      },
+      "cost": {
+        "gov_calls": 5.506666666666667,
+        "nogov_calls": 2.48,
+        "gov_util": -86.57759999999999,
+        "nogov_util": -70.65353333333333
+      }
+    },
+    "held_out": {
+      "n_tasks": 150,
+      "n_clusters": 9,
+      "success_rates": {
+        "AWARE_GOVERNOR": 29,
+        "AWARE_NO_GOVERNOR": 42,
+        "BLIND_GOVERNOR": 33,
+        "BLIND_NO_GOVERNOR": 46
+      },
+      "dg_table": {
+        "BLIND_NO_GOVERNOR": 126.93473333333333,
+        "BLIND_GOVERNOR": 141.0961333333333,
+        "AWARE_NO_GOVERNOR": 146.5069333333333,
+        "AWARE_GOVERNOR": 164.03746666666666
+      },
+      "topology_bootstrap": {
+        "\u0394DG_gov|aware": {
+          "mean": -17.530533333333338,
+          "ci_lower": -37.846820809248555,
+          "ci_upper": -5.276697247706426
+        },
+        "\u0394DG_gov|blind": {
+          "mean": -14.161399999999993,
+          "ci_lower": -42.60397849462365,
+          "ci_upper": -1.371818181818177
+        },
+        "\u0394DG_state|no-gov": {
+          "mean": -19.572199999999988,
+          "ci_lower": -28.44214285714284,
+          "ci_upper": -9.266844660194165
+        },
+        "\u0394_interaction": {
+          "mean": 3.369133333333343,
+          "ci_lower": -5.393888888888885,
+          "ci_upper": 9.233787878787892
+        },
+        "\u0394IG (rep. adv.)": {
+          "mean": 14.085266666666662,
+          "ci_lower": 4.572006578947369,
+          "ci_upper": 22.21183937823833
+        }
+      },
+      "claims": {
+        "C0": true,
+        "C1": true,
+        "C2": false,
+        "C3": false,
+        "C4": false,
+        "C5": false
+      },
+      "cost": {
+        "gov_calls": 5.493333333333333,
+        "nogov_calls": 2.473333333333333,
+        "gov_util": -90.56273333333333,
+        "nogov_util": -73.0322
+      }
+    }
+  },
+  "summary": {
+    "C0": "SUPPORTED across all phases (all gates pass, 0 errors, replay matches)",
+    "C1": "SUPPORTED across all phases (aware has more observable info)",
+    "C2": "REJECTED across all phases (governor hurts DG)",
+    "C3": "REJECTED across all phases",
+    "C4": "REJECTED in dev/held_out, inconclusive in validation",
+    "C5": "REJECTED across all phases (governor increases cost and decreases utility)"
+  },
+  "conclusion": "The governor's advisory recommendations systematically hurt decision quality across development, validation, and held-out phases. The model makes better decisions without the governor. The representation advantage exists but the governor fails to exploit it."
+}

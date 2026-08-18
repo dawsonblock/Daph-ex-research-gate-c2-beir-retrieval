@@ -59,6 +59,8 @@ def main():
     parser.add_argument("--output-dir",
                         default="experiments/v2b_i3_5_1/development")
     parser.add_argument("--progress-every", type=int, default=10)
+    parser.add_argument("--workers", type=int, default=8,
+                        help="Number of parallel workers (default: 8)")
     args = parser.parse_args()
 
     # Load benchmark
@@ -118,7 +120,7 @@ def main():
     # Set up utility
     utility = MetareasoningUtility.from_file(ROOT / "configs/v2b_i3_1_utility_v1.json")
 
-    # Create runner
+    # Create runner (for scoring/receipts; parallel workers create their own)
     runner = FactorialExperimentRunner(
         backend=backend,
         utility=utility,
@@ -130,26 +132,75 @@ def main():
         max_tokens=2048,
     )
 
-    # Run all task blocks
-    print(f"\nRunning {args.split} ({len(tasks)} tasks, 4 conditions each)...")
+    # Run all task blocks in parallel
+    n_workers = args.workers
+    print(f"\nRunning {args.split} ({len(tasks)} tasks, 4 conditions each, {n_workers} workers)...")
     results = []
-    for i, (task, schedule) in enumerate(zip(tasks, schedules)):
-        budget = split_benchmark.budget_for(task)
-        block_result = runner.run_block(task, budget, schedule.condition_order)
-        results.append(block_result)
+    all_receipts = []  # (task_index, receipts) pairs
 
-        if (i + 1) % args.progress_every == 0:
-            trajs = block_result["trajectories"]
-            print(f"  [{i+1}/{len(tasks)}] {task.task_id}: "
-                  f"B_NO_G={trajs['BLIND_NO_GOVERNOR']['task_success']}, "
-                  f"B_G={trajs['BLIND_GOVERNOR']['task_success']}, "
-                  f"A_NO_G={trajs['AWARE_NO_GOVERNOR']['task_success']}, "
-                  f"A_G={trajs['AWARE_GOVERNOR']['task_success']}")
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    import threading
+
+    # Each worker needs its own backend (API key from env)
+    def run_one_block(idx_task_schedule):
+        idx, task, schedule = idx_task_schedule
+        budget = split_benchmark.budget_for(task)
+        # Create a standalone runner with its own backend
+        worker_backend = DeepSeekBackend()
+        worker_runner = FactorialExperimentRunner(
+            backend=worker_backend,
+            utility=utility,
+            experiment_id="v2b_i3_5_1_experiment_v1",
+            experiment_identity_sha256=identity.sha256(),
+            max_steps=24,
+            strict_json=True,
+            temperature=0.0,
+            max_tokens=2048,
+        )
+        block_result, block_receipts = worker_runner.run_block_standalone(
+            task, budget, schedule.condition_order)
+        return idx, block_result, block_receipts
+
+    completed = 0
+    with ThreadPoolExecutor(max_workers=n_workers) as pool:
+        futures = {
+            pool.submit(run_one_block, (i, t, s)): i
+            for i, (t, s) in enumerate(zip(tasks, schedules))
+        }
+        for future in as_completed(futures):
+            idx, block_result, block_receipts = future.result()
+            results.append((idx, block_result, block_receipts))
+            completed += 1
+            if completed % args.progress_every == 0:
+                trajs = block_result["trajectories"]
+                print(f"  [{completed}/{len(tasks)}] {block_result['task_id']}: "
+                      f"B_NO_G={trajs['BLIND_NO_GOVERNOR']['task_success']}, "
+                      f"B_G={trajs['BLIND_GOVERNOR']['task_success']}, "
+                      f"A_NO_G={trajs['AWARE_NO_GOVERNOR']['task_success']}, "
+                      f"A_G={trajs['AWARE_GOVERNOR']['task_success']}")
+
+    # Sort results by original task index for deterministic order
+    results.sort(key=lambda x: x[0])
+    all_receipts = []
+    block_results = []
+    for idx, block_result, block_receipts in results:
+        block_results.append(block_result)
+        all_receipts.extend(block_receipts)
+    results = block_results
+
+    # Build receipt hash chain from collected receipts
+    # Use the same run_id that the workers used (from the original runner's ledger)
+    from hrm_adaptive_memory.executive.i3_5_1.receipts import ReceiptLedger
+    run_id = runner.receipt_ledger.run_id
+    runner.receipt_ledger = ReceiptLedger.build_chain_from_receipts(
+        all_receipts, run_id=run_id)
+    print(f"\nBuilt receipt chain: {runner.receipt_ledger.receipt_count} receipts")
+    assert runner.receipt_ledger.verify_chain(), "Receipt chain verification failed!"
 
     # Save receipts
     receipts_path = output_dir / "receipts.jsonl"
     receipts_sha = runner.receipt_ledger.save(receipts_path)
-    print(f"\nReceipts saved: {receipts_path} (SHA-256: {receipts_sha[:16]}...)")
+    print(f"Receipts saved: {receipts_path} (SHA-256: {receipts_sha[:16]}...)")
 
     # Save results
     results_path = output_dir / "results.json"
