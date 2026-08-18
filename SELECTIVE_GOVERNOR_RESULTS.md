@@ -251,10 +251,10 @@ exploit the governor's ranking intelligence is the I3.5.2b question.
 ## 6. Corrected Milestone Status
 
 ```text
-V2B-I3.5.2a + I3.5.2b + I3.5.2c-r1
-STATE-LEVEL COMPETENCE + PACKET TREATMENT + END-TO-END TRAJECTORY
+V2B-I3.5.2a + I3.5.2b + I3.5.2c-r1 + I3.5.2d
+STATE-LEVEL COMPETENCE + PACKET TREATMENT + END-TO-END + POLICY-CONDITIONAL VALUE
 
-  Oracle governor-ranking competence:     SUPPORTED
+  Oracle governor-ranking competence:     SUPPORTED (A* = +108.41)
   Local positive competence region:       SUPPORTED
   Local hazard region:                    SUPPORTED
   Task-group state leakage:               CONTROLLED
@@ -264,18 +264,18 @@ STATE-LEVEL COMPETENCE + PACKET TREATMENT + END-TO-END TRAJECTORY
   Q-value source tracking:                IMPLEMENTED (88.4% oracle, 11.6% fallback)
   Packet-level treatment benefit:         SUPPORTED (A_treatment ≈ A_ranking, +21.52)
   Model follows governor:                 98.0% (743/758)
-  Model refuses harmful gov advice:       SUPPORTED (11/35 STOP->ANSWER refused)
   Terminal success preserved:             SUPPORTED (83/300 = 83/300, zero discordant)
-  Continuous DG improvement:              NOT SUPPORTED (ΔDG = -3.28, LCB = -3.58, harmful)
-  Utility improvement:                    NOT SUPPORTED (ΔU = -3.28, same as ΔDG)
-  SELECTIVE safe vs ALWAYS_ON:            SUPPORTED (83 vs 60 success, -78 vs -90 utility)
-  Root cause identified:                  Q* ≠ Q^{π_model} (oracle continuation ≠ model continuation)
-  Validation status:                      STOPPED (primary hypothesis failed)
-  Counterbalancing:                       IMPLEMENTED (HMAC-based, 6 permutations)
-  Experiment identity binding:            IMPLEMENTED (all component hashes)
-  Token/latency cost tracking:            IMPLEMENTED
-  Cascade diagnostics:                    IMPLEMENTED (max chain = 4, no runaway)
-  Next milestone:                         I3.5.2d (policy-conditional intervention value)
+  Continuous DG improvement:              NOT SUPPORTED (ΔDG = -3.28, harmful)
+  Utility improvement:                    NOT SUPPORTED (ΔU = -3.28)
+  SELECTIVE safe vs ALWAYS_ON:            SUPPORTED (83 vs 60, -78 vs -90)
+  Q* ≠ Q^{π_model}:                       CONFIRMED (A* = +108, A^{π_B} = -8, A^{π_G} = -11)
+  75.8% interventions unrecoverable:      CONFIRMED (oracle state graph)
+  24.2% rescuable but gov harmful:        CONFIRMED (A^{π_B} = -38.61 in rescuable)
+  Info acquisition without conversion:    CONFIRMED (SEARCH→REASON dominant pattern)
+  Zero positive A^{π_B} interventions:    CONFIRMED (0/196)
+  Governor continuation worse than base:  CONFIRMED (A^{π_G} < A^{π_B})
+  Validation status:                      STOPPED
+  Next step:                              Redesign governor around Q^{π}, not Q*
 ```
 
 ### What is Supported
@@ -699,7 +699,190 @@ genuinely unrecoverable or whether the problem is downstream policy execution.
 
 ---
 
-## 9. Scientific Caveats
+## 9. V2B-I3.5.2d Policy-Conditional Intervention Value — COMPLETED
+
+Script: `scripts/run_v2b_i3_5_2d_experiment.py`
+Output: `experiments/v2b_i3_5_2/development/i352d/`
+
+### Experimental Design
+
+For every intervention state from I3.5.2c where the OFF trajectory has a
+corresponding step (260 states across 194 tasks):
+
+1. Replay the baseline trajectory up to state $s$
+2. **Fork A:** Execute baseline action $a_B$, continue with OFF model → terminal
+3. **Fork B:** Execute governor action $a_G$, continue with OFF model → terminal
+4. **Fork C:** Execute governor action $a_G$, continue with SELECTIVE model → terminal
+5. Record realized utilities for all three forks
+
+Three intervention-value quantities:
+
+| Quantity | Definition | What it measures |
+|---|---|---|
+| $A^*$ | $Q^*(s, a_G) - Q^*(s, a_B)$ | Oracle advantage (I3.5.2a) |
+| $A^{\pi_B}$ | $U(a_G + \pi_B) - U(a_B + \pi_B)$ | One intervention + base-model continuation |
+| $A^{\pi_G}$ | $U(a_G + \pi_G) - U(a_B + \pi_B)$ | Governor-controlled continuation |
+
+### Key Result: The Oracle Advantage Is Not Behaviorally Realizable
+
+| Quantity | Mean | Interpretation |
+|---|---|---|
+| $A^*$ (oracle) | **+108.41** | Governor knows a much better action |
+| $A^{\pi_B}$ (base continuation) | **-7.98** | Under base model continuation, harmful |
+| $A^{\pi_G}$ (gov continuation) | **-11.02** | Under governor continuation, even worse |
+
+**Zero out of 196 different-action interventions produce positive $A^{\pi_B}$.**
+
+The oracle says the governor's action is better (+108 Q-points), but when the
+model actually takes that action and continues, the result is worse (-8 utility).
+
+### Where Does Value Disappear?
+
+| Condition | Count | Interpretation |
+|---|---|---|
+| $A^* > 5$ and $A^{\pi_B} \approx 0$ | **185 / 196** | Model can't continue the path |
+| $A^* > 5$ and $A^{\pi_B} > 0$ | **0 / 196** | Model benefits — zero cases |
+| $A^* > 5$ and $A^{\pi_B} < 0$ | **1 / 196** | Model actively harmed |
+| $A^* > 5$ and $A^{\pi_G} > 0$ | **0 / 196** | Gov continuation helps — zero cases |
+
+**185 out of 196 cases: the oracle advantage exists but the model cannot
+realize it.** The governor opens a path that requires optimal continuation,
+and the model cannot provide that continuation.
+
+### Rescueability Classification
+
+| Category | Count | % | Mean $A^{\pi_B}$ |
+|---|---|---|---|
+| **UNRESCUABLE** | 197 | 75.8% | -0.12 (neutral) |
+| **RESCUABLE_AMBIGUOUS** | 63 | 24.2% | -38.61 (harmful) |
+
+**75.8% of intervention states are unrecoverable** — the oracle confirms
+there is no path to success from these states. The governor's intervention
+is neutral but pointless: the trajectory was indeed already doomed.
+
+**24.2% are potentially rescuable** but the governor's intervention is
+actively harmful (-38.61 mean $A^{\pi_B}$). In these cases, the governor
+diverts the model from a potentially recoverable path into one that the
+model cannot execute.
+
+This partially confirms the "already doomed" hypothesis (75.8% of cases)
+but also reveals a second failure mode: in the 24.2% potentially rescuable
+cases, the governor's intervention makes things worse, not better.
+
+### Success Conversion
+
+| Continuation | Successes | Total |
+|---|---|---|
+| Base continuation ($a_B + \pi_B$) | 7 | 196 |
+| Gov + OFF continuation ($a_G + \pi_B$) | **0** | 196 |
+| Gov + SEL continuation ($a_G + \pi_G$) | **0** | 196 |
+
+The governor's intervention destroys all 7 potentially rescuable cases.
+Zero interventions produce success under either continuation policy.
+
+### Chain Macro-Patterns
+
+The I3.5.2c intervention chains reveal "information acquisition without
+decision conversion":
+
+| Action Sequence | Count | Mean $\Delta U$ |
+|---|---|---|
+| `SEARCH_MORE → REASON_MORE` | 106 | -4.15 |
+| `SEARCH_MORE → VERIFY → SEARCH_MORE → ANSWER` | 49 | -6.50 |
+| `SEARCH_MORE → VERIFY → SEARCH_MORE → REASON_MORE` | 23 | -6.50 |
+| `SEARCH_MORE → SEARCH_MORE` | 14 | -4.15 |
+
+The dominant pattern is `SEARCH_MORE → REASON_MORE` (106/194 chains). The
+governor makes the model search for more information and then reason about
+it, but this never leads to a correct answer. The model acquires information
+but cannot convert it into a correct terminal decision.
+
+All chain lengths have negative mean $\Delta U$:
+- Length 2: mean $\Delta U = -4.15$
+- Length 4: mean $\Delta U = -6.50$
+
+Longer chains are worse, confirming that cascading interventions accumulate
+cost without benefit.
+
+### Scientific Interpretation
+
+The I3.5.2d result confirms the $Q^* \neq Q^{\pi_{\text{model}}}$ hypothesis
+with remarkable clarity:
+
+```text
+A*       = +108.41  (governor knows a better action under optimal continuation)
+A^{π_B}  =   -7.98  (but the base model cannot realize that advantage)
+A^{π_G}  =  -11.02  (and governor continuation is even worse)
+```
+
+The value disappears because:
+
+1. **75.8% of intervention states are unrecoverable.** The oracle confirms
+   no path to success exists. The governor's intervention is neutral but
+   wastes executor resources (the -3.28 utility loss in I3.5.2c).
+
+2. **24.2% are potentially rescuable, but the governor's intervention is
+   harmful.** The governor diverts the model from a potentially recoverable
+   path into one that the model cannot execute. The model would have had a
+   small chance (7/196 successes) with the baseline action, but zero chance
+   with the governor's action.
+
+3. **The dominant chain pattern is information acquisition without decision
+   conversion.** The governor repeatedly makes the model `SEARCH_MORE` and
+   `REASON_MORE`, but the model cannot convert the additional information
+   into a correct answer. This is the mechanism behind the utility loss.
+
+4. **Governor continuation is worse than base continuation** ($A^{\pi_G} < A^{\pi_B}$).
+   Persistent governor control does not help — it makes things worse by
+   continuing to divert the model away from paths it can execute.
+
+### Corrected Causal Chain (Final)
+
+```text
+I3.5.1:  Always-on governor damages the model policy              CONFIRMED
+I3.5.2a: Governor sometimes selects actions with higher Q*        CONFIRMED
+I3.5.2b: Model faithfully follows those recommendations            CONFIRMED
+I3.5.2c: Higher Q* actions do NOT improve value under
+         actual downstream model policy                            CONFIRMED
+I3.5.2d: A* = +108 but A^{π_B} = -8 and A^{π_G} = -11
+         75.8% of interventions are in unrecoverable states
+         24.2% are rescuable but governor intervention is harmful
+         Pattern: information acquisition without decision conversion
+                                                                   CONFIRMED
+```
+
+The root cause is now precisely characterized:
+
+$$\boxed{Q^*(s, a_G) \gg Q^{\pi_{\text{model}}}(s, a_G)}$$
+
+The governor's $Q^*$-based ranking assumes optimal continuation. The model
+cannot provide that continuation. The oracle advantage is not behaviorally
+realizable by either the base model or the governor-controlled model.
+
+### What This Means for Governor Design
+
+The next governor should reason about **policy-conditional long-horizon
+value**, not $Q^*$ alone:
+
+$$\text{Intervene only when } Q^{\pi}(s, a_G) - Q^{\pi}(s, a_B) > 0$$
+
+not:
+
+$$\text{Intervene when } Q^*(s, a_G) - Q^*(s, a_B) > 0$$
+
+This requires either:
+1. A model of the model's continuation policy (learned or simulated)
+2. Online rollouts with the actual model to estimate $Q^{\pi}$
+3. A fundamentally different intervention criterion that doesn't rely on
+   oracle optimality
+
+The current governor's competence is real but **theoretically optimal, not
+behaviorally realizable**. It identifies actions that would be better if the
+model were optimal, but the model is not optimal.
+
+---
+
+## 10. Scientific Caveats
 
 1. **The end-to-end SELECTIVE_FRAME experiment shows no terminal-success
    improvement and significant continuous DG worsening relative to OFF.**
@@ -718,30 +901,34 @@ genuinely unrecoverable or whether the problem is downstream policy execution.
    resource consumption (executive steps, retrieval, verification, search,
    reasoning). Model tokens are telemetry, not directly charged.
 
-4. **The root cause is $Q^* \neq Q^{\pi_{\text{model}}}$.** The governor's
-   $Q^*$-based ranking assumes optimal continuation. The model does not
-   continue optimally. The I3.5.2d experiment will measure the
-   policy-conditional value $Q^{\pi_B}$ to quantify this gap precisely.
+4. **The root cause is $Q^* \neq Q^{\pi_{\text{model}}}$.** I3.5.2d confirms
+   this empirically: $A^* = +108$ but $A^{\pi_B} = -8$ and $A^{\pi_G} = -11$.
+   The oracle advantage is not behaviorally realizable by either policy.
 
-5. **"The trajectory was already doomed at Step 0" is a candidate
-   explanation, not yet established.** The rescueability test in I3.5.2d will
-   determine whether intervened tasks are genuinely unrecoverable or whether
-   the problem is downstream policy execution.
+5. **75.8% of intervention states are unrecoverable** (confirmed by oracle
+   state graph analysis). The "already doomed" hypothesis is partially
+   confirmed. The remaining 24.2% are potentially rescuable but the governor's
+   intervention is actively harmful in those cases.
 
-6. **The fold-isolated CV precision (48.1%) is the honest generalization
+6. **The dominant failure pattern is information acquisition without decision
+   conversion.** The governor makes the model search and reason, but the model
+   cannot convert additional information into correct terminal decisions.
+
+7. **The fold-isolated CV precision (48.1%) is the honest generalization
    estimate.** The global-rules precision (72.4%) overestimates performance
    because the rules were not discovered fold-isolated.
 
-7. **The Brier score is calibrated** via isotonic regression. The raw Brier
+8. **The Brier score is calibrated** via isotonic regression. The raw Brier
    (0.2623) was worse than the base rate (0.0849). The calibrated Brier (0.0818)
    beats the base rate.
 
-8. **Q-value source tracking** shows 88.4% of Q-values come from the oracle
+9. **Q-value source tracking** shows 88.4% of Q-values come from the oracle
    table. 11.6% use fixed fallback penalties (all for baseline `ANSWER` actions
    not present in the oracle). The fallback penalty of $-125.11$ represents the
    standard incorrect-answer penalty.
 
-9. **Validation is stopped.** The primary development hypothesis failed.
-   The gate design must be reconsidered (measuring $Q^{\pi_B}$ instead of
-   $Q^*$) before any validation attempt. Do not tune against validation and
-   then proceed to held-out pretending it's the same frozen experiment.
+10. **Validation is stopped.** The primary development hypothesis failed.
+    The gate design must be fundamentally reconsidered (measuring $Q^{\pi_B}$
+    instead of $Q^*$) before any validation attempt. Do not tune against
+    validation and then proceed to held-out pretending it's the same frozen
+    experiment.

@@ -1,0 +1,59 @@
+{
+  "chain_analysis": {
+    "chain_length_stats": {
+      "2": {
+        "count": 120,
+        "max_delta_u": -0.02,
+        "mean_delta_u": -4.15,
+        "min_delta_u": -4.32
+      },
+      "4": {
+        "count": 74,
+        "max_delta_u": -5.34,
+        "mean_delta_u": -6.5014,
+        "min_delta_u": -9.64
+      }
+    },
+    "top_action_sequences": {
+      "SEARCH_MORE \u2192 REASON_MORE": 106,
+      "SEARCH_MORE \u2192 SEARCH_MORE": 14,
+      "SEARCH_MORE \u2192 VERIFY \u2192 SEARCH_MORE \u2192 ANSWER": 49,
+      "SEARCH_MORE \u2192 VERIFY \u2192 SEARCH_MORE \u2192 REASON_MORE": 23,
+      "SEARCH_MORE \u2192 VERIFY \u2192 SEARCH_MORE \u2192 RETRIEVE": 2
+    },
+    "total_chains": 194
+  },
+  "intervention_value_decomposition": {
+    "A_pi_base_mean": -7.9764,
+    "A_pi_gov_mean": -11.0181,
+    "A_star_mean": 108.4143,
+    "A_star_positive_pi_base_negative": 1,
+    "A_star_positive_pi_base_positive": 0,
+    "A_star_positive_pi_base_zero": 185,
+    "A_star_positive_pi_gov_positive": 0,
+    "A_star_positive_pi_gov_zero": 3
+  },
+  "n_different_action": 196,
+  "n_interventions": 260,
+  "rescueability_distribution": {
+    "RESCUABLE_AMBIGUOUS": 63,
+    "UNRESCUABLE": 197
+  },
+  "rescueability_x_a_pi_base": {
+    "RESCUABLE_AMBIGUOUS": {
+      "mean_a_pi_base": -38.6073,
+      "n": 40
+    },
+    "UNRESCUABLE": {
+      "mean_a_pi_base": -0.1223,
+      "n": 156
+    }
+  },
+  "schema": "DAPH_V2B_I3_5_2D_ANALYSIS_V1",
+  "success_conversion": {
+    "base": 7,
+    "gov_off": 0,
+    "gov_sel": 0,
+    "total": 196
+  }
+}
