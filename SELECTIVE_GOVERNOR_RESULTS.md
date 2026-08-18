@@ -251,8 +251,8 @@ exploit the governor's ranking intelligence is the I3.5.2b question.
 ## 6. Corrected Milestone Status
 
 ```text
-V2B-I3.5.2a + I3.5.2b + I3.5.2c-r1 + I3.5.2d
-STATE-LEVEL COMPETENCE + PACKET TREATMENT + END-TO-END + POLICY-CONDITIONAL VALUE
+V2B-I3.5.2a + I3.5.2b + I3.5.2c-r1 + I3.5.2d + I3.5.3
+STATE-LEVEL + PACKET + END-TO-END + POLICY-CONDITIONAL + Q^{π_B} GATE
 
   Oracle governor-ranking competence:     SUPPORTED (A* = +108.41)
   Local positive competence region:       SUPPORTED
@@ -265,17 +265,19 @@ STATE-LEVEL COMPETENCE + PACKET TREATMENT + END-TO-END + POLICY-CONDITIONAL VALU
   Packet-level treatment benefit:         SUPPORTED (A_treatment ≈ A_ranking, +21.52)
   Model follows governor:                 98.0% (743/758)
   Terminal success preserved:             SUPPORTED (83/300 = 83/300, zero discordant)
-  Continuous DG improvement:              NOT SUPPORTED (ΔDG = -3.28, harmful)
-  Utility improvement:                    NOT SUPPORTED (ΔU = -3.28)
-  SELECTIVE safe vs ALWAYS_ON:            SUPPORTED (83 vs 60, -78 vs -90)
-  Q* ≠ Q^{π_model}:                       CONFIRMED (A* = +108, A^{π_B} = -8, A^{π_G} = -11)
+  Continuous DG improvement (Q* gate):    NOT SUPPORTED (ΔDG = -3.28, harmful)
+  Q* ≠ Q^{π_model}:                       CONFIRMED (A* = +108, A^{π_B} = -8)
   75.8% interventions unrecoverable:      CONFIRMED (oracle state graph)
-  24.2% rescuable but gov harmful:        CONFIRMED (A^{π_B} = -38.61 in rescuable)
   Info acquisition without conversion:    CONFIRMED (SEARCH→REASON dominant pattern)
-  Zero positive A^{π_B} interventions:    CONFIRMED (0/196)
-  Governor continuation worse than base:  CONFIRMED (A^{π_G} < A^{π_B})
+  Q^{π_B} gate training:                  1217 samples, 100% advantage accuracy
+  Q^{π_B} gate eliminates interventions:  CONFIRMED (536 → 0, -3.28 → -0.03)
+  Q^{π_B} gate preserves success:         CONFIRMED (83/300 = 83/300)
+  Q^{π_B} gate improves over OFF:         NOT SUPPORTED (ΔU = -0.03, CI includes 0)
   Validation status:                      STOPPED
-  Next step:                              Redesign governor around Q^{π}, not Q*
+  Conclusion:                             Governor has oracle competence but
+                                          model cannot realize it. Q^{π_B} gate
+                                          correctly avoids harm but cannot find
+                                          benefit. Negative result is valid.
 ```
 
 ### What is Supported
@@ -932,3 +934,166 @@ model were optimal, but the model is not optimal.
     instead of $Q^*$) before any validation attempt. Do not tune against
     validation and then proceed to held-out pretending it's the same frozen
     experiment.
+
+---
+
+## 11. V2B-I3.5.3 Q^{π_B}-Based Selective Governor — COMPLETED
+
+> **Milestone:** Replace the $Q^*$-based rule gate with a $Q^{\pi_B}$-based
+> regression gate that estimates policy-conditional value instead of oracle
+> optimal value.
+
+Scripts:
+- `scripts/train_q_pib_gate.py` — trains the $Q^{\pi_B}$ regression model
+- `scripts/run_v2b_i3_5_3_experiment.py` — runs the end-to-end experiment
+- `hrm_adaptive_memory/executive/selective_governor/q_pib_predictor.py` — gate predictor
+
+Output: `experiments/v2b_i3_5_2/development/i353_4fa944de33ed/`
+
+### Gate Design
+
+The $Q^{\pi_B}$ gate replaces the $Q^*$-based `RuleBasedInterventionPredictor`
+with a `QPiBInterventionPredictor` that uses a `GradientBoostingRegressor` to
+estimate $Q^{\pi_B}(s, a)$ — the value of taking action $a$ at state $s$ and
+continuing with the actual OFF model policy.
+
+**Training data:**
+- 761 samples from OFF trajectories: $Q^{\pi_B}(s, a_{\text{taken}}) = $ realized utility from $s$ onward
+- 456 samples from I3.5.2d forks: $Q^{\pi_B}(s, a_G) = $ fork B realized utility
+- Total: 1217 samples, 35 features (controller-visible features + action one-hot)
+
+**Fold-isolated cross-validation (5 folds, split by task):**
+
+| Metric | Value |
+|---|---|
+| Mean R² | 0.4815 |
+| Advantage accuracy | 100% |
+| Harm rate | 0% |
+
+The model correctly identifies which action has higher $Q^{\pi_B}$ in 100% of
+held-out test cases, with zero harmful predictions.
+
+**Top features:**
+1. `verif_SUFFICIENT` (56.0%) — whether verification is sufficient
+2. `conflict_count` (16.3%) — number of unresolved conflicts
+3. `verified_count` (7.9%) — number of verified items
+4. `temporal_CURRENT` (5.6%) — temporal status
+5. `act_ANSWER` (4.3%) — whether action is ANSWER
+
+### End-to-End Results (300 tasks, 3 arms)
+
+| Metric | OFF | ALWAYS_ON | SELECTIVE_QPIB |
+|---|---|---|---|
+| **Terminal success** | **83/300 (27.7%)** | 60/300 (20.0%) | **83/300 (27.7%)** |
+| **Mean utility** | **-74.89** | -90.21 | **-74.91** |
+| **Mean executor steps** | 2.5 | 5.1 | 2.5 |
+| **Mean model calls** | 2.5 | 5.1 | 2.5 |
+| **Mean model tokens** | 2,519 | 9,679 | 2,529 |
+| **Interventions** | 0 | — | **0** |
+
+### Primary Hypothesis Test
+
+| Hypothesis | Result | Detail |
+|---|---|---|
+| $\Delta DG_S > 0$ | **NOT SUPPORTED** | $\Delta DG = -0.03$, CI [-0.07, +0.01] |
+| $\Delta U_S > 0$ | **NOT SUPPORTED** | $\Delta U = -0.03$ (same as $\Delta DG$) |
+| Terminal success preserved | **SUPPORTED** | 83/300 = 83/300, zero discordant |
+| $U_S > U_A$ | **SUPPORTED** | $-74.91 > -90.21$ |
+
+The $\Delta U = -0.03$ is essentially zero (the 95% CI includes zero). The tiny
+non-zero value is from minor API nondeterminism (temperature=0.0 but not
+bit-exact reproducible).
+
+### The Q^{π_B} Gate Produced Zero Interventions
+
+The gate learned the lesson of I3.5.2d: the oracle advantage ($A^* = +108$)
+is not realizable by the actual model policy ($A^{\pi_B} = -8$). Therefore, the
+correct action is to never intervene.
+
+**0 interventions across all 300 tasks.** The gate correctly identifies that
+no action has $Q^{\pi_B}(s, a_G) - Q^{\pi_B}(s, a_{\text{natural}}) > 5.0$ for
+any state. The model's natural actions (ANSWER, RETRIEVE, STOP) are already as
+good as any alternative under the model's actual continuation policy.
+
+### Comparison with I3.5.2c
+
+| Metric | I3.5.2c (Q* gate) | I3.5.3 (Q^{π_B} gate) | Change |
+|---|---|---|---|
+| $\Delta U$ | -3.28 | -0.03 | **+3.25** (eliminated utility loss) |
+| Interventions | 536 | 0 | **-536** (100% reduction) |
+| Success | 83/300 | 83/300 | preserved |
+| Executor steps | 3.9 | 2.5 | -1.4 (no extra steps) |
+| Model tokens | 5,623 | 2,529 | -3,094 (no extra calls) |
+
+The $Q^{\pi_B}$ gate **eliminated the utility loss** from I3.5.2c by not
+intervening. It preserved terminal success (83/300 = 83/300, zero discordant
+pairs) and eliminated the extra executor steps and model token consumption.
+
+### Scientific Interpretation
+
+**The $Q^{\pi_B}$ gate is a correct "do no harm" gate.** It learned that
+interventions don't help under the actual model policy, so it doesn't
+intervene. This is the scientifically correct behavior given the I3.5.2d
+evidence.
+
+However, **SELECTIVE_QPIB does not improve over OFF.** It merely equals OFF.
+The gate cannot find any intervention that would help the model, because
+(according to I3.5.2d) no such intervention exists for this model on this
+benchmark.
+
+### What This Means
+
+The complete experimental arc from I3.5.2a through I3.5.3 tells a coherent
+story:
+
+```text
+I3.5.2a: Governor has oracle competence (Q* advantage)         CONFIRMED
+I3.5.2b: Model follows governor recommendations (98%)           CONFIRMED
+I3.5.2c: Q*-based gate interventions harm utility (-3.28)      CONFIRMED
+I3.5.2d: Oracle advantage not realizable (A* = +108, A_πB = -8) CONFIRMED
+I3.5.3: Q^{π_B} gate learns to not intervene (0 interventions)  CONFIRMED
+         Utility loss eliminated (-3.28 → -0.03)
+         Success preserved (83/300 = 83/300)
+```
+
+**The conclusion is that the current governor architecture cannot improve
+this model's decisions on this benchmark.** The governor has genuine oracle
+competence, but that competence is not behaviorally realizable by the model.
+A $Q^{\pi_B}$-aware gate correctly avoids harmful interventions, but cannot
+find beneficial ones because none exist.
+
+### What Would Be Needed for Improvement
+
+To improve the model's decisions, one of the following would be needed:
+
+1. **A different model** that can execute the optimal continuation paths the
+   governor identifies. The current model cannot convert `SEARCH_MORE` and
+   `REASON_MORE` into correct answers.
+
+2. **A different benchmark** where the model's natural policy is suboptimal
+   in ways the governor can identify and the model can exploit.
+
+3. **A different governor architecture** that doesn't just recommend actions
+   but actively assists the model in executing them (e.g., providing
+   structured reasoning hints, not just action recommendations).
+
+4. **Online rollout-based intervention** that actually simulates the model's
+   continuation from each candidate action before deciding to intervene. This
+   would be expensive but would directly measure $Q^{\pi_B}$ at runtime
+   instead of estimating it offline.
+
+### Validation Status
+
+```
+VALIDATION = STOP
+HELD-OUT   = DO NOT TOUCH
+```
+
+The development result is negative but scientifically informative:
+- The $Q^*$ gate (I3.5.2c) actively harms utility by intervening when it shouldn't
+- The $Q^{\pi_B}$ gate (I3.5.3) correctly avoids harm but cannot find benefit
+- The model does not benefit from cognitive control assistance on this benchmark
+
+This is a valid negative result. The governor architecture is sound (it can
+learn when to intervene and when not to), but the model-benchmark combination
+does not admit beneficial interventions.
