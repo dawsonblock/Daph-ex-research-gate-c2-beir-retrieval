@@ -1,5 +1,5 @@
 {
-  "benchmark_manifest_sha256": "d4a1962f254c5f034ed8a6c676e4f1cb860b4b4058b43c96dc9c77fbef92092d",
+  "benchmark_manifest_sha256": "11df18fd8b9d821d7b7cb2f63fabebb45716c11c45271812a759fefffc733598",
   "claim_boundary": "Precomputed deterministic oracle ground truth only; no executive result.",
   "difficulty_report": {
     "path": "experiments/v2b_i3_5/oracle_tables/v2b_i3_5_difficulty_report_v1.json",
@@ -26,16 +26,16 @@
       "information_states": 231731,
       "information_transitions": 775488,
       "path": "experiments/v2b_i3_5/oracle_tables/v2b_i3_5_sequential_state_aware_controller_v1.jsonl.gz",
-      "set_sha256": "46e6384a860c7a5db99420b7a7ebf6693b0a174f96a72a1b1cb202e2fa29b498",
-      "sha256": "42685186733493b2d3b789c09000ec996f77f3ba017c095705f8d533c0364cbc",
+      "set_sha256": "98d9844a442ba042f28a3a999ed23cfce56c056d2b17285ff40e0672b543631c",
+      "sha256": "f20c55e7999bbfe8c7f0b61b4f85d4386b0b53eacbb433fc0357be834174eb10",
       "table_count": 515
     },
     "STATE_BLIND_CONTROLLER": {
       "information_states": 222471,
       "information_transitions": 781136,
       "path": "experiments/v2b_i3_5/oracle_tables/v2b_i3_5_sequential_state_blind_controller_v1.jsonl.gz",
-      "set_sha256": "229b6a065a80d30002392235cf83771fc4f3e9533c8a986519a8775a7da1edf4",
-      "sha256": "3d9a77a6b4a64ed90ec340f5c2f2d3653eade356485cc5967f7e6424862d9c61",
+      "set_sha256": "b27153967b79d2877e072a6e30655c540c4666f37978ee3327907ee68cac173b",
+      "sha256": "d6d7d8c3f943e230a2fb7e31d0830715ae36a82abe47a91360dbe44476212d6a",
       "table_count": 398
     }
   },

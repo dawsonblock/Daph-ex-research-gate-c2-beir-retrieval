@@ -70,8 +70,23 @@ def detect_bottlenecks(state: GovernorState) -> tuple[DecisionBottleneck, ...]:
     has_search = res.has_search
     has_reasoning = res.has_reasoning
 
-    # Extract chain progress from prior outcomes
-    chain = state.chain_progress
+    # Extract cognitive state early so chain tracking can be gated on it.
+    # Chain tracking only applies to the aware condition (which has
+    # cognitive_state with prior_outcomes). The blind condition cannot
+    # see V2_STAGE_N outcomes, so chain tracking would add noise.
+    cs = state.observation.cognitive_state
+
+    # Extract chain progress from prior outcomes (aware only)
+    if cs is not None and cs.prior_outcomes:
+        chain = state.chain_progress
+    else:
+        from hrm_adaptive_memory.executive.governor.chain_progress import ChainProgress
+        chain = ChainProgress(
+            stages_completed=0, stage_outcomes=(),
+            actions_that_advanced=(), actions_that_failed=(),
+            is_started=False, is_complete=False, is_poisoned=False,
+            total_steps=len(state.prior_actions),
+        )
 
     # Check for repeated no-gain (now outcome-based, not just action-based)
     if state.repeated_no_gain:
@@ -84,50 +99,52 @@ def detect_bottlenecks(state: GovernorState) -> tuple[DecisionBottleneck, ...]:
             targetable_by=_actions_that_add_new_information(state),
         ))
 
-    # Chain discovery: chain not started, need to find the starting action.
-    # Only fire when the model has already tried actions but none advanced
-    # the chain. On the very first step (no prior actions), the regular
-    # NO_EVIDENCE / UNVERIFIED_EVIDENCE bottlenecks handle action selection.
-    if chain.needs_discovery and chain.total_steps > 0:
-        untried = state.untried_composable()
-        if untried:
-            bottlenecks.append(DecisionBottleneck(
-                kind="CHAIN_DISCOVERY",
-                severity=HIGH,
-                evidence=("chain_not_started",
-                          f"stages_completed={chain.stages_completed}",
-                          f"untried={untried}"),
-                targetable_by=untried,
-            ))
-        elif chain.is_poisoned:
-            # Chain was poisoned — task likely unsolvable
-            bottlenecks.append(DecisionBottleneck(
-                kind="IRREDUCIBLE_UNCERTAINTY",
-                severity=CRITICAL,
-                evidence=("chain_poisoned", "control_poisoned_in_outcomes"),
-                targetable_by=("DEFER", "STOP"),
-            ))
+    # Chain discovery and chain incomplete: aware condition only.
+    # The blind condition cannot see V2_STAGE_N outcomes.
+    if cs is not None:
+        # Chain discovery: chain not started, need to find the starting action.
+        # Only fire when the model has already tried actions but none advanced
+        # the chain. On the very first step (no prior actions), the regular
+        # NO_EVIDENCE / UNVERIFIED_EVIDENCE bottlenecks handle action selection.
+        if chain.needs_discovery and chain.total_steps > 0:
+            untried = state.untried_composable()
+            if untried:
+                bottlenecks.append(DecisionBottleneck(
+                    kind="CHAIN_DISCOVERY",
+                    severity=HIGH,
+                    evidence=("chain_not_started",
+                              f"stages_completed={chain.stages_completed}",
+                              f"untried={untried}"),
+                    targetable_by=untried,
+                ))
+            elif chain.is_poisoned:
+                # Chain was poisoned — task likely unsolvable
+                bottlenecks.append(DecisionBottleneck(
+                    kind="IRREDUCIBLE_UNCERTAINTY",
+                    severity=CRITICAL,
+                    evidence=("chain_poisoned", "control_poisoned_in_outcomes"),
+                    targetable_by=("DEFER", "STOP"),
+                ))
 
-    # Chain incomplete: started but not finished
-    if chain.needs_continuation:
-        # Recommend actions that haven't been tried yet (might advance chain)
-        untried = state.untried_composable()
-        # Also include actions that advanced before (might advance again)
-        advanced = tuple(a for a in chain.actions_that_advanced
-                         if a in state.legal_actions)
-        targetable = tuple(dict.fromkeys(untried + advanced))  # dedup, preserve order
-        if targetable:
-            bottlenecks.append(DecisionBottleneck(
-                kind="CHAIN_INCOMPLETE",
-                severity=HIGH,
-                evidence=(f"stages_completed={chain.stages_completed}",
-                          f"advanced_by={chain.actions_that_advanced}",
-                          f"failed_actions={chain.actions_that_failed}"),
-                targetable_by=targetable,
-            ))
+        # Chain incomplete: started but not finished
+        if chain.needs_continuation:
+            # Recommend actions that haven't been tried yet (might advance chain)
+            untried = state.untried_composable()
+            # Also include actions that advanced before (might advance again)
+            advanced = tuple(a for a in chain.actions_that_advanced
+                             if a in state.legal_actions)
+            targetable = tuple(dict.fromkeys(untried + advanced))  # dedup, preserve order
+            if targetable:
+                bottlenecks.append(DecisionBottleneck(
+                    kind="CHAIN_INCOMPLETE",
+                    severity=HIGH,
+                    evidence=(f"stages_completed={chain.stages_completed}",
+                              f"advanced_by={chain.actions_that_advanced}",
+                              f"failed_actions={chain.actions_that_failed}"),
+                    targetable_by=targetable,
+                ))
 
     # If we have cognitive state (aware condition), use it
-    cs = state.observation.cognitive_state
     vs_val: str | None = None
     if cs is not None:
         # Check verification status
@@ -227,21 +244,24 @@ def detect_bottlenecks(state: GovernorState) -> tuple[DecisionBottleneck, ...]:
     # 1. verification_state is MISSING (no evidence to answer with)
     # 2. chain is started but not complete (composition chain still needs work)
     # 3. chain is poisoned (task likely unsolvable, prefer DEFER)
+    # Only applies to aware condition (where we can see verification_state
+    # and chain progress). Blind condition uses its own heuristics.
     can_answer = True
-    if vs_val is not None and vs_val == "MISSING":
-        can_answer = False
-    if chain.is_started and not chain.is_complete and not chain.is_poisoned:
-        can_answer = False
-    if chain.is_poisoned:
-        # Poisoned: prefer DEFER over ANSWER
-        can_answer = False
-        if not bottlenecks or all(b.kind == "READY_TO_ANSWER" for b in bottlenecks):
-            bottlenecks.append(DecisionBottleneck(
-                kind="IRREDUCIBLE_UNCERTAINTY",
-                severity=CRITICAL,
-                evidence=("chain_poisoned", "cannot_answer"),
-                targetable_by=("DEFER", "STOP"),
-            ))
+    if cs is not None:
+        if vs_val is not None and vs_val == "MISSING":
+            can_answer = False
+        if chain.is_started and not chain.is_complete and not chain.is_poisoned:
+            can_answer = False
+        if chain.is_poisoned:
+            # Poisoned: prefer DEFER over ANSWER
+            can_answer = False
+            if not bottlenecks or all(b.kind == "READY_TO_ANSWER" for b in bottlenecks):
+                bottlenecks.append(DecisionBottleneck(
+                    kind="IRREDUCIBLE_UNCERTAINTY",
+                    severity=CRITICAL,
+                    evidence=("chain_poisoned", "cannot_answer"),
+                    targetable_by=("DEFER", "STOP"),
+                ))
 
     # If no bottlenecks and can answer, ready to answer
     if not bottlenecks and can_answer:
