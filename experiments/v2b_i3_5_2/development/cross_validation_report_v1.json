@@ -4,145 +4,436 @@
   "k_folds": 5,
   "total_tasks": 300,
   "total_states": 758,
+  "rule_discovery_mode": "fold_isolated",
+  "rule_discovery_independence": "FOLD_ISOLATED",
+  "harm_prevalence": 0.0937,
   "out_of_fold_metrics": {
-    "mae_delta_q": 35.7152,
-    "spearman_correlation_delta_q": 0.649,
-    "roc_auc_harm": 0.7956,
-    "brier_score_harm": 0.2613,
-    "total_interventions_approved": 261,
-    "intervention_rate": 0.3443,
-    "precision_help": 0.728,
-    "harm_rate_on_interventions": 0.0268,
-    "mean_delta_q_on_interventions": 84.37,
+    "mae_delta_q": 37.1226,
+    "spearman_correlation_delta_q": 0.595,
+    "roc_auc_harm": 0.7629,
+    "brier_score_harm": 0.2623,
+    "brier_score_harm_calibrated": 0.0818,
+    "base_rate_brier_score": 0.0849,
+    "brier_vs_base_rate": 0.1774,
+    "brier_calibrated_vs_base_rate": -0.0031,
+    "ece_harm": 0.2807,
+    "ece_harm_calibrated": 0.0546,
+    "total_interventions_approved": 395,
+    "intervention_rate": 0.5211,
+    "precision_help": 0.481,
+    "harm_rate_on_interventions": 0.0177,
+    "mean_delta_q_on_interventions": 55.7483,
     "worst_decile_delta_q": 0.0
+  },
+  "calibration_diagnostics": {
+    "reliability_bins_raw": [
+      {
+        "bin_lo": 0.0,
+        "bin_hi": 0.1,
+        "count": 458,
+        "avg_predicted_prob": 0.0004,
+        "avg_actual_rate": 0.0153
+      },
+      {
+        "bin_lo": 0.1,
+        "bin_hi": 0.2,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.2,
+        "bin_hi": 0.3,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.3,
+        "bin_hi": 0.4,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.4,
+        "bin_hi": 0.5,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.5,
+        "bin_hi": 0.6,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.6,
+        "bin_hi": 0.7,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.7,
+        "bin_hi": 0.8,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.8,
+        "bin_hi": 0.9,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.9,
+        "bin_hi": 1.0,
+        "count": 300,
+        "avg_predicted_prob": 0.9,
+        "avg_actual_rate": 0.2133
+      }
+    ],
+    "reliability_bins_calibrated": [
+      {
+        "bin_lo": 0.0,
+        "bin_hi": 0.1,
+        "count": 652,
+        "avg_predicted_prob": 0.0084,
+        "avg_actual_rate": 0.0552
+      },
+      {
+        "bin_lo": 0.1,
+        "bin_hi": 0.2,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.2,
+        "bin_hi": 0.3,
+        "count": 57,
+        "avg_predicted_prob": 0.2739,
+        "avg_actual_rate": 0.3509
+      },
+      {
+        "bin_lo": 0.3,
+        "bin_hi": 0.4,
+        "count": 43,
+        "avg_predicted_prob": 0.3195,
+        "avg_actual_rate": 0.3488
+      },
+      {
+        "bin_lo": 0.4,
+        "bin_hi": 0.5,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.5,
+        "bin_hi": 0.6,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.6,
+        "bin_hi": 0.7,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.7,
+        "bin_hi": 0.8,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.8,
+        "bin_hi": 0.9,
+        "count": 6,
+        "avg_predicted_prob": 0.8613,
+        "avg_actual_rate": 0.0
+      },
+      {
+        "bin_lo": 0.9,
+        "bin_hi": 1.0,
+        "count": 0
+      }
+    ],
+    "harm_prevalence": 0.0937,
+    "base_rate_brier": 0.0849,
+    "interpretation": "Brier score is compared to the base-rate Brier (always predicting the mean harm prevalence). A Brier score above the base-rate indicates poor calibration. ROC-AUC measures discrimination (ranking), not calibration. ECE measures average absolute difference between predicted and actual probabilities in bins."
   },
   "fold_breakdown": [
     {
       "fold": 1,
       "test_states": 153,
-      "interventions": 54,
-      "intervention_rate": 0.3529,
-      "precision_help": 0.6852,
-      "harm_rate": 0.037,
-      "mean_delta_q_intervened": 68.5993
+      "train_states": 605,
+      "discovered_rules_count": 3,
+      "interventions": 78,
+      "intervention_rate": 0.5098,
+      "precision_help": 0.4744,
+      "harm_rate": 0.0256,
+      "mean_delta_q_intervened": 47.4918
     },
     {
       "fold": 2,
       "test_states": 154,
-      "interventions": 54,
-      "intervention_rate": 0.3506,
-      "precision_help": 0.7222,
-      "harm_rate": 0.0185,
-      "mean_delta_q_intervened": 91.813
+      "train_states": 604,
+      "discovered_rules_count": 2,
+      "interventions": 80,
+      "intervention_rate": 0.5195,
+      "precision_help": 0.4875,
+      "harm_rate": 0.0125,
+      "mean_delta_q_intervened": 61.9738
     },
     {
       "fold": 3,
       "test_states": 163,
-      "interventions": 60,
-      "intervention_rate": 0.3681,
-      "precision_help": 0.6833,
-      "harm_rate": 0.0333,
-      "mean_delta_q_intervened": 70.0917
+      "train_states": 595,
+      "discovered_rules_count": 3,
+      "interventions": 87,
+      "intervention_rate": 0.5337,
+      "precision_help": 0.4713,
+      "harm_rate": 0.023,
+      "mean_delta_q_intervened": 48.3391
     },
     {
       "fold": 4,
       "test_states": 138,
-      "interventions": 43,
-      "intervention_rate": 0.3116,
-      "precision_help": 0.814,
+      "train_states": 620,
+      "discovered_rules_count": 2,
+      "interventions": 69,
+      "intervention_rate": 0.5,
+      "precision_help": 0.5072,
       "harm_rate": 0.0,
-      "mean_delta_q_intervened": 103.9735
+      "mean_delta_q_intervened": 64.7951
     },
     {
       "fold": 5,
       "test_states": 150,
-      "interventions": 50,
-      "intervention_rate": 0.3333,
-      "precision_help": 0.76,
-      "harm_rate": 0.04,
-      "mean_delta_q_intervened": 93.6392
+      "train_states": 608,
+      "discovered_rules_count": 3,
+      "interventions": 81,
+      "intervention_rate": 0.54,
+      "precision_help": 0.4691,
+      "harm_rate": 0.0247,
+      "mean_delta_q_intervened": 57.802
+    }
+  ],
+  "discovered_rules_by_fold": [
+    {
+      "fold": 1,
+      "description": "pac>=2, last=VERIFY, verif=MISSING",
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=2, last=VERIFY, verif=MISSING",
+      "train_count": 130,
+      "train_help_rate": 0.8077,
+      "train_harm_rate": 0.0,
+      "train_mean_delta_q": 99.38,
+      "expected_delta_utility": 99.38,
+      "harm_probability": 0.0
+    },
+    {
+      "fold": 1,
+      "description": "pac>=3, last=SEARCH_MORE, verif=FALSIFIED",
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=3, last=SEARCH_MORE, verif=FALSIFIED",
+      "train_count": 23,
+      "train_help_rate": 1.0,
+      "train_harm_rate": 0.0,
+      "train_mean_delta_q": 100.52,
+      "expected_delta_utility": 100.52,
+      "harm_probability": 0.0
+    },
+    {
+      "fold": 1,
+      "description": "pac>=2, last=VERIFY, verif=SUFFICIENT",
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=2, last=VERIFY, verif=SUFFICIENT",
+      "train_count": 3,
+      "train_help_rate": 1.0,
+      "train_harm_rate": 0.0,
+      "train_mean_delta_q": 192.84,
+      "expected_delta_utility": 192.84,
+      "harm_probability": 0.0
+    },
+    {
+      "fold": 2,
+      "description": "pac>=2, last=VERIFY, verif=MISSING",
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=2, last=VERIFY, verif=MISSING",
+      "train_count": 137,
+      "train_help_rate": 0.7737,
+      "train_harm_rate": 0.0,
+      "train_mean_delta_q": 93.87,
+      "expected_delta_utility": 93.87,
+      "harm_probability": 0.0
+    },
+    {
+      "fold": 2,
+      "description": "pac>=3, last=SEARCH_MORE, verif=FALSIFIED",
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=3, last=SEARCH_MORE, verif=FALSIFIED",
+      "train_count": 19,
+      "train_help_rate": 1.0,
+      "train_harm_rate": 0.0,
+      "train_mean_delta_q": 91.82,
+      "expected_delta_utility": 91.82,
+      "harm_probability": 0.0
+    },
+    {
+      "fold": 3,
+      "description": "pac>=2, last=VERIFY, verif=MISSING",
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=2, last=VERIFY, verif=MISSING",
+      "train_count": 133,
+      "train_help_rate": 0.7744,
+      "train_harm_rate": 0.0,
+      "train_mean_delta_q": 96.66,
+      "expected_delta_utility": 96.66,
+      "harm_probability": 0.0
+    },
+    {
+      "fold": 3,
+      "description": "pac>=3, last=SEARCH_MORE, verif=FALSIFIED",
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=3, last=SEARCH_MORE, verif=FALSIFIED",
+      "train_count": 17,
+      "train_help_rate": 1.0,
+      "train_harm_rate": 0.0,
+      "train_mean_delta_q": 103.58,
+      "expected_delta_utility": 103.58,
+      "harm_probability": 0.0
+    },
+    {
+      "fold": 3,
+      "description": "pac>=2, last=VERIFY, verif=SUFFICIENT",
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=2, last=VERIFY, verif=SUFFICIENT",
+      "train_count": 3,
+      "train_help_rate": 1.0,
+      "train_harm_rate": 0.0,
+      "train_mean_delta_q": 192.84,
+      "expected_delta_utility": 192.84,
+      "harm_probability": 0.0
+    },
+    {
+      "fold": 4,
+      "description": "pac>=2, last=VERIFY, verif=MISSING",
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=2, last=VERIFY, verif=MISSING",
+      "train_count": 135,
+      "train_help_rate": 0.7704,
+      "train_harm_rate": 0.0,
+      "train_mean_delta_q": 93.55,
+      "expected_delta_utility": 93.55,
+      "harm_probability": 0.0
+    },
+    {
+      "fold": 4,
+      "description": "pac>=3, last=SEARCH_MORE, verif=FALSIFIED",
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=3, last=SEARCH_MORE, verif=FALSIFIED",
+      "train_count": 25,
+      "train_help_rate": 1.0,
+      "train_harm_rate": 0.0,
+      "train_mean_delta_q": 99.82,
+      "expected_delta_utility": 99.82,
+      "harm_probability": 0.0
+    },
+    {
+      "fold": 5,
+      "description": "pac>=2, last=VERIFY, verif=MISSING",
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=2, last=VERIFY, verif=MISSING",
+      "train_count": 129,
+      "train_help_rate": 0.7597,
+      "train_harm_rate": 0.0,
+      "train_mean_delta_q": 89.27,
+      "expected_delta_utility": 89.27,
+      "harm_probability": 0.0
+    },
+    {
+      "fold": 5,
+      "description": "pac>=3, last=SEARCH_MORE, verif=FALSIFIED",
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=3, last=SEARCH_MORE, verif=FALSIFIED",
+      "train_count": 24,
+      "train_help_rate": 1.0,
+      "train_harm_rate": 0.0,
+      "train_mean_delta_q": 100.15,
+      "expected_delta_utility": 100.15,
+      "harm_probability": 0.0
+    },
+    {
+      "fold": 5,
+      "description": "pac>=2, last=VERIFY, verif=SUFFICIENT",
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=2, last=VERIFY, verif=SUFFICIENT",
+      "train_count": 3,
+      "train_help_rate": 1.0,
+      "train_harm_rate": 0.0,
+      "train_mean_delta_q": 192.84,
+      "expected_delta_utility": 192.84,
+      "harm_probability": 0.0
     }
   ],
   "sample_approved_interventions": [
     {
-      "task_id": "i3_3_structure_dev_v2_0139",
+      "task_id": "i3_3_structure_dev_v2_0133",
       "step_id": 2,
       "actual_delta_q": 0.0,
-      "pred_delta_q": 83.5,
+      "pred_delta_q": 99.38,
       "pred_harm_prob": 0.0,
-      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=2, last=VERIFY, verif=MISSING"
     },
     {
-      "task_id": "i3_3_structure_dev_v2_0139",
+      "task_id": "i3_3_structure_dev_v2_0133",
       "step_id": 3,
       "actual_delta_q": 91.82,
-      "pred_delta_q": 86.8,
-      "pred_harm_prob": 0.11,
-      "reason": "SAFE_HELP:POST_SEARCH_PREMATURE_TERMINATION_PREVENTION"
+      "pred_delta_q": 90.86423276335486,
+      "pred_harm_prob": 0.0,
+      "reason": "LEARNED_MODEL_FALLBACK"
     },
     {
-      "task_id": "i3_3_structure_dev_v2_0119",
+      "task_id": "i3_3_structure_dev_v2_0114",
       "step_id": 2,
-      "actual_delta_q": 92.84,
-      "pred_delta_q": 83.5,
+      "actual_delta_q": 0.0,
+      "pred_delta_q": 99.38,
       "pred_harm_prob": 0.0,
-      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=2, last=VERIFY, verif=MISSING"
     },
     {
-      "task_id": "i3_3_structure_dev_v2_0266",
-      "step_id": 2,
-      "actual_delta_q": 92.84,
-      "pred_delta_q": 83.5,
+      "task_id": "i3_3_structure_dev_v2_0114",
+      "step_id": 3,
+      "actual_delta_q": 91.82,
+      "pred_delta_q": 90.86423276335486,
       "pred_harm_prob": 0.0,
-      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+      "reason": "LEARNED_MODEL_FALLBACK"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0245",
+      "step_id": 1,
+      "actual_delta_q": 0.0,
+      "pred_delta_q": 14.744814549965387,
+      "pred_harm_prob": 0.0,
+      "reason": "LEARNED_MODEL_FALLBACK"
     },
     {
       "task_id": "i3_3_structure_dev_v2_0245",
       "step_id": 2,
       "actual_delta_q": 0.0,
-      "pred_delta_q": 83.5,
+      "pred_delta_q": 99.38,
       "pred_harm_prob": 0.0,
-      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=2, last=VERIFY, verif=MISSING"
     },
     {
       "task_id": "i3_3_structure_dev_v2_0245",
       "step_id": 3,
       "actual_delta_q": 92.86,
-      "pred_delta_q": 86.8,
-      "pred_harm_prob": 0.11,
-      "reason": "SAFE_HELP:POST_SEARCH_PREMATURE_TERMINATION_PREVENTION"
+      "pred_delta_q": 103.76039079918019,
+      "pred_harm_prob": 0.0,
+      "reason": "LEARNED_MODEL_FALLBACK"
     },
     {
-      "task_id": "i3_3_structure_dev_v2_0128",
+      "task_id": "i3_3_structure_dev_v2_0223",
       "step_id": 2,
       "actual_delta_q": 92.84,
-      "pred_delta_q": 83.5,
+      "pred_delta_q": 99.38,
       "pred_harm_prob": 0.0,
-      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=2, last=VERIFY, verif=MISSING"
     },
     {
-      "task_id": "i3_3_structure_dev_v2_0186",
-      "step_id": 2,
+      "task_id": "i3_3_structure_dev_v2_0117",
+      "step_id": 1,
       "actual_delta_q": 0.0,
-      "pred_delta_q": 83.5,
+      "pred_delta_q": 14.744814549965387,
       "pred_harm_prob": 0.0,
-      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+      "reason": "LEARNED_MODEL_FALLBACK"
     },
     {
-      "task_id": "i3_3_structure_dev_v2_0186",
-      "step_id": 3,
-      "actual_delta_q": -133.18,
-      "pred_delta_q": 86.8,
-      "pred_harm_prob": 0.11,
-      "reason": "SAFE_HELP:POST_SEARCH_PREMATURE_TERMINATION_PREVENTION"
-    },
-    {
-      "task_id": "i3_3_structure_dev_v2_0171",
+      "task_id": "i3_3_structure_dev_v2_0117",
       "step_id": 2,
       "actual_delta_q": 92.84,
-      "pred_delta_q": 83.5,
+      "pred_delta_q": 99.38,
       "pred_harm_prob": 0.0,
-      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+      "reason": "FOLD_DISCOVERED:HELP_REGION:pac>=2, last=VERIFY, verif=MISSING"
     }
+  ],
+  "scientific_caveats": [
+    "These CV metrics measure out-of-fold performance of a predictor that combines fold-isolated discovered rules with learned linear/logistic fallback.",
+    "The Brier score should be compared to the base-rate Brier. A value above the base rate indicates poor probability calibration despite good discrimination.",
+    "These are state-level counterfactual results (governor ranking), NOT packet-level treatment results. The packet treatment experiment (I3.5.2b) is required to measure whether the model can actually exploit governor information.",
+    "End-to-end selective trajectory improvement has NOT been demonstrated."
   ]
 }

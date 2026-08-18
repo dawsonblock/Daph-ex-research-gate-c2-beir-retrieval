@@ -5,6 +5,10 @@
   "total_tasks": 300,
   "total_decision_states": 758,
   "mean_trajectory_length": 2.53,
+  "q_value_source_distribution": {
+    "oracle_q_values": 1340,
+    "fallback_penalty": 176
+  },
   "outcome_distribution": {
     "HELP": {
       "count": 197,

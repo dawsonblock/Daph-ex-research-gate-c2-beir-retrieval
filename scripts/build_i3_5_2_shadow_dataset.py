@@ -65,20 +65,35 @@ VALID_ACTIONS = tuple(
 )
 
 
+# Fixed fallback penalties for illegal/unexpected actions
+FALLBACK_PENALTIES: dict[DecisionAction, float] = {
+    DecisionAction.ANSWER: -125.11,
+    DecisionAction.DEFER: -30.11,
+    DecisionAction.STOP: -30.11,
+}
+DEFAULT_FALLBACK = -125.0
+
+
 def get_action_q(table: OraclePolicyTable, state_id: str, action: DecisionAction) -> float:
     """Look up exact Q(s, a) from oracle table with standard failure penalties."""
+    result = get_action_q_with_source(table, state_id, action)
+    return result[0]
+
+
+def get_action_q_with_source(
+    table: OraclePolicyTable, state_id: str, action: DecisionAction,
+) -> tuple[float, str]:
+    """Look up Q(s, a) and return (value, source) where source is one of:
+    'oracle_q_values', 'proposal_q_values', 'fallback_penalty'.
+    """
     q = table.q_values.get((state_id, action))
     if q is not None:
-        return q
+        return q, "oracle_q_values"
     pq = table.proposal_q_values.get((state_id, action))
     if pq is not None:
-        return pq
-    # Rejection or illegal action penalty
-    if action == DecisionAction.ANSWER:
-        return -125.11
-    if action in (DecisionAction.DEFER, DecisionAction.STOP):
-        return -30.11
-    return -125.0
+        return pq, "proposal_q_values"
+    penalty = FALLBACK_PENALTIES.get(action, DEFAULT_FALLBACK)
+    return penalty, "fallback_penalty"
 
 
 def classify_delta_q(delta_q: float, threshold: float = 5.0) -> str:
@@ -195,14 +210,16 @@ def main():
                 prior_outcomes=p_outcomes,
             )
 
-            # Compute Q-values for all valid actions
-            all_q_values = {
-                act.value: round(get_action_q(table, state_id, act), 4)
-                for act in VALID_ACTIONS
-            }
+            # Compute Q-values for all valid actions with source tracking
+            all_q_values = {}
+            all_q_sources = {}
+            for act in VALID_ACTIONS:
+                q_val, q_src = get_action_q_with_source(table, state_id, act)
+                all_q_values[act.value] = round(q_val, 4)
+                all_q_sources[act.value] = q_src
 
-            q_base = all_q_values.get(a_base_str, -125.0)
-            q_gov = all_q_values.get(gov_top_str, -125.0)
+            q_base, q_base_source = get_action_q_with_source(table, state_id, a_base)
+            q_gov, q_gov_source = get_action_q_with_source(table, state_id, gov_top)
             delta_q = round(q_gov - q_base, 4)
             label = classify_delta_q(delta_q)
 
@@ -220,12 +237,15 @@ def main():
                 "base_action": a_base_str,
                 "governor_top_action": gov_top_str,
                 "same_action": same_action,
-                "q_base": q_base,
-                "q_gov": q_gov,
+                "q_base": round(q_base, 4),
+                "q_gov": round(q_gov, 4),
+                "q_base_source": q_base_source,
+                "q_gov_source": q_gov_source,
                 "delta_q": delta_q,
                 "outcome_label": label,
                 "governor_reason_code": frame.governor_reason_code,
                 "all_q_values": all_q_values,
+                "all_q_sources": all_q_sources,
                 "features": features.as_dict(),
             }
             state_records.append(record)
@@ -296,6 +316,12 @@ def main():
     tasks_with_pos = sum(1 for t in task_summary_list if t["has_positive_intervention"])
     tasks_with_harm = sum(1 for t in task_summary_list if t["has_harmful_intervention"])
 
+    # Q-value source distribution
+    q_source_counter = Counter()
+    for r in state_records:
+        q_source_counter[r["q_base_source"]] += 1
+        q_source_counter[r["q_gov_source"]] += 1
+
     advantage_analysis = {
         "schema": "DAPH_V2B_I3_5_2_INTERVENTION_ADVANTAGE_V1",
         "schema_version": 1,
@@ -303,6 +329,7 @@ def main():
         "total_tasks": len(blocks),
         "total_decision_states": total_states,
         "mean_trajectory_length": round(total_states / len(blocks), 2),
+        "q_value_source_distribution": dict(q_source_counter.most_common()),
         "outcome_distribution": {
             "HELP": {"count": len(pos_states), "rate": round(len(pos_states) / total_states, 4)},
             "NEUTRAL": {"count": len(neu_states), "rate": round(len(neu_states) / total_states, 4)},
@@ -386,6 +413,10 @@ def main():
     print(f"  NEUTRAL (|ΔQ| <= 5.0): {len(neu_states):>4} ({len(neu_states)/total_states:>5.1%})")
     print(f"  HARM (ΔQ < -5.0):      {len(neg_states):>4} ({len(neg_states)/total_states:>5.1%})")
     print(f"\nTasks with at least 1 positive intervention step: {tasks_with_pos}/{len(blocks)} ({tasks_with_pos/len(blocks):.1%})")
+
+    print(f"\n--- Q-Value Source Distribution ---")
+    for src, cnt in q_source_counter.most_common():
+        print(f"  {src:<25}: {cnt}")
 
     print("\n--- Key Opportunity Slices ---")
     for dim in ["verification_state", "prior_action_count", "temporal_status", "last_action"]:

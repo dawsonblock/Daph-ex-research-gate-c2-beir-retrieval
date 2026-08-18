@@ -151,16 +151,6 @@ class RuleBasedInterventionPredictor(BaseInterventionPredictor):
                 reason=f"EXCEPTION_DEFAULT_SKIP:{e}",
             )
 
-        except Exception as e:
-            # Conservative default = silence
-            return InterventionPrediction(
-                expected_delta_utility=-999.0,
-                harm_probability=1.0,
-                help_probability=0.0,
-                confidence=0.0,
-                reason=f"EXCEPTION_DEFAULT_SKIP:{e}",
-            )
-
 
 class CalibratedLinearPredictor(BaseInterventionPredictor):
     """Linear regression / logistic model with frozen weights for continuous delta-U prediction."""

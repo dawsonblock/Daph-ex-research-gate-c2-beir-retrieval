@@ -1,0 +1,299 @@
+{
+  "schema": "DAPH_V2B_I3_5_2_CROSS_VALIDATION_REPORT_V1",
+  "schema_version": 1,
+  "k_folds": 5,
+  "total_tasks": 300,
+  "total_states": 758,
+  "rule_discovery_mode": "global",
+  "rule_discovery_independence": "NOT_ISOLATED",
+  "harm_prevalence": 0.0937,
+  "out_of_fold_metrics": {
+    "mae_delta_q": 39.7647,
+    "spearman_correlation_delta_q": 0.6298,
+    "roc_auc_harm": 0.8381,
+    "brier_score_harm": 0.2784,
+    "brier_score_harm_calibrated": 0.0818,
+    "base_rate_brier_score": 0.0849,
+    "brier_vs_base_rate": 0.1935,
+    "brier_calibrated_vs_base_rate": -0.0031,
+    "ece_harm": 0.2019,
+    "ece_harm_calibrated": 0.0546,
+    "total_interventions_approved": 257,
+    "intervention_rate": 0.3391,
+    "precision_help": 0.7237,
+    "harm_rate_on_interventions": 0.0272,
+    "mean_delta_q_on_interventions": 83.0749,
+    "worst_decile_delta_q": 0.0
+  },
+  "calibration_diagnostics": {
+    "reliability_bins_raw": [
+      {
+        "bin_lo": 0.0,
+        "bin_hi": 0.1,
+        "count": 391,
+        "avg_predicted_prob": 0.0,
+        "avg_actual_rate": 0.0
+      },
+      {
+        "bin_lo": 0.1,
+        "bin_hi": 0.2,
+        "count": 63,
+        "avg_predicted_prob": 0.11,
+        "avg_actual_rate": 0.1111
+      },
+      {
+        "bin_lo": 0.2,
+        "bin_hi": 0.3,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.3,
+        "bin_hi": 0.4,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.4,
+        "bin_hi": 0.5,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.5,
+        "bin_hi": 0.6,
+        "count": 4,
+        "avg_predicted_prob": 0.5,
+        "avg_actual_rate": 0.0
+      },
+      {
+        "bin_lo": 0.6,
+        "bin_hi": 0.7,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.7,
+        "bin_hi": 0.8,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.8,
+        "bin_hi": 0.9,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.9,
+        "bin_hi": 1.0,
+        "count": 200,
+        "avg_predicted_prob": 0.9,
+        "avg_actual_rate": 0.145
+      }
+    ],
+    "reliability_bins_calibrated": [
+      {
+        "bin_lo": 0.0,
+        "bin_hi": 0.1,
+        "count": 652,
+        "avg_predicted_prob": 0.0084,
+        "avg_actual_rate": 0.0552
+      },
+      {
+        "bin_lo": 0.1,
+        "bin_hi": 0.2,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.2,
+        "bin_hi": 0.3,
+        "count": 57,
+        "avg_predicted_prob": 0.2739,
+        "avg_actual_rate": 0.3509
+      },
+      {
+        "bin_lo": 0.3,
+        "bin_hi": 0.4,
+        "count": 43,
+        "avg_predicted_prob": 0.3195,
+        "avg_actual_rate": 0.3488
+      },
+      {
+        "bin_lo": 0.4,
+        "bin_hi": 0.5,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.5,
+        "bin_hi": 0.6,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.6,
+        "bin_hi": 0.7,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.7,
+        "bin_hi": 0.8,
+        "count": 0
+      },
+      {
+        "bin_lo": 0.8,
+        "bin_hi": 0.9,
+        "count": 6,
+        "avg_predicted_prob": 0.8613,
+        "avg_actual_rate": 0.0
+      },
+      {
+        "bin_lo": 0.9,
+        "bin_hi": 1.0,
+        "count": 0
+      }
+    ],
+    "harm_prevalence": 0.0937,
+    "base_rate_brier": 0.0849,
+    "interpretation": "Brier score is compared to the base-rate Brier (always predicting the mean harm prevalence). A Brier score above the base-rate indicates poor calibration. ROC-AUC measures discrimination (ranking), not calibration. ECE measures average absolute difference between predicted and actual probabilities in bins."
+  },
+  "fold_breakdown": [
+    {
+      "fold": 1,
+      "test_states": 153,
+      "train_states": 605,
+      "discovered_rules_count": null,
+      "interventions": 54,
+      "intervention_rate": 0.3529,
+      "precision_help": 0.6852,
+      "harm_rate": 0.037,
+      "mean_delta_q_intervened": 68.5993
+    },
+    {
+      "fold": 2,
+      "test_states": 154,
+      "train_states": 604,
+      "discovered_rules_count": null,
+      "interventions": 52,
+      "intervention_rate": 0.3377,
+      "precision_help": 0.7115,
+      "harm_rate": 0.0192,
+      "mean_delta_q_intervened": 87.9273
+    },
+    {
+      "fold": 3,
+      "test_states": 163,
+      "train_states": 595,
+      "discovered_rules_count": null,
+      "interventions": 60,
+      "intervention_rate": 0.3681,
+      "precision_help": 0.6833,
+      "harm_rate": 0.0333,
+      "mean_delta_q_intervened": 70.0917
+    },
+    {
+      "fold": 4,
+      "test_states": 138,
+      "train_states": 620,
+      "discovered_rules_count": null,
+      "interventions": 42,
+      "intervention_rate": 0.3043,
+      "precision_help": 0.8095,
+      "harm_rate": 0.0,
+      "mean_delta_q_intervened": 101.8576
+    },
+    {
+      "fold": 5,
+      "test_states": 150,
+      "train_states": 608,
+      "discovered_rules_count": null,
+      "interventions": 49,
+      "intervention_rate": 0.3267,
+      "precision_help": 0.7551,
+      "harm_rate": 0.0408,
+      "mean_delta_q_intervened": 93.6763
+    }
+  ],
+  "discovered_rules_by_fold": null,
+  "sample_approved_interventions": [
+    {
+      "task_id": "i3_3_structure_dev_v2_0114",
+      "step_id": 2,
+      "actual_delta_q": 0.0,
+      "pred_delta_q": 83.5,
+      "pred_harm_prob": 0.0,
+      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0114",
+      "step_id": 3,
+      "actual_delta_q": 91.82,
+      "pred_delta_q": 86.8,
+      "pred_harm_prob": 0.11,
+      "reason": "SAFE_HELP:POST_SEARCH_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0139",
+      "step_id": 2,
+      "actual_delta_q": 0.0,
+      "pred_delta_q": 83.5,
+      "pred_harm_prob": 0.0,
+      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0139",
+      "step_id": 3,
+      "actual_delta_q": 91.82,
+      "pred_delta_q": 86.8,
+      "pred_harm_prob": 0.11,
+      "reason": "SAFE_HELP:POST_SEARCH_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0186",
+      "step_id": 2,
+      "actual_delta_q": 0.0,
+      "pred_delta_q": 83.5,
+      "pred_harm_prob": 0.0,
+      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0186",
+      "step_id": 3,
+      "actual_delta_q": -133.18,
+      "pred_delta_q": 86.8,
+      "pred_harm_prob": 0.11,
+      "reason": "SAFE_HELP:POST_SEARCH_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0100",
+      "step_id": 2,
+      "actual_delta_q": 92.84,
+      "pred_delta_q": 83.5,
+      "pred_harm_prob": 0.0,
+      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0199",
+      "step_id": 2,
+      "actual_delta_q": 0.0,
+      "pred_delta_q": 83.5,
+      "pred_harm_prob": 0.0,
+      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0199",
+      "step_id": 3,
+      "actual_delta_q": 91.82,
+      "pred_delta_q": 86.8,
+      "pred_harm_prob": 0.11,
+      "reason": "SAFE_HELP:POST_SEARCH_PREMATURE_TERMINATION_PREVENTION"
+    },
+    {
+      "task_id": "i3_3_structure_dev_v2_0223",
+      "step_id": 2,
+      "actual_delta_q": 92.84,
+      "pred_delta_q": 83.5,
+      "pred_harm_prob": 0.0,
+      "reason": "SAFE_HELP:POST_VERIFY_PREMATURE_TERMINATION_PREVENTION"
+    }
+  ],
+  "scientific_caveats": [
+    "These CV metrics measure out-of-fold performance of a predictor that combines fold-isolated discovered rules with learned linear/logistic fallback.",
+    "The Brier score should be compared to the base-rate Brier. A value above the base rate indicates poor probability calibration despite good discrimination.",
+    "These are state-level counterfactual results (governor ranking), NOT packet-level treatment results. The packet treatment experiment (I3.5.2b) is required to measure whether the model can actually exploit governor information.",
+    "End-to-end selective trajectory improvement has NOT been demonstrated."
+  ]
+}
