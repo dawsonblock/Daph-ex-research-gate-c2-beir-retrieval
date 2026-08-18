@@ -1,0 +1,96 @@
+{
+  "cascades": {
+    "distribution": {
+      "2": 120,
+      "4": 74
+    },
+    "max_consecutive": 4,
+    "total_chains": 194
+  },
+  "continuous_dg": {
+    "V_pi_ALWAYS": -90.217,
+    "V_pi_OFF": -74.8957,
+    "V_pi_SELECTIVE": -78.1771,
+    "definition": "DG = V_O - V_\u03c0; \u0394DG = V_{\u03c0,SEL} - V_{\u03c0,OFF} (V_O cancels within AWARE)",
+    "delta_DG_always_vs_off": {
+      "lcb_95": -18.903,
+      "mean": -15.3213,
+      "ucb_95": -11.9931
+    },
+    "delta_DG_sel_vs_off": {
+      "lcb_95": -3.5848,
+      "mean": -3.2814,
+      "ucb_95": -2.9847
+    },
+    "hypothesis_delta_DG_gt_0": "NOT_SUPPORTED (direction is harmful)"
+  },
+  "corrected_interpretation": "SELECTIVE_FRAME preserves terminal success but significantly worsens continuous decision quality/value relative to OFF. The utility loss comes from longer/costlier executor trajectories (more action steps), NOT from model token overhead. The root cause is likely that I3.5.2a measured Q* (oracle optimal continuation value), not Q^{\u03c0_model} (model continuation value). The governor identifies actions that are better under optimal continuation, but the model does not continue optimally after the intervention, so the oracle advantage is not realized.",
+  "cost": {
+    "ALWAYS_ON": {
+      "calls": 5.1,
+      "steps": 5.1,
+      "tokens": 9693.0,
+      "utility": -90.22
+    },
+    "OFF": {
+      "calls": 2.5,
+      "steps": 2.5,
+      "tokens": 2523.0,
+      "utility": -74.9
+    },
+    "SELECTIVE": {
+      "calls": 3.9,
+      "steps": 3.9,
+      "tokens": 5623.0,
+      "utility": -78.18
+    },
+    "note": "Utility loss from longer/costlier executor trajectories. Model tokens are telemetry, not directly charged."
+  },
+  "experiment_identity_sha256": "55f93130e87cb6e482cba882220a096986f127410ff9d20a2ab8b868a735f019",
+  "hypothesis_results": {
+    "always_on_dominance": "SUPPORTED (U_SEL > U_ALWAYS: -78.18 > -90.22)",
+    "primary_dg": "NOT_SUPPORTED (\u0394DG = -3.2814, LCB = -3.5848, direction is harmful)",
+    "primary_utility": "NOT_SUPPORTED (\u0394U = -3.2814, same as \u0394DG)",
+    "terminal_success_preserved": "SUPPORTED (83/300 = 83/300, zero discordant)"
+  },
+  "interventions": {
+    "rate": 0.4531,
+    "rule_distribution": {
+      "POST_SEARCH": 268,
+      "POST_VERIFY": 268
+    },
+    "tasks_with_intervention": 194,
+    "total": 536
+  },
+  "mcnemar_always_vs_off": {
+    "always_only_success": 0,
+    "n_discordant": 23,
+    "off_only_success": 23
+  },
+  "mcnemar_sel_vs_off": {
+    "n_discordant": 0,
+    "off_only_success": 0,
+    "selective_only_success": 0
+  },
+  "n_tasks": 300,
+  "schema": "DAPH_V2B_I3_5_2C_ANALYSIS_V1_R1",
+  "schema_version": 2,
+  "terminal_success": {
+    "ALWAYS_ON": {
+      "rate": 0.2,
+      "success": 60,
+      "total": 300
+    },
+    "OFF": {
+      "rate": 0.2767,
+      "success": 83,
+      "total": 300
+    },
+    "SELECTIVE_FRAME": {
+      "rate": 0.2767,
+      "success": 83,
+      "total": 300
+    },
+    "delta_success": 0
+  }
+}

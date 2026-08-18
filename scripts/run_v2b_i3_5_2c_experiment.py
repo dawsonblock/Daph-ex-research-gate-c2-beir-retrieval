@@ -129,7 +129,13 @@ def mcnemar_test(b_success: int, c_success: int) -> dict[str, Any]:
 
 
 def compute_dg(success: bool, optimal_success: bool) -> int:
-    """Decision degradation: 1 if optimal succeeds but agent fails, else 0."""
+    """Binary terminal-success degradation: 1 if optimal succeeds but agent fails.
+
+    This is the TERMINAL degradation indicator, NOT the full DG.
+    The full DG = V_O - V_π uses realized utility, not binary success.
+    Since both arms use the same AWARE condition, V_O cancels in the contrast:
+        ΔDG = DG_OFF - DG_SEL = V_{π,SEL} - V_{π,OFF} = ΔU
+    """
     return 1 if (optimal_success and not success) else 0
 
 
@@ -329,51 +335,74 @@ def main():
     print(f"  ALWAYS_ON:        {always_succ}/{n_tasks} ({always_succ/n_tasks:.1%})")
     print(f"  SELECTIVE_FRAME:  {sel_succ}/{n_tasks} ({sel_succ/n_tasks:.1%})")
 
-    # Decision Degradation (need optimal success from benchmark)
-    # For now, use task success as proxy; DG requires oracle optimal
-    # We compute DG relative to the best observed arm as a development proxy
-    # True DG requires the oracle optimal action sequence
-    # For I3.5.2c we use the I3.5.1 definition: DG = 1 if task should succeed but agent failed
+    # Decision Degradation: DG = V_O - V_π (frozen I3.5.1 definition)
+    # V_π = realized utility (controller value under policy π)
+    # Since both arms use the same AWARE condition, V_O cancels in the contrast:
+    #   ΔDG = DG_OFF - DG_SEL = (V_O - V_{π,OFF}) - (V_O - V_{π,SEL})
+    #       = V_{π,SEL} - V_{π,OFF} = ΔU
+    # So the continuous DG contrast is identical to the utility contrast.
+    # We also report terminal-success degradation separately.
 
-    # Get optimal success from benchmark
+    # Get optimal success from benchmark for terminal degradation
     task_map = {t.task_id: t for t in split_bm.tasks}
-    # The benchmark latent.expected_terminal tells us if the task should succeed
-    # For now, use the I3.5.1 approach: compare against oracle
-    # We'll use the latent expected_terminal as the optimal reference
-    dg_off = []
-    dg_always = []
-    dg_sel = []
+    term_dg_off = []
+    term_dg_always = []
+    term_dg_sel = []
     for t in task_data:
         task = task_map.get(t["task_id"])
         if task and task.latent.expected_terminal:
             optimal = True
         else:
             optimal = False
-        dg_off.append(compute_dg(t["off_success"], optimal))
-        dg_always.append(compute_dg(t["always_success"], optimal))
-        dg_sel.append(compute_dg(t["sel_success"], optimal))
+        term_dg_off.append(compute_dg(t["off_success"], optimal))
+        term_dg_always.append(compute_dg(t["always_success"], optimal))
+        term_dg_sel.append(compute_dg(t["sel_success"], optimal))
 
-    mean_dg_off = sum(dg_off) / n_tasks
-    mean_dg_always = sum(dg_always) / n_tasks
-    mean_dg_sel = sum(dg_sel) / n_tasks
+    mean_term_dg_off = sum(term_dg_off) / n_tasks
+    mean_term_dg_always = sum(term_dg_always) / n_tasks
+    mean_term_dg_sel = sum(term_dg_sel) / n_tasks
 
-    print(f"\n--- Decision Degradation (DG) ---")
-    print(f"  DG_OFF:            {mean_dg_off:.4f} ({sum(dg_off)}/{n_tasks})")
-    print(f"  DG_ALWAYS_ON:      {mean_dg_always:.4f} ({sum(dg_always)}/{n_tasks})")
-    print(f"  DG_SELECTIVE:      {mean_dg_sel:.4f} ({sum(dg_sel)}/{n_tasks})")
+    # Continuous DG = V_O - V_π, using realized utility as V_π
+    # V_O is the same for both arms (same AWARE condition), so it cancels
+    dg_off = [t["off_utility"] for t in task_data]  # V_{π,OFF} (negated DG)
+    dg_always = [t["always_utility"] for t in task_data]
+    dg_sel = [t["sel_utility"] for t in task_data]
 
-    # Primary hypothesis: ΔDG_S = DG_OFF - DG_SELECTIVE > 0
-    dg_diffs_sel = [dg_off[i] - dg_sel[i] for i in range(n_tasks)]
-    dg_diffs_always = [dg_off[i] - dg_always[i] for i in range(n_tasks)]
+    mean_dg_off = -sum(dg_off) / n_tasks  # DG = V_O - V_π ≈ -V_π (V_O constant)
+    mean_dg_always = -sum(dg_always) / n_tasks
+    mean_dg_sel = -sum(dg_sel) / n_tasks
+
+    print(f"\n--- Terminal Success Degradation ---")
+    print(f"  TermDG_OFF:        {mean_term_dg_off:.4f} ({sum(term_dg_off)}/{n_tasks})")
+    print(f"  TermDG_ALWAYS_ON:  {mean_term_dg_always:.4f} ({sum(term_dg_always)}/{n_tasks})")
+    print(f"  TermDG_SELECTIVE:  {mean_term_dg_sel:.4f} ({sum(term_dg_sel)}/{n_tasks})")
+
+    print(f"\n--- Continuous Decision Degradation (DG = V_O - V_π) ---")
+    print(f"  DG_OFF:            {mean_dg_off:.4f}  (V_π = {sum(dg_off)/n_tasks:.2f})")
+    print(f"  DG_ALWAYS_ON:      {mean_dg_always:.4f}  (V_π = {sum(dg_always)/n_tasks:.2f})")
+    print(f"  DG_SELECTIVE:      {mean_dg_sel:.4f}  (V_π = {sum(dg_sel)/n_tasks:.2f})")
+
+    # Primary hypothesis: ΔDG_S = DG_OFF - DG_SEL > 0
+    # = (V_O - V_{π,OFF}) - (V_O - V_{π,SEL}) = V_{π,SEL} - V_{π,OFF} = ΔU
+    dg_diffs_sel = [dg_sel[i] - dg_off[i] for i in range(n_tasks)]  # V_{π,SEL} - V_{π,OFF}
+    dg_diffs_always = [dg_always[i] - dg_off[i] for i in range(n_tasks)]
     mean_dg_sel_vs_off, lcb_dg_sel, ucb_dg_sel = bootstrap_ci_paired(
         dg_diffs_sel, n_bootstrap=args.n_bootstrap)
     mean_dg_always_vs_off, lcb_dg_always, ucb_dg_always = bootstrap_ci_paired(
         dg_diffs_always, n_bootstrap=args.n_bootstrap)
 
-    print(f"\n  ΔDG_S = DG_OFF - DG_SEL:     mean={mean_dg_sel_vs_off:+.4f} "
+    print(f"\n  ΔDG_S = V_{{π,SEL}} - V_{{π,OFF}}:   mean={mean_dg_sel_vs_off:+.4f} "
           f"LCB_95={lcb_dg_sel:+.4f} UCB_95={ucb_dg_sel:+.4f}")
-    print(f"  ΔDG_A = DG_OFF - DG_ALWAYS:  mean={mean_dg_always_vs_off:+.4f} "
+    print(f"  (equivalently ΔU_S = U_SEL - U_OFF)")
+    print(f"  ΔDG_A = V_{{π,ALW}} - V_{{π,OFF}}:   mean={mean_dg_always_vs_off:+.4f} "
           f"LCB_95={lcb_dg_always:+.4f} UCB_95={ucb_dg_always:+.4f}")
+
+    # Terminal success difference
+    term_diffs_sel = [term_dg_off[i] - term_dg_sel[i] for i in range(n_tasks)]
+    mean_term_diff_sel, lcb_term_sel, ucb_term_sel = bootstrap_ci_paired(
+        term_diffs_sel, n_bootstrap=args.n_bootstrap)
+    print(f"\n  ΔTermDG_S = TermDG_OFF - TermDG_SEL: mean={mean_term_diff_sel:+.4f} "
+          f"LCB_95={lcb_term_sel:+.4f} UCB_95={ucb_term_sel:+.4f}")
 
     dg_sel_hypothesis = "SUPPORTED" if lcb_dg_sel > 0 else "NOT_SUPPORTED"
 
@@ -505,18 +534,21 @@ def main():
     mean_latency_sel = sum(t["sel_latency"] for t in task_data) / n_tasks
 
     print(f"\n--- Cost Accounting ---")
-    print(f"  {'Arm':<20} {'Calls':>6} {'Tokens':>8} {'Latency(ms)':>12} {'Steps':>6}")
-    print(f"  {'OFF':<20} {mean_calls_off:>6.1f} {mean_tokens_off:>8.0f} {mean_latency_off:>12.0f} {sum(t['off_steps'] for t in task_data)/n_tasks:>6.1f}")
-    print(f"  {'ALWAYS_ON':<20} {mean_calls_always:>6.1f} {mean_tokens_always:>8.0f} {mean_latency_always:>12.0f} {sum(t['always_steps'] for t in task_data)/n_tasks:>6.1f}")
-    print(f"  {'SELECTIVE_FRAME':<20} {mean_calls_sel:>6.1f} {mean_tokens_sel:>8.0f} {mean_latency_sel:>12.0f} {sum(t['sel_steps'] for t in task_data)/n_tasks:>6.1f}")
+    print(f"  NOTE: Utility is charged by the executor (simulated resource consumption).")
+    print(f"  Model tokens are telemetry, NOT directly charged by MetareasoningUtility.")
+    print(f"  {'Arm':<20} {'Calls':>6} {'Tokens':>8} {'Latency(ms)':>12} {'Steps':>6} {'Utility':>10}")
+    print(f"  {'OFF':<20} {mean_calls_off:>6.1f} {mean_tokens_off:>8.0f} {mean_latency_off:>12.0f} {sum(t['off_steps'] for t in task_data)/n_tasks:>6.1f} {mean_u_off:>10.2f}")
+    print(f"  {'ALWAYS_ON':<20} {mean_calls_always:>6.1f} {mean_tokens_always:>8.0f} {mean_latency_always:>12.0f} {sum(t['always_steps'] for t in task_data)/n_tasks:>6.1f} {mean_u_always:>10.2f}")
+    print(f"  {'SELECTIVE_FRAME':<20} {mean_calls_sel:>6.1f} {mean_tokens_sel:>8.0f} {mean_latency_sel:>12.0f} {sum(t['sel_steps'] for t in task_data)/n_tasks:>6.1f} {mean_u_sel:>10.2f}")
 
     delta_tokens = mean_tokens_sel - mean_tokens_off
     delta_u = mean_u_sel - mean_u_off
-    cost_adjusted = delta_u / delta_tokens if delta_tokens != 0 else float('inf')
+    delta_steps = sum(t['sel_steps'] for t in task_data)/n_tasks - sum(t['off_steps'] for t in task_data)/n_tasks
 
-    print(f"\n  Δtokens (SEL - OFF):  {delta_tokens:+.0f}")
-    print(f"  ΔU (SEL - OFF):       {delta_u:+.2f}")
-    print(f"  ΔU/Δtokens:           {cost_adjusted:+.6f}")
+    print(f"\n  ΔU (SEL - OFF):         {delta_u:+.2f}  (from longer/costlier executor trajectories)")
+    print(f"  Δsteps (SEL - OFF):     {delta_steps:+.1f}  (executor action steps)")
+    print(f"  Δtokens (SEL - OFF):    {delta_tokens:+.0f}  (model token consumption, telemetry only)")
+    print(f"  ΔU is caused by executor resource costs, NOT by model token consumption.")
 
     # Development acceptance gates
     print(f"\n{'='*78}")

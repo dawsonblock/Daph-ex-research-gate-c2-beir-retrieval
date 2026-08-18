@@ -251,7 +251,7 @@ exploit the governor's ranking intelligence is the I3.5.2b question.
 ## 6. Corrected Milestone Status
 
 ```text
-V2B-I3.5.2a + I3.5.2b + I3.5.2c
+V2B-I3.5.2a + I3.5.2b + I3.5.2c-r1
 STATE-LEVEL COMPETENCE + PACKET TREATMENT + END-TO-END TRAJECTORY
 
   Oracle governor-ranking competence:     SUPPORTED
@@ -265,14 +265,17 @@ STATE-LEVEL COMPETENCE + PACKET TREATMENT + END-TO-END TRAJECTORY
   Packet-level treatment benefit:         SUPPORTED (A_treatment ≈ A_ranking, +21.52)
   Model follows governor:                 98.0% (743/758)
   Model refuses harmful gov advice:       SUPPORTED (11/35 STOP->ANSWER refused)
-  Selective end-to-end DG improvement:    NOT SUPPORTED (ΔDG = 0.0000)
-  Selective end-to-end utility improvement: NOT SUPPORTED (ΔU = -3.28)
+  Terminal success preserved:             SUPPORTED (83/300 = 83/300, zero discordant)
+  Continuous DG improvement:              NOT SUPPORTED (ΔDG = -3.28, LCB = -3.58, harmful)
+  Utility improvement:                    NOT SUPPORTED (ΔU = -3.28, same as ΔDG)
   SELECTIVE safe vs ALWAYS_ON:            SUPPORTED (83 vs 60 success, -78 vs -90 utility)
-  SELECTIVE no harm vs OFF:               SUPPORTED (zero discordant pairs)
+  Root cause identified:                  Q* ≠ Q^{π_model} (oracle continuation ≠ model continuation)
+  Validation status:                      STOPPED (primary hypothesis failed)
   Counterbalancing:                       IMPLEMENTED (HMAC-based, 6 permutations)
   Experiment identity binding:            IMPLEMENTED (all component hashes)
   Token/latency cost tracking:            IMPLEMENTED
   Cascade diagnostics:                    IMPLEMENTED (max chain = 4, no runaway)
+  Next milestone:                         I3.5.2d (policy-conditional intervention value)
 ```
 
 ### What is Supported
@@ -425,8 +428,17 @@ The selective end-to-end trajectory run is the next experiment.
 
 ## 8. V2B-I3.5.2c End-to-End Selective Governor Trajectory Experiment
 
+> **Revision r1:** This section has been corrected from the original report.
+> Three issues were fixed: (1) the DG definition was using binary success as a
+> proxy instead of the frozen $DG = V_O - V_\pi$ definition; (2) the utility
+> loss was incorrectly attributed to model token overhead instead of executor
+> trajectory costs; (3) the causal explanation was stated as "already doomed
+> at Step 0" without evidence, when the more precise explanation is the
+> $Q^* \neq Q^{\pi_{\text{model}}}$ distinction.
+
 Script: `scripts/run_v2b_i3_5_2c_experiment.py`
 Output: `experiments/v2b_i3_5_2/development/i352c_55f93130e87c/`
+Corrected analysis: `experiments/v2b_i3_5_2/development/i352c_55f93130e87c/analysis_r1.json`
 
 ### Experimental Design
 
@@ -450,19 +462,46 @@ serializer, utility, benchmark manifest, runner, modes, source commit.
 
 | Metric | OFF | ALWAYS_ON | SELECTIVE_FRAME |
 |---|---|---|---|
-| **Success rate** | **83/300 (27.7%)** | 60/300 (20.0%) | **83/300 (27.7%)** |
-| **Mean utility** | **-74.90** | -90.22 | -78.18 |
+| **Terminal success** | **83/300 (27.7%)** | 60/300 (20.0%) | **83/300 (27.7%)** |
+| **Mean utility $V_\pi$** | **-74.90** | -90.22 | -78.18 |
+| **Mean executor steps** | 2.5 | 5.1 | 3.9 |
 | **Mean model calls** | 2.5 | 5.1 | 3.9 |
-| **Mean tokens** | 2,523 | 9,693 | 5,623 |
+| **Mean model tokens** | 2,523 | 9,693 | 5,623 |
+
+### Corrected Decision Degradation
+
+The frozen I3.5.1 DG definition is:
+
+$$DG = V_O - V_\pi$$
+
+where $V_O$ is the optimal controller value and $V_\pi$ is the realized
+utility under policy $\pi$.
+
+Since OFF and SELECTIVE use the same AWARE observation condition, $V_O$
+cancels in the contrast:
+
+$$\Delta DG_S = DG_{\text{OFF}} - DG_{\text{SEL}} = V_{\pi,\text{SEL}} - V_{\pi,\text{OFF}}$$
+
+This is identical to the utility contrast $\Delta U_S$.
+
+| Quantity | Value | 95% CI |
+|---|---|---|
+| $V_{\pi,\text{OFF}}$ | -74.90 | — |
+| $V_{\pi,\text{ALWAYS}}$ | -90.22 | — |
+| $V_{\pi,\text{SEL}}$ | -78.18 | — |
+| **$\Delta DG_S = V_{\pi,\text{SEL}} - V_{\pi,\text{OFF}}$** | **-3.2814** | **[-3.5848, -2.9847]** |
+| $\Delta DG_A = V_{\pi,\text{ALWAYS}} - V_{\pi,\text{OFF}}$ | -15.3213 | [-18.9030, -11.9931] |
+| $\Delta\text{Success}$ (terminal) | 0.0000 | [0, 0] |
 
 ### Hypothesis Tests
 
 | Hypothesis | Result | Detail |
 |---|---|---|
-| $H_1$: $\Delta DG_S > 0$ | **NOT SUPPORTED** | $\Delta DG = 0.0000$ (identical success) |
-| $H_2$: $\Delta U_S > 0$ | **NOT SUPPORTED** | $\Delta U = -3.28$, LCB$_{95} = -3.58$ |
+| $H_1$: $\Delta DG_S > 0$ (continuous) | **NOT SUPPORTED** | $\Delta DG = -3.28$, LCB $= -3.58$, direction is **harmful** |
+| $H_2$: $\Delta U_S > 0$ | **NOT SUPPORTED** | $\Delta U = -3.28$ (same as $\Delta DG$) |
 | $H_3$: $U_S > U_A$ | **SUPPORTED** | $-78.18 > -90.22$ |
-| Ideal ordering $U_S > U_0 > U_A$ | **PARTIAL** | $U_0 > U_S > U_A$ (SELECTIVE is between) |
+| Terminal success preserved | **SUPPORTED** | 83/300 = 83/300, zero discordant pairs |
+| Ideal ordering $U_S > U_0 > U_A$ | **NOT ACHIEVED** | $U_0 > U_S > U_A$ (SELECTIVE is between, not above OFF) |
 
 ### McNemar's Test
 
@@ -481,6 +520,7 @@ pairs for ALWAYS_ON are all cases where OFF succeeds but ALWAYS_ON fails.
 - Tasks with at least one intervention: 194/300 (64.7%)
 - Intervention rate per step: 45.3%
 - Rule firing: POST_VERIFY 268, POST_SEARCH 268 (evenly split)
+- Interventions produced zero net terminal-success conversions
 
 ### Cascade Diagnostics
 
@@ -491,162 +531,217 @@ pairs for ALWAYS_ON are all cases where OFF succeeds but ALWAYS_ON fails.
 
 Max consecutive interventions: 4. No runaway cascades.
 
+The 2/4 chain structure with equal POST_VERIFY/POST_SEARCH counts suggests
+structured continuation loops (VERIFY → SEARCH_MORE → VERIFY → ...) rather
+than isolated interventions. This pattern is analyzed further in I3.5.2d.
+
 ### Cost Accounting
 
 | Metric | OFF | ALWAYS_ON | SELECTIVE |
 |---|---|---|---|
+| Mean executor steps | 2.5 | 5.1 | 3.9 |
 | Mean model calls | 2.5 | 5.1 | 3.9 |
-| Mean tokens | 2,523 | 9,693 | 5,623 |
-| $\Delta$ tokens vs OFF | — | +7,170 | +3,100 |
-| $\Delta U / \Delta$ tokens | — | — | -0.00106 |
+| Mean model tokens | 2,523 | 9,693 | 5,623 |
+| Mean utility | -74.90 | -90.22 | -78.18 |
 
-The SELECTIVE arm costs ~3,100 more tokens per task than OFF but produces
-no utility gain.
+**The utility loss comes from longer/costlier executor trajectories**
+(+1.4 executor steps per task), NOT from model token overhead. The
+`MetareasoningUtility` charges simulated executive/retrieval/verification/
+search/reasoning resource consumption. Model prompt/completion tokens are
+recorded as telemetry but are not directly charged by the utility function.
 
-### Scientific Interpretation
+The SELECTIVE arm also consumes ~3,100 more model tokens per task than OFF,
+but that is a separate operational cost, not the cause of the utility loss.
 
-**SELECTIVE_FRAME is a safe baseline, not an improvement.**
+### Corrected Scientific Interpretation
 
-The selective gate successfully prevents the harm caused by ALWAYS_ON:
-- Success: 83/300 (identical to OFF, vs 60/300 for ALWAYS_ON)
-- Utility: -78.18 (between OFF at -74.90 and ALWAYS_ON at -90.22)
-- Zero discordant pairs with OFF (no task is harmed by SELECTIVE)
+**SELECTIVE_FRAME preserves terminal success but significantly worsens
+continuous decision quality/value relative to OFF.**
 
-However, SELECTIVE_FRAME does not improve over OFF:
-- Identical success rate (83/300)
-- Slightly worse utility (-78.18 vs -74.90) due to token costs
-- 195/300 trajectories diverge (different actions taken) but 0 change outcomes
+The selective gate successfully prevents the terminal-success harm caused by
+ALWAYS_ON (83/300 vs 60/300, zero discordant pairs with OFF). However,
+SELECTIVE_FRAME does not improve over OFF on either terminal success or
+continuous value:
 
-**The local Q-advantage discovered in I3.5.2a does not translate to
-trajectory-level improvement.** The governor interventions change actions in
-194 tasks but do not change any task's success/failure outcome. This means:
+- Terminal success: identical (83/300 = 83/300)
+- Continuous DG: $\Delta DG = -3.28$, LCB $= -3.58$ (harmful)
+- 536 interventions in 194 tasks produced zero net terminal-success conversions
 
-1. The positive intervention states (Step 2+ post-VERIFY/SEARCH_MORE) are in
-   tasks where the trajectory outcome is already determined by earlier
-   decisions.
-2. A better action at one step is not enough to rescue a trajectory that was
-   already heading toward failure.
-3. The governor's local competence is real but insufficient — it identifies
-   better actions at individual states, but those better actions don't
-   compound into trajectory-level success.
+### The Root Cause: $Q^* \neq Q^{\pi_{\text{model}}}$
 
-### Development Acceptance Gates
+The most precise explanation for the I3.5.2c negative result is the
+distinction between oracle-optimal continuation value and model continuation
+value.
 
-| Gate | Description | Result |
-|---|---|---|
-| G1: Validity | Receipt chain valid, all arms complete | **PASS** |
-| G2: Nontrivial intervention | intervention_rate > 0 | **PASS** (536 interventions) |
-| G3: Primary DG | mean(ΔDG_S) > 0 | **FAIL** (0.0000) |
-| G4: Primary utility | mean(ΔU_S) > 0 | **FAIL** (-3.28) |
-| G5: Always-on dominance | U_SEL > U_ALWAYS | **PASS** (-78.18 > -90.22) |
-| G6: No catastrophic harm | off_only ≤ sel_only | **PASS** (0 ≤ 0) |
-| G7: Sequential stability | max_consecutive ≤ 5 | **PASS** (4) |
+The I3.5.2a state-level analysis used $Q^*(s, a)$, the oracle Q-value computed
+by backwards dynamic programming:
 
-**5 of 7 gates passed.** The two primary hypothesis gates (DG improvement and
-utility improvement) failed. The safety gates all passed.
+$$Q^*(s, a) = r(s, a) + V^*(s')$$
 
-### What This Means for the Causal Chain
+where $V^*(s')$ assumes **optimal continuation** from the next state.
+
+When I3.5.2a found $Q^*(s, a_G) > Q^*(s, a_B)$, it established:
+
+> Taking the governor's action is better **if an optimal policy takes over
+> afterward**.
+
+It did **not** establish:
+
+$$Q^{\pi_{\text{model}}}(s, a_G) > Q^{\pi_{\text{model}}}(s, a_B)$$
+
+The I3.5.2c result shows exactly this gap:
 
 ```text
-I3.5.1:  Always-on governor hurts                     CONFIRMED
-I3.5.2a: Governor contains local high-Q competence    CONFIRMED
-I3.5.2b: Model transmits that competence (98%)        CONFIRMED
-I3.5.2c: Gating those interventions improves trajectories?  NO
+Governor recommends locally oracle-optimal continuation action
+                    ↓
+DeepSeek follows it (98% transmission, I3.5.2b)
+                    ↓
+new state
+                    ↓
+DeepSeek remains DeepSeek, not oracle
+                    ↓
+oracle continuation value never realized
 ```
 
-The causal chain breaks at the last step. The governor knows better actions
-locally, and the model follows those recommendations, but the trajectory-level
-outcome doesn't change because:
+The governor identifies actions that are better under optimal continuation,
+but the model does not continue optimally after the intervention, so the
+oracle advantage is not realized.
 
-1. **The positive intervention region is in already-determined trajectories.**
-   The Step 2+ post-VERIFY states where the governor helps are states the
-   trajectory reaches regardless of the governor. By that point, the task's
-   success or failure is often already determined by the Step 0 decision.
+### Corrected Causal Chain
 
-2. **Single-step improvements don't compound.** The governor improves one
-   action at one state, but the trajectory has multiple steps. Unless the
-   improved action at Step 2 leads to a cascade of improved actions at
-   Steps 3, 4, etc., the single-step gain is absorbed by the trajectory's
-   existing momentum.
+```text
+I3.5.1:  Always-on governor damages the model policy           CONFIRMED
+I3.5.2a: Governor sometimes selects actions with higher Q*     CONFIRMED
+I3.5.2b: Model faithfully follows those recommendations         CONFIRMED
+I3.5.2c: Higher Q* actions do NOT improve value under
+         actual downstream model policy                         CONFIRMED
+```
 
-3. **The gate approves interventions but they're neutral, not positive.**
-   The 536 interventions change actions but not outcomes. The governor's
-   recommended action is locally better (higher Q) but the trajectory-level
-   effect is zero.
+The missing link is:
+
+$$\boxed{Q^* \neq Q^{\pi_{\text{model}}}}$$
+
+This is the main discovery of I3.5.2c.
 
 ### What This Does NOT Mean
 
 1. **This does not disprove governor competence.** The state-level analysis
    (I3.5.2a) and packet treatment (I3.5.2b) are valid. The governor does know
-   better actions at specific states.
+   oracle-better actions at specific states.
 
 2. **This does not mean the architecture is wrong.** SELECTIVE_FRAME is
    strictly better than ALWAYS_ON. The gate successfully filters harmful
-   interventions.
+   interventions and preserves terminal success.
 
 3. **This does not mean the model can't use governor information.** The 98%
    follow rate in I3.5.2b is real. The model does exploit governor information
    when given it.
 
-4. **This means the current gate's positive region doesn't align with
-   trajectory-critical decision points.** The gate approves interventions at
-   states where better actions exist but where those better actions don't
-   change the final outcome.
+4. **"The trajectory was already doomed at Step 0" is one candidate
+   explanation, not yet established.** The rescueability test in I3.5.2d will
+   determine whether intervened tasks are genuinely unrecoverable or whether
+   the problem is downstream policy execution.
 
-### Next Steps
+### Development Acceptance Gates
 
-The development result suggests two directions:
+| Gate | Description | Result |
+|---|---|---|
+| G1: Validity | Receipt chain valid, all 3 arms complete | **PASS** |
+| G2: Nontrivial intervention | intervention_rate > 0 | **PASS** (536 interventions) |
+| G3: Primary DG (continuous) | $\Delta DG > 0$ | **FAIL** (-3.2814, LCB=-3.5848) |
+| G4: Primary utility | $\Delta U > 0$ | **FAIL** (-3.2814, same as $\Delta DG$) |
+| G5: Always-on dominance | $U_S > U_A$ | **PASS** (-78.18 > -90.22) |
+| G6: No catastrophic terminal harm | off_only ≤ sel_only | **PASS** (0 ≤ 0) |
+| G7: Sequential stability | max_consecutive ≤ 5 | **PASS** (4) |
 
-1. **Earlier intervention:** The gate currently intervenes at Step 2+. If the
-   trajectory-determining decisions are at Step 0-1, the gate needs to identify
-   positive intervention opportunities at those earlier steps. But I3.5.2a
-   showed Step 0 is a hazard region. This is a tension.
+**5 of 7 gates passed.** The two primary hypothesis gates failed. The safety
+gates all passed. The continuous DG gate fails with a harmful direction, not
+merely a neutral direction.
 
-2. **Multi-step lookahead:** The governor currently optimizes single-step Q.
-   If it could evaluate multi-step consequences, it might identify
-   interventions that compound. But this requires a different governor design.
+### Validation Status
 
-3. **Accept the result:** The governor has local competence that doesn't
-   translate to trajectory improvement on this benchmark. This is a valid
-   scientific finding. The selective architecture is safe (doesn't hurt) but
-   doesn't help on this task distribution.
+```
+VALIDATION = STOP
+HELD-OUT   = DO NOT TOUCH
+```
 
-**This is a development result.** The rules were derived from this corpus.
-Even if the development result were positive, it would not be confirmatory.
-The negative development result is informative but not final — a different
-gate design or different benchmark might produce different results.
+The primary development hypothesis failed. The corrected continuous DG is
+negative. The scientific gate has correctly halted progression to validation.
+
+### Next Step: I3.5.2d — Policy-Conditional Intervention Value
+
+The next milestone measures the correct estimand:
+
+$$A^{\pi_B} = Q^{\pi_B}(s, a_G) - Q^{\pi_B}(s, a_B)$$
+
+where $\pi_B$ is the actual OFF model policy. This is the value of a single
+selective intervention under the actual downstream policy, not under the
+oracle.
+
+Three intervention-value quantities will be computed:
+
+| Quantity | Definition | What it tells us |
+|---|---|---|
+| $A^*$ | $Q^*(s, a_G) - Q^*(s, a_B)$ | Oracle advantage (existing, I3.5.2a) |
+| $A^{\pi_B}$ | $Q^{\pi_B}(s, a_G) - Q^{\pi_B}(s, a_B)$ | One intervention + base-model continuation |
+| $A^{\pi_G}$ | $Q^{\pi_G}(s, a_G) - Q^{\pi_B}(s, a_B)$ | Governor-controlled continuation |
+
+This will determine exactly where value disappears:
+- If $A^* > 0$ but $A^{\pi_B} \approx 0$: the model can't continue the path
+  the governor opens.
+- If $A^* > 0$ and $A^{\pi_B} > 0$ but $A^{\pi_G} > A^{\pi_B}$: persistent
+  governor control may be necessary.
+- If $A^* > 0$ but $A^{\pi_B} = A^{\pi_G} = 0$: the oracle advantage isn't
+  behaviorally realizable by either policy.
+
+A rescueability classification will also test whether intervened tasks are
+genuinely unrecoverable or whether the problem is downstream policy execution.
 
 ---
 
 ## 9. Scientific Caveats
 
-1. **The end-to-end SELECTIVE_FRAME experiment shows no trajectory-level
-   improvement over OFF.** The governor has local competence (I3.5.2a) and the
-   model transmits it (I3.5.2b), but the local Q-advantage does not compound
-   into trajectory-level success. SELECTIVE_FRAME is a safe baseline (identical
-   to OFF, better than ALWAYS_ON) but not an improvement.
+1. **The end-to-end SELECTIVE_FRAME experiment shows no terminal-success
+   improvement and significant continuous DG worsening relative to OFF.**
+   The governor has local oracle competence (I3.5.2a) and the model transmits
+   it (I3.5.2b), but the local $Q^*$-advantage does not translate to
+   trajectory-level value under the actual model policy. SELECTIVE_FRAME is
+   safe (preserves terminal success, better than ALWAYS_ON) but not beneficial.
 
-2. **The fold-isolated CV precision (48.1%) is the honest generalization
+2. **The continuous DG is correctly defined as $V_O - V_\pi$, not binary
+   success.** The corrected $\Delta DG = -3.28$ is harmful, not neutral. The
+   terminal success difference ($\Delta\text{Success} = 0$) is reported
+   separately and should not be called DG.
+
+3. **The utility loss comes from longer/costlier executor trajectories, not
+   from model token overhead.** The `MetareasoningUtility` charges simulated
+   resource consumption (executive steps, retrieval, verification, search,
+   reasoning). Model tokens are telemetry, not directly charged.
+
+4. **The root cause is $Q^* \neq Q^{\pi_{\text{model}}}$.** The governor's
+   $Q^*$-based ranking assumes optimal continuation. The model does not
+   continue optimally. The I3.5.2d experiment will measure the
+   policy-conditional value $Q^{\pi_B}$ to quantify this gap precisely.
+
+5. **"The trajectory was already doomed at Step 0" is a candidate
+   explanation, not yet established.** The rescueability test in I3.5.2d will
+   determine whether intervened tasks are genuinely unrecoverable or whether
+   the problem is downstream policy execution.
+
+6. **The fold-isolated CV precision (48.1%) is the honest generalization
    estimate.** The global-rules precision (72.4%) overestimates performance
    because the rules were not discovered fold-isolated.
 
-3. **The Brier score is calibrated** via isotonic regression. The raw Brier
+7. **The Brier score is calibrated** via isotonic regression. The raw Brier
    (0.2623) was worse than the base rate (0.0849). The calibrated Brier (0.0818)
    beats the base rate.
 
-4. **Q-value source tracking** shows 88.4% of Q-values come from the oracle
+8. **Q-value source tracking** shows 88.4% of Q-values come from the oracle
    table. 11.6% use fixed fallback penalties (all for baseline `ANSWER` actions
    not present in the oracle). The fallback penalty of $-125.11$ represents the
    standard incorrect-answer penalty.
 
-5. **The model follows the governor 98% of the time** at the state level, but
-   this does not guarantee trajectory-level improvement. The I3.5.2c result
-   shows that local action changes don't necessarily change outcomes.
-
-6. **The predictor must not be treated as frozen validation-ready policy.**
-   The development result is negative on the primary hypotheses. Before
-   considering validation, the gate design must be reconsidered to identify
-   whether a different intervention strategy could produce trajectory-level
-   improvement, or whether the result should be accepted as a scientific
-   finding that local governor competence does not translate to trajectory
-   improvement on this benchmark.
+9. **Validation is stopped.** The primary development hypothesis failed.
+   The gate design must be reconsidered (measuring $Q^{\pi_B}$ instead of
+   $Q^*$) before any validation attempt. Do not tune against validation and
+   then proceed to held-out pretending it's the same frozen experiment.
