@@ -1,0 +1,46 @@
+{
+  "authority_note": "Exact latent oracle, not generator intent, defines optimal actions.",
+  "budget_counts": {
+    "STRUCTURE_HOLDOUT_V2": 600
+  },
+  "cognitive_channel_counts": {
+    "composition": 98,
+    "conflict": 37,
+    "conflict_alias": 20,
+    "history": 62,
+    "history_alias": 14,
+    "irreducible": 34,
+    "irreducible_alias": 24,
+    "provenance": 15,
+    "provenance_alias": 8,
+    "state_irrelevant": 175,
+    "temporal": 11,
+    "temporal_alias": 22,
+    "verification": 64,
+    "verification_alias": 16
+  },
+  "designed_action_counts_non_authoritative": {
+    "ANSWER": 100,
+    "DEFER": 44,
+    "REASON_MORE": 98,
+    "RETRIEVE": 96,
+    "SEARCH_MORE": 90,
+    "STOP": 98,
+    "VERIFY": 74
+  },
+  "generator_output_sha256": "0ee71701c5ec662151e6a6cddf3de00a274d662173803cd076ca0c6f664773f9",
+  "schema": "DAPH_V2B_I3_5_BALANCE_REPORT_V2",
+  "split_counts": {
+    "structure_dev_v2": 300,
+    "structure_held_out_v2": 150,
+    "structure_validation_v2": 150
+  },
+  "task_count": 600,
+  "topology_overlap_with_i3_4": 0,
+  "v2_seed": 7717,
+  "v2_variant_offsets": {
+    "structure_dev_v2": 700,
+    "structure_held_out_v2": 900,
+    "structure_validation_v2": 800
+  }
+}

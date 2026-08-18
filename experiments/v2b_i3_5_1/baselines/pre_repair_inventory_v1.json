@@ -1,0 +1,329 @@
+{
+  "schema": "DAPH_V2B_I3_5_1_PRE_REPAIR_INVENTORY_V1",
+  "created_at": "2026-08-18T04:59:29.640582+00:00",
+  "source_tag": "archive/i3.5-pre-causal-repair",
+  "classifications_used": [
+    "HISTORICAL_VALID",
+    "HISTORICAL_INVALID",
+    "DEVELOPMENT_DIAGNOSTIC",
+    "SUPERSEDED",
+    "UNRESOLVED_PROVENANCE"
+  ],
+  "artifact_count": 49,
+  "artifacts": [
+    {
+      "path": "experiments/v2b_i3_5/configs/v2b_i3_5_experiment_identity_v1.json",
+      "sha256": "23c67405fbe56c4ffe159fda473f1372881db101c28d4275173ae2c5669bc3ac",
+      "size_bytes": 5129,
+      "classification": "SUPERSEDED"
+    },
+    {
+      "path": "experiments/v2b_i3_5/controller_packets/v2b_i3_5_controller_packets_v2.json",
+      "sha256": "5c85def63ff13935720bac8cf148845ada918674990c8c8cb0c59d9f416dca48",
+      "size_bytes": 145162,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/generators/generate_v2b_i3_5_v2.py",
+      "sha256": "5f1facca59a3c17282353666ca0f35317b0e7e2f37279449af48c3ca30a1e23a",
+      "size_bytes": 15447,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/manifests/v2b_i3_5_benchmark_manifest_v2.json",
+      "sha256": "11df18fd8b9d821d7b7cb2f63fabebb45716c11c45271812a759fefffc733598",
+      "size_bytes": 961,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/manifests/v2b_i3_5_experiment_identity_v1.json",
+      "sha256": "1ad65f091798dfdf3921ae2148a7da651593710517f86b54a26c1c7a0d937b3c",
+      "size_bytes": 2453,
+      "classification": "SUPERSEDED"
+    },
+    {
+      "path": "experiments/v2b_i3_5/oracle_tables/v2b_i3_5_difficulty_report_v1.json",
+      "sha256": "3781c0054461beb900b403fd1a87808e2158b09588e5894534727f87342d31c3",
+      "size_bytes": 572743,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/oracle_tables/v2b_i3_5_latent_oracles_v1.jsonl.gz",
+      "sha256": "df4a0113b2976a6fc2f791173951a18aae142d68329529620f731bc16f3984d0",
+      "size_bytes": 174298606,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/oracle_tables/v2b_i3_5_observable_oracle_views_v1.json",
+      "sha256": "1fd0e0c03dab4d3f199f928d4e6c3b5991ddefde576c092d0d6578cfb4714fab",
+      "size_bytes": 506449,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/oracle_tables/v2b_i3_5_oracle_cache_manifest_v1.json",
+      "sha256": "92e06c94b99fd9ed240b43a9986f127b1a995cbf04e9abebf273303d7b8c46aa",
+      "size_bytes": 2406,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/oracle_tables/v2b_i3_5_sequential_state_aware_controller_v1.jsonl.gz",
+      "sha256": "f20c55e7999bbfe8c7f0b61b4f85d4386b0b53eacbb433fc0357be834174eb10",
+      "size_bytes": 113939480,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/oracle_tables/v2b_i3_5_sequential_state_blind_controller_v1.jsonl.gz",
+      "sha256": "d6d7d8c3f943e230a2fb7e31d0830715ae36a82abe47a91360dbe44476212d6a",
+      "size_bytes": 118818693,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/private/v2b_i3_5_tasks_v2.json",
+      "sha256": "83cad4f41dcdcad29583ce56b422de9de9c73e2d8f469a4de202fb7735db8a0d",
+      "size_bytes": 2132107,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/reports/v2b_i3_5_balance_report_v2.json",
+      "sha256": "a6fec89aa1778dd77453d24423302211ed3cbf79d3048fee52938da39ca1a23c",
+      "size_bytes": 1190,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/reports/v2b_i3_5_dev_experiment_report_v1.md",
+      "sha256": "9a74ec730b4df693195cb1765625a3bfe55b86153dce18d28ab5571981ffbaca",
+      "size_bytes": 16325,
+      "classification": "HISTORICAL_INVALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/reports/v2b_i3_5_structural_diversity_report_v2.json",
+      "sha256": "da34e7f5207002c0a1e45bd6344f4cd8c62348b5fe2dcb92733ba30b70ea70d3",
+      "size_bytes": 2605,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/reports/v2b_i3_5_topology_diversity_report_v1.json",
+      "sha256": "fc36cb188dc5b23a81f654f424df14de5c50e2f1cda0dbeac4bedba6bac955bd",
+      "size_bytes": 1165,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/results/v2b_i3_5_structure_dev_v2_analysis_v1.json",
+      "sha256": "f09ffb1272fe0b2904d3211f8ec739c07d751a2912a39c0b48213bb90254a851",
+      "size_bytes": 1103,
+      "classification": "HISTORICAL_INVALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/results/v2b_i3_5_structure_dev_v2_receipts_v1.jsonl",
+      "sha256": "58f2983e276a4dd6b50b6706ab26b4803f254471cf7562725312dd40ddd8d10b",
+      "size_bytes": 563303,
+      "classification": "HISTORICAL_INVALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/results/v2b_i3_5_structure_dev_v2_results_v1.json",
+      "sha256": "43023133a9b0a3e4fcab3a0d12c1f0e9765dcb885c103620d9c775bbea720ca4",
+      "size_bytes": 986735,
+      "classification": "HISTORICAL_INVALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/results/v2b_i3_5_structure_dev_v2_scores_v1.json",
+      "sha256": "e510c6835eb069902123a9ca3e717ef7d01c78df665e41894f7ef85b58084208",
+      "size_bytes": 454816,
+      "classification": "HISTORICAL_INVALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/results/v2b_i3_5_structure_dev_v2_stats_v1.json",
+      "sha256": "77148e498c0ba3e57da10c1a9ec247f134d7c3005dc839246d0933af54eb68c8",
+      "size_bytes": 340,
+      "classification": "HISTORICAL_INVALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/smoke/v2b_i3_5_structure_dev_v2_receipts_v1.jsonl",
+      "sha256": "6c9ca7a4ca29ff8487a7380828be898d0f2707b8e78eab8a8f66a9bb96aeadb9",
+      "size_bytes": 2020500,
+      "classification": "DEVELOPMENT_DIAGNOSTIC"
+    },
+    {
+      "path": "experiments/v2b_i3_5/smoke/v2b_i3_5_structure_dev_v2_results_v1.json",
+      "sha256": "bccaf9c716eb67592847ad92661783aff43e3a8b1ff648928d1639fec7f34cce",
+      "size_bytes": 1715120,
+      "classification": "DEVELOPMENT_DIAGNOSTIC"
+    },
+    {
+      "path": "experiments/v2b_i3_5/smoke/v2b_i3_5_structure_dev_v2_scores_v1.json",
+      "sha256": "302088301b05d1c56d23f892f87be2b861b9198f0b31e48a98edc3179c974dbc",
+      "size_bytes": 3212,
+      "classification": "DEVELOPMENT_DIAGNOSTIC"
+    },
+    {
+      "path": "experiments/v2b_i3_5/smoke/v2b_i3_5_structure_dev_v2_stats_v1.json",
+      "sha256": "df9a5aecc6910a6b35c7e68af903440b8cac1682fce688a5e6df3194ae2b9b23",
+      "size_bytes": 427,
+      "classification": "DEVELOPMENT_DIAGNOSTIC"
+    },
+    {
+      "path": "experiments/v2b_i3_5/splits/topology_allocation_v2.json",
+      "sha256": "9b55fcad017ae65d316e9259331cea5a0acd784528f5f3251d3de04f0a26258b",
+      "size_bytes": 58002,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/splits/v2b_i3_5_splits_v2.json",
+      "sha256": "c2863cf397feb4c909247a33f9ced92773ab2036112888e025a72da0b8bada2e",
+      "size_bytes": 95599,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/surface_templates/v2b_i3_5_surface_templates_v2.json",
+      "sha256": "d54c994f1499dd75d733080b4dbd0955b57531e388edeca0a3f89be9d658a074",
+      "size_bytes": 158,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "experiments/v2b_i3_5/task_families/v2b_i3_5_families_v2.json",
+      "sha256": "40a24fcdc47b9509b6f7f54e261dfe1d855172e0fb610d4384dd1d48fd41a7fa",
+      "size_bytes": 919,
+      "classification": "HISTORICAL_VALID"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/__init__.py",
+      "sha256": "ad1c3cd869b4d0b551dac010a8823c01bb17975bd8affe157116c26e559f5420",
+      "size_bytes": 1044,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/action_semantics.py",
+      "sha256": "9eba55958c254b249e7d13701de9aec7584f7187c29527dd3a94353e4a0efd74",
+      "size_bytes": 5869,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/assessor.py",
+      "sha256": "18f9999fe7c65aa1914cec3dde77427e3ecc904a3ba24a2c96a5cd123c7c2e56",
+      "size_bytes": 6782,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/bottlenecks.py",
+      "sha256": "9cb9f4ac17c9172ced00d33fb883e558a721c5ea3db0fdeef9a0dc1607bb2e40",
+      "size_bytes": 14666,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/candidate_features.py",
+      "sha256": "0fcabe6507216f500bbbeddbf78692c2af64cf121651dcef297e18f724f6bdef",
+      "size_bytes": 7703,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/chain_progress.py",
+      "sha256": "9f09ffba5618109b10164b5d749fd14c4758ca1a4a84c2d59ee58dac991eaa4d",
+      "size_bytes": 6077,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/identity.py",
+      "sha256": "c9f196e200c89db7c6055bd9933328f1e409e70a0c52cfc80cd2e7d6c7f8ab7d",
+      "size_bytes": 2424,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/option_value.py",
+      "sha256": "ecd902ae9b2b8ce3ce70dcbb0a06bda0dd7be3a80b282628c88e74597d9bf9c3",
+      "size_bytes": 1836,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/redundancy.py",
+      "sha256": "70ff6d29930a7c33abbe4a29f4f1014d9c413718a507681a44a0d0d6f009cacc",
+      "size_bytes": 2166,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/resources.py",
+      "sha256": "0b021ec25cc99586a7c6aa2b2d6bff563e2a2dd72529c0f13d6123200c8bdbc2",
+      "size_bytes": 3277,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/serializer.py",
+      "sha256": "db8043090c3d9e6da2b9bdfc8730cf8a03a03b315ebaa920ef5dc7220a530c0c",
+      "size_bytes": 1112,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/state.py",
+      "sha256": "75dec6a4374d51090a589696eed3a0590441cfe44ecfa6f45cc0e234995d2476",
+      "size_bytes": 6284,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/transition_model.py",
+      "sha256": "6266386b70825ae70885342920f9233745ea60fc8669e855255ff59b50dd9910",
+      "size_bytes": 6657,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/governor/value_of_information.py",
+      "sha256": "b9806f64f9bab95ac9d40ff1b2245754f53fa721b21e8db2d44184a96ce2c6a0",
+      "size_bytes": 3325,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/i3_5_full_runner.py",
+      "sha256": "4a9a3c4ef5d011f373c8102650d2339333743574db775db2e87d145fe3e4089e",
+      "size_bytes": 23564,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/i3_5_model_packet.py",
+      "sha256": "993a3dd0288eec2f36a40da24b399b1957d9ea4751ff5c347a475d45ca017d2f",
+      "size_bytes": 3379,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/i3_5_model_prompt.py",
+      "sha256": "f238f6a7385a41ff012faffd9d6a9a11009b62284381937650b9a40857b4c50a",
+      "size_bytes": 5653,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "hrm_adaptive_memory/executive/i3_5_observable_oracle_views.py",
+      "sha256": "dafc54f69efa867ac96c365d16f6db706c6bae244666a4a13056e85860f0b9dc",
+      "size_bytes": 6193,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "scripts/precompute_v2b_i3_5_oracles.py",
+      "sha256": "e3c0c1bb252fc548c17cdcef8812d66d2bb65df5c021cf7ed5ac09e4d14fa1b2",
+      "size_bytes": 13845,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    },
+    {
+      "path": "scripts/run_v2b_i3_5_experiment.py",
+      "sha256": "dd77589adc904f24fe8e49db84fc0e6cff65d6e9cd225e24729d9c83ad0eae8c",
+      "size_bytes": 5674,
+      "classification": "SUPERSEDED",
+      "classification_reason": "Code will be replaced by I3.5.1 refactoring"
+    }
+  ]
+}

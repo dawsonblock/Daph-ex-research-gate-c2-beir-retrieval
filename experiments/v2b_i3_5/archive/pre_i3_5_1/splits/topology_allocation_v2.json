@@ -1,0 +1,2019 @@
+{
+  "invariants": {
+    "structure_held_out_v2_disjoint_from_structure_dev_v2": true,
+    "structure_held_out_v2_disjoint_from_structure_validation_v2": true
+  },
+  "schema": "DAPH_V2B_I3_3_2_TOPOLOGY_ALLOCATION_V1",
+  "status": "FROZEN_SCIENTIFIC_BENCHMARK_NO_EXECUTIVE_RESULT",
+  "topologies": {
+    "004ce70239298413433e781ff8af57b46af7f07c9afa73c3c2feb7cb1d6034b5": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0035",
+        "i3_3_structure_validation_v2_0059"
+      ]
+    },
+    "005d86efea6fce17fe4e5604af50328977687a6589cbfb93e4f470c03059042f": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0116",
+        "i3_3_structure_dev_v2_0188"
+      ]
+    },
+    "00e4aa732b4d4f734468e8381965c061a8022940c1576750fd848537f8b6e199": {
+      "roles": [
+        "structure_dev_v2",
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0020",
+        "i3_3_structure_dev_v2_0092",
+        "i3_3_structure_dev_v2_0132",
+        "i3_3_structure_dev_v2_0140",
+        "i3_3_structure_dev_v2_0252",
+        "i3_3_structure_validation_v2_0020",
+        "i3_3_structure_validation_v2_0028",
+        "i3_3_structure_validation_v2_0084",
+        "i3_3_structure_validation_v2_0092",
+        "i3_3_structure_validation_v2_0116",
+        "i3_3_structure_validation_v2_0124",
+        "i3_3_structure_validation_v2_0132",
+        "i3_3_structure_validation_v2_0140"
+      ]
+    },
+    "0402bda0f50d0dc8ffa2dc2eee9cf5c53b1ebd799f09dddce3780aab08b03d17": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0035",
+        "i3_3_structure_held_out_v2_0059"
+      ]
+    },
+    "05134afd11c23d69cb37f85d7c14a5031c74f7f17b609b2ec72e4de630713c0c": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0010"
+      ]
+    },
+    "06e4a64e6feb0ab35b828a2afd8287d3598eabddca72a95d17f1f46965406576": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0094"
+      ]
+    },
+    "0790804c9caefafbb03a8f287ef28b2bc2d81147e1b1b89bb7f0386a9b3aebfd": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0082",
+        "i3_3_structure_held_out_v2_0107",
+        "i3_3_structure_held_out_v2_0130"
+      ]
+    },
+    "08fd5ee3a6603abdbef2d574bfbc0cb196614986af8cfa0dd9bf5019139c5e60": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0034",
+        "i3_3_structure_validation_v2_0106"
+      ]
+    },
+    "09151e808736de0a1c37ccc7101140b0b1863500f94c87bc9bf2a9112435e3b8": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0028",
+        "i3_3_structure_dev_v2_0124",
+        "i3_3_structure_dev_v2_0196",
+        "i3_3_structure_dev_v2_0244"
+      ]
+    },
+    "094eab819672dca1998964959962738e7fca549eaed5ab03fd7f7af0c2fa5091": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0004",
+        "i3_3_structure_validation_v2_0023"
+      ]
+    },
+    "0a8fe934902cc5a72bb77426721875c2563c5f4a9f25fe3a842df7383d1f6b7f": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0017",
+        "i3_3_structure_held_out_v2_0119",
+        "i3_3_structure_held_out_v2_0143"
+      ]
+    },
+    "0b41fc9d47cb81a742ff237f76ee7aea8887fe9959681d86f37aee963f7b4ab0": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0095"
+      ]
+    },
+    "0b6008f5718a1335c022a0f597011bfb3e55514c678ab6ac2138eaedd9b2ed50": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0049",
+        "i3_3_structure_held_out_v2_0073",
+        "i3_3_structure_held_out_v2_0091",
+        "i3_3_structure_held_out_v2_0115"
+      ]
+    },
+    "0c1bcc95ee7bf6c0a51259b1feda1cd758585bf26107818b95aa7eea8219591a": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0095",
+        "i3_3_structure_dev_v2_0167",
+        "i3_3_structure_dev_v2_0215",
+        "i3_3_structure_dev_v2_0263"
+      ]
+    },
+    "0d72e174d9223e4c444fae4d21cd0fe6a52c6cecfff285a63b95067ec5feb933": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0069",
+        "i3_3_structure_dev_v2_0165",
+        "i3_3_structure_dev_v2_0237",
+        "i3_3_structure_dev_v2_0285"
+      ]
+    },
+    "0e291ebccf927985d0c80ed97cb26bf57e6e3bb5d525a7fce3ecebf0c146f932": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0009",
+        "i3_3_structure_dev_v2_0026",
+        "i3_3_structure_dev_v2_0068",
+        "i3_3_structure_dev_v2_0135",
+        "i3_3_structure_dev_v2_0158",
+        "i3_3_structure_dev_v2_0177",
+        "i3_3_structure_dev_v2_0194",
+        "i3_3_structure_dev_v2_0219",
+        "i3_3_structure_dev_v2_0236",
+        "i3_3_structure_dev_v2_0278",
+        "i3_3_structure_dev_v2_0284"
+      ]
+    },
+    "0f3b4735cb17e0796be4c31f8563e25ca96e27eb7f2c5dd1aeaec028e9220aa1": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0013",
+        "i3_3_structure_dev_v2_0109",
+        "i3_3_structure_dev_v2_0277"
+      ]
+    },
+    "11756a447433eae630c7d1d1386eca47a30d9ef3e78107183b8c3fe911e90599": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0044",
+        "i3_3_structure_held_out_v2_0086",
+        "i3_3_structure_held_out_v2_0093",
+        "i3_3_structure_held_out_v2_0117"
+      ]
+    },
+    "11aaa298908b0ebc1f4a023451b706752d8c852c247f33bf517212b392f90449": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0007",
+        "i3_3_structure_dev_v2_0115",
+        "i3_3_structure_dev_v2_0199",
+        "i3_3_structure_dev_v2_0228",
+        "i3_3_structure_dev_v2_0259",
+        "i3_3_structure_dev_v2_0283"
+      ]
+    },
+    "13850048bbdfadcc6c6ef80a4d9330bad96429e20d0763f376f203ef389bfc22": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0040",
+        "i3_3_structure_held_out_v2_0065",
+        "i3_3_structure_held_out_v2_0088"
+      ]
+    },
+    "14c14f12ac910ee068d0d44a6039dd0489ba3f82dfa7111605d4eb92f09e43bc": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0014",
+        "i3_3_structure_held_out_v2_0062"
+      ]
+    },
+    "1514f7254d2a1075e6978ede643899aa1449f33269ee788a4fac63c9199a54e1": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0024"
+      ]
+    },
+    "1597e90f117c1aee199b3832009ebc4304ff3079c40123e893a34db12048805e": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0058"
+      ]
+    },
+    "163cf0d068d33f6948fe82f8a90c356e6399253709aa2ced322454b359080d0a": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0033",
+        "i3_3_structure_held_out_v2_0081"
+      ]
+    },
+    "1742e03741b0c701511d22a75d51a9541c294a290c6c4b7de66f5de269274d09": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0098",
+        "i3_3_structure_dev_v2_0146"
+      ]
+    },
+    "1ab4439a93006408e81ff48b63a3a2bae734f54f6bf5029104c06f49fec3a567": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0011",
+        "i3_3_structure_validation_v2_0083",
+        "i3_3_structure_validation_v2_0131"
+      ]
+    },
+    "1d053dccb3fc34ed81ca749399ca0ccb480f2fd2395455e3bf7cfde31984686d": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0038",
+        "i3_3_structure_dev_v2_0129",
+        "i3_3_structure_dev_v2_0189"
+      ]
+    },
+    "23a61b9fe9d3ea01fea561902c859c5be5508d31e07bdf4a1e274beb4455b845": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0022",
+        "i3_3_structure_validation_v2_0064",
+        "i3_3_structure_validation_v2_0071",
+        "i3_3_structure_validation_v2_0113",
+        "i3_3_structure_validation_v2_0136"
+      ]
+    },
+    "268c6d7bde3a9bf671932eaceed2d3d8e4f167cb11dddcfd020cde5194dbc3ec": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0009",
+        "i3_3_structure_validation_v2_0026",
+        "i3_3_structure_validation_v2_0032",
+        "i3_3_structure_validation_v2_0051",
+        "i3_3_structure_validation_v2_0068",
+        "i3_3_structure_validation_v2_0110",
+        "i3_3_structure_validation_v2_0135"
+      ]
+    },
+    "269d6fd7530ecef86144c4e2ee7ccdc40615084ceb9d023fba095442a3f40e29": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0122"
+      ]
+    },
+    "26b6afe1e6ff22546848085036ca3aabbf7daa243957dde968b8b53793633d87": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0024"
+      ]
+    },
+    "2c2b9e9beffa7b20f077911a3e5727d8aee810c58db4a1b4e27e249871e228bc": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0056",
+        "i3_3_structure_held_out_v2_0104"
+      ]
+    },
+    "2ce6f4f75204578f480d414ae547714111c313d33a8cb9702fe8876748cf5494": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0014",
+        "i3_3_structure_validation_v2_0062"
+      ]
+    },
+    "2d68501573dae77846378f5c603e62460e2b2f75f28ce2c7822d411b5885f1b6": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0105",
+        "i3_3_structure_held_out_v2_0129"
+      ]
+    },
+    "2e1b37989bfaf03a48410264d3443bc716d59f8dcb3122d89c731d8de142dc48": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0178"
+      ]
+    },
+    "2e2b91e43465137e8bf930059c147f007d27410ce872e4df834bf045c89a2f99": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0112",
+        "i3_3_structure_dev_v2_0160",
+        "i3_3_structure_dev_v2_0232",
+        "i3_3_structure_dev_v2_0280"
+      ]
+    },
+    "2e6538f532f264f3e930d9ed594e9f95bcb75ccc76a86aa7de9028b22ef95180": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0015",
+        "i3_3_structure_held_out_v2_0134",
+        "i3_3_structure_held_out_v2_0141"
+      ]
+    },
+    "2ee341f0aa380137df48b594c4e8696c96d48296ff8af8480637ac989ca91464": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0110",
+        "i3_3_structure_held_out_v2_0135"
+      ]
+    },
+    "2f6e82a18ce18520883e93d17dc1de2d8bee67050cff7156c4709fa41fab6036": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0048",
+        "i3_3_structure_dev_v2_0168",
+        "i3_3_structure_dev_v2_0216"
+      ]
+    },
+    "2f99490bf685ed82fcbfcc3ffdc58e33ab9a1447b6adc0a357e5515a9148daf3": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0054",
+        "i3_3_structure_held_out_v2_0079"
+      ]
+    },
+    "3252f2b155747273da5801e5b50aa12dad23ae1666ace77924fe525bf18ca27b": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0044",
+        "i3_3_structure_dev_v2_0086",
+        "i3_3_structure_dev_v2_0093",
+        "i3_3_structure_dev_v2_0117",
+        "i3_3_structure_dev_v2_0128",
+        "i3_3_structure_dev_v2_0249",
+        "i3_3_structure_dev_v2_0254",
+        "i3_3_structure_dev_v2_0273",
+        "i3_3_structure_dev_v2_0296"
+      ]
+    },
+    "32e2c6acf4548b566d49a4ca7ee7c39a33946e033ffd05a114445c5a16624fbf": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0015",
+        "i3_3_structure_dev_v2_0057",
+        "i3_3_structure_dev_v2_0074",
+        "i3_3_structure_dev_v2_0134",
+        "i3_3_structure_dev_v2_0176",
+        "i3_3_structure_dev_v2_0183",
+        "i3_3_structure_dev_v2_0225"
+      ]
+    },
+    "35fde601bebe6c9f52c9e87d32b533c4aaa4e529b0b53656d6dd609c8d251117": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0184"
+      ]
+    },
+    "372e85b20a925836d46f23fe00f8b78733db442f3aafb96fc5a1a58cee188dcd": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0119",
+        "i3_3_structure_validation_v2_0143"
+      ]
+    },
+    "373629773550ef3916b3ffbc559de3aea2091d0570683c3d5e1fb5eff7edaa18": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0002",
+        "i3_3_structure_dev_v2_0171",
+        "i3_3_structure_dev_v2_0212",
+        "i3_3_structure_dev_v2_0231"
+      ]
+    },
+    "3744d9ab465fb868dd1c197af9bca152b5907d4382e6c7c81adcf109e2e19cde": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0056",
+        "i3_3_structure_dev_v2_0104",
+        "i3_3_structure_dev_v2_0224",
+        "i3_3_structure_dev_v2_0248"
+      ]
+    },
+    "37b6748f137af33b27239e72b597dcde05def6b9da47ef8911c0ff2b83377105": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0078",
+        "i3_3_structure_held_out_v2_0102",
+        "i3_3_structure_held_out_v2_0127"
+      ]
+    },
+    "381cccee65a6d73589ecfa4f1e2123330f6fd219302d17a6d77195277adcc119": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0033",
+        "i3_3_structure_validation_v2_0081"
+      ]
+    },
+    "382b07879df25b2ba2aea85636e2b4a8ba3b87821ad3a2b07cdfc3a2c75e1ec8": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0038",
+        "i3_3_structure_held_out_v2_0063",
+        "i3_3_structure_held_out_v2_0087"
+      ]
+    },
+    "389d685591553c3622f22d33a26551089c7ff820d5176620d8c8bd47d161fd1c": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0111"
+      ]
+    },
+    "3966de9151b0a6cdf6403f3a46aa1acb02fba40ad2a8e6bafa8f9b0db0dab4ae": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0019",
+        "i3_3_structure_validation_v2_0067"
+      ]
+    },
+    "3b6ec8c2d8055512a5224ba668c1f4e9afe80608fc1f02a3581f5276c23a4e5d": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0030",
+        "i3_3_structure_held_out_v2_0103"
+      ]
+    },
+    "3b7df95538df324d6f02b97424b5b3e2f210b4d64bcc24bddf6ea42a02c93973": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0191"
+      ]
+    },
+    "3d08cfe60df6bbafc7321b3a874299ad8325797e0dc316307d3cceb38e034c48": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0066"
+      ]
+    },
+    "3d095743c2248c322bf1af2bb5308d887eb951bb74f314197aacf3de047c58ea": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0001",
+        "i3_3_structure_held_out_v2_0120"
+      ]
+    },
+    "3e99d9ae73a07e4df06177a617f6326c7e4d180a168283afeba43315de16074e": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0032",
+        "i3_3_structure_dev_v2_0051",
+        "i3_3_structure_dev_v2_0110",
+        "i3_3_structure_dev_v2_0200",
+        "i3_3_structure_dev_v2_0242",
+        "i3_3_structure_dev_v2_0261"
+      ]
+    },
+    "3ed80abe7a568222c6fa8d8443c681d861e8304f836df389626ccf57c430e59e": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0058",
+        "i3_3_structure_dev_v2_0154"
+      ]
+    },
+    "3f499c513c18ea3cc803968ff7bed3cb666cbf7b81256bba2add1a69fdd91f68": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0036",
+        "i3_3_structure_held_out_v2_0043",
+        "i3_3_structure_held_out_v2_0085"
+      ]
+    },
+    "404ffcc20bd5e3cb2b4cc703707633f2544036902f2607fa51fd55d28a336014": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0031",
+        "i3_3_structure_dev_v2_0091"
+      ]
+    },
+    "416a064c4fea47a86c6167236fafaac7faf54750c1acde9ad5872a830651a147": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0003",
+        "i3_3_structure_validation_v2_0021",
+        "i3_3_structure_validation_v2_0038",
+        "i3_3_structure_validation_v2_0045",
+        "i3_3_structure_validation_v2_0063",
+        "i3_3_structure_validation_v2_0075",
+        "i3_3_structure_validation_v2_0087",
+        "i3_3_structure_validation_v2_0105",
+        "i3_3_structure_validation_v2_0129",
+        "i3_3_structure_validation_v2_0147"
+      ]
+    },
+    "423c8cdcea69e3d14b12c0c052dfdadfdcef31a0fda6a3605e0085ccd1d0a482": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0007",
+        "i3_3_structure_validation_v2_0031",
+        "i3_3_structure_validation_v2_0049",
+        "i3_3_structure_validation_v2_0073",
+        "i3_3_structure_validation_v2_0091",
+        "i3_3_structure_validation_v2_0115",
+        "i3_3_structure_validation_v2_0133"
+      ]
+    },
+    "432483bc73ff9100eabb8ba93591eaa65865a88010a68cf855a311498b4cfe51": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0008",
+        "i3_3_structure_dev_v2_0099",
+        "i3_3_structure_dev_v2_0218"
+      ]
+    },
+    "43f76bb85431dc603d9b646cf73062fd71c1a4e3defb667b17ddd6191bc78ff6": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0108"
+      ]
+    },
+    "4417be7c8ce2257c9c0b68930277dbe84e9c54863dbd4fa8c8c1879feecba1ae": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0138",
+        "i3_3_structure_dev_v2_0258"
+      ]
+    },
+    "45b020f612dd75e41d8b8f886fe9dbdc955100d90782e12af9d070a8286e06e6": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0103",
+        "i3_3_structure_dev_v2_0114",
+        "i3_3_structure_dev_v2_0139",
+        "i3_3_structure_dev_v2_0156",
+        "i3_3_structure_dev_v2_0175",
+        "i3_3_structure_dev_v2_0198",
+        "i3_3_structure_dev_v2_0205"
+      ]
+    },
+    "4656bb8ebe9bd561cc334546f4118fa050e8c9878a925e0e9e8404668cf1f848": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0112"
+      ]
+    },
+    "4707fa11609819404385cf4a79912b148718bb15594843a962ec2d52b47ab4a0": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0080"
+      ]
+    },
+    "481f4fe4a27da692bea72d95e1ba663ab9312bfd86d11b34c52d419448b9f377": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0084"
+      ]
+    },
+    "49ebc168a043450b48a62767bcc0a9d447fbdd411b129cebe753f319742c95f7": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0150"
+      ]
+    },
+    "4c476a1fe68b113601c7bd4db1b3323f51ddf8ad898f297a7591517040d146ce": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0030",
+        "i3_3_structure_dev_v2_0072",
+        "i3_3_structure_dev_v2_0240",
+        "i3_3_structure_dev_v2_0282"
+      ]
+    },
+    "4d58d2cf210407c3f5e3fd46c2c0718488729a2e7273d720c1552d6059d05c66": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0011",
+        "i3_3_structure_held_out_v2_0083",
+        "i3_3_structure_held_out_v2_0131"
+      ]
+    },
+    "4e75862fd09eb72eee444d7496d5d8fabd6473f8fae168cacc93d23ab72cf20e": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0076",
+        "i3_3_structure_held_out_v2_0101",
+        "i3_3_structure_held_out_v2_0149"
+      ]
+    },
+    "4e98cf1622bc319ecf192484bd15da7ba6665bec54314c218845d0504ec73e28": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0018",
+        "i3_3_structure_dev_v2_0079",
+        "i3_3_structure_dev_v2_0289"
+      ]
+    },
+    "4fd2785cf8cd2d5f6db5144ead9c209848b9fe86912ebc00be505135577a6e54": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0017",
+        "i3_3_structure_dev_v2_0076",
+        "i3_3_structure_dev_v2_0119",
+        "i3_3_structure_dev_v2_0143",
+        "i3_3_structure_dev_v2_0149",
+        "i3_3_structure_dev_v2_0203",
+        "i3_3_structure_dev_v2_0227",
+        "i3_3_structure_dev_v2_0245",
+        "i3_3_structure_dev_v2_0269",
+        "i3_3_structure_dev_v2_0287"
+      ]
+    },
+    "5311c966fbf83f9ffa27945751f57f2f6604592ba95faa4013fe04bb66d16b58": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0012",
+        "i3_3_structure_held_out_v2_0037",
+        "i3_3_structure_held_out_v2_0060"
+      ]
+    },
+    "56fe8d502c427d8bea345b5c711c70e31c9f6bb213d0e329b07f2af491bfb8ad": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0153"
+      ]
+    },
+    "5725e475cbbbdca07a054d2d9e6c9d7683605337c840ea485160a359ea59a819": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0020",
+        "i3_3_structure_held_out_v2_0028",
+        "i3_3_structure_held_out_v2_0084",
+        "i3_3_structure_held_out_v2_0092",
+        "i3_3_structure_held_out_v2_0116",
+        "i3_3_structure_held_out_v2_0124",
+        "i3_3_structure_held_out_v2_0132",
+        "i3_3_structure_held_out_v2_0140"
+      ]
+    },
+    "5afe4f381828727542e5ab31d65e8a05e17d30d1d806a768dfd2d856da78f8b9": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0055"
+      ]
+    },
+    "5b3723757521e3487167ad8d2fd67b5b7b6995b56e2469f8faa219fb02fb3bc5": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0036",
+        "i3_3_structure_dev_v2_0043",
+        "i3_3_structure_dev_v2_0078",
+        "i3_3_structure_dev_v2_0085",
+        "i3_3_structure_dev_v2_0127",
+        "i3_3_structure_dev_v2_0169",
+        "i3_3_structure_dev_v2_0204",
+        "i3_3_structure_dev_v2_0246",
+        "i3_3_structure_dev_v2_0253",
+        "i3_3_structure_dev_v2_0288",
+        "i3_3_structure_dev_v2_0295"
+      ]
+    },
+    "5bd1b2e6ae56deb8905abef9b9fbecb6e690eaed1e4a2383a5bcf23f48c377cd": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0019",
+        "i3_3_structure_held_out_v2_0067"
+      ]
+    },
+    "5c1d4dce0d17a48baada487bcca8d465f969771179edfe71c88033d0145b2491": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0025",
+        "i3_3_structure_dev_v2_0097",
+        "i3_3_structure_dev_v2_0145",
+        "i3_3_structure_dev_v2_0193",
+        "i3_3_structure_dev_v2_0265"
+      ]
+    },
+    "63bda4f4d63ee61e0e6e1e559acfda6edd20803ffdef8ff361039b100e9f7278": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0098",
+        "i3_3_structure_validation_v2_0146"
+      ]
+    },
+    "677232dc0d939e66ad3da2a95723fcded6075cda053e6026facbeb755c3ffda6": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0018",
+        "i3_3_structure_held_out_v2_0096",
+        "i3_3_structure_held_out_v2_0121",
+        "i3_3_structure_held_out_v2_0144"
+      ]
+    },
+    "67cedc7469c70026eda124a4fd2f703fda130a1491efb4f16966e227b022e795": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0101",
+        "i3_3_structure_dev_v2_0161",
+        "i3_3_structure_dev_v2_0190"
+      ]
+    },
+    "69c285477faf31ca1c4068964ff41889d12c4423c19438417c7558c4e4f0cb2e": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0000",
+        "i3_3_structure_validation_v2_0048"
+      ]
+    },
+    "6a2c297fe9a312291341cd505885b04798740dd4b77ad4324990f14827391b59": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0049",
+        "i3_3_structure_dev_v2_0073",
+        "i3_3_structure_dev_v2_0133",
+        "i3_3_structure_dev_v2_0157",
+        "i3_3_structure_dev_v2_0217",
+        "i3_3_structure_dev_v2_0223"
+      ]
+    },
+    "6b27a5ace369f12a95b36bcacdf9e46e8d0febd49424a39aa8006c2289384b25": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0192"
+      ]
+    },
+    "6b7c7044aef6edc7ace3626989135e1aed8d4f46fcf7a4b10e8b069513a70520": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0014"
+      ]
+    },
+    "6c2ebfbdfd96c1cea78e7f2cfe5b71dfa5d9e6e27236d59d8f20a72e99566a63": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0022",
+        "i3_3_structure_held_out_v2_0064",
+        "i3_3_structure_held_out_v2_0071",
+        "i3_3_structure_held_out_v2_0113",
+        "i3_3_structure_held_out_v2_0136"
+      ]
+    },
+    "6c694946fd7a3225cc4c880b686a135fdf85e36ff2c0668dfe1e6a72c679c504": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0037",
+        "i3_3_structure_dev_v2_0054",
+        "i3_3_structure_dev_v2_0096",
+        "i3_3_structure_dev_v2_0144",
+        "i3_3_structure_dev_v2_0163",
+        "i3_3_structure_dev_v2_0186",
+        "i3_3_structure_dev_v2_0247",
+        "i3_3_structure_dev_v2_0264"
+      ]
+    },
+    "6dc6ad0081f86807b1794b51db566459de0f596f3e60f16348170936fd32b578": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0002"
+      ]
+    },
+    "6fbe97ac44aef91346af1fa3a281f7fe664a75dfed7450d33bce7baada6107c8": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0055"
+      ]
+    },
+    "7254ecc58822d1e641c25c9eaf0cf39aaf5e8a017a069328d2b5d6141c7a7d1e": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0077"
+      ]
+    },
+    "73ea5c1c18325a13ffe5387554bbe23d259c62fd1d4acfe40da643a4c012f496": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0021",
+        "i3_3_structure_dev_v2_0152"
+      ]
+    },
+    "77d5ff383128434df8a3f52b33943a982e1212ea7603bab9c09d1b1fba9985fa": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0072",
+        "i3_3_structure_held_out_v2_0114",
+        "i3_3_structure_held_out_v2_0139"
+      ]
+    },
+    "798c5944e1f1afba63bf83df51766fb8708c0822bda5e9a43465ba5ed21fc09f": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0052"
+      ]
+    },
+    "79cd3219b87ec52cd0b9470b949bdf727bccd23726e355ebc7993bc92b62ddd0": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0012",
+        "i3_3_structure_dev_v2_0060",
+        "i3_3_structure_dev_v2_0121",
+        "i3_3_structure_dev_v2_0180",
+        "i3_3_structure_dev_v2_0270"
+      ]
+    },
+    "7bbc24ad9c7816967acee381a858ae1c1989cef42fa3117c09cc38b47bc94408": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0108",
+        "i3_3_structure_dev_v2_0276"
+      ]
+    },
+    "7c43c5b6a6f8d86df7eba8bc813abba2e0ac8037b46ecc8511d422bef79b2db4": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0082",
+        "i3_3_structure_validation_v2_0107",
+        "i3_3_structure_validation_v2_0130"
+      ]
+    },
+    "7d2cc2939f7e1b3135d371aef1a4ee695af9f2f88d86a5fd2684270b139b44f8": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0008",
+        "i3_3_structure_held_out_v2_0057"
+      ]
+    },
+    "7d3ecadc684ce05bb315996d10fb5f5a50ffb94288daf8f0baeec158d2f7ca91": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0010"
+      ]
+    },
+    "7dfefdf57c11f5c3782c316f36d6e703374dc5c5911f2be84e0150f0b5b1bea4": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0062",
+        "i3_3_structure_dev_v2_0182",
+        "i3_3_structure_dev_v2_0230"
+      ]
+    },
+    "7f2528bfbb7eab6deec335d8d67d0992e0bb624e2f8fb4729220fec3cf32c272": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0262"
+      ]
+    },
+    "81065d63faa8b8d2f7299ef795dd79b559d28729ad69b0c5d7225a85ef5b81b2": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0029",
+        "i3_3_structure_dev_v2_0034",
+        "i3_3_structure_dev_v2_0064",
+        "i3_3_structure_dev_v2_0106",
+        "i3_3_structure_dev_v2_0113",
+        "i3_3_structure_dev_v2_0136",
+        "i3_3_structure_dev_v2_0148",
+        "i3_3_structure_dev_v2_0155",
+        "i3_3_structure_dev_v2_0197",
+        "i3_3_structure_dev_v2_0239",
+        "i3_3_structure_dev_v2_0274"
+      ]
+    },
+    "815dae5210b964004989355340b7cbf3c1a879b4c630145dd698a2a143bf982e": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0004",
+        "i3_3_structure_dev_v2_0023",
+        "i3_3_structure_dev_v2_0065",
+        "i3_3_structure_dev_v2_0088",
+        "i3_3_structure_dev_v2_0107",
+        "i3_3_structure_dev_v2_0166",
+        "i3_3_structure_dev_v2_0208",
+        "i3_3_structure_dev_v2_0214",
+        "i3_3_structure_dev_v2_0256",
+        "i3_3_structure_dev_v2_0275",
+        "i3_3_structure_dev_v2_0298"
+      ]
+    },
+    "81683eb15576e8f23fac414ecaa20ce9fde4657b69647ae54cf9eeb415ec92cf": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0016",
+        "i3_3_structure_held_out_v2_0047",
+        "i3_3_structure_held_out_v2_0137",
+        "i3_3_structure_held_out_v2_0142"
+      ]
+    },
+    "8373b01b7abc74fc830fd997b88c5278ffe2d23fc41bc7c60df15023967763c3": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0039"
+      ]
+    },
+    "8548b130a12ac4a5bcab9cf1843ce577012212ed9f82e47eb45ee985a96fcf64": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0004",
+        "i3_3_structure_held_out_v2_0023"
+      ]
+    },
+    "854a7afd668fde639f3cb505858b1d21dba576ebae2660aab5c7f36ecd8c12bc": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0027",
+        "i3_3_structure_dev_v2_0123",
+        "i3_3_structure_dev_v2_0195",
+        "i3_3_structure_dev_v2_0243"
+      ]
+    },
+    "88633415f4981d8016e5332efdc455e73b874a9bc9ed31dc371cbdb5efd6cc26": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0024"
+      ]
+    },
+    "8879ad94e158359bfa254fd962b8819997471301e8112c0cba2d9d97457ae1b0": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0111"
+      ]
+    },
+    "89c7b1e4a45092efb6e7dd91a5d590368274df2ee4934d7688e157d720245621": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0012",
+        "i3_3_structure_validation_v2_0018",
+        "i3_3_structure_validation_v2_0037",
+        "i3_3_structure_validation_v2_0054",
+        "i3_3_structure_validation_v2_0060",
+        "i3_3_structure_validation_v2_0079",
+        "i3_3_structure_validation_v2_0096",
+        "i3_3_structure_validation_v2_0121",
+        "i3_3_structure_validation_v2_0144"
+      ]
+    },
+    "8a144f0a39cc1c001bb6cd971df866012e541b050f297f6a81b3b649f29af8d9": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0076"
+      ]
+    },
+    "8b96d339d885313dd5599ba4eeb73e8ccfe349f63f0f5832105bdd8b60915c99": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0100",
+        "i3_3_structure_dev_v2_0142"
+      ]
+    },
+    "8bf5fc09d54bd158b6f35f3e7fc8928df21fac2ad9dfbacfc721b0b6d6cf4e49": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0030",
+        "i3_3_structure_validation_v2_0072",
+        "i3_3_structure_validation_v2_0103",
+        "i3_3_structure_validation_v2_0114",
+        "i3_3_structure_validation_v2_0139"
+      ]
+    },
+    "8c9de16dfc7b3db65f3a320aaad67210e269440630fd2566a256c3bc63f3b8c3": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0003",
+        "i3_3_structure_held_out_v2_0147"
+      ]
+    },
+    "8cc1acd0d9c1af60b623072a8b64e57345a72a2643a4b6d319c547d9010556be": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0003",
+        "i3_3_structure_dev_v2_0045",
+        "i3_3_structure_dev_v2_0063",
+        "i3_3_structure_dev_v2_0075",
+        "i3_3_structure_dev_v2_0087",
+        "i3_3_structure_dev_v2_0105",
+        "i3_3_structure_dev_v2_0147",
+        "i3_3_structure_dev_v2_0213",
+        "i3_3_structure_dev_v2_0255",
+        "i3_3_structure_dev_v2_0266",
+        "i3_3_structure_dev_v2_0297"
+      ]
+    },
+    "8d54416e5d0d9ceb14fff2980dd4254b3f1abe75a9689f7ad40bd039f8a504f4": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0133"
+      ]
+    },
+    "915fd4f15bd651c6ec44d4252c374dc107eeccb3d7e661d1a38df3039441bfd5": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0112"
+      ]
+    },
+    "919888bbf9d1c9bc6539b0646d136949bc31e8223d78ead0338bebb4327f33c3": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0006",
+        "i3_3_structure_validation_v2_0126"
+      ]
+    },
+    "94a499a4fd2fcc766ac87169a0c22a930b8f9278f07e5b741fcaaf2910fd8061": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0098",
+        "i3_3_structure_held_out_v2_0146"
+      ]
+    },
+    "95c2cad5268c2b0d52c9d0ea3e4183c342506a80bc813975c058e5df3e2ef412": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0007",
+        "i3_3_structure_held_out_v2_0031"
+      ]
+    },
+    "9909a6fe494f2ac6777ad09dd059ae90df8a92a9494289b85c4363f5b5d8baa7": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0122"
+      ]
+    },
+    "9b334d5953de1aea0ef9b7f534826b6dfa0655d32eb10b873db85b8f1177f76c": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0101",
+        "i3_3_structure_validation_v2_0149"
+      ]
+    },
+    "9b4314371cd1d8e97b837191a9eeaf0341c46cbca94c2333dd80af3ac45a11e5": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0042",
+        "i3_3_structure_dev_v2_0090",
+        "i3_3_structure_dev_v2_0210"
+      ]
+    },
+    "9b87c08247f0dcf5efdacdf15352bea9cd4be24432758eeca2d12867338a825d": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0034",
+        "i3_3_structure_held_out_v2_0106"
+      ]
+    },
+    "9e19673b82895bbdb6fadb75ff8454d05e1015966e70155e8076b87458ba884c": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0077"
+      ]
+    },
+    "a0b7a40ad7138452c43d5aa163d727ecb35e4501e4b187af93c893c65e860356": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0041",
+        "i3_3_structure_validation_v2_0089"
+      ]
+    },
+    "a141d2e842805d305cfe9fe7e22b98e6686a220fb93a169e48bd5ecf1888d631": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0005",
+        "i3_3_structure_dev_v2_0053",
+        "i3_3_structure_dev_v2_0173",
+        "i3_3_structure_dev_v2_0293"
+      ]
+    },
+    "a1af3c799dad124e60bccefa07de28d25f83ba82c07f9e293e8039a16f74ff07": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0052",
+        "i3_3_structure_dev_v2_0220"
+      ]
+    },
+    "a1f1b47d64dbdccbb7275a4a17c0cf366cedddfbc4b77defbfa8d1e7400c0643": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0080"
+      ]
+    },
+    "a2638c6f4e352c89d1756d64c4599d8768fd4a2bdec0bdc8474137d171a69fae": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0050",
+        "i3_3_structure_dev_v2_0141",
+        "i3_3_structure_dev_v2_0170",
+        "i3_3_structure_dev_v2_0260",
+        "i3_3_structure_dev_v2_0272"
+      ]
+    },
+    "a5d5f22414b637d6cabdcbf9752d24f46ce0244835d121b4e8a3eec1a6829566": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0267"
+      ]
+    },
+    "a85a711a96930f50ed81b21011db2ced7b3a933edf9ace356a9eedd09bff37c7": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0005",
+        "i3_3_structure_held_out_v2_0013",
+        "i3_3_structure_held_out_v2_0053",
+        "i3_3_structure_held_out_v2_0061",
+        "i3_3_structure_held_out_v2_0069",
+        "i3_3_structure_held_out_v2_0109"
+      ]
+    },
+    "af76012759fb19215e77edb87282190b347cf51cc1932545215443dccbff6a62": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0206"
+      ]
+    },
+    "affa987112fe74ee8433d1e5405bb0d7b2aa1ab3c22cfa272d8a1404f18dd967": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0081",
+        "i3_3_structure_dev_v2_0201"
+      ]
+    },
+    "b1350ee26e120a477ddbe6863bd49a4459e7c270c6eab0af8e2ac911af793ca3": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0016",
+        "i3_3_structure_validation_v2_0047",
+        "i3_3_structure_validation_v2_0137",
+        "i3_3_structure_validation_v2_0142"
+      ]
+    },
+    "b19a7791d129d67fdb17a2ea47e5a3294b294e4fbbab302987e1b92e731ac0ef": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0026",
+        "i3_3_structure_held_out_v2_0051",
+        "i3_3_structure_held_out_v2_0068"
+      ]
+    },
+    "b28f69b912603e7744c3e1cbed85750b0baee440a612c92f79f4cdb3fc935a72": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0111"
+      ]
+    },
+    "b580ad864548f6c8196a1b698d013eb41334edc7a03440434baea8fd5f08b5c7": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0000"
+      ]
+    },
+    "b790e11fe29d50718b1d57309c3f775c1ba847875fb3a2ff271af7f3059c1cf4": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0083",
+        "i3_3_structure_dev_v2_0179",
+        "i3_3_structure_dev_v2_0299"
+      ]
+    },
+    "b85498f9071a5094128930f45167c58167bd69c6982a11e6223848711a32b135": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0002",
+        "i3_3_structure_validation_v2_0044",
+        "i3_3_structure_validation_v2_0086",
+        "i3_3_structure_validation_v2_0093",
+        "i3_3_structure_validation_v2_0117",
+        "i3_3_structure_validation_v2_0128"
+      ]
+    },
+    "b9c444cb81856ab277de5cbbbfbb17f81fdea84d899dd437399c616fbe464f31": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0089",
+        "i3_3_structure_dev_v2_0209",
+        "i3_3_structure_dev_v2_0257"
+      ]
+    },
+    "ba94f976a8cf5b8b7123ba9da4275cb09824273af6dae2b8469c0567e8e97231": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0040",
+        "i3_3_structure_dev_v2_0082",
+        "i3_3_structure_dev_v2_0130",
+        "i3_3_structure_dev_v2_0172",
+        "i3_3_structure_dev_v2_0250",
+        "i3_3_structure_dev_v2_0292"
+      ]
+    },
+    "bc4a20a88cf19e83943a67a982043e8ba1b2e53015a9d05619e072a70b36c790": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0008",
+        "i3_3_structure_validation_v2_0015",
+        "i3_3_structure_validation_v2_0050",
+        "i3_3_structure_validation_v2_0057",
+        "i3_3_structure_validation_v2_0074",
+        "i3_3_structure_validation_v2_0099",
+        "i3_3_structure_validation_v2_0134",
+        "i3_3_structure_validation_v2_0141"
+      ]
+    },
+    "bcff04ebae6ec840bb9c557247e17e589266d0f1aa48ab0e91d00c2530283c75": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0122",
+        "i3_3_structure_dev_v2_0290"
+      ]
+    },
+    "bd60cf259129513bfa889d413e011eb68853b5cc1ef9328ee060548e3310bab9": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0001",
+        "i3_3_structure_dev_v2_0102",
+        "i3_3_structure_dev_v2_0120",
+        "i3_3_structure_dev_v2_0162",
+        "i3_3_structure_dev_v2_0211",
+        "i3_3_structure_dev_v2_0222"
+      ]
+    },
+    "be348b5d37e1d1a774515292f7c1819b74e791e5da9ee898ef1648acd13e7106": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0291"
+      ]
+    },
+    "be87bf565f8cb067f0ba72610de4f06a385017c4b08e8b99eda8cedd98980010": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0042",
+        "i3_3_structure_validation_v2_0090",
+        "i3_3_structure_validation_v2_0138"
+      ]
+    },
+    "c2e48a6b89c4f21b94ab41984eac153538c57f33758e9d9a5c7762eb18c2ba24": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0010"
+      ]
+    },
+    "c347c74dc615c8fae9406262c7c7cb60eb5fe28a03df4a4398d502846285e31f": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0241"
+      ]
+    },
+    "c70a8aa5e7886766c8bc9455f98c400c58944488c65778384ad238ccbc5e5bb7": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0009",
+        "i3_3_structure_held_out_v2_0032"
+      ]
+    },
+    "c77e0df6139f05b995cfda594f6eade31319c4e74f8e226e55a7d3c7d7c48df5": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0229"
+      ]
+    },
+    "c88a1fce16bdc27a5e7f09c3f6319a0210c0a6fc8f89cb7a9c6d4c816a6f75f1": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0039"
+      ]
+    },
+    "c895f0e87cf2d3f567c40335c8fa737a2790c34f4166c6a99f2bedec702f560c": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0027",
+        "i3_3_structure_validation_v2_0123"
+      ]
+    },
+    "ca8f822859824e95f8442372fd537799430a24c249f6d9d06d2d04c424d19feb": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0017"
+      ]
+    },
+    "cb35d35d4beee231736b87819f69980925c73d024656fc634871123dd2961128": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0094"
+      ]
+    },
+    "cb4d6cd9dc870091309135bf144c68b0731464d761ac569ed94125523d5a3439": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0000",
+        "i3_3_structure_held_out_v2_0048"
+      ]
+    },
+    "cbc8629e450180687e897eb4879e90fe98a24b361e2eb0e35629fc087377a98c": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0055"
+      ]
+    },
+    "cd1eaa989bdaaaba9c1e9d75b533796c3fca0f18c1a63d5e1f90ace94ef156e5": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0151",
+        "i3_3_structure_dev_v2_0271"
+      ]
+    },
+    "ce84a1a8be4ce6425722423609aa77d7361068f210a51ce1683924f8f1c67d95": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0040",
+        "i3_3_structure_validation_v2_0065",
+        "i3_3_structure_validation_v2_0088"
+      ]
+    },
+    "d073115a3541c9d6c71ee6f01d1b10acb027084aa7cbd62c95dd5d458c19a2b0": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0066",
+        "i3_3_structure_dev_v2_0234"
+      ]
+    },
+    "d14a2780e84014fcd074419e8331c59e4f400e7213172a439e7df452ea71920a": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0019",
+        "i3_3_structure_dev_v2_0067",
+        "i3_3_structure_dev_v2_0187",
+        "i3_3_structure_dev_v2_0235"
+      ]
+    },
+    "d27914176513ed2e462a7c0708b8f40fad22c107154acf372f61619162892a5a": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0077"
+      ]
+    },
+    "d3701f2bc7d9475443195147faa4ee012ee980d283529cc30c604bf819392715": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0080"
+      ]
+    },
+    "d3ccab4706a01d72729dd3aa7120cebfba454966c6465ae913c316535c87c597": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0046",
+        "i3_3_structure_validation_v2_0070",
+        "i3_3_structure_validation_v2_0118"
+      ]
+    },
+    "d7e8c0fb369db19e561a3169ac2c5dacd00dee6d155353898ea6efac6bc6ce6c": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0039"
+      ]
+    },
+    "d81c618af64ea595b41af58e1641d80b6ec6739884ada4a6373dbbe262c78e0c": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0100",
+        "i3_3_structure_validation_v2_0125"
+      ]
+    },
+    "db59138d9e09f211b763b7af7dba615d77957d09a57052d2df62b3496b96518e": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0033"
+      ]
+    },
+    "dceab3b1c4add6771f693a8d985ff786a0c8d8f1239417c97b3eaa8e211a4f51": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0066"
+      ]
+    },
+    "dd04bfdcbbd13da23a83d2dbdf12e1271729b2fefbdcb145eb23e47a05a8ef26": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0011",
+        "i3_3_structure_dev_v2_0131",
+        "i3_3_structure_dev_v2_0251"
+      ]
+    },
+    "dd5c6ad92373354537cba573d6599c953b41ff61b7a0faac2132ae193ff233aa": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0046",
+        "i3_3_structure_held_out_v2_0070",
+        "i3_3_structure_held_out_v2_0118"
+      ]
+    },
+    "ddcac9661f31c341db5cd3e26d95caf42f534b3495b61b82e61ab7bd6072394b": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0050",
+        "i3_3_structure_held_out_v2_0074",
+        "i3_3_structure_held_out_v2_0099"
+      ]
+    },
+    "de212f32d81646d34e63970ebab1f49dd70211d4d670b5821077374b356e5137": {
+      "roles": [
+        "structure_dev_v2",
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0061",
+        "i3_3_structure_dev_v2_0181",
+        "i3_3_structure_dev_v2_0221",
+        "i3_3_structure_validation_v2_0005",
+        "i3_3_structure_validation_v2_0013",
+        "i3_3_structure_validation_v2_0053",
+        "i3_3_structure_validation_v2_0061",
+        "i3_3_structure_validation_v2_0069",
+        "i3_3_structure_validation_v2_0109"
+      ]
+    },
+    "e0c50bac548f7372f852944ca25741f5f75aabffc9a830dd5902d3a8bd680ab3": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0108"
+      ]
+    },
+    "e3d0fced5deeb2ec4f0d09ce716b83ab828f11cea06393da41ce88406d1d46f4": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0100",
+        "i3_3_structure_held_out_v2_0125"
+      ]
+    },
+    "e3e6be5ec5e4d0033e5911d7184103d56aaa1ea13e883f3f229a598273bbafaf": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0128"
+      ]
+    },
+    "e405696f8ce8dfa81affcdfcb1a7045da349f1c86f4130d87fe52c6d08961093": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0095"
+      ]
+    },
+    "e4d908077dda26036a832e6a5cac22db095c2408a9ce05fa17d4e117dacbfd87": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0041"
+      ]
+    },
+    "e4ef41d32d8ab7d05b63715653e130f73521e0277a269034eb3cd30d6f744228": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0056",
+        "i3_3_structure_validation_v2_0104"
+      ]
+    },
+    "e595337212c7e305af49dcdec7a9846d26ec5e269d8af36bd519d6cf86f71426": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0025",
+        "i3_3_structure_validation_v2_0097",
+        "i3_3_structure_validation_v2_0145"
+      ]
+    },
+    "e60b9873057a6108372579f21a0316095efe0bbcf009b2d36ef2a09f89597a6a": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0029",
+        "i3_3_structure_held_out_v2_0148"
+      ]
+    },
+    "e68356d6d49971abc238a6310fc9d26925f16971fb18fd579b8ecba2f6d929ae": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0025",
+        "i3_3_structure_held_out_v2_0097",
+        "i3_3_structure_held_out_v2_0145"
+      ]
+    },
+    "e6e3d9550cf1fd90126201afad34d3a211acdc2e66d53ebb551b63c7b0919c9c": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0027",
+        "i3_3_structure_held_out_v2_0123"
+      ]
+    },
+    "e75b7572321293171508d0a52776ab75447536382f7f33a1843a2d5968752c99": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0202"
+      ]
+    },
+    "e8ac60a3f2ac81903ea0823f4df79e8d04ca8aa4d71800066e631be45e6a25d9": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0021",
+        "i3_3_structure_held_out_v2_0045",
+        "i3_3_structure_held_out_v2_0075"
+      ]
+    },
+    "e9c3f2f40c101a9f0c782d946bb28378d1417c02c853cc36063d3344f0c7b236": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0052"
+      ]
+    },
+    "ea1795091ed56e81606a38fa2d015c9cd4e33ad0e695ba3e515c704f057a8b49": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0046",
+        "i3_3_structure_dev_v2_0118",
+        "i3_3_structure_dev_v2_0238",
+        "i3_3_structure_dev_v2_0286"
+      ]
+    },
+    "eb09b208ec10612510b0421fa0d7d61976a2883e17b5736636141380528f3f89": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0006",
+        "i3_3_structure_dev_v2_0126",
+        "i3_3_structure_dev_v2_0174",
+        "i3_3_structure_dev_v2_0294"
+      ]
+    },
+    "eb14910b8b67979f38bab0ac87f4e49b0b35effa9b15cdda150551254444b3b1": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0058"
+      ]
+    },
+    "eb33fbe4b8b19a63e2216eb8389efc0b275cb2d039392aa3ce863d5ad39cf92d": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0164"
+      ]
+    },
+    "ebba2a12f8b0dcee3caf3597e286e5ff88e8de4d3b5300e5d9660747a2eaa462": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0022",
+        "i3_3_structure_dev_v2_0071",
+        "i3_3_structure_dev_v2_0281"
+      ]
+    },
+    "eebb13cebd04d2d99aad1406f78ed7648fc5c1027fbdb0c23230c56ffc976330": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0006",
+        "i3_3_structure_held_out_v2_0126"
+      ]
+    },
+    "f04c55d9aef741a8eb2feabdddd587cb0d417a024fd8660c69315e04319811b4": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0001",
+        "i3_3_structure_validation_v2_0036",
+        "i3_3_structure_validation_v2_0043",
+        "i3_3_structure_validation_v2_0078",
+        "i3_3_structure_validation_v2_0085",
+        "i3_3_structure_validation_v2_0102",
+        "i3_3_structure_validation_v2_0120",
+        "i3_3_structure_validation_v2_0127"
+      ]
+    },
+    "f1bf4986816137cc2d834f237508227744a1e1c6ee53f723155dc017927a2db8": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0016",
+        "i3_3_structure_dev_v2_0035",
+        "i3_3_structure_dev_v2_0047",
+        "i3_3_structure_dev_v2_0059",
+        "i3_3_structure_dev_v2_0125",
+        "i3_3_structure_dev_v2_0137",
+        "i3_3_structure_dev_v2_0185",
+        "i3_3_structure_dev_v2_0226",
+        "i3_3_structure_dev_v2_0233",
+        "i3_3_structure_dev_v2_0268"
+      ]
+    },
+    "f23d77cea66c5fd21521004aaaed54e49dc90c78a4bbbcc14965b968abd0da5e": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0070"
+      ]
+    },
+    "f549d8b96ff47ef04a4c4f7f54e589aeec914d4048c60189c501f5e8c8937f3a": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0094"
+      ]
+    },
+    "f768a8ab9cff176dabc99ab98024fd739d0687a74b9c3329ba6cb75fa688d3d2": {
+      "roles": [
+        "structure_dev_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_dev_v2_0159",
+        "i3_3_structure_dev_v2_0207",
+        "i3_3_structure_dev_v2_0279"
+      ]
+    },
+    "fc47ea4b284ceadbc141f82a62431c805e34dcecd3b6282e723aac93e7438e1c": {
+      "roles": [
+        "structure_validation_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_validation_v2_0029",
+        "i3_3_structure_validation_v2_0148"
+      ]
+    },
+    "fedc77a72bf6f37bf4f4df2b7bc90fd1507a313ee633dfe1aada0e086680add4": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0041",
+        "i3_3_structure_held_out_v2_0089"
+      ]
+    },
+    "ff2247b85f72c89ad668b8afbc92b531a39587da62fa506eca50a39e50cda6d8": {
+      "roles": [
+        "structure_held_out_v2"
+      ],
+      "task_ids": [
+        "i3_3_structure_held_out_v2_0042",
+        "i3_3_structure_held_out_v2_0090",
+        "i3_3_structure_held_out_v2_0138"
+      ]
+    }
+  }
+}

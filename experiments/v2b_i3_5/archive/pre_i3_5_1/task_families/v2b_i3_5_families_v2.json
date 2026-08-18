@@ -1,0 +1,57 @@
+{
+  "channels": [
+    "composition",
+    "conflict",
+    "conflict_alias",
+    "history",
+    "history_alias",
+    "irreducible",
+    "irreducible_alias",
+    "provenance",
+    "provenance_alias",
+    "state_irrelevant",
+    "temporal",
+    "temporal_alias",
+    "verification",
+    "verification_alias"
+  ],
+  "generator_revision": "v2b-i3.5-generator-v1",
+  "operational_seed": 7717,
+  "pair_action_cycle": [
+    [
+      "ANSWER",
+      "RETRIEVE"
+    ],
+    [
+      "VERIFY",
+      "SEARCH_MORE"
+    ],
+    [
+      "REASON_MORE",
+      "STOP"
+    ],
+    [
+      "ANSWER",
+      "SEARCH_MORE"
+    ],
+    [
+      "RETRIEVE",
+      "REASON_MORE"
+    ],
+    [
+      "DEFER",
+      "STOP"
+    ],
+    [
+      "REASON_MORE",
+      "STOP"
+    ]
+  ],
+  "schema": "DAPH_V2B_I3_3_TASK_FAMILIES_V1",
+  "seed_controls": [
+    "surface_template",
+    "entity",
+    "opaque_instance_id"
+  ],
+  "status": "FROZEN_FOR_DEVELOPMENT"
+}

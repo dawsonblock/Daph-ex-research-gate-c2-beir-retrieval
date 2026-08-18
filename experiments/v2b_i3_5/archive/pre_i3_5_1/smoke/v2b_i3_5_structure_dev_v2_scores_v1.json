@@ -1,0 +1,74 @@
+{
+  "contributions": [
+    {
+      "condition": "STATE_BLIND_CONTROLLER",
+      "controller_value": -125.44,
+      "decision_gap_contribution": 222.05,
+      "information_class_hash": "a8852657d0428534d7f5b9c65ba1143b229cecca0e3a17ba97fffab118e96914",
+      "information_gap_contribution": 3.280000000000001,
+      "latent_optimal_value": 99.89,
+      "latent_oracle_table_sha256": "850c6d3cd1e52c232ad7c2d47ef46da2d45dc3bec0bb5825ef62ec8285a56c6e",
+      "observable_optimal_value": 96.61,
+      "observable_oracle_set_sha256": "a4bbc0b9414f74c7111604be793785135d6e740bd847819389c27118719ee05a",
+      "task_id": "i3_3_structure_dev_v2_0000",
+      "total_regret_contribution": 225.32999999999998
+    },
+    {
+      "condition": "STATE_AWARE_CONTROLLER",
+      "controller_value": 99.89,
+      "decision_gap_contribution": 0.0,
+      "information_class_hash": "09f6f234f858f57ff6d09fea5ccfcac5b85ab5f02baecdc3dcf473eea7b2cf70",
+      "information_gap_contribution": 0.0,
+      "latent_optimal_value": 99.89,
+      "latent_oracle_table_sha256": "850c6d3cd1e52c232ad7c2d47ef46da2d45dc3bec0bb5825ef62ec8285a56c6e",
+      "observable_optimal_value": 99.89,
+      "observable_oracle_set_sha256": "052d56e7be48ba0e3e9b8c4e8ba142f26bdd87550f663927655ab3f6b93caa83",
+      "task_id": "i3_3_structure_dev_v2_0000",
+      "total_regret_contribution": 0.0
+    },
+    {
+      "condition": "STATE_BLIND_CONTROLLER",
+      "controller_value": -125.44,
+      "decision_gap_contribution": 222.05,
+      "information_class_hash": "a8852657d0428534d7f5b9c65ba1143b229cecca0e3a17ba97fffab118e96914",
+      "information_gap_contribution": -3.1700000000000017,
+      "latent_optimal_value": 93.44,
+      "latent_oracle_table_sha256": "7b06cd5e738fd6e2fcfe78e2ece258e726ec0808aac879c2ea5af3158bd3b2a1",
+      "observable_optimal_value": 96.61,
+      "observable_oracle_set_sha256": "a4bbc0b9414f74c7111604be793785135d6e740bd847819389c27118719ee05a",
+      "task_id": "i3_3_structure_dev_v2_0001",
+      "total_regret_contribution": 218.88
+    },
+    {
+      "condition": "STATE_AWARE_CONTROLLER",
+      "controller_value": -39.74,
+      "decision_gap_contribution": 133.18,
+      "information_class_hash": "58f49ce7debd8597acfc72267cf903bf98a365a176f97a6c030ec91e6aa3d043",
+      "information_gap_contribution": 0.0,
+      "latent_optimal_value": 93.44,
+      "latent_oracle_table_sha256": "7b06cd5e738fd6e2fcfe78e2ece258e726ec0808aac879c2ea5af3158bd3b2a1",
+      "observable_optimal_value": 93.44,
+      "observable_oracle_set_sha256": "052d56e7be48ba0e3e9b8c4e8ba142f26bdd87550f663927655ab3f6b93caa83",
+      "task_id": "i3_3_structure_dev_v2_0001",
+      "total_regret_contribution": 133.18
+    }
+  ],
+  "deltas": [
+    {
+      "delta_cost": 0.0,
+      "delta_dg": 222.05,
+      "delta_ig": 3.280000000000001,
+      "delta_tr": 225.32999999999998,
+      "task_id": "i3_3_structure_dev_v2_0000"
+    },
+    {
+      "delta_cost": 0.0,
+      "delta_dg": 88.87,
+      "delta_ig": -3.1700000000000017,
+      "delta_tr": 85.69999999999999,
+      "task_id": "i3_3_structure_dev_v2_0001"
+    }
+  ],
+  "note": "Not scientific evidence. Produced with invalid API key or 2-task test only.",
+  "status": "INVALID_KEY_INTEGRATION_SMOKE_ONLY"
+}

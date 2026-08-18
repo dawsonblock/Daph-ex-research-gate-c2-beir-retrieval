@@ -1,0 +1,63 @@
+{
+  "schema": "DAPH_V2B_I3_5_1_PRE_REPAIR_CONTRADICTIONS_V1",
+  "created_at": "2026-08-18T04:59:51.753481+00:00",
+  "source_tag": "archive/i3.5-pre-causal-repair",
+  "contradictions": {
+    "causal_design_mismatch": {
+      "detected": true,
+      "description": "The I3.5 report claims the treatment is governor vs no-governor, but the runner invokes governor.assess() and serialize_governor_packet() for both blind and aware arms. The blind condition still receives a governor frame, making the causal governor claim invalid.",
+      "evidence": [
+        "Runner code: i3_5_full_runner.py calls governor.assess() for both conditions",
+        "Serializer: i3_5_model_packet.py always includes governor frame",
+        "Report claims governor vs no-governor comparison"
+      ]
+    },
+    "duplicate_experiment_identities": {
+      "detected": true,
+      "description": "Two incompatible I3.5 experiment identity files exist with different governor and action-semantics hashes.",
+      "evidence": {
+        "configs_identity": {
+          "path": "experiments/v2b_i3_5/configs/v2b_i3_5_experiment_identity_v1.json",
+          "governor_sha256": "058009781dfa6b43cff34fc6a307c5ad2c98fa294b75ee086aa9c87f06e4f567",
+          "action_semantics_sha256": "a9f6bb4c2374659bd6f424342a70504e60b62e105836c059b24a332b1640f84d"
+        },
+        "manifests_identity": {
+          "path": "experiments/v2b_i3_5/manifests/v2b_i3_5_experiment_identity_v1.json",
+          "governor_sha256": "MISSING",
+          "action_semantics_sha256": "a7eb624cdffc0192b4a0390ae3de495549cc2db9968c52ea0c5e21ef09300357"
+        },
+        "hashes_match": false
+      }
+    },
+    "receipt_report_mismatch": {
+      "detected": true,
+      "description": "Receipts contain HTTP 402 (Payment Required) backend errors, but the report claims zero backend errors.",
+      "evidence": {
+        "total_backend_errors_in_results": 600,
+        "report_claims_zero_errors": false,
+        "error_type": "HTTP Error 402: Payment Required"
+      }
+    },
+    "stats_analysis_sign_conflict": {
+      "detected": true,
+      "description": "The stats file and analysis file report contradictory \u0394DG signs.",
+      "evidence": {
+        "stats_mean_delta_dg": -9.045599999999999,
+        "analysis_mean_delta_dg": 46.62049999999999,
+        "signs_match": false
+      }
+    },
+    "report_count_invariant_failure": {
+      "detected": true,
+      "description": "Report disagreement tables may have counts that do not sum to the task population N.",
+      "evidence": "Report generation lacks accounting assertions. The I3.4.1 corrected report had categories summing to 510 for a 300-task population."
+    }
+  },
+  "summary": {
+    "causal_design_mismatch": true,
+    "duplicate_experiment_identities": true,
+    "receipt_report_mismatch": true,
+    "stats_analysis_sign_conflict": true,
+    "report_count_invariant_failure": true
+  }
+}

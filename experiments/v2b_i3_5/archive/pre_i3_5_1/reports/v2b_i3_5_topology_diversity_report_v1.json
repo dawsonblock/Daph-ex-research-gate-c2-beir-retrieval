@@ -1,0 +1,41 @@
+{
+  "identity_semantics": "Behavior-derived proposal/policy/transition connectivity; excludes task ids, surface text, generator channel labels, state labels, and budget-profile names.",
+  "schema": "DAPH_V2B_I3_3_2_TOPOLOGY_DIVERSITY_REPORT_V1",
+  "status": "FROZEN_SCIENTIFIC_BENCHMARK_NO_EXECUTIVE_RESULT",
+  "topology_depth_bands": {
+    "structure_dev_v2": {
+      "DEPTH_1": 124,
+      "DEPTH_4_PLUS": 176
+    },
+    "structure_held_out_v2": {
+      "DEPTH_1": 59,
+      "DEPTH_4_PLUS": 91
+    },
+    "structure_validation_v2": {
+      "DEPTH_1": 59,
+      "DEPTH_4_PLUS": 91
+    }
+  },
+  "topology_overlap_matrix": {
+    "structure_dev_v2": {
+      "structure_dev_v2": 87,
+      "structure_held_out_v2": 0,
+      "structure_validation_v2": 2
+    },
+    "structure_held_out_v2": {
+      "structure_dev_v2": 0,
+      "structure_held_out_v2": 65,
+      "structure_validation_v2": 0
+    },
+    "structure_validation_v2": {
+      "structure_dev_v2": 2,
+      "structure_held_out_v2": 0,
+      "structure_validation_v2": 51
+    }
+  },
+  "transition_topologies": {
+    "structure_dev_v2": 87,
+    "structure_held_out_v2": 65,
+    "structure_validation_v2": 51
+  }
+}

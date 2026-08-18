@@ -1,0 +1,67 @@
+{
+  "controller": {
+    "max_tokens": 2048,
+    "model": "deepseek-v4-flash",
+    "response_format": "json_object",
+    "temperature": 0.0,
+    "thinking_mode": "disabled"
+  },
+  "created_at": "2026-08-15T07:23:34.542101+00:00",
+  "data_split_policy": {
+    "i3_4_diagnostic_use": "PERMITTED_FOR_GOVERNOR_DESIGN_ONLY",
+    "i3_4_held_out_structure": "CONTAMINATED_FOR_I3_5_MODEL_SELECTION",
+    "i3_5_splits": "NEW_STRUCTURAL_V2_REQUIRED"
+  },
+  "governor": {
+    "action_semantics_sha256": "a7eb624cdffc0192b4a0390ae3de495549cc2db9968c52ea0c5e21ef09300357",
+    "architecture": "deterministic_symbolic_v1",
+    "components": [
+      "governor/state.py",
+      "governor/action_semantics.py",
+      "governor/bottlenecks.py",
+      "governor/transition_model.py",
+      "governor/candidate_features.py",
+      "governor/redundancy.py",
+      "governor/value_of_information.py",
+      "governor/option_value.py",
+      "governor/assessor.py",
+      "governor/serializer.py",
+      "governor/identity.py"
+    ],
+    "identity_sha256": "cd9af54dd638234aa18957bbff12be1e544195b9e0364fb7e0a7cc1cc061d296"
+  },
+  "hypothesis": "A transition-aware governor frame enables the fixed DeepSeek executive to generalize its use of DAPH cognitive state to unseen control topologies.",
+  "milestone": "V2B-I3.5_GENERAL_GOVERNOR_V1",
+  "predecessor": {
+    "commit": "e758e6c",
+    "diagnosis": "DAPH improves what the model can know (IG), but the current fixed DeepSeek executive cannot reliably generalize how to use it (DG) to unseen control topologies.",
+    "milestone": "V2B-I3.4",
+    "verdict": "REJECTED_ON_HELD_OUT_STRUCTURE"
+  },
+  "prohibitions": [
+    "No oracle value leakage into governor frame",
+    "No latent state in governor frame",
+    "No topology ID in governor frame",
+    "No I3.4 held_out_structure tasks for I3.5 model selection",
+    "No learned components in V1 (deterministic symbolic only)",
+    "No governor bypass of policy gate"
+  ],
+  "schema": "DAPH_V2B_I3_5_EXPERIMENT_IDENTITY_V1",
+  "scientific_criteria": {
+    "ordinal_levels": [
+      "NONE",
+      "LOW",
+      "MEDIUM",
+      "HIGH"
+    ],
+    "primary_ci_method": "topology_cluster_bootstrap",
+    "primary_hypothesis": "DG_aware < DG_blind on held_out_structure_v2",
+    "secondary_ci_method": "task_level_bootstrap",
+    "subgroups": [
+      "DEPTH_1",
+      "DEPTH_4_PLUS"
+    ]
+  },
+  "title": "Structure-General Executive: Model-Based Governor Layer",
+  "version": 1
+}

@@ -1,0 +1,16 @@
+{
+  "balance_report_path": "../reports/v2b_i3_5_balance_report_v2.json",
+  "benchmark_id": "v2b_i3_5_structure_v2",
+  "claim_boundary": "Frozen V2 structural benchmark for I3.5; no executive result.",
+  "controller_packets_path": "../controller_packets/v2b_i3_5_controller_packets_v2.json",
+  "integrity_revision": "V2B-I3.5",
+  "oracle_cache_manifest_path": "../oracle_tables/v2b_i3_5_oracle_cache_manifest_v1.json",
+  "private_environment_path": "../private/v2b_i3_5_tasks_v2.json",
+  "protocol_path": "../../../configs/v2b_i3_2_2_protocol_v1.json",
+  "schema": "DAPH_V2B_I3_3_BENCHMARK_MANIFEST_V1",
+  "split_definitions_path": "../splits/v2b_i3_5_splits_v2.json",
+  "status": "FROZEN_FOR_DEVELOPMENT",
+  "structural_diversity_report_path": "../reports/v2b_i3_5_structural_diversity_report_v2.json",
+  "surface_templates_path": "../surface_templates/v2b_i3_5_surface_templates_v2.json",
+  "task_families_path": "../task_families/v2b_i3_5_families_v2.json"
+}
