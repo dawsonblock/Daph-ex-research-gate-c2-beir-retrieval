@@ -1,0 +1,70 @@
+{
+  "schema": "DAPH_V2B_I3_9_R1_CLOSURE_V1",
+  "experiment": "I3.9-r1 boundary repair — A vs M0 vs M1 on structural OOD v3",
+  "corpus": "i3_9_structural_ood_v3 (300 tasks, 10 categories x 30, fresh seeds, zero overlap with v1/v2)",
+  "protocol_frozen_at": "dc5c715 (before v2 diagnosis run)",
+  "m1_fix_committed_at": "a7eae8d (READY condition + early_false_ready task fix, before v3 confirmatory run)",
+  "v3_run_completed": true,
+  "overall_results": {
+    "mean_u": {"A": 33.24, "M0": 28.48, "M1": 22.35},
+    "success": {"A": "222/300", "M0": "210/300", "M1": "210/300"},
+    "bootstrap_ci_m1_a": [-22.56, 0.74],
+    "bootstrap_ci_m1_m0": [-17.02, 4.44],
+    "mcnemar_m1_a": {"b": 43, "c": 31, "p": 0.20},
+    "mcnemar_m1_m0": {"b": 30, "c": 30, "p": 1.0}
+  },
+  "frozen_claims": {
+    "C1_m1_lower_endpoint_95ci_positive": {"result": false, "ci": [-22.56, 0.74]},
+    "C2_m1_success_gt_a": {"result": false, "values": "M1=210, A=222"},
+    "C3_m1_rescues_gt_breaks": {"result": false, "values": "rescues=31, breaks=43"},
+    "C4_m1_redundant_lt_a": {"result": true, "values": "M1=0.048, A=0.136"},
+    "C5_m1_steps_lt_a": {"result": true, "values": "M1=3.89, A=4.23"},
+    "safety_m1_breaks_le_rescues": {"result": false, "values": "43 > 31"},
+    "adversarial_m1_false_ready_lt_5pct": {"result": true, "values": "0/300 = 0.0%"},
+    "generalization_no_catastrophic": {"result": false, "categories": ["early_false_ready", "stale_support"]},
+    "retain_m0_gain_multi_hyp": {"result": false, "values": "M1=0 rescues vs M0=30"},
+    "stale_support_m1_not_collapse": {"result": false, "values": "M1=0/30"}
+  },
+  "key_findings": {
+    "true_false_ready_rate": {
+      "M0": "60/300 (20.0%)",
+      "M1": "0/300 (0.0%)",
+      "interpretation": "M1's conservative READY condition (requiring no unverified visible AND no hidden evidence) completely eliminates false readies. This is a major safety improvement."
+    },
+    "conflict_unresolved_rescue": {
+      "A": "0/30 (0%)",
+      "M0": "0/30 (0%)",
+      "M1": "30/30 (100%)",
+      "rescues": 30,
+      "interpretation": "M1's PROVISIONALLY_READY state prevents premature answering. Model verifies both evidence items, both hypotheses eliminated, M1 says INSUFFICIENT, model DEFERs correctly. This is a new capability not present in M0."
+    },
+    "multi_hypothesis_ambiguity_loss": {
+      "M0": "30/30 (100%), 30 rescues",
+      "M1": "0/30 (0%), 0 rescues",
+      "interpretation": "M1 lost M0's discrimination rescue. After both hypotheses are viable, M1 says NEEDS_DISCRIMINATION but doesn't recommend SEARCH_MORE. Model keeps VERIFYing (nothing to verify) until exhaustion. Removing operation recommendations lost this capability."
+    },
+    "stale_support_unfixed": {
+      "A": "30/30 (100%)",
+      "M0": "0/30 (0%)",
+      "M1": "0/30 (0%)",
+      "interpretation": "Both M arms fail. Model RETRIEVEs (exposes nothing) instead of SEARCH_MORE. Neither M0's RETRIEVE recommendation nor M1's no-recommendation helps. The model cannot distinguish RETRIEVE from SEARCH_MORE without explicit guidance."
+    },
+    "early_false_ready_partial_fix": {
+      "A": "13/30 (43.3%)",
+      "M0": "0/30 (0%), 30 false readies",
+      "M1": "0/30 (0%), 0 false readies, 30 provisional fails",
+      "interpretation": "M1 eliminates false readies (PROVISIONALLY_READY instead of READY) but model still ANSWERs prematurely. The model treats PROVISIONALLY_READY as 'probably ready' and doesn't retrieve hidden evidence. Baseline A succeeds on 43% by naturally retrieving hidden evidence."
+    }
+  },
+  "scientific_interpretation": {
+    "what_m1_accomplishes": "M1 successfully separates state estimation from action prescription. The conservative READY condition (PROVISIONALLY_READY when any evidence remains unresolved) eliminates false readies entirely (20% → 0%). The conflict_unresolved rescue (0% → 100%) demonstrates that state-only guidance can improve decisions when the correct action is to stop (DEFER) rather than to gather more evidence.",
+    "what_m1_fails_at": "M1 cannot help the model choose between RETRIEVE and SEARCH_MORE. Without operation recommendations, the model defaults to RETRIEVE (which may expose nothing) instead of SEARCH_MORE. This loses M0's multi_hypothesis_ambiguity rescue (100% → 0%) and doesn't fix stale_support (0%).",
+    "the_fundamental_tension": "M0's operation recommendations are harmful when wrong (stale_support: prescribes RETRIEVE when SEARCH_MORE needed) but valuable when right (multi_hyp_ambiguity: prescribes RETRIEVE correctly). M1's no-recommendation approach is safer (no false guidance) but loses the value of correct guidance. The model (deepseek-chat) cannot reliably select the correct action from state alone.",
+    "implication_for_future_architecture": "The next iteration should provide action hints without hard prescription. For example, an 'evidence_availability' field that says 'hidden evidence accessible via search' without saying 'SEARCH_MORE'. This would preserve M1's safety while recovering M0's discrimination rescue."
+  },
+  "causal_comparison_m1_m0": {
+    "delta_u": -6.13,
+    "ci": [-17.02, 4.44],
+    "interpretation": "M1 is not significantly worse than M0 (CI includes 0). The trade is roughly neutral on utility: M1 gains conflict_unresolved (30 rescues) but loses multi_hypothesis_ambiguity (30 breaks)."
+  }
+}
