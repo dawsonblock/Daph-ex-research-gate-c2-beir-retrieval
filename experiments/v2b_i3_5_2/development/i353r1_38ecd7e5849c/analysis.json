@@ -1,0 +1,106 @@
+{
+  "acceptance_gates": {
+    "G1_validity": true,
+    "G2_nontrivial_intervention": false,
+    "G3_primary_dg": false,
+    "G4_primary_utility": false,
+    "G5_always_on_dominance": true,
+    "G6_no_catastrophic_harm": true,
+    "G7_sequential_stability": true,
+    "G8_identity_binding": true
+  },
+  "cascade": {
+    "chain_length_distribution": {},
+    "max_consecutive": 0,
+    "total_chains": 0
+  },
+  "comparison": {
+    "i352c_delta_u": -3.2814,
+    "i352c_interventions": 536,
+    "i352c_success": 83,
+    "i353_delta_u": -0.03,
+    "i353_interventions": 0,
+    "i353_success": 83,
+    "i353r1_delta_u": 0.3784,
+    "i353r1_interventions": 0,
+    "i353r1_success": 83
+  },
+  "cost": {
+    "ALWAYS_ON": {
+      "calls": 5.14,
+      "steps": 5.14,
+      "tokens": 9734.0,
+      "utility": -91.0739
+    },
+    "OFF": {
+      "calls": 2.55,
+      "steps": 2.55,
+      "tokens": 2534.0,
+      "utility": -75.3205
+    },
+    "SELECTIVE_QPIB_BASE_FIRST": {
+      "calls": 2.56,
+      "steps": 2.56,
+      "tokens": 2545.0,
+      "utility": -74.9421
+    },
+    "delta_calls": 0.01,
+    "delta_steps": 0.01,
+    "delta_tokens": 12.0,
+    "delta_u": 0.3784
+  },
+  "experiment_identity_sha256": "38ecd7e5849c8839dc3c7ef55c1927d4dfb82aa06d31d8e4e043ec586402747e",
+  "gate_model_path": "experiments/v2b_i3_5_2/development/i353r1/pairwise_advantage_gate_v1.pkl",
+  "hypothesis_results": {
+    "primary_dg_hypothesis": "NOT_SUPPORTED"
+  },
+  "intervention_stats": {
+    "intervention_rate": 0.0,
+    "tasks_with_intervention": 0,
+    "total_interventions": 0
+  },
+  "mcnemar_sel_vs_off": {
+    "b_off_only": 0,
+    "c_sel_only": 1,
+    "n_discordant": 1,
+    "p_value_exact": 1.0,
+    "statistic": 0.0
+  },
+  "n_gates_passed": 5,
+  "n_tasks": 300,
+  "predictor_type": "PairwiseAdvantagePredictor",
+  "q_pib_identity_sha256": "b13c144534f49d0841e6f84a443a5a4a032ed8d9224d143c566fa6e273d0a5b5",
+  "schema": "DAPH_V2B_I3_5_3R1_ANALYSIS_V1",
+  "success_rates": {
+    "ALWAYS_ON": {
+      "rate": 0.1933,
+      "success": 58,
+      "total": 300
+    },
+    "OFF": {
+      "rate": 0.2733,
+      "success": 82,
+      "total": 300
+    },
+    "SELECTIVE_QPIB_BASE_FIRST": {
+      "rate": 0.2767,
+      "success": 83,
+      "total": 300
+    }
+  },
+  "utility": {
+    "U_ALWAYS_ON": -91.0739,
+    "U_OFF": -75.3205,
+    "U_SELECTIVE_QPIB_BASE_FIRST": -74.9421,
+    "delta_U_always_vs_off": {
+      "lcb_95": -19.5092,
+      "mean": -15.7533,
+      "ucb_95": -12.3466
+    },
+    "delta_U_sel_vs_off": {
+      "lcb_95": -0.0503,
+      "mean": 0.3784,
+      "ucb_95": 1.2071
+    }
+  }
+}

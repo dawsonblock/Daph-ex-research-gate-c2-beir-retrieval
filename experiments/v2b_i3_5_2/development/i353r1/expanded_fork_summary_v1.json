@@ -1,0 +1,41 @@
+{
+  "action_pair_distribution": {
+    "ANSWER->REASON_MORE": {
+      "count": 2,
+      "mean_dqp": -0.11
+    },
+    "ANSWER->SEARCH_MORE": {
+      "count": 133,
+      "mean_dqp": -0.11
+    },
+    "ANSWER->VERIFY": {
+      "count": 65,
+      "mean_dqp": -23.8023
+    },
+    "REASON_MORE->VERIFY": {
+      "count": 2,
+      "mean_dqp": 0.0
+    },
+    "RETRIEVE->VERIFY": {
+      "count": 62,
+      "mean_dqp": 1.9485
+    },
+    "STOP->ANSWER": {
+      "count": 35,
+      "mean_dqp": -120.0
+    },
+    "VERIFY->SEARCH_MORE": {
+      "count": 1,
+      "mean_dqp": 0.0
+    }
+  },
+  "base_successes": 42,
+  "gov_successes": 0,
+  "mean_a_star": -37.6756,
+  "mean_delta_q_pi": -18.804,
+  "n_forks": 300,
+  "negative_dqp": 49,
+  "positive_dqp": 52,
+  "schema": "DAPH_V2B_I3_5_3R1_EXPANDED_FORK_V1",
+  "zero_dqp": 199
+}

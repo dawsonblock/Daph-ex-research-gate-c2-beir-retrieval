@@ -1,0 +1,181 @@
+{
+  "action_pair_distribution": {
+    "ANSWER->REASON_MORE": 2,
+    "ANSWER->SEARCH_MORE": 133,
+    "ANSWER->VERIFY": 65,
+    "REASON_MORE->VERIFY": 2,
+    "RETRIEVE->VERIFY": 62,
+    "STOP->ANSWER": 35,
+    "VERIFY->SEARCH_MORE": 1
+  },
+  "constant_baseline": {
+    "mean_mse": 2809.8191,
+    "mean_r2": -0.1453,
+    "mean_sign_accuracy": 0.6635,
+    "total_interventions_approved": 0
+  },
+  "fold_results": [
+    {
+      "const_intervene_approved": 0,
+      "const_mse": 2969.3616,
+      "const_r2": -0.1785,
+      "const_sign_accuracy": 0.6333,
+      "fold": 0,
+      "model_intervene_approved": 0,
+      "model_intervene_negative": 0,
+      "model_intervene_positive": 0,
+      "model_mse": 649.3781,
+      "model_r2": 0.7423,
+      "model_sign_accuracy": 0.9667,
+      "n_test": 60,
+      "n_train": 240
+    },
+    {
+      "const_intervene_approved": 0,
+      "const_mse": 3863.4069,
+      "const_r2": -0.1546,
+      "const_sign_accuracy": 0.6667,
+      "fold": 1,
+      "model_intervene_approved": 0,
+      "model_intervene_negative": 0,
+      "model_intervene_positive": 0,
+      "model_mse": 1836.789,
+      "model_r2": 0.4511,
+      "model_sign_accuracy": 0.95,
+      "n_test": 60,
+      "n_train": 240
+    },
+    {
+      "const_intervene_approved": 0,
+      "const_mse": 2684.0317,
+      "const_r2": -0.1574,
+      "const_sign_accuracy": 0.6557,
+      "fold": 2,
+      "model_intervene_approved": 0,
+      "model_intervene_negative": 0,
+      "model_intervene_positive": 0,
+      "model_mse": 840.8194,
+      "model_r2": 0.6374,
+      "model_sign_accuracy": 0.9508,
+      "n_test": 61,
+      "n_train": 239
+    },
+    {
+      "const_intervene_approved": 0,
+      "const_mse": 2488.6614,
+      "const_r2": -0.1387,
+      "const_sign_accuracy": 0.6667,
+      "fold": 3,
+      "model_intervene_approved": 0,
+      "model_intervene_negative": 0,
+      "model_intervene_positive": 0,
+      "model_mse": 646.4891,
+      "model_r2": 0.7042,
+      "model_sign_accuracy": 0.9667,
+      "n_test": 60,
+      "n_train": 240
+    },
+    {
+      "const_intervene_approved": 0,
+      "const_mse": 2043.6339,
+      "const_r2": -0.0972,
+      "const_sign_accuracy": 0.6949,
+      "fold": 4,
+      "model_intervene_approved": 0,
+      "model_intervene_negative": 0,
+      "model_intervene_positive": 0,
+      "model_mse": 657.5594,
+      "model_r2": 0.647,
+      "model_sign_accuracy": 0.9831,
+      "n_test": 59,
+      "n_train": 241
+    }
+  ],
+  "model_beats_baseline": {
+    "mse": true,
+    "r2": true,
+    "sign_accuracy": true
+  },
+  "model_path": "experiments/v2b_i3_5_2/development/i353r1/pairwise_advantage_gate_v1.pkl",
+  "model_performance": {
+    "mean_mse": 926.207,
+    "mean_r2": 0.6364,
+    "mean_sign_accuracy": 0.9635,
+    "total_interventions_approved": 0,
+    "total_interventions_negative": 0,
+    "total_interventions_positive": 0
+  },
+  "model_sha256": "dcb936646ea2254f02cc0367cb798dab2469c30c41206ef0e37bb9ff7b1d4361",
+  "n_features": 42,
+  "n_samples": 300,
+  "n_tasks": 235,
+  "schema": "DAPH_V2B_I3_5_3R1_PAIRWISE_TRAINING_V1",
+  "target_stats": {
+    "max": 5.34,
+    "mean": -18.804,
+    "min": -220.11,
+    "std": 49.5819
+  },
+  "top_features": [
+    {
+      "importance": 0.407604,
+      "name": "a_gov_ANSWER"
+    },
+    {
+      "importance": 0.343696,
+      "name": "a_base_STOP"
+    },
+    {
+      "importance": 0.101445,
+      "name": "last_act_SEARCH_MORE"
+    },
+    {
+      "importance": 0.035544,
+      "name": "temporal_UNKNOWN"
+    },
+    {
+      "importance": 0.027428,
+      "name": "temporal_STALE"
+    },
+    {
+      "importance": 0.025467,
+      "name": "verif_MISSING"
+    },
+    {
+      "importance": 0.024911,
+      "name": "verif_FALSIFIED"
+    },
+    {
+      "importance": 0.009379,
+      "name": "search_budget_remaining"
+    },
+    {
+      "importance": 0.006828,
+      "name": "a_gov_REASON_MORE"
+    },
+    {
+      "importance": 0.00552,
+      "name": "a_gov_VERIFY"
+    },
+    {
+      "importance": 0.00431,
+      "name": "conflict_count"
+    },
+    {
+      "importance": 0.003926,
+      "name": "a_base_REASON_MORE"
+    },
+    {
+      "importance": 0.003338,
+      "name": "a_base_ANSWER"
+    },
+    {
+      "importance": 0.000285,
+      "name": "prior_action_count"
+    },
+    {
+      "importance": 0.000221,
+      "name": "a_base_RETRIEVE"
+    }
+  ]
+}

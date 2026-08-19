@@ -60,12 +60,14 @@ from ..selective_governor import (
     InterventionDecision,
     serialize_decision,
 )
+from ..selective_governor.features import extract_features
+from ..selective_governor.pairwise_advantage_predictor import PairwiseAdvantagePredictor
 from .modes import GovernorMode
 
 RUNNER_SCHEMA = "DAPH_V2B_I3_5_2_TRAJECTORY_RUNNER_V1"
 RUNNER_VERSION = 1
 
-# The six permutations for counterbalancing
+# The six permutations for counterbalancing (3 arms)
 ARM_PERMUTATIONS: tuple[tuple[GovernorMode, ...], ...] = (
     (GovernorMode.OFF, GovernorMode.ALWAYS_ON, GovernorMode.SELECTIVE_FRAME),
     (GovernorMode.OFF, GovernorMode.SELECTIVE_FRAME, GovernorMode.ALWAYS_ON),
@@ -76,13 +78,31 @@ ARM_PERMUTATIONS: tuple[tuple[GovernorMode, ...], ...] = (
 )
 
 
-def counterbalanced_order(seed: str, task_id: str) -> tuple[GovernorMode, ...]:
-    """Deterministically select arm ordering from HMAC(seed, task_id) % 6."""
+def _all_permutations(modes: tuple[GovernorMode, ...]) -> list[tuple[GovernorMode, ...]]:
+    """Generate all permutations of the given modes."""
+    from itertools import permutations
+    return [tuple(p) for p in permutations(modes)]
+
+
+def counterbalanced_order(
+    seed: str, task_id: str, modes: tuple[GovernorMode, ...] | None = None,
+) -> tuple[GovernorMode, ...]:
+    """Deterministically select arm ordering from HMAC(seed, task_id).
+
+    If modes is provided, generates all permutations of those modes.
+    Otherwise, uses the default ARM_PERMUTATIONS.
+    """
     key = seed.encode() if isinstance(seed, str) else seed
     msg = task_id.encode()
     h = hmac.new(key, msg, hashlib.sha256).digest()
-    idx = int.from_bytes(h[:4], "big") % 6
-    return ARM_PERMUTATIONS[idx]
+
+    if modes is not None:
+        perms = _all_permutations(modes)
+        idx = int.from_bytes(h[:4], "big") % len(perms)
+        return perms[idx]
+    else:
+        idx = int.from_bytes(h[:4], "big") % 6
+        return ARM_PERMUTATIONS[idx]
 
 
 @dataclass(frozen=True)
@@ -174,6 +194,7 @@ class I352FactorialRunner:
     executor: DeterministicActionExecutor = field(default_factory=DeterministicActionExecutor)
     governor: GeneralGovernor = field(default_factory=GeneralGovernor)
     gate: SelectiveGovernorGate = field(default_factory=SelectiveGovernorGate)
+    pairwise_predictor: PairwiseAdvantagePredictor | None = None
     utility: MetareasoningUtility | None = None
     experiment_id: str = "v2b_i3_5_2_experiment_v1"
     experiment_identity_sha256: str = ""
@@ -291,6 +312,14 @@ class I352FactorialRunner:
                 packet_schema = packet["schema"]
                 gov_top, gov_reason, gov_sha = None, None, None
 
+            elif governor_mode == GovernorMode.SELECTIVE_QPIB_BASE_FIRST:
+                # Base-first: always start with base packet.
+                # After getting a_B from the model, we'll evaluate whether
+                # to make a second governor-packet call.
+                packet = build_base_packet(observation)
+                packet_schema = packet["schema"]
+                gov_top, gov_reason, gov_sha = None, None, None
+
             assert_no_evaluator_leakage(packet)
             user_prompt = packet_json(packet)
             pkt_sha = packet_sha256(packet)
@@ -392,6 +421,160 @@ class I352FactorialRunner:
             )
             self.receipt_ledger.add(receipt)
 
+            # === SELECTIVE_QPIB_BASE_FIRST: second model call if needed ===
+            # We have a_B from the base packet call. Now compute governor a_G
+            # and evaluate pairwise advantage. If approved, make a second
+            # model call with the governor packet and use that action instead.
+            if governor_mode == GovernorMode.SELECTIVE_QPIB_BASE_FIRST and self.pairwise_predictor is not None:
+                a_b_str = proposal.action.value
+
+                # Compute governor recommendation
+                governor_frame = self.governor.assess(
+                    observation=observation,
+                    remaining_steps=self.max_steps - step_id,
+                    prior_actions=prior_action_strs,
+                    prior_outcomes=tuple(prior_outcomes),
+                )
+                a_g_str = governor_frame.governor_top_action or a_b_str
+                gov_top = a_g_str
+                gov_reason = governor_frame.governor_reason_code
+                gov_sha = frame_sha256(governor_frame)
+
+                if a_g_str != a_b_str:
+                    # Extract features for pairwise advantage evaluation
+                    pw_features = extract_features(
+                        observation,
+                        remaining_steps=self.max_steps - step_id,
+                        prior_actions=prior_action_strs,
+                        prior_outcomes=tuple(prior_outcomes),
+                    )
+
+                    # Evaluate pairwise advantage
+                    should_intervene, delta_q_pi, pw_reason = self.pairwise_predictor.should_intervene(
+                        pw_features, a_b_str, a_g_str,
+                    )
+
+                    if should_intervene:
+                        # Make second model call with governor packet
+                        actual_intervened = True
+                        interventions_approved += 1
+                        gov_packet = build_governor_packet(observation, governor_frame)
+                        assert_no_evaluator_leakage(gov_packet)
+                        gov_user_prompt = packet_json(gov_packet)
+                        gov_pkt_sha = packet_sha256(gov_packet)
+                        packet_schema = gov_packet["schema"]
+
+                        self.backend.pair_id = f"{trajectory_id}:interv:step{step_id}"
+
+                        model_calls += 1
+                        gov_prompt_tokens = 0
+                        gov_completion_tokens = 0
+                        gov_call_total_tokens = 0
+                        gov_ts_start = datetime.now(timezone.utc).isoformat()
+                        gov_t_start = time.monotonic()
+                        try:
+                            gov_call_result = self.backend.generate(
+                                system_prompt=SYSTEM_PROMPT, user_prompt=gov_user_prompt,
+                                temperature=self.temperature, max_tokens=self.max_tokens)
+                        except Exception:
+                            backend_errors += 1
+                            gov_proposal = BACKEND_ERROR_PROPOSAL
+                            gov_call_result = None
+                            gov_http_status = 500
+                            gov_raw_output = None
+                        else:
+                            gov_raw_output = gov_call_result.raw_output
+                            gov_http_status = 200
+                            gov_prompt_tokens = gov_call_result.prompt_tokens
+                            gov_completion_tokens = gov_call_result.completion_tokens
+                            gov_call_total_tokens = gov_prompt_tokens + gov_completion_tokens
+                            gov_outcome = decode_output(gov_call_result.raw_output, strict=self.strict_json)
+                            if gov_outcome.valid and gov_outcome.proposal:
+                                gov_proposal = gov_outcome.proposal
+                            else:
+                                decoder_failures += 1
+                                gov_proposal = FAIL_CLOSED_PROPOSAL
+
+                        gov_t_end = time.monotonic()
+                        gov_latency_ms = (gov_t_end - gov_t_start) * 1000.0
+                        total_latency_ms += gov_latency_ms
+                        total_prompt_tokens += gov_prompt_tokens
+                        total_completion_tokens += gov_completion_tokens
+                        total_tokens += gov_call_total_tokens
+                        prompt_tokens += gov_prompt_tokens
+                        completion_tokens += gov_completion_tokens
+                        call_total_tokens += gov_call_total_tokens
+
+                        # Record second receipt
+                        gov_receipt = make_receipt(
+                            run_id=self.receipt_ledger.run_id,
+                            experiment_identity_sha256=self.experiment_identity_sha256,
+                            condition_identity_sha256=condition_sha,
+                            task_id=task.task_id,
+                            pair_or_block_id=f"{self.experiment_id}:{task.task_id}",
+                            trajectory_id=trajectory_id,
+                            step_id=step_id,
+                            attempt_index=1,
+                            input_packet=gov_packet,
+                            system_prompt=SYSTEM_PROMPT,
+                            generation_config={
+                                "temperature": self.temperature,
+                                "max_tokens": self.max_tokens,
+                                "strict_json": self.strict_json,
+                            },
+                            provider="deepseek",
+                            requested_model="deepseek-chat",
+                            reported_model=gov_call_result.model_name if gov_call_result else None,
+                            system_fingerprint=gov_call_result.system_fingerprint if gov_call_result else None,
+                            timestamp_start=gov_ts_start,
+                            timestamp_end=datetime.now(timezone.utc).isoformat(),
+                            latency_ms=gov_latency_ms,
+                            http_status=gov_http_status,
+                            result_class=(
+                                "OK" if gov_call_result and gov_proposal is not BACKEND_ERROR_PROPOSAL
+                                else "BACKEND_ERROR" if gov_call_result is None
+                                else "DECODER_FAILURE" if gov_proposal is FAIL_CLOSED_PROPOSAL
+                                else "OK"
+                            ),
+                            raw_output=gov_raw_output,
+                            parsed_output=(
+                                {"action": gov_proposal.action.value, "reason_code": gov_proposal.reason_code}
+                                if gov_proposal is not None else None
+                            ),
+                            decoder_status=(
+                                "VALID" if gov_proposal is not None and gov_proposal is not FAIL_CLOSED_PROPOSAL
+                                else "INVALID" if gov_proposal is FAIL_CLOSED_PROPOSAL and gov_call_result is not None
+                                else "NOT_RUN"
+                            ),
+                            previous_receipt_sha256=self.receipt_ledger.receipt_chain_root,
+                        )
+                        self.receipt_ledger.add(gov_receipt)
+
+                        # Use the governor-packet action
+                        proposal = gov_proposal
+                        pkt_sha = gov_pkt_sha
+
+                        # Record intervention
+                        interventions.append(InterventionRecord(
+                            task_id=task.task_id,
+                            step_id=step_id,
+                            gate_decision="INTERVENE",
+                            gate_reason=pw_reason,
+                            expected_delta_q=delta_q_pi,
+                            predicted_harm_probability=0.0,
+                            predicted_confidence=1.0,
+                            model_action=proposal.action.value,
+                            governor_top_action=a_g_str,
+                            governor_model_agreement=(a_g_str == proposal.action.value),
+                            outcome="",  # filled after execution
+                            packet_schema=packet_schema,
+                            prompt_tokens=gov_prompt_tokens,
+                            completion_tokens=gov_completion_tokens,
+                            latency_ms=gov_latency_ms,
+                        ))
+                    # else: skip intervention, use a_B (already in proposal)
+                # else: a_G == a_B, no intervention needed
+
             # Execute action
             action = proposal.action
             resources_before = runtime.resources
@@ -425,8 +608,10 @@ class I352FactorialRunner:
                     intervention_chain_lengths.append(current_consecutive)
                 current_consecutive = 0
 
-            # Record intervention detail
-            if actual_intervened and gate_decision is not None:
+            # Record intervention detail (for SELECTIVE/SELECTIVE_FRAME modes)
+            # Note: SELECTIVE_QPIB_BASE_FIRST records interventions earlier with
+            # the pairwise advantage reason, so we skip it here.
+            if actual_intervened and gate_decision is not None and governor_mode != GovernorMode.SELECTIVE_QPIB_BASE_FIRST:
                 interventions.append(InterventionRecord(
                     task_id=task.task_id,
                     step_id=step_id,
@@ -463,6 +648,27 @@ class I352FactorialRunner:
                     completion_tokens=completion_tokens,
                     latency_ms=latency_ms,
                 ))
+
+            # Update intervention outcome for base-first mode (recorded earlier with empty outcome)
+            if actual_intervened and governor_mode == GovernorMode.SELECTIVE_QPIB_BASE_FIRST and interventions:
+                last_iv = interventions[-1]
+                interventions[-1] = InterventionRecord(
+                    task_id=last_iv.task_id,
+                    step_id=last_iv.step_id,
+                    gate_decision=last_iv.gate_decision,
+                    gate_reason=last_iv.gate_reason,
+                    expected_delta_q=last_iv.expected_delta_q,
+                    predicted_harm_probability=last_iv.predicted_harm_probability,
+                    predicted_confidence=last_iv.predicted_confidence,
+                    model_action=last_iv.model_action,
+                    governor_top_action=last_iv.governor_top_action,
+                    governor_model_agreement=last_iv.governor_model_agreement,
+                    outcome=execution.outcome_code,
+                    packet_schema=last_iv.packet_schema,
+                    prompt_tokens=last_iv.prompt_tokens,
+                    completion_tokens=last_iv.completion_tokens,
+                    latency_ms=last_iv.latency_ms,
+                )
 
             steps.append(I352TrajectoryStep(
                 step_id=step_id,
@@ -592,7 +798,7 @@ class I352FactorialRunner:
 
         # Determine execution order
         if counterbalance_seed:
-            execution_order = counterbalanced_order(counterbalance_seed, task.task_id)
+            execution_order = counterbalanced_order(counterbalance_seed, task.task_id, modes=modes)
         else:
             execution_order = modes
 
