@@ -6,21 +6,26 @@ trajectories, recomputes the governor recommendation a_G, extracts features,
 runs the pairwise advantage model, and records every gate evaluation
 (including SKIPs).
 
-This closes the loop: the standard run proves approved interventions = 0,
-but this replay proves the complete runtime distribution of predicted ΔQ_π.
-
 No DeepSeek API calls are needed — this is pure offline computation using
 the saved trajectory steps and the trained pairwise model.
+
+I3.5.3-r2.1 changes:
+  - Full floating-point precision internally; rounding only in display fields
+  - Criterion-specific artifact naming (tau5_margin5, tau0_margin0, etc.)
+  - Full provenance binding (SHA-256 of all inputs)
+  - Hard invariant: at tau=0, margin=0, approved == predicted_positive
 
 Usage:
     PYTHONPATH=. python scripts/replay_i3_5_3r1_gate_evaluations.py \\
         --results experiments/v2b_i3_5_2/development/i353r1_38ecd7e5849c/results.json \\
-        --gate-model experiments/v2b_i3_5_2/development/i353r1/pairwise_advantage_gate_v1.pkl
+        --gate-model experiments/v2b_i3_5_2/development/i353r1/pairwise_advantage_gate_v1.pkl \\
+        --delta-threshold 5 --lcb-margin 5
 """
 from __future__ import annotations
 
 import argparse
 import copy
+import hashlib
 import json
 import sys
 from collections import Counter, defaultdict
@@ -55,6 +60,41 @@ from hrm_adaptive_memory.executive.selective_governor.pairwise_advantage_predict
 )
 
 
+def criterion_slug(threshold: float, margin: float) -> str:
+    """Generate a filesystem-safe slug from the criterion parameters."""
+    s = f"tau{threshold:g}_margin{margin:g}"
+    return s.replace(".", "p").replace("-", "m")
+
+
+def file_sha256(path: str | Path) -> str:
+    p = Path(path)
+    if not p.exists():
+        return "MISSING"
+    return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def compute_replay_identity(
+    results_sha: str,
+    model_sha: str,
+    script_sha: str,
+    benchmark_sha: str,
+    predictor_source_sha: str,
+    threshold: float,
+    margin: float,
+) -> str:
+    """Compute a replay identity that binds all inputs + criterion."""
+    binding = json.dumps({
+        "results_sha": results_sha,
+        "model_sha": model_sha,
+        "script_sha": script_sha,
+        "benchmark_sha": benchmark_sha,
+        "predictor_source_sha": predictor_source_sha,
+        "threshold": threshold,
+        "margin": margin,
+    }, sort_keys=True)
+    return hashlib.sha256(binding.encode()).hexdigest()
+
+
 def features_from_step(
     task: Any,
     i3_runtime: Any,
@@ -86,13 +126,14 @@ def replay_trajectory(
     sel_steps: list[dict[str, Any]],
     governor: GeneralGovernor,
     predictor: PairwiseAdvantagePredictor,
+    replay_identity_sha: str,
     max_steps: int = 24,
 ) -> list[dict[str, Any]]:
     """Replay one SELECTIVE_QPIB_BASE_FIRST trajectory offline.
 
     For each step, reconstruct the state, get a_B from the saved step,
     compute a_G from the governor, extract features, and evaluate the
-    pairwise predictor. Record every evaluation.
+    pairwise predictor. Record every evaluation with FULL precision.
     """
     oracle_executor = DeterministicMetareasoningExecutor()
     task_executor = DeterministicActionExecutor()
@@ -130,8 +171,9 @@ def replay_trajectory(
 
         # Evaluate pairwise predictor if there's a disagreement
         if a_b_str != a_g_str:
-            delta_q_pi = predictor.predict_advantage(features, a_b_str, a_g_str)
-            lcb = delta_q_pi - predictor.lcb_margin
+            # FULL precision — no rounding before aggregation
+            delta_q_pi = float(predictor.predict_advantage(features, a_b_str, a_g_str))
+            lcb = float(delta_q_pi - predictor.lcb_margin)
             should_intervene, _, reason = predictor.should_intervene(
                 features, a_b_str, a_g_str)
 
@@ -140,13 +182,18 @@ def replay_trajectory(
                 "step_id": step_idx,
                 "base_action": a_b_str,
                 "governor_action": a_g_str,
-                "predicted_delta_q_pi": round(delta_q_pi, 4),
-                "lcb": round(lcb, 4),
+                # Full precision for scientific calculations
+                "predicted_delta_q_pi": delta_q_pi,
+                "lcb": lcb,
+                # Display-only rounded values
+                "predicted_delta_q_pi_display": round(delta_q_pi, 4),
+                "lcb_display": round(lcb, 4),
                 "threshold": predictor.delta_threshold,
                 "margin": predictor.lcb_margin,
                 "effective_requirement": predictor.delta_threshold + predictor.lcb_margin,
                 "decision": "INTERVENE" if should_intervene else "SKIP",
                 "reason": reason,
+                "replay_identity_sha256": replay_identity_sha,
             })
         else:
             evaluations.append({
@@ -156,11 +203,14 @@ def replay_trajectory(
                 "governor_action": a_g_str,
                 "predicted_delta_q_pi": 0.0,
                 "lcb": 0.0,
+                "predicted_delta_q_pi_display": 0.0,
+                "lcb_display": 0.0,
                 "threshold": predictor.delta_threshold,
                 "margin": predictor.lcb_margin,
                 "effective_requirement": predictor.delta_threshold + predictor.lcb_margin,
                 "decision": "SKIP_SAME_ACTION",
                 "reason": "a_G == a_B",
+                "replay_identity_sha256": replay_identity_sha,
             })
 
         # Step forward using the executed action from the saved trajectory
@@ -204,6 +254,7 @@ def main():
     parser.add_argument("--lcb-margin", type=float, default=None)
     args = parser.parse_args()
 
+    # Load predictor and apply overrides
     print(f"Loading pairwise advantage gate from {args.gate_model}...")
     predictor = PairwiseAdvantagePredictor.load(args.gate_model)
     if args.delta_threshold is not None:
@@ -214,6 +265,50 @@ def main():
     print(f"  LCB margin: {predictor.lcb_margin}")
     print(f"  Effective requirement: predicted ΔQ_π > {predictor.delta_threshold + predictor.lcb_margin}")
 
+    # Compute provenance
+    print("\nComputing replay provenance...")
+    results_sha = file_sha256(args.results)
+    model_sha = file_sha256(args.gate_model)
+    script_sha = file_sha256(__file__)
+    benchmark_sha = file_sha256(args.benchmark_manifest)
+    predictor_source_sha = file_sha256(
+        ROOT / "hrm_adaptive_memory/executive/selective_governor/pairwise_advantage_predictor.py")
+
+    # Get source commit
+    import subprocess
+    try:
+        source_commit = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    except Exception:
+        source_commit = "UNKNOWN"
+
+    replay_identity_sha = compute_replay_identity(
+        results_sha=results_sha,
+        model_sha=model_sha,
+        script_sha=script_sha,
+        benchmark_sha=benchmark_sha,
+        predictor_source_sha=predictor_source_sha,
+        threshold=predictor.delta_threshold,
+        margin=predictor.lcb_margin,
+    )
+    print(f"  Replay identity: {replay_identity_sha}")
+    print(f"  Results SHA:     {results_sha[:16]}...")
+    print(f"  Model SHA:       {model_sha[:16]}...")
+    print(f"  Script SHA:      {script_sha[:16]}...")
+
+    # Criterion-specific output directory
+    slug = criterion_slug(predictor.delta_threshold, predictor.lcb_margin)
+    output_dir = Path(args.output_dir) / "replay"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    evals_path = output_dir / f"gate_evaluations_{slug}.jsonl"
+    summary_path = output_dir / f"gate_evaluation_summary_{slug}.json"
+
+    print(f"\nOutput slug: {slug}")
+    print(f"  Evaluations: {evals_path}")
+    print(f"  Summary:     {summary_path}")
+
+    # Load benchmark and results
     print(f"\nLoading benchmark from {args.benchmark_manifest}...")
     benchmark = load_metareasoning_benchmark(args.benchmark_manifest, verify_oracle_cache=False)
     split_bm = benchmark.for_split("structure_dev_v2")
@@ -245,7 +340,8 @@ def main():
 
         evals = replay_trajectory(
             task=task, budget=budget, sel_steps=sel_steps,
-            governor=governor, predictor=predictor)
+            governor=governor, predictor=predictor,
+            replay_identity_sha=replay_identity_sha)
         all_evaluations.extend(evals)
 
         if (i + 1) % 50 == 0:
@@ -254,17 +350,15 @@ def main():
 
     print(f"\nTotal evaluations: {len(all_evaluations)}")
 
-    # Save all evaluations
-    output_dir = Path(args.output_dir)
-    evals_path = output_dir / "gate_evaluations.jsonl"
+    # Save all evaluations (full precision)
     with open(evals_path, "w") as f:
         for ev in all_evaluations:
             f.write(json.dumps(ev, sort_keys=True) + "\n")
     print(f"Saved: {evals_path}")
 
-    # Analysis
+    # Analysis — all from full precision
     print("\n" + "=" * 78)
-    print("GATE EVALUATION DISTRIBUTION (OFFLINE REPLAY)")
+    print(f"GATE EVALUATION DISTRIBUTION (OFFLINE REPLAY — {slug})")
     print("=" * 78)
 
     n = len(all_evaluations)
@@ -275,10 +369,35 @@ def main():
     print(f"  a_G == a_B (no disagreement): {n_same}")
     print(f"  a_G != a_B (disagreement):    {n_disagree}")
 
-    # For disagreement evaluations only
+    # For disagreement evaluations only — use full precision values
     disagree_evals = [e for e in all_evaluations if e["decision"] != "SKIP_SAME_ACTION"]
 
+    summary: dict[str, Any] = {
+        "schema": "DAPH_V2B_I3_5_3R2_REPLAY_V1",
+        "replay_identity_sha256": replay_identity_sha,
+        "criterion_slug": slug,
+        "n_evaluations": n,
+        "n_same_action": n_same,
+        "n_disagreements": n_disagree,
+        "runtime_params": {
+            "delta_threshold": predictor.delta_threshold,
+            "lcb_margin": predictor.lcb_margin,
+            "effective_requirement": predictor.delta_threshold + predictor.lcb_margin,
+        },
+        "provenance": {
+            "source_results_sha256": results_sha,
+            "gate_model_sha256": model_sha,
+            "replay_script_sha256": script_sha,
+            "benchmark_manifest_sha256": benchmark_sha,
+            "predictor_source_sha256": predictor_source_sha,
+            "threshold": predictor.delta_threshold,
+            "margin": predictor.lcb_margin,
+            "source_commit": source_commit,
+        },
+    }
+
     if disagree_evals:
+        # Full precision predictions
         predictions = [e["predicted_delta_q_pi"] for e in disagree_evals]
         lcbs = [e["lcb"] for e in disagree_evals]
 
@@ -298,11 +417,11 @@ def main():
         n_skip = sum(1 for e in disagree_evals if e["decision"] == "SKIP")
 
         print(f"\n--- Predicted ΔQ_π distribution (N={n_disagree} disagreements) ---")
-        print(f"  Mean predicted ΔQ_π:  {mean_pred:+.4f}")
-        print(f"  Min predicted ΔQ_π:   {min_pred:+.4f}")
-        print(f"  Max predicted ΔQ_π:   {max_pred:+.4f}")
-        print(f"  Mean LCB:             {mean_lcb:+.4f}")
-        print(f"  Max LCB:              {max_lcb:+.4f}")
+        print(f"  Mean predicted ΔQ_π:  {mean_pred:+.6f}")
+        print(f"  Min predicted ΔQ_π:   {min_pred:+.6f}")
+        print(f"  Max predicted ΔQ_π:   {max_pred:+.6f}")
+        print(f"  Mean LCB:             {mean_lcb:+.6f}")
+        print(f"  Max LCB:              {max_lcb:+.6f}")
         print(f"  Predicted > 0:        {pred_positive}/{n_disagree} ({pred_positive/n_disagree:.1%})")
         print(f"  Predicted > 5:        {pred_gt_5}/{n_disagree} ({pred_gt_5/n_disagree:.1%})")
         print(f"  Predicted > 10:       {pred_gt_10}/{n_disagree} ({pred_gt_10/n_disagree:.1%})")
@@ -310,6 +429,15 @@ def main():
         print(f"  LCB > 5:              {lcb_gt_5}/{n_disagree} ({lcb_gt_5/n_disagree:.1%})")
         print(f"  Approved (INTERVENE): {n_intervene}/{n_disagree}")
         print(f"  Skipped (SKIP):       {n_skip}/{n_disagree}")
+
+        # Hard invariant: at tau=0, margin=0, approved == pred_positive
+        if predictor.delta_threshold == 0.0 and predictor.lcb_margin == 0.0:
+            assert n_intervene == pred_positive, (
+                f"INVARIANT VIOLATION: at tau=0, margin=0, "
+                f"approved ({n_intervene}) != predicted_positive ({pred_positive}). "
+                f"This indicates a rounding or logic bug."
+            )
+            print(f"\n  INVARIANT CHECK: approved == predicted_positive → PASS ({n_intervene} == {pred_positive})")
 
         # Action pair distribution
         print(f"\n--- Action pair × predicted ΔQ_π ---")
@@ -320,30 +448,22 @@ def main():
         for (b, g), preds in sorted(pair_preds.items(), key=lambda x: -len(x[1])):
             pos = sum(1 for p in preds if p > 0)
             print(f"  {b} → {g}: n={len(preds)}, "
-                  f"mean={sum(preds)/len(preds):+.2f}, "
-                  f"max={max(preds):+.2f}, "
+                  f"mean={sum(preds)/len(preds):+.6f}, "
+                  f"max={max(preds):+.6f}, "
                   f"positive={pos}")
 
-    # Save summary
-    summary = {
-        "schema": "DAPH_V2B_I3_5_3R1_GATE_EVAL_REPLAY_V1",
-        "n_evaluations": n,
-        "n_same_action": n_same,
-        "n_disagreements": n_disagree,
-        "runtime_params": {
-            "delta_threshold": predictor.delta_threshold,
-            "lcb_margin": predictor.lcb_margin,
-            "effective_requirement": predictor.delta_threshold + predictor.lcb_margin,
-        },
-    }
-
-    if disagree_evals:
+        # Summary with full precision + display values
         summary["prediction_distribution"] = {
-            "mean": round(mean_pred, 4),
-            "min": round(min_pred, 4),
-            "max": round(max_pred, 4),
-            "mean_lcb": round(mean_lcb, 4),
-            "max_lcb": round(max_lcb, 4),
+            "mean": mean_pred,
+            "mean_display": round(mean_pred, 4),
+            "min": min_pred,
+            "min_display": round(min_pred, 4),
+            "max": max_pred,
+            "max_display": round(max_pred, 4),
+            "mean_lcb": mean_lcb,
+            "mean_lcb_display": round(mean_lcb, 4),
+            "max_lcb": max_lcb,
+            "max_lcb_display": round(max_lcb, 4),
             "pred_positive": pred_positive,
             "pred_gt_5": pred_gt_5,
             "pred_gt_10": pred_gt_10,
@@ -355,14 +475,15 @@ def main():
         summary["action_pair_distribution"] = {
             f"{b}->{g}": {
                 "n": len(preds),
-                "mean": round(sum(preds)/len(preds), 4),
-                "max": round(max(preds), 4),
+                "mean": sum(preds) / len(preds),
+                "mean_display": round(sum(preds) / len(preds), 4),
+                "max": max(preds),
+                "max_display": round(max(preds), 4),
                 "positive": sum(1 for p in preds if p > 0),
             }
             for (b, g), preds in pair_preds.items()
         }
 
-    summary_path = output_dir / "gate_evaluation_summary.json"
     summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
     print(f"\nSummary saved: {summary_path}")
 
