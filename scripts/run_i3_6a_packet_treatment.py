@@ -211,11 +211,11 @@ def run_packet_treatment(
 
         # Parse responses
         base_parsed = parse_model_response(
-            base_result.text if base_result else None)
+            base_result.raw_output if base_result else None)
         action_parsed = parse_model_response(
-            action_result.text if action_result else None)
+            action_result.raw_output if action_result else None)
         assist_parsed = parse_model_response(
-            assist_result.text if assist_result else None)
+            assist_result.raw_output if assist_result else None)
 
         base_action = base_parsed.get("action") if base_parsed else None
         action_action = action_parsed.get("action") if action_parsed else None

@@ -1,0 +1,65 @@
+{
+  "action_distributions": {
+    "action_only": {
+      "ANSWER": 2,
+      "SEARCH_MORE": 23,
+      "STOP": 2,
+      "VERIFY": 21
+    },
+    "base": {
+      "ANSWER": 34,
+      "RETRIEVE": 10,
+      "STOP": 4
+    },
+    "exec_assist": {
+      "ANSWER": 4,
+      "SEARCH_MORE": 24,
+      "VERIFY": 20
+    }
+  },
+  "agreement_rates": {
+    "action_vs_assist": "45/48 (93.8%)",
+    "base_vs_action": "2/48 (4.2%)",
+    "base_vs_assist": "0/48 (0.0%)"
+  },
+  "assistance_identity_sha256": "a592e9c706afd9a1cd45b59f4797a4818b73b465f9dfaf8ebddcc8eb21197440",
+  "assistance_utilization": {
+    "assistance_used": "0/48",
+    "success_condition_understood": "0/48"
+  },
+  "backend_errors": {
+    "action_only": 0,
+    "base": 0,
+    "exec_assist": 0
+  },
+  "governor_follow_rate": {
+    "action_only": "46/48 (95.8%)",
+    "base": "0/48 (0.0%)",
+    "exec_assist": "47/48 (97.9%)"
+  },
+  "json_validity": {
+    "action_only": 48,
+    "base": 48,
+    "exec_assist": 48
+  },
+  "n_tasks_processed": 50,
+  "n_treatment_states": 48,
+  "schema": "DAPH_V2B_I3_6A_PACKET_TREATMENT_V1",
+  "token_costs": {
+    "action_only": {
+      "completion": 1552,
+      "prompt": 84657,
+      "total": 86209
+    },
+    "base": {
+      "completion": 1048,
+      "prompt": 48246,
+      "total": 49294
+    },
+    "exec_assist": {
+      "completion": 1482,
+      "prompt": 98949,
+      "total": 100431
+    }
+  }
+}
