@@ -10,10 +10,18 @@
     20.4083
   ],
   "ci_method": "paired_task_bootstrap",
+  "ci_method_description": "Two-sided 95% percentile bootstrap CI. The lower endpoint is the 2.5th percentile of the bootstrap distribution. This is more conservative than a one-sided 95% LCB (which would use the 5th percentile).",
   "estimand_u": "U_M - U_A",
-  "lcb95_bootstrap": 8.5111,
-  "lcb95_normal": 8.0078,
-  "lcb95_positive": true,
+  "frozen_confirmation_claims": {
+    "C1_P_success_M_gt_P_success_A": true,
+    "C2_E_delta_U_gt_0": true,
+    "C3_rescues_gt_breaks": true,
+    "C4_redundant_M_lt_redundant_A": true,
+    "C5_steps_M_lt_steps_A": true
+  },
+  "lower_endpoint_two_sided_95ci_bootstrap": 8.5111,
+  "lower_endpoint_two_sided_95ci_normal": 8.0078,
+  "lower_endpoint_two_sided_95ci_positive": true,
   "mcnemar": {
     "all_favor_m": true,
     "b_a_only_success": 0,
@@ -25,13 +33,6 @@
   "mean_delta_u": 14.2081,
   "n_pairs": 200,
   "pairing_unit": "task_id",
-  "pre_registered_claims": {
-    "C1_P_success_M_gt_P_success_A": true,
-    "C2_E_delta_U_gt_0": true,
-    "C3_rescues_gt_breaks": true,
-    "C4_redundant_M_lt_redundant_A": true,
-    "C5_steps_M_lt_steps_A": true
-  },
   "primary_confirmatory_criterion": {
     "criterion": "LCB_95(U_M - U_A) > 0",
     "satisfied": true

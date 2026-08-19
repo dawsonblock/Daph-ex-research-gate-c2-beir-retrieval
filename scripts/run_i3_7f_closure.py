@@ -186,9 +186,15 @@ def compute_paired_statistics(results: list[dict]) -> dict:
         "ci_method": "paired_task_bootstrap",
         "ci95_bootstrap": [round(ci_lo, 4), round(ci_hi, 4)],
         "ci95_normal": [round(normal_lo, 4), round(normal_hi, 4)],
-        "lcb95_bootstrap": round(ci_lo, 4),
-        "lcb95_normal": round(normal_lo, 4),
-        "lcb95_positive": ci_lo > 0,
+        "lower_endpoint_two_sided_95ci_bootstrap": round(ci_lo, 4),
+        "lower_endpoint_two_sided_95ci_normal": round(normal_lo, 4),
+        "lower_endpoint_two_sided_95ci_positive": ci_lo > 0,
+        "ci_method_description": (
+            "Two-sided 95% percentile bootstrap CI. The lower endpoint "
+            "is the 2.5th percentile of the bootstrap distribution. "
+            "This is more conservative than a one-sided 95% LCB (which "
+            "would use the 5th percentile)."
+        ),
         "success": {
             "a_success": a_s,
             "m_success": m_s,
@@ -212,7 +218,7 @@ def compute_paired_statistics(results: list[dict]) -> dict:
             "m_mean": round(m_steps / n, 4),
             "delta_mean": round(m_steps / n - a_steps / n, 4),
         },
-        "pre_registered_claims": {
+        "frozen_confirmation_claims": {
             "C1_P_success_M_gt_P_success_A": m_s / n > a_s / n,
             "C2_E_delta_U_gt_0": mean_delta_u > 0,
             "C3_rescues_gt_breaks": mcnemar["c_m_only_success"] > mcnemar["b_a_only_success"],
@@ -220,7 +226,7 @@ def compute_paired_statistics(results: list[dict]) -> dict:
             "C5_steps_M_lt_steps_A": m_steps / n < a_steps / n,
         },
         "primary_confirmatory_criterion": {
-            "criterion": "LCB_95(U_M - U_A) > 0",
+            "criterion": "lower endpoint of two-sided 95% paired bootstrap CI(U_M - U_A) > 0",
             "satisfied": ci_lo > 0,
         },
         "safety_criterion": {
@@ -418,7 +424,15 @@ def run_behavioral_equivalence(benchmark, budget) -> dict:
 # ---------------------------------------------------------------------------
 
 def freeze_identity() -> dict:
-    """Record hashes of all frozen artifacts."""
+    """Record hashes of all frozen artifacts.
+
+    The hash boundary is widened to cover everything that affects
+    treatment semantics: M builder, system prompt, snapshot serializer,
+    model decoder, evidence executor, utility config, action vocabulary,
+    resource budgets, and the confirmation manifest/results.
+    """
+    import re
+
     # M builder source hash
     m_source = open(ROOT / "scripts" / "run_i3_7e_compact_governor.py").read()
     m_hash = sha256_str(m_source)
@@ -430,31 +444,126 @@ def freeze_identity() -> dict:
     results_hash = sha256_file(CONFIRMATION_RESULTS)
 
     # System prompt hash (extract from script)
-    import re
     prompt_match = re.search(
         r'MINIMAL_DECISION_STATE_SYSTEM_PROMPT = """(.*?)"""',
         m_source, re.DOTALL)
     m_prompt_hash = sha256_str(prompt_match.group(1)) if prompt_match else None
 
+    # Widen hash boundary: all components that affect treatment semantics
+    frozen_components = {}
+
+    # M builder script
+    frozen_components["m_builder_script"] = {
+        "path": "scripts/run_i3_7e_compact_governor.py",
+        "sha256": m_hash,
+    }
+
+    # M system prompt
+    frozen_components["m_system_prompt"] = {
+        "sha256": m_prompt_hash,
+    }
+
+    # Evidence snapshot serializer
+    serializer_path = ROOT / "hrm_adaptive_memory/executive/evidence_benchmark/serializer.py"
+    frozen_components["evidence_snapshot_serializer"] = {
+        "path": str(serializer_path.relative_to(ROOT)),
+        "sha256": sha256_file(serializer_path),
+    }
+
+    # Model decoder
+    decoder_path = ROOT / "hrm_adaptive_memory/executive/model_decoder.py"
+    frozen_components["model_decoder"] = {
+        "path": str(decoder_path.relative_to(ROOT)),
+        "sha256": sha256_file(decoder_path),
+    }
+
+    # Evidence executor
+    executor_path = ROOT / "hrm_adaptive_memory/executive/evidence_benchmark/executor.py"
+    frozen_components["evidence_executor"] = {
+        "path": str(executor_path.relative_to(ROOT)),
+        "sha256": sha256_file(executor_path),
+    }
+
+    # Evidence schema
+    schema_path = ROOT / "hrm_adaptive_memory/executive/evidence_benchmark/schema.py"
+    frozen_components["evidence_schema"] = {
+        "path": str(schema_path.relative_to(ROOT)),
+        "sha256": sha256_file(schema_path),
+    }
+
+    # Utility config
+    utility_path = ROOT / "configs/v2b_i3_1_utility_v1.json"
+    frozen_components["utility_config"] = {
+        "path": str(utility_path.relative_to(ROOT)),
+        "sha256": sha256_file(utility_path),
+    }
+
+    # Action vocabulary (core)
+    core_path = ROOT / "hrm_adaptive_memory/cognitive_control/core.py"
+    frozen_components["action_vocabulary_core"] = {
+        "path": str(core_path.relative_to(ROOT)),
+        "sha256": sha256_file(core_path),
+    }
+
+    # Cognitive state (VerificationState, TemporalStatus)
+    state_path = ROOT / "hrm_adaptive_memory/cognitive_control/state.py"
+    frozen_components["cognitive_state_enums"] = {
+        "path": str(state_path.relative_to(ROOT)),
+        "sha256": sha256_file(state_path),
+    }
+
+    # Resource budget
+    resources_path = ROOT / "hrm_adaptive_memory/executive/resources.py"
+    frozen_components["resource_budget"] = {
+        "path": str(resources_path.relative_to(ROOT)),
+        "sha256": sha256_file(resources_path),
+    }
+
+    # Model backend
+    backend_path = ROOT / "hrm_adaptive_memory/executive/model_backend.py"
+    frozen_components["model_backend"] = {
+        "path": str(backend_path.relative_to(ROOT)),
+        "sha256": sha256_file(backend_path),
+    }
+
+    # Pinned model controller (FAIL_CLOSED_PROPOSAL etc.)
+    controller_path = ROOT / "hrm_adaptive_memory/executive/pinned_model_controller.py"
+    frozen_components["pinned_model_controller"] = {
+        "path": str(controller_path.relative_to(ROOT)),
+        "sha256": sha256_file(controller_path),
+    }
+
+    # Confirmation manifest and results
+    frozen_components["confirmation_manifest"] = {
+        "path": "experiments/v2b_i3_7/manifests/i3_7_evidence_confirmation_v1.json",
+        "sha256": manifest_hash,
+    }
+    frozen_components["confirmation_results"] = {
+        "path": "experiments/v2b_i3_7/development/i3_7f/repair_check_v1.jsonl",
+        "sha256": results_hash,
+    }
+
+    # Source commit
+    import subprocess
+    commit_hash = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT
+    ).decode().strip()
+
+    frozen_components["source_commit"] = {
+        "git_sha": commit_hash,
+    }
+
+    # Model configuration
+    frozen_components["model_configuration"] = {
+        "model": "deepseek-chat",
+        "temperature": 0.0,
+        "max_tokens": 2048,
+        "response_format": "json_object",
+    }
+
     return {
         "schema": "DAPH_V2B_I3_7F_CLOSURE_V1",
-        "frozen_artifacts": {
-            "m_builder_script": {
-                "path": "scripts/run_i3_7e_compact_governor.py",
-                "sha256": m_hash,
-            },
-            "m_system_prompt": {
-                "sha256": m_prompt_hash,
-            },
-            "confirmation_manifest": {
-                "path": "experiments/v2b_i3_7/manifests/i3_7_evidence_confirmation_v1.json",
-                "sha256": manifest_hash,
-            },
-            "confirmation_results": {
-                "path": "experiments/v2b_i3_7/development/i3_7f/repair_check_v1.jsonl",
-                "sha256": results_hash,
-            },
-        },
+        "frozen_artifacts": frozen_components,
         "m_definition": {
             "name": "Minimal Decision State Governor (MDSG)",
             "type": "deterministic controller-visible state compressor",
@@ -512,10 +621,10 @@ def main():
     print(f"   Saved: {stats_path}")
     print(f"   Delta U: {stats['mean_delta_u']:+.4f}")
     print(f"   Bootstrap 95% CI: [{stats['ci95_bootstrap'][0]:+.4f}, {stats['ci95_bootstrap'][1]:+.4f}]")
-    print(f"   LCB_95 > 0: {stats['lcb95_positive']}")
+    print(f"   Lower endpoint 95% CI > 0: {stats['lower_endpoint_two_sided_95ci_positive']}")
     print(f"   McNemar: b={stats['mcnemar']['b_a_only_success']}, c={stats['mcnemar']['c_m_only_success']}, p={stats['mcnemar']['exact_p_value']}")
-    print(f"   Pre-registered claims:")
-    for claim, passed in stats["pre_registered_claims"].items():
+    print(f"   Frozen confirmation claims:")
+    for claim, passed in stats["frozen_confirmation_claims"].items():
         print(f"     {claim}: {'PASS' if passed else 'FAIL'}")
 
     # Leakage qualification
@@ -546,10 +655,10 @@ def main():
     identity["paired_statistics"] = {
         "mean_delta_u": stats["mean_delta_u"],
         "ci95_bootstrap": stats["ci95_bootstrap"],
-        "lcb95_positive": stats["lcb95_positive"],
+        "lower_endpoint_two_sided_95ci_positive": stats["lower_endpoint_two_sided_95ci_positive"],
         "rescues": stats["mcnemar"]["c_m_only_success"],
         "breaks": stats["mcnemar"]["b_a_only_success"],
-        "all_claims_pass": all(stats["pre_registered_claims"].values()),
+        "all_claims_pass": all(stats["frozen_confirmation_claims"].values()),
     }
     identity["leakage_qualification"] = {
         "passed": leakage["passed"],
@@ -569,10 +678,10 @@ def main():
     print(f"\n{'=' * 78}")
     print("I3.7f CLOSURE SUMMARY")
     print(f"{'=' * 78}")
-    print(f"  Primary criterion: LCB_95(Delta U) > 0")
+    print(f"  Primary criterion: lower endpoint of two-sided 95% paired bootstrap CI(Delta U) > 0")
     print(f"    Delta U = {stats['mean_delta_u']:+.4f}")
     print(f"    Bootstrap 95% CI = [{stats['ci95_bootstrap'][0]:+.4f}, {stats['ci95_bootstrap'][1]:+.4f}]")
-    print(f"    PASSED: {stats['lcb95_positive']}")
+    print(f"    PASSED: {stats['lower_endpoint_two_sided_95ci_positive']}")
     print(f"\n  Safety criterion: Breaks <= Rescues")
     print(f"    Breaks = {stats['mcnemar']['b_a_only_success']}")
     print(f"    Rescues = {stats['mcnemar']['c_m_only_success']}")
@@ -580,8 +689,8 @@ def main():
     print(f"    Zero breaks: {stats['safety_criterion']['strictly_zero_breaks']}")
     print(f"\n  McNemar exact test: p = {stats['mcnemar']['exact_p_value']}")
     print(f"    All discordant pairs favor M: {stats['mcnemar']['all_favor_m']}")
-    print(f"\n  Pre-registered claims:")
-    for claim, passed in stats["pre_registered_claims"].items():
+    print(f"\n  Frozen confirmation claims:")
+    for claim, passed in stats["frozen_confirmation_claims"].items():
         print(f"    {claim}: {'PASS' if passed else 'FAIL'}")
     print(f"\n  Leakage qualification: {'PASS' if leakage['passed'] else 'FAIL'}")
     print(f"    {leakage['packets_tested']} packets tested, 0 violations")
