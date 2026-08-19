@@ -1,0 +1,139 @@
+{
+  "advantage_distribution": {
+    "a_b": {
+      "mean": -14.268749999999999,
+      "negative": 40,
+      "positive": 8
+    },
+    "a_e": {
+      "mean": 58.77541666666667,
+      "negative": 5,
+      "positive": 43
+    },
+    "execution_gain": {
+      "mean": 73.04416666666667,
+      "negative": 0,
+      "positive": 44
+    }
+  },
+  "base_successes": 5,
+  "broken_by_action": 5,
+  "broken_by_assist": 5,
+  "broken_success_details": [
+    {
+      "base_action": "STOP",
+      "gov_action": "ANSWER",
+      "step_id": 0,
+      "task_id": "i3_3_structure_dev_v2_0011",
+      "u_action": -120.0,
+      "u_assist": -120.0,
+      "u_base": 0.0
+    },
+    {
+      "base_action": "STOP",
+      "gov_action": "ANSWER",
+      "step_id": 0,
+      "task_id": "i3_3_structure_dev_v2_0013",
+      "u_action": -120.0,
+      "u_assist": -120.0,
+      "u_base": 0.0
+    },
+    {
+      "base_action": "STOP",
+      "gov_action": "ANSWER",
+      "step_id": 0,
+      "task_id": "i3_3_structure_dev_v2_0025",
+      "u_action": -120.0,
+      "u_assist": -120.0,
+      "u_base": 0.0
+    },
+    {
+      "base_action": "STOP",
+      "gov_action": "ANSWER",
+      "step_id": 0,
+      "task_id": "i3_3_structure_dev_v2_0027",
+      "u_action": -120.0,
+      "u_assist": -120.0,
+      "u_base": 0.0
+    },
+    {
+      "base_action": "ANSWER",
+      "gov_action": "VERIFY",
+      "step_id": 3,
+      "task_id": "i3_3_structure_dev_v2_0037",
+      "u_action": -120.11,
+      "u_assist": -36.56,
+      "u_base": 100.0
+    }
+  ],
+  "by_action_pair": {
+    "ANSWER->SEARCH_MORE": {
+      "action_success": 0,
+      "assist_success": 0,
+      "base_success": 0,
+      "break": 0,
+      "mean_a_b": -0.11000000000000001,
+      "mean_a_e": 78.75956521739131,
+      "mean_execution_gain": 78.86956521739127,
+      "n": 23,
+      "rescue": 0
+    },
+    "ANSWER->VERIFY": {
+      "action_success": 0,
+      "assist_success": 0,
+      "base_success": 1,
+      "break": 1,
+      "mean_a_b": -20.110000000000007,
+      "mean_a_e": 62.20545454545454,
+      "mean_execution_gain": 82.31545454545453,
+      "n": 11,
+      "rescue": 0
+    },
+    "RETRIEVE->VERIFY": {
+      "action_success": 0,
+      "assist_success": 0,
+      "base_success": 0,
+      "break": 0,
+      "mean_a_b": 1.884,
+      "mean_a_e": 80.549,
+      "mean_execution_gain": 78.665,
+      "n": 10,
+      "rescue": 0
+    },
+    "STOP->ANSWER": {
+      "action_success": 0,
+      "assist_success": 0,
+      "base_success": 4,
+      "break": 4,
+      "mean_a_b": -120.0,
+      "mean_a_e": -120.0,
+      "mean_execution_gain": 0.0,
+      "n": 4,
+      "rescue": 0
+    }
+  },
+  "conversion_stages": {
+    "base_fail_action_success": 0,
+    "base_fail_assist_success": 0,
+    "base_success_action_fail": 5,
+    "base_success_assist_fail": 0,
+    "both_fail": 43,
+    "both_success": 0
+  },
+  "cost_adjusted": {
+    "mean_model_calls": {
+      "action_only": 1.1875,
+      "base": 0.5625,
+      "exec_assist": 5.270833333333333
+    },
+    "utility_per_call": {
+      "action_only": -101.6301754385965,
+      "base": -189.18592592592594,
+      "exec_assist": -9.038735177865613
+    }
+  },
+  "n_forks": 48,
+  "rescues_by_action": 0,
+  "rescues_by_assist": 0,
+  "schema": "DAPH_V2B_I3_6B_RESCUE_CONVERSION_V1"
+}
