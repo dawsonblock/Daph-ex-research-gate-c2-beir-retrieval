@@ -226,9 +226,11 @@ class EvidenceSnapshot:
     proposition-level evidence items, their hypothesis relationships,
     and verification states.
 
-    Action-availability hints (retrieve_available, search_available) are
-    controller-visible: the model can attempt either action and observe
-    whether new evidence appears. They do not leak hidden evidence content.
+    Action affordances (can_retrieve, can_search, can_verify) are
+    derived exclusively from resource budgets and visible evidence state.
+    They report whether an operation is legally callable, NOT whether
+    it will produce evidence. They do not inspect task.retrieve_exposes,
+    task.search_exposes, or any hidden/transition information.
     """
     task_id: str
     task_summary: str
@@ -243,8 +245,9 @@ class EvidenceSnapshot:
     resource_state: Mapping[str, int | float]
     prior_actions: tuple[str, ...]
     prior_outcomes: tuple[str, ...]
-    retrieve_available: bool = False
-    search_available: bool = False
+    can_retrieve: bool = False
+    can_search: bool = False
+    can_verify: bool = False
 
     def as_dict(self) -> dict:
         return {
@@ -261,8 +264,9 @@ class EvidenceSnapshot:
             "resource_state": dict(self.resource_state),
             "prior_actions": list(self.prior_actions),
             "prior_outcomes": list(self.prior_outcomes),
-            "retrieve_available": self.retrieve_available,
-            "search_available": self.search_available,
+            "can_retrieve": self.can_retrieve,
+            "can_search": self.can_search,
+            "can_verify": self.can_verify,
         }
 
 

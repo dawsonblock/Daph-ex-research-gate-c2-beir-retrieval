@@ -910,28 +910,27 @@ def build_mdsg_state_only_packet(
 
 
 # ---------------------------------------------------------------------------
-# M2: MDSG-StateWithHints — state estimation + action availability hints
+# M3: MDSG-StateWithAffordances — clean state estimation + legal affordances
 #
-# Combines M1's conservative READY with action-availability hints.
-# The hints tell the model WHAT operations are possible without
-# prescribing WHICH to take:
-#   retrieve_available: RETRIEVE would expose new evidence
-#   search_available: SEARCH_MORE would expose new evidence
+# I3.9-r3 repair of M2. Two changes:
+#   1. Clean affordances: can_retrieve/can_search/can_verify derived
+#      exclusively from resource budgets and visible evidence state.
+#      Does NOT inspect task.retrieve_exposes or task.search_exposes.
+#   2. Neutral state label: SUPPORTED_BUT_UNRESOLVED instead of
+#      PROVISIONALLY_READY. Prompt does not say "you may ANSWER".
+#      Reports only the epistemic condition.
 #
-# This addresses the fundamental tension from I3.9-r1:
-#   M0's operation recommendations: harmful when wrong, helpful when right
-#   M1's no hints: safe but model can't choose between RETRIEVE/SEARCH_MORE
-#   M2's availability hints: safe + model knows which operations are viable
+# M2 (736018d) is frozen as a contaminated development result.
 # ---------------------------------------------------------------------------
 
-MDSG_STATE_WITH_HINTS_SYSTEM_PROMPT = """You are a metareasoning controller for a retrieval-verification task.
+MDSG_STATE_WITH_AFFORDANCES_SYSTEM_PROMPT = """You are a metareasoning controller for a retrieval-verification task.
 
 You must choose one bounded action from the frozen seven-action vocabulary:
   ANSWER, RETRIEVE, VERIFY, SEARCH_MORE, REASON_MORE, DEFER, STOP
 
 ACTION SEMANTICS:
-  RETRIEVE: Expose hidden evidence items. Only useful if retrieve_available is true.
-  SEARCH_MORE: Search for additional evidence from other sources. Only useful if search_available is true.
+  RETRIEVE: Expose hidden evidence items.
+  SEARCH_MORE: Search for additional evidence from other sources.
   VERIFY: Verify the most recently retrieved unverified evidence item.
   ANSWER: Provide the final answer. Only use when you have sufficient verified current evidence.
   DEFER: Give up due to insufficient evidence.
@@ -942,21 +941,21 @@ You are given the evidence state plus a compact decision-state summary:
   - eliminated_hypotheses: hypotheses that have been ruled out
   - verified_support: evidence IDs that provide verified support
   - verified_contradictions: evidence IDs that provide verified contradiction
-  - decision_state: READY_TO_ANSWER, PROVISIONALLY_READY, NEEDS_DISCRIMINATION, NEEDS_EVIDENCE, or INSUFFICIENT
+  - decision_state: READY_TO_ANSWER, SUPPORTED_BUT_UNRESOLVED, NEEDS_DISCRIMINATION, NEEDS_EVIDENCE, or INSUFFICIENT
   - evidence_status: describes what evidence situation remains unresolved
-  - evidence_availability: tells you which operations CAN expose new evidence
-    - retrieve_available: true if RETRIEVE would expose new evidence
-    - search_available: true if SEARCH_MORE would expose new evidence
+  - action_affordances: which operations are currently callable
+    - can_retrieve: true if RETRIEVE can be called (retrieval budget remains)
+    - can_search: true if SEARCH_MORE can be called (search budget remains)
+    - can_verify: true if VERIFY can be called (verification budget remains and unverified visible evidence exists)
 
-This summary tells you the current decision-relevant state. Use it to avoid unnecessary actions.
+DECISION STATE MEANINGS (epistemic conditions only, no action recommendations):
+  READY_TO_ANSWER: One hypothesis has verified current support, no verified contradiction, no unresolved visible evidence, and no hidden evidence remains.
+  SUPPORTED_BUT_UNRESOLVED: One hypothesis currently has verified support, but unresolved evidence remains (unverified visible, hidden, or stale).
+  NEEDS_DISCRIMINATION: Multiple hypotheses are viable, or unverified visible evidence could discriminate between them.
+  NEEDS_EVIDENCE: No hypothesis has verified support, but evidence-gathering operations are possible.
+  INSUFFICIENT: No hypothesis can be resolved with available evidence.
 
-CRITICAL RULES:
-  - If decision_state is READY_TO_ANSWER, you have sufficient verified evidence. ANSWER immediately.
-  - If decision_state is PROVISIONALLY_READY, one hypothesis is supported but evidence remains. You may ANSWER or gather more evidence. Consider whether the visible evidence is reliable enough.
-  - If decision_state is NEEDS_DISCRIMINATION, multiple hypotheses are viable. VERIFY unverified evidence to discriminate.
-  - If decision_state is NEEDS_EVIDENCE, no hypothesis has verified support. Use evidence_availability to decide: RETRIEVE if retrieve_available, SEARCH_MORE if search_available.
-  - If decision_state is INSUFFICIENT, DEFER.
-  - You retain full authority over which action to take. The decision state and availability hints are advisory.
+Choose the next action yourself based on the epistemic state and which operations are callable.
 
 OUTPUT FORMAT:
 You must respond with a JSON object containing exactly these three fields:
@@ -971,18 +970,19 @@ The reason_code must be uppercase with underscores only.
 The word json appears in this prompt to satisfy the API requirement."""
 
 
-def build_mdsg_state_with_hints_packet(
+def build_mdsg_state_with_affordances_packet(
     snapshot: EvidenceSnapshot,
 ) -> dict:
-    """M2 arm: MDSG-StateWithHints.
+    """M3 arm: MDSG-StateWithAffordances.
 
     Strictly a function of the controller-visible snapshot.
     Must never receive EvidenceRuntime or EvidenceTask.
 
-    Combines M1's conservative READY with action-availability hints.
+    Clean affordances from budgets + visible state only.
+    Neutral state labels (SUPPORTED_BUT_UNRESOLVED, not PROVISIONALLY_READY).
     """
     packet = build_hypotheses_only_packet(snapshot)
-    packet["schema"] = "DAPH_V2B_I3_9_MDSG_STATE_WITH_HINTS_PACKET_V1"
+    packet["schema"] = "DAPH_V2B_I3_9_MDSG_STATE_WITH_AFFORDANCES_PACKET_V1"
 
     viability = _classify_from_snapshot(snapshot)
 
@@ -1018,34 +1018,25 @@ def build_mdsg_state_with_hints_packet(
 
     multiple_viable = len(live_hyps) > 1
 
-    # Action-availability hints from snapshot
-    retrieve_avail = snapshot.retrieve_available
-    search_avail = snapshot.search_available
-
-    # Build evidence_availability description
-    avail_parts = []
-    if retrieve_avail:
-        avail_parts.append("retrieve_available")
-    if search_avail:
-        avail_parts.append("search_available")
-    evidence_availability = {
-        "retrieve_available": retrieve_avail,
-        "search_available": search_avail,
-        "description": ", ".join(avail_parts) if avail_parts else "no_hidden_evidence_accessible",
+    # Clean affordances from snapshot (budget-derived, no transition info)
+    action_affordances = {
+        "can_retrieve": snapshot.can_retrieve,
+        "can_search": snapshot.can_search,
+        "can_verify": snapshot.can_verify,
     }
 
-    # Determine decision state — same conservative logic as M1
+    # Determine decision state — conservative, neutral labels
     if satisfied and not multiple_viable:
         if unverified_visible:
-            decision_state = "PROVISIONALLY_READY"
+            decision_state = "SUPPORTED_BUT_UNRESOLVED"
             evidence_status = "ONE_HYPOTHESIS_SUPPORTED_UNVERIFIED_VISIBLE_REMAINS"
             remaining_blocker = None
         elif snapshot.hidden_evidence_count > 0:
-            decision_state = "PROVISIONALLY_READY"
+            decision_state = "SUPPORTED_BUT_UNRESOLVED"
             evidence_status = "ONE_HYPOTHESIS_SUPPORTED_HIDDEN_EVIDENCE_REMAINS"
             remaining_blocker = None
         elif has_stale_verified:
-            decision_state = "PROVISIONALLY_READY"
+            decision_state = "SUPPORTED_BUT_UNRESOLVED"
             evidence_status = "SUPPORTED_WITH_STALE_EVIDENCE"
             remaining_blocker = None
         else:
@@ -1108,9 +1099,62 @@ def build_mdsg_state_with_hints_packet(
         "evidence_status": evidence_status,
         "remaining_blocker": remaining_blocker,
         "hidden_evidence_count": snapshot.hidden_evidence_count,
-        "evidence_availability": evidence_availability,
+        "action_affordances": action_affordances,
     }
 
+    assert_no_evidence_leakage(packet)
+    return packet
+
+
+# ---------------------------------------------------------------------------
+# A1: Baseline + public affordances (affordance-matched control)
+#
+# Same as baseline A0 but includes can_retrieve/can_search/can_verify.
+# This equalizes information access so M3-A1 isolates MDSG state value.
+# ---------------------------------------------------------------------------
+
+BASELINE_WITH_AFFORDANCES_SYSTEM_PROMPT = """You are a metareasoning controller for a retrieval-verification task.
+
+You must choose one bounded action from the frozen seven-action vocabulary:
+  ANSWER, RETRIEVE, VERIFY, SEARCH_MORE, REASON_MORE, DEFER, STOP
+
+ACTION SEMANTICS:
+  RETRIEVE: Expose hidden evidence items.
+  SEARCH_MORE: Search for additional evidence from other sources.
+  VERIFY: Verify the most recently retrieved unverified evidence item.
+  ANSWER: Provide the final answer. Only use when you have sufficient verified current evidence.
+  DEFER: Give up due to insufficient evidence.
+  STOP: Stop without answering.
+
+You are given the evidence state plus action affordances:
+  - can_retrieve: true if RETRIEVE can be called (retrieval budget remains)
+  - can_search: true if SEARCH_MORE can be called (search budget remains)
+  - can_verify: true if VERIFY can be called (verification budget remains and unverified visible evidence exists)
+
+Choose the next action based on the evidence and available operations.
+
+OUTPUT FORMAT:
+You must respond with a JSON object containing exactly these three fields:
+{
+  "action": "one of ANSWER RETRIEVE VERIFY SEARCH_MORE REASON_MORE DEFER STOP",
+  "reason_code": "A_SHORT_UPPERCASE_REASON_CODE",
+  "target_id": null
+}
+
+The reason_code must be uppercase with underscores only.
+
+The word json appears in this prompt to satisfy the API requirement."""
+
+
+def build_baseline_with_affordances_packet(snapshot: EvidenceSnapshot) -> dict:
+    """A1 arm: baseline evidence + public action affordances."""
+    packet = serialize_evidence_snapshot(snapshot)
+    packet["schema"] = "DAPH_V2B_I3_9_BASELINE_WITH_AFFORDANCES_PACKET_V1"
+    packet["action_affordances"] = {
+        "can_retrieve": snapshot.can_retrieve,
+        "can_search": snapshot.can_search,
+        "can_verify": snapshot.can_verify,
+    }
     assert_no_evidence_leakage(packet)
     return packet
 
@@ -1213,11 +1257,18 @@ def run_trajectory(
         elif mode == "MDSG_STATE_WITH_HINTS":
             packet = build_mdsg_state_with_hints_packet(evidence_snapshot)
             system_prompt = MDSG_STATE_WITH_HINTS_SYSTEM_PROMPT
+        elif mode == "MDSG_STATE_WITH_AFFORDANCES":
+            packet = build_mdsg_state_with_affordances_packet(evidence_snapshot)
+            system_prompt = MDSG_STATE_WITH_AFFORDANCES_SYSTEM_PROMPT
+        elif mode == "BASELINE_WITH_AFFORDANCES":
+            packet = build_baseline_with_affordances_packet(evidence_snapshot)
+            system_prompt = BASELINE_WITH_AFFORDANCES_SYSTEM_PROMPT
         else:
             raise ValueError(f"Unknown mode: {mode}")
 
         # Log per-step decision state for M arms
-        if mode in ("MINIMAL_DECISION_STATE", "MDSG_STATE_ONLY", "MDSG_STATE_WITH_HINTS"):
+        if mode in ("MINIMAL_DECISION_STATE", "MDSG_STATE_ONLY",
+                     "MDSG_STATE_WITH_HINTS", "MDSG_STATE_WITH_AFFORDANCES"):
             ds_info = packet.get("decision_state_summary", {})
             decision_state_log.append({
                 "step": step_id,

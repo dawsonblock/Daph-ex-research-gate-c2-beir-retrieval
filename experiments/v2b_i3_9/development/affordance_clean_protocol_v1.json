@@ -1,0 +1,83 @@
+{
+  "schema": "DAPH_V2B_I3_9_R3_AFFORDANCE_CLEAN_PROTOCOL_V1",
+  "created_before_model_run": true,
+  "description": "Frozen protocol for I3.9-r3 affordance-clean MDSG. Tests whether M3 (state + clean legal affordances) beats an affordance-matched baseline A1, isolating MDSG state value from affordance information value.",
+  "purpose": "Causal decomposition: separate the value of public affordance information from the value of MDSG state compression. M2 (736018d) is frozen as a contaminated development result because its retrieve_available/search_available fields leaked transition-model information from task.retrieve_exposes/search_exposes.",
+  "contaminated_predecessor": {
+    "commit": "736018d",
+    "classification": "STRONG POSITIVE DEVELOPMENT RESULT WITH PRIVILEGED TRANSITION-AFFORDANCE HINT",
+    "defect": "retrieve_available/search_available computed from task.retrieve_exposes/search_exposes — tells controller whether an operation WILL produce evidence, not just whether it is callable",
+    "lessons_retained": [
+      "state-only is insufficient",
+      "operation prescription is dangerous",
+      "conservative READY eliminates false READY emissions",
+      "multi-hypothesis discrimination is real",
+      "stale evidence requires distinguishing search from retrieval"
+    ]
+  },
+  "corpus": {
+    "id": "i3_9_structural_ood_v5",
+    "description": "Fresh structural OOD corpus with new seeds, same 10 category definitions",
+    "n_tasks": 300,
+    "split": "structural_ood_v5",
+    "no_overlap_with": ["v1", "v2", "v3", "v4"]
+  },
+  "arms": {
+    "A0": "original baseline (no MDSG, no affordances)",
+    "A1": "baseline + public affordances (can_retrieve/can_search/can_verify from budgets only)",
+    "M1": "MDSG-StateOnly (SUPPORTED_BUT_UNRESOLVED, no affordances)",
+    "M3": "MDSG-StateWithAffordances (state + clean affordances from budgets only)"
+  },
+  "m3_design": {
+    "inherits_from_m1": "conservative READY, SUPPORTED_BUT_UNRESOLVED (replaces PROVISIONALLY_READY)",
+    "adds": "action_affordances: can_retrieve, can_search, can_verify",
+    "affordance_derivation": "exclusively from resource budgets and visible evidence state",
+    "affordance_does_not_inspect": [
+      "task.retrieve_exposes",
+      "task.search_exposes",
+      "hidden evidence IDs",
+      "future transition results"
+    ],
+    "prompt_semantics": "reports epistemic conditions only, no action recommendations",
+    "supported_but_unresolved_semantics": "one hypothesis has verified support but unresolved evidence remains — no 'you may ANSWER' language"
+  },
+  "leakage_qualification": {
+    "description": "Two runtime states with identical visible state and tool budgets but different hidden retrieve_exposes/search_exposes mappings must produce identical M3 packets",
+    "test_type": "behavioral_equivalence"
+  },
+  "primary_criterion": {
+    "id": "C1",
+    "description": "E[U_M3 - U_A1] > 0 (both arms have identical affordance info)",
+    "test": "lower endpoint of two-sided 95% paired task bootstrap CI > 0",
+    "bootstrap_iterations": 10000,
+    "bootstrap_seed": 42,
+    "rationale": "A1 has the same affordance bits as M3, so M3-A1 isolates MDSG state compression value"
+  },
+  "secondary_criteria": {
+    "C2": "Success_M3 > Success_A1",
+    "C3": "Rescues_M3_vs_A1 > Breaks_M3_vs_A1",
+    "C4": "RedundantActionRate_M3 < RedundantActionRate_A1",
+    "C5": "Steps_M3 < Steps_A1"
+  },
+  "safety_criterion": {
+    "description": "Breaks_M3_vs_A1 <= Rescues_M3_vs_A1"
+  },
+  "adversarial_safety_criterion": {
+    "description": "True FalseReadyRate_M3 < 5%",
+    "metric": "FalseReady = M3 emitted READY_TO_ANSWER AND model ANSWERed AND ANSWER failed"
+  },
+  "generalization_criterion": {
+    "description": "No catastrophic subgroup regression vs A1. No category where M3 success drops more than 10pp below A1."
+  },
+  "subgroup_criteria": {
+    "early_false_ready": "M3 within 10pp of A1 (no catastrophic regression)",
+    "stale_support": "M3 does not collapse (success > 0%)",
+    "multi_hypothesis_ambiguity": "M3 retains substantial benefit (rescues vs A1 > 10)",
+    "conflict_unresolved": "M3 retains substantial benefit (rescues vs A1 > 10)"
+  },
+  "causal_decomposition": {
+    "A1_A0": "value of public affordance information alone",
+    "M3_A1": "value of MDSG state compression once affordance info is equalized (PRIMARY)",
+    "M3_M1": "value of adding clean affordances to state-only MDSG"
+  }
+}
