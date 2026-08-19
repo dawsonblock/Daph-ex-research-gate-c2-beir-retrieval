@@ -1,0 +1,60 @@
+{
+  "action_pair_distribution": {
+    "ANSWER->ANSWER": 66,
+    "ANSWER->REASON_MORE": 3,
+    "ANSWER->SEARCH_MORE": 135,
+    "ANSWER->VERIFY": 62,
+    "REASON_MORE->VERIFY": 4,
+    "RETRIEVE->RETRIEVE": 135,
+    "RETRIEVE->VERIFY": 63,
+    "SEARCH_MORE->SEARCH_MORE": 63,
+    "STOP->ANSWER": 34,
+    "VERIFY->SEARCH_MORE": 1,
+    "VERIFY->VERIFY": 198
+  },
+  "assistance_identity_sha256": "d2572c5701f5b2750fa058147dae3024bddf6e4be210f3f356489cae2ec8ef03",
+  "assistance_rate": 1.0,
+  "bottleneck_distribution": {
+    "CHAIN_DISCOVERY": 262,
+    "NO_EVIDENCE": 135,
+    "READY_TO_ANSWER": 100,
+    "REPEATED_NO_GAIN": 1,
+    "UNRESOLVED_CONFLICT": 266
+  },
+  "budget_distribution": {
+    "1": 761,
+    "2": 3
+  },
+  "disagreement_rate": 0.39528795811518325,
+  "duplicate_frame_rate": 0.0,
+  "frame_size": {
+    "max": 1231,
+    "mean": 1189.9489528795812,
+    "min": 1099
+  },
+  "n_agreement": 462,
+  "n_assisted": 764,
+  "n_disagreement": 302,
+  "n_no_assistance": 0,
+  "n_total_states": 764,
+  "schema": "DAPH_V2B_I3_6_SHADOW_DISTRIBUTION_V1",
+  "step_distribution": {
+    "0": 300,
+    "1": 198,
+    "2": 198,
+    "3": 64,
+    "4": 4
+  },
+  "total_frames": 764,
+  "type_distribution": {
+    "ANSWER_READY_TO_ANSWER": 100,
+    "REASON_MORE_CHAIN_DISCOVERY": 3,
+    "RETRIEVE_NO_EVIDENCE": 135,
+    "SEARCH_MORE_CHAIN_DISCOVERY": 125,
+    "SEARCH_MORE_REPEATED_NO_GAIN": 1,
+    "SEARCH_MORE_UNRESOLVED_CONFLICT": 73,
+    "VERIFY_CHAIN_DISCOVERY": 134,
+    "VERIFY_UNRESOLVED_CONFLICT": 193
+  },
+  "unique_frames": 764
+}

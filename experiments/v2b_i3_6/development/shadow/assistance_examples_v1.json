@@ -1,0 +1,407 @@
+{
+  "ANSWER_READY_TO_ANSWER": {
+    "agreement": true,
+    "assistance_frame": {
+      "bottleneck_description": "verification=SUFFICIENT, evidence=1",
+      "bottleneck_type": "READY_TO_ANSWER",
+      "execution_steps": [
+        {
+          "operation": "answer",
+          "purpose": "terminate with the verified answer",
+          "stop_condition": "answer submitted",
+          "target": "verified evidence supporting the answer (target: verification-i3_3_structure_dev_v2_0000)"
+        }
+      ],
+      "failure_conditions": [
+        "verification_state is not SUFFICIENT",
+        "unresolved conflicts exist"
+      ],
+      "governor_reason_code": "READY_TO_ANSWER",
+      "known_evidence": [
+        "verification_state=SUFFICIENT",
+        "evidence_count=1",
+        "verified=1",
+        "conflicts=0"
+      ],
+      "max_assisted_steps": 1,
+      "missing_information": [],
+      "next_action_on_failure": "VERIFY",
+      "next_action_on_success": null,
+      "objective": "terminate with a verified answer supported by sufficient evidence",
+      "recommended_action": "ANSWER",
+      "schema": "DAPH_V2B_I3_6_EXECUTION_ASSISTANCE_V1",
+      "source_state_sha256": "d7807adeaac37d3a29ccfd05bcf67bec249b2e979ee58aa856cb846fc32e6392",
+      "success_conditions": [
+        "answer submitted with sufficient verified evidence",
+        "no unresolved conflicts remain"
+      ],
+      "target_description": "verified evidence supporting the answer (target: verification-i3_3_structure_dev_v2_0000)",
+      "target_type": "verified_evidence",
+      "version": 1
+    },
+    "assistance_frame_sha256": "58a8fcce2b62806b8af4b82060534f4837ca972617d3a5920b1b9035e8825452",
+    "assistance_type": "ANSWER_READY_TO_ANSWER",
+    "base_action": "ANSWER",
+    "bottleneck_type": "READY_TO_ANSWER",
+    "governor_action": "ANSWER",
+    "max_assisted_steps": 1,
+    "objective": "terminate with a verified answer supported by sufficient evidence",
+    "step_id": 0,
+    "target_description": "verified evidence supporting the answer (target: verification-i3_3_structure_dev_v2_0000)",
+    "task_id": "i3_3_structure_dev_v2_0000"
+  },
+  "REASON_MORE_CHAIN_DISCOVERY": {
+    "agreement": false,
+    "assistance_frame": {
+      "bottleneck_description": "signals=[]",
+      "bottleneck_type": "CHAIN_DISCOVERY",
+      "execution_steps": [
+        {
+          "operation": "reason",
+          "purpose": "resolve the current inference gap",
+          "stop_condition": "inference gap resolved or reasoning depth limit reached",
+          "target": "unresolved inference dependency"
+        }
+      ],
+      "failure_conditions": [
+        "reasoning depth limit reached without resolution",
+        "insufficient inputs to complete the inference"
+      ],
+      "governor_reason_code": "CHAIN_DISCOVERY_NEEDED",
+      "known_evidence": [
+        "evidence_count=1",
+        "verified=0"
+      ],
+      "max_assisted_steps": 2,
+      "missing_information": [
+        "resolution of the inference dependency"
+      ],
+      "next_action_on_failure": "DEFER",
+      "next_action_on_success": "VERIFY",
+      "objective": "resolve the current inference gap",
+      "recommended_action": "REASON_MORE",
+      "schema": "DAPH_V2B_I3_6_EXECUTION_ASSISTANCE_V1",
+      "source_state_sha256": "09b17a180444385ff91f731845c1c9bcdeddc29ee4308b07bcbc4c3ca7e5da04",
+      "success_conditions": [
+        "inference gap resolved",
+        "composition chain advances"
+      ],
+      "target_description": "unresolved inference dependency",
+      "target_type": "inference_step",
+      "version": 1
+    },
+    "assistance_frame_sha256": "c13f4554ac89473d730f2d99d3e179d10a75f3b3ac5a2f2ef7e019be55517d63",
+    "assistance_type": "REASON_MORE_CHAIN_DISCOVERY",
+    "base_action": "ANSWER",
+    "bottleneck_type": "CHAIN_DISCOVERY",
+    "governor_action": "REASON_MORE",
+    "max_assisted_steps": 2,
+    "objective": "resolve the current inference gap",
+    "step_id": 3,
+    "target_description": "unresolved inference dependency",
+    "task_id": "i3_3_structure_dev_v2_0086"
+  },
+  "RETRIEVE_NO_EVIDENCE": {
+    "agreement": true,
+    "assistance_frame": {
+      "bottleneck_description": "verification_state=MISSING, evidence_count=1",
+      "bottleneck_type": "NO_EVIDENCE",
+      "execution_steps": [
+        {
+          "operation": "retrieve",
+          "purpose": "obtain evidence needed for verification",
+          "stop_condition": "at least one new evidence item retrieved",
+          "target": "evidence class matching the task's information requirement"
+        }
+      ],
+      "failure_conditions": [
+        "retrieval returns no new evidence",
+        "retrieval budget exhausted"
+      ],
+      "governor_reason_code": "TARGETS_NO_EVIDENCE",
+      "known_evidence": [],
+      "max_assisted_steps": 1,
+      "missing_information": [
+        "evidence supporting the candidate answer"
+      ],
+      "next_action_on_failure": "SEARCH_MORE",
+      "next_action_on_success": "VERIFY",
+      "objective": "retrieve evidence needed to support the candidate answer",
+      "recommended_action": "RETRIEVE",
+      "schema": "DAPH_V2B_I3_6_EXECUTION_ASSISTANCE_V1",
+      "source_state_sha256": "b8ccd31ee50dca85558fbe933d94264d916b5e3e8b3347b35f04b6f26067d80d",
+      "success_conditions": [
+        "at least one new evidence item retrieved",
+        "evidence_count increases"
+      ],
+      "target_description": "evidence class matching the task's information requirement",
+      "target_type": "evidence_class",
+      "version": 1
+    },
+    "assistance_frame_sha256": "7eda83a2ee340c02b000bbfb34e9fbf6362f41c7344755983bbc9f73cece3230",
+    "assistance_type": "RETRIEVE_NO_EVIDENCE",
+    "base_action": "RETRIEVE",
+    "bottleneck_type": "NO_EVIDENCE",
+    "governor_action": "RETRIEVE",
+    "max_assisted_steps": 1,
+    "objective": "retrieve evidence needed to support the candidate answer",
+    "step_id": 0,
+    "target_description": "evidence class matching the task's information requirement",
+    "task_id": "i3_3_structure_dev_v2_0002"
+  },
+  "SEARCH_MORE_CHAIN_DISCOVERY": {
+    "agreement": false,
+    "assistance_frame": {
+      "bottleneck_description": "temporal=UNKNOWN, conflicts=0",
+      "bottleneck_type": "CHAIN_DISCOVERY",
+      "execution_steps": [
+        {
+          "operation": "search",
+          "purpose": "find evidence supporting the candidate answer",
+          "stop_condition": "at least one qualifying evidence item found",
+          "target": "source class containing evidence for the claim"
+        }
+      ],
+      "failure_conditions": [
+        "no qualifying evidence after one search",
+        "search budget exhausted"
+      ],
+      "governor_reason_code": "CHAIN_DISCOVERY_NEEDED",
+      "known_evidence": [
+        "temporal_status=UNKNOWN",
+        "verification_state=MISSING"
+      ],
+      "max_assisted_steps": 1,
+      "missing_information": [
+        "any supporting evidence"
+      ],
+      "next_action_on_failure": "DEFER",
+      "next_action_on_success": "VERIFY",
+      "objective": "find evidence supporting the candidate answer",
+      "recommended_action": "SEARCH_MORE",
+      "schema": "DAPH_V2B_I3_6_EXECUTION_ASSISTANCE_V1",
+      "source_state_sha256": "21006133eb89930d451200e0fc3e62e1b69ca592fb239eb6c9939be8f55f2df0",
+      "success_conditions": [
+        "at least one qualifying evidence item found",
+        "new evidence addresses the missing information"
+      ],
+      "target_description": "source class containing evidence for the claim",
+      "target_type": "search_target",
+      "version": 1
+    },
+    "assistance_frame_sha256": "039f0157593945b752f2962ace740de2322b283afda10784a2369ea90ffa52e8",
+    "assistance_type": "SEARCH_MORE_CHAIN_DISCOVERY",
+    "base_action": "ANSWER",
+    "bottleneck_type": "CHAIN_DISCOVERY",
+    "governor_action": "SEARCH_MORE",
+    "max_assisted_steps": 1,
+    "objective": "find evidence supporting the candidate answer",
+    "step_id": 2,
+    "target_description": "source class containing evidence for the claim",
+    "task_id": "i3_3_structure_dev_v2_0002"
+  },
+  "SEARCH_MORE_REPEATED_NO_GAIN": {
+    "agreement": false,
+    "assistance_frame": {
+      "bottleneck_description": "temporal=UNKNOWN, conflicts=0",
+      "bottleneck_type": "REPEATED_NO_GAIN",
+      "execution_steps": [
+        {
+          "operation": "search",
+          "purpose": "find evidence supporting the candidate answer",
+          "stop_condition": "at least one qualifying evidence item found",
+          "target": "source class containing evidence for the claim"
+        }
+      ],
+      "failure_conditions": [
+        "no qualifying evidence after one search",
+        "search budget exhausted"
+      ],
+      "governor_reason_code": "TARGETS_REPEATED_NO_GAIN",
+      "known_evidence": [
+        "temporal_status=UNKNOWN",
+        "verification_state=MISSING"
+      ],
+      "max_assisted_steps": 1,
+      "missing_information": [
+        "any supporting evidence"
+      ],
+      "next_action_on_failure": "DEFER",
+      "next_action_on_success": "VERIFY",
+      "objective": "find evidence supporting the candidate answer",
+      "recommended_action": "SEARCH_MORE",
+      "schema": "DAPH_V2B_I3_6_EXECUTION_ASSISTANCE_V1",
+      "source_state_sha256": "ca0da160b1a45ffec1d9ebf530e506226c2a4f5539dde9e7fc82caaa56f7f657",
+      "success_conditions": [
+        "at least one qualifying evidence item found",
+        "new evidence addresses the missing information"
+      ],
+      "target_description": "source class containing evidence for the claim",
+      "target_type": "search_target",
+      "version": 1
+    },
+    "assistance_frame_sha256": "b5c4f5411389e8290fed36aa8c3e050626aff50139c8a9d259c191cef291e201",
+    "assistance_type": "SEARCH_MORE_REPEATED_NO_GAIN",
+    "base_action": "ANSWER",
+    "bottleneck_type": "REPEATED_NO_GAIN",
+    "governor_action": "SEARCH_MORE",
+    "max_assisted_steps": 1,
+    "objective": "find evidence supporting the candidate answer",
+    "step_id": 3,
+    "target_description": "source class containing evidence for the claim",
+    "task_id": "i3_3_structure_dev_v2_0260"
+  },
+  "SEARCH_MORE_UNRESOLVED_CONFLICT": {
+    "agreement": true,
+    "assistance_frame": {
+      "bottleneck_description": "temporal=STALE, conflicts=1",
+      "bottleneck_type": "UNRESOLVED_CONFLICT",
+      "execution_steps": [
+        {
+          "operation": "search",
+          "purpose": "find current evidence to replace stale information",
+          "stop_condition": "at least one qualifying evidence item found",
+          "target": "timestamped confirmation of the current evidence state"
+        }
+      ],
+      "failure_conditions": [
+        "no qualifying evidence after one search",
+        "search budget exhausted"
+      ],
+      "governor_reason_code": "TARGETS_UNRESOLVED_CONFLICT",
+      "known_evidence": [
+        "temporal_status=STALE",
+        "verification_state=FALSIFIED"
+      ],
+      "max_assisted_steps": 1,
+      "missing_information": [
+        "current temporal confirmation"
+      ],
+      "next_action_on_failure": "DEFER",
+      "next_action_on_success": "VERIFY",
+      "objective": "find current evidence to replace stale information",
+      "recommended_action": "SEARCH_MORE",
+      "schema": "DAPH_V2B_I3_6_EXECUTION_ASSISTANCE_V1",
+      "source_state_sha256": "858d83eff70e1b6f38b7a93c29ef55ba5b2693c9124cda9c4e573c89c26035f7",
+      "success_conditions": [
+        "at least one qualifying evidence item found",
+        "new evidence addresses the missing information"
+      ],
+      "target_description": "timestamped confirmation of the current evidence state",
+      "target_type": "search_target",
+      "version": 1
+    },
+    "assistance_frame_sha256": "9b01f5a728c6d8972c81386e23567269446e660bebda14a7e757f13ae1b212e5",
+    "assistance_type": "SEARCH_MORE_UNRESOLVED_CONFLICT",
+    "base_action": "SEARCH_MORE",
+    "bottleneck_type": "UNRESOLVED_CONFLICT",
+    "governor_action": "SEARCH_MORE",
+    "max_assisted_steps": 1,
+    "objective": "find current evidence to replace stale information",
+    "step_id": 2,
+    "target_description": "timestamped confirmation of the current evidence state",
+    "task_id": "i3_3_structure_dev_v2_0001"
+  },
+  "VERIFY_CHAIN_DISCOVERY": {
+    "agreement": true,
+    "assistance_frame": {
+      "bottleneck_description": "verification_state=MISSING, conflicts=0",
+      "bottleneck_type": "CHAIN_DISCOVERY",
+      "execution_steps": [
+        {
+          "operation": "verify",
+          "purpose": "verify the top evidence item",
+          "stop_condition": "verification_status changes to SUFFICIENT or FALSIFIED",
+          "target": "top evidence item (target: verification-i3_3_structure_dev_v2_0002)"
+        }
+      ],
+      "failure_conditions": [
+        "evidence becomes FALSIFIED",
+        "verification remains MISSING after verification attempt"
+      ],
+      "governor_reason_code": "CHAIN_DISCOVERY_NEEDED",
+      "known_evidence": [
+        "evidence_count=1",
+        "verified=0"
+      ],
+      "max_assisted_steps": 1,
+      "missing_information": [
+        "verification status"
+      ],
+      "next_action_on_failure": "SEARCH_MORE",
+      "next_action_on_success": "ANSWER",
+      "objective": "verify the top evidence item",
+      "recommended_action": "VERIFY",
+      "schema": "DAPH_V2B_I3_6_EXECUTION_ASSISTANCE_V1",
+      "source_state_sha256": "15cebc0b692d5764d7f390ae82ac9b72aa40643ef88e85baa7d217a65d311615",
+      "success_conditions": [
+        "verification_status becomes SUFFICIENT",
+        "evidence supports the candidate answer"
+      ],
+      "target_description": "top evidence item (target: verification-i3_3_structure_dev_v2_0002)",
+      "target_type": "evidence_item",
+      "version": 1
+    },
+    "assistance_frame_sha256": "5d80f43d6ec14a353bcb19f38750613be099223441398c4f49e6dcfbff4034c8",
+    "assistance_type": "VERIFY_CHAIN_DISCOVERY",
+    "base_action": "VERIFY",
+    "bottleneck_type": "CHAIN_DISCOVERY",
+    "governor_action": "VERIFY",
+    "max_assisted_steps": 1,
+    "objective": "verify the top evidence item",
+    "step_id": 1,
+    "target_description": "top evidence item (target: verification-i3_3_structure_dev_v2_0002)",
+    "task_id": "i3_3_structure_dev_v2_0002"
+  },
+  "VERIFY_UNRESOLVED_CONFLICT": {
+    "agreement": false,
+    "assistance_frame": {
+      "bottleneck_description": "verification_state=MISSING, conflicts=1",
+      "bottleneck_type": "UNRESOLVED_CONFLICT",
+      "execution_steps": [
+        {
+          "operation": "verify",
+          "purpose": "resolve conflicting evidence through verification",
+          "stop_condition": "verification_status changes to SUFFICIENT or FALSIFIED",
+          "target": "conflicting evidence pair (1 conflicts)"
+        }
+      ],
+      "failure_conditions": [
+        "evidence becomes FALSIFIED",
+        "verification remains MISSING after verification attempt"
+      ],
+      "governor_reason_code": "TARGETS_UNRESOLVED_CONFLICT",
+      "known_evidence": [
+        "evidence_count=1",
+        "verified=0"
+      ],
+      "max_assisted_steps": 1,
+      "missing_information": [
+        "resolution of the conflicting claims"
+      ],
+      "next_action_on_failure": "SEARCH_MORE",
+      "next_action_on_success": "ANSWER",
+      "objective": "resolve conflicting evidence through verification",
+      "recommended_action": "VERIFY",
+      "schema": "DAPH_V2B_I3_6_EXECUTION_ASSISTANCE_V1",
+      "source_state_sha256": "0b0a5eb69092c69039fba5d8e2788fb75ed58b7134603f07007d78f817cab6cb",
+      "success_conditions": [
+        "verification_status becomes SUFFICIENT",
+        "evidence supports the candidate answer"
+      ],
+      "target_description": "conflicting evidence pair (1 conflicts)",
+      "target_type": "evidence_item",
+      "version": 1
+    },
+    "assistance_frame_sha256": "f26a719e7fd8e00b7a3087e55614795d432f5ba60c1313a280022f49ae6d24d1",
+    "assistance_type": "VERIFY_UNRESOLVED_CONFLICT",
+    "base_action": "RETRIEVE",
+    "bottleneck_type": "UNRESOLVED_CONFLICT",
+    "governor_action": "VERIFY",
+    "max_assisted_steps": 1,
+    "objective": "resolve conflicting evidence through verification",
+    "step_id": 0,
+    "target_description": "conflicting evidence pair (1 conflicts)",
+    "task_id": "i3_3_structure_dev_v2_0001"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "DAPH_V2B_I3_6_BASELINE_PARENT_V1",
+  "description": "I3.5.x frozen negative-control lineage. I3.6 branches from i3.5.1-clean and records the I3.5.x terminal closure SHA for reference.",
+  "i351_clean_branch_sha": "3bc0ca8592e809a53d73456b55a11b1ccb7f7149",
+  "i353_r21_closure_terminal_sha": "3ecf27a",
+  "i353_r21_closure_branch": "i3.5.3-r2.1-scientific-closure",
+  "i351_clean_branch": "i3.5.1-clean",
+  "i36_branch": "i3.6-execution-assisting-governor",
+  "i35x_summary": {
+    "always_on_governor": "REJECTED / HARMFUL",
+    "q_star_selective_governor": "REJECTED",
+    "q_pi_pairwise_governor": "ABSTAINS (frozen 5+5 criterion, 0/303 approved)",
+    "development_conclusion": "FROZEN NEGATIVE",
+    "validation": "UNTOUCHED",
+    "held_out": "UNTOUCHED"
+  },
+  "i36_hypothesis": "Governor identifies useful direction does NOT imply model knows how to execute that direction. I3.6 changes intervention from action recommendation to execution scaffold.",
+  "recorded_at": "2026-08-18"
+}
