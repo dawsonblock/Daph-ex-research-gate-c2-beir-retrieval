@@ -1,0 +1,35 @@
+{
+  "action_distribution": {
+    "ANSWER": 4,
+    "SEARCH_MORE": 23,
+    "VERIFY": 21
+  },
+  "n_backend_errors": 0,
+  "n_parse_errors": 0,
+  "n_probes": 48,
+  "n_valid": 48,
+  "resolution_identity_sha256": "e18adb1b7e4c18cb9463e68b1a7d8f66ed98b9e72cc1da27462a706d6877e79b",
+  "schema": "DAPH_V2B_I3_6E_B_UTILIZATION_PROBE_V1",
+  "utilization_rates": {
+    "action_follows_discriminator": {
+      "count": 48,
+      "rate": 1.0
+    },
+    "action_matches_recommended": {
+      "count": 48,
+      "rate": 1.0
+    },
+    "answer_condition_referenced": {
+      "count": 0,
+      "rate": 0.0
+    },
+    "discriminator_valid": {
+      "count": 44,
+      "rate": 0.9167
+    },
+    "hypothesis_valid": {
+      "count": 48,
+      "rate": 1.0
+    }
+  }
+}
