@@ -1,0 +1,114 @@
+{
+  "evidence_answer": {
+    "breaks": 0,
+    "catastrophic_regression": false,
+    "ci95_bootstrap": [
+      5.124,
+      5.4326
+    ],
+    "mean_steps": {
+      "a": 4.98,
+      "m": 3.0
+    },
+    "mean_utility": {
+      "a": 88.26,
+      "delta": 5.27,
+      "m": 93.53
+    },
+    "n_tasks": 124,
+    "redundant_rate": {
+      "a": 0.2071,
+      "m": 0.0
+    },
+    "rescues": 0,
+    "success": {
+      "a": "124/124 (100.0%)",
+      "delta_pp": 0.0,
+      "m": "124/124 (100.0%)"
+    }
+  },
+  "evidence_conflict": {
+    "breaks": 0,
+    "catastrophic_regression": false,
+    "ci95_bootstrap": [
+      20.1872,
+      60.449
+    ],
+    "mean_steps": {
+      "a": 5.72,
+      "m": 3.0
+    },
+    "mean_utility": {
+      "a": 54.562,
+      "delta": 38.968,
+      "m": 93.53
+    },
+    "n_tasks": 61,
+    "redundant_rate": {
+      "a": 0.5014,
+      "m": 0.0
+    },
+    "rescues": 9,
+    "success": {
+      "a": "52/61 (85.2%)",
+      "delta_pp": 14.75,
+      "m": "61/61 (100.0%)"
+    }
+  },
+  "evidence_defer": {
+    "breaks": 0,
+    "catastrophic_regression": false,
+    "ci95_bootstrap": [
+      14.1733,
+      15.3848
+    ],
+    "mean_steps": {
+      "a": 8.29,
+      "m": 2.0
+    },
+    "mean_utility": {
+      "a": -138.0186,
+      "delta": 14.7286,
+      "m": -123.29
+    },
+    "n_tasks": 63,
+    "redundant_rate": {
+      "a": 0.8793,
+      "m": 0.0
+    },
+    "rescues": 0,
+    "success": {
+      "a": "0/63 (0.0%)",
+      "delta_pp": 0.0,
+      "m": "0/63 (0.0%)"
+    }
+  },
+  "evidence_stale": {
+    "breaks": 0,
+    "catastrophic_regression": false,
+    "ci95_bootstrap": [
+      -2.0081,
+      -1.1521
+    ],
+    "mean_steps": {
+      "a": 3.5,
+      "m": 4.0
+    },
+    "mean_utility": {
+      "a": 92.9602,
+      "delta": -1.5802,
+      "m": 91.38
+    },
+    "n_tasks": 52,
+    "redundant_rate": {
+      "a": 0.0,
+      "m": 0.0
+    },
+    "rescues": 0,
+    "success": {
+      "a": "52/52 (100.0%)",
+      "delta_pp": 0.0,
+      "m": "52/52 (100.0%)"
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "architectural_finding": "Useful governor = decision-state compressor / stopping controller, not action recommender.",
+  "frozen_artifacts": {
+    "action_vocabulary_core": {
+      "path": "hrm_adaptive_memory/cognitive_control/core.py",
+      "sha256": "902a0c4d202159b464627e320eae5e11ff109d8102159c07fd5ab2a3ec9dd52c"
+    },
+    "cognitive_state_enums": {
+      "path": "hrm_adaptive_memory/cognitive_control/state.py",
+      "sha256": "a64fa2c97df8af5ce9da5a16f97c8c7e4bf033605550f412af2b0a7650ad30eb"
+    },
+    "evidence_executor": {
+      "path": "hrm_adaptive_memory/executive/evidence_benchmark/executor.py",
+      "sha256": "6e1cc8c1f26ccd685d045e4ecd3beef6e0a88ba4c344c988d080239cb278073c"
+    },
+    "evidence_schema": {
+      "path": "hrm_adaptive_memory/executive/evidence_benchmark/schema.py",
+      "sha256": "499bd7384425495627f2db7b2e726bc5c72cd4a4495f9811dde5d8a90d583354"
+    },
+    "evidence_snapshot_serializer": {
+      "path": "hrm_adaptive_memory/executive/evidence_benchmark/serializer.py",
+      "sha256": "88d16465c6c146a6d7217cc24aef023dcc30cfde65b660c2ed25b8e756e40aa1"
+    },
+    "m_builder_script": {
+      "path": "scripts/run_i3_7e_compact_governor.py",
+      "sha256": "40970e6a3fcbefd44b16ef847fbc7f34198afde102cfc8b96a58ef4e2e5b6a52"
+    },
+    "m_system_prompt": {
+      "sha256": "e28337534247b726bf55b87bc66167e4f0491c915966c86bf9535efc4ec720df"
+    },
+    "model_backend": {
+      "path": "hrm_adaptive_memory/executive/model_backend.py",
+      "sha256": "5d28799258b9dfba2447066f4cac1396970d8591063b2c1586cc65949cbff3fa"
+    },
+    "model_configuration": {
+      "max_tokens": 2048,
+      "model": "deepseek-chat",
+      "response_format": "json_object",
+      "temperature": 0.0
+    },
+    "model_decoder": {
+      "path": "hrm_adaptive_memory/executive/model_decoder.py",
+      "sha256": "64687df823c44ca9633a79b4fa00555e447874135bbd0288c3a694d50b8595b8"
+    },
+    "pinned_model_controller": {
+      "path": "hrm_adaptive_memory/executive/pinned_model_controller.py",
+      "sha256": "156c68bab4c3b91f77a3052adb36a51dadd79928efe4c0c2525cb61f7414e916"
+    },
+    "resource_budget": {
+      "path": "hrm_adaptive_memory/executive/resources.py",
+      "sha256": "d520b54bdcf91d88420ae9d4ec782d6d7c5aaea546ee49287f6c8f984e0f6e17"
+    },
+    "source_commit": {
+      "git_sha": "d812ebd2f65dd195ffb25fb7942cbde748d0a0f3"
+    },
+    "utility_config": {
+      "path": "configs/v2b_i3_1_utility_v1.json",
+      "sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07"
+    },
+    "validation_manifest": {
+      "path": "experiments/v2b_i3_8/manifests/i3_8_evidence_validation_v1.json",
+      "sha256": "c87032edff57b2d70e79a3a465dee98b2600da8a8a989fb8f87b4dd68f6b3bcb"
+    },
+    "validation_protocol": {
+      "path": "experiments/v2b_i3_8/development/validation_protocol_v1.json",
+      "sha256": "69f0f02763f1be02e2bcb51e9ec02310f97709ce59e9e477383cf44951c8648d"
+    },
+    "validation_results": {
+      "path": "experiments/v2b_i3_8/development/i3_8_validation/repair_check_v1.jsonl",
+      "sha256": "4f63789e2c9b64c9638aedd187abb300b919a4d37a82a8d44d36841d0f558d17"
+    }
+  },
+  "generalization_criterion": {
+    "expected_primary_gain_source": "evidence_conflict",
+    "no catastrophic subgroup regression": true,
+    "primary_gain_source": "evidence_conflict"
+  },
+  "m_definition": {
+    "does_not_override_actions": true,
+    "function": "M_t = f(O_t)",
+    "mechanism": "Detects when the current evidence state is sufficient for termination and signals READY_TO_ANSWER. The model retains full action authority.",
+    "name": "Minimal Decision State Governor (MDSG)",
+    "type": "deterministic controller-visible state compressor"
+  },
+  "overall_statistics": {
+    "all_claims_pass": true,
+    "breaks": 0,
+    "ci95_bootstrap": [
+      8.7981,
+      17.8013
+    ],
+    "lower_endpoint_two_sided_95ci_positive": true,
+    "mcnemar_p": 0.00390625,
+    "mean_delta_u": 12.9209,
+    "n_pairs": 300,
+    "rescues": 9
+  },
+  "schema": "DAPH_V2B_I3_8_VALIDATION_CLOSURE_V1",
+  "subgroup_summary": {
+    "evidence_answer": {
+      "breaks": 0,
+      "catastrophic_regression": false,
+      "delta_success_pp": 0.0,
+      "delta_u": 5.27,
+      "n": 124,
+      "rescues": 0
+    },
+    "evidence_conflict": {
+      "breaks": 0,
+      "catastrophic_regression": false,
+      "delta_success_pp": 14.75,
+      "delta_u": 38.968,
+      "n": 61,
+      "rescues": 9
+    },
+    "evidence_defer": {
+      "breaks": 0,
+      "catastrophic_regression": false,
+      "delta_success_pp": 0.0,
+      "delta_u": 14.7286,
+      "n": 63,
+      "rescues": 0
+    },
+    "evidence_stale": {
+      "breaks": 0,
+      "catastrophic_regression": false,
+      "delta_success_pp": 0.0,
+      "delta_u": -1.5802,
+      "n": 52,
+      "rescues": 0
+    }
+  }
+}

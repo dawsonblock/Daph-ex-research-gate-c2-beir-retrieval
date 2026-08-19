@@ -1,0 +1,68 @@
+{
+  "bootstrap_iterations": 10000,
+  "bootstrap_seed": 42,
+  "ci95_bootstrap": [
+    8.7981,
+    17.8013
+  ],
+  "ci95_normal": [
+    8.5121,
+    17.3297
+  ],
+  "ci_method": "paired_task_bootstrap",
+  "ci_method_description": "Two-sided 95% percentile bootstrap CI. The lower endpoint is the 2.5th percentile of the bootstrap distribution.",
+  "estimand_u": "U_M - U_A",
+  "frozen_validation_claims": {
+    "C1_E_delta_U_gt_0": true,
+    "C1_lower_endpoint_95ci_positive": true,
+    "C2_success_M_gt_success_A": true,
+    "C3_rescues_gt_breaks": true,
+    "C4_redundant_M_lt_redundant_A": true,
+    "C5_steps_M_lt_steps_A": true
+  },
+  "lower_endpoint_two_sided_95ci_bootstrap": 8.7981,
+  "lower_endpoint_two_sided_95ci_positive": true,
+  "mcnemar": {
+    "all_favor_m": true,
+    "b_a_only_success": 0,
+    "c_m_only_success": 9,
+    "exact_p_value": 0.00390625,
+    "n_discordant": 9
+  },
+  "mean_delta_u": 12.9209,
+  "n_pairs": 300,
+  "pairing_unit": "task_id",
+  "primary_confirmatory_criterion": {
+    "criterion": "lower endpoint of two-sided 95% paired bootstrap CI(U_M - U_A) > 0",
+    "satisfied": true
+  },
+  "redundant_actions": {
+    "a_rate": 0.456,
+    "a_total": 762,
+    "m_rate": 0.0,
+    "m_total": 0
+  },
+  "safety_criterion": {
+    "breaks": 0,
+    "criterion": "Breaks_M <= Rescues_M",
+    "rescues": 9,
+    "satisfied": true,
+    "strictly_zero_breaks": true
+  },
+  "std_err_delta_u": 2.2494,
+  "steps": {
+    "a_mean": 5.57,
+    "a_total": 1671,
+    "delta_mean": -2.6067,
+    "m_mean": 2.9633,
+    "m_total": 889
+  },
+  "success": {
+    "a_rate": 0.76,
+    "a_success": 228,
+    "delta_success": 9,
+    "delta_success_percentage_points": 3.0,
+    "m_rate": 0.79,
+    "m_success": 237
+  }
+}

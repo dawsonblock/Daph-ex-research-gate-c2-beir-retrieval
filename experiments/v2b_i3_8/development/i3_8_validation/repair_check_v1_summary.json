@@ -1,0 +1,54 @@
+{
+  "acs_metrics": {
+    "A": {
+      "acs_before": 300,
+      "led_to_success": 228,
+      "terminal_matches": 228
+    },
+    "M": {
+      "acs_before": 300,
+      "led_to_success": 237,
+      "terminal_matches": 237
+    }
+  },
+  "arms": {
+    "A": "semantic evidence baseline",
+    "M": "leakage-clean minimal decision state"
+  },
+  "breaks": 0,
+  "classification": {
+    "BOTH_FAIL": 63,
+    "BOTH_SUCCESS": 228,
+    "RESCUE": 9
+  },
+  "gates": {
+    "breaks_le_1": true,
+    "mean_u_ge_baseline": true,
+    "rescues_ge_1": true,
+    "rescues_gt_breaks": true,
+    "success_ge_baseline": true
+  },
+  "mean_steps": {
+    "A": 5.57,
+    "M": 2.96
+  },
+  "mean_u": {
+    "A": 34.7043,
+    "M": 47.6251
+  },
+  "n_tasks": 300,
+  "redundant_actions": {
+    "A": 762,
+    "M": 0
+  },
+  "redundant_rate": {
+    "A": 0.456,
+    "M": 0.0
+  },
+  "rescues": 9,
+  "schema": "DAPH_V2B_I3_7E_R1_REPAIR_CHECK_V1",
+  "success": {
+    "A": "228/300",
+    "M": "237/300"
+  }
+}
