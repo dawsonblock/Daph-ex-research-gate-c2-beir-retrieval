@@ -44,6 +44,48 @@ def assert_no_evaluator_leakage(packet: dict) -> None:
     _check_recursive(packet)
 
 
+def _build_terminal_decision_rule(
+    resolution_frame: ResolutionAssistanceFrame,
+) -> dict:
+    """Build a prominent terminal decision rule that the model cannot miss.
+
+    This is the key fix for the answer-condition utilization gap (I3.6e-b).
+    The model followed discriminators (100%) but never referenced answer
+    conditions (0%). This section makes the termination logic explicit
+    and impossible to overlook.
+    """
+    rules = []
+    for ac in resolution_frame.answer_conditions:
+        rules.append({
+            "if": ac.condition,
+            "then": ac.terminal_action,
+            "use": ac.answer_payload_reference,
+            "hypothesis": ac.hypothesis_id,
+        })
+    return {
+        "instruction": "AFTER each action, check these conditions. If ANY condition is met, you MUST take the corresponding terminal action immediately.",
+        "rules": rules,
+        "defer_if_none_met": resolution_frame.defer_condition,
+        "critical": "Do not continue searching if an answer condition is already satisfied. Check first.",
+    }
+
+
+def _build_answer_condition_check_step(
+    resolution_frame: ResolutionAssistanceFrame,
+) -> dict:
+    """Build an explicit answer-condition-check step for the execution plan."""
+    return {
+        "operation": "check_answer_conditions",
+        "target": "all answer_conditions listed in the terminal_decision_rule",
+        "purpose": "determine if any hypothesis already has sufficient verified support to terminate",
+        "decision_consequence": (
+            "if any answer condition is met: take the corresponding terminal action NOW; "
+            "if no condition is met: proceed with the recommended action"
+        ),
+        "stop_condition": "answer conditions evaluated",
+    }
+
+
 def serialize_resolution_packet(
     observation: ControllerObservation,
     gov_frame: Any,
@@ -56,21 +98,16 @@ def serialize_resolution_packet(
     Modes:
       - RESOLUTION_ASSIST: full resolution scaffold, model retains action control
       - RESOLUTION_ASSIST_DIRECT: governor's first action is authoritative
-
-    The packet includes:
-      - task_id, task_summary (from observation)
-      - governor_recommended_action
-      - candidate_hypotheses (with evidence relationships)
-      - current_evidence (with hypothesis links)
-      - unresolved_question
-      - discriminating_evidence
-      - execution_plan (with decision consequences)
-      - answer_conditions (explicit hypothesis -> answer mappings)
-      - defer_condition
-      - search_specification (if SEARCH_MORE)
-      - max_additional_actions
-      - context state (if persistent context provided)
+      - RESOLUTION_ASSIST_EMPHASIZED: answer conditions promoted to top-level
+        terminal_decision_rule, with an explicit check step prepended to
+        the execution plan. Fixes the I3.6e-b utilization gap where the
+        model followed discriminators (100%) but ignored answer conditions (0%).
     """
+    execution_plan = [s.as_dict() for s in resolution_frame.execution_plan]
+    if mode == "RESOLUTION_ASSIST_EMPHASIZED":
+        check_step = _build_answer_condition_check_step(resolution_frame)
+        execution_plan = [check_step] + execution_plan
+
     packet = {
         "schema": "DAPH_V2B_I3_6D_RESOLUTION_PACKET_V1",
         "mode": mode,
@@ -82,7 +119,7 @@ def serialize_resolution_packet(
         "current_evidence": [e.as_dict() for e in resolution_frame.current_evidence],
         "unresolved_question": resolution_frame.unresolved_question,
         "discriminating_evidence": [d.as_dict() for d in resolution_frame.discriminating_evidence],
-        "execution_plan": [s.as_dict() for s in resolution_frame.execution_plan],
+        "execution_plan": execution_plan,
         "answer_conditions": [a.as_dict() for a in resolution_frame.answer_conditions],
         "defer_condition": resolution_frame.defer_condition,
         "search_specification": (
@@ -92,7 +129,9 @@ def serialize_resolution_packet(
         "max_additional_actions": resolution_frame.max_additional_actions,
     }
 
-    # Include persistent context if provided
+    if mode == "RESOLUTION_ASSIST_EMPHASIZED":
+        packet["terminal_decision_rule"] = _build_terminal_decision_rule(resolution_frame)
+
     if context is not None:
         packet["resolution_context"] = {
             "context_id": context.context_id,
@@ -104,7 +143,6 @@ def serialize_resolution_packet(
             "hypothesis_updates": [u.as_dict() for u in context.hypothesis_updates],
         }
 
-    # Validate no leakage
     assert_no_evaluator_leakage(packet)
 
     return packet

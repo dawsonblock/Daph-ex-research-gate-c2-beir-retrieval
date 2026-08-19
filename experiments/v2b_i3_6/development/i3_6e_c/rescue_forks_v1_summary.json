@@ -1,0 +1,44 @@
+{
+  "arms": {
+    "A": "a_B + pi_B (baseline)",
+    "E1": "a_B + resolution context (current)",
+    "E2": "a_B + resolution context EMPHASIZED (answer-condition-emphasized)"
+  },
+  "classification": {
+    "base_vs_e1": {
+      "BOTH_FAIL": 43,
+      "BOTH_SUCCESS": 5
+    },
+    "base_vs_e2": {
+      "BOTH_FAIL": 43,
+      "BOTH_SUCCESS": 5
+    }
+  },
+  "gates": {
+    "G1_BREAK_E2_zero": true,
+    "G2_RESCUE_E2_ge_1": false,
+    "G3_RESCUE_gt_BREAK": false,
+    "G4_E2_success_gt_E1": false,
+    "G5_E2_success_gt_base": false
+  },
+  "n_forks": 48,
+  "n_tasks": 50,
+  "rescues_and_breaks": {
+    "e1_breaks": 0,
+    "e1_rescues": 0,
+    "e2_breaks": 0,
+    "e2_rescues": 0
+  },
+  "resolution_identity_sha256": "2baedec645327ddc87516ad7911997da24cec7a1e28110c1812cfdd99e599b77",
+  "schema": "DAPH_V2B_I3_6E_C_RESCUE_FORKS_V1",
+  "success": {
+    "base": "5/48",
+    "e1": "5/48",
+    "e2": "5/48"
+  },
+  "utility": {
+    "mean_u_a_base": -106.9521,
+    "mean_u_e1": -91.7196,
+    "mean_u_e2": -90.5925
+  }
+}
