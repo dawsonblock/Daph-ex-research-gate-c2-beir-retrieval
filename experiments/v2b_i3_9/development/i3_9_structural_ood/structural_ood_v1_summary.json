@@ -1,0 +1,170 @@
+{
+  "breaks": 30,
+  "classification": {
+    "BOTH_FAIL": 60,
+    "BOTH_SUCCESS": 182,
+    "BREAK": 30,
+    "RESCUE": 28
+  },
+  "false_ready_rate": {
+    "A": {
+      "count": 60,
+      "rate": 0.2
+    },
+    "M": {
+      "count": 60,
+      "rate": 0.2
+    }
+  },
+  "mean_steps": {
+    "A": 4.19,
+    "M": 2.9
+  },
+  "mean_u": {
+    "A": 26.0255,
+    "M": 28.477
+  },
+  "n_tasks": 300,
+  "redundant_rate": {
+    "A": 0.1551,
+    "M": 0.0
+  },
+  "rescues": 28,
+  "schema": "DAPH_V2B_I3_9_STRUCTURAL_OOD_SUMMARY_V1",
+  "subgroups": {
+    "conflict_unresolved": {
+      "a_false_ready": 30,
+      "a_success": "0/30 (0.0%)",
+      "breaks": 0,
+      "catastrophic_regression": false,
+      "delta_u": 4.036,
+      "m_false_ready": 30,
+      "m_success": "0/30 (0.0%)",
+      "mean_u_a": -127.326,
+      "mean_u_m": -123.29,
+      "n": 30,
+      "rescues": 0
+    },
+    "early_false_ready": {
+      "a_false_ready": 30,
+      "a_success": "0/30 (0.0%)",
+      "breaks": 0,
+      "catastrophic_regression": false,
+      "delta_u": 3.5353,
+      "m_false_ready": 30,
+      "m_success": "0/30 (0.0%)",
+      "mean_u_a": -126.8253,
+      "mean_u_m": -123.29,
+      "n": 30,
+      "rescues": 0
+    },
+    "late_resolution": {
+      "a_false_ready": 0,
+      "a_success": "30/30 (100.0%)",
+      "breaks": 0,
+      "catastrophic_regression": false,
+      "delta_u": 0.212,
+      "m_false_ready": 0,
+      "m_success": "30/30 (100.0%)",
+      "mean_u_a": 87.988,
+      "mean_u_m": 88.2,
+      "n": 30,
+      "rescues": 0
+    },
+    "multi_hypothesis_ambiguity": {
+      "a_false_ready": 0,
+      "a_success": "3/30 (10.0%)",
+      "breaks": 0,
+      "catastrophic_regression": false,
+      "delta_u": 211.831,
+      "m_false_ready": 0,
+      "m_success": "30/30 (100.0%)",
+      "mean_u_a": -115.121,
+      "mean_u_m": 96.71,
+      "n": 30,
+      "rescues": 27
+    },
+    "noise_evidence": {
+      "a_false_ready": 0,
+      "a_success": "30/30 (100.0%)",
+      "breaks": 0,
+      "catastrophic_regression": false,
+      "delta_u": 3.18,
+      "m_false_ready": 0,
+      "m_success": "30/30 (100.0%)",
+      "mean_u_a": 93.53,
+      "mean_u_m": 96.71,
+      "n": 30,
+      "rescues": 0
+    },
+    "single_verify_ready": {
+      "a_false_ready": 0,
+      "a_success": "29/30 (96.7%)",
+      "breaks": 0,
+      "catastrophic_regression": false,
+      "delta_u": 8.0463,
+      "m_false_ready": 0,
+      "m_success": "30/30 (100.0%)",
+      "mean_u_a": 88.6637,
+      "mean_u_m": 96.71,
+      "n": 30,
+      "rescues": 1
+    },
+    "stale_support": {
+      "a_false_ready": 0,
+      "a_success": "30/30 (100.0%)",
+      "breaks": 30,
+      "catastrophic_regression": true,
+      "delta_u": -225.406,
+      "m_false_ready": 0,
+      "m_success": "0/30 (0.0%)",
+      "mean_u_a": 88.296,
+      "mean_u_m": -137.11,
+      "n": 30,
+      "rescues": 0
+    },
+    "three_hypothesis": {
+      "a_false_ready": 0,
+      "a_success": "30/30 (100.0%)",
+      "breaks": 0,
+      "catastrophic_regression": false,
+      "delta_u": 6.36,
+      "m_false_ready": 0,
+      "m_success": "30/30 (100.0%)",
+      "mean_u_a": 90.35,
+      "mean_u_m": 96.71,
+      "n": 30,
+      "rescues": 0
+    },
+    "triple_verify_ready": {
+      "a_false_ready": 0,
+      "a_success": "30/30 (100.0%)",
+      "breaks": 0,
+      "catastrophic_regression": false,
+      "delta_u": 6.36,
+      "m_false_ready": 0,
+      "m_success": "30/30 (100.0%)",
+      "mean_u_a": 90.35,
+      "mean_u_m": 96.71,
+      "n": 30,
+      "rescues": 0
+    },
+    "varying_visible_split": {
+      "a_false_ready": 0,
+      "a_success": "30/30 (100.0%)",
+      "breaks": 0,
+      "catastrophic_regression": false,
+      "delta_u": 6.36,
+      "m_false_ready": 0,
+      "m_success": "30/30 (100.0%)",
+      "mean_u_a": 90.35,
+      "mean_u_m": 96.71,
+      "n": 30,
+      "rescues": 0
+    }
+  },
+  "success": {
+    "A": "212/300",
+    "M": "210/300"
+  }
+}

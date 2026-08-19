@@ -626,31 +626,32 @@ class StructuralOODGenerator:
         )
 
         evidence = (
-            # E1 supports H1
+            # E1 supports H1 (does not contradict H2, so H2 remains testable)
             EvidenceItem(
                 evidence_id="E1",
                 proposition=f"Source A claims {subject}.",
                 source_class="initial",
                 supports=("H1",),
-                contradicts=("H2",),
+                contradicts=(),
                 verification_state=VerificationState.UNVERIFIED,
                 temporal_status=TemporalStatus.CURRENT,
                 retrieved=True,
                 verify_result="SUFFICIENT",
             ),
-            # E2 supports H2 — so after verifying both, two viable hypotheses
+            # E2 supports H2 (does not contradict H1, so H1 remains viable)
+            # After verifying both E1 and E2, two viable hypotheses → NEEDS_DISCRIMINATION
             EvidenceItem(
                 evidence_id="E2",
                 proposition=f"Source B claims not-{subject}.",
                 source_class="initial",
                 supports=("H2",),
-                contradicts=("H1",),
+                contradicts=(),
                 verification_state=VerificationState.UNVERIFIED,
                 temporal_status=TemporalStatus.CURRENT,
                 retrieved=True,
                 verify_result="SUFFICIENT",
             ),
-            # E3 (hidden) breaks the tie — contradicts H2
+            # E3 (hidden) breaks the tie — contradicts H2, supports H1
             EvidenceItem(
                 evidence_id="E3",
                 proposition=f"A definitive source confirms {subject}.",

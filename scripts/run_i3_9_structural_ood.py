@@ -178,10 +178,12 @@ def main():
         current = runtime
         final = None
         for step in task.oracle_resolution_path:
-            action_name = step.split(":")[0]
+            parts = step.split(":")
+            action_name = parts[0]
+            target = parts[1] if len(parts) > 1 else None
             from hrm_adaptive_memory.cognitive_control.core import DecisionAction
             action = DecisionAction(action_name)
-            final = executor.execute(current, action)
+            final = executor.execute(current, action, target_evidence_id=target)
             current = final.runtime
             if final.terminal:
                 break

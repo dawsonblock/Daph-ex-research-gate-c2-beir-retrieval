@@ -833,11 +833,12 @@ def run_trajectory(
                 proposal = FAIL_CLOSED_PROPOSAL
 
         action = proposal.action
+        target_id = getattr(proposal, "target_id", None)
 
         # Check if this action is redundant
         resources_before = runtime.resources
         runtime_before = runtime
-        exec_res = executor.execute(runtime, action)
+        exec_res = executor.execute(runtime, action, target_evidence_id=target_id)
         resources_after = exec_res.runtime.resources
 
         is_redundant = is_redundant_action(
