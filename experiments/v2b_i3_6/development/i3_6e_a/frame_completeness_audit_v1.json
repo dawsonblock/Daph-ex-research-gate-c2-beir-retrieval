@@ -1,0 +1,57 @@
+{
+  "component_pass_rates": {
+    "answer_coverage": {
+      "passed": 48,
+      "rate": 1.0,
+      "total": 48
+    },
+    "decision_mapping": {
+      "passed": 42,
+      "rate": 0.875,
+      "total": 48
+    },
+    "discriminator_count": {
+      "passed": 44,
+      "rate": 0.9166666666666666,
+      "total": 48
+    },
+    "discriminator_distinct_outcomes": {
+      "passed": 44,
+      "rate": 0.9166666666666666,
+      "total": 48
+    },
+    "evidence_mapped": {
+      "passed": 48,
+      "rate": 1.0,
+      "total": 48
+    },
+    "hypothesis_count": {
+      "passed": 44,
+      "rate": 0.9166666666666666,
+      "total": 48
+    },
+    "search_discriminating": {
+      "passed": 48,
+      "rate": 1.0,
+      "total": 48
+    },
+    "unmapped_evidence": {
+      "passed": 48,
+      "rate": 1.0,
+      "total": 48
+    }
+  },
+  "frames_generated": 48,
+  "mean_rcs": 0.9531,
+  "n_states": 48,
+  "n_tasks": 50,
+  "rcs_distribution": {
+    "high_>=0.75": 44,
+    "low_<0.5": 0,
+    "medium_0.5-0.75": 4
+  },
+  "rescue_path_count": 44,
+  "rescue_path_rate": 0.9167,
+  "resolution_identity_sha256": "6ace0206dfc105ec589de4a01d7d93164c82a2b1bbb6341b929ad4df4e3bdc5f",
+  "schema": "DAPH_V2B_I3_6E_A_FRAME_COMPLETENESS_V1"
+}

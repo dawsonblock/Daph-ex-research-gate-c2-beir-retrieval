@@ -1,0 +1,46 @@
+{
+  "arms": {
+    "A": "a_B + pi_B (baseline)",
+    "D_RAW": "a_G + resolution context (raw governor)",
+    "D_SAFE": "safe(a_B,a_G) + resolution context (vetoed)",
+    "E": "a_B + resolution context (no override)"
+  },
+  "classification": {
+    "base_vs_context": {
+      "BOTH_FAIL": 43,
+      "BOTH_SUCCESS": 5
+    },
+    "base_vs_raw": {
+      "BOTH_FAIL": 43,
+      "BREAK": 5
+    },
+    "base_vs_safe": {
+      "BOTH_FAIL": 43,
+      "BOTH_SUCCESS": 4,
+      "BREAK": 1
+    }
+  },
+  "n_forks": 48,
+  "n_tasks": 50,
+  "resolution_identity_sha256": "6ace0206dfc105ec589de4a01d7d93164c82a2b1bbb6341b929ad4df4e3bdc5f",
+  "safety_hypothesis": {
+    "hypothesis": "Breaks_D_SAFE < Breaks_D_RAW",
+    "hypothesis_supported": true,
+    "raw_breaks": 5,
+    "safe_breaks": 1
+  },
+  "safety_rule": "STOP_TO_ANSWER_VETO_V1",
+  "schema": "DAPH_V2B_I3_6D_B_SAFETY_ABLATION_V1",
+  "success": {
+    "base": "5/48",
+    "context": "5/48",
+    "raw": "0/48",
+    "safe": "4/48"
+  },
+  "utility": {
+    "mean_u_a_base": -106.9521,
+    "mean_u_e": -89.8446,
+    "mean_u_raw": -60.3267,
+    "mean_u_safe": -50.3267
+  }
+}
