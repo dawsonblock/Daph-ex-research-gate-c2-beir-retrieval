@@ -1,0 +1,54 @@
+{
+  "advantages": {
+    "mean_a_b": -16.0792,
+    "mean_one_shot_gain": -1.7867,
+    "mean_persistence_gain": 72.8235,
+    "mean_persistent_gain": 71.0369
+  },
+  "assistance_identity_sha256": "c29ef8d6a586d08a6870426e0860bfb0565acb4bf2c4a46959c3c6cf22d25992",
+  "classification_base_vs_action": {
+    "BOTH_FAIL": 43,
+    "BREAK": 5
+  },
+  "classification_base_vs_oneshot": {
+    "BOTH_FAIL": 43,
+    "BREAK": 5
+  },
+  "classification_base_vs_persistent": {
+    "BOTH_FAIL": 43,
+    "BREAK": 5
+  },
+  "delta_metrics": {
+    "delta_calls_oneshot_vs_action": 38,
+    "delta_calls_persistent_vs_action": 199,
+    "delta_u_oneshot_vs_action": -1.7867,
+    "delta_u_persistent_vs_action": 71.0369
+  },
+  "fork_modes": {
+    "A": "a_B + pi_B (baseline)",
+    "B": "a_G + pi_B (action-only)",
+    "C": "a_G + one-shot assist then pi_B",
+    "D": "a_G + persistent pi_Assist"
+  },
+  "model_calls": {
+    "action_only": 55,
+    "base": 27,
+    "one_shot": 93,
+    "persistent": 254
+  },
+  "n_forks": 48,
+  "n_tasks": 50,
+  "schema": "DAPH_V2B_I3_6B_R1_CONTINUATION_FORKS_V1",
+  "success": {
+    "action_only": "0/48",
+    "base": "5/48",
+    "one_shot": "0/48",
+    "persistent": "0/48"
+  },
+  "utility": {
+    "mean_u_a_base": -106.9521,
+    "mean_u_b_action": -123.0312,
+    "mean_u_c_oneshot": -124.8179,
+    "mean_u_d_persistent": -51.9944
+  }
+}

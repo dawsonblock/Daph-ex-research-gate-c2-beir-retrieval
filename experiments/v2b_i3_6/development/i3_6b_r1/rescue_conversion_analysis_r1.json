@@ -1,0 +1,186 @@
+{
+  "advantage_means": {
+    "a_b": -16.0792,
+    "one_shot_gain": -1.7867,
+    "persistence_gain": 72.8235,
+    "persistent_gain": 71.0369
+  },
+  "bootstrap_cis": {
+    "a_b": {
+      "lcb": -29.7329,
+      "mean": -16.0792,
+      "n_obs": 48,
+      "n_tasks": 38,
+      "ucb": -4.4483
+    },
+    "one_shot_gain": {
+      "lcb": -2.1231,
+      "mean": -1.7867,
+      "n_obs": 48,
+      "n_tasks": 38,
+      "ucb": -1.3967
+    },
+    "persistence_gain": {
+      "lcb": 64.8682,
+      "mean": 72.8235,
+      "n_obs": 48,
+      "n_tasks": 38,
+      "ucb": 79.4296
+    },
+    "persistent_gain": {
+      "lcb": 63.154,
+      "mean": 71.0369,
+      "n_obs": 48,
+      "n_tasks": 38,
+      "ucb": 77.4867
+    }
+  },
+  "by_action_pair": {
+    "ANSWER->SEARCH_MORE": {
+      "breaks": {
+        "action": 0,
+        "oneshot": 0,
+        "persistent": 0
+      },
+      "mean_a_b": -2.16,
+      "mean_one_shot_gain": -2.3209,
+      "mean_persistence_gain": 81.1022,
+      "mean_persistent_gain": 78.7813,
+      "n": 23,
+      "rescues": {
+        "action": 0,
+        "oneshot": 0,
+        "persistent": 0
+      },
+      "success": {
+        "action": 0,
+        "base": 0,
+        "oneshot": 0,
+        "persistent": 0
+      }
+    },
+    "ANSWER->VERIFY": {
+      "breaks": {
+        "action": 1,
+        "oneshot": 1,
+        "persistent": 1
+      },
+      "mean_a_b": -23.18,
+      "mean_one_shot_gain": -2.16,
+      "mean_persistence_gain": 84.4755,
+      "mean_persistent_gain": 82.3155,
+      "n": 11,
+      "rescues": {
+        "action": 0,
+        "oneshot": 0,
+        "persistent": 0
+      },
+      "success": {
+        "action": 0,
+        "base": 1,
+        "oneshot": 0,
+        "persistent": 0
+      }
+    },
+    "RETRIEVE->VERIFY": {
+      "breaks": {
+        "action": 0,
+        "oneshot": 0,
+        "persistent": 0
+      },
+      "mean_a_b": 1.286,
+      "mean_one_shot_gain": -0.862,
+      "mean_persistence_gain": 70.095,
+      "mean_persistent_gain": 69.233,
+      "n": 10,
+      "rescues": {
+        "action": 0,
+        "oneshot": 0,
+        "persistent": 0
+      },
+      "success": {
+        "action": 0,
+        "base": 0,
+        "oneshot": 0,
+        "persistent": 0
+      }
+    },
+    "STOP->ANSWER": {
+      "breaks": {
+        "action": 4,
+        "oneshot": 4,
+        "persistent": 4
+      },
+      "mean_a_b": -120.0,
+      "mean_one_shot_gain": 0.0,
+      "mean_persistence_gain": 0.0,
+      "mean_persistent_gain": 0.0,
+      "n": 4,
+      "rescues": {
+        "action": 0,
+        "oneshot": 0,
+        "persistent": 0
+      },
+      "success": {
+        "action": 0,
+        "base": 4,
+        "oneshot": 0,
+        "persistent": 0
+      }
+    }
+  },
+  "classification": {
+    "base_vs_action": {
+      "BOTH_FAIL": 43,
+      "BREAK": 5
+    },
+    "base_vs_oneshot": {
+      "BOTH_FAIL": 43,
+      "BREAK": 5
+    },
+    "base_vs_persistent": {
+      "BOTH_FAIL": 43,
+      "BREAK": 5
+    }
+  },
+  "delta_metrics": {
+    "delta_calls_oneshot_vs_action": 38,
+    "delta_calls_persistent_vs_action": 199,
+    "delta_u_oneshot_vs_action": -1.7867,
+    "delta_u_persistent_vs_action": 71.0369,
+    "delta_u_persistent_vs_base": 54.9577
+  },
+  "gates": {
+    "Q1": true,
+    "Q10": false,
+    "Q2": true,
+    "Q3": true,
+    "Q4": true,
+    "Q5": true,
+    "Q6": true,
+    "Q7": true,
+    "Q8": false,
+    "Q9": false
+  },
+  "n_forks": 48,
+  "schema": "DAPH_V2B_I3_6B_R1_RESCUE_CONVERSION_V1",
+  "success_counts": {
+    "action": 0,
+    "base": 5,
+    "oneshot": 0,
+    "persistent": 0
+  },
+  "terminal_penalty_shift": {
+    "n_shifts_oneshot": 0,
+    "n_shifts_persistent": 43,
+    "penalty_shift_fraction": 1.135,
+    "penalty_shift_reward": 3870.0,
+    "total_persistent_gain": 3409.77
+  },
+  "utility_means": {
+    "u_a_base": -106.9521,
+    "u_b_action": -123.0312,
+    "u_c_oneshot": -124.8179,
+    "u_d_persistent": -51.9944
+  }
+}
