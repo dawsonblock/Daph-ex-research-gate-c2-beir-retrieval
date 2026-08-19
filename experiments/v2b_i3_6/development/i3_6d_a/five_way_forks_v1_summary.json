@@ -1,0 +1,52 @@
+{
+  "classification": {
+    "base_vs_action": {
+      "BOTH_FAIL": 43,
+      "BREAK": 5
+    },
+    "base_vs_context": {
+      "BOTH_FAIL": 43,
+      "BOTH_SUCCESS": 5
+    },
+    "base_vs_generic": {
+      "BOTH_FAIL": 43,
+      "BREAK": 5
+    },
+    "base_vs_resolution": {
+      "BOTH_FAIL": 43,
+      "BREAK": 5
+    }
+  },
+  "contrasts": {
+    "mean_action_override_gain": 29.5179,
+    "mean_context_gain": -29.5179,
+    "mean_context_vs_base": 17.1075,
+    "mean_resolution_gain": -10.0804,
+    "mean_resolution_vs_base": 46.6254
+  },
+  "fork_modes": {
+    "A": "a_B + pi_B (baseline)",
+    "B": "a_G + pi_B (action-only)",
+    "C": "a_G + generic execution assist",
+    "D": "a_G + resolution assist",
+    "E": "a_B + resolution assist (context only)"
+  },
+  "n_forks": 48,
+  "n_tasks": 50,
+  "resolution_identity_sha256": "035f8ebdf4393429239c90367fcbf9c02ab89d9630a09f1fbd791b8e3bd79acd",
+  "schema": "DAPH_V2B_I3_6D_A_FIVE_WAY_FORKS_V1",
+  "success": {
+    "action_only": "0/48",
+    "base": "5/48",
+    "context": "5/48",
+    "generic": "0/48",
+    "resolution": "0/48"
+  },
+  "utility": {
+    "mean_u_a_base": -106.9521,
+    "mean_u_b_action": -123.0312,
+    "mean_u_c_generic": -50.2463,
+    "mean_u_d_resolution": -60.3267,
+    "mean_u_e_context": -89.8446
+  }
+}
