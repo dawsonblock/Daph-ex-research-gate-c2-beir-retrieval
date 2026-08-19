@@ -1,0 +1,31 @@
+{
+  "schema": "DAPH_V2B_I3_9_R3_CLOSURE_V1",
+  "experiment": "I3.9-r3 affordance-clean — A0 vs A1 vs M1 vs M3 on structural OOD v5",
+  "corpus": "i3_9_structural_ood_v5 (300 tasks, 10 categories x 30, fresh seeds, zero overlap with v1-v4)",
+  "protocol_frozen_at": "f23e262 (before v5 confirmatory run)",
+  "v5_run_completed": true,
+  "overall_results": {
+    "mean_u": {"A0": 34.60, "A1": 66.65, "M1": 22.33, "M3": 79.82},
+    "success": {"A0": "224/300", "A1": "270/300", "M1": "210/300", "M3": "299/300"},
+    "bootstrap_ci_m3_a1_primary": [6.71, 20.02],
+    "bootstrap_ci_m3_a0": [34.86, 55.92],
+    "bootstrap_ci_a1_a0": [23.47, 40.96],
+    "bootstrap_ci_m3_m1": [45.82, 69.07]
+  },
+  "frozen_claims": {
+    "C1_m3_a1_lower_endpoint_95ci_positive": {"result": true, "ci": [6.71, 20.02]},
+    "C2_m3_success_gt_a1": {"result": true, "values": "M3=299, A1=270"},
+    "C3_m3_a1_rescues_gt_breaks": {"result": true, "values": "rescues=30, breaks=1"},
+    "C4_m3_redundant_lt_a1": {"result": false, "values": "M3=0.376, A1=0.220"},
+    "C5_m3_steps_lt_a1": {"result": false, "values": "M3=7.27, A1=4.99"},
+    "safety_m3_breaks_le_rescues": {"result": true, "values": "1 <= 30"},
+    "adversarial_m3_false_ready_lt_5pct": {"result": true, "values": "0/300 = 0.0%"},
+    "generalization_no_catastrophic_vs_a1": {"result": true},
+    "early_false_ready_m3_within_10pp_a1": {"result": true, "values": "M3=100%, A1=100%"},
+    "stale_support_m3_no_collapse": {"result": true, "values": "M3=100%"},
+    "multi_hyp_m3_retain": {"result": false, "reason": "A1 already at 100% — M3 cannot rescue what A1 already solves", "m3_a1_rescues": 0},
+    "conflict_unresolved_m3_retain": {"result": true, "values": "M3 rescues vs A1 = 30"},
+    "m3_gt_m1_ci_positive": {"result": true, "ci": [45.82, 69.07]}
+  },
+  "summary": "10 of 13 frozen claims PASS. Primary criterion PASSES: M3 beats affordance-matched A1 with CI [+6.71, +20.02]. Two failures are step/redundancy tradeoffs from conservative evidence gathering. One failure (multi_hyp) is a ceiling effect — A1 already solves it."
+}
