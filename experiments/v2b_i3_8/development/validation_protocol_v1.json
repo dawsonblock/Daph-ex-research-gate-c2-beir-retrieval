@@ -1,0 +1,78 @@
+{
+  "schema": "DAPH_V2B_I3_8_VALIDATION_PROTOCOL_V1",
+  "created_before_model_run": true,
+  "description": "Frozen validation protocol for MDSG. All claims are specified before any model results are generated on the validation corpus.",
+  "validation_corpus": {
+    "path": "experiments/v2b_i3_8/manifests/i3_8_evidence_validation_v1.json",
+    "n_tasks": 300,
+    "split": "validation_v1",
+    "overlap_with_dev": 0,
+    "overlap_with_confirmation": 0,
+    "category_distribution": {
+      "evidence_answer": 124,
+      "evidence_defer": 63,
+      "evidence_stale": 52,
+      "evidence_conflict": 61
+    },
+    "terminal_distribution": {
+      "ANSWER": 237,
+      "DEFER": 63
+    }
+  },
+  "frozen_treatment": {
+    "m_builder": "scripts/run_i3_7e_compact_governor.py (unchanged from c38dc3d)",
+    "m_system_prompt": "unchanged from c38dc3d",
+    "no_action_override": true,
+    "model": "deepseek-chat",
+    "temperature": 0.0,
+    "max_tokens": 2048
+  },
+  "arms": {
+    "A": "semantic evidence baseline",
+    "M": "minimal decision state (frozen, leakage-clean)"
+  },
+  "primary_confirmatory_criterion": {
+    "id": "C1",
+    "description": "E[U_M - U_A] > 0",
+    "test": "lower endpoint of two-sided 95% paired task bootstrap CI > 0",
+    "bootstrap_iterations": 10000,
+    "bootstrap_seed": 42
+  },
+  "secondary_criteria": {
+    "C2": {
+      "description": "Success_M > Success_A",
+      "test": "paired McNemar exact test, c > b"
+    },
+    "C3": {
+      "description": "Rescues > Breaks",
+      "test": "count of (A fail, M success) > count of (A success, M fail)"
+    },
+    "C4": {
+      "description": "RedundantActionRate_M < RedundantActionRate_A",
+      "test": "M redundant actions / M steps < A redundant actions / A steps"
+    },
+    "C5": {
+      "description": "Steps_M < Steps_A",
+      "test": "M mean steps < A mean steps"
+    }
+  },
+  "safety_criterion": {
+    "description": "Breaks_M <= Rescues_M",
+    "strict_preference": "Breaks_M = 0"
+  },
+  "generalization_criterion": {
+    "description": "The gain must not come exclusively from one task template. Report results by the four evidence categories separately. Require no catastrophic subgroup regression (no category where M success rate drops more than 10 percentage points below A).",
+    "categories": [
+      "evidence_answer",
+      "evidence_defer",
+      "evidence_stale",
+      "evidence_conflict"
+    ],
+    "expected_primary_gain_source": "evidence_conflict"
+  },
+  "analysis_plan": {
+    "overall": "paired bootstrap CI + McNemar + rescues/breaks + redundant rate + steps",
+    "by_category": "per-category success rates, mean utility, rescues, breaks",
+    "rescue_mechanism": "verify that rescues follow the READY_TO_ANSWER pattern (VERIFY, VERIFY, ANSWER vs baseline resource exhaustion)"
+  }
+}
