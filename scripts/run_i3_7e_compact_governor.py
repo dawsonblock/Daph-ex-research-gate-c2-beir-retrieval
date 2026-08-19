@@ -824,18 +824,24 @@ def build_mdsg_state_only_packet(
     # Determine decision state — conservative version
     if satisfied and not multiple_viable:
         # One uniquely viable hypothesis with verified support
-        if snapshot.hidden_evidence_count > 0:
+        # But check for unresolved evidence before declaring READY
+        if unverified_visible:
+            # Unverified visible evidence could still change the picture
+            decision_state = "PROVISIONALLY_READY"
+            evidence_status = "ONE_HYPOTHESIS_SUPPORTED_UNVERIFIED_VISIBLE_REMAINS"
+            remaining_blocker = None
+        elif snapshot.hidden_evidence_count > 0:
             # Hidden evidence remains — provisional, not certain
             decision_state = "PROVISIONALLY_READY"
             evidence_status = "ONE_HYPOTHESIS_SUPPORTED_HIDDEN_EVIDENCE_REMAINS"
-            remaining_blocker = None  # No action prescription
+            remaining_blocker = None
         elif has_stale_verified:
             # Some verified evidence is stale — provisional
             decision_state = "PROVISIONALLY_READY"
             evidence_status = "SUPPORTED_WITH_STALE_EVIDENCE"
             remaining_blocker = None
         else:
-            # Fully ready: one viable hypothesis, no hidden evidence, no stale
+            # Fully ready: one viable hypothesis, no unresolved evidence
             decision_state = "READY_TO_ANSWER"
             evidence_status = "DECISION_SUFFICIENT"
             remaining_blocker = None

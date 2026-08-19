@@ -481,13 +481,14 @@ class StructuralOODGenerator:
         )
 
         evidence = (
-            # Visible: makes H1 look viable
+            # Visible: makes H1 look viable (supports H1 without contradicting H2,
+            # so that H2 remains testable after E3 is found)
             EvidenceItem(
                 evidence_id="E1",
                 proposition=f"An initial source claims {subject}.",
                 source_class="initial",
                 supports=("H1",),
-                contradicts=("H2",),
+                contradicts=(),
                 verification_state=VerificationState.UNVERIFIED,
                 temporal_status=TemporalStatus.CURRENT,
                 retrieved=True,

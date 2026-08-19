@@ -183,8 +183,8 @@ def main():
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"Generating {args.n_tasks} structural OOD v2 tasks...")
-    tasks = generate_structural_ood_tasks(n_tasks=args.n_tasks, split="structural_ood_v2")
+    print(f"Generating {args.n_tasks} structural OOD v3 tasks...")
+    tasks = generate_structural_ood_tasks(n_tasks=args.n_tasks, split="structural_ood_v3")
     budget = ResourceBudget(
         max_executive_steps=24, max_reasoning_tokens=2048,
         max_retrieval_calls=5, max_verification_calls=5,
@@ -192,11 +192,11 @@ def main():
     )
 
     benchmark = EvidenceBenchmark(
-        benchmark_id="i3_9_structural_ood_v2",
+        benchmark_id="i3_9_structural_ood_v3",
         tasks=tasks,
         budget_profiles={"STANDARD": budget},
     )
-    save_evidence_benchmark(benchmark, "experiments/v2b_i3_9/manifests/i3_9_structural_ood_v2.json")
+    save_evidence_benchmark(benchmark, "experiments/v2b_i3_9/manifests/i3_9_structural_ood_v3.json")
 
     cats = Counter(t.category for t in tasks)
     print(f"  Category distribution: {dict(cats)}")
