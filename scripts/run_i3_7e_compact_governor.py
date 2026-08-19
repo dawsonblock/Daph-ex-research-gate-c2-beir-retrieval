@@ -1160,6 +1160,502 @@ def build_baseline_with_affordances_packet(snapshot: EvidenceSnapshot) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# M4a: MDSG + observed_resolution_strength
+#
+# Adds a visible-evidence statistic to M3's state output.
+# Does NOT claim knowledge of hidden evidence's decision-relevance.
+# Does NOT change the epistemic state classifier.
+# Does NOT add action recommendations.
+#
+# observed_resolution_strength is derived from:
+#   - verified_support_count for the leading hypothesis
+#   - whether any unverified visible evidence could contradict
+#   - whether any competing hypothesis has verified support
+#
+# Semantics: "HIGH means the currently visible evidence strongly supports
+# one hypothesis. It does NOT mean unseen evidence cannot change the decision."
+# ---------------------------------------------------------------------------
+
+MDSG_OBSERVED_RESOLUTION_SYSTEM_PROMPT = """You are a metareasoning controller for a retrieval-verification task.
+
+You must choose one bounded action from the frozen seven-action vocabulary:
+  ANSWER, RETRIEVE, VERIFY, SEARCH_MORE, REASON_MORE, DEFER, STOP
+
+ACTION SEMANTICS:
+  RETRIEVE: Expose hidden evidence items.
+  SEARCH_MORE: Search for additional evidence from other sources.
+  VERIFY: Verify the most recently retrieved unverified evidence item.
+  ANSWER: Provide the final answer. Only use when you have sufficient verified current evidence.
+  DEFER: Give up due to insufficient evidence.
+  STOP: Stop without answering.
+
+You are given the evidence state plus a compact decision-state summary:
+  - live_hypotheses: hypotheses that are still viable
+  - eliminated_hypotheses: hypotheses that have been ruled out
+  - verified_support: evidence IDs that provide verified support
+  - verified_contradictions: evidence IDs that provide verified contradiction
+  - decision_state: READY_TO_ANSWER, SUPPORTED_BUT_UNRESOLVED, NEEDS_DISCRIMINATION, NEEDS_EVIDENCE, or INSUFFICIENT
+  - evidence_status: describes what evidence situation remains unresolved
+  - observed_resolution_strength: HIGH, MODERATE, or LOW
+    HIGH means the currently visible evidence strongly supports one hypothesis.
+    It does NOT mean unseen evidence cannot change the decision.
+    MODERATE means one hypothesis has verified support but the visible evidence is less decisive.
+    LOW means the visible evidence does not yet strongly support any hypothesis.
+  - action_affordances: which operations are currently callable
+    - can_retrieve: true if RETRIEVE can be called (retrieval budget remains)
+    - can_search: true if SEARCH_MORE can be called (search budget remains)
+    - can_verify: true if VERIFY can be called (verification budget remains and unverified visible evidence exists)
+
+DECISION STATE MEANINGS (epistemic conditions only, no action recommendations):
+  READY_TO_ANSWER: One hypothesis has verified current support, no verified contradiction, no unresolved visible evidence, and no hidden evidence remains.
+  SUPPORTED_BUT_UNRESOLVED: One hypothesis currently has verified support, but unresolved evidence remains (unverified visible, hidden, or stale).
+  NEEDS_DISCRIMINATION: Multiple hypotheses are viable, or unverified visible evidence could discriminate between them.
+  NEEDS_EVIDENCE: No hypothesis has verified support, but evidence-gathering operations are possible.
+  INSUFFICIENT: No hypothesis can be resolved with available evidence.
+
+Choose the next action yourself based on the epistemic state, the observed resolution strength, and which operations are callable.
+
+OUTPUT FORMAT:
+You must respond with a JSON object containing exactly these three fields:
+{
+  "action": "one of ANSWER RETRIEVE VERIFY SEARCH_MORE REASON_MORE DEFER STOP",
+  "reason_code": "A_SHORT_UPPERCASE_REASON_CODE",
+  "target_id": null
+}
+
+The reason_code must be uppercase with underscores only.
+
+The word json appears in this prompt to satisfy the API requirement."""
+
+
+def _compute_observed_resolution_strength(
+    snapshot: EvidenceSnapshot,
+    viability: dict,
+    satisfied: bool,
+    satisfied_h: str | None,
+) -> tuple[str, dict]:
+    """Compute observed_resolution_strength from controller-visible evidence.
+
+    HIGH: leading hypothesis has >=2 verified supporters, no unverified visible
+          evidence could contradict it, no competing hypothesis has verified support.
+    MODERATE: leading hypothesis has >=1 verified supporter, no unverified visible
+              evidence could contradict it.
+    LOW: unverified visible evidence could contradict the leading hypothesis,
+         OR a competing hypothesis has verified support,
+         OR no hypothesis has verified support.
+    """
+    if not satisfied or satisfied_h is None:
+        return "LOW", {
+            "verified_support_count": 0,
+            "visible_unverified_risk": False,
+            "competing_verified_support": False,
+        }
+
+    # Count verified supporters for the leading hypothesis
+    leading_info = viability.get(satisfied_h, {})
+    verified_support_count = len(leading_info.get("supporting_evidence", []))
+
+    # Check if any unverified visible evidence could contradict the leading hypothesis
+    visible_unverified_risk = False
+    for ev in snapshot.visible_evidence:
+        if ev.verification_state == VerificationState.UNVERIFIED:
+            if satisfied_h in ev.contradicts:
+                visible_unverified_risk = True
+                break
+
+    # Check if any competing hypothesis has verified support
+    competing_verified_support = False
+    for h_id, info in viability.items():
+        if h_id == satisfied_h:
+            continue
+        if info.get("status") == "VIABLE" and info.get("supporting_evidence"):
+            competing_verified_support = True
+            break
+
+    if verified_support_count >= 2 and not visible_unverified_risk and not competing_verified_support:
+        strength = "HIGH"
+    elif verified_support_count >= 1 and not visible_unverified_risk:
+        strength = "MODERATE"
+    else:
+        strength = "LOW"
+
+    return strength, {
+        "verified_support_count": verified_support_count,
+        "visible_unverified_risk": visible_unverified_risk,
+        "competing_verified_support": competing_verified_support,
+    }
+
+
+def build_mdsg_observed_resolution_packet(
+    snapshot: EvidenceSnapshot,
+) -> dict:
+    """M4a arm: MDSG + observed_resolution_strength."""
+    packet = build_hypotheses_only_packet(snapshot)
+    packet["schema"] = "DAPH_V2B_I3_10_MDSG_OBSERVED_RESOLUTION_PACKET_V1"
+
+    viability = _classify_from_snapshot(snapshot)
+
+    live_hyps = [h_id for h_id, info in viability.items()
+                 if info["status"] == "VIABLE"]
+    eliminated_hyps = [h_id for h_id, info in viability.items()
+                       if info["status"] == "ELIMINATED"]
+    weakened_hyps = [h_id for h_id, info in viability.items()
+                     if info["status"] == "WEAKENED"]
+    untested_hyps = [h_id for h_id, info in viability.items()
+                     if info["status"] == "UNTESTED"]
+
+    verified_support: list[str] = []
+    verified_contradictions: list[str] = []
+    for h_id, info in viability.items():
+        verified_support.extend(info["supporting_evidence"])
+        verified_contradictions.extend(info["contradicting_evidence"])
+    verified_support = sorted(set(verified_support))
+    verified_contradictions = sorted(set(verified_contradictions))
+
+    satisfied, satisfied_h = _answer_condition_from_snapshot(snapshot)
+
+    unverified_visible = [
+        ev.evidence_id for ev in snapshot.visible_evidence
+        if ev.verification_state == VerificationState.UNVERIFIED
+    ]
+
+    has_stale_verified = any(
+        ev.verification_state == VerificationState.SUFFICIENT
+        and ev.temporal_status == TemporalStatus.STALE
+        for ev in snapshot.visible_evidence
+    )
+
+    multiple_viable = len(live_hyps) > 1
+
+    action_affordances = {
+        "can_retrieve": snapshot.can_retrieve,
+        "can_search": snapshot.can_search,
+        "can_verify": snapshot.can_verify,
+    }
+
+    strength, strength_detail = _compute_observed_resolution_strength(
+        snapshot, viability, satisfied, satisfied_h)
+
+    # Same conservative state logic as M3
+    if satisfied and not multiple_viable:
+        if unverified_visible:
+            decision_state = "SUPPORTED_BUT_UNRESOLVED"
+            evidence_status = "ONE_HYPOTHESIS_SUPPORTED_UNVERIFIED_VISIBLE_REMAINS"
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "SUPPORTED_BUT_UNRESOLVED"
+            evidence_status = "ONE_HYPOTHESIS_SUPPORTED_HIDDEN_EVIDENCE_REMAINS"
+        elif has_stale_verified:
+            decision_state = "SUPPORTED_BUT_UNRESOLVED"
+            evidence_status = "SUPPORTED_WITH_STALE_EVIDENCE"
+        else:
+            decision_state = "READY_TO_ANSWER"
+            evidence_status = "DECISION_SUFFICIENT"
+    elif multiple_viable:
+        decision_state = "NEEDS_DISCRIMINATION"
+        evidence_status = "MULTIPLE_VIABLE_HYPOTHESES"
+    elif len(eliminated_hyps) == len(viability) - 1 and len(live_hyps) == 0:
+        if unverified_visible:
+            decision_state = "NEEDS_DISCRIMINATION"
+            evidence_status = "UNVERIFIED_VISIBLE_EVIDENCE_REMAINS"
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "NEEDS_EVIDENCE"
+            evidence_status = "NO_VERIFIED_SUPPORT_HIDDEN_EVIDENCE_REMAINS"
+        else:
+            decision_state = "INSUFFICIENT"
+            evidence_status = "NO_VERIFIED_SUPPORT_NO_HIDDEN_EVIDENCE"
+    elif len(live_hyps) == 0 and len(untested_hyps) > 0:
+        if unverified_visible:
+            decision_state = "NEEDS_DISCRIMINATION"
+            evidence_status = "NO_VERIFIED_SUPPORT_UNVERIFIED_VISIBLE"
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "NEEDS_EVIDENCE"
+            evidence_status = "NO_VERIFIED_SUPPORT_HIDDEN_EVIDENCE_REMAINS"
+        else:
+            decision_state = "INSUFFICIENT"
+            evidence_status = "NO_EVIDENCE_AVAILABLE"
+    else:
+        if unverified_visible:
+            decision_state = "NEEDS_DISCRIMINATION"
+            evidence_status = "WEAKENED_HYPOTHESES_UNVERIFIED_EVIDENCE"
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "NEEDS_EVIDENCE"
+            evidence_status = "WEAKENED_HYPOTHESES_HIDDEN_EVIDENCE_REMAINS"
+        else:
+            decision_state = "INSUFFICIENT"
+            evidence_status = "WEAKENED_HYPOTHESES_NO_EVIDENCE"
+
+    packet["decision_state_summary"] = {
+        "live_hypotheses": live_hyps,
+        "eliminated_hypotheses": eliminated_hyps,
+        "weakened_hypotheses": weakened_hyps,
+        "untested_hypotheses": untested_hyps,
+        "verified_support": verified_support,
+        "verified_contradictions": verified_contradictions,
+        "unverified_relevant_evidence": unverified_visible,
+        "decision_state": decision_state,
+        "evidence_status": evidence_status,
+        "remaining_blocker": None,
+        "hidden_evidence_count": snapshot.hidden_evidence_count,
+        "action_affordances": action_affordances,
+        "observed_resolution_strength": strength,
+        "observed_resolution_detail": strength_detail,
+    }
+
+    assert_no_evidence_leakage(packet)
+    return packet
+
+
+# ---------------------------------------------------------------------------
+# M4b: MDSG + evidence_pipeline_state
+#
+# Exposes the state of the evidence pipeline so the model can distinguish
+# "I have unverified evidence to evaluate" from "I need to acquire more."
+#
+# Pipeline states:
+#   NO_SUPPORT: no verified support for any hypothesis
+#   UNVERIFIED_VISIBLE_PENDING: unverified visible evidence exists that
+#     could discriminate between hypotheses
+#   SUPPORTED_VISIBLE_PENDING: one hypothesis has verified support, but
+#     unverified visible evidence remains
+#   SUPPORTED_HIDDEN_REMAINS: one hypothesis has verified support, all
+#     visible evidence verified, hidden evidence remains
+#   MULTIPLE_SUPPORTED: multiple hypotheses have verified support
+#   FULLY_RESOLVED: one hypothesis has verified support, all visible
+#     verified, no hidden evidence
+#
+# No policy verbs. State representation only.
+# ---------------------------------------------------------------------------
+
+MDSG_PIPELINE_STATE_SYSTEM_PROMPT = """You are a metareasoning controller for a retrieval-verification task.
+
+You must choose one bounded action from the frozen seven-action vocabulary:
+  ANSWER, RETRIEVE, VERIFY, SEARCH_MORE, REASON_MORE, DEFER, STOP
+
+ACTION SEMANTICS:
+  RETRIEVE: Expose hidden evidence items.
+  SEARCH_MORE: Search for additional evidence from other sources.
+  VERIFY: Verify the most recently retrieved unverified evidence item.
+  ANSWER: Provide the final answer. Only use when you have sufficient verified current evidence.
+  DEFER: Give up due to insufficient evidence.
+  STOP: Stop without answering.
+
+You are given the evidence state plus a compact decision-state summary:
+  - live_hypotheses: hypotheses that are still viable
+  - eliminated_hypotheses: hypotheses that have been ruled out
+  - verified_support: evidence IDs that provide verified support
+  - verified_contradictions: evidence IDs that provide verified contradiction
+  - decision_state: READY_TO_ANSWER, SUPPORTED_BUT_UNRESOLVED, NEEDS_DISCRIMINATION, NEEDS_EVIDENCE, or INSUFFICIENT
+  - evidence_status: describes what evidence situation remains unresolved
+  - evidence_pipeline_state: describes where evidence is in the evaluation pipeline
+    NO_SUPPORT: no verified support for any hypothesis yet
+    UNVERIFIED_VISIBLE_PENDING: unverified visible evidence exists that could be relevant
+    SUPPORTED_VISIBLE_PENDING: one hypothesis has verified support, but unverified visible evidence remains
+    SUPPORTED_HIDDEN_REMAINS: one hypothesis has verified support, all visible evidence verified, hidden evidence remains
+    MULTIPLE_SUPPORTED: multiple hypotheses have verified support
+    FULLY_RESOLVED: one hypothesis has verified support, all visible verified, no hidden evidence
+  - evidence_pipeline_counts:
+    verified_support_count: number of verified evidence items supporting the leading hypothesis
+    verified_competing_support_count: number of verified items supporting competing hypotheses
+    unverified_visible_count: number of unverified visible evidence items
+    hidden_evidence_count: number of hidden evidence items
+  - action_affordances: which operations are currently callable
+    - can_retrieve: true if RETRIEVE can be called (retrieval budget remains)
+    - can_search: true if SEARCH_MORE can be called (search budget remains)
+    - can_verify: true if VERIFY can be called (verification budget remains and unverified visible evidence exists)
+
+DECISION STATE MEANINGS (epistemic conditions only, no action recommendations):
+  READY_TO_ANSWER: One hypothesis has verified current support, no verified contradiction, no unresolved visible evidence, and no hidden evidence remains.
+  SUPPORTED_BUT_UNRESOLVED: One hypothesis currently has verified support, but unresolved evidence remains (unverified visible, hidden, or stale).
+  NEEDS_DISCRIMINATION: Multiple hypotheses are viable, or unverified visible evidence could discriminate between them.
+  NEEDS_EVIDENCE: No hypothesis has verified support, but evidence-gathering operations are possible.
+  INSUFFICIENT: No hypothesis can be resolved with available evidence.
+
+Choose the next action yourself based on the epistemic state, the evidence pipeline state, and which operations are callable.
+
+OUTPUT FORMAT:
+You must respond with a JSON object containing exactly these three fields:
+{
+  "action": "one of ANSWER RETRIEVE VERIFY SEARCH_MORE REASON_MORE DEFER STOP",
+  "reason_code": "A_SHORT_UPPERCASE_REASON_CODE",
+  "target_id": null
+}
+
+The reason_code must be uppercase with underscores only.
+
+The word json appears in this prompt to satisfy the API requirement."""
+
+
+def _compute_evidence_pipeline_state(
+    snapshot: EvidenceSnapshot,
+    viability: dict,
+    satisfied: bool,
+    satisfied_h: str | None,
+) -> tuple[str, dict]:
+    """Compute evidence_pipeline_state from controller-visible structure."""
+    unverified_visible = [
+        ev for ev in snapshot.visible_evidence
+        if ev.verification_state == VerificationState.UNVERIFIED
+    ]
+    unverified_visible_count = len(unverified_visible)
+    hidden_count = snapshot.hidden_evidence_count
+
+    # Count verified support for leading hypothesis
+    leading_support_count = 0
+    if satisfied and satisfied_h:
+        leading_info = viability.get(satisfied_h, {})
+        leading_support_count = len(leading_info.get("supporting_evidence", []))
+
+    # Count verified support for competing hypotheses
+    competing_support_count = 0
+    for h_id, info in viability.items():
+        if h_id == satisfied_h:
+            continue
+        competing_support_count += len(info.get("supporting_evidence", []))
+
+    # Determine pipeline state
+    if leading_support_count > 0 and competing_support_count > 0:
+        pipeline_state = "MULTIPLE_SUPPORTED"
+    elif leading_support_count == 0 and unverified_visible_count > 0:
+        pipeline_state = "UNVERIFIED_VISIBLE_PENDING"
+    elif leading_support_count == 0 and unverified_visible_count == 0 and hidden_count > 0:
+        pipeline_state = "NO_SUPPORT"
+    elif leading_support_count > 0 and unverified_visible_count > 0:
+        pipeline_state = "SUPPORTED_VISIBLE_PENDING"
+    elif leading_support_count > 0 and unverified_visible_count == 0 and hidden_count > 0:
+        pipeline_state = "SUPPORTED_HIDDEN_REMAINS"
+    elif leading_support_count > 0 and unverified_visible_count == 0 and hidden_count == 0:
+        pipeline_state = "FULLY_RESOLVED"
+    else:
+        pipeline_state = "NO_SUPPORT"
+
+    return pipeline_state, {
+        "verified_support_count": leading_support_count,
+        "verified_competing_support_count": competing_support_count,
+        "unverified_visible_count": unverified_visible_count,
+        "hidden_evidence_count": hidden_count,
+    }
+
+
+def build_mdsg_pipeline_state_packet(
+    snapshot: EvidenceSnapshot,
+) -> dict:
+    """M4b arm: MDSG + evidence_pipeline_state."""
+    packet = build_hypotheses_only_packet(snapshot)
+    packet["schema"] = "DAPH_V2B_I3_10_MDSG_PIPELINE_STATE_PACKET_V1"
+
+    viability = _classify_from_snapshot(snapshot)
+
+    live_hyps = [h_id for h_id, info in viability.items()
+                 if info["status"] == "VIABLE"]
+    eliminated_hyps = [h_id for h_id, info in viability.items()
+                       if info["status"] == "ELIMINATED"]
+    weakened_hyps = [h_id for h_id, info in viability.items()
+                     if info["status"] == "WEAKENED"]
+    untested_hyps = [h_id for h_id, info in viability.items()
+                     if info["status"] == "UNTESTED"]
+
+    verified_support: list[str] = []
+    verified_contradictions: list[str] = []
+    for h_id, info in viability.items():
+        verified_support.extend(info["supporting_evidence"])
+        verified_contradictions.extend(info["contradicting_evidence"])
+    verified_support = sorted(set(verified_support))
+    verified_contradictions = sorted(set(verified_contradictions))
+
+    satisfied, satisfied_h = _answer_condition_from_snapshot(snapshot)
+
+    unverified_visible = [
+        ev.evidence_id for ev in snapshot.visible_evidence
+        if ev.verification_state == VerificationState.UNVERIFIED
+    ]
+
+    has_stale_verified = any(
+        ev.verification_state == VerificationState.SUFFICIENT
+        and ev.temporal_status == TemporalStatus.STALE
+        for ev in snapshot.visible_evidence
+    )
+
+    multiple_viable = len(live_hyps) > 1
+
+    action_affordances = {
+        "can_retrieve": snapshot.can_retrieve,
+        "can_search": snapshot.can_search,
+        "can_verify": snapshot.can_verify,
+    }
+
+    pipeline_state, pipeline_counts = _compute_evidence_pipeline_state(
+        snapshot, viability, satisfied, satisfied_h)
+
+    # Same conservative state logic as M3
+    if satisfied and not multiple_viable:
+        if unverified_visible:
+            decision_state = "SUPPORTED_BUT_UNRESOLVED"
+            evidence_status = "ONE_HYPOTHESIS_SUPPORTED_UNVERIFIED_VISIBLE_REMAINS"
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "SUPPORTED_BUT_UNRESOLVED"
+            evidence_status = "ONE_HYPOTHESIS_SUPPORTED_HIDDEN_EVIDENCE_REMAINS"
+        elif has_stale_verified:
+            decision_state = "SUPPORTED_BUT_UNRESOLVED"
+            evidence_status = "SUPPORTED_WITH_STALE_EVIDENCE"
+        else:
+            decision_state = "READY_TO_ANSWER"
+            evidence_status = "DECISION_SUFFICIENT"
+    elif multiple_viable:
+        decision_state = "NEEDS_DISCRIMINATION"
+        evidence_status = "MULTIPLE_VIABLE_HYPOTHESES"
+    elif len(eliminated_hyps) == len(viability) - 1 and len(live_hyps) == 0:
+        if unverified_visible:
+            decision_state = "NEEDS_DISCRIMINATION"
+            evidence_status = "UNVERIFIED_VISIBLE_EVIDENCE_REMAINS"
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "NEEDS_EVIDENCE"
+            evidence_status = "NO_VERIFIED_SUPPORT_HIDDEN_EVIDENCE_REMAINS"
+        else:
+            decision_state = "INSUFFICIENT"
+            evidence_status = "NO_VERIFIED_SUPPORT_NO_HIDDEN_EVIDENCE"
+    elif len(live_hyps) == 0 and len(untested_hyps) > 0:
+        if unverified_visible:
+            decision_state = "NEEDS_DISCRIMINATION"
+            evidence_status = "NO_VERIFIED_SUPPORT_UNVERIFIED_VISIBLE"
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "NEEDS_EVIDENCE"
+            evidence_status = "NO_VERIFIED_SUPPORT_HIDDEN_EVIDENCE_REMAINS"
+        else:
+            decision_state = "INSUFFICIENT"
+            evidence_status = "NO_EVIDENCE_AVAILABLE"
+    else:
+        if unverified_visible:
+            decision_state = "NEEDS_DISCRIMINATION"
+            evidence_status = "WEAKENED_HYPOTHESES_UNVERIFIED_EVIDENCE"
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "NEEDS_EVIDENCE"
+            evidence_status = "WEAKENED_HYPOTHESES_HIDDEN_EVIDENCE_REMAINS"
+        else:
+            decision_state = "INSUFFICIENT"
+            evidence_status = "WEAKENED_HYPOTHESES_NO_EVIDENCE"
+
+    packet["decision_state_summary"] = {
+        "live_hypotheses": live_hyps,
+        "eliminated_hypotheses": eliminated_hyps,
+        "weakened_hypotheses": weakened_hyps,
+        "untested_hypotheses": untested_hyps,
+        "verified_support": verified_support,
+        "verified_contradictions": verified_contradictions,
+        "unverified_relevant_evidence": unverified_visible,
+        "decision_state": decision_state,
+        "evidence_status": evidence_status,
+        "remaining_blocker": None,
+        "hidden_evidence_count": snapshot.hidden_evidence_count,
+        "action_affordances": action_affordances,
+        "evidence_pipeline_state": pipeline_state,
+        "evidence_pipeline_counts": pipeline_counts,
+    }
+
+    assert_no_evidence_leakage(packet)
+    return packet
+
+
+# ---------------------------------------------------------------------------
 # Trajectory runner
 # ---------------------------------------------------------------------------
 
@@ -1263,12 +1759,19 @@ def run_trajectory(
         elif mode == "BASELINE_WITH_AFFORDANCES":
             packet = build_baseline_with_affordances_packet(evidence_snapshot)
             system_prompt = BASELINE_WITH_AFFORDANCES_SYSTEM_PROMPT
+        elif mode == "MDSG_OBSERVED_RESOLUTION":
+            packet = build_mdsg_observed_resolution_packet(evidence_snapshot)
+            system_prompt = MDSG_OBSERVED_RESOLUTION_SYSTEM_PROMPT
+        elif mode == "MDSG_PIPELINE_STATE":
+            packet = build_mdsg_pipeline_state_packet(evidence_snapshot)
+            system_prompt = MDSG_PIPELINE_STATE_SYSTEM_PROMPT
         else:
             raise ValueError(f"Unknown mode: {mode}")
 
         # Log per-step decision state for M arms
         if mode in ("MINIMAL_DECISION_STATE", "MDSG_STATE_ONLY",
-                     "MDSG_STATE_WITH_HINTS", "MDSG_STATE_WITH_AFFORDANCES"):
+                     "MDSG_STATE_WITH_HINTS", "MDSG_STATE_WITH_AFFORDANCES",
+                     "MDSG_OBSERVED_RESOLUTION", "MDSG_PIPELINE_STATE"):
             ds_info = packet.get("decision_state_summary", {})
             decision_state_log.append({
                 "step": step_id,
