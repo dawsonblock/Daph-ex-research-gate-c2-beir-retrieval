@@ -1,0 +1,124 @@
+{
+  "schema": "DAPH_V2B_I3_9_R3_M3_FREEZE_V1",
+  "commit": "2c467df",
+  "classification": "M3 STRUCTURAL-OOD CONFIRMATION",
+  "freeze_status": "FROZEN — do not modify M3 based on v5",
+  "primary_efficacy": "PASS",
+  "safety": "PASS",
+  "generalization": "PASS",
+  "efficiency": "FAIL",
+  "honest_claim": "MDSG's controller-visible epistemic state representation substantially improves decision reliability on structurally out-of-distribution evidence tasks when compared with an affordance-matched baseline, while preserving model policy authority. Its current conservative state semantics incur additional cognition cost.",
+  "architectural_result": "Epistemic state compression provides causal value beyond public action affordances.",
+  "frozen_claims_final_status": {
+    "C1_m3_a1_lower_endpoint_95ci_positive": {
+      "result": "PASS",
+      "ci": [6.71, 20.02],
+      "interpretation": "MDSG state compression adds real value beyond affordance information"
+    },
+    "C2_m3_success_gt_a1": {
+      "result": "PASS",
+      "values": "M3=299, A1=270",
+      "interpretation": "29 additional correct decisions attributable to state compression"
+    },
+    "C3_m3_a1_rescues_gt_breaks": {
+      "result": "PASS",
+      "values": "rescues=30, breaks=1",
+      "interpretation": "Near-monotone improvement — state compression rarely hurts"
+    },
+    "C4_m3_redundant_lt_a1": {
+      "result": "FAIL",
+      "values": "M3=0.376, A1=0.220",
+      "interpretation": "M3 performs more redundant actions — overconservative cognition",
+      "not_dismissed_as": "This is not merely 'the cost of safety.' It identifies the next real architectural weakness."
+    },
+    "C5_m3_steps_lt_a1": {
+      "result": "FAIL",
+      "values": "M3=7.27, A1=4.99",
+      "interpretation": "M3 takes 46% more steps — solved decision correctness but not metareasoning efficiency",
+      "not_dismissed_as": "This is not merely 'the cost of safety.' The architecture has progressed from undercontrolled cognition to overconservative cognition."
+    },
+    "safety_m3_breaks_le_rescues": {
+      "result": "PASS",
+      "values": "1 <= 30"
+    },
+    "adversarial_m3_false_ready_lt_5pct": {
+      "result": "PASS",
+      "values": "0/300 = 0.0%"
+    },
+    "generalization_no_catastrophic_vs_a1": {
+      "result": "PASS",
+      "interpretation": "No subgroup where M3 drops more than 10pp below A1"
+    },
+    "early_false_ready_m3_within_10pp_a1": {
+      "result": "PASS",
+      "values": "M3=100%, A1=100%"
+    },
+    "stale_support_m3_no_collapse": {
+      "result": "PASS",
+      "values": "M3=100%"
+    },
+    "multi_hyp_m3_retain": {
+      "result": "FAIL",
+      "values": "M3 rescues vs A1 = 0",
+      "interpretation": "Ceiling effect — A1 already at 100% because affordance bits alone suffice for SEARCH_MORE selection. M3 cannot rescue what A1 already solves. The underlying capability is preserved (M3=100% = A1=100%) but the criterion as specified failed.",
+      "note": "This remains a frozen failed criterion. A good scientific record does not convert failed pre-specified criteria into 'not really failures' afterward."
+    },
+    "conflict_unresolved_m3_retain": {
+      "result": "PASS",
+      "values": "M3 rescues vs A1 = 30",
+      "interpretation": "Cleanest demonstration of MDSG's unique value. A1 receives same affordances and scores 0/30. M3 scores 30/30. The gain cannot be explained by tool availability, evidence visibility, transition hints, or action override. It comes from the epistemic-state abstraction itself. Probably the strongest single subgroup result in the entire lineage."
+    },
+    "m3_gt_m1_ci_positive": {
+      "result": "PASS",
+      "ci": [45.82, 69.07],
+      "interpretation": "Clean affordances add massive value to state-only MDSG"
+    }
+  },
+  "causal_decomposition": {
+    "A1_A0": {
+      "ci": [23.47, 40.96],
+      "meaning": "Public affordance bits alone add +46 successes — much of M2's advantage came from affordance information, not MDSG state"
+    },
+    "M3_A1": {
+      "ci": [6.71, 20.02],
+      "meaning": "MDSG state compression adds genuine value on top of affordances (PRIMARY)"
+    },
+    "M3_M1": {
+      "ci": [45.82, 69.07],
+      "meaning": "Affordances add massive value to state-only MDSG"
+    }
+  },
+  "what_is_not_claimed": [
+    "MDSG is universally optimal",
+    "MDSG eliminates overthinking",
+    "The failed criteria are not really failures"
+  ],
+  "what_is_claimed": "MDSG's controller-visible epistemic state representation substantially improves decision reliability on structurally out-of-distribution evidence tasks when compared with an affordance-matched baseline, while preserving model policy authority. Its current conservative state semantics incur additional cognition cost.",
+  "next_phase": {
+    "id": "I3.10",
+    "name": "Value-of-Continuation / Efficient MDSG",
+    "question": "How do we retain M3's near-perfect decision correctness while reducing unnecessary cognition?",
+    "approach": "Not 'make MDSG smarter' but 'calibrate the stopping frontier: knowing not only what the epistemic state is, but whether another unit of cognition has enough expected decision value to justify its cost.'",
+    "phases": [
+      "I3.10a: forensic excess-cognition analysis on v5 (diagnosis only, no new model run)",
+      "I3.10b: build state-only decision-stability signal (M4)",
+      "fresh efficiency-development corpus",
+      "confirmatory test: can M4 retain M3 success while reducing steps?"
+    ],
+    "m4_design_constraints": [
+      "Do not change the epistemic state classifier",
+      "Keep READY_TO_ANSWER, SUPPORTED_BUT_UNRESOLVED, NEEDS_DISCRIMINATION, NEEDS_EVIDENCE, INSUFFICIENT",
+      "Keep can_retrieve, can_search, can_verify",
+      "M4 outputs state, not policy",
+      "LLM remains responsible for deciding whether to answer",
+      "Preserves the architectural lesson: prescribing action -> fragile; improving state representation -> robust"
+    ],
+    "m4_aggressive_success_criteria": [
+      "Success_M4 >= Success_M3 - 1pp",
+      "Steps_M4 < Steps_M3",
+      "RedundantRate_M4 < RedundantRate_M3",
+      "FalseReadyRate_M4 < 5%",
+      "No catastrophic subgroup regression"
+    ]
+  }
+}
