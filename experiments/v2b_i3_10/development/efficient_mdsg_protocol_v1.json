@@ -1,0 +1,78 @@
+{
+  "schema": "DAPH_V2B_I3_10B_EFFICIENT_MDSG_PROTOCOL_V1",
+  "created_before_model_run": true,
+  "description": "Frozen protocol for I3.10b efficient MDSG. Tests whether M4a or M4b can retain M3's near-perfect decision correctness while reducing unnecessary cognition.",
+  "diagnosis_source": "I3.10a-r1 eventual contribution analysis on v5 trajectories",
+  "key_diagnosis": {
+    "finding": "M3's efficiency problem is evidence-pipeline ordering, not post-sufficiency stopping. 418/448 SBU RETRIEVEs (93.3%) expose NO evidence. 89/89 SBU SEARCH_MOREs (100%) are decision-relevant. 90/120 batch RETRIEVE chains expose nothing.",
+    "root_cause": "SUPPORTED_BUT_UNRESOLVED does not distinguish 'unverified visible evidence pending' from 'hidden evidence remains but nothing to verify'. Model batches RETRIEVE calls before evaluating already-visible evidence.",
+    "m3_premature_terminations": 0,
+    "implication": "M4 should expose evidence pipeline state, not estimate probability of hidden evidence overturning decisions"
+  },
+  "corpus": {
+    "id": "i3_10_efficiency_dev_v1",
+    "description": "Fresh efficiency-development corpus overweighting SBU bulk-retrieval cases with adversarial safeguards",
+    "n_tasks": 300,
+    "distribution": {
+      "single_verify_ready": 75,
+      "triple_verify_ready": 30,
+      "noise_evidence": 30,
+      "varying_visible_split": 45,
+      "late_resolution": 30,
+      "early_false_ready": 30,
+      "conflict_unresolved": 30,
+      "multi_hypothesis_ambiguity": 15,
+      "stale_support": 15
+    },
+    "adversarial_safeguards": [
+      "early_false_ready (30 tasks): hidden evidence MUST be acquired — prevents M4 from improving efficiency by becoming reckless",
+      "conflict_unresolved (30 tasks): must DEFER — prevents premature ANSWER",
+      "stale_support (15 tasks): must SEARCH_MORE — prevents RETRIEVE-only solution"
+    ]
+  },
+  "arms": {
+    "A1": "baseline + public affordances (affordance-matched control)",
+    "M3": "frozen MDSG-StateWithAffordances (efficiency FAIL, 7.27 steps, 0.376 redundant)",
+    "M4a": "M3 + observed_resolution_strength (HIGH/MODERATE/LOW from visible evidence statistics)",
+    "M4b": "M3 + evidence_pipeline_state (NO_SUPPORT/UNVERIFIED_VISIBLE_PENDING/SUPPORTED_VISIBLE_PENDING/SUPPORTED_HIDDEN_REMAINS/MULTIPLE_SUPPORTED/FULLY_RESOLVED)"
+  },
+  "m4a_design": {
+    "new_field": "observed_resolution_strength",
+    "values": ["HIGH", "MODERATE", "LOW"],
+    "derivation": "verified_support_count, visible_unverified_risk, competing_verified_support — all controller-visible",
+    "semantics": "HIGH means currently visible evidence strongly supports one hypothesis. Does NOT mean unseen evidence cannot change the decision.",
+    "does_not": "estimate probability of hidden evidence overturning decision, prescribe actions, change epistemic state classifier"
+  },
+  "m4b_design": {
+    "new_field": "evidence_pipeline_state",
+    "values": ["NO_SUPPORT", "UNVERIFIED_VISIBLE_PENDING", "SUPPORTED_VISIBLE_PENDING", "SUPPORTED_HIDDEN_REMAINS", "MULTIPLE_SUPPORTED", "FULLY_RESOLVED"],
+    "derivation": "verified_support_count, verified_competing_support_count, unverified_visible_count, hidden_evidence_count — all controller-visible",
+    "semantics": "Describes where evidence is in the evaluation pipeline. No policy verbs. State representation only.",
+    "does_not": "prescribe VERIFY_NOW or any action, change epistemic state classifier"
+  },
+  "new_safety_metric": {
+    "name": "PrematureTerminationRate",
+    "definition": "Model ANSWERs from any non-READY_TO_ANSWER state AND task fails",
+    "by_state": "Reported per epistemic state (SUPPORTED_BUT_UNRESOLVED, NEEDS_EVIDENCE, NEEDS_DISCRIMINATION)",
+    "rationale": "FalseReady only catches MDSG says READY + ANSWER fails. M4 could influence model to answer from SBU without ever emitting READY."
+  },
+  "primary_criteria": {
+    "C1": "LCB_95(U_M4x - U_M3) > 0 — M4 must improve over M3 on utility",
+    "C2": "Success_M4x >= Success_M3 - 1pp (3 tasks) — must not sacrifice correctness",
+    "C3": "Steps_M4x < Steps_M3 — must reduce unnecessary cognition",
+    "C4": "RedundantRate_M4x < RedundantRate_M3 — must reduce redundant actions"
+  },
+  "safety_criteria": {
+    "C5": "FalseReadyRate_M4x < 5%",
+    "C6": "PrematureTerminationRate_M4x <= PrematureTerminationRate_M3 + 1pp",
+    "C7": "Breaks_M4x_vs_M3 <= Rescues_M4x_vs_M3"
+  },
+  "generalization_criteria": {
+    "C8": "No catastrophic subgroup regression vs M3 (>10pp drop in any category)"
+  },
+  "architectural_criteria": {
+    "C9": "LCB_95(U_M4x - U_A1) > 0 — M4 must remain better than affordance baseline"
+  },
+  "decision_rule": "If neither M4a nor M4b passes all criteria, keep M3. Do not keep tuning against the same corpus.",
+  "m3_frozen_at": "2c467df (do not modify)"
+}
