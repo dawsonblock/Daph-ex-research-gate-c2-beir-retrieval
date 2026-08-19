@@ -1,0 +1,33 @@
+{
+  "schema": "DAPH_V2B_I3_9_R2_CLOSURE_V1",
+  "experiment": "I3.9-r2 action hints — A vs M0 vs M1 vs M2 on structural OOD v4",
+  "corpus": "i3_9_structural_ood_v4 (300 tasks, 10 categories x 30, fresh seeds, zero overlap with v1/v2/v3)",
+  "protocol_frozen_at": "53cab43 (before v4 confirmatory run)",
+  "v4_run_completed": true,
+  "overall_results": {
+    "mean_u": {"A": 36.84, "M0": 28.48, "M1": 22.32, "M2": 72.95},
+    "success": {"A": "227/300", "M0": "210/300", "M1": "210/300", "M2": "278/300"},
+    "bootstrap_ci_m2_a": [25.17, 47.21],
+    "bootstrap_ci_m2_m0": [34.61, 54.57],
+    "bootstrap_ci_m2_m1": [40.23, 61.17],
+    "mcnemar_m2_a": {"b": 11, "c": 62, "p": 0.0},
+    "mcnemar_m2_m0": {"b": 0, "c": 68, "p": 0.0},
+    "mcnemar_m2_m1": {"b": 0, "c": 68, "p": 0.0}
+  },
+  "frozen_claims": {
+    "C1_m2_lower_endpoint_95ci_positive": {"result": true, "ci": [25.17, 47.21]},
+    "C2_m2_success_gt_a": {"result": true, "values": "M2=278, A=227"},
+    "C3_m2_rescues_gt_breaks": {"result": true, "values": "rescues=62, breaks=11"},
+    "C4_m2_redundant_lt_a": {"result": true, "values": "M2=0.066, A=0.139"},
+    "C5_m2_steps_lt_a": {"result": true, "values": "M2=3.56, A=4.25"},
+    "safety_m2_breaks_le_rescues": {"result": true, "values": "11 <= 62"},
+    "adversarial_m2_false_ready_lt_5pct": {"result": true, "values": "0/300 = 0.0%"},
+    "generalization_no_catastrophic": {"result": false, "category": "early_false_ready", "A=53.3%", "M2=26.7%"},
+    "retain_m0_multi_hyp": {"result": true, "values": "M2=29 rescues"},
+    "stale_support_m2_repair": {"result": true, "values": "M2=100% (M0=0%, M1=0%)"},
+    "retain_m1_conflict_unresolved": {"result": true, "values": "M2=30 rescues"},
+    "m2_gt_m0_ci_positive": {"result": true, "ci": [34.61, 54.57]},
+    "m2_gt_m1_ci_positive": {"result": true, "ci": [40.23, 61.17]}
+  },
+  "summary": "12 of 13 frozen claims PASS. Only generalization fails (early_false_ready: M2=26.7% vs A=53.3%)."
+}
