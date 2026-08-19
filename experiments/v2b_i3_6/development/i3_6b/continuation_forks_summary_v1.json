@@ -1,0 +1,35 @@
+{
+  "advantages": {
+    "mean_a_b": -14.2687,
+    "mean_a_e": 58.7754,
+    "mean_execution_gain": 73.0442
+  },
+  "assistance_identity_sha256": "cd58948d4441fa376b6eafcf5f4193d7af637f6a2e7ef0f565ef52b5e39c9bae",
+  "backend_errors": 0,
+  "model_calls": {
+    "action_only": 57,
+    "base": 27,
+    "exec_assist": 253
+  },
+  "n_forks": 48,
+  "n_tasks": 50,
+  "rescue_classification": {
+    "action_break": 5,
+    "action_rescue": 0,
+    "assist_break": 5,
+    "assist_rescue": 0,
+    "both_fail": 43,
+    "both_success": 0
+  },
+  "schema": "DAPH_V2B_I3_6B_CONTINUATION_FORKS_V1",
+  "success": {
+    "action_only": "0/48",
+    "base": "5/48",
+    "exec_assist": "0/48"
+  },
+  "utility": {
+    "mean_u_action_only": -120.6858,
+    "mean_u_base": -106.4171,
+    "mean_u_exec_assist": -47.6417
+  }
+}
