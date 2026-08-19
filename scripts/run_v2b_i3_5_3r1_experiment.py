@@ -237,9 +237,28 @@ def main():
     identity["predictor_type"] = "PairwiseAdvantagePredictor"
     identity["gate_model_path"] = args.gate_model
 
-    # Recompute experiment identity with Q^{π_B} binding
+    # Bind the effective runtime threshold and margin into the identity.
+    # This ensures the exact decision rule used by workers is recorded.
+    effective_threshold = pairwise_predictor.delta_threshold
+    effective_margin = pairwise_predictor.lcb_margin
+    effective_intervention_requirement = effective_threshold + effective_margin
+    identity["runtime_gate_params"] = {
+        "delta_threshold": effective_threshold,
+        "lcb_margin": effective_margin,
+        "effective_requirement": (
+            f"predicted ΔQ_π > {effective_intervention_requirement} "
+            f"(LCB = predicted - {effective_margin} > {effective_threshold})"
+        ),
+        "cli_overrides": {
+            "delta_threshold": args.delta_threshold,
+            "lcb_margin": args.lcb_margin,
+        },
+    }
+
+    # Recompute experiment identity with Q^{π_B} binding + runtime params
+    runtime_binding = json.dumps(identity["runtime_gate_params"], sort_keys=True)
     exp_sha_with_q_pib = hashlib.sha256(
-        (exp_sha + q_pib_identity_sha).encode()
+        (exp_sha + q_pib_identity_sha + runtime_binding).encode()
     ).hexdigest()
     identity["experiment_identity_with_q_pib_sha256"] = exp_sha_with_q_pib
 
@@ -272,7 +291,12 @@ def main():
         worker_backend = DeepSeekBackend()
         worker_gate = SelectiveGovernorGate(predictor=RuleBasedInterventionPredictor())
         # Each worker gets its own copy of the pairwise predictor
+        # and re-applies the CLI threshold/margin overrides.
         worker_pairwise = PairwiseAdvantagePredictor.load(args.gate_model)
+        if args.delta_threshold is not None:
+            worker_pairwise.delta_threshold = args.delta_threshold
+        if args.lcb_margin is not None:
+            worker_pairwise.lcb_margin = args.lcb_margin
         worker_runner = I352FactorialRunner(
             backend=worker_backend,
             gate=worker_gate,

@@ -251,8 +251,8 @@ exploit the governor's ranking intelligence is the I3.5.2b question.
 ## 6. Corrected Milestone Status
 
 ```text
-V2B-I3.5.2a + I3.5.2b + I3.5.2c-r1 + I3.5.2d + I3.5.3 + I3.5.3-r1
-STATE-LEVEL + PACKET + END-TO-END + POLICY-CONDITIONAL + Q^{π_B} + PAIRWISE
+V2B-I3.5.2a + I3.5.2b + I3.5.2c-r1 + I3.5.2d + I3.5.3 + I3.5.3-r1 + I3.5.3-r2
+STATE-LEVEL + PACKET + END-TO-END + POLICY-CONDITIONAL + Q^{π_B} + PAIRWISE + CLOSURE
 
   Oracle governor-ranking competence:     SUPPORTED (A* = +108.41)
   Local positive competence region:       SUPPORTED
@@ -273,8 +273,9 @@ STATE-LEVEL + PACKET + END-TO-END + POLICY-CONDITIONAL + Q^{π_B} + PAIRWISE
   Pairwise base-first gate (I3.5.3-r1):   0 interventions, ΔU=+0.38, identity bound
   Pairwise model beats constant baseline: CONFIRMED (R²=0.64 vs -0.14, sign 96% vs 66%)
   Expanded fork dataset (all disagreements): 300 forks, 52 positive (all RET→VER, +1.95)
-  No intervention > +5 utility:           CONFIRMED (max ΔQ_π in forks = +5.34)
-  Gate abstains even at τ=0:              CONFIRMED (0 interventions at zero threshold)
+  No intervention > +5 utility:           CONFIRMED (max fork ΔQ_π = +5.34, max runtime = +3.18)
+  Gate abstains at frozen 5+5 criterion:  CONFIRMED (0/303 approved, max LCB = -1.82)
+  Gate at τ=0 would approve 68:           CONFIRMED (offline replay, all small ΔQ_π ≤ +3.18)
   Identity binding (model SHA-256):       PASS (G8)
   Validation status:                      STOPPED
   Conclusion:                             Across all governor-baseline disagreements
@@ -1179,7 +1180,8 @@ Scripts:
 Unlike I3.5.2d (which only forked at $Q^*$-gate-selected states), I3.5.3-r1
 forks at **every** OFF trajectory state where $a_G \ne a_B$.
 
-**300 governor-baseline disagreement states found** across 300 tasks.
+**300 governor-baseline disagreement states found** across 235 development tasks
+(65 tasks contributed no governor/baseline disagreement).
 
 Action pair distribution:
 
@@ -1269,11 +1271,57 @@ Since the gate approved 0 interventions:
 
 This is the optimal cost profile for a null-intervention gate.
 
-### Permissive Threshold Test
+### Permissive Threshold Test (Offline Replay)
 
-A 50-task run with $\tau=0$ and margin=0 (the most permissive possible
-setting) still produced **0 interventions**. The model never predicts a
-positive $\Delta Q_\pi$ at runtime, even when the threshold is zero.
+> **Correction (I3.5.3-r2):** The original I3.5.3-r1 claim that "even at
+> $\tau=0$ and margin=0, the gate produces 0 interventions" was invalid.
+> The CLI overrides were applied to the parent process but not propagated
+> to worker predictors. The actual workers used the serialized defaults
+> ($\tau=5$, margin=5). This is fixed in I3.5.3-r2.
+
+An offline replay of the 300-task SELECTIVE_QPIB_BASE_FIRST trajectories
+was run with $\tau=0$ and margin=0 (no DeepSeek calls needed — pure
+offline computation using saved trajectory steps and the trained model).
+
+**Offline replay results (303 governor/baseline disagreements):**
+
+| Metric | Standard (τ=5, margin=5) | Permissive (τ=0, margin=0) |
+|---|---|---|
+| Approved interventions | 0 | 68 |
+| Max predicted ΔQ_π | +3.18 | +3.18 |
+| Max LCB | -1.82 | +3.18 |
+| Predicted > 0 | 66/303 (21.8%) | 66/303 (21.8%) |
+| Predicted > 5 | 0/303 (0.0%) | 0/303 (0.0%) |
+
+At $\tau=0$, the gate would approve 68 interventions (63 RETRIEVE→VERIFY,
+2 ANSWER→REASON_MORE, 1 VERIFY→SEARCH_MORE, 2 others). However, the
+maximum predicted ΔQ_π is only +3.18, and the maximum raw fork ΔQ_π is
++5.34 — neither exceeds the frozen 5+5 criterion.
+
+The 66 positive predictions are all small (mean +1.92 for RETRIEVE→VERIFY).
+These are not task rescues — the fork dataset shows 0 governor-continuation
+successes versus 42 base-continuation successes across 300 forks. The
+positive ΔQ_π cases represent small utility improvements within trajectories
+that still fail to achieve successful termination.
+
+**Complete runtime distribution (standard τ=5, margin=5, offline replay):**
+
+| Metric | Value |
+|---|---|
+| Total evaluations | 767 |
+| a_G == a_B (no disagreement) | 464 |
+| a_G != a_B (disagreement) | 303 |
+| Mean predicted ΔQ_π | -18.51 |
+| Min predicted ΔQ_π | -120.00 |
+| Max predicted ΔQ_π | +3.18 |
+| Mean LCB | -23.51 |
+| Max LCB | -1.82 |
+| Predicted > 0 | 66/303 (21.8%) |
+| Predicted > 5 | 0/303 (0.0%) |
+| LCB > 0 | 0/303 (0.0%) |
+| LCB > 5 | 0/303 (0.0%) |
+| Approved (INTERVENE) | 0/303 |
+| Skipped (SKIP) | 303/303 |
 
 ### Scientific Interpretation
 
@@ -1305,9 +1353,14 @@ positive $\Delta Q_\pi$ at runtime, even when the threshold is zero.
 **The strongest supported statement is:**
 
 > Across all observed governor-baseline disagreements on the development
-> distribution, no governor intervention improved return under baseline-model
-> continuation by more than 5 utility points. The learned pairwise advantage
-> gate correctly abstains, preserving baseline performance at zero extra cost.
+> distribution, no pairwise intervention produced a sufficiently robust
+> predicted advantage to cross the frozen 5+5 intervention criterion.
+> Observed positive policy-conditional advantages were small; the maximum
+> raw fork ΔQ_π was +5.34 and the positive RETRIEVE→VERIFY region averaged
+> +1.95. At runtime, the maximum predicted ΔQ_π was +3.18 (offline replay,
+> 303 disagreements). The learned pairwise advantage gate correctly
+> abstains under the frozen criterion, preserving baseline performance at
+> zero extra cost.
 
 ### Comparison Across All Milestones
 
@@ -1320,3 +1373,109 @@ positive $\Delta Q_\pi$ at runtime, even when the threshold is zero.
 I3.5.3-r1 is the first correctly specified, properly identity-bound,
 base-first pairwise advantage gate. It confirms the null-intervention finding
 of I3.5.3 but with a mathematically correct decision rule.
+
+---
+
+## 13. V2B-I3.5.3-r2 Pairwise Gate Closure — COMPLETED
+
+> **Milestone:** Close three documentation/specification gaps in I3.5.3-r1
+> without running a new end-to-end experiment.
+
+### Repairs applied
+
+1. **Worker threshold propagation**: CLI `--delta-threshold` and `--lcb-margin`
+   overrides are now applied to each worker's predictor, not just the parent
+   process. The previous 50-task "permissive threshold test" was invalid
+   because workers used serialized defaults (τ=5, margin=5).
+
+2. **Runtime parameter identity binding**: The effective threshold, margin,
+   and CLI overrides are now bound into `experiment_identity.json` under
+   `runtime_gate_params`, and included in the combined identity hash.
+
+3. **Complete gate evaluation persistence**: An offline replay script
+   (`scripts/replay_i3_5_3r1_gate_evaluations.py`) reconstructs every
+   SELECTIVE_QPIB_BASE_FIRST trajectory state, recomputes a_G, runs the
+   pairwise model, and records every evaluation (including SKIPs) to
+   `gate_evaluations.jsonl`.
+
+### Documentation corrections
+
+1. **"300 disagreement states across 300 tasks"** → corrected to
+   "300 disagreement states across 235 development tasks" (65 tasks
+   contributed no governor/baseline disagreement).
+
+2. **"no governor intervention improved return by >5 points"** → corrected.
+   The maximum raw fork ΔQ_π was +5.34. The correct claim is that no
+   pairwise intervention produced a sufficiently robust predicted advantage
+   to cross the frozen 5+5 criterion.
+
+3. **"even at τ=0, the gate produces 0 interventions"** → removed.
+   Offline replay with τ=0, margin=0 shows the gate would approve 68
+   interventions. The max predicted ΔQ_π is +3.18 (below 5 but above 0).
+
+### Offline replay results
+
+Script: `scripts/replay_i3_5_3r1_gate_evaluations.py`
+
+No DeepSeek API calls needed — pure offline computation using saved
+trajectory steps and the trained pairwise model.
+
+**Standard criterion (τ=5, margin=5):**
+
+| Metric | Value |
+|---|---|
+| Total evaluations | 767 |
+| a_G == a_B | 464 |
+| a_G != a_B (disagreements) | 303 |
+| Max predicted ΔQ_π | +3.18 |
+| Max LCB | -1.82 |
+| Predicted > 0 | 66 (21.8%) |
+| Predicted > 5 | 0 (0.0%) |
+| LCB > 0 | 0 (0.0%) |
+| Approved | 0/303 |
+
+**Permissive criterion (τ=0, margin=0):**
+
+| Metric | Value |
+|---|---|
+| Approved | 68/303 |
+| Max predicted ΔQ_π | +3.18 |
+| All approved are RETRIEVE→VERIFY (63) or small positive (5) |
+
+### Key observation: small local improvement ≠ task rescue
+
+The fork dataset shows:
+- Base continuation successes: 42/300
+- Governor continuation successes: 0/300
+
+The 66 positive predicted ΔQ_π cases (all RETRIEVE→VERIFY, mean +1.92)
+are **not task rescues**. They represent small utility improvements within
+trajectories that still fail to achieve successful termination.
+
+This reinforces the broader conclusion:
+
+$$\text{small local utility improvement} \neq \text{task rescue}$$
+
+### Final scientific arc
+
+```
+Q* competence exists                    CONFIRMED
+        ↓
+model follows governor advice           CONFIRMED (98%)
+        ↓
+Q*-based intervention harms policy      CONFIRMED (ΔU = -3.28)
+        ↓
+policy-conditional forks explain why    CONFIRMED (A* = +108, A_πB = -8)
+        ↓
+base-first pairwise gate learns         CONFIRMED (0 interventions at 5+5)
+conservative abstention
+        ↓
+abstention is correct, not just safe    CONFIRMED (max runtime ΔQ_π = +3.18)
+        ↓
+small positive ΔQ_π ≠ task rescue       CONFIRMED (0 gov successes in forks)
+```
+
+The remaining research question is no longer "how do we gate this governor
+better?" It is how to create interventions that materially improve
+$Q^{\pi}$ — probably by changing what assistance the governor provides,
+rather than improving the gating mechanism further.

@@ -1,0 +1,69 @@
+{
+  "action_pair_distribution": {
+    "ANSWER->REASON_MORE": {
+      "max": 0.344,
+      "mean": 0.344,
+      "n": 2,
+      "positive": 2
+    },
+    "ANSWER->SEARCH_MORE": {
+      "max": -0.1083,
+      "mean": -0.1104,
+      "n": 132,
+      "positive": 0
+    },
+    "ANSWER->VERIFY": {
+      "max": -0.0958,
+      "mean": -22.9296,
+      "n": 66,
+      "positive": 0
+    },
+    "REASON_MORE->VERIFY": {
+      "max": 0.0,
+      "mean": -0.405,
+      "n": 4,
+      "positive": 0
+    },
+    "RETRIEVE->VERIFY": {
+      "max": 3.1799,
+      "mean": 1.9223,
+      "n": 63,
+      "positive": 63
+    },
+    "STOP->ANSWER": {
+      "max": -119.9991,
+      "mean": -119.9991,
+      "n": 35,
+      "positive": 0
+    },
+    "VERIFY->SEARCH_MORE": {
+      "max": 0.0071,
+      "mean": 0.0071,
+      "n": 1,
+      "positive": 1
+    }
+  },
+  "n_disagreements": 303,
+  "n_evaluations": 767,
+  "n_same_action": 464,
+  "prediction_distribution": {
+    "lcb_gt_5": 0,
+    "lcb_positive": 0,
+    "max": 3.1799,
+    "max_lcb": -1.8201,
+    "mean": -18.5073,
+    "mean_lcb": -23.5073,
+    "min": -119.9991,
+    "n_intervene": 0,
+    "n_skip": 303,
+    "pred_gt_10": 0,
+    "pred_gt_5": 0,
+    "pred_positive": 66
+  },
+  "runtime_params": {
+    "delta_threshold": 5.0,
+    "effective_requirement": 10.0,
+    "lcb_margin": 5.0
+  },
+  "schema": "DAPH_V2B_I3_5_3R1_GATE_EVAL_REPLAY_V1"
+}
