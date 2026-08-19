@@ -81,19 +81,94 @@ from hrm_adaptive_memory.executive.pinned_model_controller import (
 )
 
 # ---------------------------------------------------------------------------
-# Decision-state analysis (shared by metrics and M-arm packet builder)
+# Decision-state analysis
+#
+# Two parallel implementations:
+#   - _classify_from_snapshot: used by the M-arm packet builder.
+#     Operates ONLY on EvidenceSnapshot (controller-visible).
+#     Must never receive EvidenceRuntime or EvidenceTask.
+#   - classify_hypothesis_viability / answer_condition_satisfied:
+#     used by metrics and redundancy checks (evaluation-side).
+#     May use EvidenceRuntime.
+#
+# This separation enforces the observation boundary: the packet builder
+# cannot accidentally inspect hidden evidence.
 # ---------------------------------------------------------------------------
+
+def _classify_from_snapshot(
+    snapshot: EvidenceSnapshot,
+) -> dict[str, dict[str, Any]]:
+    """Classify hypothesis viability from controller-visible snapshot only.
+
+    This function must never receive EvidenceRuntime.  It derives all
+    information from snapshot.hypotheses and snapshot.visible_evidence.
+    """
+    h_ids = [h.hypothesis_id for h in snapshot.hypotheses]
+    result: dict[str, dict[str, Any]] = {}
+
+    for h_id in h_ids:
+        has_support = False
+        has_contradiction = False
+        supporting_evidence: list[str] = []
+        contradicting_evidence: list[str] = []
+        falsified_support: list[str] = []
+        falsified_contradiction: list[str] = []
+
+        for ev in snapshot.visible_evidence:
+            # Only visible (retrieved) evidence is considered
+            if ev.verification_state == VerificationState.SUFFICIENT:
+                if ev.temporal_status == TemporalStatus.STALE:
+                    continue
+                if h_id in ev.supports:
+                    has_support = True
+                    supporting_evidence.append(ev.evidence_id)
+                if h_id in ev.contradicts:
+                    has_contradiction = True
+                    contradicting_evidence.append(ev.evidence_id)
+            elif ev.verification_state == VerificationState.FALSIFIED:
+                if h_id in ev.supports:
+                    falsified_support.append(ev.evidence_id)
+                if h_id in ev.contradicts:
+                    falsified_contradiction.append(ev.evidence_id)
+
+        if has_contradiction:
+            status = "ELIMINATED"
+        elif has_support:
+            status = "VIABLE"
+        elif falsified_support and not has_support:
+            status = "WEAKENED"
+        else:
+            status = "UNTESTED"
+
+        result[h_id] = {
+            "status": status,
+            "supporting_evidence": supporting_evidence,
+            "contradicting_evidence": contradicting_evidence,
+            "falsified_support": falsified_support,
+            "falsified_contradiction": falsified_contradiction,
+        }
+
+    return result
+
+
+def _answer_condition_from_snapshot(
+    snapshot: EvidenceSnapshot,
+) -> tuple[bool, str | None]:
+    """Check answer condition from snapshot only (controller-visible)."""
+    viability = _classify_from_snapshot(snapshot)
+    viable_hyps = [h_id for h_id, info in viability.items()
+                   if info["status"] == "VIABLE"]
+    if len(viable_hyps) == 1:
+        return True, viable_hyps[0]
+    return False, None
+
 
 def classify_hypothesis_viability(
     runtime: EvidenceRuntime,
 ) -> dict[str, dict[str, Any]]:
-    """For each hypothesis, determine its viability status.
+    """Evaluation-side viability classification (may use runtime).
 
-    A hypothesis is:
-      VIABLE: has verified current support, no verified current contradiction
-      ELIMINATED: has a verified current contradiction against it
-      UNTESTED: no verified evidence for or against
-      WEAK: has support but also has live contradiction
+    Used by metrics and redundancy checks, NOT by packet builders.
     """
     task = runtime.task
     h_ids = [h.hypothesis_id for h in task.hypotheses]
@@ -119,8 +194,6 @@ def classify_hypothesis_viability(
                 has_contradiction = True
                 contradicting_evidence.append(ev.evidence_id)
 
-        # Also check for FALSIFIED evidence that supported this hypothesis
-        # (meaning the support was false → hypothesis weakened)
         falsified_support = []
         for ev in runtime.evidence:
             if not ev.retrieved:
@@ -129,8 +202,6 @@ def classify_hypothesis_viability(
                 if h_id in ev.supports:
                     falsified_support.append(ev.evidence_id)
 
-        # Check for FALSIFIED evidence that contradicted this hypothesis
-        # (meaning the contradiction was false → hypothesis strengthened)
         falsified_contradiction = []
         for ev in runtime.evidence:
             if not ev.retrieved:
@@ -160,19 +231,10 @@ def classify_hypothesis_viability(
 
 
 def answer_condition_satisfied(runtime: EvidenceRuntime) -> tuple[bool, str | None]:
-    """Check if the answer condition is genuinely satisfied.
-
-    AnswerConditionSatisfied(s)
-      = exists h: h is uniquely viable
-                AND required evidence for h is verified
-                AND no live verified contradiction remains
-
-    Returns (satisfied, hypothesis_id).
-    """
+    """Evaluation-side answer condition check (may use runtime)."""
     viability = classify_hypothesis_viability(runtime)
     viable_hyps = [h_id for h_id, info in viability.items()
                    if info["status"] == "VIABLE"]
-
     if len(viable_hyps) == 1:
         return True, viable_hyps[0]
     return False, None
@@ -485,9 +547,11 @@ def build_hypotheses_discriminator_packet(
 
 def build_minimal_decision_state_packet(
     snapshot: EvidenceSnapshot,
-    runtime: EvidenceRuntime,
 ) -> dict:
     """M arm: evidence + minimal decision state.
+
+    STRICTLY a function of the controller-visible snapshot.
+    Must never receive EvidenceRuntime or EvidenceTask.
 
     The minimal decision state compresses the current evidence into:
       - live_hypotheses
@@ -500,7 +564,7 @@ def build_minimal_decision_state_packet(
     packet = build_hypotheses_only_packet(snapshot)
     packet["schema"] = "DAPH_V2B_I3_7_MINIMAL_DECISION_STATE_PACKET_V1"
 
-    viability = classify_hypothesis_viability(runtime)
+    viability = _classify_from_snapshot(snapshot)
 
     live_hyps = [h_id for h_id, info in viability.items()
                  if info["status"] == "VIABLE"]
@@ -516,24 +580,29 @@ def build_minimal_decision_state_packet(
     for h_id, info in viability.items():
         verified_support.extend(info["supporting_evidence"])
         verified_contradictions.extend(info["contradicting_evidence"])
-    # Deduplicate
     verified_support = sorted(set(verified_support))
     verified_contradictions = sorted(set(verified_contradictions))
 
-    # Determine decision state
-    satisfied, satisfied_h = answer_condition_satisfied(runtime)
+    # Determine decision state from snapshot only
+    satisfied, satisfied_h = _answer_condition_from_snapshot(snapshot)
+
+    # Unverified visible evidence (from snapshot only)
+    unverified_visible = [
+        ev.evidence_id for ev in snapshot.visible_evidence
+        if ev.verification_state == VerificationState.UNVERIFIED
+    ]
 
     if satisfied:
         decision_state = "READY_TO_ANSWER"
         remaining_blocker = None
     elif len(eliminated_hyps) == len(viability) - 1 and len(live_hyps) == 0:
-        # All but one eliminated, but the remaining one has no verified support
+        # All but one eliminated, remaining one has no verified support
         remaining_h = [h for h in viability if h not in eliminated_hyps]
         if remaining_h:
-            # Need to verify support for the remaining hypothesis
+            # Check visible unverified evidence that supports remaining hypothesis
             unverified_support = [
-                ev.evidence_id for ev in runtime.evidence
-                if ev.retrieved and ev.verification_state == VerificationState.UNVERIFIED
+                ev.evidence_id for ev in snapshot.visible_evidence
+                if ev.verification_state == VerificationState.UNVERIFIED
                 and remaining_h[0] in ev.supports
             ]
             if unverified_support:
@@ -543,33 +612,26 @@ def build_minimal_decision_state_packet(
                     "operation": "VERIFY",
                     "rationale": f"Verify {unverified_support[0]} to confirm {remaining_h[0]}.",
                 }
+            elif snapshot.hidden_evidence_count > 0:
+                # Hidden evidence exists but we cannot name it
+                decision_state = "NEEDS_EVIDENCE"
+                remaining_blocker = {
+                    "evidence_id": None,
+                    "operation": "RETRIEVE",
+                    "rationale": "Additional hidden evidence remains available.",
+                }
             else:
-                # Need to find evidence for the remaining hypothesis
-                hidden_for_h = [
-                    ev.evidence_id for ev in runtime.evidence
-                    if not ev.retrieved and remaining_h[0] in ev.supports
-                ]
-                if hidden_for_h:
-                    decision_state = "NEEDS_EVIDENCE"
-                    remaining_blocker = {
-                        "evidence_id": hidden_for_h[0],
-                        "operation": "RETRIEVE",
-                        "rationale": f"Retrieve {hidden_for_h[0]} to find support for {remaining_h[0]}.",
-                    }
-                else:
-                    decision_state = "INSUFFICIENT"
-                    remaining_blocker = None
+                decision_state = "INSUFFICIENT"
+                remaining_blocker = None
         else:
             decision_state = "INSUFFICIENT"
             remaining_blocker = None
     elif len(live_hyps) > 1:
         # Multiple viable hypotheses — need discrimination
-        # Find unverified evidence that touches multiple hypotheses
+        # Find visible unverified evidence that touches live hypotheses
         best_blocker = None
         best_score = -1
-        for ev in runtime.evidence:
-            if not ev.retrieved:
-                continue
+        for ev in snapshot.visible_evidence:
             if ev.verification_state != VerificationState.UNVERIFIED:
                 continue
             touched = set(ev.supports + ev.contradicts) & set(live_hyps)
@@ -583,61 +645,55 @@ def build_minimal_decision_state_packet(
         if best_blocker:
             decision_state = "NEEDS_DISCRIMINATION"
             remaining_blocker = best_blocker
-        else:
-            # No unverified retrieved evidence touches live hypotheses
-            # Check hidden evidence
-            hidden_touching = [
-                ev.evidence_id for ev in runtime.evidence
-                if not ev.retrieved
-                and (set(ev.supports + ev.contradicts) & set(live_hyps))
-            ]
-            if hidden_touching:
-                decision_state = "NEEDS_EVIDENCE"
-                remaining_blocker = {
-                    "evidence_id": hidden_touching[0],
-                    "operation": "RETRIEVE",
-                    "rationale": f"Retrieve {hidden_touching[0]} to find discriminating evidence.",
-                }
-            else:
-                decision_state = "INSUFFICIENT"
-                remaining_blocker = None
-    elif len(live_hyps) == 0 and len(untested_hyps) > 0:
-        # No verified support for anything yet
-        unverified_retrieved = [
-            ev.evidence_id for ev in runtime.evidence
-            if ev.retrieved and ev.verification_state == VerificationState.UNVERIFIED
-        ]
-        if unverified_retrieved:
-            decision_state = "NEEDS_DISCRIMINATION"
-            remaining_blocker = {
-                "evidence_id": unverified_retrieved[0],
-                "operation": "VERIFY",
-                "rationale": f"Verify {unverified_retrieved[0]} to establish hypothesis support.",
-            }
-        elif runtime.hidden_evidence:
+        elif snapshot.hidden_evidence_count > 0:
+            # Hidden evidence may help discriminate, but we cannot name it
             decision_state = "NEEDS_EVIDENCE"
             remaining_blocker = {
-                "evidence_id": runtime.hidden_evidence[0].evidence_id,
+                "evidence_id": None,
                 "operation": "RETRIEVE",
-                "rationale": "Retrieve hidden evidence to establish hypothesis support.",
+                "rationale": "Additional hidden evidence remains available.",
+            }
+        else:
+            decision_state = "INSUFFICIENT"
+            remaining_blocker = None
+    elif len(live_hyps) == 0 and len(untested_hyps) > 0:
+        # No verified support for anything yet
+        if unverified_visible:
+            decision_state = "NEEDS_DISCRIMINATION"
+            remaining_blocker = {
+                "evidence_id": unverified_visible[0],
+                "operation": "VERIFY",
+                "rationale": f"Verify {unverified_visible[0]} to establish hypothesis support.",
+            }
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "NEEDS_EVIDENCE"
+            remaining_blocker = {
+                "evidence_id": None,
+                "operation": "RETRIEVE",
+                "rationale": "Additional hidden evidence remains available.",
             }
         else:
             decision_state = "INSUFFICIENT"
             remaining_blocker = None
     else:
-        decision_state = "NEEDS_EVIDENCE"
-        remaining_blocker = None
-        if runtime.hidden_evidence:
+        # Weakened or mixed state
+        if unverified_visible:
+            decision_state = "NEEDS_DISCRIMINATION"
             remaining_blocker = {
-                "evidence_id": runtime.hidden_evidence[0].evidence_id,
-                "operation": "RETRIEVE",
-                "rationale": "Retrieve hidden evidence.",
+                "evidence_id": unverified_visible[0],
+                "operation": "VERIFY",
+                "rationale": f"Verify {unverified_visible[0]} to resolve hypothesis status.",
             }
-
-    unverified_relevant = [
-        ev.evidence_id for ev in runtime.evidence
-        if ev.retrieved and ev.verification_state == VerificationState.UNVERIFIED
-    ]
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "NEEDS_EVIDENCE"
+            remaining_blocker = {
+                "evidence_id": None,
+                "operation": "RETRIEVE",
+                "rationale": "Additional hidden evidence remains available.",
+            }
+        else:
+            decision_state = "INSUFFICIENT"
+            remaining_blocker = None
 
     packet["decision_state_summary"] = {
         "live_hypotheses": live_hyps,
@@ -646,7 +702,7 @@ def build_minimal_decision_state_packet(
         "untested_hypotheses": untested_hyps,
         "verified_support": verified_support,
         "verified_contradictions": verified_contradictions,
-        "unverified_relevant_evidence": unverified_relevant,
+        "unverified_relevant_evidence": unverified_visible,
         "decision_state": decision_state,
         "remaining_blocker": remaining_blocker,
     }
@@ -742,7 +798,7 @@ def run_trajectory(
             packet = build_hypotheses_discriminator_packet(evidence_snapshot, runtime)
             system_prompt = HYPOTHESES_DISCRIMINATOR_SYSTEM_PROMPT
         elif mode == "MINIMAL_DECISION_STATE":
-            packet = build_minimal_decision_state_packet(evidence_snapshot, runtime)
+            packet = build_minimal_decision_state_packet(evidence_snapshot)
             system_prompt = MINIMAL_DECISION_STATE_SYSTEM_PROMPT
         else:
             raise ValueError(f"Unknown mode: {mode}")
