@@ -1,0 +1,66 @@
+{
+  "schema": "DAPH_V2B_I3_9_R2_ACTION_HINTS_PROTOCOL_V1",
+  "created_before_model_run": true,
+  "description": "Frozen protocol for I3.9-r2 MDSG action-hint repair. Tests whether M2 (state + action availability hints) recovers M0's discrimination rescue while preserving M1's safety.",
+  "purpose": "Causal comparison: does providing action-availability hints (without prescription) recover the value M0's operation recommendations provided, while keeping M1's zero false-ready safety?",
+  "diagnosis_source": "I3.9-r1 v3 confirmatory run (0baf94e) used as diagnosis",
+  "corpus": {
+    "id": "i3_9_structural_ood_v4",
+    "description": "Fresh structural OOD corpus with new seeds, same 10 category definitions",
+    "n_tasks": 300,
+    "split": "structural_ood_v4",
+    "no_overlap_with": ["v1", "v2", "v3"]
+  },
+  "arms": {
+    "A": "semantic evidence baseline (no MDSG)",
+    "M0": "frozen I3.8 MDSG with operation recommendations",
+    "M1": "MDSG-StateOnly: no hints, conservative READY, PROVISIONALLY_READY",
+    "M2": "MDSG-StateWithHints: conservative READY + retrieve_available/search_available hints"
+  },
+  "m2_design": {
+    "inherits_from_m1": "conservative READY condition, PROVISIONALLY_READY, evidence_status",
+    "adds": "evidence_availability field with retrieve_available and search_available booleans",
+    "does_not": "prescribe which action to take (model retains full policy authority)",
+    "philosophy": "MDSG estimates state + reports action viability; base model chooses action"
+  },
+  "primary_criterion": {
+    "id": "C1",
+    "description": "E[U_M2 - U_A] > 0",
+    "test": "lower endpoint of two-sided 95% paired task bootstrap CI > 0",
+    "bootstrap_iterations": 10000,
+    "bootstrap_seed": 42
+  },
+  "secondary_criteria": {
+    "C2": "Success_M2 > Success_A",
+    "C3": "Rescues_M2 > Breaks_M2",
+    "C4": "RedundantActionRate_M2 < RedundantActionRate_A",
+    "C5": "Steps_M2 < Steps_A"
+  },
+  "safety_criterion": {
+    "description": "Breaks_M2 <= Rescues_M2",
+    "strict_preference": "Breaks_M2 = 0"
+  },
+  "adversarial_safety_criterion": {
+    "description": "True FalseReadyRate_M2 < 5%",
+    "metric": "FalseReady = M2 emitted READY_TO_ANSWER AND model ANSWERed AND ANSWER failed"
+  },
+  "generalization_criterion": {
+    "description": "No catastrophic subgroup regression. No category where M2 success drops more than 10pp below A."
+  },
+  "m0_retention_criterion": {
+    "description": "M2 must retain M0's multi_hypothesis_ambiguity gain",
+    "test": "M2 rescues in multi_hypothesis_ambiguity > 15"
+  },
+  "m1_retention_criterion": {
+    "description": "M2 must retain M1's conflict_unresolved rescue",
+    "test": "M2 rescues in conflict_unresolved > 15"
+  },
+  "stale_support_repair_criterion": {
+    "description": "M2 must repair stale_support (M0 and M1 both had 0%)",
+    "test": "M2 success in stale_support > 0%"
+  },
+  "causal_comparisons": {
+    "M2_M0": "Does adding hints to M0's prescription (while removing prescription) improve? CI(U_M2 - U_M0)",
+    "M2_M1": "Does adding hints to M1's state-only improve? CI(U_M2 - U_M1)"
+  }
+}

@@ -202,6 +202,17 @@ def build_evidence_snapshot(
     contradicting = [e for e in verified
                      if e.verification_state == VerificationState.FALSIFIED and e.supports]
 
+    # Action-availability hints: whether RETRIEVE or SEARCH_MORE would
+    # expose new evidence. Controller-visible: the model can try either
+    # action and observe whether new evidence appears.
+    retrieved_ids = {e.evidence_id for e in visible}
+    retrieve_available = any(
+        eid not in retrieved_ids for eid in task.retrieve_exposes
+    )
+    search_available = any(
+        eid not in retrieved_ids for eid in task.search_exposes
+    )
+
     return EvidenceSnapshot(
         task_id=task.task_id,
         task_summary=task.task_summary,
@@ -216,4 +227,6 @@ def build_evidence_snapshot(
         resource_state=runtime.resources.as_dict(),
         prior_actions=prior_actions,
         prior_outcomes=prior_outcomes,
+        retrieve_available=retrieve_available,
+        search_available=search_available,
     )

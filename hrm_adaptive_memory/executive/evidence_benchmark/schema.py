@@ -225,6 +225,10 @@ class EvidenceSnapshot:
     This extends the aggregate CognitiveStateSnapshot with actual
     proposition-level evidence items, their hypothesis relationships,
     and verification states.
+
+    Action-availability hints (retrieve_available, search_available) are
+    controller-visible: the model can attempt either action and observe
+    whether new evidence appears. They do not leak hidden evidence content.
     """
     task_id: str
     task_summary: str
@@ -239,6 +243,8 @@ class EvidenceSnapshot:
     resource_state: Mapping[str, int | float]
     prior_actions: tuple[str, ...]
     prior_outcomes: tuple[str, ...]
+    retrieve_available: bool = False
+    search_available: bool = False
 
     def as_dict(self) -> dict:
         return {
@@ -255,6 +261,8 @@ class EvidenceSnapshot:
             "resource_state": dict(self.resource_state),
             "prior_actions": list(self.prior_actions),
             "prior_outcomes": list(self.prior_outcomes),
+            "retrieve_available": self.retrieve_available,
+            "search_available": self.search_available,
         }
 
 

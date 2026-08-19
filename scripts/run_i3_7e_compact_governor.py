@@ -910,6 +910,212 @@ def build_mdsg_state_only_packet(
 
 
 # ---------------------------------------------------------------------------
+# M2: MDSG-StateWithHints — state estimation + action availability hints
+#
+# Combines M1's conservative READY with action-availability hints.
+# The hints tell the model WHAT operations are possible without
+# prescribing WHICH to take:
+#   retrieve_available: RETRIEVE would expose new evidence
+#   search_available: SEARCH_MORE would expose new evidence
+#
+# This addresses the fundamental tension from I3.9-r1:
+#   M0's operation recommendations: harmful when wrong, helpful when right
+#   M1's no hints: safe but model can't choose between RETRIEVE/SEARCH_MORE
+#   M2's availability hints: safe + model knows which operations are viable
+# ---------------------------------------------------------------------------
+
+MDSG_STATE_WITH_HINTS_SYSTEM_PROMPT = """You are a metareasoning controller for a retrieval-verification task.
+
+You must choose one bounded action from the frozen seven-action vocabulary:
+  ANSWER, RETRIEVE, VERIFY, SEARCH_MORE, REASON_MORE, DEFER, STOP
+
+ACTION SEMANTICS:
+  RETRIEVE: Expose hidden evidence items. Only useful if retrieve_available is true.
+  SEARCH_MORE: Search for additional evidence from other sources. Only useful if search_available is true.
+  VERIFY: Verify the most recently retrieved unverified evidence item.
+  ANSWER: Provide the final answer. Only use when you have sufficient verified current evidence.
+  DEFER: Give up due to insufficient evidence.
+  STOP: Stop without answering.
+
+You are given the evidence state plus a compact decision-state summary:
+  - live_hypotheses: hypotheses that are still viable
+  - eliminated_hypotheses: hypotheses that have been ruled out
+  - verified_support: evidence IDs that provide verified support
+  - verified_contradictions: evidence IDs that provide verified contradiction
+  - decision_state: READY_TO_ANSWER, PROVISIONALLY_READY, NEEDS_DISCRIMINATION, NEEDS_EVIDENCE, or INSUFFICIENT
+  - evidence_status: describes what evidence situation remains unresolved
+  - evidence_availability: tells you which operations CAN expose new evidence
+    - retrieve_available: true if RETRIEVE would expose new evidence
+    - search_available: true if SEARCH_MORE would expose new evidence
+
+This summary tells you the current decision-relevant state. Use it to avoid unnecessary actions.
+
+CRITICAL RULES:
+  - If decision_state is READY_TO_ANSWER, you have sufficient verified evidence. ANSWER immediately.
+  - If decision_state is PROVISIONALLY_READY, one hypothesis is supported but evidence remains. You may ANSWER or gather more evidence. Consider whether the visible evidence is reliable enough.
+  - If decision_state is NEEDS_DISCRIMINATION, multiple hypotheses are viable. VERIFY unverified evidence to discriminate.
+  - If decision_state is NEEDS_EVIDENCE, no hypothesis has verified support. Use evidence_availability to decide: RETRIEVE if retrieve_available, SEARCH_MORE if search_available.
+  - If decision_state is INSUFFICIENT, DEFER.
+  - You retain full authority over which action to take. The decision state and availability hints are advisory.
+
+OUTPUT FORMAT:
+You must respond with a JSON object containing exactly these three fields:
+{
+  "action": "one of ANSWER RETRIEVE VERIFY SEARCH_MORE REASON_MORE DEFER STOP",
+  "reason_code": "A_SHORT_UPPERCASE_REASON_CODE",
+  "target_id": null
+}
+
+The reason_code must be uppercase with underscores only.
+
+The word json appears in this prompt to satisfy the API requirement."""
+
+
+def build_mdsg_state_with_hints_packet(
+    snapshot: EvidenceSnapshot,
+) -> dict:
+    """M2 arm: MDSG-StateWithHints.
+
+    Strictly a function of the controller-visible snapshot.
+    Must never receive EvidenceRuntime or EvidenceTask.
+
+    Combines M1's conservative READY with action-availability hints.
+    """
+    packet = build_hypotheses_only_packet(snapshot)
+    packet["schema"] = "DAPH_V2B_I3_9_MDSG_STATE_WITH_HINTS_PACKET_V1"
+
+    viability = _classify_from_snapshot(snapshot)
+
+    live_hyps = [h_id for h_id, info in viability.items()
+                 if info["status"] == "VIABLE"]
+    eliminated_hyps = [h_id for h_id, info in viability.items()
+                       if info["status"] == "ELIMINATED"]
+    weakened_hyps = [h_id for h_id, info in viability.items()
+                     if info["status"] == "WEAKENED"]
+    untested_hyps = [h_id for h_id, info in viability.items()
+                     if info["status"] == "UNTESTED"]
+
+    verified_support: list[str] = []
+    verified_contradictions: list[str] = []
+    for h_id, info in viability.items():
+        verified_support.extend(info["supporting_evidence"])
+        verified_contradictions.extend(info["contradicting_evidence"])
+    verified_support = sorted(set(verified_support))
+    verified_contradictions = sorted(set(verified_contradictions))
+
+    satisfied, satisfied_h = _answer_condition_from_snapshot(snapshot)
+
+    unverified_visible = [
+        ev.evidence_id for ev in snapshot.visible_evidence
+        if ev.verification_state == VerificationState.UNVERIFIED
+    ]
+
+    has_stale_verified = any(
+        ev.verification_state == VerificationState.SUFFICIENT
+        and ev.temporal_status == TemporalStatus.STALE
+        for ev in snapshot.visible_evidence
+    )
+
+    multiple_viable = len(live_hyps) > 1
+
+    # Action-availability hints from snapshot
+    retrieve_avail = snapshot.retrieve_available
+    search_avail = snapshot.search_available
+
+    # Build evidence_availability description
+    avail_parts = []
+    if retrieve_avail:
+        avail_parts.append("retrieve_available")
+    if search_avail:
+        avail_parts.append("search_available")
+    evidence_availability = {
+        "retrieve_available": retrieve_avail,
+        "search_available": search_avail,
+        "description": ", ".join(avail_parts) if avail_parts else "no_hidden_evidence_accessible",
+    }
+
+    # Determine decision state — same conservative logic as M1
+    if satisfied and not multiple_viable:
+        if unverified_visible:
+            decision_state = "PROVISIONALLY_READY"
+            evidence_status = "ONE_HYPOTHESIS_SUPPORTED_UNVERIFIED_VISIBLE_REMAINS"
+            remaining_blocker = None
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "PROVISIONALLY_READY"
+            evidence_status = "ONE_HYPOTHESIS_SUPPORTED_HIDDEN_EVIDENCE_REMAINS"
+            remaining_blocker = None
+        elif has_stale_verified:
+            decision_state = "PROVISIONALLY_READY"
+            evidence_status = "SUPPORTED_WITH_STALE_EVIDENCE"
+            remaining_blocker = None
+        else:
+            decision_state = "READY_TO_ANSWER"
+            evidence_status = "DECISION_SUFFICIENT"
+            remaining_blocker = None
+    elif multiple_viable:
+        decision_state = "NEEDS_DISCRIMINATION"
+        evidence_status = "MULTIPLE_VIABLE_HYPOTHESES"
+        remaining_blocker = None
+    elif len(eliminated_hyps) == len(viability) - 1 and len(live_hyps) == 0:
+        if unverified_visible:
+            decision_state = "NEEDS_DISCRIMINATION"
+            evidence_status = "UNVERIFIED_VISIBLE_EVIDENCE_REMAINS"
+            remaining_blocker = None
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "NEEDS_EVIDENCE"
+            evidence_status = "NO_VERIFIED_SUPPORT_HIDDEN_EVIDENCE_REMAINS"
+            remaining_blocker = None
+        else:
+            decision_state = "INSUFFICIENT"
+            evidence_status = "NO_VERIFIED_SUPPORT_NO_HIDDEN_EVIDENCE"
+            remaining_blocker = None
+    elif len(live_hyps) == 0 and len(untested_hyps) > 0:
+        if unverified_visible:
+            decision_state = "NEEDS_DISCRIMINATION"
+            evidence_status = "NO_VERIFIED_SUPPORT_UNVERIFIED_VISIBLE"
+            remaining_blocker = None
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "NEEDS_EVIDENCE"
+            evidence_status = "NO_VERIFIED_SUPPORT_HIDDEN_EVIDENCE_REMAINS"
+            remaining_blocker = None
+        else:
+            decision_state = "INSUFFICIENT"
+            evidence_status = "NO_EVIDENCE_AVAILABLE"
+            remaining_blocker = None
+    else:
+        if unverified_visible:
+            decision_state = "NEEDS_DISCRIMINATION"
+            evidence_status = "WEAKENED_HYPOTHESES_UNVERIFIED_EVIDENCE"
+            remaining_blocker = None
+        elif snapshot.hidden_evidence_count > 0:
+            decision_state = "NEEDS_EVIDENCE"
+            evidence_status = "WEAKENED_HYPOTHESES_HIDDEN_EVIDENCE_REMAINS"
+            remaining_blocker = None
+        else:
+            decision_state = "INSUFFICIENT"
+            evidence_status = "WEAKENED_HYPOTHESES_NO_EVIDENCE"
+            remaining_blocker = None
+
+    packet["decision_state_summary"] = {
+        "live_hypotheses": live_hyps,
+        "eliminated_hypotheses": eliminated_hyps,
+        "weakened_hypotheses": weakened_hyps,
+        "untested_hypotheses": untested_hyps,
+        "verified_support": verified_support,
+        "verified_contradictions": verified_contradictions,
+        "unverified_relevant_evidence": unverified_visible,
+        "decision_state": decision_state,
+        "evidence_status": evidence_status,
+        "remaining_blocker": remaining_blocker,
+        "hidden_evidence_count": snapshot.hidden_evidence_count,
+        "evidence_availability": evidence_availability,
+    }
+
+    assert_no_evidence_leakage(packet)
+    return packet
+
+
+# ---------------------------------------------------------------------------
 # Trajectory runner
 # ---------------------------------------------------------------------------
 
@@ -1004,11 +1210,14 @@ def run_trajectory(
         elif mode == "MDSG_STATE_ONLY":
             packet = build_mdsg_state_only_packet(evidence_snapshot)
             system_prompt = MDSG_STATE_ONLY_SYSTEM_PROMPT
+        elif mode == "MDSG_STATE_WITH_HINTS":
+            packet = build_mdsg_state_with_hints_packet(evidence_snapshot)
+            system_prompt = MDSG_STATE_WITH_HINTS_SYSTEM_PROMPT
         else:
             raise ValueError(f"Unknown mode: {mode}")
 
         # Log per-step decision state for M arms
-        if mode in ("MINIMAL_DECISION_STATE", "MDSG_STATE_ONLY"):
+        if mode in ("MINIMAL_DECISION_STATE", "MDSG_STATE_ONLY", "MDSG_STATE_WITH_HINTS"):
             ds_info = packet.get("decision_state_summary", {})
             decision_state_log.append({
                 "step": step_id,
