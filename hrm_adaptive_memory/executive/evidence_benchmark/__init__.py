@@ -24,6 +24,7 @@ from .schema import (
 )
 from .executor import EvidenceExecutor, build_evidence_snapshot
 from .generator import EvidenceTaskGenerator, generate_evidence_tasks
+from .structural_ood_generator import StructuralOODGenerator, generate_structural_ood_tasks
 from .serializer import serialize_evidence_snapshot, assert_no_evidence_leakage
 from .loader import load_evidence_benchmark, save_evidence_benchmark, EvidenceBenchmark
 
@@ -34,6 +35,7 @@ __all__ = [
     "initial_evidence_runtime",
     "EvidenceExecutor",
     "EvidenceTaskGenerator", "generate_evidence_tasks",
+    "StructuralOODGenerator", "generate_structural_ood_tasks",
     "serialize_evidence_snapshot",
     "load_evidence_benchmark", "save_evidence_benchmark",
 ]
