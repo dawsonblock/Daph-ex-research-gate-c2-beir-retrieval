@@ -1,0 +1,14 @@
+{
+  "forbidden_fields": [
+    "correct_hypothesis_id",
+    "verify_result",
+    "expected_terminal",
+    "oracle_resolution_path",
+    "oracle_path"
+  ],
+  "n_tasks": 200,
+  "packets_tested": 1200,
+  "passed": true,
+  "schema": "DAPH_V2B_I3_7F_LEAKAGE_QUALIFICATION_V1",
+  "violations": []
+}

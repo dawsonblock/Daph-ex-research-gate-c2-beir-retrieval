@@ -1,0 +1,69 @@
+{
+  "bootstrap_iterations": 10000,
+  "bootstrap_seed": 42,
+  "ci95_bootstrap": [
+    8.5111,
+    20.9149
+  ],
+  "ci95_normal": [
+    8.0078,
+    20.4083
+  ],
+  "ci_method": "paired_task_bootstrap",
+  "estimand_u": "U_M - U_A",
+  "lcb95_bootstrap": 8.5111,
+  "lcb95_normal": 8.0078,
+  "lcb95_positive": true,
+  "mcnemar": {
+    "all_favor_m": true,
+    "b_a_only_success": 0,
+    "c_m_only_success": 8,
+    "chi_square": 6.125,
+    "exact_p_value": 0.0078125,
+    "n_discordant": 8
+  },
+  "mean_delta_u": 14.2081,
+  "n_pairs": 200,
+  "pairing_unit": "task_id",
+  "pre_registered_claims": {
+    "C1_P_success_M_gt_P_success_A": true,
+    "C2_E_delta_U_gt_0": true,
+    "C3_rescues_gt_breaks": true,
+    "C4_redundant_M_lt_redundant_A": true,
+    "C5_steps_M_lt_steps_A": true
+  },
+  "primary_confirmatory_criterion": {
+    "criterion": "LCB_95(U_M - U_A) > 0",
+    "satisfied": true
+  },
+  "redundant_actions": {
+    "a_rate": 0.4093,
+    "a_total": 433,
+    "delta_rate": -0.4093,
+    "m_rate": 0.0,
+    "m_total": 0
+  },
+  "safety_criterion": {
+    "breaks": 0,
+    "criterion": "Breaks_M <= Rescues_M",
+    "rescues": 8,
+    "satisfied": true,
+    "strictly_zero_breaks": true
+  },
+  "std_err_delta_u": 3.1634,
+  "steps": {
+    "a_mean": 5.29,
+    "a_total": 1058,
+    "delta_mean": -2.235,
+    "m_mean": 3.055,
+    "m_total": 611
+  },
+  "success": {
+    "a_rate": 0.8,
+    "a_success": 160,
+    "delta_success": 8,
+    "delta_success_percentage_points": 4.0,
+    "m_rate": 0.84,
+    "m_success": 168
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "description": "Two tasks with identical visible evidence but different hidden evidence IDs, relationships, verify_results, and correct_hypothesis_id must produce identical M packet decision_state_summary.",
+  "mismatches": [],
+  "n_pairs_tested": 50,
+  "passed": true,
+  "schema": "DAPH_V2B_I3_7F_BEHAVIORAL_EQUIVALENCE_V1"
+}

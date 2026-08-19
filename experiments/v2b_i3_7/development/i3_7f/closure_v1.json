@@ -1,0 +1,63 @@
+{
+  "architectural_finding": "Useful governor = decision-state compressor / stopping controller, not action recommender.",
+  "behavioral_equivalence": {
+    "pairs_tested": 50,
+    "passed": true
+  },
+  "confirmed_capability": "prevent unnecessary cognition",
+  "frozen_artifacts": {
+    "confirmation_manifest": {
+      "path": "experiments/v2b_i3_7/manifests/i3_7_evidence_confirmation_v1.json",
+      "sha256": "97c5bff76e9d3c5164dcf941c330c56a9105be3f4213d2b5a7ec1b30b39408b5"
+    },
+    "confirmation_results": {
+      "path": "experiments/v2b_i3_7/development/i3_7f/repair_check_v1.jsonl",
+      "sha256": "721fa5c6ea04b8670d32f5e7995a80b13affa05be34cd8ac5dbe225a35d76a98"
+    },
+    "m_builder_script": {
+      "path": "scripts/run_i3_7e_compact_governor.py",
+      "sha256": "40970e6a3fcbefd44b16ef847fbc7f34198afde102cfc8b96a58ef4e2e5b6a52"
+    },
+    "m_system_prompt": {
+      "sha256": "e28337534247b726bf55b87bc66167e4f0491c915966c86bf9535efc4ec720df"
+    }
+  },
+  "leakage_qualification": {
+    "packets_tested": 1200,
+    "passed": true
+  },
+  "m_definition": {
+    "decision_states": [
+      "READY_TO_ANSWER",
+      "NEEDS_DISCRIMINATION",
+      "NEEDS_EVIDENCE",
+      "INSUFFICIENT"
+    ],
+    "does_not_access": [
+      "EvidenceRuntime",
+      "EvidenceTask",
+      "hidden_evidence",
+      "verify_result",
+      "expected_terminal",
+      "correct_hypothesis_id",
+      "oracle_resolution_path"
+    ],
+    "does_not_override_actions": true,
+    "function": "M_t = f(O_t) where O_t is the serialized controller-visible observation",
+    "mechanism": "Detects when the current evidence state is sufficient for termination (one uniquely viable hypothesis with verified support and no live verified contradiction) and signals READY_TO_ANSWER. The model retains full action authority.",
+    "name": "Minimal Decision State Governor (MDSG)",
+    "type": "deterministic controller-visible state compressor"
+  },
+  "paired_statistics": {
+    "all_claims_pass": true,
+    "breaks": 0,
+    "ci95_bootstrap": [
+      8.5111,
+      20.9149
+    ],
+    "lcb95_positive": true,
+    "mean_delta_u": 14.2081,
+    "rescues": 8
+  },
+  "schema": "DAPH_V2B_I3_7F_CLOSURE_V1"
+}
