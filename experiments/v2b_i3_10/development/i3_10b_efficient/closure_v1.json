@@ -1,0 +1,36 @@
+{
+  "schema": "DAPH_V2B_I3_10B_CLOSURE_V1",
+  "experiment": "I3.10b efficient MDSG — A1 vs M3 vs M4a vs M4b on efficiency corpus",
+  "corpus": "i3_10_efficiency_dev_v1 (300 tasks, overweighted SBU bulk-retrieval + adversarial safeguards)",
+  "protocol_frozen_at": "8c1ebbf (before efficiency corpus run)",
+  "result": "NEITHER M4a NOR M4b PASSES ALL CRITERIA — KEEP M3",
+  "overall_results": {
+    "mean_u": {"A1": 42.36, "M3": 36.58, "M4a": 37.69, "M4b": 36.91},
+    "success": {"A1": "182/300", "M3": "180/300", "M4a": "181/300", "M4b": "181/300"},
+    "bootstrap_ci_m4a_m3": [-0.23, 2.56],
+    "bootstrap_ci_m4b_m3": [-0.15, 1.20],
+    "bootstrap_ci_m4a_a1": [-6.36, -3.14],
+    "bootstrap_ci_m4b_a1": [-6.60, -4.47]
+  },
+  "frozen_claims": {
+    "C1_m4a_m3_ci_positive": {"result": false, "ci": [-0.23, 2.56]},
+    "C1_m4b_m3_ci_positive": {"result": false, "ci": [-0.15, 1.20]},
+    "C2_m4a_success_within_1pp_m3": {"result": true, "values": "M4a=181, M3=180"},
+    "C2_m4b_success_within_1pp_m3": {"result": true, "values": "M4b=181, M3=180"},
+    "C3_m4a_steps_lt_m3": {"result": true, "values": "M4a=3.98, M3=4.20"},
+    "C3_m4b_steps_lt_m3": {"result": false, "values": "M4b=4.23, M3=4.20"},
+    "C4_m4a_redundant_lt_m3": {"result": true, "values": "M4a=0.579, M3=0.602"},
+    "C4_m4b_redundant_lt_m3": {"result": false, "values": "M4b=0.609, M3=0.602"},
+    "C5_m4a_false_ready_lt_5pct": {"result": true, "values": "0/300 = 0.0%"},
+    "C5_m4b_false_ready_lt_5pct": {"result": true, "values": "0/300 = 0.0%"},
+    "C6_m4a_premature_le_m3_plus_1pp": {"result": true, "values": "M4a=0, M3=0"},
+    "C6_m4b_premature_le_m3_plus_1pp": {"result": true, "values": "M4b=0, M3=0"},
+    "C7_m4a_breaks_le_rescues": {"result": true, "values": "1 <= 2"},
+    "C7_m4b_breaks_le_rescues": {"result": true, "values": "0 <= 1"},
+    "C8_m4a_no_catastrophic_vs_m3": {"result": true},
+    "C8_m4b_no_catastrophic_vs_m3": {"result": true},
+    "C9_m4a_a1_ci_positive": {"result": false, "ci": [-6.36, -3.14]},
+    "C9_m4b_a1_ci_positive": {"result": false, "ci": [-6.60, -4.47]}
+  },
+  "summary": "M4a passes 7/9, M4b passes 6/9. Both fail C1 (primary: no significant improvement over M3) and C9 (both worse than A1 on this corpus). Per the frozen decision rule: keep M3."
+}

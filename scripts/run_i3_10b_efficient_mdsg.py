@@ -58,14 +58,12 @@ def generate_efficiency_corpus(n_tasks: int = 300, split: str = "efficiency_dev_
 
     Target distribution (300 tasks):
       25% SBU bulk-retrieval cases (single_verify_ready, triple_verify_ready, noise_evidence)
-      20% single_verify_ready
       15% varying_visible_split
       10% late_resolution
       10% early_false_ready (adversarial: hidden evidence must be checked)
       10% conflict_unresolved (adversarial: must DEFER)
       10% multi_hypothesis_ambiguity + stale_support
     """
-    # Generate extra tasks from each category and sample the target distribution
     target_counts = {
         "single_verify_ready": 75,      # 25% SBU bulk-retrieval
         "triple_verify_ready": 30,      # 10% SBU bulk-retrieval
@@ -78,25 +76,26 @@ def generate_efficiency_corpus(n_tasks: int = 300, split: str = "efficiency_dev_
         "stale_support": 15,            # 5%
     }
 
-    # Generate enough tasks per category
-    total_needed = sum(target_counts.values())
-    tasks_per_cat = max(target_counts.values()) + 10
+    # Generate a large pool with all categories, then filter and sample
+    # Need enough per category — generate 10x the max target
+    pool_size = max(target_counts.values()) * 10
+    pool = generate_structural_ood_tasks(n_tasks=pool_size, split=f"{split}_pool")
+
+    # Group by category
+    by_cat: dict[str, list] = {}
+    for task in pool:
+        by_cat.setdefault(task.category, []).append(task)
 
     all_tasks = []
     for cat, count in target_counts.items():
-        cat_tasks = generate_structural_ood_tasks(
-            n_tasks=tasks_per_cat,
-            split=f"{split}_{cat}",
-            category_filter=cat,
-        )
-        # Take the first 'count' tasks
+        cat_tasks = by_cat.get(cat, [])
         all_tasks.extend(cat_tasks[:count])
 
     # Renumber task IDs to be sequential
     for i, task in enumerate(all_tasks):
         object.__setattr__(task, 'task_id', f"{split}_{i:04d}")
 
-    return all_tasks[:total_needed]
+    return all_tasks
 
 
 def counterbalance_4arm(task_id: str) -> list[str]:
