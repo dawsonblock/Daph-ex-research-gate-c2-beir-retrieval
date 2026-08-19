@@ -1,0 +1,66 @@
+{
+  "arms": {
+    "A": "baseline model + semantic evidence",
+    "B": "baseline model + resolution context",
+    "C": "baseline model + emphasized resolution context"
+  },
+  "classification": {
+    "A_vs_B": {
+      "BOTH_FAIL": 8,
+      "BOTH_SUCCESS": 35,
+      "BREAK": 6,
+      "RESCUE": 1
+    },
+    "A_vs_C": {
+      "BOTH_FAIL": 8,
+      "BOTH_SUCCESS": 34,
+      "BREAK": 7,
+      "RESCUE": 1
+    }
+  },
+  "gates": {
+    "G1_BREAK_C_zero": false,
+    "G2_RESCUE_C_ge_1": true,
+    "G3_RESCUE_gt_BREAK": false,
+    "G4_C_success_gt_A": false,
+    "G5_C_success_gt_B": false
+  },
+  "information_conversion_pipeline": {
+    "A": {
+      "answer_condition_satisfied": 50,
+      "hypothesis_eliminated": 41,
+      "target_retrieved": 30,
+      "target_verified": 30
+    },
+    "B": {
+      "answer_condition_satisfied": 50,
+      "hypothesis_eliminated": 41,
+      "target_retrieved": 26,
+      "target_verified": 26
+    },
+    "C": {
+      "answer_condition_satisfied": 50,
+      "hypothesis_eliminated": 41,
+      "target_retrieved": 26,
+      "target_verified": 26
+    }
+  },
+  "n_tasks": 50,
+  "rescues_and_breaks": {
+    "B_breaks": 6,
+    "B_rescues": 1,
+    "C_breaks": 7,
+    "C_rescues": 1
+  },
+  "schema": "DAPH_V2B_I3_7D_EVIDENCE_EXPERIMENT_V1",
+  "success": {
+    "A": "41/50",
+    "B": "36/50",
+    "C": "35/50"
+  },
+  "utility": {
+    "mean_u_a": 45.7712,
+    "mean_u_b": 26.4328,
+    "mean_u_c": 21.82
+  }
+}
