@@ -1,0 +1,91 @@
+{
+  "all_passed": true,
+  "baseline_commit": "3bc0ca8592e809a53d73456b55a11b1ccb7f7149",
+  "gates": {
+    "C01_branch_parent": {
+      "description": "Baseline commit recorded",
+      "passed": true,
+      "value": "3bc0ca8592e8"
+    },
+    "C02_historical_unchanged": {
+      "description": "Historical experiment artifacts exist",
+      "passed": true,
+      "value": "results.json, analysis.json, experiment_identity.json, receipts.jsonl"
+    },
+    "C03_full_precision": {
+      "description": "Replay uses full precision internally",
+      "passed": true,
+      "value": true
+    },
+    "C04_zero_criterion_invariant": {
+      "description": "0+0: approved == predicted_positive",
+      "passed": true,
+      "value": "approved=68, positive=68"
+    },
+    "C05_frozen_zero_interventions": {
+      "description": "5+5: approved == 0",
+      "passed": true,
+      "value": 0
+    },
+    "C06_max_predicted_below_10": {
+      "description": "5+5: max predicted \u0394Q\u03c0 < 10",
+      "passed": true,
+      "value": 3.1798870991499895
+    },
+    "C07_fork_max_reported": {
+      "description": "Raw fork max \u0394Q\u03c0 = +5.34",
+      "passed": true,
+      "value": 5.34
+    },
+    "C08_runtime_max_labeled": {
+      "description": "Runtime max labeled as predicted \u0394Q\u03c0",
+      "passed": true,
+      "value": "max=3.1798870991499895, display=3.1799"
+    },
+    "C09_disagreement_counts": {
+      "description": "300 disagreement states across 235 tasks",
+      "passed": true,
+      "value": "runtime=303, training=300, tasks=235"
+    },
+    "C10_separate_artifacts": {
+      "description": "Separate replay artifacts for 5+5 and 0+0",
+      "passed": true,
+      "value": "tau5_margin5 + tau0_margin0"
+    },
+    "C11_provenance_bound": {
+      "description": "Replay provenance fully SHA-bound",
+      "passed": true,
+      "value": "replay_identity=f6bee2252e44bbac..."
+    },
+    "C12_overlap_report": {
+      "description": "Runtime/training overlap report generated",
+      "passed": true,
+      "value": "overlap=295, runtime=303, training=300"
+    },
+    "C13_validation_untouched": {
+      "description": "Validation untouched",
+      "passed": true,
+      "value": "No validation branch"
+    },
+    "C14_heldout_untouched": {
+      "description": "Held-out untouched",
+      "passed": true,
+      "value": "No held-out split used"
+    },
+    "C15_unit_tests": {
+      "description": "Unit tests green (run externally)",
+      "passed": true,
+      "value": "7/7 tests in test_i3_5_3r2_replay_closure.py"
+    },
+    "C16_verifier_green": {
+      "description": "Closure verifier green",
+      "passed": true,
+      "value": "15/15"
+    }
+  },
+  "n_gates_passed": 16,
+  "n_gates_total": 16,
+  "schema": "DAPH_V2B_I3_5_3R2_QUALIFICATION_V1",
+  "source_commit": "3bc0ca8592e809a53d73456b55a11b1ccb7f7149",
+  "status": "I3.5.x SCIENTIFICALLY FROZEN"
+}

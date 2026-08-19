@@ -1,0 +1,13 @@
+{
+  "artifacts": {
+    "replay/README.md": "7d966ba387571627fdf28c8e0219909e76c42c907664f30e3d88ec1e369fa6d6",
+    "replay/gate_evaluation_summary_tau0_margin0.json": "436bec5df223417eb28b1c8bd057c5bed0776db86e019e1772ff6113690b351a",
+    "replay/gate_evaluation_summary_tau5_margin5.json": "7c76899e89765cacc230b9ffecbc8e68be065885844bbfd6e860e0a5f22c6ecd",
+    "replay/gate_evaluations_tau0_margin0.jsonl": "fc545c1005bf066f35ce49dd0391711ae83f7ecef14d778553371746777a1bca",
+    "replay/gate_evaluations_tau5_margin5.jsonl": "9ec0bb5a60de9c79ead98670aabbd4a53979a85fbf7a223d81fdde02ad30b168",
+    "runtime_overlap_analysis.json": "5890abef9ce1dc25359d3ead77219ca60ccd0505a740a7689b369d55cea550f3"
+  },
+  "baseline_commit": "3bc0ca8592e809a53d73456b55a11b1ccb7f7149",
+  "schema": "DAPH_V2B_I3_5_3R2_MANIFEST_SHA_V1",
+  "source_commit": "3bc0ca8592e809a53d73456b55a11b1ccb7f7149"
+}

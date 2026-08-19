@@ -1,0 +1,68 @@
+{
+  "by_action_pair": {
+    "ANSWER->REASON_MORE": {
+      "overlap": 2,
+      "overlap_positive": 2,
+      "runtime": 2,
+      "runtime_positive": 2,
+      "training": 2
+    },
+    "ANSWER->SEARCH_MORE": {
+      "overlap": 131,
+      "overlap_positive": 0,
+      "runtime": 132,
+      "runtime_positive": 0,
+      "training": 133
+    },
+    "ANSWER->VERIFY": {
+      "overlap": 62,
+      "overlap_positive": 0,
+      "runtime": 66,
+      "runtime_positive": 0,
+      "training": 65
+    },
+    "REASON_MORE->VERIFY": {
+      "overlap": 2,
+      "overlap_positive": 1,
+      "runtime": 4,
+      "runtime_positive": 2,
+      "training": 2
+    },
+    "RETRIEVE->VERIFY": {
+      "overlap": 62,
+      "overlap_positive": 62,
+      "runtime": 63,
+      "runtime_positive": 63,
+      "training": 62
+    },
+    "STOP->ANSWER": {
+      "overlap": 35,
+      "overlap_positive": 0,
+      "runtime": 35,
+      "runtime_positive": 0,
+      "training": 35
+    },
+    "VERIFY->SEARCH_MORE": {
+      "overlap": 1,
+      "overlap_positive": 1,
+      "runtime": 1,
+      "runtime_positive": 1,
+      "training": 1
+    }
+  },
+  "exact_pair_overlap": 295,
+  "positive_runtime_predictions": 68,
+  "positive_runtime_predictions_ood": 2,
+  "positive_runtime_predictions_seen_in_training": 66,
+  "provenance": {
+    "analysis_script_sha256": "7d5856e1fb565e5271ae3f584042b1cb9b676c2acdf75a38b8f709378ca12d1f",
+    "fork_dataset_sha256": "d61d47dbb55806126e07c4b2fc7b574bf1320615e20294c2e2cd91471faf854f",
+    "replay_evaluations_sha256": "9ec0bb5a60de9c79ead98670aabbd4a53979a85fbf7a223d81fdde02ad30b168",
+    "source_commit": "3bc0ca8592e809a53d73456b55a11b1ccb7f7149"
+  },
+  "runtime_disagreements": 303,
+  "runtime_only": 8,
+  "schema": "DAPH_V2B_I3_5_3R2_RUNTIME_OVERLAP_V1",
+  "training_disagreements": 300,
+  "training_only": 5
+}

@@ -1,0 +1,30 @@
+{
+  "artifacts": [
+    "runtime_overlap_analysis.json",
+    "replay/README.md",
+    "replay/gate_evaluations_tau5_margin5.jsonl",
+    "replay/gate_evaluation_summary_tau5_margin5.json",
+    "replay/gate_evaluations_tau0_margin0.jsonl",
+    "replay/gate_evaluation_summary_tau0_margin0.json"
+  ],
+  "baseline_commit": "3bc0ca8592e809a53d73456b55a11b1ccb7f7149",
+  "frozen_criterion": {
+    "effective_requirement": 10.0,
+    "lcb_margin": 5.0,
+    "threshold": 5.0
+  },
+  "key_results": {
+    "approved_interventions": 0,
+    "max_lcb": -1.8201129008500105,
+    "max_predicted_dq_pi": 3.1798870991499895,
+    "overlap_exact": 295,
+    "overlap_ood_positive": 2,
+    "permissive_approved": 68,
+    "permissive_positive": 68,
+    "runtime_disagreements": 303
+  },
+  "milestone": "V2B-I3.5.3-r2.1",
+  "schema": "DAPH_V2B_I3_5_3R2_CLOSURE_MANIFEST_V1",
+  "source_commit": "3bc0ca8592e809a53d73456b55a11b1ccb7f7149",
+  "title": "Pairwise Gate Scientific Closure"
+}

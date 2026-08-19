@@ -251,38 +251,55 @@ exploit the governor's ranking intelligence is the I3.5.2b question.
 ## 6. Corrected Milestone Status
 
 ```text
-V2B-I3.5.2a + I3.5.2b + I3.5.2c-r1 + I3.5.2d + I3.5.3 + I3.5.3-r1 + I3.5.3-r2
-STATE-LEVEL + PACKET + END-TO-END + POLICY-CONDITIONAL + Q^{π_B} + PAIRWISE + CLOSURE
+V2B-I3.5.x FINAL DEVELOPMENT STATUS
+I3.5.1 always-on governor:
+  REJECTED / HARMFUL
+I3.5.2a oracle ranking competence:
+  SUPPORTED
+I3.5.2b packet transmission:
+  SUPPORTED
+I3.5.2c Q*-selective trajectory improvement:
+  REJECTED
+I3.5.2d Qπ realizability:
+  NOT SUPPORTED FOR CURRENT GOVERNOR
+I3.5.3 original Qπ surrogate:
+  HISTORICAL / SPECIFICATION DEFECTS
+I3.5.3-r1 base-first pairwise gate:
+  VALID MECHANISM
+  PRIMARY IMPROVEMENT NOT SUPPORTED
+I3.5.3-r2/r2.1 closure:
+  FROZEN NEGATIVE DEVELOPMENT RESULT
 
-  Oracle governor-ranking competence:     SUPPORTED (A* = +108.41)
-  Local positive competence region:       SUPPORTED
-  Local hazard region:                    SUPPORTED
-  Task-group state leakage:               CONTROLLED
-  Fold-isolated rule stability:           SUPPORTED (same rules in 5/5 folds)
-  Probability calibration:                REPAIRED (isotonic, Brier < base rate)
-  CV rule-discovery independence:         ESTABLISHED (fold-isolated mode)
-  Q-value source tracking:                IMPLEMENTED (88.4% oracle, 11.6% fallback)
-  Packet-level treatment benefit:         SUPPORTED (A_treatment ≈ A_ranking, +21.52)
-  Model follows governor:                 98.0% (743/758)
-  Terminal success preserved:             SUPPORTED (83/300 = 83/300, zero discordant)
-  Continuous DG improvement (Q* gate):    NOT SUPPORTED (ΔDG = -3.28, harmful)
-  Q* ≠ Q^{π_model}:                       CONFIRMED (A* = +108, A^{π_B} = -8)
-  75.8% interventions unrecoverable:      CONFIRMED (oracle state graph)
-  Info acquisition without conversion:    CONFIRMED (SEARCH→REASON dominant pattern)
-  Q^{π_B} 7-action gate (I3.5.3):         0 interventions, ΔU=-0.03 (spec defects)
-  Pairwise base-first gate (I3.5.3-r1):   0 interventions, ΔU=+0.38, identity bound
-  Pairwise model beats constant baseline: CONFIRMED (R²=0.64 vs -0.14, sign 96% vs 66%)
-  Expanded fork dataset (all disagreements): 300 forks, 52 positive (all RET→VER, +1.95)
-  No intervention > +5 utility:           CONFIRMED (max fork ΔQ_π = +5.34, max runtime = +3.18)
-  Gate abstains at frozen 5+5 criterion:  CONFIRMED (0/303 approved, max LCB = -1.82)
-  Gate at τ=0 would approve 68:           CONFIRMED (offline replay, all small ΔQ_π ≤ +3.18)
-  Identity binding (model SHA-256):       PASS (G8)
-  Validation status:                      STOPPED
-  Conclusion:                             Across all governor-baseline disagreements
-                                          on the development distribution, no governor
-                                          intervention improved return by >5 points.
-                                          The correctly specified pairwise gate
-                                          abstains, preserving baseline at zero cost.
+Frozen production criterion:
+  threshold = 5
+  LCB margin = 5
+  effective predicted advantage requirement > 10
+
+Runtime replay (full precision, 303 disagreements):
+  max predicted ΔQπ = +3.179887
+  max LCB = -1.820113
+  predicted > 0: 68/303 (22.4%)
+  predicted > 5: 0/303 (0.0%)
+  interventions = 0
+
+Permissive diagnostic (τ=0, margin=0):
+  approved = 68 (== predicted_positive, invariant PASS)
+  weak positive opportunities exist (max +3.18)
+  these are not validation candidates
+
+Runtime/training overlap:
+  295/303 runtime states overlap training corpus
+  66/68 positive predictions seen in training
+  2/68 positive predictions are OOD
+
+Fork dataset (observed ΔQπ):
+  300 disagreement states across 235 tasks
+  max observed ΔQπ = +5.34
+  0 governor-continuation successes vs 42 base-continuation
+  small local utility improvement ≠ task rescue
+
+Validation and held-out remain unopened for this mechanism
+because the primary development improvement criterion was not met.
 ```
 
 ### What is Supported
@@ -1338,16 +1355,19 @@ that still fail to achieve successful termination.
 
 4. The model beats a constant-baseline comparator (R²=0.64 vs -0.14).
 
-5. The gate produces 0 interventions even at $\tau=0$.
+5. Under the frozen threshold $\tau=5$ and LCB margin $m=5$, none of the
+   runtime disagreements satisfies the intervention criterion.
 
 **What I3.5.3-r1 does NOT establish:**
 
-- It does **not** prove "no beneficial interventions exist" across all possible
-  alternative actions. It only covers the 7 action types the governor can
-  recommend, at the states where the governor disagrees with the baseline.
+- It does **not** prove that no beneficial interventions exist across all
+  possible alternative actions. It only covers the 7 action types the
+  governor can recommend, at the states where the governor disagrees with
+  the baseline.
 
-- The 52 positive $\Delta Q_\pi$ cases (all `RETRIEVE → VERIFY`, mean $+1.95$)
-  suggest there may be small beneficial interventions below the threshold.
+- The 52 positive observed $\Delta Q_\pi$ cases (all `RETRIEVE → VERIFY`,
+  mean $+1.95$) suggest there may be small beneficial interventions below
+  the frozen criterion.
   A lower threshold might approve some, but the expected gain is small.
 
 **The strongest supported statement is:**
