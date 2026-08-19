@@ -1,0 +1,76 @@
+{
+  "schema": "DAPH_V2B_I3_9_R1_BOUNDARY_REPAIR_PROTOCOL_V1",
+  "created_before_model_run": true,
+  "description": "Frozen protocol for I3.9-r1 MDSG boundary repair. Tests whether removing action prescription and tightening sufficiency classification repairs the OOD failures from I3.9.",
+  "purpose": "Causal comparison: does M1 (state-only, conservative READY) repair M0's (frozen MDSG) OOD failures while preserving its discrimination capability?",
+  "diagnosis_source": "I3.9 exploratory run (23892d0) used strictly as diagnosis dataset, not for tuning",
+  "corpus": {
+    "id": "i3_9_structural_ood_v2",
+    "description": "Fresh structural OOD corpus with new seeds, same 10 category definitions",
+    "n_tasks": 300,
+    "split": "structural_ood_v2",
+    "no_overlap_with": ["i3_7 development", "i3_7f confirmation", "i3_8 validation", "i3_9 structural_ood_v1"]
+  },
+  "arms": {
+    "A": "semantic evidence baseline (no MDSG)",
+    "M0": "frozen I3.8 MDSG with operation recommendations (historical control)",
+    "M1": "MDSG-StateOnly: no operation recs, conservative READY, PROVISIONALLY_READY state"
+  },
+  "m1_design": {
+    "removes": "all operation recommendations from remaining_blocker",
+    "adds": "PROVISIONALLY_READY state when one hypothesis is viable but hidden evidence remains",
+    "adds": "evidence_status field describing situation without prescribing action",
+    "preserves": "state classification (live/eliminated/weakened/untested hypotheses)",
+    "preserves": "NEEDS_DISCRIMINATION signal for multiple viable hypotheses",
+    "philosophy": "MDSG estimates state; base model retains full policy authority"
+  },
+  "primary_criterion": {
+    "id": "C1",
+    "description": "E[U_M1 - U_A] > 0",
+    "test": "lower endpoint of two-sided 95% paired task bootstrap CI > 0",
+    "bootstrap_iterations": 10000,
+    "bootstrap_seed": 42
+  },
+  "secondary_criteria": {
+    "C2": "Success_M1 > Success_A",
+    "C3": "Rescues_M1 > Breaks_M1",
+    "C4": "RedundantActionRate_M1 < RedundantActionRate_A",
+    "C5": "Steps_M1 < Steps_A"
+  },
+  "safety_criterion": {
+    "description": "Breaks_M1 <= Rescues_M1",
+    "strict_preference": "Breaks_M1 = 0"
+  },
+  "adversarial_safety_criterion": {
+    "description": "True FalseReadyRate_M1 < 5%",
+    "metric": "FalseReady = M1 emitted READY_TO_ANSWER at some step AND model ANSWERed AND ANSWER failed",
+    "note": "This is the TRUE per-step metric, not the proxy used in I3.9. PROVISIONALLY_READY followed by failed ANSWER is tracked separately as provisional_fail, not as false_ready."
+  },
+  "generalization_criterion": {
+    "description": "No catastrophic subgroup regression. No category where M1 success drops more than 10pp below A.",
+    "categories": [
+      "single_verify_ready", "triple_verify_ready", "noise_evidence",
+      "three_hypothesis", "early_false_ready", "late_resolution",
+      "multi_hypothesis_ambiguity", "stale_support", "conflict_unresolved",
+      "varying_visible_split"
+    ]
+  },
+  "m0_retention_criterion": {
+    "description": "M1 must retain most of M0's multi_hypothesis_ambiguity gain",
+    "test": "M1 rescues in multi_hypothesis_ambiguity > 15 (M0 had 27)"
+  },
+  "stale_support_repair_criterion": {
+    "description": "M1 must not collapse on stale_support (M0 had 0% success, 30 breaks)",
+    "test": "M1 success in stale_support > 0% (i.e., M1_success != 0/30)"
+  },
+  "causal_comparison": {
+    "M1_M0": "Does removing action prescription + conservative READY specifically repair OOD failures?",
+    "test": "paired bootstrap CI(U_M1 - U_M0)"
+  },
+  "analysis_plan": {
+    "overall": "paired bootstrap CI + McNemar for M0-A, M1-A, M1-M0",
+    "by_category": "per-category success, utility, rescues, breaks, false_ready for all 3 arms",
+    "true_false_ready": "per-step decision_state_log inspection for M0 and M1",
+    "adversarial_focus": "early_false_ready, conflict_unresolved, stale_support subgroups"
+  }
+}
