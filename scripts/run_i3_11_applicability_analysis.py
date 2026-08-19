@@ -301,40 +301,106 @@ def main():
         mean_d = sum(f["delta_u"] for f in subset) / n
         print(f"  {name:<50} {n:>4} {rescues:>6} {breaks:>6} {neutral:>7} {mean_d:>+10.4f}")
 
-    # === Proposed routing rule ===
+    # === Proposed routing rules ===
     print(f"\n{'='*82}")
-    print("PROPOSED ROUTING RULE (for analysis, not yet tested):")
+    print("PROPOSED ROUTING RULES (offline simulation, not yet tested):")
 
-    # Analyze: what if we route based on expected_terminal == DEFER?
+    # --- Oracle routing: expected_terminal (NOT runtime-usable) ---
     defer_tasks = [f for f in combined if f["is_defer_task"]]
     answer_tasks = [f for f in combined if f["is_answer_task"]]
 
-    print(f"\n  Route ON (M3) for DEFER tasks, OFF (A1) for ANSWER tasks:")
+    print(f"\n  ORACLE routing (NOT runtime-usable — uses task metadata):")
+    print(f"    Route ON (M3) for DEFER tasks, OFF (A1) for ANSWER tasks:")
     print(f"    DEFER tasks: n={len(defer_tasks)}, mean_delta={sum(f['delta_u'] for f in defer_tasks)/max(len(defer_tasks),1):+.4f}")
     print(f"    ANSWER tasks: n={len(answer_tasks)}, mean_delta={sum(f['delta_u'] for f in answer_tasks)/max(len(answer_tasks),1):+.4f}")
 
-    # Simulate routing
-    routed_delta = 0
-    routed_a1_u = 0
-    routed_m3_u = 0
+    oracle_routed_u = 0
+    oracle_a1_u = 0
     for f in combined:
         if f["is_defer_task"]:
-            routed_delta += f["delta_u"]
-            routed_m3_u += f["u_m3"]
-            routed_a1_u += f["u_a1"]
+            oracle_routed_u += f["u_m3"]
         else:
-            # Use A1 for answer tasks
-            routed_delta += 0  # A1 vs A1 = 0
-            routed_m3_u += f["u_a1"]  # Using A1
-            routed_a1_u += f["u_a1"]
+            oracle_routed_u += f["u_a1"]
+        oracle_a1_u += f["u_a1"]
 
     n = len(combined)
-    print(f"\n  Simulated routing (ON for DEFER, OFF for ANSWER):")
-    print(f"    Mean routed U: {routed_m3_u/n:+.4f}")
-    print(f"    Mean A1-only U: {routed_a1_u/n:+.4f}")
-    print(f"    Mean M3-always U: {sum(f['u_m3'] for f in combined)/n:+.4f}")
-    print(f"    Routing advantage over A1: {(routed_m3_u - routed_a1_u)/n:+.4f}")
-    print(f"    Routing advantage over M3: {(routed_m3_u - sum(f['u_m3'] for f in combined))/n:+.4f}")
+    m3_always_u = sum(f["u_m3"] for f in combined)
+    print(f"    Mean routed U: {oracle_routed_u/n:+.4f}")
+    print(f"    Mean A1-only U: {oracle_a1_u/n:+.4f}")
+    print(f"    Mean M3-always U: {m3_always_u/n:+.4f}")
+    print(f"    Routing advantage over A1: {(oracle_routed_u - oracle_a1_u)/n:+.4f}")
+    print(f"    Routing advantage over M3: {(oracle_routed_u - m3_always_u)/n:+.4f}")
+
+    # --- R0: hidden_evidence_count routing (RUNTIME-USABLE) ---
+    print(f"\n  R0 routing (RUNTIME-USABLE — controller-visible):")
+    print(f"    hidden_evidence_count == 0 -> M3")
+    print(f"    hidden_evidence_count > 0  -> A1")
+
+    r0_routed_u = 0
+    r0_a1_u = 0
+    r0_rescues = 0
+    r0_breaks = 0
+    r0_m3_used = 0
+    r0_a1_used = 0
+    for f in combined:
+        if f["n_hidden"] == 0:
+            r0_routed_u += f["u_m3"]
+            r0_m3_used += 1
+            if f["m3_rescues"]:
+                r0_rescues += 1
+        else:
+            r0_routed_u += f["u_a1"]
+            r0_a1_used += 1
+            if f["a1_success"] and not f.get("m3_success", False):
+                pass  # A1 used, M3 would have broken — not a break for R0
+        r0_a1_u += f["u_a1"]
+
+    print(f"    M3 used: {r0_m3_used}, A1 used: {r0_a1_used}")
+    print(f"    Mean routed U: {r0_routed_u/n:+.4f}")
+    print(f"    Mean A1-only U: {r0_a1_u/n:+.4f}")
+    print(f"    Mean M3-always U: {m3_always_u/n:+.4f}")
+    print(f"    Routing advantage over A1: {(r0_routed_u - r0_a1_u)/n:+.4f}")
+    print(f"    Routing advantage over M3: {(r0_routed_u - m3_always_u)/n:+.4f}")
+    print(f"    R0 captures {r0_rescues}/{len(rescue_tasks)} rescues")
+    print(f"    R0 avoids {len(break_tasks) - 0} breaks (all breaks were on hidden>0 tasks)")
+
+    # Verify: all breaks were on hidden>0 tasks
+    breaks_on_hidden0 = sum(1 for f in break_tasks if f["n_hidden"] == 0)
+    print(f"    Breaks on hidden==0 tasks: {breaks_on_hidden0} (should be 0 for R0 to avoid all)")
+
+    # R0 vs oracle
+    oracle_gain = (oracle_routed_u - oracle_a1_u) / n
+    r0_gain = (r0_routed_u - r0_a1_u) / n
+    print(f"\n    R0 recovers {r0_gain/oracle_gain*100:.1f}% of oracle routing gain")
+
+    # --- Feature classification ---
+    print(f"\n{'='*82}")
+    print("FEATURE CLASSIFICATION:")
+    runtime_safe = [
+        "hidden_evidence_count",
+        "n_hypotheses",
+        "visible_evidence_count",
+        "unverified_visible_count",
+        "verified_support_count",
+        "verified_contradiction_count",
+        "can_retrieve",
+        "can_search",
+        "can_verify",
+        "initial_decision_state",
+        "initial_live_hyps",
+        "initial_eliminated",
+    ]
+    analysis_only = [
+        "category",
+        "expected_terminal",
+        "oracle_steps",
+        "oracle_resolution_path",
+        "correct_hypothesis_id",
+        "a1_success",
+        "m3_success",
+    ]
+    print(f"  Runtime-safe features (usable for routing): {runtime_safe}")
+    print(f"  Analysis-only features (NOT usable for routing): {analysis_only}")
 
     # === Save analysis ===
     analysis = {
@@ -377,17 +443,39 @@ def main():
         "key_finding": {
             "m3_unique_value": "M3's rescues are concentrated in conflict_unresolved (DEFER tasks where A1 cannot recognize insufficiency). On v5: 30/30 rescues. On efficiency-dev: 0 (A1 already succeeds on conflict_unresolved).",
             "m3_cost": "M3's breaks are concentrated in single_verify_ready, varying_visible_split, late_resolution, noise_evidence — tasks where A1 is already efficient and M3's extra steps cost utility.",
-            "routing_signal": "expected_terminal (DEFER vs ANSWER) is the strongest controller-visible predictor, but it is task-level metadata not available at runtime. Initial decision state (NEEDS_DISCRIMINATION with multiple hypotheses) may be a runtime-usable proxy.",
+            "routing_signal": "expected_terminal (DEFER vs ANSWER) is the strongest predictor but is task-level metadata NOT available at runtime and NOT controller-visible. The strongest runtime-usable, controller-visible predictor is hidden_evidence_count: when hidden_evidence_count==0, M3 mean delta U=+25.83 with 30 rescues and 0 breaks; when hidden_evidence_count>0, M3 mean delta U is negative with 0 rescues. This may be a generator proxy (conflict_unresolved systematically has 0 hidden evidence) and must be tested on a decorrelated corpus.",
             "distribution_dependence": "M3's value depends on whether epistemic-state compression is the model's bottleneck. When baseline policy handles tasks efficiently, M3 is neutral or costly.",
+            "deeper_interpretation": "MDSG is most useful when all potentially relevant evidence is already observable and the remaining difficulty is epistemic interpretation rather than acquisition. hidden_evidence_count==0 marks this regime. When hidden evidence remains, evidence acquisition policy is important and A1 often handles it more efficiently.",
+        },
+        "feature_classification": {
+            "runtime_safe_features": runtime_safe,
+            "analysis_only_features": analysis_only,
+            "note": "Routers must only use runtime_safe_features. Analysis-only features are for offline understanding only.",
         },
         "simulated_routing": {
-            "rule": "ON for DEFER tasks, OFF for ANSWER tasks",
-            "routed_mean_u": round(routed_m3_u / n, 4),
-            "a1_only_mean_u": round(routed_a1_u / n, 4),
-            "m3_always_mean_u": round(sum(f["u_m3"] for f in combined) / n, 4),
-            "routing_advantage_over_a1": round((routed_m3_u - routed_a1_u) / n, 4),
-            "routing_advantage_over_m3": round((routed_m3_u - sum(f["u_m3"] for f in combined)) / n, 4),
-            "note": "This routing uses expected_terminal which is task metadata. A runtime-usable routing gate would need to predict this from observable features.",
+            "oracle": {
+                "rule": "ON for DEFER tasks, OFF for ANSWER tasks",
+                "routed_mean_u": round(oracle_routed_u / n, 4),
+                "a1_only_mean_u": round(oracle_a1_u / n, 4),
+                "m3_always_mean_u": round(m3_always_u / n, 4),
+                "routing_advantage_over_a1": round((oracle_routed_u - oracle_a1_u) / n, 4),
+                "routing_advantage_over_m3": round((oracle_routed_u - m3_always_u) / n, 4),
+                "note": "Uses expected_terminal which is task metadata NOT available at runtime.",
+            },
+            "r0_hidden_count": {
+                "rule": "hidden_evidence_count == 0 -> M3, else -> A1",
+                "routed_mean_u": round(r0_routed_u / n, 4),
+                "a1_only_mean_u": round(r0_a1_u / n, 4),
+                "m3_always_mean_u": round(m3_always_u / n, 4),
+                "routing_advantage_over_a1": round((r0_routed_u - r0_a1_u) / n, 4),
+                "routing_advantage_over_m3": round((r0_routed_u - m3_always_u) / n, 4),
+                "m3_used": r0_m3_used,
+                "a1_used": r0_a1_used,
+                "rescues_captured": r0_rescues,
+                "breaks_on_hidden0": breaks_on_hidden0,
+                "pct_of_oracle_gain_recovered": round(r0_gain / oracle_gain * 100, 1),
+                "note": "Runtime-usable. Must be tested on decorrelated corpus before promotion.",
+            },
         },
     }
 

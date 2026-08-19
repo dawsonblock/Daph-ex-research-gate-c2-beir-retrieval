@@ -1,0 +1,64 @@
+{
+  "schema": "DAPH_V2B_I3_11A_ROUTING_STRESS_PROTOCOL_V1",
+  "created_before_model_run": true,
+  "description": "Frozen protocol for I3.11a routing invariance stress test. Tests whether R0 (hidden_evidence_count == 0 -> M3, else -> A1) generalizes when hidden_evidence_count is deliberately crossed with task semantics.",
+  "research_question": "Does hidden_evidence_count == 0 itself predict MDSG applicability (H1), or does it merely identify conflict_unresolved in the current generator (H2)?",
+  "r0_router": {
+    "rule": "hidden_evidence_count == 0 -> M3, else -> A1",
+    "input_fields": ["hidden_evidence_count"],
+    "complexity": "zero — deterministic one-bit rule",
+    "leakage_assertion": "assert_r0_leakage verifies only hidden_evidence_count is used",
+    "no_training": true,
+    "no_learned_parameters": true
+  },
+  "corpus": {
+    "id": "routing_stress_v1",
+    "description": "Decorrelated corpus crossing hidden_evidence_count with task semantics",
+    "n_tasks": 300,
+    "crossing": {
+      "conflict_unresolved_h0": 30,
+      "conflict_unresolved_h1": 30,
+      "conflict_unresolved_h2": 30,
+      "single_verify_ready_h0": 25,
+      "single_verify_ready_h1": 25,
+      "single_verify_ready_h2": 25,
+      "varying_visible_split_h0": 15,
+      "varying_visible_split_h1": 15,
+      "varying_visible_split_h2": 15,
+      "triple_verify_ready_h0": 10,
+      "triple_verify_ready_h1": 10,
+      "triple_verify_ready_h2": 10,
+      "early_false_ready_h1": 15,
+      "early_false_ready_h2": 15
+    },
+    "critical_test_cases": {
+      "conflict_unresolved_with_hidden_gt_0": "If H1: M3 should NOT rescue. If H2: M3 SHOULD rescue. R0 routes to A1.",
+      "answer_tasks_with_hidden_0": "If H1: M3 should help. If H2: M3 should NOT help. R0 routes to M3."
+    }
+  },
+  "arms": {
+    "A1": "baseline + public affordances",
+    "M3": "frozen MDSG-StateWithAffordages (frozen at 2c467df)",
+    "R0": "deterministic router: hidden_evidence_count == 0 -> M3, else -> A1"
+  },
+  "primary_criteria": {
+    "C1": "LCB_95(U_R0 - U_A1) > 0 — R0 must beat A1",
+    "C2": "LCB_95(U_R0 - U_M3) > 0 — R0 must beat M3 (otherwise R0 merely approximates M3)"
+  },
+  "safety_criteria": {
+    "C3": "Success_R0 >= max(Success_A1, Success_M3) - 1pp (3 tasks)",
+    "C4": "Rescues_R0_vs_A1 > Breaks_R0_vs_A1",
+    "C5": "No catastrophic subgroup regression (>10pp drop vs A1 in any category)"
+  },
+  "routing_leakage_constraints": {
+    "router_input_must_be": {"hidden_evidence_count": "int"},
+    "forbidden_fields": [
+      "category", "expected_terminal", "oracle_steps",
+      "oracle_resolution_path", "correct_hypothesis_id",
+      "a1_success", "m3_success", "verify_result"
+    ],
+    "assertion": "assert_r0_leakage raises ValueError if forbidden fields are present"
+  },
+  "decision_rule": "If R0 passes C1 and C2, it generalizes and the hidden-count signal is real. If R0 passes C1 but not C2, it approximates M3 but doesn't improve. If R0 fails C1, the hidden-count signal was a generator proxy.",
+  "m3_frozen_at": "2c467df (do not modify)"
+}

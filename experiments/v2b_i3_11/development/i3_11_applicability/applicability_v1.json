@@ -223,11 +223,38 @@
     "v5",
     "efficiency_dev"
   ],
+  "feature_classification": {
+    "analysis_only_features": [
+      "category",
+      "expected_terminal",
+      "oracle_steps",
+      "oracle_resolution_path",
+      "correct_hypothesis_id",
+      "a1_success",
+      "m3_success"
+    ],
+    "note": "Routers must only use runtime_safe_features. Analysis-only features are for offline understanding only.",
+    "runtime_safe_features": [
+      "hidden_evidence_count",
+      "n_hypotheses",
+      "visible_evidence_count",
+      "unverified_visible_count",
+      "verified_support_count",
+      "verified_contradiction_count",
+      "can_retrieve",
+      "can_search",
+      "can_verify",
+      "initial_decision_state",
+      "initial_live_hyps",
+      "initial_eliminated"
+    ]
+  },
   "key_finding": {
+    "deeper_interpretation": "MDSG is most useful when all potentially relevant evidence is already observable and the remaining difficulty is epistemic interpretation rather than acquisition. hidden_evidence_count==0 marks this regime. When hidden evidence remains, evidence acquisition policy is important and A1 often handles it more efficiently.",
     "distribution_dependence": "M3's value depends on whether epistemic-state compression is the model's bottleneck. When baseline policy handles tasks efficiently, M3 is neutral or costly.",
     "m3_cost": "M3's breaks are concentrated in single_verify_ready, varying_visible_split, late_resolution, noise_evidence \u2014 tasks where A1 is already efficient and M3's extra steps cost utility.",
     "m3_unique_value": "M3's rescues are concentrated in conflict_unresolved (DEFER tasks where A1 cannot recognize insufficiency). On v5: 30/30 rescues. On efficiency-dev: 0 (A1 already succeeds on conflict_unresolved).",
-    "routing_signal": "expected_terminal (DEFER vs ANSWER) is the strongest controller-visible predictor, but it is task-level metadata not available at runtime. Initial decision state (NEEDS_DISCRIMINATION with multiple hypotheses) may be a runtime-usable proxy."
+    "routing_signal": "expected_terminal (DEFER vs ANSWER) is the strongest predictor but is task-level metadata NOT available at runtime and NOT controller-visible. The strongest runtime-usable, controller-visible predictor is hidden_evidence_count: when hidden_evidence_count==0, M3 mean delta U=+25.83 with 30 rescues and 0 breaks; when hidden_evidence_count>0, M3 mean delta U is negative with 0 rescues. This may be a generator proxy (conflict_unresolved systematically has 0 hidden evidence) and must be tested on a decorrelated corpus."
   },
   "n_total": 600,
   "overall": {
@@ -256,12 +283,28 @@
   },
   "schema": "DAPH_V2B_I3_11_APPLICABILITY_V1",
   "simulated_routing": {
-    "a1_only_mean_u": 54.5058,
-    "m3_always_mean_u": 58.2021,
-    "note": "This routing uses expected_terminal which is task metadata. A runtime-usable routing gate would need to predict this from observable features.",
-    "routed_mean_u": 63.8834,
-    "routing_advantage_over_a1": 9.3776,
-    "routing_advantage_over_m3": 5.6813,
-    "rule": "ON for DEFER tasks, OFF for ANSWER tasks"
+    "oracle": {
+      "a1_only_mean_u": 54.5058,
+      "m3_always_mean_u": 58.2021,
+      "note": "Uses expected_terminal which is task metadata NOT available at runtime.",
+      "routed_mean_u": 63.8834,
+      "routing_advantage_over_a1": 9.3776,
+      "routing_advantage_over_m3": 5.6813,
+      "rule": "ON for DEFER tasks, OFF for ANSWER tasks"
+    },
+    "r0_hidden_count": {
+      "a1_only_mean_u": 54.5058,
+      "a1_used": 390,
+      "breaks_on_hidden0": 0,
+      "m3_always_mean_u": 58.2021,
+      "m3_used": 210,
+      "note": "Runtime-usable. Must be tested on decorrelated corpus before promotion.",
+      "pct_of_oracle_gain_recovered": 96.4,
+      "rescues_captured": 30,
+      "routed_mean_u": 63.5475,
+      "routing_advantage_over_a1": 9.0417,
+      "routing_advantage_over_m3": 5.3454,
+      "rule": "hidden_evidence_count == 0 -> M3, else -> A1"
+    }
   }
 }
