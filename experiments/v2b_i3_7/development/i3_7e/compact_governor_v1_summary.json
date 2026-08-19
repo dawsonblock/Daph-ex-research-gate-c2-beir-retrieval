@@ -1,0 +1,111 @@
+{
+  "arm_summaries": {
+    "A": {
+      "acs_before_terminal": 50,
+      "arm": "A",
+      "breaks": 0,
+      "condition_led_to_success": 40,
+      "hypothesis_eliminated": 35,
+      "mean_model_calls": 5.64,
+      "mean_steps": 5.64,
+      "mean_u": 43.2162,
+      "redundant_action_count": 120,
+      "redundant_action_rate": 0.4255,
+      "rescues": 0,
+      "success": "40/50",
+      "success_rate": 0.8,
+      "target_evidence_retrieved": 30,
+      "target_evidence_verified": 30,
+      "terminal_matches_condition": 40
+    },
+    "H": {
+      "acs_before_terminal": 50,
+      "arm": "H",
+      "breaks": 5,
+      "condition_led_to_success": 35,
+      "hypothesis_eliminated": 35,
+      "mean_model_calls": 6.02,
+      "mean_steps": 6.02,
+      "mean_u": 20.307,
+      "redundant_action_count": 145,
+      "redundant_action_rate": 0.4817,
+      "rescues": 0,
+      "success": "35/50",
+      "success_rate": 0.7,
+      "target_evidence_retrieved": 30,
+      "target_evidence_verified": 30,
+      "terminal_matches_condition": 35
+    },
+    "HD": {
+      "acs_before_terminal": 50,
+      "arm": "HD",
+      "breaks": 39,
+      "condition_led_to_success": 1,
+      "hypothesis_eliminated": 32,
+      "mean_model_calls": 8.48,
+      "mean_steps": 8.48,
+      "mean_u": -134.3006,
+      "redundant_action_count": 299,
+      "redundant_action_rate": 0.7052,
+      "rescues": 0,
+      "success": "1/50",
+      "success_rate": 0.02,
+      "target_evidence_retrieved": 27,
+      "target_evidence_verified": 27,
+      "terminal_matches_condition": 1
+    },
+    "M": {
+      "acs_before_terminal": 50,
+      "arm": "M",
+      "breaks": 0,
+      "condition_led_to_success": 45,
+      "hypothesis_eliminated": 5,
+      "mean_model_calls": 2.98,
+      "mean_steps": 2.98,
+      "mean_u": 71.676,
+      "redundant_action_count": 0,
+      "redundant_action_rate": 0.0,
+      "rescues": 5,
+      "success": "45/50",
+      "success_rate": 0.9,
+      "target_evidence_retrieved": 0,
+      "target_evidence_verified": 0,
+      "terminal_matches_condition": 45
+    }
+  },
+  "arms": {
+    "A": "semantic evidence baseline",
+    "H": "hypotheses only",
+    "HD": "hypotheses + discriminator",
+    "M": "minimal decision state"
+  },
+  "divergence_summary": {
+    "total_breaks": 44,
+    "total_rescues": 5
+  },
+  "gates": {
+    "H": {
+      "breaks_le_1": false,
+      "mean_u_ge_baseline": false,
+      "rescues_ge_1": false,
+      "rescues_gt_breaks": false,
+      "success_ge_baseline": false
+    },
+    "HD": {
+      "breaks_le_1": false,
+      "mean_u_ge_baseline": false,
+      "rescues_ge_1": false,
+      "rescues_gt_breaks": false,
+      "success_ge_baseline": false
+    },
+    "M": {
+      "breaks_le_1": true,
+      "mean_u_ge_baseline": true,
+      "rescues_ge_1": true,
+      "rescues_gt_breaks": true,
+      "success_ge_baseline": true
+    }
+  },
+  "n_tasks": 50,
+  "schema": "DAPH_V2B_I3_7E_COMPACT_GOVERNOR_V1"
+}

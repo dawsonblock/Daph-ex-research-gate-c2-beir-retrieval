@@ -1,0 +1,3338 @@
+{
+  "breaks": [
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        []
+      ],
+      "a_redundant_count": 0,
+      "a_u": 93.53,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 2,
+      "task_id": "i3_7_evidence_structure_dev_v2_0000",
+      "u_delta": -230.64
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0001",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0002",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0003",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0004",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "SEARCH_MORE",
+      "a_actions_full": [
+        "SEARCH_MORE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [],
+      "a_redundant_count": 0,
+      "a_u": 94.55,
+      "a_verified_before_div": [],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "VERIFY",
+      "arm_actions_full": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [],
+      "arm_redundant_count": 5,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [],
+      "category": "evidence_stale",
+      "classification": "BREAK",
+      "divergence_step": 0,
+      "task_id": "i3_7_evidence_structure_dev_v2_0007",
+      "u_delta": -231.66
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0006",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "a_redundant_count": 4,
+      "a_u": 84.93,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        []
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 6,
+      "task_id": "i3_7_evidence_structure_dev_v2_0005",
+      "u_delta": -222.04
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0008",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0010",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0011",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        []
+      ],
+      "a_redundant_count": 0,
+      "a_u": 93.53,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 2,
+      "task_id": "i3_7_evidence_structure_dev_v2_0012",
+      "u_delta": -230.64
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0014",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0016",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "SEARCH_MORE",
+      "a_actions_full": [
+        "VERIFY",
+        "SEARCH_MORE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        []
+      ],
+      "a_redundant_count": 0,
+      "a_u": 91.37,
+      "a_verified_before_div": [
+        [
+          "E1"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        []
+      ],
+      "arm_redundant_count": 5,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_stale",
+      "classification": "BREAK",
+      "divergence_step": 1,
+      "task_id": "i3_7_evidence_structure_dev_v2_0018",
+      "u_delta": -228.48
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        []
+      ],
+      "a_redundant_count": 0,
+      "a_u": 93.53,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 2,
+      "task_id": "i3_7_evidence_structure_dev_v2_0017",
+      "u_delta": -230.64
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "VERIFY",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "a_redundant_count": 8,
+      "a_u": 73.24,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm": "H",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 7,
+      "task_id": "i3_7_evidence_structure_dev_v2_0019",
+      "u_delta": -210.35
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "VERIFY",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "a_redundant_count": 8,
+      "a_u": 73.24,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 7,
+      "task_id": "i3_7_evidence_structure_dev_v2_0019",
+      "u_delta": -210.35
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0021",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        []
+      ],
+      "a_redundant_count": 0,
+      "a_u": 93.53,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 2,
+      "task_id": "i3_7_evidence_structure_dev_v2_0022",
+      "u_delta": -230.64
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0023",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0024",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        []
+      ],
+      "a_redundant_count": 0,
+      "a_u": 93.53,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "arm": "H",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 2,
+      "task_id": "i3_7_evidence_structure_dev_v2_0025",
+      "u_delta": -230.64
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        []
+      ],
+      "a_redundant_count": 0,
+      "a_u": 93.53,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 2,
+      "task_id": "i3_7_evidence_structure_dev_v2_0025",
+      "u_delta": -230.64
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0026",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        []
+      ],
+      "a_redundant_count": 0,
+      "a_u": 93.53,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "arm": "H",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 2,
+      "task_id": "i3_7_evidence_structure_dev_v2_0027",
+      "u_delta": -230.64
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        []
+      ],
+      "a_redundant_count": 0,
+      "a_u": 93.53,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 2,
+      "task_id": "i3_7_evidence_structure_dev_v2_0027",
+      "u_delta": -230.64
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0028",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0029",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0031",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0035",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0036",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0037",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "VERIFY",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "a_redundant_count": 8,
+      "a_u": 73.24,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm": "H",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 7,
+      "task_id": "i3_7_evidence_structure_dev_v2_0038",
+      "u_delta": -210.35
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "VERIFY",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "a_redundant_count": 8,
+      "a_u": 73.24,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 7,
+      "task_id": "i3_7_evidence_structure_dev_v2_0038",
+      "u_delta": -210.35
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "SEARCH_MORE",
+      "a_actions_full": [
+        "SEARCH_MORE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [],
+      "a_redundant_count": 0,
+      "a_u": 94.55,
+      "a_verified_before_div": [],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "VERIFY",
+      "arm_actions_full": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [],
+      "arm_redundant_count": 5,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [],
+      "category": "evidence_stale",
+      "classification": "BREAK",
+      "divergence_step": 0,
+      "task_id": "i3_7_evidence_structure_dev_v2_0039",
+      "u_delta": -231.66
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0040",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0042",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0045",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0046",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0047",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "ANSWER",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "a_redundant_count": 1,
+      "a_u": 88.2,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [
+          "E3"
+        ],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -140.29,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [
+          "E3"
+        ]
+      ],
+      "category": "evidence_answer",
+      "classification": "BREAK",
+      "divergence_step": 4,
+      "task_id": "i3_7_evidence_structure_dev_v2_0048",
+      "u_delta": -228.49
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "VERIFY",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "VERIFY",
+        "REASON_MORE",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "a_redundant_count": 9,
+      "a_u": 71.1,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm": "H",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 7,
+      "task_id": "i3_7_evidence_structure_dev_v2_0049",
+      "u_delta": -208.21
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "VERIFY",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "VERIFY",
+        "REASON_MORE",
+        "ANSWER"
+      ],
+      "a_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "a_redundant_count": 9,
+      "a_u": 71.1,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm": "HD",
+      "arm_acs_before_terminal": true,
+      "arm_action": "RETRIEVE",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "arm_redundant_count": 6,
+      "arm_u": -137.11,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "category": "evidence_conflict",
+      "classification": "BREAK",
+      "divergence_step": 7,
+      "task_id": "i3_7_evidence_structure_dev_v2_0049",
+      "u_delta": -208.21
+    }
+  ],
+  "rescues": [
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "RETRIEVE",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "a_exposed_before_div": [
+        [],
+        []
+      ],
+      "a_redundant_count": 6,
+      "a_u": -137.11,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "arm": "M",
+      "arm_acs_before_terminal": true,
+      "arm_action": "ANSWER",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        []
+      ],
+      "arm_redundant_count": 0,
+      "arm_u": 93.53,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_conflict",
+      "classification": "RESCUE",
+      "divergence_step": 2,
+      "task_id": "i3_7_evidence_structure_dev_v2_0009",
+      "u_delta": 230.64
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "RETRIEVE",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "a_exposed_before_div": [
+        [],
+        []
+      ],
+      "a_redundant_count": 6,
+      "a_u": -137.11,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "arm": "M",
+      "arm_acs_before_terminal": true,
+      "arm_action": "ANSWER",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        []
+      ],
+      "arm_redundant_count": 0,
+      "arm_u": 93.53,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_conflict",
+      "classification": "RESCUE",
+      "divergence_step": 2,
+      "task_id": "i3_7_evidence_structure_dev_v2_0013",
+      "u_delta": 230.64
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "RETRIEVE",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "a_exposed_before_div": [
+        [],
+        []
+      ],
+      "a_redundant_count": 6,
+      "a_u": -137.11,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "arm": "M",
+      "arm_acs_before_terminal": true,
+      "arm_action": "ANSWER",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        []
+      ],
+      "arm_redundant_count": 0,
+      "arm_u": 93.53,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_conflict",
+      "classification": "RESCUE",
+      "divergence_step": 2,
+      "task_id": "i3_7_evidence_structure_dev_v2_0033",
+      "u_delta": 230.64
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "RETRIEVE",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "a_exposed_before_div": [
+        [],
+        []
+      ],
+      "a_redundant_count": 6,
+      "a_u": -137.11,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "arm": "M",
+      "arm_acs_before_terminal": true,
+      "arm_action": "ANSWER",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        []
+      ],
+      "arm_redundant_count": 0,
+      "arm_u": 93.53,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_conflict",
+      "classification": "RESCUE",
+      "divergence_step": 2,
+      "task_id": "i3_7_evidence_structure_dev_v2_0043",
+      "u_delta": 230.64
+    },
+    {
+      "a_acs_before_terminal": true,
+      "a_action": "RETRIEVE",
+      "a_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RETRIEVE"
+      ],
+      "a_exposed_before_div": [
+        [],
+        []
+      ],
+      "a_redundant_count": 6,
+      "a_u": -137.11,
+      "a_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "arm": "M",
+      "arm_acs_before_terminal": true,
+      "arm_action": "ANSWER",
+      "arm_actions_full": [
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "arm_exposed_before_div": [
+        [],
+        []
+      ],
+      "arm_redundant_count": 0,
+      "arm_u": 93.53,
+      "arm_verified_before_div": [
+        [
+          "E2"
+        ],
+        [
+          "E1"
+        ]
+      ],
+      "category": "evidence_conflict",
+      "classification": "RESCUE",
+      "divergence_step": 2,
+      "task_id": "i3_7_evidence_structure_dev_v2_0044",
+      "u_delta": 230.64
+    }
+  ]
+}
