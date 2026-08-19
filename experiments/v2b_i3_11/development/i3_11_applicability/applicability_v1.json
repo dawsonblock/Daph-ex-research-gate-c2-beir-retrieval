@@ -1,0 +1,267 @@
+{
+  "by_a1_success": {
+    "a1_fails": {
+      "m3_also_fails": 118,
+      "n": 148,
+      "rescues": 30
+    },
+    "a1_succeeds": {
+      "breaks": 3,
+      "n": 452,
+      "rescues_possible": 3
+    }
+  },
+  "by_category": {
+    "conflict_unresolved": {
+      "a1_success_rate": 0.5,
+      "breaks": 0,
+      "m3_success_rate": 1.0,
+      "mean_delta_u": 93.776,
+      "n": 60,
+      "p_m3_better": 0.5,
+      "p_m3_equal": 0.5,
+      "p_m3_worse": 0.0,
+      "rescues": 30
+    },
+    "early_false_ready": {
+      "a1_success_rate": 0.5,
+      "breaks": 0,
+      "m3_success_rate": 0.5,
+      "mean_delta_u": 0.0,
+      "n": 60,
+      "p_m3_better": 0.0,
+      "p_m3_equal": 1.0,
+      "p_m3_worse": 0.0,
+      "rescues": 0
+    },
+    "late_resolution": {
+      "a1_success_rate": 0.5,
+      "breaks": 0,
+      "m3_success_rate": 0.5,
+      "mean_delta_u": -7.2647,
+      "n": 60,
+      "p_m3_better": 0.0,
+      "p_m3_equal": 0.5167,
+      "p_m3_worse": 0.4833,
+      "rescues": 0
+    },
+    "multi_hypothesis_ambiguity": {
+      "a1_success_rate": 0.6667,
+      "breaks": 0,
+      "m3_success_rate": 0.6667,
+      "mean_delta_u": 0.0,
+      "n": 45,
+      "p_m3_better": 0.0,
+      "p_m3_equal": 1.0,
+      "p_m3_worse": 0.0,
+      "rescues": 0
+    },
+    "noise_evidence": {
+      "a1_success_rate": 1.0,
+      "breaks": 0,
+      "m3_success_rate": 1.0,
+      "mean_delta_u": -4.505,
+      "n": 60,
+      "p_m3_better": 0.0,
+      "p_m3_equal": 0.2833,
+      "p_m3_worse": 0.7167,
+      "rescues": 0
+    },
+    "single_verify_ready": {
+      "a1_success_rate": 1.0,
+      "breaks": 0,
+      "m3_success_rate": 1.0,
+      "mean_delta_u": -16.09,
+      "n": 105,
+      "p_m3_better": 0.0,
+      "p_m3_equal": 0.0,
+      "p_m3_worse": 1.0,
+      "rescues": 0
+    },
+    "stale_support": {
+      "a1_success_rate": 0.6667,
+      "breaks": 0,
+      "m3_success_rate": 0.6667,
+      "mean_delta_u": -6.0389,
+      "n": 45,
+      "p_m3_better": 0.0,
+      "p_m3_equal": 0.3333,
+      "p_m3_worse": 0.6667,
+      "rescues": 0
+    },
+    "three_hypothesis": {
+      "a1_success_rate": 1.0,
+      "breaks": 0,
+      "m3_success_rate": 1.0,
+      "mean_delta_u": 0.7913,
+      "n": 30,
+      "p_m3_better": 0.3333,
+      "p_m3_equal": 0.6667,
+      "p_m3_worse": 0.0,
+      "rescues": 0
+    },
+    "triple_verify_ready": {
+      "a1_success_rate": 1.0,
+      "breaks": 0,
+      "m3_success_rate": 1.0,
+      "mean_delta_u": 0.75,
+      "n": 60,
+      "p_m3_better": 0.2,
+      "p_m3_equal": 0.8,
+      "p_m3_worse": 0.0,
+      "rescues": 0
+    },
+    "varying_visible_split": {
+      "a1_success_rate": 0.6267,
+      "breaks": 3,
+      "m3_success_rate": 0.5867,
+      "mean_delta_u": -10.8023,
+      "n": 75,
+      "p_m3_better": 0.0,
+      "p_m3_equal": 0.44,
+      "p_m3_worse": 0.56,
+      "rescues": 0
+    }
+  },
+  "by_expected_terminal": {
+    "ANSWER": {
+      "a1_success_rate": 0.7815,
+      "breaks": 3,
+      "m3_success_rate": 0.7759,
+      "mean_delta_u": -6.3126,
+      "n": 540,
+      "p_m3_better": 0.0407,
+      "p_m3_equal": 0.4981,
+      "p_m3_worse": 0.4611,
+      "rescues": 0
+    },
+    "DEFER": {
+      "a1_success_rate": 0.5,
+      "breaks": 0,
+      "m3_success_rate": 1.0,
+      "mean_delta_u": 93.776,
+      "n": 60,
+      "p_m3_better": 0.5,
+      "p_m3_equal": 0.5,
+      "p_m3_worse": 0.0,
+      "rescues": 30
+    }
+  },
+  "by_initial_state": {
+    "NEEDS_DISCRIMINATION": {
+      "a1_success_rate": 0.7533,
+      "breaks": 3,
+      "m3_success_rate": 0.7983,
+      "mean_delta_u": 3.6963,
+      "n": 600,
+      "p_m3_better": 0.0867,
+      "p_m3_equal": 0.4983,
+      "p_m3_worse": 0.415,
+      "rescues": 30
+    }
+  },
+  "by_n_hidden": {
+    "0": {
+      "a1_success_rate": 0.8571,
+      "breaks": 0,
+      "m3_success_rate": 1.0,
+      "mean_delta_u": 25.8333,
+      "n": 210,
+      "p_m3_better": 0.2476,
+      "p_m3_equal": 0.5476,
+      "p_m3_worse": 0.2048,
+      "rescues": 30
+    },
+    "1": {
+      "a1_success_rate": 0.7333,
+      "breaks": 3,
+      "m3_success_rate": 0.7242,
+      "mean_delta_u": -8.3981,
+      "n": 330,
+      "p_m3_better": 0.0,
+      "p_m3_equal": 0.4636,
+      "p_m3_worse": 0.5364,
+      "rescues": 0
+    },
+    "2": {
+      "a1_success_rate": 0.5,
+      "breaks": 0,
+      "m3_success_rate": 0.5,
+      "mean_delta_u": -7.2647,
+      "n": 60,
+      "p_m3_better": 0.0,
+      "p_m3_equal": 0.5167,
+      "p_m3_worse": 0.4833,
+      "rescues": 0
+    }
+  },
+  "by_n_hypotheses": {
+    "2": {
+      "a1_success_rate": 0.7467,
+      "breaks": 3,
+      "m3_success_rate": 0.7981,
+      "mean_delta_u": 4.1791,
+      "n": 525,
+      "p_m3_better": 0.08,
+      "p_m3_equal": 0.4457,
+      "p_m3_worse": 0.4743,
+      "rescues": 30
+    },
+    "3": {
+      "a1_success_rate": 0.8,
+      "breaks": 0,
+      "m3_success_rate": 0.8,
+      "mean_delta_u": 0.3165,
+      "n": 75,
+      "p_m3_better": 0.1333,
+      "p_m3_equal": 0.8667,
+      "p_m3_worse": 0.0,
+      "rescues": 0
+    }
+  },
+  "corpora": [
+    "v5",
+    "efficiency_dev"
+  ],
+  "key_finding": {
+    "distribution_dependence": "M3's value depends on whether epistemic-state compression is the model's bottleneck. When baseline policy handles tasks efficiently, M3 is neutral or costly.",
+    "m3_cost": "M3's breaks are concentrated in single_verify_ready, varying_visible_split, late_resolution, noise_evidence \u2014 tasks where A1 is already efficient and M3's extra steps cost utility.",
+    "m3_unique_value": "M3's rescues are concentrated in conflict_unresolved (DEFER tasks where A1 cannot recognize insufficiency). On v5: 30/30 rescues. On efficiency-dev: 0 (A1 already succeeds on conflict_unresolved).",
+    "routing_signal": "expected_terminal (DEFER vs ANSWER) is the strongest controller-visible predictor, but it is task-level metadata not available at runtime. Initial decision state (NEEDS_DISCRIMINATION with multiple hypotheses) may be a runtime-usable proxy."
+  },
+  "n_total": 600,
+  "overall": {
+    "efficiency_dev": {
+      "breaks": 2,
+      "mean_delta_u": -5.7781,
+      "n": 300,
+      "rescues": 0
+    },
+    "v5": {
+      "breaks": 1,
+      "mean_delta_u": 13.1706,
+      "n": 300,
+      "rescues": 30
+    }
+  },
+  "rescue_break_summary": {
+    "break_categories": {
+      "varying_visible_split": 3
+    },
+    "rescue_categories": {
+      "conflict_unresolved": 30
+    },
+    "total_breaks": 3,
+    "total_rescues": 30
+  },
+  "schema": "DAPH_V2B_I3_11_APPLICABILITY_V1",
+  "simulated_routing": {
+    "a1_only_mean_u": 54.5058,
+    "m3_always_mean_u": 58.2021,
+    "note": "This routing uses expected_terminal which is task metadata. A runtime-usable routing gate would need to predict this from observable features.",
+    "routed_mean_u": 63.8834,
+    "routing_advantage_over_a1": 9.3776,
+    "routing_advantage_over_m3": 5.6813,
+    "rule": "ON for DEFER tasks, OFF for ANSWER tasks"
+  }
+}
