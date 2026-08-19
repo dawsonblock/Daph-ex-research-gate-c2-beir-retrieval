@@ -1,0 +1,97 @@
+{
+  "schema": "DAPH_V2B_I3_10A_FORENSIC_FINDINGS_V1",
+  "source": "i3_9_r3 v5 trajectories (300 tasks, M3 arm)",
+  "diagnosis_only": true,
+  "no_new_model_runs": true,
+  "key_findings": {
+    "1_excess_cognition_is_low": {
+      "finding": "M3 mean excess cognition = 0.12 steps (after first READY_TO_ANSWER)",
+      "interpretation": "M3 does NOT waste steps after reaching READY_TO_ANSWER. The efficiency loss is BEFORE reaching READY, not after.",
+      "implication": "The problem is not 'stopping too late' but 'reaching READY too slowly'"
+    },
+    "2_sbu_dwell_is_the_bottleneck": {
+      "finding": "SUPPORTED_BUT_UNRESOLVED mean dwell = 3.75 steps, max = 9. 270 episodes across 300 tasks.",
+      "interpretation": "The model spends most of its extra steps in SUPPORTED_BUT_UNRESOLVED before transitioning to READY_TO_ANSWER",
+      "worst_categories": {
+        "varying_visible_split": "mean_dwell=8.90, max=9",
+        "single_verify_ready": "mean_dwell=7.00, max=7",
+        "late_resolution": "mean_dwell=6.00, max=6"
+      }
+    },
+    "3_retrieve_in_sbu_never_changes_state": {
+      "finding": "RETRIEVE in SUPPORTED_BUT_UNRESOLVED: 448 calls, P(state changes)=0.0000",
+      "interpretation": "RETRIEVE exposes new unverified evidence, but the state stays SBU because the new evidence is unverified. The model keeps RETRIEVEing until all hidden evidence is exposed.",
+      "pattern": "328 of 448 RETRIEVE calls are followed by another RETRIEVE. The model retrieves ALL hidden evidence before verifying any of it."
+    },
+    "4_verify_in_sbu_is_productive": {
+      "finding": "VERIFY in SUPPORTED_BUT_UNRESOLVED: 469 calls, P(state changes)=0.5629",
+      "interpretation": "VERIFY is the productive action in SBU — it's what eventually transitions to READY_TO_ANSWER"
+    },
+    "5_a1_answers_earlier_correctly": {
+      "finding": "In varying_visible_split: A1=7.27 steps 30/30, M3=10.87 steps 29/30. In single_verify_ready: A1=2.00 steps 30/30, M3=9.00 steps 30/30.",
+      "interpretation": "A1 correctly answers after partial evidence gathering. M3's SBU signal causes the model to retrieve ALL hidden evidence before answering, even when the current support is already sufficient.",
+      "example": "A1: VERIFY×3, RETRIEVE×3, ANSWER (7 steps, success). M3: VERIFY×3, RETRIEVE×5, SEARCH_MORE, VERIFY, ANSWER (11 steps, success). M3 retrieves 2 more items and searches unnecessarily."
+    },
+    "6_conflict_unresolved_is_cleanest_mdsG_value": {
+      "finding": "A1=0/30, M3=30/30 with identical affordance information. M3's SBU→INSUFFICIENT trajectory guides DEFER. A1 cannot do this.",
+      "interpretation": "The epistemic state abstraction itself provides irreducible value that affordances cannot."
+    }
+  },
+  "state_action_transition_matrix": {
+    "SUPPORTED_BUT_UNRESOLVED": {
+      "RETRIEVE": {"count": 448, "p_state_change": 0.0, "interpretation": "never changes state — exposes unverified evidence"},
+      "SEARCH_MORE": {"count": 89, "p_state_change": 0.0, "interpretation": "never changes state — exposes unverified evidence"},
+      "VERIFY": {"count": 469, "p_state_change": 0.5629, "interpretation": "productive — verification can transition to READY"},
+      "ANSWER": {"count": 5, "p_state_change": null, "interpretation": "model answers from SBU (usually fails)"}
+    },
+    "NEEDS_DISCRIMINATION": {
+      "RETRIEVE": {"count": 150, "p_state_change": 0.0, "interpretation": "never changes state — should VERIFY instead"},
+      "SEARCH_MORE": {"count": 30, "p_state_change": 0.0, "interpretation": "never changes state"},
+      "VERIFY": {"count": 450, "p_state_change": 0.8667, "interpretation": "highly productive — verification discriminates"}
+    },
+    "NEEDS_EVIDENCE": {
+      "RETRIEVE": {"count": 180, "p_state_change": 0.1667, "interpretation": "low productivity — usually exposes unverified evidence"},
+      "SEARCH_MORE": {"count": 30, "p_state_change": 1.0, "interpretation": "always changes state — search finds discriminating evidence"}
+    }
+  },
+  "diagnosis_for_m4": {
+    "primary_efficiency_loss": "M3's SUPPORTED_BUT_UNRESOLVED causes the model to retrieve ALL hidden evidence before answering, even when current verified support is already decision-sufficient",
+    "root_cause": "SBU does not distinguish between 'unverified visible evidence that could overturn the decision' and 'hidden evidence that is unlikely to be decision-relevant'",
+    "m4_target": "Add a decision-stability signal that tells the model whether remaining unresolved evidence is likely to change the decision",
+    "m4_constraint": "Must be derivable from controller-visible structure only. Must not change epistemic state classifier. Must not add action recommendations.",
+    "observable_proxies_for_decision_stability": [
+      "number of independent verified supporters for the leading hypothesis",
+      "number of visible unverified items that could contradict",
+      "hidden evidence count (already in snapshot)",
+      "whether any visible unverified evidence supports a competing hypothesis"
+    ]
+  },
+  "m4_design_sketch": {
+    "new_field": "decision_stability",
+    "values": ["HIGH", "MODERATE", "LOW"],
+    "derivation_rules": {
+      "HIGH": "leading hypothesis has >=2 verified supporters AND no visible unverified evidence could contradict AND no competing hypothesis has verified support",
+      "MODERATE": "leading hypothesis has 1 verified supporter AND no visible unverified evidence could contradict",
+      "LOW": "visible unverified evidence could contradict, OR competing hypothesis has verified support, OR no verified support exists"
+    },
+    "prompt_semantics": "Reports epistemic condition only. Does not recommend actions. Model retains full policy authority.",
+    "example_packet": {
+      "epistemic_state": "SUPPORTED_BUT_UNRESOLVED",
+      "decision_stability": "HIGH",
+      "evidence_status": "ONE_HYPOTHESIS_SUPPORTED_HIDDEN_EVIDENCE_REMAINS",
+      "action_affordances": {"can_retrieve": true, "can_search": true, "can_verify": false},
+      "live_hypotheses": ["H1"],
+      "verified_support": ["E1", "E2"],
+      "verified_contradictions": [],
+      "hidden_evidence_count": 3
+    }
+  },
+  "m4_aggressive_success_criteria": {
+    "success": "Success_M4 >= Success_M3 - 1pp (>= 296/300)",
+    "steps": "Steps_M4 < Steps_M3 (7.27)",
+    "redundant": "RedundantRate_M4 < RedundantRate_M3 (0.376)",
+    "false_ready": "FalseReadyRate_M4 < 5%",
+    "generalization": "No catastrophic subgroup regression vs A1",
+    "primary_ci": "LCB_95(U_M4 - U_A1) > 0"
+  }
+}

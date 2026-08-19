@@ -1,0 +1,339 @@
+{
+  "diagnosis": {
+    "constraint": "M4 must not change the epistemic state classifier or add action recommendations",
+    "implication_for_m4": "M4 should add a decision-stability signal that distinguishes 'unresolved but decision-relevant' from 'unresolved but non-decisive'",
+    "primary_finding": "M3's SUPPORTED_BUT_UNRESOLVED state has low state-change probability for several actions, indicating overconservative continuation"
+  },
+  "excess_cognition": {
+    "a1_mean_excess_steps_proxy": 1.5296,
+    "m3_acted_on_unresolved": 5,
+    "m3_mean_excess_steps": 0.1156,
+    "m3_never_sufficient": 6,
+    "per_category": {
+      "conflict_unresolved": {
+        "m3_success": 30,
+        "max_excess": 2,
+        "mean_excess": 1.13,
+        "n": 30,
+        "never_sufficient": 0
+      },
+      "early_false_ready": {
+        "m3_success": 30,
+        "max_excess": 0,
+        "mean_excess": 0.0,
+        "n": 30,
+        "never_sufficient": 0
+      },
+      "late_resolution": {
+        "m3_success": 30,
+        "max_excess": 0,
+        "mean_excess": 0.0,
+        "n": 30,
+        "never_sufficient": 0
+      },
+      "multi_hypothesis_ambiguity": {
+        "m3_success": 30,
+        "max_excess": 0,
+        "mean_excess": 0.0,
+        "n": 30,
+        "never_sufficient": 0
+      },
+      "noise_evidence": {
+        "m3_success": 30,
+        "max_excess": 0,
+        "mean_excess": 0.0,
+        "n": 30,
+        "never_sufficient": 5
+      },
+      "single_verify_ready": {
+        "m3_success": 30,
+        "max_excess": 0,
+        "mean_excess": 0.0,
+        "n": 30,
+        "never_sufficient": 0
+      },
+      "stale_support": {
+        "m3_success": 30,
+        "max_excess": 0,
+        "mean_excess": 0.0,
+        "n": 30,
+        "never_sufficient": 0
+      },
+      "three_hypothesis": {
+        "m3_success": 30,
+        "max_excess": 0,
+        "mean_excess": 0.0,
+        "n": 30,
+        "never_sufficient": 0
+      },
+      "triple_verify_ready": {
+        "m3_success": 30,
+        "max_excess": 0,
+        "mean_excess": 0.0,
+        "n": 30,
+        "never_sufficient": 0
+      },
+      "varying_visible_split": {
+        "m3_success": 29,
+        "max_excess": 0,
+        "mean_excess": 0.0,
+        "n": 30,
+        "never_sufficient": 1
+      }
+    }
+  },
+  "low_value_continuations": [
+    {
+      "action": "RETRIEVE",
+      "interpretation": "RETRIEVE in NEEDS_DISCRIMINATION changes state only 0.0% of the time",
+      "n": 150,
+      "p_change": 0.0,
+      "state": "NEEDS_DISCRIMINATION"
+    },
+    {
+      "action": "SEARCH_MORE",
+      "interpretation": "SEARCH_MORE in NEEDS_DISCRIMINATION changes state only 0.0% of the time",
+      "n": 30,
+      "p_change": 0.0,
+      "state": "NEEDS_DISCRIMINATION"
+    },
+    {
+      "action": "RETRIEVE",
+      "interpretation": "RETRIEVE in SUPPORTED_BUT_UNRESOLVED changes state only 0.0% of the time",
+      "n": 448,
+      "p_change": 0.0,
+      "state": "SUPPORTED_BUT_UNRESOLVED"
+    },
+    {
+      "action": "SEARCH_MORE",
+      "interpretation": "SEARCH_MORE in SUPPORTED_BUT_UNRESOLVED changes state only 0.0% of the time",
+      "n": 89,
+      "p_change": 0.0,
+      "state": "SUPPORTED_BUT_UNRESOLVED"
+    },
+    {
+      "action": "SEARCH_MORE",
+      "interpretation": "SEARCH_MORE in INSUFFICIENT changes state only 0.0% of the time",
+      "n": 34,
+      "p_change": 0.0,
+      "state": "INSUFFICIENT"
+    },
+    {
+      "action": "RETRIEVE",
+      "interpretation": "RETRIEVE in NEEDS_EVIDENCE changes state only 16.7% of the time",
+      "n": 180,
+      "p_change": 0.1667,
+      "state": "NEEDS_EVIDENCE"
+    }
+  ],
+  "n_tasks": 300,
+  "schema": "DAPH_V2B_I3_10A_FORENSIC_V1",
+  "source": "i3_9_r3_affordance_clean/affordance_clean_v1.jsonl",
+  "state_action_matrix": {
+    "INSUFFICIENT": {
+      "DEFER": {
+        "count": 30,
+        "state_changed": 0,
+        "state_same": 0
+      },
+      "SEARCH_MORE": {
+        "count": 34,
+        "state_changed": 0,
+        "state_same": 34
+      }
+    },
+    "NEEDS_DISCRIMINATION": {
+      "RETRIEVE": {
+        "count": 150,
+        "state_changed": 0,
+        "state_same": 150
+      },
+      "SEARCH_MORE": {
+        "count": 30,
+        "state_changed": 0,
+        "state_same": 30
+      },
+      "VERIFY": {
+        "count": 450,
+        "state_changed": 390,
+        "state_same": 60
+      }
+    },
+    "NEEDS_EVIDENCE": {
+      "RETRIEVE": {
+        "count": 180,
+        "state_changed": 30,
+        "state_same": 150
+      },
+      "SEARCH_MORE": {
+        "count": 30,
+        "state_changed": 30,
+        "state_same": 0
+      }
+    },
+    "READY_TO_ANSWER": {
+      "ANSWER": {
+        "count": 264,
+        "state_changed": 0,
+        "state_same": 0
+      }
+    },
+    "SUPPORTED_BUT_UNRESOLVED": {
+      "ANSWER": {
+        "count": 5,
+        "state_changed": 0,
+        "state_same": 0
+      },
+      "DEFER": {
+        "count": 1,
+        "state_changed": 0,
+        "state_same": 0
+      },
+      "RETRIEVE": {
+        "count": 448,
+        "state_changed": 0,
+        "state_same": 448
+      },
+      "SEARCH_MORE": {
+        "count": 89,
+        "state_changed": 0,
+        "state_same": 89
+      },
+      "VERIFY": {
+        "count": 469,
+        "state_changed": 264,
+        "state_same": 205
+      }
+    }
+  },
+  "state_change_probabilities": {
+    "INSUFFICIENT": {
+      "DEFER": {
+        "changed": 0,
+        "n": 0,
+        "p_change": null,
+        "p_same": null,
+        "same": 0
+      },
+      "SEARCH_MORE": {
+        "changed": 0,
+        "n": 34,
+        "p_change": 0.0,
+        "p_same": 1.0,
+        "same": 34
+      }
+    },
+    "NEEDS_DISCRIMINATION": {
+      "RETRIEVE": {
+        "changed": 0,
+        "n": 150,
+        "p_change": 0.0,
+        "p_same": 1.0,
+        "same": 150
+      },
+      "SEARCH_MORE": {
+        "changed": 0,
+        "n": 30,
+        "p_change": 0.0,
+        "p_same": 1.0,
+        "same": 30
+      },
+      "VERIFY": {
+        "changed": 390,
+        "n": 450,
+        "p_change": 0.8667,
+        "p_same": 0.1333,
+        "same": 60
+      }
+    },
+    "NEEDS_EVIDENCE": {
+      "RETRIEVE": {
+        "changed": 30,
+        "n": 180,
+        "p_change": 0.1667,
+        "p_same": 0.8333,
+        "same": 150
+      },
+      "SEARCH_MORE": {
+        "changed": 30,
+        "n": 30,
+        "p_change": 1.0,
+        "p_same": 0.0,
+        "same": 0
+      }
+    },
+    "READY_TO_ANSWER": {
+      "ANSWER": {
+        "changed": 0,
+        "n": 0,
+        "p_change": null,
+        "p_same": null,
+        "same": 0
+      }
+    },
+    "SUPPORTED_BUT_UNRESOLVED": {
+      "ANSWER": {
+        "changed": 0,
+        "n": 0,
+        "p_change": null,
+        "p_same": null,
+        "same": 0
+      },
+      "DEFER": {
+        "changed": 0,
+        "n": 0,
+        "p_change": null,
+        "p_same": null,
+        "same": 0
+      },
+      "RETRIEVE": {
+        "changed": 0,
+        "n": 448,
+        "p_change": 0.0,
+        "p_same": 1.0,
+        "same": 448
+      },
+      "SEARCH_MORE": {
+        "changed": 0,
+        "n": 89,
+        "p_change": 0.0,
+        "p_same": 1.0,
+        "same": 89
+      },
+      "VERIFY": {
+        "changed": 264,
+        "n": 469,
+        "p_change": 0.5629,
+        "p_same": 0.4371,
+        "same": 205
+      }
+    }
+  },
+  "state_dwell_stats": {
+    "INSUFFICIENT": {
+      "max_dwell": 3,
+      "mean_dwell": 2.13,
+      "n_episodes": 30
+    },
+    "NEEDS_DISCRIMINATION": {
+      "max_dwell": 7,
+      "mean_dwell": 1.62,
+      "n_episodes": 390
+    },
+    "NEEDS_EVIDENCE": {
+      "max_dwell": 6,
+      "mean_dwell": 3.5,
+      "n_episodes": 60
+    },
+    "READY_TO_ANSWER": {
+      "max_dwell": 1,
+      "mean_dwell": 1.0,
+      "n_episodes": 264
+    },
+    "SUPPORTED_BUT_UNRESOLVED": {
+      "max_dwell": 9,
+      "mean_dwell": 3.75,
+      "n_episodes": 270
+    }
+  }
+}
