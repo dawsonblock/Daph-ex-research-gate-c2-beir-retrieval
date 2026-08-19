@@ -1,0 +1,66 @@
+{
+  "schema": "DAPH_V2B_I3_10B_FREEZE_V1",
+  "commit": "34d4f87",
+  "classification": "DEVELOPMENT NEGATIVE / NON-PROMOTION",
+  "freeze_integrity": {
+    "frozen_hypotheses": true,
+    "frozen_m4_treatments": true,
+    "exact_pre_run_executable_corpus_builder": false,
+    "note": "The frozen runner at 8c1ebbf called generate_structural_ood_tasks with an unsupported category_filter argument. The repair switched to pool-and-filter by task.category. This did not alter the frozen claim hierarchy or M4 treatment definitions, but the exact executable corpus builder was not immutable pre-run. I3.10b is therefore not a high-grade confirmatory falsification — it is a development negative sufficient to reject M4a/M4b under the development decision rule."
+  },
+  "freeze_wording": "Neither M4a nor M4b satisfied the pre-specified promotion rule. M4a produced small directional efficiency improvements but no statistically reliable utility gain over M3. M3 remains the best validated MDSG treatment. The fresh efficiency corpus additionally shows that M3's advantage is distribution-dependent, motivating selective representation routing rather than further expansion of the MDSG state.",
+  "m4a_directional_signal": {
+    "utility_delta": "+1.11",
+    "ci": [-0.23, 2.56],
+    "steps": "3.98 < 4.20",
+    "redundant_rate": "0.579 < 0.602",
+    "interpretation": "M4a moves in the intended direction but does not satisfy the frozen promotion criterion. This is NOT proof that state representation cannot solve the efficiency problem — it is evidence that the tested state representations did not demonstrate a statistically reliable improvement on this corpus."
+  },
+  "corpus_effect": {
+    "v5": {"A1": "270/300", "M3": "299/300"},
+    "efficiency_dev": {"A1": "182/300", "M3": "180/300"},
+    "interpretation": "M3's value is strongly task-distribution dependent. When baseline policy already handles a task family efficiently, the extra state representation can be neutral or costly. When the base model cannot recognize conflict resolution or decision sufficiency, MDSG can be extremely valuable.",
+    "implication": "MDSG value depends on whether epistemic-state compression is actually the model's bottleneck."
+  },
+  "what_is_not_claimed": [
+    "The batch-retrieval pathology is not addressable by additional state representation alone",
+    "State representation cannot solve the efficiency problem",
+    "This is a high-grade confirmatory falsification"
+  ],
+  "what_is_claimed": "The tested state representations did not demonstrate a statistically reliable utility improvement over M3 on this fresh efficiency corpus. M4a shows a small positive efficiency signal, but it did not satisfy the frozen promotion criterion.",
+  "next_phase": {
+    "id": "I3.11",
+    "name": "Selective MDSG Routing",
+    "question": "Can we identify when M3 should be enabled?",
+    "approach": "Preserve M3 exactly. Learn/determine an activation condition for when MDSG representation is likely to help. Not an action gate, not a governor-action selector — a representation-routing gate.",
+    "architecture": "Observable task/state -> MDSG applicability gate -> OFF (A1 packet) or ON (M3 packet)",
+    "target": "Use MDSG only when epistemic-state compression has expected value",
+    "first_step": "Offline applicability analysis across both corpora (v5 + efficiency-dev) to find controller-visible predictors of M3 value",
+    "predictors_to_examine": [
+      "epistemic state",
+      "number of live hypotheses",
+      "verified support count",
+      "verified contradiction count",
+      "unverified visible count",
+      "hidden evidence count",
+      "can_retrieve/search/verify",
+      "prior action counts",
+      "resource remaining",
+      "task structural category (analysis only, not runtime)"
+    ],
+    "quantities_to_estimate": [
+      "P(U_M3 > U_A1 | x)",
+      "E[U_M3 - U_A1 | x]"
+    ],
+    "expected_boundary": "MDSG useful: conflict/ambiguity/stopping-recognition bottleneck. MDSG unnecessary: straightforward evidence acquisition / already-efficient baseline."
+  },
+  "progression_summary": {
+    "action_governor": "harmful",
+    "execution_scaffold": "mostly changes failure mode",
+    "resolution_context": "too intrusive",
+    "minimal_decision_state": "genuine benefit",
+    "m3_state_plus_affordances": "strong OOD benefit, but task-dependent overhead",
+    "m4_richer_state": "no reliable improvement",
+    "next": "selective deployment of the validated state abstraction"
+  }
+}
