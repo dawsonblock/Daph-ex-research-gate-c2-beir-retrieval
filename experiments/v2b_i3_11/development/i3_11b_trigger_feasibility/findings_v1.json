@@ -15,6 +15,8 @@
     "T2_all_eliminated": {
       "coverage": 1.0,
       "false_activation": 0.0,
+      "useful_activation_precision": 0.9778,
+      "useful_activation_explanation": "88 of 90 T2 activations are M3 rescue opportunities. The remaining 2 are tasks where both A1 and M3 fail (non-beneficial activations, not false activations under the A1-success denominator).",
       "median_latency": 2,
       "missed_rescues": 0,
       "description": "All hypotheses eliminated by visible verified evidence. Fires at step 2 (after both E1 and E2 are verified, both hypotheses eliminated by contradictions).",
@@ -28,18 +30,23 @@
     }
   },
   "recommended_trigger": "T2 (all hypotheses eliminated by visible verified evidence)",
+  "offline_result_caveat": "T2 identifies all 88 tasks on which always-M3 rescued A1 in the I3.11a corpus. This does not yet prove R1 will rescue all 88, because R1 reaches T2 after following the A1 prefix, whereas always-M3 followed an M3 trajectory from step 0. I3.11c tests the hybrid trajectory directly.",
+  "trigger_terminology": "T2 is an observed-state phase transition detector, not a predictor of conflict/DEFER likelihood. That is precisely why it is better than static routing.",
   "r1_design": {
     "name": "R1 — Epistemic-Conflict Router (T2 variant)",
     "rule": "A1 until all hypotheses eliminated by visible verified evidence, then M3",
-    "trigger": "T2: all_hypotheses_eliminated == True",
+    "trigger": "T2: all_hypotheses_eliminated == True (latched, permanent switch)",
     "trigger_input": ["eliminated_hypotheses count == n_hypotheses", "n_hypotheses > 0"],
     "trigger_source": "M3's frozen state estimator runs internally on controller-visible snapshot. Only the trigger condition is checked — M3 context is not exposed to LLM until trigger fires.",
+    "trigger_computation_safety": "T2 computation is observation-safe. M3's viability classifier only reads snapshot.hypotheses and snapshot.visible_evidence; a hypothesis becomes ELIMINATED when visible verified SUFFICIENT evidence contradicts it. It does not inspect hidden truth or future outcomes.",
     "does_not_predict": "hidden truth, future verification outcomes, task category, expected terminal",
     "responds_to": "observed verified epistemic structure — specifically, all hypotheses being eliminated by verified contradictions",
     "phase_switch": "acquisition representation (A1) → epistemic resolution representation (M3) when verified evidence eliminates all hypotheses",
+    "latching": "R1 starts A1. First T2 activation permanently switches the trajectory to M3. No switching back.",
     "why_not_T1": "T1 (INSUFFICIENT) misses 13/88 rescues because A1's post-elimination retrieval of noise evidence changes the state label to NEEDS_EVIDENCE. T2 checks the structural condition directly.",
     "why_not_T3": "T3 has 16.67% false activation — bilateral verified support also occurs on answerable tasks like triple_verify_ready."
   },
   "architectural_hypothesis": "MDSG does not need a task-level applicability predictor. Use the ordinary representation during evidence acquisition and activate MDSG when verified evidence enters an epistemically difficult resolution state (all hypotheses eliminated). This turns selective routing from task classification into phase switching.",
-  "next_step": "I3.11c: fresh decorrelated corpus with A1/M3/R1 (T2 trigger). Must include cases where all hypotheses are eliminated but the task is still answerable (adversarial: verified bilateral conflict that later resolves to ANSWER)."
+  "epistemic_algebra_constraint": "Under the current MDSG viability classifier, once a hypothesis has a visible verified SUFFICIENT contradiction, later adding more support does not revive it (contradiction dominates support). Therefore 'all hypotheses eliminated but later ANSWER is correct' is not naturally representable without new mechanisms (evidence retraction, supersession, reliability revision). I3.11c will NOT modify the benchmark semantics to create this case.",
+  "next_step": "I3.11c: fresh decorrelated corpus under current epistemic algebra with A1/M3/R1 (T2 trigger). Must include all-eliminated states with irrelevant hidden evidence remaining (tests why T2 > T1)."
 }

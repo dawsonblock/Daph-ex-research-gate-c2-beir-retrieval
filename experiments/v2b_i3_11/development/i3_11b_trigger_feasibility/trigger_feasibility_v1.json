@@ -7,8 +7,11 @@
     "does_not_predict": "hidden truth, future verification outcomes, task category",
     "key_insight": "M3's state estimator runs internally on controller-visible snapshot without exposing M3 context to LLM. Representation changes only when observed verified evidence justifies it.",
     "name": "R1 \u2014 Epistemic-Conflict Router",
+    "offline_result_caveat": "T2 identifies all 88 tasks on which always-M3 rescued A1 in the I3.11a corpus. This does not yet prove R1 will rescue all 88, because R1 reaches T2 after following the A1 prefix, whereas always-M3 followed an M3 trajectory from step 0. I3.11c tests the hybrid trajectory directly.",
     "responds_to": "observed verified epistemic structure",
-    "rule": "A1 until T1 fires (INSUFFICIENT), then M3"
+    "rule": "A1 until T2 fires (all_hypotheses_eliminated), then M3",
+    "trigger": "T2: all_hypotheses_eliminated == True (latched, permanent switch)",
+    "trigger_terminology": "T2 is an observed-state phase transition detector, not a predictor of conflict/DEFER likelihood."
   },
   "schema": "DAPH_V2B_I3_11B_TRIGGER_FEASIBILITY_V1",
   "source": "I3.11a routing stress trajectories (A1 replays with M3 state computed internally)",
@@ -94,19 +97,23 @@
         5,
         5
       ],
-      "trigger_fires_total": 77
+      "trigger_fires_total": 77,
+      "useful_activation_precision": 0.974
     },
     "T2_all_eliminated": {
       "coverage": 1.0,
       "description": "all hypotheses eliminated by visible verified evidence",
       "false_activation": 0.0,
-      "trigger_fires_total": 90
+      "trigger_fires_total": 90,
+      "useful_activation_explanation": "88 of 90 T2 activations are M3 rescue opportunities. The remaining 2 are tasks where both A1 and M3 fail (non-beneficial activations, not false activations under the A1-success denominator).",
+      "useful_activation_precision": 0.9778
     },
     "T3_bilateral_verified_no_unverified": {
       "coverage": 1.0,
       "description": "verified mutually incompatible evidence AND no visible unverified discriminator",
       "false_activation": 0.1667,
-      "trigger_fires_total": 120
+      "trigger_fires_total": 120,
+      "useful_activation_precision": 0.7333
     }
   }
 }
