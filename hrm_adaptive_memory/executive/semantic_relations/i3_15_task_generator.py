@@ -143,8 +143,13 @@ def _gen_easy_task(
     passages: list[I3_15Passage],
     rng: random.Random,
     retrieval_hard: bool,
+    task_index: int = 0,
 ) -> SemanticTask:
-    """EpistemicEasy: single passage directly states the answer."""
+    """EpistemicEasy: single passage directly states the answer.
+
+    Balanced 50/50 between SUPPORT (ANSWER expected) and CONTRADICT (DEFER expected).
+    Uses task_index parity to guarantee exact balance rather than relying on RNG.
+    """
     subject = DOMAIN_SUBJECTS.get(domain, domain)
     h = _make_hyps(subject)
 
@@ -153,7 +158,24 @@ def _gen_easy_task(
     if not domain_passages:
         domain_passages = passages
 
-    p1 = rng.choice(domain_passages)
+    # Split into support and contradict, pick based on task_index parity
+    support_passages = [p for p in domain_passages if p.gold_relation == "SUPPORT"]
+    contradict_passages = [p for p in domain_passages if p.gold_relation == "CONTRADICT"]
+
+    # Fallback to any domain if this domain lacks one type
+    if not support_passages:
+        support_passages = [p for p in passages if p.gold_relation == "SUPPORT"]
+    if not contradict_passages:
+        contradict_passages = [p for p in passages if p.gold_relation == "CONTRADICT"]
+
+    # Alternate: even index -> SUPPORT, odd index -> CONTRADICT
+    if task_index % 2 == 0 and support_passages:
+        p1 = rng.choice(support_passages)
+    elif contradict_passages:
+        p1 = rng.choice(contradict_passages)
+    else:
+        p1 = rng.choice(domain_passages)
+
     is_support = p1.gold_relation == "SUPPORT"
     expected = DecisionAction.ANSWER if is_support else DecisionAction.DEFER
     correct = "H1" if is_support else "H2"
@@ -183,11 +205,15 @@ def _gen_medium_task(
     passages: list[I3_15Passage],
     rng: random.Random,
     retrieval_hard: bool,
+    task_index: int = 0,
 ) -> SemanticTask:
     """EpistemicMedium: temporal supersession or authority conflict.
 
     Two passages from the same domain with conflicting status. The more
     recent or more authoritative passage determines the answer.
+
+    Balanced 50/50 between ANSWER-expected (support is more recent) and
+    DEFER-expected (contradict is more recent) outcomes.
     """
     subject = DOMAIN_SUBJECTS.get(domain, domain)
     h = _make_hyps(subject)
@@ -209,18 +235,53 @@ def _gen_medium_task(
                 h = _make_hyps(subject)
                 break
 
-    p1 = rng.choice(contradict)  # Earlier: not operational
-    p2 = rng.choice(support)     # Later: operational
+    # Alternate: even index -> support is more recent (ANSWER),
+    #            odd index  -> contradict is more recent (DEFER)
+    if task_index % 2 == 0:
+        # Support should be more recent -> pick support with later timestamp
+        p_support = rng.choice(support)
+        p_contradict = rng.choice(contradict)
+        # Ensure support is more recent; if not, swap selection
+        if p_support.timestamp < p_contradict.timestamp:
+            # Find a support passage that is more recent
+            later_support = [p for p in support if p.timestamp >= p_contradict.timestamp]
+            if later_support:
+                p_support = rng.choice(later_support)
+            else:
+                # No later support — just use what we have, answer will be DEFER
+                pass
+        p1 = p_contradict  # earlier
+        p2 = p_support     # later
+    else:
+        # Contradict should be more recent -> pick contradict with later timestamp
+        p_support = rng.choice(support)
+        p_contradict = rng.choice(contradict)
+        # Ensure contradict is more recent
+        if p_contradict.timestamp < p_support.timestamp:
+            later_contradict = [p for p in contradict if p.timestamp >= p_support.timestamp]
+            if later_contradict:
+                p_contradict = rng.choice(later_contradict)
+            else:
+                # No later contradict — just use what we have, answer will be ANSWER
+                pass
+        p1 = p_support      # earlier
+        p2 = p_contradict   # later
 
     # The answer depends on which is more recent
-    # If support is more recent -> ANSWER (H1)
-    # If contradict is more recent -> DEFER (H2)
     if p2.timestamp >= p1.timestamp:
-        expected = DecisionAction.ANSWER
-        correct = "H1"
+        if p2.gold_relation == "SUPPORT":
+            expected = DecisionAction.ANSWER
+            correct = "H1"
+        else:
+            expected = DecisionAction.DEFER
+            correct = "H2"
     else:
-        expected = DecisionAction.DEFER
-        correct = "H2"
+        if p1.gold_relation == "SUPPORT":
+            expected = DecisionAction.ANSWER
+            correct = "H1"
+        else:
+            expected = DecisionAction.DEFER
+            correct = "H2"
 
     ev = (
         _passage_to_evidence(p1, "E1", retrieved=True),
@@ -250,45 +311,58 @@ def _gen_hard_task(
     passages: list[I3_15Passage],
     rng: random.Random,
     retrieval_hard: bool,
+    task_index: int = 0,
 ) -> SemanticTask:
     """EpistemicHard: multi-step reasoning chain.
 
     A chain of 3 passages where the final state depends on all prior steps.
     The answer is determined by the last passage in the chain.
+
+    Balanced 50/50 between chains resolving to SUPPORT (operational) and
+    chains resolving to CONTRADICT (non-operational).
     """
     subject = DOMAIN_SUBJECTS.get(domain, domain)
     h = _make_hyps(subject)
 
-    # Find a chain from this domain
-    domain_chains = []
+    # Find chain endings (passages with depends_on that are the last in their chain)
+    # A chain ending is a passage that is not depended on by any other passage
+    all_by_id = {p.passage_id: p for p in passages}
+    depended_on = set()
     for p in passages:
-        if p.domain == domain and p.depends_on:
-            # This is part of a chain
-            domain_chains.append(p)
+        depended_on.update(p.depends_on)
 
-    if not domain_chains:
-        # Find any chain
-        for d in set(p.domain for p in passages if p.depends_on):
-            domain_chains = [p for p in passages if p.domain == d and p.depends_on]
+    chain_endings = [p for p in passages if p.depends_on and p.passage_id not in depended_on]
+
+    # Find chain endings from this domain
+    domain_endings = [p for p in chain_endings if p.domain == domain]
+
+    if not domain_endings:
+        # Find any domain with chain endings
+        for d in set(p.domain for p in chain_endings):
+            domain_endings = [p for p in chain_endings if p.domain == d]
             subject = DOMAIN_SUBJECTS.get(d, d)
             h = _make_hyps(subject)
             break
 
-    if not domain_chains:
+    if not domain_endings:
         # Fallback: use easy passage
-        return _gen_easy_task(task_id, domain, passages, rng, retrieval_hard)
+        return _gen_easy_task(task_id, domain, passages, rng, retrieval_hard, task_index)
 
-    # Find the final passage in a chain (SUPPORT = chain resolves to operational)
-    final_passages = [p for p in domain_chains if p.gold_relation == "SUPPORT"]
-    if not final_passages:
-        final_passages = domain_chains
+    # Split endings by gold relation
+    support_endings = [p for p in domain_endings if p.gold_relation == "SUPPORT"]
+    contradict_endings = [p for p in domain_endings if p.gold_relation == "CONTRADICT"]
 
-    final = rng.choice(final_passages)
+    # Alternate: even index -> SUPPORT chain, odd index -> CONTRADICT chain
+    if task_index % 2 == 0 and support_endings:
+        final = rng.choice(support_endings)
+    elif contradict_endings:
+        final = rng.choice(contradict_endings)
+    elif support_endings:
+        final = rng.choice(support_endings)
+    else:
+        final = rng.choice(domain_endings)
 
     # Reconstruct the chain by following depends_on
-    chain = []
-    all_by_id = {p.passage_id: p for p in passages}
-
     def _find_chain(p):
         result = []
         for dep_id in p.depends_on:
@@ -356,6 +430,9 @@ def generate_i3_15_corpus(
 
     2x3 matrix: RetrievalEasy/Hard x EpistemicEasy/Medium/Hard
     = 6 cells x n_per_cell tasks
+
+    Within each cell, task_index parity guarantees 50/50 split between
+    ANSWER-expected (SUPPORT) and DEFER-expected (CONTRADICT) outcomes.
     """
     rng = random.Random(seed)
     corpus = get_corpus()
@@ -370,7 +447,8 @@ def generate_i3_15_corpus(
                 domain = domains[task_idx % len(domains)]
                 task_id = f"i3_15_{task_idx:04d}"
                 gen = GENERATORS[epistemic]
-                task = gen(task_id, domain, corpus, rng, retrieval_hard)
+                task = gen(task_id, domain, corpus, rng, retrieval_hard,
+                           task_index=i)
                 tasks.append(task)
                 task_idx += 1
 

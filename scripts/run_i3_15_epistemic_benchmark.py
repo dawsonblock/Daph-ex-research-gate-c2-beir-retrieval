@@ -63,7 +63,7 @@ from hrm_adaptive_memory.executive.resources import ResourceBudget
 
 RETRIEVAL_LEVELS = ["Q0_BM25", "Q3_RERANKED", "Q4_ORACLE"]
 ARMS = ["A1_INFERRED", "R1_INFERRED"]
-TOP_K = 10
+TOP_K = 15
 
 
 def build_corpus_index(corpus_passages):

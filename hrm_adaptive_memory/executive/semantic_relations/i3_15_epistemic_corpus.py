@@ -130,6 +130,51 @@ MEDIUM_PASSAGES: list[I3_15Passage] = [
     # --- Load balancer authority ---
     I3_15Passage("M021", "The load balancer health check endpoint reports all targets as healthy.", "health_check", "load_balancer", "2024-06-06T11:00Z", "SUPPORT"),
     I3_15Passage("M022", "The load balancer health check was probing a deprecated endpoint that always returns 200. Two backend servers are actually unhealthy and returning 502 errors.", "config_audit", "load_balancer", "2024-06-06T11:15Z", "CONTRADICT"),
+
+    # ====================================================================
+    # Medium pairs where CONTRADICT is more recent (service goes down)
+    # Needed to balance medium tasks so not all resolve to ANSWER
+    # ====================================================================
+
+    # --- API Gateway: operational then degraded ---
+    I3_15Passage("M023", "The API gateway was operating normally at 06:00 UTC. All endpoints were responding within normal parameters.", "status_report", "api_gateway", "2024-06-05T06:00Z", "SUPPORT"),
+    I3_15Passage("M024", "The API gateway started returning 502 errors at 08:00 UTC. The API gateway is degraded and not fully operational.", "incident_report", "api_gateway", "2024-06-05T08:00Z", "CONTRADICT"),
+
+    # --- Database: operational then connection issues ---
+    I3_15Passage("M025", "The database was operational at 10:00 UTC with all replication in sync.", "status_report", "database", "2024-06-06T10:00Z", "SUPPORT"),
+    I3_15Passage("M026", "The database started rejecting new connections at 11:30 UTC due to connection pool exhaustion. The database is not operational.", "incident_report", "database", "2024-06-06T11:30Z", "CONTRADICT"),
+
+    # --- CDN: operational then edge failure ---
+    I3_15Passage("M027", "The CDN was fully operational at 14:00 UTC with all edge nodes healthy.", "status_report", "cdn", "2024-06-07T14:00Z", "SUPPORT"),
+    I3_15Passage("M028", "A CDN edge node in the US-East region went down at 15:00 UTC. The CDN is not fully operational for US-East traffic.", "incident_report", "cdn", "2024-06-07T15:00Z", "CONTRADICT"),
+
+    # --- Kubernetes: operational then node failure ---
+    I3_15Passage("M029", "The Kubernetes cluster was fully operational at 09:00 UTC. All nodes were Ready.", "status_report", "kubernetes", "2024-06-08T09:00Z", "SUPPORT"),
+    I3_15Passage("M030", "Two Kubernetes worker nodes went NotReady at 10:30 UTC after a disk failure. The Kubernetes cluster is not fully operational.", "incident_report", "kubernetes", "2024-06-08T10:30Z", "CONTRADICT"),
+
+    # --- Security: confirmed then new threat ---
+    I3_15Passage("M031", "The security posture was confirmed at 12:00 UTC. All vulnerabilities had been patched.", "security_status", "security", "2024-06-09T12:00Z", "SUPPORT"),
+    I3_15Passage("M032", "A new security threat was detected at 14:00 UTC. The security posture is not confirmed while the threat is investigated.", "security_alert", "security", "2024-06-09T14:00Z", "CONTRADICT"),
+
+    # --- Deployment: operational then crash ---
+    I3_15Passage("M033", "The deployment of version 2.6 was operational at 16:00 UTC. All health checks passed.", "deployment_report", "deployment", "2024-06-10T16:00Z", "SUPPORT"),
+    I3_15Passage("M034", "The deployment crashed at 17:00 UTC due to an unhandled exception. The deployment is not operational.", "crash_report", "deployment", "2024-06-10T17:00Z", "CONTRADICT"),
+
+    # --- Monitoring: operational then agent failure ---
+    I3_15Passage("M035", "The monitoring system was operational at 08:00 UTC. All dashboards were updating.", "monitoring_status", "monitoring", "2024-06-11T08:00Z", "SUPPORT"),
+    I3_15Passage("M036", "The monitoring agent stopped sending data at 09:00 UTC. The monitoring system is not operational.", "monitoring_incident", "monitoring", "2024-06-11T09:00Z", "CONTRADICT"),
+
+    # --- Cache: operational then memory pressure ---
+    I3_15Passage("M037", "The Redis cache was operational at 11:00 UTC with normal memory usage.", "status_report", "cache", "2024-06-09T11:00Z", "SUPPORT"),
+    I3_15Passage("M038", "The Redis cache hit memory limits at 12:00 UTC and started evicting keys. The Redis cache is not fully operational.", "cache_incident", "cache", "2024-06-09T12:00Z", "CONTRADICT"),
+
+    # --- Message queue: operational then consumer failure ---
+    I3_15Passage("M039", "The message queue was operational at 13:00 UTC with zero backlog.", "status_report", "message_queue", "2024-06-08T13:00Z", "SUPPORT"),
+    I3_15Passage("M040", "The message queue consumer crashed at 14:00 UTC. The backlog is growing and the message queue is not fully operational.", "consumer_crash", "message_queue", "2024-06-08T14:00Z", "CONTRADICT"),
+
+    # --- Load balancer: operational then backend failure ---
+    I3_15Passage("M041", "The load balancer was operational at 10:00 UTC. All backend servers were healthy.", "status_report", "load_balancer", "2024-06-08T10:00Z", "SUPPORT"),
+    I3_15Passage("M042", "The load balancer marked three backend servers as unhealthy at 11:00 UTC. The load balancer is not fully operational.", "incident_report", "load_balancer", "2024-06-08T11:00Z", "CONTRADICT"),
 ]
 
 
@@ -178,6 +223,51 @@ HARD_PASSAGES: list[I3_15Passage] = [
     I3_15Passage("H022", "The primary Redis cache node failed at 14:00 UTC. The Redis cache failover to the replica has been initiated but is not yet complete.", "failover_notice", "cache", "2024-06-08T14:00Z", "CONTRADICT"),
     I3_15Passage("H023", "Redis cache failover completed at 14:05 UTC. The Redis cache replica is now the primary node. Cache data sync is in progress.", "failover_report", "cache", "2024-06-08T14:05Z", "CONDITIONAL", depends_on=("H022",)),
     I3_15Passage("H024", "Redis cache data sync completed at 14:20 UTC. The Redis cache is fully operational with the new primary node.", "sync_complete", "cache", "2024-06-08T14:20Z", "SUPPORT", depends_on=("H023",)),
+
+    # ====================================================================
+    # Chains that resolve to CONTRADICT (non-operational)
+    # Needed to balance the hard tasks so not all chains end in SUPPORT
+    # ====================================================================
+
+    # --- Chain 9: API Gateway restored -> regression -> not operational ---
+    I3_15Passage("H025", "The API gateway was restored to full service at 08:00 UTC after the earlier incident. All endpoints were responding normally.", "restoration_report", "api_gateway", "2024-06-05T08:00Z", "SUPPORT"),
+    I3_15Passage("H026", "The API gateway began experiencing elevated latency at 09:30 UTC. The API gateway error rate has increased to 5%.", "regression_report", "api_gateway", "2024-06-05T09:30Z", "CONTRADICT", depends_on=("H025",)),
+    I3_15Passage("H027", "The API gateway regression was traced to a configuration drift in the rate limiter. The API gateway is currently not operational while the configuration is reverted.", "incident_report", "api_gateway", "2024-06-05T10:00Z", "CONTRADICT", depends_on=("H026",)),
+
+    # --- Chain 10: Database restored -> corruption found -> not operational ---
+    I3_15Passage("H028", "The database was restored from backup at 12:00 UTC. The database appeared operational with all tables accessible.", "restoration_report", "database", "2024-06-06T12:00Z", "SUPPORT"),
+    I3_15Passage("H029", "The database consistency check detected foreign key violations in the restored data. The database integrity is compromised.", "consistency_report", "database", "2024-06-06T13:00Z", "CONTRADICT", depends_on=("H028",)),
+    I3_15Passage("H030", "The database has been taken offline to repair the corruption. The database is not operational until the repair is complete.", "repair_notice", "database", "2024-06-06T13:30Z", "CONTRADICT", depends_on=("H029",)),
+
+    # --- Chain 11: CDN propagation -> partial failure -> not operational ---
+    I3_15Passage("H031", "The CDN cache purge completed and fresh content was being served globally at 11:30 UTC. The CDN was operational.", "propagation_complete", "cdn", "2024-06-06T11:30Z", "SUPPORT"),
+    I3_15Passage("H032", "The CDN origin server experienced a hardware failure at 12:15 UTC. The CDN cannot fetch fresh content from the origin.", "origin_failure", "cdn", "2024-06-06T12:15Z", "CONTRADICT", depends_on=("H031",)),
+    I3_15Passage("H033", "The CDN is serving stale cached content as a fallback. The CDN is not fully operational because the origin server is down.", "stale_fallback", "cdn", "2024-06-06T12:30Z", "CONTRADICT", depends_on=("H032",)),
+
+    # --- Chain 12: Kubernetes upgrade -> node panic -> not operational ---
+    I3_15Passage("H034", "The Kubernetes cluster upgrade to v1.29 was completed at 04:00 UTC. All nodes were reporting Ready status.", "upgrade_complete", "kubernetes", "2024-06-07T04:00Z", "SUPPORT"),
+    I3_15Passage("H035", "Three Kubernetes worker nodes panicked after the upgrade due to a driver incompatibility. The nodes are in NotReady state.", "node_panic", "kubernetes", "2024-06-07T05:00Z", "CONTRADICT", depends_on=("H034",)),
+    I3_15Passage("H036", "The Kubernetes cluster has been cordoned. The Kubernetes cluster is not operational while the affected nodes are rolled back to v1.28.", "rollback_notice", "kubernetes", "2024-06-07T05:30Z", "CONTRADICT", depends_on=("H035",)),
+
+    # --- Chain 13: Security patched -> new vulnerability -> not operational ---
+    I3_15Passage("H037", "The security patch was applied and the payment module was restored at 08:00 UTC. The security posture was confirmed.", "security_resolution", "security", "2024-06-08T08:00Z", "SUPPORT"),
+    I3_15Passage("H038", "A new zero-day vulnerability was discovered in the same library at 10:00 UTC. The security posture is compromised again.", "zero_day_advisory", "security", "2024-06-08T10:00Z", "CONTRADICT", depends_on=("H037",)),
+    I3_15Passage("H039", "The security team has isolated the affected module. The security posture is not confirmed while the new vulnerability is being assessed.", "isolation_notice", "security", "2024-06-08T10:30Z", "CONTRADICT", depends_on=("H038",)),
+
+    # --- Chain 14: Deployment promoted -> traffic spike -> rollback -> not operational ---
+    I3_15Passage("H040", "The deployment of version 3.0 was promoted to 100% of traffic at 12:00 UTC. The deployment was operational.", "deployment_complete", "deployment", "2024-06-09T12:00Z", "SUPPORT"),
+    I3_15Passage("H041", "The deployment experienced a traffic spike that overwhelmed the new version. Error rates spiked to 15%.", "traffic_spike", "deployment", "2024-06-09T12:30Z", "CONTRADICT", depends_on=("H040",)),
+    I3_15Passage("H042", "The deployment has been rolled back to version 2.9. The deployment is not operational during the rollback transition.", "rollback_report", "deployment", "2024-06-09T13:00Z", "CONTRADICT", depends_on=("H041",)),
+
+    # --- Chain 15: Monitoring restored -> data gap -> not operational ---
+    I3_15Passage("H043", "The monitoring agent was restarted and data collection resumed at 07:00 UTC. The monitoring system was operational.", "monitoring_fix", "monitoring", "2024-06-10T07:00Z", "SUPPORT"),
+    I3_15Passage("H044", "The monitoring system detected a 6-hour data gap from the earlier outage. Alert thresholds cannot be evaluated accurately.", "data_gap_report", "monitoring", "2024-06-10T08:00Z", "CONTRADICT", depends_on=("H043",)),
+    I3_15Passage("H045", "The monitoring system has been placed in degraded mode. The monitoring system is not fully operational until the data gap is backfilled.", "degraded_notice", "monitoring", "2024-06-10T08:30Z", "CONTRADICT", depends_on=("H044",)),
+
+    # --- Chain 16: Cache sync -> split brain -> not operational ---
+    I3_15Passage("H046", "The Redis cache failover completed and data sync was initiated at 14:05 UTC. The Redis cache appeared operational.", "failover_report", "cache", "2024-06-08T14:05Z", "SUPPORT"),
+    I3_15Passage("H047", "The Redis cache experienced a split-brain condition during failover. Both nodes attempted to serve writes simultaneously.", "split_brain", "cache", "2024-06-08T14:30Z", "CONTRADICT", depends_on=("H046",)),
+    I3_15Passage("H048", "The Redis cache has been taken offline to resolve the split-brain condition. The Redis cache is not operational.", "offline_notice", "cache", "2024-06-08T15:00Z", "CONTRADICT", depends_on=("H047",)),
 ]
 
 

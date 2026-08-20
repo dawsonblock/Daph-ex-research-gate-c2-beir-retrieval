@@ -69,10 +69,10 @@
   },
 
   "frozen_retrieval": {
-    "Q0_BM25": "BM25 (k1=1.5, b=0.75, top_k=10)",
-    "Q3_RERANKED": "Hybrid BM25+BGE-small + gte-reranker (top_k=10, candidate_pool=20)",
+    "Q0_BM25": "BM25 (k1=1.5, b=0.75, top_k=15)",
+    "Q3_RERANKED": "Hybrid BM25+BGE-small + gte-reranker (top_k=15, candidate_pool=20)",
     "Q4_ORACLE": "oracle ceiling",
-    "note": "top_k=10 for I3.15 (was 5 in I3.14b). Multi-passage chains need more slots. This is a new frozen benchmark identity."
+    "note": "top_k=15 for I3.15 (was 5 in I3.14b, 10 in first I3.15 run). Multi-passage chains (3 passages) need more slots. This is a new frozen benchmark identity."
   },
 
   "experimental_arms": ["A1_INFERRED", "R1_INFERRED"],
