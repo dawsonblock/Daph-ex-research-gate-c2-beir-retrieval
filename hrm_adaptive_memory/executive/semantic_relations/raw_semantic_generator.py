@@ -142,6 +142,9 @@ class SemanticTask:
     """A task with both gold relations and the EvidenceTask."""
     evidence_task: EvidenceTask
     gold_relations: tuple[GoldRelation, ...]
+    # Optional fields for S2 stress corpus
+    tier: str = ""  # "S2-EASY", "S2-MEDIUM", "S2-HARD", or "" for S1
+    semantic_class: str = ""  # semantic phenomenon tag for S2
 
     @property
     def task_id(self) -> str:

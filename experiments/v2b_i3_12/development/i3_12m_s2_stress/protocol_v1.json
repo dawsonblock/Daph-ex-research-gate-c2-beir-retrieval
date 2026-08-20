@@ -1,0 +1,106 @@
+{
+  "protocol_id": "i3_12m_s2_stress_v1",
+  "frozen_at": "2025-01-27",
+  "frozen_from_branch": "i3.12-semantic-relation-ablation",
+  "scientific_question": "How much semantic noise can the metacognitive architecture tolerate before its value disappears?",
+  "extractor": {
+    "class": "DeterministicRelationExtractor",
+    "version": "2.6.0",
+    "sha256": "8df7e942b690b5c37ab38d951bc17c0600a196ce01bfa6745c203b91d5d384d9",
+    "frozen_as": "EXTRACTOR_V2_6_0_FROZEN",
+    "note": "Do NOT modify extractor after seeing S2 results. Any improvement becomes I3.13 v3 on a new corpus."
+  },
+  "corpus": {
+    "generator": "generate_s2_corpus",
+    "seed": 42,
+    "n_tasks": 450,
+    "n_tiers": 3,
+    "tier_config": {
+      "S2-EASY": {
+        "PARAPHRASE": 75,
+        "SIMPLE_NEGATION": 75
+      },
+      "S2-MEDIUM": {
+        "NEGATION_SCOPE": 30,
+        "TEMPORAL_SHIFT": 30,
+        "TEMPORAL_OVERRIDE": 30,
+        "IRRELEVANT_OVERLAP": 30,
+        "MULTI_SENTENCE_COMPOSITION": 30
+      },
+      "S2-HARD": {
+        "CONDITIONAL_SUPPORT": 30,
+        "PARTIAL_SUPPORT": 30,
+        "SOURCE_CONFLICT": 30,
+        "MULTI_HOP": 30,
+        "AMBIGUOUS": 30
+      }
+    },
+    "corpus_sha256": "18aa6fbe3c10ea06a89a67cc7aedea11ec71a00bfb1ba7c68d4982bb86b79724"
+  },
+  "qualification_gates": {
+    "S2-EASY": {
+      "threshold": 0.85,
+      "actual": 0.89,
+      "status": "PASS"
+    },
+    "S2-MEDIUM": {
+      "threshold": 0.6,
+      "actual": 0.62,
+      "status": "PASS"
+    },
+    "S2-HARD": {
+      "threshold": 0.5,
+      "actual": 0.6,
+      "status": "PASS"
+    }
+  },
+  "frozen_components": {
+    "MDSG": "unmodified from I3.11",
+    "T2": "unmodified from I3.11",
+    "R1": "unmodified from I3.11c",
+    "A1": "unmodified from I3.7e",
+    "prompts": "unmodified from I3.7e",
+    "utility": "unmodified (v2b_i3_1)",
+    "executor": "unmodified",
+    "decoder": "unmodified",
+    "backend": "unmodified",
+    "model_config": "unmodified (FROZEN_CONFIG: deepseek-v4-flash, temp=0)",
+    "extractor": "FROZEN as EXTRACTOR_V2_6_0_FROZEN"
+  },
+  "new_components": {
+    "s2_stress_generator": "new for I3.12m"
+  },
+  "experiment_design": {
+    "type": "3-tier stress test with 6-arm factorial",
+    "tiers": [
+      "S2-EASY",
+      "S2-MEDIUM",
+      "S2-HARD"
+    ],
+    "arms": [
+      "A1_GOLD",
+      "M3_GOLD",
+      "R1_GOLD",
+      "A1_INFERRED",
+      "M3_INFERRED",
+      "R1_INFERRED"
+    ],
+    "n_tasks": 450,
+    "n_trajectories": 2700,
+    "primary_criterion": "LCB_95(U_R1_INFERRED - U_A1_INFERRED) > 0",
+    "key_metric": "SemanticRobustnessGap_R1 = U_R1_GOLD - U_R1_INFERRED (by tier)",
+    "safety_metric": "FalseT2Rate < 5% for EASY and MEDIUM",
+    "causal_chain": "RelationError -> StateError -> T2Error -> RepresentationError -> TaskOutcome"
+  },
+  "identity_bundle": {
+    "s2_generator": "9a6a29c147edb112df955eb4b0449d012aa38dd2c6baee0ab329f7b9d0ea9f46",
+    "extractor": "b00e480af3be88a8ff17c7eeadaea1cf95848d40c19f563ad99bdbc813b78b2a",
+    "integration": "6361c1e91361a122b72c0f61060bd0c43522d1b321bef1692dd6258ae8ea19cd",
+    "i3_12j_runner": "7847c23da5196ee4ae38e46183d88aac5643d25afde26a561aae71c88ff4d356",
+    "a1_m3_runner": "7db842eb88a16ba0d1a10962ad3c61727f9cac6c07014f85e1a56d802e77a6a7",
+    "r1_router": "a33088bb9b5aa08fa43db4fcdca1b7a6604db08dd21e26019ab1a2244d15bb0f",
+    "model_backend": "5d28799258b9dfba2447066f4cac1396970d8591063b2c1586cc65949cbff3fa",
+    "generation_config": "31e21cbcd02e13eaede79a34261a279254406b38398dcecc5061b2c83d162d82",
+    "utility_config": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07"
+  }
+}
