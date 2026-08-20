@@ -1,0 +1,15 @@
+{
+  "schema": "DAPH_V2B_I3_11C_ERRATUM_V1",
+  "date": "2026-08-19",
+  "issue": "Between the frozen protocol commit 835588a and result commit 7cc68fb, scripts/run_i3_11c_r1_router.py changed by one executable line. The frozen version called gen_bilateral_one_falsified(...) while the defined function was gen_bilateral_one_side_falsified(...). The result version repaired that function name.",
+  "nature_of_change": "Mechanical NameError repair. Not a change to R1, T2, the claims, the corpus semantics, or the treatment specification.",
+  "classification": {
+    "frozen_hypotheses": true,
+    "frozen_R1_treatment": true,
+    "frozen_corpus_specification": true,
+    "exact_executable_implementation": false
+  },
+  "scientific_classification": "Strong pre-specified confirmation with a mechanical post-freeze executable repair, rather than pristine immutable-code confirmation.",
+  "impact_on_result": "None. The repaired function generates bilateral_one_falsified tasks exactly as specified in the protocol. The corpus composition, R1 implementation, T2 trigger, and all frozen claims are unchanged.",
+  "resolution": "I3.11d will use the exact repaired R1 executable byte-for-byte, commit its hashes before generating any results, and run on a fresh corpus with expanded structural variation."
+}
