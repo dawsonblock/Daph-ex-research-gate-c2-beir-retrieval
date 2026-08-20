@@ -1,0 +1,180 @@
+{
+  "analysis_id": "i3_12m_s2_corrected_analysis_v1",
+  "correction_reason": "Initial-snapshot T2 metrics were misdefined. Trajectory-level T2 metrics reveal false positives and false negatives that the initial-snapshot measurement missed.",
+  "n_tasks": 450,
+  "n_trajectories": 2700,
+
+  "correction_1_mds_state_accuracy": {
+    "claim": "MDSG state accuracy = 1.0 across all tiers",
+    "corrected_claim": "Initial-snapshot eliminated-hypothesis-set accuracy = 1.0 across all tiers",
+    "what_was_measured": [
+      "decision_state categorical label (e.g., NEEDS_DISCRIMINATION, INSUFFICIENT)",
+      "eliminated_hypotheses set"
+    ],
+    "what_was_NOT_measured": [
+      "verified_support counts",
+      "verified_contradictions counts",
+      "weakened_hypotheses set",
+      "untested_hypotheses set",
+      "evidence_status",
+      "remaining_blocker",
+      "action_affordances",
+      "Any MDSG packet fields after VERIFY actions during trajectory"
+    ],
+    "scope": "Initial snapshot only (before any VERIFY actions). At initial snapshot, no evidence is verified, so eliminated set is empty for both gold and inferred. The eliminated-set match is trivially true at initial snapshot for most tasks.",
+    "implication": "The claim 'MDSG state accuracy = 1.0' should not be interpreted as 'the complete MDSG packet is identical under gold and inferred relations.' It means only that the eliminated-hypothesis projection matches at the initial snapshot."
+  },
+
+  "correction_2_t2_metrics": {
+    "original_claim": "T2 precision = 1.0, recall = 1.0, false positive rate = 0.0 across all tiers",
+    "corrected_claim": "Initial-snapshot T2 metrics are trivially perfect because no evidence is verified at initial snapshot. Trajectory-level T2 metrics reveal measurable errors.",
+    "initial_snapshot_metrics": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_positive_rate": 0.0,
+      "note": "Misleading: at initial snapshot, T2 cannot fire because no evidence is verified yet."
+    },
+    "trajectory_level_metrics": {
+      "overall": {
+        "tp": 119,
+        "fp": 14,
+        "fn": 97,
+        "tn": 220,
+        "precision": 0.8947,
+        "recall": 0.5509,
+        "false_positive_rate": 0.0311
+      },
+      "per_tier": {
+        "S2-EASY": {
+          "tp": 55, "fp": 0, "fn": 15, "tn": 80,
+          "precision": 1.0,
+          "recall": 0.7857,
+          "false_positive_rate": 0.0,
+          "safety_gate_5pct": "PASS",
+          "safety_gate_10pct": "PASS"
+        },
+        "S2-MEDIUM": {
+          "tp": 39, "fp": 8, "fn": 35, "tn": 68,
+          "precision": 0.8298,
+          "recall": 0.5270,
+          "false_positive_rate": 0.0533,
+          "safety_gate_5pct": "FAIL",
+          "safety_gate_10pct": "PASS"
+        },
+        "S2-HARD": {
+          "tp": 25, "fp": 6, "fn": 47, "tn": 72,
+          "precision": 0.8065,
+          "recall": 0.3472,
+          "false_positive_rate": 0.0400,
+          "safety_gate_5pct": "PASS",
+          "safety_gate_10pct": "PASS"
+        }
+      }
+    },
+    "root_cause": "The initial-snapshot T2 metric checks whether all hypotheses are eliminated BEFORE any VERIFY actions. Since no evidence is verified at the start, no hypotheses can be eliminated, and T2 cannot fire. The trajectory-level T2 metric tracks whether R1 actually triggers T2 during the run, which can happen after VERIFY actions change the evidence state."
+  },
+
+  "correction_3_error_type_severity": {
+    "original_claim": "P(T2 false positive | any error type) = 0.0 - no error type triggers false T2",
+    "corrected_claim": "FALSE_CONTRADICTION is the sole cause of trajectory-level T2 false positives. The original analysis missed this because it measured T2 at the initial snapshot.",
+    "trajectory_t2_false_positives": {
+      "count": 14,
+      "caused_by": "FALSE_CONTRADICTION (13/14 pure, 1/14 mixed with MISSED_CONTRADICTION and MISSED_SUPPORT)",
+      "by_semantic_class": {
+        "NEGATION_SCOPE": 8,
+        "PARTIAL_SUPPORT": 6
+      },
+      "by_category": {
+        "s2-medium_simple_answer": 7,
+        "s2-hard_simple_answer": 4,
+        "s2-hard_noise_dominant": 2,
+        "s2-medium_noise_dominant": 1
+      },
+      "mechanism": "FALSE_CONTRADICTION edges cause incorrect hypothesis elimination after VERIFY. When enough hypotheses are falsely eliminated, T2 fires, R1 switches to M3, and M3 makes worse decisions than A1 would have."
+    },
+    "trajectory_t2_false_negatives": {
+      "count": 97,
+      "caused_by": "MISSED_CONTRADICTION (83) and MISSED_SUPPORT (83) primarily",
+      "impact": {
+        "r1_inferred_success": "0/97",
+        "r1_gold_success": "68/97",
+        "a1_inferred_success": "0/97",
+        "mean_utility": {
+          "a1_inferred": -127.09,
+          "r1_inferred": -127.16,
+          "r1_gold": 3.28
+        }
+      },
+      "mechanism": "MISSED_CONTRADICTION edges prevent hypothesis elimination. When gold relations would eliminate all hypotheses (triggering T2), inferred relations leave some viable. T2 doesn't fire, R1 stays in A1, and both A1 and R1 fail where R1_GOLD would have succeeded."
+    },
+    "severity_ordering_corrected": {
+      "for_t2_false_positive": "FALSE_CONTRADICTION >> all others (sole cause)",
+      "for_t2_false_negative": "MISSED_CONTRADICTION ≈ MISSED_SUPPORT >> FALSE_SUPPORT ≈ FALSE_CONTRADICTION",
+      "for_task_failure": "MISSED_SUPPORT ≈ MISSED_CONTRADICTION (0.58) > FALSE_CONTRADICTION ≈ FALSE_SUPPORT (0.35)",
+      "note": "The user's expected ordering was correct: FALSE_CONTRADICTION is the most dangerous error type for T2 false positives. The original analysis missed this entirely."
+    }
+  },
+
+  "correction_4_catastrophic_subgroup": {
+    "subgroup": "s2-medium_simple_answer",
+    "r1_inferred_success": 0.8158,
+    "a1_inferred_success": 1.0,
+    "r1_a1_delta_u": -24.54,
+    "root_cause": "7 of 38 tasks in this category have trajectory-level T2 false positives caused by FALSE_CONTRADICTION errors in NEGATION_SCOPE evidence. R1 incorrectly switches to M3 mode, then M3 recommends DEFER or STOP instead of ANSWER.",
+    "resolution": "The T2 false-positive metric WAS misdefined. The initial-snapshot metric showed 0 false positives, but the trajectory-level metric shows 7 false positives in this subgroup alone. The catastrophic subgroup is caused by trajectory-level T2 false positives, not by M3 being worse than A1 after a correct phase transition."
+  },
+
+  "corrected_key_research_table": [
+    {
+      "tier": "S2-EASY",
+      "relation_match_rate": 0.78,
+      "initial_snapshot_eliminated_set_accuracy": 1.0,
+      "trajectory_t2_precision": 1.0,
+      "trajectory_t2_recall": 0.7857,
+      "trajectory_false_t2_rate": 0.0,
+      "r1_inferred_success": 0.82,
+      "r1_gold_success": 0.91,
+      "r1_a1_delta_inferred": 60.69,
+      "semantic_robustness_gap_r1": 17.61,
+      "primary_passes": true,
+      "safety_gate_5pct": "PASS"
+    },
+    {
+      "tier": "S2-MEDIUM",
+      "relation_match_rate": 0.29,
+      "initial_snapshot_eliminated_set_accuracy": 1.0,
+      "trajectory_t2_precision": 0.8298,
+      "trajectory_t2_recall": 0.5270,
+      "trajectory_false_t2_rate": 0.0533,
+      "r1_inferred_success": 0.63,
+      "r1_gold_success": 0.81,
+      "r1_a1_delta_inferred": 29.47,
+      "semantic_robustness_gap_r1": 31.06,
+      "primary_passes": true,
+      "safety_gate_5pct": "FAIL"
+    },
+    {
+      "tier": "S2-HARD",
+      "relation_match_rate": 0.34,
+      "initial_snapshot_eliminated_set_accuracy": 1.0,
+      "trajectory_t2_precision": 0.8065,
+      "trajectory_t2_recall": 0.3472,
+      "trajectory_false_t2_rate": 0.04,
+      "r1_inferred_success": 0.61,
+      "r1_gold_success": 0.87,
+      "r1_a1_delta_inferred": 22.41,
+      "semantic_robustness_gap_r1": 45.01,
+      "primary_passes": true,
+      "safety_gate_5pct": "PASS"
+    }
+  ],
+
+  "corrected_conclusions": {
+    "primary_criterion": "PASSES. LCB_95(U_R1_INFERRED - U_A1_INFERRED) = 31.33 > 0. R1 remains beneficial even with severe relation extraction degradation.",
+    "safety_gates": "S2-MEDIUM FAILS the 5% false T2 gate (5.33%) at trajectory level. S2-EASY and S2-HARD pass. The MEDIUM failure is concentrated in NEGATION_SCOPE evidence with FALSE_CONTRADICTION errors.",
+    "t2_calibration": "T2 is NOT perfectly calibrated. Trajectory-level precision is 0.89, recall is 0.55. The initial-snapshot metric was misleading because T2 cannot fire before VERIFY actions.",
+    "architectural_finding": "Selective epistemic abstraction provides PARTIAL fault containment under semantic extraction error. R1's latched hybrid design reduces but does not eliminate the impact of relation errors. The containment is breached by FALSE_CONTRADICTION errors that cause trajectory-level T2 false positives, and by MISSED_CONTRADICTION/MISSED_SUPPORT errors that cause T2 false negatives.",
+    "semantic_gap": "Semantic extraction errors materially degrade absolute performance (gap grows from 17.61 to 45.01), but they do not eliminate R1's relative advantage over A1 on this S2 distribution. The semantic extractor IS a substantial source of lost performance — 83/450 tasks are SEMANTIC_CAUSAL.",
+    "bottleneck_identification": "The semantic extractor is a bottleneck for absolute performance. T2 is a secondary bottleneck for safety (trajectory-level false positives in MEDIUM). The base policy is not the bottleneck. The architecture's selectivity mitigates but does not eliminate semantic extraction errors."
+  }
+}
