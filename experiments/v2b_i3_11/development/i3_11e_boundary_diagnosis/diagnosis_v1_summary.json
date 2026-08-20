@@ -1,0 +1,118 @@
+{
+  "break_task_results": [
+    {
+      "B0": "SEARCH_MORE",
+      "B1": "SEARCH_MORE",
+      "B2": "SEARCH_MORE",
+      "B3": "SEARCH_MORE",
+      "B4": "SEARCH_MORE",
+      "B5": "SEARCH_MORE",
+      "category": "bilateral_conflict_h0",
+      "evidence_match": true,
+      "task_id": "r1_confirm_v1_0001",
+      "vstate_match": true
+    },
+    {
+      "B0": "SEARCH_MORE",
+      "B1": "SEARCH_MORE",
+      "B2": "SEARCH_MORE",
+      "B3": "SEARCH_MORE",
+      "B4": "SEARCH_MORE",
+      "B5": "SEARCH_MORE",
+      "category": "bilateral_conflict_h0",
+      "evidence_match": true,
+      "task_id": "r1_confirm_v1_0009",
+      "vstate_match": true
+    },
+    {
+      "B0": "SEARCH_MORE",
+      "B1": "DEFER",
+      "B2": "SEARCH_MORE",
+      "B3": "SEARCH_MORE",
+      "B4": "SEARCH_MORE",
+      "B5": "SEARCH_MORE",
+      "category": "triple_all_eliminated",
+      "evidence_match": true,
+      "task_id": "r1_confirm_v1_0043",
+      "vstate_match": true
+    },
+    {
+      "B0": "SEARCH_MORE",
+      "B1": "SEARCH_MORE",
+      "B2": "SEARCH_MORE",
+      "B3": "SEARCH_MORE",
+      "B4": "SEARCH_MORE",
+      "B5": "SEARCH_MORE",
+      "category": "triple_all_eliminated",
+      "evidence_match": true,
+      "task_id": "r1_confirm_v1_0051",
+      "vstate_match": true
+    },
+    {
+      "B0": "VERIFY",
+      "B1": "VERIFY",
+      "B2": "VERIFY",
+      "B3": "VERIFY",
+      "B4": "VERIFY",
+      "B5": "VERIFY",
+      "category": "noise_before_conflict",
+      "evidence_match": true,
+      "task_id": "r1_confirm_v1_0114",
+      "vstate_match": true
+    },
+    {
+      "B0": "VERIFY",
+      "B1": "VERIFY",
+      "B2": "VERIFY",
+      "B3": "VERIFY",
+      "B4": "VERIFY",
+      "B5": "VERIFY",
+      "category": "noise_before_conflict",
+      "evidence_match": true,
+      "task_id": "r1_confirm_v1_0129",
+      "vstate_match": true
+    }
+  ],
+  "diagnostic_counts": {
+    "B0_STOP": 0,
+    "B1_STOP": 0,
+    "B3_STOP": 0,
+    "B4_STOP": 0,
+    "B5_STOP": 0
+  },
+  "matched_success_results": [
+    {
+      "B0": "SEARCH_MORE",
+      "B1": "DEFER",
+      "B2": "SEARCH_MORE",
+      "B3": "SEARCH_MORE",
+      "B4": "SEARCH_MORE",
+      "B5": "SEARCH_MORE",
+      "category": "bilateral_conflict_h0",
+      "task_id": "r1_confirm_v1_0000"
+    },
+    {
+      "B0": "VERIFY",
+      "B1": "VERIFY",
+      "B2": "VERIFY",
+      "B3": "VERIFY",
+      "B4": "VERIFY",
+      "B5": "VERIFY",
+      "category": "noise_before_conflict",
+      "task_id": "r1_confirm_v1_0111"
+    },
+    {
+      "B0": "SEARCH_MORE",
+      "B1": "SEARCH_MORE",
+      "B2": "SEARCH_MORE",
+      "B3": "RETRIEVE",
+      "B4": "SEARCH_MORE",
+      "B5": "SEARCH_MORE",
+      "category": "triple_all_eliminated",
+      "task_id": "r1_confirm_v1_0040"
+    }
+  ],
+  "n_break_tasks": 6,
+  "n_matched_successes": 3,
+  "schema": "DAPH_V2B_I3_11E_DIAGNOSIS_V1"
+}
