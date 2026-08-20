@@ -3,7 +3,7 @@
   "experiment": "I3.11f Repeated-Measures R1 vs M3 (K=5, 100 tasks, interleaved) + I3.11f-r1 statistical repair",
   "protocol_frozen_at": "cbda2c0",
   "results_committed_at": "0e5d502",
-  "repair_committed_at": "pending",
+  "repair_committed_at": "53f02f4",
   "executable_hashes_committed_before_run": true,
   "everything_frozen": "T2, R1, M3, A1, prompts, utility, model/config all unchanged",
   "sampling_scope": "I3.11f used a break-enriched 100-task subset (all tasks from 3 prior break categories + random sample of others), not an unbiased sample of the 330-task I3.11d distribution. Mean utility values are estimates for the I3.11f diagnostic population, not unbiased estimates over I3.11d.",

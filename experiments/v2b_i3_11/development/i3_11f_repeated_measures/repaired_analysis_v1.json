@@ -116,7 +116,7 @@
   "success_probability_noninferiority": {
     "conventional_1pp_ci_rule": {
       "lcb_95": -0.012,
-      "note": "Lower 95% bound is -0.014, which is below -0.01. Conventional 1pp CI-based non-inferiority FAILS.",
+      "note": "One-sided 95% LCB is -0.012, which is below -0.01. (The two-sided 95% CI lower endpoint is -0.014.) Conventional 1pp CI-based non-inferiority FAILS.",
       "result": "FAIL",
       "rule": "LCB_95(P_R1 - P_M3) > -0.01"
     },
