@@ -1,5 +1,5 @@
 {
-  "schema": "DAPH_V2B_I3_11D_CLOSURE_V1",
+  "schema": "DAPH_V2B_I3_11D_CLOSURE_V1_REVISED",
   "experiment": "I3.11d R1 confirmation under expanded hypothesis topology",
   "corpus": "r1_confirm_v1 (330 tasks, 2-5 hypotheses, asymmetric, late conflict, noise)",
   "protocol_frozen_at": "82f33b7",
@@ -35,30 +35,41 @@
     "r1_breaks_vs_m3": 6,
     "r1_rescues_vs_m3": 1,
     "break_pattern": "All 6 R1 breaks vs M3 follow the same pattern: R1 emits STOP instead of DEFER after switching to M3 representation. M3 from step 0 correctly emits DEFER.",
-    "break_explanation": "This is a real hybrid-trajectory effect. When the model is switched from A1 to M3 mid-trajectory, it sometimes chooses STOP (give up without proper deferral) instead of DEFER (correct terminal). When the model starts in M3 from step 0, it correctly emits DEFER. The representation switch itself appears to cause a behavioral discontinuity.",
+    "break_causal_status": "Phenomenon demonstrated, cause NOT isolated. The model backend is stateless across steps — each step is a fresh call with the current system prompt and serialized evidence packet. Therefore R1 and always-M3 differ after T2 because they arrived at that state through different trajectories: R1 via A1 actions/outcomes, M3 via M3 actions/outcomes. The causal distinction is hybrid-prefix/path dependence at the representation boundary, NOT proven 'loss of representation continuity.'",
+    "possible_causes_not_yet_isolated": [
+      "different prior action history",
+      "different resource state at trigger point",
+      "different visible evidence ordering",
+      "different evidence acquisition path",
+      "different prior outcome sequence",
+      "the representation transition itself"
+    ],
     "break_categories": {
       "bilateral_conflict_h0": 2,
       "triple_all_eliminated": 2,
       "noise_before_conflict": 2
     },
     "all_breaks_are_stop_not_defer": true,
-    "implication": "R1's phase switching captures M3's conflict detection but does not fully capture M3's terminal-action authority. The model behaves differently when switched mid-trajectory vs. starting in M3."
+    "terminal_semantic_ambiguity": "M3's prompt defines DEFER as 'Give up due to insufficient evidence' and STOP as 'Stop without answering.' M3 deliberately does NOT say 'if INSUFFICIENT then DEFER' — the model chooses the action. From a natural-language policy perspective, both STOP and DEFER can look reasonable after INSUFFICIENT. Yet the frozen utility treats them very differently: correct_defer=+70, correct_stop=0. These six failures may partly expose a terminal-action semantic ambiguity that the utility function magnifies, rather than a fundamental limitation of phase routing."
   },
   "topology_analysis": {
-    "t2_generalizes_to_3_hypotheses": "Mostly. triple_all_eliminated: M3=20/20, R1=18/20 (2 STOP instead of DEFER). triple_all_eliminated_noise: M3=15/15, R1=15/15.",
-    "t2_generalizes_to_4_hypotheses": "Yes. quad_all_eliminated: M3=15/15, R1=15/15. one_viable_among_eliminated: T2 correctly does NOT fire (0/15 triggered).",
-    "t2_generalizes_to_5_hypotheses": "Yes (trivially). penta_simple_answer: T2 correctly does NOT fire (0/15 triggered).",
+    "t2_positive_generalization": "T2 generalizes positively to all-eliminated states with 2-4 hypotheses. bilateral_conflict (2h): T2 fires, R1 captures most M3 rescues. triple_all_eliminated (3h): T2 fires, R1=18/20. triple_all_eliminated_noise (3h): T2 fires despite noise, R1=15/15. quad_all_eliminated (4h): T2 fires, R1=15/15.",
+    "t2_negative_control_5h": "penta_simple_answer (5h): T2 correctly does NOT fire (0/15). This is useful negative-control evidence but does NOT demonstrate a five-hypothesis all-eliminated transition. A penta_all_eliminated subgroup would be needed for the stronger 2-5 positive statement.",
     "late_conflict": "T2 fires at step 4+ (mean trigger step for late_conflict is higher). late_conflict: M3=20/20, R1=20/20. T2 handles late conflict.",
     "noise_before_conflict": "T2 fires despite noise. noise_before_conflict: M3=20/20, R1=18/20 (2 STOP instead of DEFER).",
-    "asymmetric_conflict": "Both M3 and R1 fail. asymmetric_conflict: M3=1/20, R1=1/20. This category has a generator issue — H2 is eliminated by E3's contradiction of H1, but H1 is also eliminated by E1/E2's contradiction of H2. However, the oracle says DEFER with correct_hypothesis_id=H2, which may be inconsistent. See erratum.",
-    "multi_viable": "Both M3 and R1 fail. multi_viable: M3=0/20, R1=0/20. This is a 3-hypothesis DEFER task where the model cannot resolve. T2 correctly does NOT fire (0/20 triggered).",
+    "asymmetric_conflict_quarantined": "Both M3 and R1 fail (M3=1/20, R1=1/20). This category has a generator inconsistency: H2 is eliminated by E3's contradiction of H1, but H1 is also eliminated by E1/E2's contradiction of H2. The oracle says DEFER with correct_hypothesis_id=H2, which may be inconsistent. asymmetric_conflict is QUARANTINED from architectural conclusions until the generator is repaired.",
+    "multi_viable": "Both M3 and R1 fail (M3=0/20, R1=0/20). This is a 3-hypothesis DEFER task where the model cannot resolve. T2 correctly does NOT fire (0/20 triggered).",
     "subset_eliminated": "T2 correctly does NOT fire (0/20). R1=A1=20/20, M3=20/20.",
     "falsified_contradiction": "T2 correctly does NOT fire (0/20). All arms 20/20."
   },
-  "scientific_conclusion": "R1's phase-switching architecture captures M3's conflict-detection benefit over A1 (125 rescues, 0 breaks, CI [+61.12, +80.16]). However, R1 does not reliably beat M3 on this expanded topology (CI [-1.57, +1.91]). The failure mode is specific: when switched from A1 to M3 mid-trajectory, the model sometimes emits STOP instead of DEFER. This is a hybrid-trajectory behavioral discontinuity, not a T2 trigger failure. T2 itself generalizes well across hypothesis counts (3, 4, 5), late conflict, and noise.",
-  "calibrated_architectural_statement": "Within the current evidence-reasoning benchmark family, a deterministic observed-state phase transition detector (T2) correctly identifies when all hypotheses are eliminated across varying hypothesis topology (2-5 hypotheses, asymmetric graphs, late conflict, noise). R1's phase switching captures M3's conflict-detection benefit over A1. However, mid-trajectory representation switching introduces a behavioral discontinuity (STOP vs DEFER) that prevents R1 from reliably beating always-M3. This suggests that the representation switch itself has a cost that must be addressed before R1 can dominate M3.",
+  "frozen_calibrated_claim": "Across the expanded I3.11d topology, T2 remains a robust detector of the all-hypotheses-eliminated epistemic state and enables R1 to preserve most of M3's conflict-resolution benefit while reducing computation. However, R1 does not yet dominate always-M3 because hybrid-prefix trajectories occasionally produce STOP rather than the required DEFER terminal decision. The causal source of this boundary effect remains unresolved.",
+  "architectural_status": {
+    "t2_detector": "strong evidence — 100% rescue-opportunity coverage, 0% A1-success false activation, works under broader topology (2-4 positive, 5 negative control)",
+    "r1_router": "strongly better than A1, more efficient than M3, does NOT reliably dominate M3, suffers 6 terminal-choice failures after hybrid prefixes"
+  },
   "what_worked": [
-    "T2 trigger generalizes to 3, 4, 5 hypotheses",
+    "T2 trigger generalizes positively to all-eliminated states with 2-4 hypotheses",
+    "T2 correctly does NOT fire on 5-hypothesis answerable control (negative control only)",
     "T2 handles late conflict (step 4+ trigger)",
     "T2 handles noise before conflict",
     "T2 correctly does NOT fire on subset-eliminated, falsified-contradiction, multi-viable, simple-answer tasks",
@@ -69,13 +80,9 @@
   ],
   "what_did_not_work": [
     "R1 does not reliably beat M3 (C2 fails, CI crosses zero)",
-    "6 R1 breaks vs M3, all from STOP instead of DEFER after representation switch",
-    "R1 success 285 vs M3 290 (fails C3 by 2 tasks)"
+    "6 R1 breaks vs M3, all from STOP instead of DEFER after hybrid prefix",
+    "R1 success 285 vs M3 290 (fails C3 by 2 tasks)",
+    "Causal source of STOP-vs-DEFER boundary effect NOT isolated"
   ],
-  "next_step_options": [
-    "Investigate the STOP-vs-DEFER discontinuity: is it caused by the model receiving A1 context in early steps and then losing continuity when M3 state appears?",
-    "Test whether a gradual representation transition (e.g., showing both A1 and M3 fields for one step) reduces the discontinuity",
-    "Test whether starting with M3 for one warmup step before switching back to A1 until T2 reduces the discontinuity",
-    "Accept that R1 approximates M3 with fewer steps but does not dominate it, and freeze R1 as a practical efficiency improvement"
-  ]
+  "next_step": "I3.11e — Boundary Discontinuity Diagnosis. Take the 6 R1→M3 break tasks plus matched successful R1 conflict tasks. At the first post-T2 model decision, freeze the complete controller-visible input and compare between R1 and always-M3. Run controlled packet ablations (B0-B5 factorial) to isolate whether history, evidence state, or terminal semantics cause the STOP. This is diagnosis, not candidate selection."
 }

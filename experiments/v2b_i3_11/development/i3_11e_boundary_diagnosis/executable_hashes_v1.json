@@ -1,0 +1,16 @@
+{
+  "schema": "DAPH_V2B_I3_11E_EXECUTABLE_HASHES_V1",
+  "committed_before_run": true,
+  "description": "SHA-256 hashes of all executables used in I3.11e diagnosis, committed before any model calls.",
+  "hashes": {
+    "scripts/run_i3_11c_r1_router.py": "a33088bb9b5aa08fa43db4fcdca1b7a6604db08dd21e26019ab1a2244d15bb0f",
+    "scripts/run_i3_11d_r1_confirm.py": "1c46585253fdf0d472035f03e36283fae88627b9f4cbf39b409081bfb7cfbd6b",
+    "scripts/run_i3_11e_boundary_diagnosis.py": "992a4ef2d89e27bc4ddc2c41bc2307c25985ad0f284199ff1adfdedb2065677c",
+    "scripts/run_i3_7e_compact_governor.py": "7db842eb88a16ba0d1a10962ad3c61727f9cac6c07014f85e1a56d802e77a6a7",
+    "hrm_adaptive_memory/executive/model_backend.py": "5d28799258b9dfba2447066f4cac1396970d8591063b2c1586cc65949cbff3fa",
+    "hrm_adaptive_memory/executive/i3_4_generation_config.py": "31e21cbcd02e13eaede79a34261a279254406b38398dcecc5061b2c83d162d82"
+  },
+  "r1_implementation_unchanged": true,
+  "m3_implementation_unchanged": true,
+  "diagnosis_script_is_new": true
+}

@@ -1,0 +1,50 @@
+{
+  "schema": "DAPH_V2B_I3_11E_DIAGNOSIS_PROTOCOL_V1",
+  "created_before_model_run": true,
+  "description": "Frozen protocol for I3.11e Boundary Discontinuity Diagnosis. This is DIAGNOSIS, not candidate selection. No variant is promoted.",
+  "research_question": "Why does the identical M3 decision representation yield STOP after an A1 prefix, while always-M3 yields DEFER?",
+  "method": {
+    "step_1": "Take the 6 R1→M3 break tasks from I3.11d",
+    "step_2": "Take 6 matched successful R1 conflict tasks (same categories, R1 succeeded)",
+    "step_3": "Replay R1 and M3 trajectories up to the T2 trigger step",
+    "step_4": "Freeze the complete controller-visible state at trigger",
+    "step_5": "Run controlled factorial ablations at the first post-T2 model call"
+  },
+  "factorial": {
+    "B0": {"state": "R1", "history": "R1", "prompt": "frozen M3", "description": "baseline = R1 at trigger"},
+    "B1": {"state": "R1", "history": "stripped", "prompt": "frozen M3", "description": "history removed"},
+    "B2": {"state": "R1", "history": "matched M3", "prompt": "frozen M3", "description": "history swapped"},
+    "B3": {"state": "R1", "history": "R1", "prompt": "clarified STOP/DEFER", "description": "terminal semantics clarified"},
+    "B4": {"state": "M3", "history": "R1", "prompt": "frozen M3", "description": "state swapped"},
+    "B5": {"state": "M3", "history": "M3", "prompt": "frozen M3", "description": "baseline = M3 at trigger"}
+  },
+  "diagnostic_questions": {
+    "B0_STOP_B1_DEFER": "HISTORY causes the failure",
+    "B0_STOP_B3_DEFER": "TERMINAL SEMANTICS cause the failure",
+    "B4_STOP_B5_DEFER": "PRIOR TRAJECTORY/HISTORY is causal (strong evidence)",
+    "all_R1_state_STOP": "A1 prefix changed evidence/resource state in a way that makes STOP more likely"
+  },
+  "clarified_terminal_semantics": {
+    "DEFER": "A terminal epistemic decision that available evidence is insufficient to resolve the task.",
+    "STOP": "Administrative termination without making an epistemic answer-or-defer decision.",
+    "note": "This is NOT the same as 'if INSUFFICIENT then DEFER'. It preserves policy authority while making the action vocabulary non-overlapping. It tests whether STOP and DEFER overlap too much linguistically in the frozen M3 prompt."
+  },
+  "state_comparison": "At trigger step, compare: visible evidence IDs, verification states, hidden count, resource state, prior_actions, prior_outcomes, decision_state, affordances between R1 and M3.",
+  "break_task_ids": [
+    "r1_confirm_v1_0001",
+    "r1_confirm_v1_0009",
+    "r1_confirm_v1_0043",
+    "r1_confirm_v1_0051",
+    "r1_confirm_v1_0114",
+    "r1_confirm_v1_0129"
+  ],
+  "not_candidate_selection": true,
+  "no_promotion": true,
+  "r1_implementation": "Frozen from I3.11c. T2 and R1 are NOT modified. This experiment only diagnoses the boundary effect.",
+  "executable_integrity": {
+    "r1_implementation": "scripts/run_i3_11c_r1_router.py (frozen, not modified)",
+    "m3_implementation": "scripts/run_i3_7e_compact_governor.py (frozen, not modified)",
+    "diagnosis_script": "scripts/run_i3_11e_boundary_diagnosis.py (new, for diagnosis only)",
+    "hashes_committed_before_run": true
+  }
+}
