@@ -1,0 +1,13 @@
+{
+  "experiment": "I3.15",
+  "n_tasks": 150,
+  "n_trajectories": 900,
+  "corpus_sha256": "562b18e71661caca90c6832d29641cf61da098108b2fa07af7a8dc829f2b7c53",
+  "top_k": 10,
+  "deltas": {
+    "Q0_BM25": 0.021199999999998553,
+    "Q3_RERANKED": 2.827333333333333,
+    "Q4_ORACLE": -0.05740000000000123
+  },
+  "interaction": 2.8061333333333343
+}

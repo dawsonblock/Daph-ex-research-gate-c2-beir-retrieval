@@ -1,0 +1,116 @@
+{
+  "experiment": "I3.15",
+  "title": "Retrieval-Fair Epistemically-Hard Benchmark",
+  "status": "FROZEN",
+  "date": "2026-08-20",
+  "predecessor": "I3.14b",
+  "motivation": "I3.14a showed that fixing retrieval fairness (same-domain evidence) eliminated R1's advantage because evidence became directly interpretable. I3.13's R1 advantage was confounded with cross-domain retrieval difficulty. I3.15 separates retrieval difficulty from epistemic difficulty using a 2x3 matrix design.",
+
+  "scientific_questions": [
+    "When retrieval is solved, where does MDSG/R1 help?",
+    "When semantic reasoning is hard, does better retrieval make MDSG more valuable?",
+    "Is there a positive interaction term E_retrieval x E_MDSG?"
+  ],
+
+  "design": {
+    "matrix": "2 x 3 factorial",
+    "retrieval_difficulty": ["RetrievalEasy", "RetrievalHard"],
+    "epistemic_difficulty": ["EpistemicEasy", "EpistemicMedium", "EpistemicHard"],
+    "n_per_cell": 25,
+    "n_total_tasks": 150,
+    "n_passages_per_task": "varies by epistemic class (1-4 passages)"
+  },
+
+  "epistemic_classes": {
+    "EpistemicEasy": {
+      "description": "Single passage directly states the answer. Model can read and answer.",
+      "examples": ["Service is currently operational.", "Service is currently not operational."],
+      "expected_r1_advantage": "minimal — direct interpretation suffices"
+    },
+    "EpistemicMedium": {
+      "description": "Temporal supersession or authority conflict. Requires comparing timestamps or source authority.",
+      "examples": [
+        "May 1: Service offline. May 5: All regions except APAC operational. Question: Is APAC restored?",
+        "Status page: Service restored. Internal report 20min later: Restoration premature, writes still failing."
+      ],
+      "expected_r1_advantage": "moderate — requires tracking temporal/source relationships"
+    },
+    "EpistemicHard": {
+      "description": "Multi-step reasoning chain or conditional implication. No single passage answers the question.",
+      "examples": [
+        "A: Operations suspended after DB incident. B: Replacement cluster passed validation, traffic blocked pending DNS. C: DNS propagation completed. -> Service operational?",
+        "If migration completes, writes resume. Later: Migration completed. -> Writes resumed?"
+      ],
+      "expected_r1_advantage": "large — requires multi-hop reasoning over evidence graph"
+    }
+  },
+
+  "retrieval_conditions": {
+    "RetrievalEasy": {
+      "description": "Query terms overlap heavily with passage content. BM25 can find required passages.",
+      "query_design": "Query uses domain-specific terms that appear in the passages"
+    },
+    "RetrievalHard": {
+      "description": "Query uses abstract/general terms. BM25 struggles; dense retrieval and reranking needed.",
+      "query_design": "Query uses abstract status questions without domain-specific terms"
+    }
+  },
+
+  "frozen_downstream": {
+    "semantic_extractor": "v2.6.0 (SHA256: b00e480af3be88a8...)",
+    "MDSG": "frozen",
+    "T2": "frozen",
+    "R1": "frozen",
+    "A1": "frozen",
+    "prompts": "frozen",
+    "executor": "frozen",
+    "utility": "frozen (v2b_i3_1_utility_v1.json)",
+    "model": "DeepSeek (frozen config)"
+  },
+
+  "frozen_retrieval": {
+    "Q0_BM25": "BM25 (k1=1.5, b=0.75, top_k=10)",
+    "Q3_RERANKED": "Hybrid BM25+BGE-small + gte-reranker (top_k=10, candidate_pool=20)",
+    "Q4_ORACLE": "oracle ceiling",
+    "note": "top_k=10 for I3.15 (was 5 in I3.14b). Multi-passage chains need more slots. This is a new frozen benchmark identity."
+  },
+
+  "experimental_arms": ["A1_INFERRED", "R1_INFERRED"],
+  "retrieval_levels": ["Q0_BM25", "Q3_RERANKED", "Q4_ORACLE"],
+  "factorial": "3 retrieval x 2 arms = 6 cells",
+  "n_trajectories": "150 tasks x 3 retrieval x 2 arms = 900 trajectories",
+
+  "metrics": {
+    "primary": "Delta_R(Q) = U(R1,Q) - U(A1,Q) for each retrieval level Q",
+    "interaction": "E_retrieval x E_MDSG = Delta_R(Q3) - Delta_R(Q0)",
+    "conditional_survival": [
+      "P(success | RecallAll=1)",
+      "P(success | RecallAll=1, RelationsCorrect=1)",
+      "P(success | RecallAll=1, RelationsCorrect=1, T2Correct=1)",
+      "P(success | RecallAll=1, RelationsCorrect=1, T2Correct=1, RoutingCorrect=1)"
+    ],
+    "gap_decomposition": [
+      "RetrievalGap (Q4 - Qk)",
+      "SemanticGap (R1_GOLD - R1_INF)",
+      "RoutingGap (R1_INF - A1_INF)",
+      "PolicyGap (residual)"
+    ]
+  },
+
+  "hypotheses": {
+    "H1": "Delta_R(Q0) is small because evidence often missing",
+    "H2": "Delta_R(Q3) is larger because enough evidence reaches controller",
+    "H3": "Delta_R(Q4) is largest because reasoning, not retrieval, becomes bottleneck",
+    "H4": "The interaction E_retrieval x E_MDSG is positive — better retrieval amplifies R1's value",
+    "H5": "EpistemicHard tasks show the largest R1 advantage across all retrieval levels"
+  },
+
+  "forbidden": [
+    "Modifying semantic extractor v2.6.0",
+    "Modifying MDSG/T2/R1/A1 architecture",
+    "Modifying prompts or executor",
+    "Modifying retrieval configurations (frozen from I3.14b)",
+    "Making evidence text directly state the answer for EpistemicMedium/Hard tasks",
+    "Using cross-domain evidence that makes retrieval impossible"
+  ]
+}
