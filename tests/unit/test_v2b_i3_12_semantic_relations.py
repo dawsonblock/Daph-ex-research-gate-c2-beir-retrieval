@@ -241,3 +241,114 @@ class TestValidatorInput:
         violations = validate_extraction_input(data)
         assert len(violations) == 1
         assert "correct_hypothesis_id" in violations[0]
+
+
+class TestSnapshotIntegration:
+    """I3.12f: Integration of inferred relations into EvidenceSnapshot."""
+
+    @pytest.fixture
+    def budget(self):
+        from hrm_adaptive_memory.executive.resources import ResourceState, ResourceBudget
+        return ResourceBudget(
+            max_executive_steps=24, max_reasoning_tokens=2048,
+            max_retrieval_calls=5, max_verification_calls=5,
+            max_search_calls=5, max_elapsed_ms=10000,
+        )
+
+    @pytest.fixture
+    def extractor(self):
+        return DeterministicRelationExtractor()
+
+    def test_s0_oracle_snapshot_preserves_relations(self, budget):
+        """S0 (oracle) snapshot must preserve original supports/contradicts."""
+        from hrm_adaptive_memory.executive.evidence_benchmark import initial_evidence_runtime
+        from hrm_adaptive_memory.executive.semantic_relations.integration import build_evidence_snapshot_oracle
+        from hrm_adaptive_memory.executive.resources import ResourceState
+
+        tasks = generate_i3_12_corpus(n_per_category=1, seed=42)
+        task = tasks[0]
+        runtime = initial_evidence_runtime(task.evidence_task, ResourceState(budget))
+        snap = build_evidence_snapshot_oracle(runtime)
+
+        # Oracle relations should match the original task evidence
+        for ev_orig, ev_snap in zip(task.evidence_task.evidence_items, snap.visible_evidence):
+            assert ev_snap.supports == ev_orig.supports
+            assert ev_snap.contradicts == ev_orig.contradicts
+
+    def test_s1_inferred_snapshot_has_relations(self, budget, extractor):
+        """S1 (inferred) snapshot must have inferred supports/contradicts."""
+        from hrm_adaptive_memory.executive.evidence_benchmark import initial_evidence_runtime
+        from hrm_adaptive_memory.executive.semantic_relations.integration import build_evidence_snapshot_with_inferred_relations
+        from hrm_adaptive_memory.executive.resources import ResourceState
+
+        tasks = generate_i3_12_corpus(n_per_category=1, seed=42)
+        task = tasks[0]
+        runtime = initial_evidence_runtime(task.evidence_task, ResourceState(budget))
+        snap, graph = build_evidence_snapshot_with_inferred_relations(runtime, extractor)
+
+        # Each visible evidence should have inferred relations
+        for ev in snap.visible_evidence:
+            # Inferred relations should be non-empty for supporting/contradicting evidence
+            assert isinstance(ev.supports, tuple)
+            assert isinstance(ev.contradicts, tuple)
+
+    def test_s1_does_not_mutate_original_runtime(self, budget, extractor):
+        """S1 inference must not mutate the original runtime."""
+        from hrm_adaptive_memory.executive.evidence_benchmark import initial_evidence_runtime
+        from hrm_adaptive_memory.executive.semantic_relations.integration import infer_relations_for_runtime
+        from hrm_adaptive_memory.executive.resources import ResourceState
+
+        tasks = generate_i3_12_corpus(n_per_category=1, seed=42)
+        task = tasks[0]
+        runtime = initial_evidence_runtime(task.evidence_task, ResourceState(budget))
+
+        orig_supports = runtime.evidence[0].supports
+        orig_contradicts = runtime.evidence[0].contradicts
+
+        new_runtime, graph = infer_relations_for_runtime(runtime, extractor)
+
+        # Original must be unchanged
+        assert runtime.evidence[0].supports == orig_supports
+        assert runtime.evidence[0].contradicts == orig_contradicts
+        # New runtime must be a different object
+        assert runtime is not new_runtime
+        assert runtime.evidence[0] is not new_runtime.evidence[0]
+
+    def test_s0_s1_affordances_identical(self, budget, extractor):
+        """S0 and S1 must have identical affordances (no information advantage)."""
+        from hrm_adaptive_memory.executive.evidence_benchmark import initial_evidence_runtime
+        from hrm_adaptive_memory.executive.semantic_relations.integration import (
+            build_evidence_snapshot_oracle,
+            build_evidence_snapshot_with_inferred_relations,
+        )
+        from hrm_adaptive_memory.executive.resources import ResourceState
+
+        tasks = generate_i3_12_corpus(n_per_category=1, seed=42)
+        task = tasks[0]
+        runtime = initial_evidence_runtime(task.evidence_task, ResourceState(budget))
+
+        snap_s0 = build_evidence_snapshot_oracle(runtime)
+        snap_s1, _ = build_evidence_snapshot_with_inferred_relations(runtime, extractor)
+
+        assert snap_s0.can_retrieve == snap_s1.can_retrieve
+        assert snap_s0.can_search == snap_s1.can_search
+        assert snap_s0.can_verify == snap_s1.can_verify
+        assert snap_s0.resource_state == snap_s1.resource_state
+
+    def test_s1_relation_graph_has_provenance(self, budget, extractor):
+        """S1 relation graph must have provenance hashes."""
+        from hrm_adaptive_memory.executive.evidence_benchmark import initial_evidence_runtime
+        from hrm_adaptive_memory.executive.semantic_relations.integration import build_evidence_snapshot_with_inferred_relations
+        from hrm_adaptive_memory.executive.resources import ResourceState
+
+        tasks = generate_i3_12_corpus(n_per_category=1, seed=42)
+        task = tasks[0]
+        runtime = initial_evidence_runtime(task.evidence_task, ResourceState(budget))
+        _, graph = build_evidence_snapshot_with_inferred_relations(runtime, extractor)
+
+        assert graph.relation_graph_sha256
+        assert graph.extractor_identity_sha256
+        assert len(graph.relations) > 0
+        for rel in graph.relations:
+            assert rel.evidence_sha256
+            assert rel.hypothesis_sha256
