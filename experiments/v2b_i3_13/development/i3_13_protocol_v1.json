@@ -1,0 +1,141 @@
+{
+  "protocol_id": "i3_13_retrieved_evidence_v1",
+  "frozen_at": "2025-01-27",
+  "branch": "i3.13-retrieved-evidence",
+  "previous_lineage": "I3.12 (semantic relation ablation, closed at ba07512)",
+
+  "scientific_question": "Can the metacognitive architecture operate over actually retrieved evidence, and where does performance degrade in the longer causal chain from retrieval through semantic extraction through epistemic reasoning through routing through policy?",
+
+  "motivation": "I3.12 established that R1 remains beneficial despite semantic extraction errors on controlled synthetic text. I3.13 tests whether this survives the transition from generated evidence to retrieved real-world document passages, introducing a new upstream failure channel: retrieval error.",
+
+  "frozen_components": {
+    "extractor": "DeterministicRelationExtractor v2.6.0 (FROZEN from I3.12)",
+    "MDSG": "unmodified from I3.11",
+    "T2": "unmodified from I3.11",
+    "R1": "unmodified from I3.11c",
+    "A1": "unmodified from I3.7e",
+    "prompts": "unmodified from I3.7e",
+    "utility": "v2b_i3_1_utility_v1.json",
+    "executor": "unmodified",
+    "model_config": "deepseek-v4-flash, temp=0, max_tokens=2048, json_object"
+  },
+
+  "new_components": {
+    "document_corpus": "Frozen corpus of real document passages with evaluator-side ground truth",
+    "retrieval_system": "BM25 retriever over frozen corpus",
+    "i3_13_task_generator": "Generates tasks with hypotheses and evidence from real passages",
+    "i3_13_runner": "Runs the full causal chain experiment"
+  },
+
+  "experiment_design": {
+    "type": "Multi-condition experiment with causal chain tracking",
+    "retrieval_conditions": {
+      "R0_ORACLE": "All required passages supplied directly (no retrieval needed)",
+      "R1_REAL": "BM25 retriever supplies top-k passages (may miss relevant, include irrelevant)",
+      "R2_DISTRACTORS": "BM25 retriever + guaranteed relevant + additional distractor passages"
+    },
+    "representations": {
+      "A1_GOLD": "Baseline with affordances, gold relations",
+      "A1_INFERRED": "Baseline with affordances, inferred relations",
+      "M3_GOLD": "MDSG state, gold relations",
+      "M3_INFERRED": "MDSG state, inferred relations",
+      "R1_GOLD": "Latched hybrid router, gold relations",
+      "R1_INFERRED": "Latched hybrid router, inferred relations"
+    },
+    "priority_arms": ["A1_REAL", "R1_REAL", "R1_ORACLE_RETRIEVAL", "R1_GOLD_RELATIONS"],
+    "full_factorial": "3 retrieval conditions x 6 representations = 18 arms (if budget permits)",
+    "n_tasks": "TBD (target 150-300)",
+    "primary_criterion": "LCB_95(U_R1_INFERRED_REAL - U_A1_INFERRED_REAL) > 0"
+  },
+
+  "causal_chain": {
+    "stages": [
+      "RetrievalRecall",
+      "RelationF1",
+      "EliminationAccuracy",
+      "T2Precision_Recall",
+      "RoutingAccuracy",
+      "TaskUtility"
+    ],
+    "failure_channels": [
+      "RETRIEVAL_ERROR: needed evidence was never retrieved",
+      "SEMANTIC_EXTRACTION_ERROR: needed evidence was retrieved but classified incorrectly",
+      "EPISTEMIC_ERROR: relations correct but MDSG/T2 was wrong",
+      "ROUTING_ERROR: epistemic state correct but representation routing was wrong",
+      "POLICY_ERROR: everything upstream correct but LLM policy failed"
+    ]
+  },
+
+  "oracle_ceilings": {
+    "ORACLE_RETRIEVAL": "All necessary passages available (R0 condition)",
+    "ORACLE_RELATIONS": "Correct SUPPORT/CONTRADICT graph (GOLD condition)",
+    "ORACLE_ROUTING": "Correct epistemic phase available (R1_GOLD condition)"
+  },
+
+  "gap_decomposition": {
+    "RetrievalGap": "U(ORACLE_RETRIEVAL) - U(REAL_RETRIEVAL)",
+    "SemanticGap": "U(GOLD_RELATIONS) - U(INFERRED_RELATIONS)",
+    "RoutingGap": "U(R1) - U(A1) [or U(R1) - U(M3)]",
+    "PolicyGap": "U(ORACLE_ALL) - U(best_system)"
+  },
+
+  "conditional_performance": [
+    "P(success | retrieval_complete)",
+    "P(success | retrieval_complete, relation_correct)",
+    "P(success | retrieval_complete, relation_correct, T2_correct)"
+  ],
+
+  "central_table_format": {
+    "Stage": ["Retrieval", "Retrieval", "Semantic", "Epistemic", "Epistemic", "T2", "T2", "Routing", "Policy", "System"],
+    "Metric": ["Recall@k", "required_evidence_coverage", "SUPPORT/CONTRADICT/NEUTRAL F1", "eliminated-set accuracy", "viable-set accuracy", "precision", "recall", "correct representation rate", "task success", "mean utility"]
+  },
+
+  "corpus_design": {
+    "source": "Frozen document corpus with recoverable ground truth",
+    "candidate_sources": ["Wikipedia snapshots", "scientific abstracts", "technical documentation", "policy documents", "product specifications", "historical reports"],
+    "requirements": [
+      "Each task has competing hypotheses where correct evidence exists in the corpus",
+      "Evaluator knows which passages are required for each task",
+      "Genuine retrieval recall can be calculated",
+      "Passages contain real-world language (not controlled templates)"
+    ]
+  },
+
+  "per_task_telemetry": {
+    "required_evidence_retrieved": "bool",
+    "retrieval_recall": "float",
+    "gold_relation_present": "bool",
+    "inferred_relation_correct": "bool",
+    "relation_error": "error type or null",
+    "gold_eliminated_set": "list",
+    "inferred_eliminated_set": "list",
+    "gold_t2": "bool",
+    "inferred_t2": "bool",
+    "routing_changed": "bool",
+    "gold_r1_success": "bool",
+    "inferred_r1_success": "bool",
+    "failure_attribution": "RETRIEVAL_ERROR | SEMANTIC_EXTRACTION | EPISTEMIC_ERROR | ROUTING_ERROR | POLICY_ERROR | NO_ERROR"
+  },
+
+  "safety_metrics": {
+    "trajectory_t2_precision": "TP / (TP + FP) using trajectory-level T2 (not initial-snapshot)",
+    "trajectory_t2_recall": "TP / (TP + FN) using trajectory-level T2",
+    "false_t2_rate": "FP / N using trajectory-level T2",
+    "rescue_break_ratio": "R1 rescues / R1 breaks vs A1"
+  },
+
+  "interpretation_tree": {
+    "if_passes_and_r1_above_a1": "Architecture operates over retrieved evidence; proceed to uncertainty-aware relations (I3.14)",
+    "if_fails_due_to_retrieval": "Retrieval is the bottleneck; improve retriever before testing semantic robustness",
+    "if_fails_due_to_semantic": "Semantic extraction on real text is the bottleneck; build extractor v3 with cost-sensitive loss",
+    "if_fails_due_to_t2": "Epistemic graph uncertainty is the bottleneck; build uncertainty-aware T2",
+    "if_fails_due_to_policy": "Base policy is the bottleneck; improve prompts or model"
+  },
+
+  "progression": {
+    "I3.12": "Can semantic noise enter the architecture? YES",
+    "I3.13": "Can the architecture operate over actually retrieved evidence?",
+    "I3.14": "Can uncertainty-aware relations improve robustness?",
+    "I3.15": "Can the system generalize across domains/models?"
+  }
+}

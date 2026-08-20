@@ -1,0 +1,92 @@
+{
+  "closure_id": "i3_12_lineage_closure_v1",
+  "branch": "i3.12-semantic-relation-ablation",
+  "final_commit": "ba07512",
+  "closed_at": "2025-01-27",
+
+  "lineage_summary": {
+    "I3.12a": "Semantic relation schema module",
+    "I3.12b": "Controlled raw-semantic task generator",
+    "I3.12c": "Deterministic relation extractor v2.5.0",
+    "I3.12d": "Extractor-only evaluation; macro-F1 gate reached 1.0000",
+    "I3.12e": "Leakage barriers and behavioral-equivalence tests",
+    "I3.12f": "Inferred relations integrated into EvidenceSnapshot",
+    "I3.12g": "S0 regression/control; extractor v2.6.0 (added 'confirmed' keyword)",
+    "I3.12h": "S1 packet-level equivalence (70/70 match)",
+    "I3.12i": "Frozen raw-semantic protocol v1",
+    "I3.12j": "300-task, 6-arm factorial experiment (1800 trajectories)",
+    "I3.12k": "Gold-vs-inferred semantic-gap and causal-attribution analysis",
+    "I3.12l": "Failure attribution (subsumed by I3.12k causal hierarchy)",
+    "I3.12m": "S2 semantic stress and error propagation (450 tasks, 2700 trajectories)"
+  },
+
+  "key_results": {
+    "I3.12j_bridge": {
+      "claim": "MDSG/T2/R1 architecture survives replacing oracle relation annotations with an upstream semantic extraction layer when that extractor reconstructs the graph correctly.",
+      "primary_criterion": "LCB_95(U_R1_INFERRED - U_A1_INFERRED) = 46.87 > 0",
+      "mean_delta": 54.51,
+      "ci_95": [45.39, 63.96],
+      "scope": "Pipeline transfer test under controlled, effectively perfect extraction. Does NOT establish semantic robustness."
+    },
+    "I3.12m_stress": {
+      "claim": "R1 remains beneficial even though semantic errors measurably corrupt the phase detector.",
+      "primary_criterion": "LCB_95(U_R1_INFERRED - U_A1_INFERRED) = 31.33 > 0",
+      "mean_delta": 37.52,
+      "scope": "S2 semantic stress with 3 difficulty tiers, 12 semantic classes, 673 relation errors across 450 tasks.",
+
+      "corrected_t2_metrics": {
+        "note": "Initial-snapshot T2 metrics were misdefined. Trajectory-level metrics are the correct measurement.",
+        "overall": {"precision": 0.8947, "recall": 0.5509, "false_positive_rate": 0.0311},
+        "per_tier": {
+          "S2-EASY": {"precision": 1.0, "recall": 0.7857, "false_positive_rate": 0.0, "safety_gate_5pct": "PASS"},
+          "S2-MEDIUM": {"precision": 0.8298, "recall": 0.5270, "false_positive_rate": 0.0533, "safety_gate_5pct": "FAIL"},
+          "S2-HARD": {"precision": 0.8065, "recall": 0.3472, "false_positive_rate": 0.04, "safety_gate_5pct": "PASS"}
+        }
+      },
+
+      "error_asymmetry": {
+        "for_t2_false_positive": "FALSE_CONTRADICTION is the sole cause (14/14 trajectory T2 false positives)",
+        "for_t2_false_negative": "MISSED_CONTRADICTION (83) and MISSED_SUPPORT (83) are primary causes",
+        "for_task_failure": "MISSED_SUPPORT ≈ MISSED_CONTRADICTION (0.58) > FALSE_CONTRADICTION ≈ FALSE_SUPPORT (0.35)"
+      },
+
+      "semantic_gap": {
+        "A1": "~0 (baseline unaffected by relation errors)",
+        "M3": "19.73 → 39.44 → 49.72 (MDSG highly sensitive to relation errors)",
+        "R1": "17.61 → 31.06 → 45.01 (R1 less sensitive than M3 due to latched hybrid design)",
+        "interpretation": "R1's selectivity provides partial fault containment. The containment is breached by FALSE_CONTRADICTION (causes false T2) and MISSED_CONTRADICTION/MISSED_SUPPORT (causes missed T2)."
+      },
+
+      "causal_classification": {
+        "NO_DIVERGENCE": 203,
+        "TRAJECTORY_CASCADE": 151,
+        "SEMANTIC_CAUSAL": 83,
+        "BACKEND_RESPONSE_VARIANCE": 9,
+        "SEMANTIC_BENEFIT": 4
+      },
+
+      "rescue_break": {"rescues": 99, "breaks": 13, "ratio": 7.6}
+    }
+  },
+
+  "architectural_finding": {
+    "name": "Selective epistemic abstraction provides partial fault containment under semantic extraction error",
+    "evidence": "R1 gap < M3 gap at every tier. R1 starts in A1 and only switches to M3 when T2 fires. Since T2 fires less often under inferred relations (recall 0.55), R1 avoids MDSG state when it would be harmful.",
+    "limitation": "Containment is incomplete. FALSE_CONTRADICTION errors cause trajectory-level T2 false positives (14 cases). MISSED_CONTRADICTION/MISSED_SUPPORT errors cause T2 false negatives (97 cases) where R1_INFERRED succeeds 0/97 while R1_GOLD succeeds 68/97.",
+    "implication": "The semantic extractor is the dominant upstream limitation. Engineering effort should focus on cost-sensitive relation extraction that weights FALSE_CONTRADICTION and MISSED_CONTRADICTION more heavily."
+  },
+
+  "frozen_components": {
+    "extractor": "DeterministicRelationExtractor v2.6.0 (SHA-256: 8df7e942b690b5c37ab38d951bc17c0600a196ce01bfa6745c203b91d5d384d9)",
+    "MDSG": "unmodified from I3.11",
+    "T2": "unmodified from I3.11",
+    "R1": "unmodified from I3.11c",
+    "A1": "unmodified from I3.7e",
+    "prompts": "unmodified from I3.7e",
+    "utility": "v2b_i3_1_utility_v1.json",
+    "executor": "unmodified",
+    "model_config": "deepseek-v4-flash, temp=0, max_tokens=2048, json_object"
+  },
+
+  "next_step": "I3.13: Retrieved real-world evidence. Replace generated evidence sentences with passages retrieved from a frozen document corpus. Measure the longer causal chain: RetrievalRecall → RelationF1 → EliminationAccuracy → T2Precision/Recall → RoutingAccuracy → TaskUtility."
+}
