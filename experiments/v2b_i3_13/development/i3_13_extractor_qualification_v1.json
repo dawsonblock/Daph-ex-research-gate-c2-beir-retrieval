@@ -1,0 +1,62 @@
+{
+  "qualification_id": "i3_13_extractor_qualification_v1",
+  "extractor_version": "2.6.0",
+  "extractor_sha256": "b00e480af3be88a8ff17c7eeadaea1cf95848d40c19f563ad99bdbc813b78b2a",
+  "n_tasks": 150,
+  "macro_f1": 0.3283,
+  "edge_accuracy": 0.41,
+  "tasks_fully_correct": 28,
+  "tasks_with_errors": 122,
+  "error_types": {
+    "FALSE_CONTRADICTION": 36,
+    "FALSE_SUPPORT": 33,
+    "MISSED_SUPPORT": 119,
+    "MISSED_CONTRADICTION": 107
+  },
+  "per_relation": {
+    "SUPPORT": {
+      "tp": 59,
+      "fp": 22,
+      "fn": 119,
+      "tn": 0
+    },
+    "CONTRADICT": {
+      "tp": 72,
+      "fp": 21,
+      "fn": 107,
+      "tn": 0
+    },
+    "NEUTRAL": {
+      "tp": 0,
+      "fp": 26,
+      "fn": 0,
+      "tn": 74
+    }
+  },
+  "per_category": {
+    "bilateral_conflict": {
+      "tasks_correct": 4,
+      "n_tasks": 25
+    },
+    "clear_answer": {
+      "tasks_correct": 8,
+      "n_tasks": 25
+    },
+    "compositional": {
+      "tasks_correct": 3,
+      "n_tasks": 25
+    },
+    "conflict_with_noise": {
+      "tasks_correct": 1,
+      "n_tasks": 25
+    },
+    "degraded_service": {
+      "tasks_correct": 5,
+      "n_tasks": 25
+    },
+    "noise_plus_signal": {
+      "tasks_correct": 7,
+      "n_tasks": 25
+    }
+  }
+}
