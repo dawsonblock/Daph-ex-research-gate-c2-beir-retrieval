@@ -134,7 +134,7 @@ def retrieve_with_ladder(task, retriever, corpus_by_id, k=5):
 def compute_retrieval_recall(retrieved_passages, required_ids):
     if not required_ids:
         return 1.0
-    retrieved_ids = {p["passage_id"] for p in retrieved_passages}
+    retrieved_ids = {p.passage_id for p in retrieved_passages}
     found = len(retrieved_ids & required_ids)
     return found / len(required_ids)
 
@@ -146,7 +146,7 @@ def compute_retrieval_recall(retrieved_passages, required_ids):
 def build_retrieved_evidence_task(task, retrieved_passages, corpus_by_text):
     """Build an EvidenceTask with evidence from retrieved passages."""
     et = task.evidence_task
-    retrieved_texts = {p["text"] for p in retrieved_passages}
+    retrieved_texts = {p.text for p in retrieved_passages}
 
     evidence_items = []
     for ev in et.evidence_items:
@@ -155,10 +155,10 @@ def build_retrieved_evidence_task(task, retrieved_passages, corpus_by_text):
 
     existing_texts = {ev.proposition for ev in evidence_items}
     for p in retrieved_passages:
-        if p["text"] not in existing_texts:
+        if p.text not in existing_texts:
             evidence_items.append(EvidenceItem(
-                evidence_id=f"D{p['passage_id']}",
-                proposition=p["text"],
+                evidence_id=f"D{p.passage_id}",
+                proposition=p.text,
                 source_class="search",
                 supports=(),
                 contradicts=(),
@@ -199,40 +199,50 @@ def compute_relation_accuracy(new_et, task, extractor):
     n_edges = 0
     n_correct = 0
 
-    for ev in new_et.evidence_items:
-        if ev.source_class == "search":
-            continue  # Skip distractor passages
-        gold_supports = set(ev.supports)
-        gold_contradicts = set(ev.contradicts)
+    for ev in [e for e in new_et.evidence_items if e.retrieved]:
+        for hyp in new_et.hypotheses:
+            result = extractor.extract(
+                evidence_id=ev.evidence_id,
+                evidence_proposition=ev.proposition,
+                hypothesis_id=hyp.hypothesis_id,
+                hypothesis_proposition=hyp.proposition,
+            )
+            inferred = result.relation.relation.value
 
-        inferred = extractor.extract_relations(ev.proposition, new_et.hypotheses)
-        inf_supports = set(inferred.get("supports", []))
-        inf_contradicts = set(inferred.get("contradicts", []))
+            # Find gold relation
+            gold_rel = "NEUTRAL"
+            if not ev.evidence_id.startswith("D"):
+                for gr in task.gold_relations:
+                    if gr.evidence_id == ev.evidence_id and gr.hypothesis_id == hyp.hypothesis_id:
+                        gold_rel = gr.relation
+                        break
 
-        for hid in set(gold_supports) | set(inf_supports):
             n_edges += 1
-            if (hid in gold_supports) == (hid in inf_supports):
+            if inferred == gold_rel:
                 n_correct += 1
             else:
-                if hid in inf_supports and hid not in gold_supports:
-                    error_type = "FALSE_SUPPORT"
-                elif hid not in inf_supports and hid in gold_supports:
-                    error_type = "MISSED_SUPPORT"
                 correct = False
+                if error_type is None:
+                    if gold_rel == "SUPPORT" and inferred == "CONTRADICT":
+                        error_type = "FALSE_CONTRADICTION"
+                    elif gold_rel == "SUPPORT" and inferred == "NEUTRAL":
+                        error_type = "MISSED_SUPPORT"
+                    elif gold_rel == "CONTRADICT" and inferred == "SUPPORT":
+                        error_type = "FALSE_SUPPORT"
+                    elif gold_rel == "CONTRADICT" and inferred == "NEUTRAL":
+                        error_type = "MISSED_CONTRADICTION"
+                    elif gold_rel == "NEUTRAL" and inferred == "SUPPORT":
+                        error_type = "FALSE_SUPPORT"
+                    elif gold_rel == "NEUTRAL" and inferred == "CONTRADICT":
+                        error_type = "FALSE_CONTRADICTION"
 
-        for hid in set(gold_contradicts) | set(inf_contradicts):
-            n_edges += 1
-            if (hid in gold_contradicts) == (hid in inf_contradicts):
-                n_correct += 1
-            else:
-                if hid in inf_contradicts and hid not in gold_contradicts:
-                    error_type = "FALSE_CONTRADICTION"
-                elif hid not in inf_contradicts and hid in gold_contradicts:
-                    error_type = "MISSED_CONTRADICTION"
-                correct = False
-
-    accuracy = n_correct / n_edges if n_edges > 0 else 1.0
-    return {"correct": correct, "error_type": error_type, "accuracy": accuracy}
+    return {
+        "correct": correct,
+        "error_type": error_type,
+        "n_edges": n_edges,
+        "n_correct": n_correct,
+        "accuracy": n_correct / n_edges if n_edges > 0 else 1.0,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -243,11 +253,10 @@ def run_single(work_item):
     """Run a single trajectory. Must be picklable for ProcessPoolExecutor."""
     (task_dict, condition, arm, corpus_data, api_key, budget_dict) = work_item
 
-    # Reconstruct task from dict
+    # Reconstruct task from dict — regenerate the full corpus
     from hrm_adaptive_memory.executive.semantic_relations.i3_13_task_generator import (
-        I3_13Task, generate_i3_13_corpus,
+        generate_i3_13_corpus,
     )
-    # We need the full task object — regenerate the corpus
     all_tasks = generate_i3_13_corpus(n_per_category=25, seed=42)
     task = next(t for t in all_tasks if t.task_id == task_dict["task_id"])
 
@@ -306,7 +315,7 @@ def run_single(work_item):
     # Run trajectory
     budget = ResourceBudget(**budget_dict)
     utility = MetareasoningUtility.from_file(
-        ROOT / "configs/v2b_i3_3_3_baseline.json")
+        ROOT / "configs/v2b_i3_1_utility_v1.json")
 
     use_gold = "GOLD" in arm
     arch = arm.split("_")[0]
