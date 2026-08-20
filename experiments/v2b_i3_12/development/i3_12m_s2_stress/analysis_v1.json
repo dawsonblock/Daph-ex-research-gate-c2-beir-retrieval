@@ -1,0 +1,495 @@
+{
+  "n_tasks": 450,
+  "n_trajectories": 2700,
+  "per_tier": {
+    "S2-EASY": {
+      "n_tasks": 150,
+      "per_arm": {
+        "A1_GOLD": {
+          "mean_utility": -16.7271,
+          "success_rate": 0.5,
+          "mean_steps": 3.18,
+          "total_backend_errors": 0
+        },
+        "M3_GOLD": {
+          "mean_utility": 66.0146,
+          "success_rate": 0.94,
+          "mean_steps": 5.01,
+          "total_backend_errors": 0
+        },
+        "R1_GOLD": {
+          "mean_utility": 61.7266,
+          "success_rate": 0.9133,
+          "mean_steps": 4.57,
+          "total_backend_errors": 0
+        },
+        "A1_INFERRED": {
+          "mean_utility": -16.573,
+          "success_rate": 0.5,
+          "mean_steps": 3.14,
+          "total_backend_errors": 0
+        },
+        "M3_INFERRED": {
+          "mean_utility": 46.2887,
+          "success_rate": 0.8333,
+          "mean_steps": 5.22,
+          "total_backend_errors": 0
+        },
+        "R1_INFERRED": {
+          "mean_utility": 44.1141,
+          "success_rate": 0.82,
+          "mean_steps": 4.27,
+          "total_backend_errors": 0
+        }
+      },
+      "by_semantic_class": {
+        "PARAPHRASE": {
+          "n_tasks": 75,
+          "relation_errors": 17,
+          "r1_inferred_success": 0.7733,
+          "r1_gold_success": 0.88,
+          "semantic_gap_r1": 20.5956,
+          "r1_delta_vs_a1_inferred": 53.3731
+        },
+        "SIMPLE_NEGATION": {
+          "n_tasks": 75,
+          "relation_errors": 16,
+          "r1_inferred_success": 0.8667,
+          "r1_gold_success": 0.9467,
+          "semantic_gap_r1": 14.6295,
+          "r1_delta_vs_a1_inferred": 68.0011
+        }
+      },
+      "primary_criterion": {
+        "mean_delta": 60.6871,
+        "one_sided_lcb_95": 49.3805,
+        "two_sided_ci_95": [
+          47.5416,
+          74.502
+        ],
+        "passes": true
+      },
+      "semantic_robustness_gap": {
+        "a1": {
+          "mean_gap": -0.1541,
+          "ci_95": [
+            -0.5194,
+            0.2091
+          ]
+        },
+        "m3": {
+          "mean_gap": 19.7259,
+          "ci_95": [
+            10.4965,
+            30.0597
+          ]
+        },
+        "r1": {
+          "mean_gap": 17.6125,
+          "ci_95": [
+            8.6802,
+            27.3689
+          ]
+        }
+      },
+      "t2_metrics": {
+        "t2_precision": 1.0,
+        "t2_recall": 1.0,
+        "false_t2_rate": 0.0,
+        "false_t2_rate_passes_5pct": true,
+        "gold_t2_count": 0,
+        "inferred_t2_count": 0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "causal_chain": {
+        "relation_graph_match": 117,
+        "relation_graph_mismatch": 33,
+        "mdsg_state_match": 150,
+        "mdsg_state_mismatch": 0,
+        "t2_match": 150,
+        "t2_mismatch": 0,
+        "t2_false_positive": 0,
+        "t2_false_negative": 0
+      }
+    },
+    "S2-MEDIUM": {
+      "n_tasks": 150,
+      "per_arm": {
+        "A1_GOLD": {
+          "mean_utility": -17.7007,
+          "success_rate": 0.4933,
+          "mean_steps": 2.97,
+          "total_backend_errors": 0
+        },
+        "M3_GOLD": {
+          "mean_utility": 50.6349,
+          "success_rate": 0.8667,
+          "mean_steps": 4.75,
+          "total_backend_errors": 0
+        },
+        "R1_GOLD": {
+          "mean_utility": 42.8589,
+          "success_rate": 0.8133,
+          "mean_steps": 4.32,
+          "total_backend_errors": 0
+        },
+        "A1_INFERRED": {
+          "mean_utility": -17.6645,
+          "success_rate": 0.4933,
+          "mean_steps": 3.02,
+          "total_backend_errors": 0
+        },
+        "M3_INFERRED": {
+          "mean_utility": 11.1949,
+          "success_rate": 0.6333,
+          "mean_steps": 5.36,
+          "total_backend_errors": 0
+        },
+        "R1_INFERRED": {
+          "mean_utility": 11.8028,
+          "success_rate": 0.6333,
+          "mean_steps": 3.68,
+          "total_backend_errors": 0
+        }
+      },
+      "by_semantic_class": {
+        "IRRELEVANT_OVERLAP": {
+          "n_tasks": 30,
+          "relation_errors": 4,
+          "r1_inferred_success": 0.9,
+          "r1_gold_success": 0.9,
+          "semantic_gap_r1": 0.325,
+          "r1_delta_vs_a1_inferred": 73.3097
+        },
+        "MULTI_SENTENCE_COMPOSITION": {
+          "n_tasks": 30,
+          "relation_errors": 27,
+          "r1_inferred_success": 0.4667,
+          "r1_gold_success": 0.8,
+          "semantic_gap_r1": 65.577,
+          "r1_delta_vs_a1_inferred": 0.0
+        },
+        "NEGATION_SCOPE": {
+          "n_tasks": 30,
+          "relation_errors": 30,
+          "r1_inferred_success": 0.7,
+          "r1_gold_success": 0.9333,
+          "semantic_gap_r1": 25.087,
+          "r1_delta_vs_a1_inferred": 60.6487
+        },
+        "TEMPORAL_OVERRIDE": {
+          "n_tasks": 30,
+          "relation_errors": 27,
+          "r1_inferred_success": 0.5,
+          "r1_gold_success": 0.7333,
+          "semantic_gap_r1": 46.752,
+          "r1_delta_vs_a1_inferred": -0.318
+        },
+        "TEMPORAL_SHIFT": {
+          "n_tasks": 30,
+          "relation_errors": 18,
+          "r1_inferred_success": 0.6,
+          "r1_gold_success": 0.7,
+          "semantic_gap_r1": 17.5397,
+          "r1_delta_vs_a1_inferred": 13.6963
+        }
+      },
+      "primary_criterion": {
+        "mean_delta": 29.4673,
+        "one_sided_lcb_95": 18.5693,
+        "two_sided_ci_95": [
+          16.4799,
+          42.59
+        ],
+        "passes": true
+      },
+      "semantic_robustness_gap": {
+        "a1": {
+          "mean_gap": -0.0361,
+          "ci_95": [
+            -0.5207,
+            0.5297
+          ]
+        },
+        "m3": {
+          "mean_gap": 39.44,
+          "ci_95": [
+            27.1589,
+            52.0843
+          ]
+        },
+        "r1": {
+          "mean_gap": 31.0561,
+          "ci_95": [
+            20.0235,
+            42.8637
+          ]
+        }
+      },
+      "t2_metrics": {
+        "t2_precision": 1.0,
+        "t2_recall": 1.0,
+        "false_t2_rate": 0.0,
+        "false_t2_rate_passes_5pct": true,
+        "gold_t2_count": 0,
+        "inferred_t2_count": 0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "causal_chain": {
+        "relation_graph_match": 44,
+        "relation_graph_mismatch": 106,
+        "mdsg_state_match": 150,
+        "mdsg_state_mismatch": 0,
+        "t2_match": 150,
+        "t2_mismatch": 0,
+        "t2_false_positive": 0,
+        "t2_false_negative": 0
+      }
+    },
+    "S2-HARD": {
+      "n_tasks": 150,
+      "per_arm": {
+        "A1_GOLD": {
+          "mean_utility": -16.5543,
+          "success_rate": 0.5,
+          "mean_steps": 3.09,
+          "total_backend_errors": 0
+        },
+        "M3_GOLD": {
+          "mean_utility": 55.7621,
+          "success_rate": 0.9,
+          "mean_steps": 4.67,
+          "total_backend_errors": 0
+        },
+        "R1_GOLD": {
+          "mean_utility": 50.3643,
+          "success_rate": 0.8667,
+          "mean_steps": 4.33,
+          "total_backend_errors": 0
+        },
+        "A1_INFERRED": {
+          "mean_utility": -17.0648,
+          "success_rate": 0.4933,
+          "mean_steps": 2.95,
+          "total_backend_errors": 1
+        },
+        "M3_INFERRED": {
+          "mean_utility": 6.0406,
+          "success_rate": 0.62,
+          "mean_steps": 6.57,
+          "total_backend_errors": 0
+        },
+        "R1_INFERRED": {
+          "mean_utility": 5.3497,
+          "success_rate": 0.6067,
+          "mean_steps": 3.53,
+          "total_backend_errors": 0
+        }
+      },
+      "by_semantic_class": {
+        "AMBIGUOUS": {
+          "n_tasks": 30,
+          "relation_errors": 1,
+          "r1_inferred_success": 0.9667,
+          "r1_gold_success": 0.9333,
+          "semantic_gap_r1": -9.3333,
+          "r1_delta_vs_a1_inferred": 82.8213
+        },
+        "CONDITIONAL_SUPPORT": {
+          "n_tasks": 30,
+          "relation_errors": 29,
+          "r1_inferred_success": 0.5333,
+          "r1_gold_success": 0.8667,
+          "semantic_gap_r1": 61.002,
+          "r1_delta_vs_a1_inferred": 0.0
+        },
+        "MULTI_HOP": {
+          "n_tasks": 30,
+          "relation_errors": 30,
+          "r1_inferred_success": 0.4333,
+          "r1_gold_success": 0.9,
+          "semantic_gap_r1": 87.0413,
+          "r1_delta_vs_a1_inferred": 0.0
+        },
+        "PARTIAL_SUPPORT": {
+          "n_tasks": 30,
+          "relation_errors": 19,
+          "r1_inferred_success": 0.5667,
+          "r1_gold_success": 0.9,
+          "semantic_gap_r1": 52.8683,
+          "r1_delta_vs_a1_inferred": 18.6903
+        },
+        "SOURCE_CONFLICT": {
+          "n_tasks": 30,
+          "relation_errors": 20,
+          "r1_inferred_success": 0.5333,
+          "r1_gold_success": 0.7333,
+          "semantic_gap_r1": 33.4947,
+          "r1_delta_vs_a1_inferred": 10.5607
+        }
+      },
+      "primary_criterion": {
+        "mean_delta": 22.4145,
+        "one_sided_lcb_95": 13.1293,
+        "two_sided_ci_95": [
+          11.1911,
+          34.064
+        ],
+        "passes": true
+      },
+      "semantic_robustness_gap": {
+        "a1": {
+          "mean_gap": 0.5105,
+          "ci_95": [
+            -3.852,
+            5.1223
+          ]
+        },
+        "m3": {
+          "mean_gap": 49.7215,
+          "ci_95": [
+            36.5143,
+            63.2209
+          ]
+        },
+        "r1": {
+          "mean_gap": 45.0146,
+          "ci_95": [
+            30.7076,
+            59.3399
+          ]
+        }
+      },
+      "t2_metrics": {
+        "t2_precision": 1.0,
+        "t2_recall": 1.0,
+        "false_t2_rate": 0.0,
+        "false_t2_rate_passes_5pct": true,
+        "gold_t2_count": 0,
+        "inferred_t2_count": 0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "causal_chain": {
+        "relation_graph_match": 51,
+        "relation_graph_mismatch": 99,
+        "mdsg_state_match": 150,
+        "mdsg_state_mismatch": 0,
+        "t2_match": 150,
+        "t2_mismatch": 0,
+        "t2_false_positive": 0,
+        "t2_false_negative": 0
+      }
+    }
+  },
+  "per_arm": {
+    "A1_GOLD": {
+      "mean_utility": -16.994,
+      "success_rate": 0.4978
+    },
+    "M3_GOLD": {
+      "mean_utility": 57.4705,
+      "success_rate": 0.9022
+    },
+    "R1_GOLD": {
+      "mean_utility": 51.6499,
+      "success_rate": 0.8644
+    },
+    "A1_INFERRED": {
+      "mean_utility": -17.1008,
+      "success_rate": 0.4956
+    },
+    "M3_INFERRED": {
+      "mean_utility": 21.1747,
+      "success_rate": 0.6956
+    },
+    "R1_INFERRED": {
+      "mean_utility": 20.4222,
+      "success_rate": 0.6867
+    }
+  },
+  "primary_criterion": {
+    "mean_delta": 37.523,
+    "one_sided_lcb_95": 31.3334,
+    "two_sided_ci_95": [
+      30.1355,
+      44.8723
+    ],
+    "passes": true
+  },
+  "semantic_robustness_gap": {
+    "a1": {
+      "mean_gap": 0.1068,
+      "ci_95": [
+        -1.3349,
+        1.6008
+      ]
+    },
+    "m3": {
+      "mean_gap": 36.2958,
+      "ci_95": [
+        29.2785,
+        43.4279
+      ]
+    },
+    "r1": {
+      "mean_gap": 31.2278,
+      "ci_95": [
+        24.3839,
+        38.3449
+      ]
+    }
+  },
+  "t2_metrics": {},
+  "causal_chain": {},
+  "error_propagation": {},
+  "key_research_table": [
+    {
+      "tier": "S2-EASY",
+      "relation_match_rate": 0.78,
+      "mdsg_state_accuracy": 1.0,
+      "t2_precision": 1.0,
+      "t2_recall": 1.0,
+      "false_t2_rate": 0.0,
+      "r1_inferred_success": 0.82,
+      "r1_gold_success": 0.9133,
+      "r1_a1_delta_inferred": 60.6871,
+      "semantic_robustness_gap_r1": 17.6125,
+      "primary_passes": true
+    },
+    {
+      "tier": "S2-MEDIUM",
+      "relation_match_rate": 0.2933,
+      "mdsg_state_accuracy": 1.0,
+      "t2_precision": 1.0,
+      "t2_recall": 1.0,
+      "false_t2_rate": 0.0,
+      "r1_inferred_success": 0.6333,
+      "r1_gold_success": 0.8133,
+      "r1_a1_delta_inferred": 29.4673,
+      "semantic_robustness_gap_r1": 31.0561,
+      "primary_passes": true
+    },
+    {
+      "tier": "S2-HARD",
+      "relation_match_rate": 0.34,
+      "mdsg_state_accuracy": 1.0,
+      "t2_precision": 1.0,
+      "t2_recall": 1.0,
+      "false_t2_rate": 0.0,
+      "r1_inferred_success": 0.6067,
+      "r1_gold_success": 0.8667,
+      "r1_a1_delta_inferred": 22.4145,
+      "semantic_robustness_gap_r1": 45.0146,
+      "primary_passes": true
+    }
+  ],
+  "elapsed_seconds": 3320.9,
+  "extractor_version": "2.6.0",
+  "extractor_sha256": "8df7e942b690b5c37ab38d951bc17c0600a196ce01bfa6745c203b91d5d384d9"
+}

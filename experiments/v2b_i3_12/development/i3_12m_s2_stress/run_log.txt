@@ -1,0 +1,90 @@
+I3.12m: S2 Semantic Stress and Error Propagation
+  450 tasks x 6 arms = 2700 trajectories
+  Primary: LCB_95(U_R1_INFERRED - U_A1_INFERRED) > 0
+  Key metric: SemanticRobustnessGap by tier
+  Safety: FalseT2Rate < 5% for EASY and MEDIUM
+
+  Generated 450 S2 tasks
+  Tier distribution: {'S2-EASY': 150, 'S2-MEDIUM': 150, 'S2-HARD': 150}
+  Extractor: v2.6.0 (FROZEN)
+  Extractor SHA256: 8df7e942b690b5c37ab38d951bc17c0600a196ce01bfa6745c203b91d5d384d9
+
+  All oracle paths succeed: True
+
+Processing 450 tasks x 6 arms = 2700 trajectories
+  with 4 workers...
+  Completed 10/450 tasks (0.1/s, ETA 3438s)
+  Completed 20/450 tasks (0.1/s, ETA 3499s)
+  Completed 30/450 tasks (0.1/s, ETA 3610s)
+  Completed 40/450 tasks (0.1/s, ETA 3340s)
+  Completed 50/450 tasks (0.1/s, ETA 3209s)
+  Completed 60/450 tasks (0.1/s, ETA 3154s)
+  Completed 70/450 tasks (0.1/s, ETA 3108s)
+  Completed 80/450 tasks (0.1/s, ETA 2978s)
+  Completed 90/450 tasks (0.1/s, ETA 2907s)
+  Completed 100/450 tasks (0.1/s, ETA 2812s)
+  Completed 110/450 tasks (0.1/s, ETA 2713s)
+  Completed 120/450 tasks (0.1/s, ETA 2634s)
+  Completed 130/450 tasks (0.1/s, ETA 2504s)
+  Completed 140/450 tasks (0.1/s, ETA 2420s)
+  Completed 150/450 tasks (0.1/s, ETA 2379s)
+  Completed 160/450 tasks (0.1/s, ETA 2285s)
+  Completed 170/450 tasks (0.1/s, ETA 2182s)
+  Completed 180/450 tasks (0.1/s, ETA 2112s)
+  Completed 190/450 tasks (0.1/s, ETA 2028s)
+  Completed 200/450 tasks (0.1/s, ETA 1936s)
+  Completed 210/450 tasks (0.1/s, ETA 1837s)
+  Completed 220/450 tasks (0.1/s, ETA 1761s)
+  Completed 230/450 tasks (0.1/s, ETA 1668s)
+  Completed 240/450 tasks (0.1/s, ETA 1576s)
+  Completed 250/450 tasks (0.1/s, ETA 1492s)
+  Completed 260/450 tasks (0.1/s, ETA 1416s)
+  Completed 270/450 tasks (0.1/s, ETA 1341s)
+  Completed 280/450 tasks (0.1/s, ETA 1262s)
+  Completed 290/450 tasks (0.1/s, ETA 1180s)
+  Completed 300/450 tasks (0.1/s, ETA 1113s)
+  Completed 310/450 tasks (0.1/s, ETA 1042s)
+  Completed 320/450 tasks (0.1/s, ETA 970s)
+  Completed 330/450 tasks (0.1/s, ETA 900s)
+  Completed 340/450 tasks (0.1/s, ETA 825s)
+  Completed 350/450 tasks (0.1/s, ETA 748s)
+  Completed 360/450 tasks (0.1/s, ETA 670s)
+  Completed 370/450 tasks (0.1/s, ETA 593s)
+  Completed 380/450 tasks (0.1/s, ETA 516s)
+  Completed 390/450 tasks (0.1/s, ETA 443s)
+  Completed 400/450 tasks (0.1/s, ETA 370s)
+  Completed 410/450 tasks (0.1/s, ETA 297s)
+  Completed 420/450 tasks (0.1/s, ETA 223s)
+  Completed 430/450 tasks (0.1/s, ETA 148s)
+  Completed 440/450 tasks (0.1/s, ETA 74s)
+  Completed 450/450 tasks (0.1/s, ETA 0s)
+
+Completed 450 tasks in 3320.9s
+  Raw results: experiments/v2b_i3_12/development/i3_12m_s2_stress/results_v1.jsonl
+
+======================================================================
+I3.12m Results Summary (450 tasks, 2700 trajectories)
+======================================================================
+
+Key Research Table:
+  Tier           RelMatch    MDSGAcc     T2Prec      T2Rec    FalseT2   R1InfSuc  R1GoldSuc    R1-A1dU      GapR1   Pass
+  S2-EASY          0.7800     1.0000     1.0000     1.0000     0.0000     0.8200     0.9133      60.69    17.6125    YES
+  S2-MEDIUM        0.2933     1.0000     1.0000     1.0000     0.0000     0.6333     0.8133      29.47    31.0561    YES
+  S2-HARD          0.3400     1.0000     1.0000     1.0000     0.0000     0.6067     0.8667      22.41    45.0146    YES
+
+Overall primary criterion:
+  LCB_95(U_R1_INF - U_A1_INF) = 31.3334
+  Mean delta = 37.523
+  PASSES: True
+
+Semantic Robustness Gap (GOLD - INFERRED):
+  A1: mean=0.1068 CI=[-1.3349, 1.6008]
+  M3: mean=36.2958 CI=[29.2785, 43.4279]
+  R1: mean=31.2278 CI=[24.3839, 38.3449]
+
+T2 safety metrics:
+  S2-EASY: FalseT2Rate=0.0000 (< 5%: YES) Prec=1.0000 Rec=1.0000
+  S2-MEDIUM: FalseT2Rate=0.0000 (< 5%: YES) Prec=1.0000 Rec=1.0000
+  S2-HARD: FalseT2Rate=0.0000 (< 5%: YES) Prec=1.0000 Rec=1.0000
+
+  Report: experiments/v2b_i3_12/development/i3_12m_s2_stress/analysis_v1.json
