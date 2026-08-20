@@ -1,0 +1,46 @@
+{
+  "schema": "DAPH_V2B_I3_11A_CLOSURE_V1",
+  "experiment": "I3.11a routing invariance stress test — R0 vs A1 vs M3 on decorrelated corpus",
+  "corpus": "routing_stress_v1 (270 tasks, hidden_evidence_count crossed with task semantics)",
+  "protocol_frozen_at": "c82435d",
+  "result": "R0 PASSES C1 (beats A1) BUT FAILS C2 (does not beat M3). H2 SUPPORTED: hidden_evidence_count==0 was a generator proxy.",
+  "overall_results": {
+    "mean_u": {"A1": 15.59, "M3": 70.24, "R0": 36.03},
+    "success": {"A1": "180/270", "M3": "268/270", "R0": "209/270"},
+    "bootstrap_ci_r0_a1": [13.85, 27.68],
+    "bootstrap_ci_r0_m3": [-43.74, -24.94],
+    "bootstrap_ci_m3_a1": [44.13, 65.44]
+  },
+  "frozen_claims": {
+    "C1_r0_a1_ci_positive": {"result": true, "ci": [13.85, 27.68]},
+    "C2_r0_m3_ci_positive": {"result": false, "ci": [-43.74, -24.94]},
+    "C3_r0_success_ge_max_a1_m3_minus_1pp": {"result": false, "values": "R0=209, M3=268, threshold=265"},
+    "C4_r0_rescues_gt_breaks_vs_a1": {"result": true, "values": "29 > 0"},
+    "C5_no_catastrophic_subgroup": {"result": true}
+  },
+  "critical_test_1": {
+    "name": "conflict_unresolved with hidden>0",
+    "n": 60,
+    "a1_success": "0/60",
+    "m3_success": "59/60",
+    "m3_rescues": 59,
+    "r0_success": "0/60 (routed to A1)",
+    "verdict": "H2 SUPPORTED: M3 rescues conflict_unresolved even with hidden>0. hidden_evidence_count==0 was identifying conflict_unresolved in the original generator, not a general MDSG applicability signal.",
+    "implication": "R0 loses 59 rescues by routing conflict_unresolved with hidden>0 to A1."
+  },
+  "critical_test_2": {
+    "name": "ANSWER tasks with hidden=0",
+    "n": 50,
+    "a1_success": "50/50",
+    "m3_success": "50/50",
+    "m3_rescues": 0,
+    "mean_delta_u_m3_a1": 0.13,
+    "r0_success": "50/50 (routed to M3)",
+    "verdict": "Neutral: M3 neither helps nor hurts on ANSWER tasks with hidden=0. R0 routing to M3 here is harmless but unnecessary."
+  },
+  "scientific_conclusion": "The hidden_evidence_count==0 routing signal was a generator proxy (H2), not a real MDSG applicability predictor (H1). M3's value is specifically in conflict resolution and DEFER recognition — it rescues conflict_unresolved tasks regardless of hidden_evidence_count. R0 captures only the hidden==0 subset of conflict_unresolved, missing 59/89 rescues. The deeper interpretation must be revised: MDSG is most useful when the task requires recognizing that no hypothesis can be resolved (conflict/insufficiency), not merely when all evidence is observable.",
+  "what_was_right": "The offline R0 simulation on pooled v5+efficiency-dev data correctly identified that hidden_evidence_count==0 correlated with M3's rescues. The decorrelation test correctly revealed this was a proxy.",
+  "what_was_wrong": "The deeper interpretation 'MDSG is most useful when all potentially relevant evidence is already observable' was not supported. M3 rescues conflict_unresolved regardless of hidden count. The real signal is task-semantic (conflict/DEFER recognition), not structural (evidence visibility).",
+  "implication_for_routing": "A runtime-usable routing gate must predict conflict/DEFER-likelihood from observable features, not from hidden_evidence_count. The initial decision state (NEEDS_DISCRIMINATION) is the same for all tasks and not discriminative. A better candidate might be: number of hypotheses with visible support from both sides, or visible evidence that supports competing hypotheses.",
+  "next_step": "Search for a runtime-usable predictor of conflict/DEFER-likelihood. The offline data shows M3's rescues are concentrated in tasks where visible evidence supports BOTH hypotheses with SUFFICIENT verification — but this requires knowing verification results, which are hidden until VERIFY is called. A step-0 predictor may need to look at evidence-to-hypothesis relation topology (e.g., 'does visible evidence support both H1 and H2?')."
+}
