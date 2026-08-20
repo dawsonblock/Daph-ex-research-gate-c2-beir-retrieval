@@ -1,0 +1,45 @@
+{
+  "experiment": "I3.13",
+  "status": "CLOSED",
+  "n_tasks": 150,
+  "n_trajectories": 1800,
+  "primary_criterion": {
+    "condition": "R1_REAL",
+    "LCB_95": 0.451,
+    "mean_delta": 5.4151,
+    "passes": true,
+    "interpretation": "R1 retains statistically positive utility advantage despite retrieval incompleteness"
+  },
+  "error_budget_waterfall": {
+    "ceiling_oracle_gold": 18.83,
+    "retrieval_loss": 124.25,
+    "after_retrieval": -105.41,
+    "semantic_loss": 24.21,
+    "after_semantic": -5.38,
+    "routing_loss": 16.42,
+    "after_routing": -21.8,
+    "actual_system": -100.57
+  },
+  "degraded_service": {
+    "classification": "BENCHMARK_UNRESOLVABLE",
+    "n_tasks": 25,
+    "n_successes": 0,
+    "n_trajectories": 300,
+    "action": "Quarantine; keep in frozen report; exclude only in exploratory analysis"
+  },
+  "recall_decomposition": {
+    "RecallAny": 0.3267,
+    "RecallAll": 0.1467,
+    "P_success_RecallAll_1": 0.8636,
+    "P_success_RecallAll_0": 0.0312,
+    "P_T2_correct_RecallAll_1": 0.9545,
+    "P_T2_correct_RecallAll_0": 0.9219
+  },
+  "priority_order": [
+    "Retrieval (Recall=0.22, 505 failures)",
+    "Semantic extraction (SemanticGap=24.21 oracle)",
+    "T2 uncertainty (Recall=0.28, 33 FN)",
+    "R1 optimization (RoutingGap=16.42, already positive)"
+  ],
+  "next_phase": "I3.14a Retrieval Sufficiency Repair"
+}
