@@ -1,0 +1,27 @@
+{
+  "schema": "DAPH_V2B_I3_11F_MANIFEST_V1",
+  "experiment": "I3.11f Repeated-Measures R1 vs M3",
+  "branch": "i3.8-mdsg-validation",
+  "freeze_commit": "cbda2c0",
+  "result_commit": "pending",
+  "protocol": "experiments/v2b_i3_11/development/i3_11f_repeated_measures/protocol_v1.json",
+  "executable_hashes": "experiments/v2b_i3_11/development/i3_11f_repeated_measures/executable_hashes_v1.json",
+  "raw_results": "experiments/v2b_i3_11/development/i3_11f_repeated_measures/repeated_measures_v1.jsonl",
+  "summary": "experiments/v2b_i3_11/development/i3_11f_repeated_measures/repeated_measures_v1_summary.json",
+  "fingerprint_micro": "experiments/v2b_i3_11/development/i3_11f_repeated_measures/fingerprint_micro_v1.json",
+  "closure": "experiments/v2b_i3_11/development/i3_11f_repeated_measures/closure_v1.json",
+  "runner": "scripts/run_i3_11f_repeated_measures.py",
+  "frozen_components_unchanged": ["T2", "R1", "M3", "A1", "prompts", "utility", "model_config"],
+  "design": "K=5 repeats per task per arm, 100 tasks, interleaved call order, task-level bootstrap",
+  "co_primary": {
+    "C1": "LCB_95(E[U_R1] - E[U_A1]) > 0",
+    "C2": "LCB_95(E[U_R1] - E[U_M3]) > 0"
+  },
+  "results_summary": {
+    "C1": "PASS [+117.61, +148.63]",
+    "C2": "FAIL [-0.87, +3.06] (CI crosses zero, point estimate +1.04 favors R1)",
+    "C3": "PASS (R1=0.91, M3=0.908, non-inferior)",
+    "C4": "PASS (R1=6.02 steps, M3=6.37 steps)",
+    "C5": "PASS [+0.62, +0.79]"
+  }
+}

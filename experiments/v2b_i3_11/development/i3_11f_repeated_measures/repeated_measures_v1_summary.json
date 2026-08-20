@@ -1,0 +1,268 @@
+{
+  "estimand": "per-task mean utility and success probability, bootstrapped over tasks",
+  "fingerprint_micro_experiment": {
+    "r1_confirm_v1_0009": {
+      "action_distribution": {
+        "DEFER": 4,
+        "STOP": 21
+      },
+      "divergence_step": 3,
+      "fingerprint_table": {
+        "a26a7955944dc5c60445bff77fac9c8e": {
+          "actions": {
+            "DEFER": 4,
+            "STOP": 21
+          },
+          "n": 25
+        }
+      },
+      "n_calls": 25,
+      "n_unique_fingerprints": 1
+    },
+    "r1_confirm_v1_0043": {
+      "action_distribution": {
+        "DEFER": 10,
+        "STOP": 15
+      },
+      "divergence_step": 4,
+      "fingerprint_table": {
+        "a26a7955944dc5c60445bff77fac9c8e": {
+          "actions": {
+            "DEFER": 10,
+            "STOP": 15
+          },
+          "n": 25
+        }
+      },
+      "n_calls": 25,
+      "n_unique_fingerprints": 1
+    }
+  },
+  "frozen_claims": {
+    "C1_r1_a1_utility_ci_positive": true,
+    "C2_r1_m3_utility_ci_positive": false,
+    "C3_r1_success_prob_noninferior": true,
+    "C4_r1_steps_lt_m3": true,
+    "C5_r1_a1_success_ci_positive": true
+  },
+  "instability_metrics": {
+    "deterministic_request_rate": 0.9442,
+    "fingerprint_distribution": {
+      "a26a7955944dc5c60445bff77fac9c8e": 8126
+    },
+    "n_deterministic": 1099,
+    "n_stop_defer_flip": 8,
+    "n_unique_fingerprints": 1,
+    "n_unstable": 65,
+    "stop_defer_flip_rate": 0.0069,
+    "total_unique_requests": 1164,
+    "unstable_request_rate": 0.0558
+  },
+  "k_repeats": 5,
+  "n_tasks": 100,
+  "overall": {
+    "bootstrap_ci_m3_a1_utility": [
+      116.44,
+      147.81
+    ],
+    "bootstrap_ci_r1_a1_success_prob": [
+      0.62,
+      0.794
+    ],
+    "bootstrap_ci_r1_a1_utility": [
+      117.6099,
+      148.6337
+    ],
+    "bootstrap_ci_r1_m3_success_prob": [
+      -0.014,
+      0.022
+    ],
+    "bootstrap_ci_r1_m3_utility": [
+      -0.8741,
+      3.059
+    ],
+    "mean_steps": {
+      "A1": 3.86,
+      "M3": 6.37,
+      "R1": 6.02
+    },
+    "mean_success_prob": {
+      "A1": 0.2,
+      "M3": 0.908,
+      "R1": 0.91
+    },
+    "mean_u": {
+      "A1": -85.0596,
+      "M3": 47.5621,
+      "R1": 48.6001
+    }
+  },
+  "schema": "DAPH_V2B_I3_11F_REPEATED_MEASURES_V1",
+  "subgroups": {
+    "asymmetric_conflict": {
+      "mean_p_a1": 0.0,
+      "mean_p_m3": 0.3333,
+      "mean_p_r1": 0.3333,
+      "mean_steps_m3": 4.27,
+      "mean_steps_r1": 4.27,
+      "mean_u_a1": -129.65,
+      "mean_u_m3": -66.8927,
+      "mean_u_r1": -66.8927,
+      "n": 3
+    },
+    "bilateral_conflict_h0": {
+      "mean_p_a1": 0.0,
+      "mean_p_m3": 0.88,
+      "mean_p_r1": 0.88,
+      "mean_steps_m3": 5.47,
+      "mean_steps_r1": 5.56,
+      "mean_u_a1": -126.7292,
+      "mean_u_m3": 46.1949,
+      "mean_u_r1": 46.0005,
+      "n": 20
+    },
+    "bilateral_conflict_h1_noise": {
+      "mean_p_a1": 0.0,
+      "mean_p_m3": 1.0,
+      "mean_p_r1": 1.0,
+      "mean_steps_m3": 14.0,
+      "mean_steps_r1": 14.0,
+      "mean_u_a1": -133.5568,
+      "mean_u_m3": 38.8,
+      "mean_u_r1": 38.8,
+      "n": 5
+    },
+    "early_false_ready": {
+      "mean_p_a1": 1.0,
+      "mean_p_m3": 1.0,
+      "mean_p_r1": 1.0,
+      "mean_steps_m3": 5.0,
+      "mean_steps_r1": 5.0,
+      "mean_u_a1": 88.2,
+      "mean_u_m3": 88.2,
+      "mean_u_r1": 88.2,
+      "n": 3
+    },
+    "falsified_contradiction": {
+      "mean_p_a1": 1.0,
+      "mean_p_m3": 1.0,
+      "mean_p_r1": 1.0,
+      "mean_steps_m3": 3.0,
+      "mean_steps_r1": 3.0,
+      "mean_u_a1": 93.53,
+      "mean_u_m3": 93.53,
+      "mean_u_r1": 93.53,
+      "n": 4
+    },
+    "late_conflict": {
+      "mean_p_a1": 0.0,
+      "mean_p_m3": 1.0,
+      "mean_p_r1": 1.0,
+      "mean_steps_m3": 5.44,
+      "mean_steps_r1": 5.52,
+      "mean_u_a1": -132.83,
+      "mean_u_m3": 56.2196,
+      "mean_u_r1": 56.0468,
+      "n": 5
+    },
+    "multi_viable": {
+      "mean_p_a1": 0.0,
+      "mean_p_m3": 0.0,
+      "mean_p_r1": 0.0,
+      "mean_steps_m3": 13.2,
+      "mean_steps_r1": 3.0,
+      "mean_u_a1": -126.47,
+      "mean_u_m3": -149.4113,
+      "mean_u_r1": -126.47,
+      "n": 3
+    },
+    "noise_before_conflict": {
+      "mean_p_a1": 0.0,
+      "mean_p_m3": 0.95,
+      "mean_p_r1": 0.95,
+      "mean_steps_m3": 8.4,
+      "mean_steps_r1": 8.53,
+      "mean_u_a1": -129.8726,
+      "mean_u_m3": 44.7963,
+      "mean_u_r1": 44.5049,
+      "n": 20
+    },
+    "one_viable_among_eliminated": {
+      "mean_p_a1": 1.0,
+      "mean_p_m3": 1.0,
+      "mean_p_r1": 1.0,
+      "mean_steps_m3": 4.0,
+      "mean_steps_r1": 2.13,
+      "mean_u_a1": 96.498,
+      "mean_u_m3": 90.35,
+      "mean_u_r1": 96.286,
+      "n": 3
+    },
+    "quad_all_eliminated": {
+      "mean_p_a1": 0.0,
+      "mean_p_m3": 1.0,
+      "mean_p_r1": 1.0,
+      "mean_steps_m3": 5.75,
+      "mean_steps_r1": 5.75,
+      "mean_u_a1": -132.83,
+      "mean_u_m3": 55.55,
+      "mean_u_r1": 55.55,
+      "n": 4
+    },
+    "simple_answer": {
+      "mean_p_a1": 1.0,
+      "mean_p_m3": 1.0,
+      "mean_p_r1": 1.0,
+      "mean_steps_m3": 2.0,
+      "mean_steps_r1": 2.0,
+      "mean_u_a1": 96.71,
+      "mean_u_m3": 96.71,
+      "mean_u_r1": 96.71,
+      "n": 3
+    },
+    "stale_then_current": {
+      "mean_p_a1": 1.0,
+      "mean_p_m3": 1.0,
+      "mean_p_r1": 1.0,
+      "mean_steps_m3": 10.0,
+      "mean_steps_r1": 7.0,
+      "mean_u_a1": 83.89,
+      "mean_u_m3": 77.44,
+      "mean_u_r1": 83.89,
+      "n": 1
+    },
+    "subset_eliminated": {
+      "mean_p_a1": 1.0,
+      "mean_p_m3": 1.0,
+      "mean_p_r1": 1.0,
+      "mean_steps_m3": 3.0,
+      "mean_steps_r1": 3.0,
+      "mean_u_a1": 93.53,
+      "mean_u_m3": 93.53,
+      "mean_u_r1": 93.53,
+      "n": 2
+    },
+    "triple_all_eliminated": {
+      "mean_p_a1": 0.0,
+      "mean_p_m3": 0.96,
+      "mean_p_r1": 0.97,
+      "mean_steps_m3": 5.5,
+      "mean_steps_r1": 5.47,
+      "mean_u_a1": -129.65,
+      "mean_u_m3": 53.1102,
+      "mean_u_r1": 54.1748,
+      "n": 20
+    },
+    "triple_verify_answer": {
+      "mean_p_a1": 1.0,
+      "mean_p_m3": 1.0,
+      "mean_p_r1": 1.0,
+      "mean_steps_m3": 4.0,
+      "mean_steps_r1": 4.0,
+      "mean_u_a1": 90.35,
+      "mean_u_m3": 90.35,
+      "mean_u_r1": 90.35,
+      "n": 4
+    }
+  }
+}

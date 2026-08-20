@@ -1,0 +1,442 @@
+{
+  "r1_confirm_v1_0009": {
+    "action_distribution": {
+      "DEFER": 4,
+      "STOP": 21
+    },
+    "all_calls": [
+      {
+        "action": "STOP",
+        "call_idx": 0,
+        "finish_reason": "stop",
+        "latency_ms": 1219,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 1,
+        "finish_reason": "stop",
+        "latency_ms": 983,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 2,
+        "finish_reason": "stop",
+        "latency_ms": 1175,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 3,
+        "finish_reason": "stop",
+        "latency_ms": 1078,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 4,
+        "finish_reason": "stop",
+        "latency_ms": 1082,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 5,
+        "finish_reason": "stop",
+        "latency_ms": 1174,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 6,
+        "finish_reason": "stop",
+        "latency_ms": 1154,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 7,
+        "finish_reason": "stop",
+        "latency_ms": 1119,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 8,
+        "finish_reason": "stop",
+        "latency_ms": 1117,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 9,
+        "finish_reason": "stop",
+        "latency_ms": 1194,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 10,
+        "finish_reason": "stop",
+        "latency_ms": 1376,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 11,
+        "finish_reason": "stop",
+        "latency_ms": 1307,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 12,
+        "finish_reason": "stop",
+        "latency_ms": 971,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 13,
+        "finish_reason": "stop",
+        "latency_ms": 1117,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 14,
+        "finish_reason": "stop",
+        "latency_ms": 1127,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 15,
+        "finish_reason": "stop",
+        "latency_ms": 1084,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 16,
+        "finish_reason": "stop",
+        "latency_ms": 1132,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 17,
+        "finish_reason": "stop",
+        "latency_ms": 1164,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 18,
+        "finish_reason": "stop",
+        "latency_ms": 1107,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 19,
+        "finish_reason": "stop",
+        "latency_ms": 1289,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 20,
+        "finish_reason": "stop",
+        "latency_ms": 1128,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 21,
+        "finish_reason": "stop",
+        "latency_ms": 1334,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 22,
+        "finish_reason": "stop",
+        "latency_ms": 1117,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 23,
+        "finish_reason": "stop",
+        "latency_ms": 1288,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 24,
+        "finish_reason": "stop",
+        "latency_ms": 1257,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      }
+    ],
+    "divergence_step": 3,
+    "fingerprint_table": {
+      "a26a7955944dc5c60445bff77fac9c8e": {
+        "actions": {
+          "DEFER": 4,
+          "STOP": 21
+        },
+        "n": 25
+      }
+    },
+    "n_calls": 25,
+    "n_unique_fingerprints": 1
+  },
+  "r1_confirm_v1_0043": {
+    "action_distribution": {
+      "DEFER": 10,
+      "STOP": 15
+    },
+    "all_calls": [
+      {
+        "action": "STOP",
+        "call_idx": 0,
+        "finish_reason": "stop",
+        "latency_ms": 947,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 1,
+        "finish_reason": "stop",
+        "latency_ms": 1315,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 2,
+        "finish_reason": "stop",
+        "latency_ms": 1257,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 3,
+        "finish_reason": "stop",
+        "latency_ms": 1123,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 4,
+        "finish_reason": "stop",
+        "latency_ms": 1183,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 5,
+        "finish_reason": "stop",
+        "latency_ms": 1040,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 6,
+        "finish_reason": "stop",
+        "latency_ms": 1055,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 7,
+        "finish_reason": "stop",
+        "latency_ms": 1079,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 8,
+        "finish_reason": "stop",
+        "latency_ms": 1041,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 9,
+        "finish_reason": "stop",
+        "latency_ms": 1340,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 10,
+        "finish_reason": "stop",
+        "latency_ms": 1271,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 11,
+        "finish_reason": "stop",
+        "latency_ms": 1081,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 12,
+        "finish_reason": "stop",
+        "latency_ms": 1129,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 13,
+        "finish_reason": "stop",
+        "latency_ms": 1072,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 14,
+        "finish_reason": "stop",
+        "latency_ms": 1044,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 15,
+        "finish_reason": "stop",
+        "latency_ms": 1112,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 16,
+        "finish_reason": "stop",
+        "latency_ms": 1029,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 17,
+        "finish_reason": "stop",
+        "latency_ms": 1240,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 18,
+        "finish_reason": "stop",
+        "latency_ms": 1040,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 19,
+        "finish_reason": "stop",
+        "latency_ms": 1205,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 20,
+        "finish_reason": "stop",
+        "latency_ms": 1106,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 21,
+        "finish_reason": "stop",
+        "latency_ms": 1085,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "DEFER",
+        "call_idx": 22,
+        "finish_reason": "stop",
+        "latency_ms": 1048,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 23,
+        "finish_reason": "stop",
+        "latency_ms": 1082,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      },
+      {
+        "action": "STOP",
+        "call_idx": 24,
+        "finish_reason": "stop",
+        "latency_ms": 1050,
+        "reported_model": "deepseek-v4-flash",
+        "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e"
+      }
+    ],
+    "divergence_step": 4,
+    "fingerprint_table": {
+      "a26a7955944dc5c60445bff77fac9c8e": {
+        "actions": {
+          "DEFER": 10,
+          "STOP": 15
+        },
+        "n": 25
+      }
+    },
+    "n_calls": 25,
+    "n_unique_fingerprints": 1
+  }
+}
