@@ -1,0 +1,11 @@
+{
+  "schema": "DAPH_V2B_I3_11A_ERRATUM_V1",
+  "date": "2026-08-19",
+  "issue": "The frozen protocol routing_stress_protocol_v1.json states n_tasks=300, but the specified subgroup counts sum to 270. The actual experiment correctly ran 270 tasks.",
+  "protocol_said": 300,
+  "subgroup_sum": 270,
+  "actual_run": 270,
+  "impact": "None on results or conclusions. The frozen distribution implied n=270. The protocol header was inconsistent with its own distribution table.",
+  "correction": "n=270 was the frozen distribution. No protocol modification needed — this erratum documents the discrepancy.",
+  "frozen_protocol_unchanged": true
+}
