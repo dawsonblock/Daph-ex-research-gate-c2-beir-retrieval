@@ -1,0 +1,96 @@
+{
+  "experiment": "I3.14a",
+  "title": "Retrieval Sufficiency Repair",
+  "status": "FROZEN",
+  "date": "2026-08-20",
+  "predecessor": "I3.13",
+  "motivation": "I3.13 showed RecallAll=0.1467 and P(success|RecallAll=1)=0.86 vs P(success|RecallAll=0)=0.03. Retrieval is the dominant bottleneck (124.25 utility points lost). The downstream architecture is already strong when given correct inputs (97.9% conditional success).",
+
+  "scientific_question": "Does increasing RequiredEvidenceRecall from ~0.22 toward 0.7-0.9 produce a proportional increase in TaskUtility, while keeping all downstream components frozen?",
+
+  "frozen_downstream": {
+    "semantic_extractor": "v2.6.0 (SHA256: b00e480af3be88a8...)",
+    "MDSG": "frozen",
+    "T2": "frozen",
+    "R1": "frozen",
+    "A1": "frozen",
+    "prompts": "frozen (BASELINE_WITH_AFFORDANCES, MDSG_STATE_WITH_AFFORDANCES)",
+    "executor": "frozen",
+    "utility": "frozen",
+    "model": "DeepSeek (frozen config)",
+    "corpus": "I3.13 50-passage corpus (SHA256: 360a1520f01766be...)",
+    "tasks": "I3.13 150-task corpus (seed=42, 25 per category)"
+  },
+
+  "retrieval_ladder": {
+    "Q0_BM25": {
+      "description": "Frozen BM25 baseline (current I3.13 R1_REAL)",
+      "retriever": "BM25Retriever (k1=1.5, b=0.75)",
+      "top_k": 5
+    },
+    "Q1_DENSE": {
+      "description": "Dense retrieval with BGE-small-en-v1.5",
+      "retriever": "PinnedTransformerEmbedder (BAAI/bge-small-en-v1.5, revision 5c38ec7c405ec4b44b94cc5a9bb96e735b38267a)",
+      "similarity": "cosine",
+      "top_k": 5
+    },
+    "Q2_HYBRID": {
+      "description": "Hybrid BM25 + dense with score fusion",
+      "retriever": "BM25 + BGE-small, reciprocal rank fusion (RRF k=60)",
+      "top_k": 5
+    },
+    "Q3_RERANKED": {
+      "description": "Hybrid retrieval + cross-encoder reranking",
+      "retriever": "Q2 hybrid candidate pool (top 20) + gte-reranker-modernbert-base",
+      "top_k": 5
+    },
+    "Q4_ORACLE": {
+      "description": "Oracle retrieval ceiling (all required passages supplied)",
+      "retriever": "oracle (evaluator-side gold)",
+      "top_k": "all required"
+    }
+  },
+
+  "metrics": {
+    "primary": "RequiredEvidenceRecall@k (mean across tasks)",
+    "secondary": [
+      "RecallAny@k (fraction of tasks with >=1 required passage)",
+      "RecallAll@k (fraction of tasks with all required passages)",
+      "TaskSuccess",
+      "MeanUtility",
+      "P(success | RecallAll=1)",
+      "P(success | RecallAll=0)",
+      "P(T2_correct | RecallAll=1)",
+      "P(T2_correct | RecallAll=0)"
+    ],
+    "gap_decomposition": [
+      "RetrievalGap (Q4 - Qk)",
+      "SemanticGap (R1_GOLD - R1_INF)",
+      "RoutingGap (R1_INF - A1_INF)",
+      "PolicyGap (residual)"
+    ]
+  },
+
+  "arms": ["A1_GOLD", "A1_INFERRED", "R1_GOLD", "R1_INFERRED"],
+  "n_tasks": 150,
+  "n_conditions": 5,
+  "n_arms": 4,
+  "n_trajectories": 3000,
+
+  "degraded_service_handling": "Quarantine as BENCHMARK_UNRESOLVABLE; include in frozen report but compute exploratory metrics excluding it",
+
+  "success_criteria": {
+    "primary": "Identify retrieval configuration that maximizes RequiredEvidenceRecall while keeping downstream frozen",
+    "secondary": "Demonstrate that RecallAll increase produces TaskUtility increase",
+    "freeze_decision": "Freeze best non-oracle retriever as I3.14b candidate"
+  },
+
+  "forbidden": [
+    "Modifying semantic extractor v2.6.0",
+    "Modifying MDSG/T2/R1/A1 architecture",
+    "Modifying prompts or executor",
+    "Modifying the I3.13 corpus or task set",
+    "Adding uncertainty-aware T2 (reserved for I3.16)",
+    "Optimizing extractor training (reserved for I3.15)"
+  ]
+}

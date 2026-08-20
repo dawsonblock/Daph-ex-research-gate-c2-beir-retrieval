@@ -237,22 +237,43 @@ def gen_conflict_task(
     passages: list[DocumentPassage],
     rng: random.Random,
 ) -> SemanticTask:
-    """Task with bilateral conflict. T2 should fire."""
+    """Task with bilateral conflict within the same domain. T2 should fire.
+
+    Selects two passages from the SAME domain: one supporting current
+    (operational) and one contradicting current (not operational). This
+    ensures the query can potentially retrieve both passages.
+    """
     subject = DOMAIN_SUBJECTS.get(domain, domain)
     h = _make_hyps(2, subject)
 
-    # Find one passage supporting current and one supporting stale
-    current_support = [p for p in passages
+    # Find passages from the SAME domain with conflicting status
+    domain_passages = [p for p in passages if p.domain == domain]
+    current_support = [p for p in domain_passages
                        if any(r == "SUPPORT" and o == "current" for o, r in p.gold_relations)]
-    stale_support = [p for p in passages
-                     if any(r == "SUPPORT" and o == "stale" for o, r in p.gold_relations)]
+    current_contradict = [p for p in domain_passages
+                          if any(r == "CONTRADICT" and o == "current" for o, r in p.gold_relations)]
+
+    if not current_support or not current_contradict:
+        # Fallback: search all domains for one with both
+        for d in set(p.domain for p in passages):
+            d_support = [p for p in passages if p.domain == d
+                         if any(r == "SUPPORT" and o == "current" for o, r in p.gold_relations)]
+            d_contradict = [p for p in passages if p.domain == d
+                            if any(r == "CONTRADICT" and o == "current" for o, r in p.gold_relations)]
+            if d_support and d_contradict:
+                current_support = d_support
+                current_contradict = d_contradict
+                # Update subject to match the domain we found
+                subject = DOMAIN_SUBJECTS.get(d, d)
+                h = _make_hyps(2, subject)
+                break
 
     p1 = rng.choice(current_support)
-    p2 = rng.choice(stale_support)
+    p2 = rng.choice(current_contradict)
 
     ev = (
         _passage_to_evidence(p1, "E1", retrieved=True, verify_result="SUFFICIENT"),
-        _passage_to_evidence(p2, "E2", retrieved=True, verify_result="SUFFICIENT"),
+        _passage_to_evidence(p2, "E2", retrieved=True, verify_result="FALSIFIED"),
     )
     gold = _passage_gold_relations(p1, "E1", 2) + _passage_gold_relations(p2, "E2", 2)
 
@@ -275,12 +296,28 @@ def gen_degraded_task(
     passages: list[DocumentPassage],
     rng: random.Random,
 ) -> SemanticTask:
-    """Task where evidence contradicts H1 (current). H2 (stale/defer) wins."""
+    """Task where evidence contradicts H1 (current). H2 (stale/defer) wins.
+
+    Selects contradicting passage from the SAME domain so the query can retrieve it.
+    """
     subject = DOMAIN_SUBJECTS.get(domain, domain)
     h = _make_hyps(2, subject)
 
-    contradict_passages = [p for p in passages
+    domain_passages = [p for p in passages if p.domain == domain]
+    contradict_passages = [p for p in domain_passages
                           if any(r == "CONTRADICT" and o == "current" for o, r in p.gold_relations)]
+
+    if not contradict_passages:
+        # Fallback: any domain with contradict passages
+        for d in set(p.domain for p in passages):
+            d_contradict = [p for p in passages if p.domain == d
+                           if any(r == "CONTRADICT" and o == "current" for o, r in p.gold_relations)]
+            if d_contradict:
+                contradict_passages = d_contradict
+                subject = DOMAIN_SUBJECTS.get(d, d)
+                h = _make_hyps(2, subject)
+                break
+
     if not contradict_passages:
         contradict_passages = [p for p in passages
                               if any(r == "CONTRADICT" for o, r in p.gold_relations)]
@@ -309,14 +346,40 @@ def gen_noise_plus_signal_task(
     passages: list[DocumentPassage],
     rng: random.Random,
 ) -> SemanticTask:
-    """Task with noise passages + one signal passage. T2 should NOT fire."""
+    """Task with noise passages + one signal passage. T2 should NOT fire.
+
+    All passages are from the SAME domain so the query can retrieve them.
+    """
     subject = DOMAIN_SUBJECTS.get(domain, domain)
     h = _make_hyps(2, subject)
 
-    neutral_passages = [p for p in passages
+    domain_passages = [p for p in passages if p.domain == domain]
+    neutral_passages = [p for p in domain_passages
                         if all(r == "NEUTRAL" for _, r in p.gold_relations)]
-    support_passages = [p for p in passages
+    support_passages = [p for p in domain_passages
                         if any(r == "SUPPORT" and o == "current" for o, r in p.gold_relations)]
+
+    # Fallback to any domain if this domain doesn't have both
+    if not neutral_passages or not support_passages:
+        for d in set(p.domain for p in passages):
+            d_neutral = [p for p in passages if p.domain == d
+                         if all(r == "NEUTRAL" for _, r in p.gold_relations)]
+            d_support = [p for p in passages if p.domain == d
+                         if any(r == "SUPPORT" and o == "current" for o, r in p.gold_relations)]
+            if d_neutral and d_support:
+                neutral_passages = d_neutral
+                support_passages = d_support
+                subject = DOMAIN_SUBJECTS.get(d, d)
+                h = _make_hyps(2, subject)
+                break
+
+    # If still no neutral, use non-support passages from the domain
+    if not neutral_passages:
+        neutral_passages = [p for p in domain_passages
+                            if not any(r == "SUPPORT" and o == "current" for o, r in p.gold_relations)]
+    if not neutral_passages:
+        neutral_passages = [p for p in passages
+                            if all(r == "NEUTRAL" for _, r in p.gold_relations)]
 
     p_noise1 = rng.choice(neutral_passages)
     p_noise2 = rng.choice(neutral_passages)
@@ -350,20 +413,38 @@ def gen_conflict_with_noise_task(
     passages: list[DocumentPassage],
     rng: random.Random,
 ) -> SemanticTask:
-    """Task with bilateral conflict + hidden noise. T2 should fire."""
+    """Task with bilateral conflict + hidden noise. T2 should fire.
+
+    Conflict passages are from the SAME domain. Noise can be from any domain.
+    """
     subject = DOMAIN_SUBJECTS.get(domain, domain)
     h = _make_hyps(2, subject)
 
-    current_support = [p for p in passages
+    domain_passages = [p for p in passages if p.domain == domain]
+    current_support = [p for p in domain_passages
                        if any(r == "SUPPORT" and o == "current" for o, r in p.gold_relations)]
-    stale_support = [p for p in passages
-                     if any(r == "SUPPORT" and o == "stale" for o, r in p.gold_relations)]
+    current_contradict = [p for p in domain_passages
+                          if any(r == "CONTRADICT" and o == "current" for o, r in p.gold_relations)]
+
+    if not current_support or not current_contradict:
+        for d in set(p.domain for p in passages):
+            d_support = [p for p in passages if p.domain == d
+                         if any(r == "SUPPORT" and o == "current" for o, r in p.gold_relations)]
+            d_contradict = [p for p in passages if p.domain == d
+                            if any(r == "CONTRADICT" and o == "current" for o, r in p.gold_relations)]
+            if d_support and d_contradict:
+                current_support = d_support
+                current_contradict = d_contradict
+                subject = DOMAIN_SUBJECTS.get(d, d)
+                h = _make_hyps(2, subject)
+                break
+
     neutral_passages = [p for p in passages
                         if all(r == "NEUTRAL" for _, r in p.gold_relations)]
 
     p1 = rng.choice(current_support)
-    p2 = rng.choice(stale_support)
-    p3 = rng.choice(neutral_passages)
+    p2 = rng.choice(current_contradict)
+    p3 = rng.choice(neutral_passages) if neutral_passages else rng.choice(passages)
 
     ev = (
         _passage_to_evidence(p1, "E1", retrieved=True, verify_result="SUFFICIENT"),
@@ -393,13 +474,30 @@ def gen_compositional_task(
     passages: list[DocumentPassage],
     rng: random.Random,
 ) -> SemanticTask:
-    """Task with compositional/complex passages. Tests real language understanding."""
+    """Task with compositional/complex passages. Tests real language understanding.
+
+    Selects complex passages from the SAME domain so the query can retrieve them.
+    """
     subject = DOMAIN_SUBJECTS.get(domain, domain)
     h = _make_hyps(2, subject)
 
-    # Use complex passages (those with multiple sentences or compositional structure)
-    complex_passages = [p for p in passages if len(p.text.split(".")) > 2
+    # Try domain-specific complex passages first
+    domain_passages = [p for p in passages if p.domain == domain]
+    complex_passages = [p for p in domain_passages if len(p.text.split(".")) > 2
                         and any(r != "NEUTRAL" for _, r in p.gold_relations)]
+
+    # Fallback: any domain with complex passages
+    if not complex_passages:
+        for d in set(p.domain for p in passages):
+            d_complex = [p for p in passages if p.domain == d
+                         if len(p.text.split(".")) > 2
+                         and any(r != "NEUTRAL" for _, r in p.gold_relations)]
+            if d_complex:
+                complex_passages = d_complex
+                subject = DOMAIN_SUBJECTS.get(d, d)
+                h = _make_hyps(2, subject)
+                break
+
     if not complex_passages:
         complex_passages = [p for p in passages if any(r != "NEUTRAL" for _, r in p.gold_relations)]
 

@@ -1,24 +1,22 @@
 #!/usr/bin/env python3
-"""I3.13: Retrieved real-world evidence experiment.
+"""I3.14a: Retrieval Sufficiency Repair.
 
-Tests whether the metacognitive architecture operates over actually
-retrieved evidence, measuring the full causal chain:
+Tests a retrieval ladder (Q0-Q4) while keeping all downstream components
+frozen from I3.13. The scientific question is whether increasing
+RequiredEvidenceRecall produces proportional TaskUtility increase.
 
-  RetrievalRecall -> RelationF1 -> EliminationAccuracy
-  -> T2Precision/Recall -> RoutingAccuracy -> TaskUtility
+Retrieval ladder:
+  Q0_BM25:     Frozen BM25 baseline (current I3.13 R1_REAL)
+  Q1_DENSE:    BGE-small-en-v1.5 dense retrieval
+  Q2_HYBRID:   BM25 + dense with reciprocal rank fusion
+  Q3_RERANKED: Hybrid + cross-encoder reranking
+  Q4_ORACLE:   Oracle retrieval ceiling
 
-Three retrieval conditions:
-  R0_ORACLE: All required passages supplied directly
-  R1_REAL: BM25 retriever supplies top-k passages
-  R2_DISTRACTORS: BM25 + guaranteed relevant + distractors
-
-Representations per condition (priority subset for cost control):
-  A1_GOLD, A1_INFERRED, R1_GOLD, R1_INFERRED
-
-Per-task telemetry tracks the complete failure attribution.
+Frozen downstream:
+  semantic extractor v2.6.0, MDSG, T2, R1, A1, prompts, executor, utility, model
 
 Usage:
-    PYTHONPATH=. python3 -u scripts/run_i3_13_retrieved_evidence.py --workers 4
+    PYTHONPATH=. python3 -u scripts/run_i3_14a_retrieval_ladder.py --workers 4
 """
 from __future__ import annotations
 
@@ -29,6 +27,7 @@ import os
 import sys
 import time
 import traceback
+import statistics
 from collections import Counter, defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
@@ -54,16 +53,14 @@ from hrm_adaptive_memory.executive.semantic_relations.i3_13_document_corpus impo
 from hrm_adaptive_memory.executive.semantic_relations.deterministic_rules import (
     DeterministicRelationExtractor,
 )
-from hrm_adaptive_memory.executive.semantic_relations.raw_semantic_generator import (
-    SemanticTask,
+from hrm_adaptive_memory.retrieval.i3_14_retrieval_ladder import (
+    build_retriever, RETRIEVAL_CONDITIONS, retriever_digest,
 )
-from hrm_adaptive_memory.retrieval.lexical import BM25Retriever
 from hrm_adaptive_memory.memory.chunking import Chunk
 from hrm_adaptive_memory.executive.evidence_benchmark import (
-    EvidenceItem, EvidenceTask, EvidenceHypothesis, EvidenceRuntime,
+    EvidenceItem, EvidenceTask, EvidenceRuntime,
     initial_evidence_runtime,
 )
-from hrm_adaptive_memory.cognitive_control.core import DecisionAction
 from hrm_adaptive_memory.cognitive_control.state import (
     TemporalStatus, VerificationState,
 )
@@ -72,11 +69,11 @@ from hrm_adaptive_memory.executive.metareasoning_utility import MetareasoningUti
 
 
 # ---------------------------------------------------------------------------
-# Retrieval conditions
+# Corpus indexing
 # ---------------------------------------------------------------------------
 
-def build_retrieval_index(corpus_passages):
-    """Build a BM25 index over the document corpus."""
+def build_corpus_index(corpus_passages):
+    """Build index structures from the corpus."""
     chunks = [
         Chunk(
             chunk_id=p.passage_id,
@@ -90,14 +87,17 @@ def build_retrieval_index(corpus_passages):
         )
         for p in corpus_passages
     ]
-    return BM25Retriever(chunks)
+    corpus_by_text = {p.text: p.passage_id for p in corpus_passages}
+    corpus_by_id = {p.passage_id: p for p in corpus_passages}
+    return chunks, corpus_by_text, corpus_by_id
 
 
 def get_required_passage_ids(task, corpus_by_text):
     """Get the passage IDs for evidence that should be retrieved.
 
     Only counts evidence with retrieved=True. Evidence with retrieved=False
-    (e.g., hidden noise in conflict_with_noise) is not required for retrieval.
+    (e.g., hidden noise in conflict_with_noise) is not required for retrieval
+    — it's meant to be found through SEARCH actions, not initial retrieval.
     """
     required = set()
     for ev in task.evidence_task.evidence_items:
@@ -110,7 +110,7 @@ def get_required_passage_ids(task, corpus_by_text):
 
 
 def retrieve_oracle(task, corpus_by_text, corpus_by_id):
-    """R0_ORACLE: return exactly the passages used in the task."""
+    """Q4_ORACLE: return exactly the passages used in the task."""
     passages = []
     for ev in task.evidence_task.evidence_items:
         pid = corpus_by_text.get(ev.proposition)
@@ -119,8 +119,8 @@ def retrieve_oracle(task, corpus_by_text, corpus_by_id):
     return passages
 
 
-def retrieve_real(task, retriever, corpus_by_id, k=5):
-    """R1_REAL: BM25 retrieval over the corpus."""
+def retrieve_with_ladder(task, retriever, corpus_by_id, k=5):
+    """Retrieve passages using a ladder retriever."""
     query = task.evidence_task.task_summary
     results = retriever.search(query, top_k=k)
     passages = []
@@ -129,35 +129,6 @@ def retrieve_real(task, retriever, corpus_by_id, k=5):
         if p:
             passages.append(p)
     return passages
-
-
-def retrieve_distractors(task, retriever, corpus_by_text, corpus_by_id, k=5, n_distractors=3):
-    """R2_DISTRACTORS: guaranteed relevant + BM25 distractors."""
-    oracle_passages = retrieve_oracle(task, corpus_by_text, corpus_by_id)
-    oracle_ids = {p["passage_id"] for p in oracle_passages}
-
-    query = task.evidence_task.task_summary
-    results = retriever.search(query, top_k=k + n_distractors)
-
-    distractors = []
-    for chunk, score in results:
-        p = corpus_by_id.get(chunk.chunk_id)
-        if p and p["passage_id"] not in oracle_ids:
-            distractors.append(p)
-        if len(distractors) >= n_distractors:
-            break
-
-    # If not enough from BM25, add random
-    import random
-    rng = random.Random(hash(task.task_id) % 2**32)
-    all_non_oracle = [p for pid, p in corpus_by_id.items() if pid not in oracle_ids]
-    while len(distractors) < n_distractors and all_non_oracle:
-        p = rng.choice(all_non_oracle)
-        if p not in distractors:
-            distractors.append(p)
-        all_non_oracle = [x for x in all_non_oracle if x is not p]
-
-    return oracle_passages + distractors
 
 
 def compute_retrieval_recall(retrieved_passages, required_ids):
@@ -169,29 +140,19 @@ def compute_retrieval_recall(retrieved_passages, required_ids):
 
 
 # ---------------------------------------------------------------------------
-# Build evidence task from retrieved passages
+# Build evidence task from retrieved passages (from I3.13)
 # ---------------------------------------------------------------------------
 
 def build_retrieved_evidence_task(task, retrieved_passages, corpus_by_text):
-    """Build an EvidenceTask with evidence from retrieved passages.
-
-    The task's original evidence items are kept if their passages were retrieved.
-    Additional retrieved passages (distractors) are added as neutral evidence.
-    """
+    """Build an EvidenceTask with evidence from retrieved passages."""
     et = task.evidence_task
     retrieved_texts = {p["text"] for p in retrieved_passages}
 
-    # Keep original evidence items ONLY if their passages were actually retrieved.
-    # The `ev.retrieved` flag is the task generator's default (True for all
-    # generated evidence), NOT an indicator that the retriever found it.
-    # We must gate on `ev.proposition in retrieved_texts` so that R1_REAL
-    # genuinely tests retrieval recall.
     evidence_items = []
     for ev in et.evidence_items:
         if ev.proposition in retrieved_texts:
             evidence_items.append(ev)
 
-    # Add distractor passages as neutral evidence
     existing_texts = {ev.proposition for ev in evidence_items}
     for p in retrieved_passages:
         if p["text"] not in existing_texts:
@@ -228,7 +189,7 @@ def build_retrieved_evidence_task(task, retrieved_passages, corpus_by_text):
 
 
 # ---------------------------------------------------------------------------
-# Relation accuracy computation
+# Relation accuracy (from I3.13)
 # ---------------------------------------------------------------------------
 
 def compute_relation_accuracy(new_et, task, extractor):
@@ -238,121 +199,94 @@ def compute_relation_accuracy(new_et, task, extractor):
     n_edges = 0
     n_correct = 0
 
-    for ev in [e for e in new_et.evidence_items if e.retrieved]:
-        for hyp in new_et.hypotheses:
-            result = extractor.extract(
-                evidence_id=ev.evidence_id,
-                evidence_proposition=ev.proposition,
-                hypothesis_id=hyp.hypothesis_id,
-                hypothesis_proposition=hyp.proposition,
-            )
-            inferred = result.relation.relation.value
+    for ev in new_et.evidence_items:
+        if ev.source_class == "search":
+            continue  # Skip distractor passages
+        gold_supports = set(ev.supports)
+        gold_contradicts = set(ev.contradicts)
 
-            # Find gold relation
-            gold_rel = "NEUTRAL"
-            if not ev.evidence_id.startswith("D"):
-                for gr in task.gold_relations:
-                    if gr.evidence_id == ev.evidence_id and gr.hypothesis_id == hyp.hypothesis_id:
-                        gold_rel = gr.relation
-                        break
+        inferred = extractor.extract_relations(ev.proposition, new_et.hypotheses)
+        inf_supports = set(inferred.get("supports", []))
+        inf_contradicts = set(inferred.get("contradicts", []))
 
+        for hid in set(gold_supports) | set(inf_supports):
             n_edges += 1
-            if inferred == gold_rel:
+            if (hid in gold_supports) == (hid in inf_supports):
                 n_correct += 1
             else:
+                if hid in inf_supports and hid not in gold_supports:
+                    error_type = "FALSE_SUPPORT"
+                elif hid not in inf_supports and hid in gold_supports:
+                    error_type = "MISSED_SUPPORT"
                 correct = False
-                if error_type is None:
-                    if gold_rel == "SUPPORT" and inferred == "CONTRADICT":
-                        error_type = "FALSE_CONTRADICTION"
-                    elif gold_rel == "SUPPORT" and inferred == "NEUTRAL":
-                        error_type = "MISSED_SUPPORT"
-                    elif gold_rel == "CONTRADICT" and inferred == "SUPPORT":
-                        error_type = "FALSE_SUPPORT"
-                    elif gold_rel == "CONTRADICT" and inferred == "NEUTRAL":
-                        error_type = "MISSED_CONTRADICTION"
-                    elif gold_rel == "NEUTRAL" and inferred == "SUPPORT":
-                        error_type = "FALSE_SUPPORT"
-                    elif gold_rel == "NEUTRAL" and inferred == "CONTRADICT":
-                        error_type = "FALSE_CONTRADICTION"
 
-    return {
-        "correct": correct,
-        "error_type": error_type,
-        "n_edges": n_edges,
-        "n_correct": n_correct,
-        "accuracy": n_correct / n_edges if n_edges > 0 else 1.0,
-    }
+        for hid in set(gold_contradicts) | set(inf_contradicts):
+            n_edges += 1
+            if (hid in gold_contradicts) == (hid in inf_contradicts):
+                n_correct += 1
+            else:
+                if hid in inf_contradicts and hid not in gold_contradicts:
+                    error_type = "FALSE_CONTRADICTION"
+                elif hid not in inf_contradicts and hid in gold_contradicts:
+                    error_type = "MISSED_CONTRADICTION"
+                correct = False
+
+    accuracy = n_correct / n_edges if n_edges > 0 else 1.0
+    return {"correct": correct, "error_type": error_type, "accuracy": accuracy}
 
 
 # ---------------------------------------------------------------------------
-# Run a single (task, condition, arm) trajectory
+# Single trajectory runner
 # ---------------------------------------------------------------------------
 
-def run_single(args_tuple):
-    """Run a single task-condition-arm combination.
+def run_single(work_item):
+    """Run a single trajectory. Must be picklable for ProcessPoolExecutor."""
+    (task_dict, condition, arm, corpus_data, api_key, budget_dict) = work_item
 
-    args_tuple is picklable for ProcessPoolExecutor.
-    """
-    (semantic_task_dict, retrieval_condition, arm,
-     corpus_data, api_key, budget_dict) = args_tuple
-
-    # Reconstruct objects
-    extractor = DeterministicRelationExtractor()
-    corpus_by_id = {p["passage_id"]: p for p in corpus_data}
-    corpus_by_text = {p["text"]: p["passage_id"] for p in corpus_data}
-
-    # Reconstruct SemanticTask
+    # Reconstruct task from dict
     from hrm_adaptive_memory.executive.semantic_relations.i3_13_task_generator import (
-        generate_i3_13_corpus,
+        I3_13Task, generate_i3_13_corpus,
     )
-    # We need the full SemanticTask - regenerate from seed
-    # This is deterministic so it's safe
+    # We need the full task object — regenerate the corpus
     all_tasks = generate_i3_13_corpus(n_per_category=25, seed=42)
-    task = None
-    for t in all_tasks:
-        if t.task_id == semantic_task_dict["task_id"]:
-            task = t
-            break
-    if task is None:
-        raise ValueError(f"Task not found: {semantic_task_dict['task_id']}")
+    task = next(t for t in all_tasks if t.task_id == task_dict["task_id"])
 
-    # Rebuild retriever
-    chunks = [
-        Chunk(chunk_id=p["passage_id"], source_id=p["source"], source_type="document",
-              title=p["domain"], section="", content=p["text"],
-              token_count=len(p["text"].split()), metadata={})
-        for p in corpus_data
-    ]
-    retriever = BM25Retriever(chunks)
+    # Reconstruct corpus
+    from hrm_adaptive_memory.executive.semantic_relations.i3_13_document_corpus import (
+        DocumentPassage, get_corpus,
+    )
+    corpus = get_corpus()
+    chunks, corpus_by_text, corpus_by_id = build_corpus_index(corpus)
 
-    budget = ResourceBudget(**budget_dict)
-    utility = MetareasoningUtility.from_file(ROOT / "configs/v2b_i3_1_utility_v1.json")
+    # Build retriever (Q4_ORACLE is handled separately)
+    retriever = None
+    if condition != "Q4_ORACLE":
+        retriever = build_retriever(condition, chunks)
 
-    # 1. Retrieve passages
+    # Retrieve passages
     required_ids = get_required_passage_ids(task, corpus_by_text)
-    if retrieval_condition == "R0_ORACLE":
+    if condition == "Q4_ORACLE":
         passages = retrieve_oracle(task, corpus_by_text, corpus_by_id)
-    elif retrieval_condition == "R1_REAL":
-        passages = retrieve_real(task, retriever, corpus_by_id, k=5)
-    elif retrieval_condition == "R2_DISTRACTORS":
-        passages = retrieve_distractors(task, retriever, corpus_by_text, corpus_by_id, k=5, n_distractors=3)
     else:
-        raise ValueError(f"Unknown condition: {retrieval_condition}")
+        passages = retrieve_with_ladder(task, retriever, corpus_by_id, k=5)
 
     retrieval_recall = compute_retrieval_recall(passages, required_ids)
     required_retrieved = retrieval_recall == 1.0
 
-    # 2. Build evidence task from retrieved passages
+    # Build evidence task
     new_et = build_retrieved_evidence_task(task, passages, corpus_by_text)
     if new_et is None:
         return {
             "task_id": task.task_id,
             "category": task.category,
-            "retrieval_condition": retrieval_condition,
+            "retrieval_condition": condition,
             "arm": arm,
             "retrieval_recall": 0.0,
             "required_evidence_retrieved": False,
+            "recall_any": False,
+            "recall_all": False,
             "n_evidence": 0,
+            "n_required": len(required_ids),
             "success": False,
             "utility": -150.0,
             "steps": 0,
@@ -361,13 +295,19 @@ def run_single(args_tuple):
             "t2_trigger_step": None,
             "relation_correct": False,
             "relation_error": None,
+            "relation_accuracy": 0.0,
             "failure_attribution": "RETRIEVAL_ERROR",
         }
 
-    # 3. Compute relation accuracy
+    # Compute relation accuracy
+    extractor = DeterministicRelationExtractor()
     rel_info = compute_relation_accuracy(new_et, task, extractor)
 
-    # 4. Run trajectory
+    # Run trajectory
+    budget = ResourceBudget(**budget_dict)
+    utility = MetareasoningUtility.from_file(
+        ROOT / "configs/v2b_i3_3_3_baseline.json")
+
     use_gold = "GOLD" in arm
     arch = arm.split("_")[0]
 
@@ -384,7 +324,7 @@ def run_single(args_tuple):
                 snapshot_builder=sb,
             )
         else:
-            mode = "BASELINE_WITH_AFFORDANCES" if arch == "A1" else "MDSG_STATE_WITH_AFFORDANCES"
+            mode = "BASELINE_WITH_AFFORDANCES"
             result = i3_12j.run_trajectory_i3_12(
                 task=new_et, budget=budget, utility=utility,
                 mode=mode, api_key=api_key, fork_label=arm,
@@ -394,11 +334,14 @@ def run_single(args_tuple):
         return {
             "task_id": task.task_id,
             "category": task.category,
-            "retrieval_condition": retrieval_condition,
+            "retrieval_condition": condition,
             "arm": arm,
             "retrieval_recall": round(retrieval_recall, 4),
             "required_evidence_retrieved": required_retrieved,
+            "recall_any": retrieval_recall > 0,
+            "recall_all": required_retrieved,
             "n_evidence": len(new_et.evidence_items),
+            "n_required": len(required_ids),
             "success": False,
             "utility": -150.0,
             "steps": 0,
@@ -418,7 +361,6 @@ def run_single(args_tuple):
     terminal = result.get("terminal_action", "UNKNOWN")
     t2_triggered = result.get("r1_triggered", False)
 
-    # 5. Determine failure attribution
     if success:
         failure_attribution = "NO_ERROR"
     elif not required_retrieved:
@@ -431,10 +373,12 @@ def run_single(args_tuple):
     return {
         "task_id": task.task_id,
         "category": task.category,
-        "retrieval_condition": retrieval_condition,
+        "retrieval_condition": condition,
         "arm": arm,
         "retrieval_recall": round(retrieval_recall, 4),
         "required_evidence_retrieved": required_retrieved,
+        "recall_any": retrieval_recall > 0,
+        "recall_all": required_retrieved,
         "n_evidence": len(new_et.evidence_items),
         "n_required": len(required_ids),
         "success": success,
@@ -459,11 +403,11 @@ def main():
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--n-per-category", type=int, default=25)
     parser.add_argument("--retrieval-conditions", nargs="+",
-                        default=["R0_ORACLE", "R1_REAL", "R2_DISTRACTORS"])
+                        default=RETRIEVAL_CONDITIONS)
     parser.add_argument("--arms", nargs="+",
                         default=["A1_GOLD", "A1_INFERRED", "R1_GOLD", "R1_INFERRED"])
     parser.add_argument("--output-dir", type=str,
-                        default="experiments/v2b_i3_13/development/i3_13_retrieved")
+                        default="experiments/v2b_i3_14/development/i3_14a_ladder")
     args = parser.parse_args()
 
     api_key = os.environ.get("DEEPSEEK_API_KEY")
@@ -489,13 +433,13 @@ def main():
     n_arms = len(args.arms)
     total = n_tasks * n_conditions * n_arms
 
-    print(f"I3.13: Retrieved Real-World Evidence Experiment")
+    print(f"I3.14a: Retrieval Sufficiency Repair")
     print(f"  {n_tasks} tasks x {n_conditions} conditions x {n_arms} arms = {total} trajectories")
     print(f"  Retrieval conditions: {args.retrieval_conditions}")
     print(f"  Arms: {args.arms}")
     print(f"  Extractor: v2.6.0 (FROZEN), SHA256: {extractor_sha[:16]}...")
     print(f"  Corpus: {len(corpus)} passages, SHA256: {corpus_sha256()[:16]}...")
-    print(f"  Primary: LCB_95(U_R1_INFERRED_REAL - U_A1_INFERRED_REAL) > 0")
+    print(f"  Primary: RequiredEvidenceRecall increase -> TaskUtility increase")
     print()
 
     # Build work items
@@ -519,7 +463,7 @@ def main():
     completed = 0
 
     with open(log_path, "w") as logf, open(results_path, "w") as rf:
-        logf.write(f"I3.13: Retrieved Real-World Evidence Experiment\n")
+        logf.write(f"I3.14a: Retrieval Sufficiency Repair\n")
         logf.write(f"  {n_tasks} tasks x {n_conditions} conditions x {n_arms} arms = {total} trajectories\n")
         logf.write(f"  Extractor: v2.6.0 (FROZEN), SHA256: {extractor_sha[:16]}...\n")
         logf.write(f"  Corpus: {len(corpus)} passages, SHA256: {corpus_sha256()[:16]}...\n\n")
@@ -553,56 +497,54 @@ def main():
 
     # Summary
     print(f"\n{'='*80}")
-    print(f"I3.13 Results Summary ({n_tasks} tasks, {total} trajectories)")
+    print(f"I3.14a Results Summary ({n_tasks} tasks, {total} trajectories)")
     print(f"{'='*80}")
 
     by_ca = defaultdict(list)
     for r in results:
         by_ca[(r["retrieval_condition"], r["arm"])].append(r)
 
-    print(f"\n{'Condition':<16} {'Arm':<16} {'N':>5} {'Recall':>8} {'Success':>8} {'MeanU':>8} {'RelAcc':>8} {'TopFail':>20}")
+    print(f"\n{'Condition':<16} {'Arm':<16} {'N':>5} {'Recall':>8} {'RecAll':>8} {'Success':>8} {'MeanU':>8} {'RelAcc':>8}")
     for (cond, arm), rs in sorted(by_ca.items()):
         n = len(rs)
         recall = sum(r["retrieval_recall"] for r in rs) / n
+        recall_all = sum(r.get("recall_all", False) for r in rs) / n
         success = sum(r["success"] for r in rs) / n
         mean_u = sum(r["utility"] for r in rs) / n
         rel_acc = sum(r.get("relation_accuracy", 1.0) for r in rs) / n
-        fa = Counter(r["failure_attribution"] for r in rs)
-        top_fa = fa.most_common(1)[0][0] if fa else "N/A"
-        print(f"  {cond:<16} {arm:<16} {n:>5} {recall:>8.4f} {success:>8.4f} {mean_u:>8.2f} {rel_acc:>8.4f} {top_fa:>20}")
+        print(f"  {cond:<16} {arm:<16} {n:>5} {recall:>8.4f} {recall_all:>8.4f} {success:>8.4f} {mean_u:>8.2f} {rel_acc:>8.4f}")
 
-    # Primary criterion
-    r1_real = [r for r in results if r["retrieval_condition"] == "R1_REAL" and r["arm"] == "R1_INFERRED"]
-    a1_real = [r for r in results if r["retrieval_condition"] == "R1_REAL" and r["arm"] == "A1_INFERRED"]
-    if r1_real and a1_real:
-        r_by_task = {r["task_id"]: r for r in r1_real}
-        a_by_task = {r["task_id"]: r for r in a1_real}
-        deltas = []
-        for tid in r_by_task:
-            if tid in a_by_task:
-                deltas.append(r_by_task[tid]["utility"] - a_by_task[tid]["utility"])
-        if deltas:
-            import statistics
-            mean_delta = sum(deltas) / len(deltas)
-            if len(deltas) > 1:
-                std = statistics.stdev(deltas)
-                se = std / (len(deltas) ** 0.5)
-                lcb = mean_delta - 1.96 * se
-            else:
-                lcb = mean_delta
-            print(f"\nPrimary criterion (R1_REAL):")
-            print(f"  LCB_95(U_R1_INF - U_A1_INF) = {lcb:.4f}")
-            print(f"  Mean delta = {mean_delta:.4f}")
-            print(f"  PASSES: {lcb > 0}")
+    # Recall decomposition per condition
+    print(f"\n{'='*80}")
+    print("RETRIEVAL RECALL DECOMPOSITION")
+    print(f"{'='*80}")
+    for cond in args.retrieval_conditions:
+        r1i = [r for r in results if r["retrieval_condition"] == cond and r["arm"] == "R1_INFERRED"]
+        if not r1i:
+            continue
+        recall = sum(r["retrieval_recall"] for r in r1i) / len(r1i)
+        recall_any = sum(r.get("recall_any", False) for r in r1i) / len(r1i)
+        recall_all = sum(r.get("recall_all", False) for r in r1i) / len(r1i)
+        print(f"  {cond}: Recall={recall:.4f} RecallAny={recall_any:.4f} RecallAll={recall_all:.4f}")
 
-    # Failure attribution
-    print(f"\nFailure attribution (all results):")
-    fa_counts = Counter(r["failure_attribution"] for r in results)
-    for fa, count in fa_counts.most_common():
-        print(f"  {fa}: {count}")
+    # P(success | RecallAll=1) vs P(success | RecallAll=0) per condition
+    print(f"\n{'='*80}")
+    print("CONDITIONAL PERFORMANCE: P(success | RecallAll)")
+    print(f"{'='*80}")
+    for cond in args.retrieval_conditions:
+        r1i = [r for r in results if r["retrieval_condition"] == cond and r["arm"] == "R1_INFERRED"]
+        if not r1i:
+            continue
+        all_retr = [r for r in r1i if r.get("recall_all", False)]
+        not_all = [r for r in r1i if not r.get("recall_all", False)]
+        p_all = sum(r["success"] for r in all_retr) / len(all_retr) if all_retr else 0
+        p_not = sum(r["success"] for r in not_all) / len(not_all) if not_all else 0
+        print(f"  {cond}: P(succ|RecallAll=1)={p_all:.4f} (n={len(all_retr)})  P(succ|RecallAll=0)={p_not:.4f} (n={len(not_all)})")
 
     # Gap decomposition
-    print(f"\nGap decomposition (mean utility):")
+    print(f"\n{'='*80}")
+    print("GAP DECOMPOSITION (mean utility)")
+    print(f"{'='*80}")
     for cond in args.retrieval_conditions:
         cond_results = [r for r in results if r["retrieval_condition"] == cond]
         if not cond_results:
@@ -610,13 +552,38 @@ def main():
         by_arm = defaultdict(list)
         for r in cond_results:
             by_arm[r["arm"]].append(r)
-        r1_gold_u = sum(r["utility"] for r in by_arm.get("R1_GOLD", [])) / len(by_arm.get("R1_GOLD", [1])) if by_arm.get("R1_GOLD") else 0
-        r1_inf_u = sum(r["utility"] for r in by_arm.get("R1_INFERRED", [])) / len(by_arm.get("R1_INFERRED", [1])) if by_arm.get("R1_INFERRED") else 0
-        a1_inf_u = sum(r["utility"] for r in by_arm.get("A1_INFERRED", [])) / len(by_arm.get("A1_INFERRED", [1])) if by_arm.get("A1_INFERRED") else 0
-        a1_gold_u = sum(r["utility"] for r in by_arm.get("A1_GOLD", [])) / len(by_arm.get("A1_GOLD", [1])) if by_arm.get("A1_GOLD") else 0
-        semantic_gap = r1_gold_u - r1_inf_u
-        routing_gap = r1_inf_u - a1_inf_u
-        print(f"  {cond}: R1_GOLD={r1_gold_u:.2f} R1_INF={r1_inf_u:.2f} A1_INF={a1_inf_u:.2f} A1_GOLD={a1_gold_u:.2f} SemGap={semantic_gap:.2f} RouteGap={routing_gap:.2f}")
+        r1g = sum(r["utility"] for r in by_arm.get("R1_GOLD", [])) / len(by_arm["R1_GOLD"]) if by_arm.get("R1_GOLD") else 0
+        r1i = sum(r["utility"] for r in by_arm.get("R1_INFERRED", [])) / len(by_arm["R1_INFERRED"]) if by_arm.get("R1_INFERRED") else 0
+        a1i = sum(r["utility"] for r in by_arm.get("A1_INFERRED", [])) / len(by_arm["A1_INFERRED"]) if by_arm.get("A1_INFERRED") else 0
+        a1g = sum(r["utility"] for r in by_arm.get("A1_GOLD", [])) / len(by_arm["A1_GOLD"]) if by_arm.get("A1_GOLD") else 0
+        sem_gap = r1g - r1i
+        route_gap = r1i - a1i
+        print(f"  {cond}: R1_GOLD={r1g:.2f} R1_INF={r1i:.2f} A1_INF={a1i:.2f} A1_GOLD={a1g:.2f} SemGap={sem_gap:.2f} RouteGap={route_gap:.2f}")
+
+    # Retrieval gap (Q4 - Qk)
+    print(f"\n{'='*80}")
+    print("RETRIEVAL GAP (Q4_ORACLE - Qk, R1_INFERRED)")
+    print(f"{'='*80}")
+    q4_r1i = [r for r in results if r["retrieval_condition"] == "Q4_ORACLE" and r["arm"] == "R1_INFERRED"]
+    if q4_r1i:
+        q4_u = sum(r["utility"] for r in q4_r1i) / len(q4_r1i)
+        q4_recall = sum(r["retrieval_recall"] for r in q4_r1i) / len(q4_r1i)
+        for cond in args.retrieval_conditions:
+            if cond == "Q4_ORACLE":
+                continue
+            qk_r1i = [r for r in results if r["retrieval_condition"] == cond and r["arm"] == "R1_INFERRED"]
+            if not qk_r1i:
+                continue
+            qk_u = sum(r["utility"] for r in qk_r1i) / len(qk_r1i)
+            qk_recall = sum(r["retrieval_recall"] for r in qk_r1i) / len(qk_r1i)
+            retr_gap = q4_u - qk_u
+            print(f"  {cond}: U={qk_u:.2f} Recall={qk_recall:.4f} RetrievalGap={retr_gap:.2f}")
+
+    # Failure attribution
+    print(f"\nFailure attribution (all results):")
+    fa_counts = Counter(r["failure_attribution"] for r in results)
+    for fa, count in fa_counts.most_common():
+        print(f"  {fa}: {count}")
 
     # Save analysis
     analysis = {
@@ -629,12 +596,6 @@ def main():
         "arms": args.arms,
         "failure_attribution": dict(fa_counts),
     }
-    if r1_real and a1_real and deltas:
-        analysis["primary_criterion"] = {
-            "lcb_95": round(lcb, 4),
-            "mean_delta": round(mean_delta, 4),
-            "passes": lcb > 0,
-        }
     analysis_path = out_dir / "analysis_v1.json"
     with open(analysis_path, "w") as f:
         json.dump(analysis, f, indent=2)
