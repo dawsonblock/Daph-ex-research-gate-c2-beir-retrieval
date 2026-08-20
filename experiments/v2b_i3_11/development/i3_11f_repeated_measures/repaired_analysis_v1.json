@@ -1,0 +1,152 @@
+{
+  "fingerprint_micro": {
+    "r1_confirm_v1_0009": {
+      "action_distribution": {
+        "DEFER": 4,
+        "STOP": 21
+      },
+      "n_calls": 25,
+      "n_unique_fingerprints": 1
+    },
+    "r1_confirm_v1_0043": {
+      "action_distribution": {
+        "DEFER": 10,
+        "STOP": 15
+      },
+      "n_calls": 25,
+      "n_unique_fingerprints": 1
+    }
+  },
+  "instability_repaired": {
+    "interpretation": "Singleton requests (n_calls=1) are UNOBSERVED for repeatability, not deterministic. The 5.58% unstable rate in the original summary conflated singleton requests with deterministic ones. The repaired rate conditions on n_calls>=2.",
+    "n_repeated": 1111,
+    "p_unstable_given_repeated": 0.0585,
+    "repeated_stable": 1046,
+    "repeated_unstable": 65,
+    "singleton_fraction": 0.0455,
+    "singleton_unobserved": 53,
+    "stop_defer_flip_repeated": 8,
+    "stratified_by_replicate_count": {
+      "1": {
+        "n_requests": 53,
+        "p_unstable": 0.0,
+        "stable": 0,
+        "stop_defer_flip": 0,
+        "unstable": 0
+      },
+      "10": {
+        "n_requests": 507,
+        "p_unstable": 0.0769,
+        "stable": 468,
+        "stop_defer_flip": 6,
+        "unstable": 39
+      },
+      "2": {
+        "n_requests": 40,
+        "p_unstable": 0.025,
+        "stable": 39,
+        "stop_defer_flip": 0,
+        "unstable": 1
+      },
+      "3": {
+        "n_requests": 39,
+        "p_unstable": 0.0513,
+        "stable": 37,
+        "stop_defer_flip": 0,
+        "unstable": 2
+      },
+      "4": {
+        "n_requests": 28,
+        "p_unstable": 0.0357,
+        "stable": 27,
+        "stop_defer_flip": 0,
+        "unstable": 1
+      },
+      "5": {
+        "n_requests": 422,
+        "p_unstable": 0.0332,
+        "stable": 408,
+        "stop_defer_flip": 0,
+        "unstable": 14
+      },
+      "6": {
+        "n_requests": 14,
+        "p_unstable": 0.2857,
+        "stable": 10,
+        "stop_defer_flip": 1,
+        "unstable": 4
+      },
+      "7": {
+        "n_requests": 17,
+        "p_unstable": 0.0588,
+        "stable": 16,
+        "stop_defer_flip": 1,
+        "unstable": 1
+      },
+      "8": {
+        "n_requests": 15,
+        "p_unstable": 0.0667,
+        "stable": 14,
+        "stop_defer_flip": 0,
+        "unstable": 1
+      },
+      "9": {
+        "n_requests": 29,
+        "p_unstable": 0.069,
+        "stable": 27,
+        "stop_defer_flip": 0,
+        "unstable": 2
+      }
+    },
+    "total_unique_request_hashes": 1164,
+    "wilson_95_ci": [
+      0.0462,
+      0.0739
+    ]
+  },
+  "no_additional_model_calls": true,
+  "sampling_scope_note": "I3.11f used a break-enriched 100-task subset (all tasks from 3 prior break categories + random sample of others), not an unbiased sample of the 330-task I3.11d distribution. Mean utility values are estimates for the I3.11f diagnostic population, not unbiased estimates over I3.11d.",
+  "schema": "DAPH_V2B_I3_11F_R1_REPAIR_V1",
+  "steps_confirmed": {
+    "a1": 3.86,
+    "c4_result": "PASS",
+    "m3": 6.37,
+    "r1": 6.02
+  },
+  "success_probability_noninferiority": {
+    "conventional_1pp_ci_rule": {
+      "lcb_95": -0.012,
+      "note": "Lower 95% bound is -0.014, which is below -0.01. Conventional 1pp CI-based non-inferiority FAILS.",
+      "result": "FAIL",
+      "rule": "LCB_95(P_R1 - P_M3) > -0.01"
+    },
+    "frozen_C3_point_estimate_rule": {
+      "margin": 0.002,
+      "mean_p_m3": 0.908,
+      "mean_p_r1": 0.91,
+      "result": "PASS",
+      "rule": "mean_p_r1 >= mean_p_m3 - 0.01"
+    },
+    "lower_95_bound_one_sided": -0.012,
+    "mean_delta_p": 0.002,
+    "two_sided_95_ci": [
+      -0.014,
+      0.022
+    ]
+  },
+  "uses_frozen_i3_11f_results": true,
+  "utility_confirmed": {
+    "c1_result": "PASS",
+    "c2_result": "FAIL",
+    "ci_r1_a1": [
+      117.6099,
+      148.6337
+    ],
+    "ci_r1_m3": [
+      -0.8741,
+      3.059
+    ],
+    "mean_delta_r1_a1": 133.6596,
+    "mean_delta_r1_m3": 1.0379
+  }
+}

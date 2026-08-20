@@ -1,60 +1,93 @@
 {
-  "schema": "DAPH_V2B_I3_11F_CLOSURE_V1",
-  "experiment": "I3.11f Repeated-Measures R1 vs M3 (K=5, 100 tasks, interleaved)",
+  "schema": "DAPH_V2B_I3_11F_CLOSURE_V1_FINAL",
+  "experiment": "I3.11f Repeated-Measures R1 vs M3 (K=5, 100 tasks, interleaved) + I3.11f-r1 statistical repair",
   "protocol_frozen_at": "cbda2c0",
+  "results_committed_at": "0e5d502",
+  "repair_committed_at": "pending",
   "executable_hashes_committed_before_run": true,
   "everything_frozen": "T2, R1, M3, A1, prompts, utility, model/config all unchanged",
-  "result": "C1 PASSES (R1 beats A1). C2 FAILS but R1 mean utility slightly higher than M3 and CI is mostly positive. C3 PASSES (R1 success probability non-inferior to M3). R1 is cheaper. The I3.11d C2 failure was a noisy single-run estimate.",
+  "sampling_scope": "I3.11f used a break-enriched 100-task subset (all tasks from 3 prior break categories + random sample of others), not an unbiased sample of the 330-task I3.11d distribution. Mean utility values are estimates for the I3.11f diagnostic population, not unbiased estimates over I3.11d.",
   "overall_results": {
     "mean_utility": {"A1": -85.06, "M3": 47.56, "R1": 48.60},
-    "mean_success_probability": {"A1": 0.20, "M3": 0.908, "R1": 0.91},
+    "mean_success_probability": {"A1": 0.20, "M3": 0.908, "R1": 0.910},
     "bootstrap_ci_r1_a1_utility": [117.61, 148.63],
     "bootstrap_ci_r1_m3_utility": [-0.87, 3.06],
-    "bootstrap_ci_r1_m3_success_prob": [-0.014, 0.022],
+    "bootstrap_ci_r1_m3_success_prob_two_sided": [-0.014, 0.022],
+    "lower_95_bound_r1_m3_success_prob_one_sided": -0.012,
     "mean_steps": {"A1": 3.86, "M3": 6.37, "R1": 6.02}
   },
   "frozen_claims": {
-    "C1_r1_a1_utility_ci_positive": {"result": true, "ci": [117.61, 148.63]},
-    "C2_r1_m3_utility_ci_positive": {"result": false, "ci": [-0.87, 3.06], "note": "CI crosses zero but is mostly positive. Mean delta = +1.04. With more tasks, this may separate."},
-    "C3_r1_success_prob_noninferior": {"result": true, "values": "R1=0.91, M3=0.908, threshold=0.898"},
-    "C4_r1_steps_lt_m3": {"result": true, "values": "R1=6.02, M3=6.37"},
-    "C5_r1_a1_success_ci_positive": {"result": true, "ci": [0.62, 0.79]}
+    "C1_r1_a1_utility_ci_positive": {"result": "PASS", "ci": [117.61, 148.63]},
+    "C2_r1_m3_utility_ci_positive": {"result": "FAIL", "ci": [-0.87, 3.06], "note": "CI crosses zero. Point estimate +1.04 favors R1. R1 superiority over M3 in expected utility is NOT established."},
+    "C3_r1_success_prob_noninferior_frozen_point_rule": {
+      "result": "PASS",
+      "rule": "mean_p_r1 >= mean_p_m3 - 0.01",
+      "mean_p_r1": 0.910, "mean_p_m3": 0.908, "margin": 0.002
+    },
+    "C3_conventional_1pp_ci_noninferiority": {
+      "result": "FAIL",
+      "rule": "LCB_95(P_R1 - P_M3) > -0.01",
+      "lcb_95": -0.012,
+      "note": "Lower 95% bound is -0.012, below -0.01. Conventional 1pp CI-based non-inferiority is NOT established. The frozen point-estimate rule passes; the CI-based rule does not."
+    },
+    "C4_r1_steps_lt_m3": {"result": "PASS", "values": "R1=6.02, M3=6.37"},
+    "C5_r1_a1_success_ci_positive": {"result": "PASS", "ci": [0.62, 0.79]}
   },
-  "instability_metrics": {
-    "total_unique_requests": 1164,
-    "deterministic_request_rate": 0.9442,
-    "unstable_request_rate": 0.0558,
-    "stop_defer_flip_rate": 0.0069,
-    "unique_fingerprints": 1,
-    "fingerprint_distribution": "single fingerprint across all 8126 calls",
-    "interpretation": "The variability is NOT from backend routing or instance changes. It is direct stochastic/numerical variability at temperature=0 under identical reported backend conditions. 94.4% of unique requests are deterministic; 5.6% produce different actions across repeats. STOP<->DEFER flips occur in 0.69% of unique requests."
+  "instability_metrics_repaired": {
+    "total_unique_request_hashes": 1164,
+    "singleton_unobserved": 53,
+    "singleton_fraction": 0.0455,
+    "repeated_stable_n_ge_2_one_action": 1046,
+    "repeated_unstable_n_ge_2_multiple_actions": 65,
+    "stop_defer_flip_repeated": 8,
+    "n_repeated": 1111,
+    "p_unstable_given_repeated": 0.0585,
+    "wilson_95_ci_p_unstable_given_repeated": [0.0462, 0.0739],
+    "stratified_by_replicate_count": {
+      "n_calls_1": {"n_requests": 53, "stable": 0, "unstable": 0, "p_unstable": 0.0, "note": "UNOBSERVED"},
+      "n_calls_2": {"n_requests": 40, "stable": 39, "unstable": 1, "p_unstable": 0.025},
+      "n_calls_3": {"n_requests": 39, "stable": 37, "unstable": 2, "p_unstable": 0.051},
+      "n_calls_4": {"n_requests": 28, "stable": 27, "unstable": 1, "p_unstable": 0.036},
+      "n_calls_5": {"n_requests": 422, "stable": 408, "unstable": 14, "p_unstable": 0.033},
+      "n_calls_6": {"n_requests": 14, "stable": 10, "unstable": 4, "p_unstable": 0.286},
+      "n_calls_7": {"n_requests": 17, "stable": 16, "unstable": 1, "p_unstable": 0.059},
+      "n_calls_8": {"n_requests": 15, "stable": 14, "unstable": 1, "p_unstable": 0.067},
+      "n_calls_9": {"n_requests": 29, "stable": 27, "unstable": 2, "p_unstable": 0.069},
+      "n_calls_10": {"n_requests": 507, "stable": 468, "unstable": 39, "p_unstable": 0.077, "stop_defer_flip": 6}
+    },
+    "interpretation": "The original 5.58% unstable request rate conflated singleton requests (n_calls=1) with deterministic ones. Singleton requests are UNOBSERVED for repeatability, not deterministic. The repaired rate conditions on n_calls>=2: P(unstable | n_calls>=2) = 0.0585, Wilson 95% CI [0.0462, 0.0739]. The 25-call micro-experiment provides much stronger evidence than the global rate."
   },
   "fingerprint_micro_experiment": {
-    "task_0009": {"STOP": 21, "DEFER": 4, "fingerprint": "single (constant)", "interpretation": "Same fingerprint across all 25 calls. STOP 84%, DEFER 16%. Direct stochastic variability under identical backend conditions."},
-    "task_0043": {"STOP": 15, "DEFER": 10, "fingerprint": "single (constant)", "interpretation": "Same fingerprint across all 25 calls. STOP 60%, DEFER 40%. Clear bimodal stochastic variability under identical backend conditions."},
-    "conclusion": "Since fingerprint is constant and output still changes, this is direct stochastic/numerical variability under identical reported backend conditions. NOT backend routing."
+    "task_0009": {"STOP": 21, "DEFER": 4, "n_calls": 25, "fingerprint": "single constant"},
+    "task_0043": {"STOP": 15, "DEFER": 10, "n_calls": 25, "fingerprint": "single constant"},
+    "interpretation": "Output variability occurs under byte-identical serialized requests, constant reported model, and constant system_fingerprint. Thus the variation is not explained by any backend change exposed through the recorded fingerprint; its lower-level provider cause remains unidentified."
   },
   "scientific_conclusion": {
-    "primary_finding": "R1 and M3 are statistically tied on success probability (0.91 vs 0.908) and R1 has slightly higher mean utility (+48.60 vs +47.56). The I3.11d C2 failure (CI [-1.57, +1.91]) was a noisy single-run estimate. With repeated measures, the R1-M3 utility CI shifts to [-0.87, +3.06] — still crossing zero but centered at +1.04 rather than near zero.",
-    "efficiency_finding": "R1 uses fewer steps than M3 (6.02 vs 6.37) while achieving equivalent success probability. R1 is a practical efficiency improvement over M3.",
-    "instability_finding": "Backend response variance at temperature=0 is real but limited: 5.6% of unique requests are unstable, 0.69% produce STOP<->DEFER flips. The variance is direct stochastic/numerical variability under a single constant system fingerprint — NOT backend routing or instance changes.",
-    "i3_11d_reinterpretation": "The I3.11d five-task success gap (285 vs 290) was within the range of backend response variance. Repeated measures show R1 and M3 have equivalent success probability. The I3.11d C2 failure was a noisy single-run estimate, not evidence of a systematic R1 deficiency."
+    "frozen_statement": "I3.11f confirms substantial temperature-0 output variability for some byte-identical requests and shows that the five-task R1 success deficit observed in I3.11d is not stable under repeated sampling. On the frozen, break-enriched 100-task repeated-measures set, R1 and M3 have very similar observed success probabilities (0.910 vs 0.908), while R1 uses fewer steps (6.02 vs 6.37) and has a slightly higher mean utility (+48.60 vs +47.56). R1 superiority over M3 in expected utility is not established because the paired 95% CI crosses zero [-0.87, +3.06]. The frozen point-estimate non-inferiority rule passes, although a conventional 1pp CI-based non-inferiority test would not pass because the lower success-difference bound is -1.2pp.",
+    "backend_finding": "Repeated byte-identical requests can yield different terminal actions at temperature 0 even when reported model and system_fingerprint remain constant. This rules out fingerprint-observable backend changes as the explanation, but does not uniquely identify the provider-side source of the variance.",
+    "i3_11d_reinterpretation": "The apparent R1 reliability deficit in the I3.11d single realization was not stable under repeated sampling. However, R1 superiority over M3 in expected utility remains unconfirmed because I3.11f C2 also fails. Both I3.11d and I3.11f fail the same superiority criterion; what repeated measures undermine is the observed five-task R1 success deficit, not the C2 decision itself.",
+    "what_is_established": [
+      "R1 preserves most observed M3 reliability while reducing computation, but superiority over M3 remains unproven.",
+      "R1 crushes A1: utility CI [+117.61, +148.63].",
+      "R1 and M3 have nearly identical observed mean success probabilities: 0.910 vs 0.908.",
+      "No statistically detectable success difference is seen: CI [-0.014, +0.022].",
+      "R1 uses fewer steps: 6.02 vs 6.37.",
+      "R1's utility point estimate is +1.04 above M3.",
+      "Utility superiority remains unconfirmed: CI [-0.87, +3.06].",
+      "Temperature-0 output variability is real and demonstrable for byte-identical requests under constant fingerprint."
+    ],
+    "what_is_not_established": [
+      "R1 superiority over M3 in expected utility (C2 fails).",
+      "Conventional 1pp CI-based non-inferiority for success probability (LCB = -0.012).",
+      "Equivalence of R1 and M3 success probabilities (no difference detected is not equivalence).",
+      "That the variance is NOT backend routing (constant fingerprint rules out fingerprint-observable changes only).",
+      "Unbiased estimates over the original I3.11d task distribution (I3.11f is break-enriched)."
+    ]
   },
-  "decision_rule_application": {
-    "C2_fails_C3_passes": "Per the frozen decision rule: R1 has a genuine efficiency-reliability tradeoff — cheaper, not reliably better than M3 in utility, but non-inferior on success probability.",
-    "refinement": "However, R1 mean utility is slightly HIGHER than M3 (+48.60 vs +47.56) and success probability is essentially identical (0.91 vs 0.908). The C2 failure is due to residual variance with 100 tasks, not a systematic disadvantage. With more tasks or higher K, C2 may separate."
-  },
-  "calibrated_architectural_statement": "Within the current evidence-reasoning benchmark family, a deterministic observed-state phase transition detector (T2) correctly identifies when all hypotheses are eliminated across varying hypothesis topology (2-4 positive, 5 negative control). R1's phase switching captures M3's conflict-detection benefit over A1 (success probability 0.91 vs 0.20, utility CI [+117.61, +148.63]). R1 achieves equivalent success probability to M3 (0.91 vs 0.908) while using fewer steps (6.02 vs 6.37) and slightly higher mean utility (+48.60 vs +47.56). The R1-M3 utility difference is not yet statistically significant under repeated measures (CI [-0.87, +3.06]), but the point estimate favors R1. Backend response variance at temperature=0 is real but limited (5.6% unstable request rate) and is direct stochastic variability under a constant system fingerprint, not backend routing.",
-  "architectural_status": {
-    "T2_detector": "strongly supported, observation-safe, generalizes across broader topology (2-4 positive, 5 negative control)",
-    "R1_vs_A1": "strongly supported — large benefit, lower computation than M3",
-    "R1_vs_M3": "R1 non-inferior on success probability, slightly higher mean utility, fewer steps. Utility CI crosses zero but favors R1. Not yet statistically significant but point estimates favor R1.",
-    "hybrid_boundary_defect": "not supported as a systematic explanation (I3.11e)",
-    "backend_response_variance": "clearly present, quantified: 5.6% unstable, 0.69% STOP<->DEFER flip, single constant fingerprint, direct stochastic variability"
-  },
+  "calibrated_architectural_statement": "Within the current evidence-reasoning benchmark family, a deterministic observed-state phase transition detector (T2) correctly identifies when all hypotheses are eliminated across varying hypothesis topology (2-4 positive, 5 negative control). R1's phase switching captures M3's conflict-detection benefit over A1 (success probability 0.91 vs 0.20, utility CI [+117.61, +148.63]). On the frozen break-enriched 100-task repeated-measures set, R1 and M3 have very similar observed success probabilities (0.910 vs 0.908, no statistically detectable difference), while R1 uses fewer steps (6.02 vs 6.37) and has a slightly higher mean utility (+48.60 vs +47.56). R1 superiority over M3 in expected utility is not established (CI [-0.87, +3.06]). The frozen point-estimate non-inferiority rule passes; a conventional 1pp CI-based non-inferiority test does not (LCB = -0.012). Temperature-0 output variability is demonstrable for byte-identical requests under constant system_fingerprint; the lower-level provider cause remains unidentified.",
   "next_step_options": [
-    "Freeze R1 as a validated practical efficiency improvement: non-inferior to M3 on success, fewer steps, slightly higher mean utility.",
-    "Increase N or K to narrow the R1-M3 utility CI and potentially achieve C2 significance.",
-    "Accept that R1 and M3 are statistically tied and the architectural claim is: phase routing achieves M3-level performance at A1-level cost on non-conflict tasks."
+    "Freeze R1 as a practical efficiency improvement: non-inferior to M3 under the frozen point-estimate rule, fewer steps, slightly higher mean utility. Acknowledge that conventional CI-based non-inferiority and utility superiority are not yet established.",
+    "Increase N or K to narrow the R1-M3 utility and success CIs.",
+    "Accept that R1 and M3 are not statistically distinguishable on this set and the architectural claim is: phase routing achieves M3-level performance at lower cost on non-conflict tasks, with residual variance from backend response variability."
   ]
 }
