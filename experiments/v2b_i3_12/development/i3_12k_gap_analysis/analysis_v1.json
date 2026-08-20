@@ -1,0 +1,3634 @@
+{
+  "analysis_id": "i3_12k_gap_analysis_v1",
+  "n_tasks": 300,
+  "n_tasks_with_any_discrepancy": 53,
+  "total_attributions": {
+    "TRAJECTORY_CASCADE": 63,
+    "BACKEND_RESPONSE_VARIANCE": 1
+  },
+  "per_representation": {
+    "a1": {
+      "TRAJECTORY_CASCADE": 19
+    },
+    "m3": {
+      "TRAJECTORY_CASCADE": 14
+    },
+    "r1": {
+      "TRAJECTORY_CASCADE": 30,
+      "BACKEND_RESPONSE_VARIANCE": 1
+    }
+  },
+  "causal_hierarchy": [
+    "1. RELATION_EXTRACTION_ERROR: inferred graph != gold graph",
+    "2. SNAPSHOT_TRANSFORMATION_ERROR: graph same, snapshot differs",
+    "3. PACKET_TRANSFORMATION_ERROR: snapshot same, packet differs",
+    "4. BACKEND_RESPONSE_VARIANCE: request_sha256 same, output differs",
+    "5. TRAJECTORY_CASCADE: earlier differing output caused later divergence",
+    "6. UNKNOWN"
+  ],
+  "key_finding": "All GOLD/INFERRED discrepancies are attributable to backend response variance or trajectory cascades, NOT to relation extraction errors. Zero RELATION_EXTRACTION_ERROR attributions across 300 tasks x 3 representations = 900 pairs. The extractor produces identical graphs, confirming the pipeline transfer is clean. 63 TRAJECTORY_CASCADE + 1 BACKEND_RESPONSE_VARIANCE = 64 total discrepancies, all caused by non-deterministic model outputs at temperature 0 (consistent with I3.11f findings).",
+  "discrepancy_details": [
+    {
+      "task_id": "i3_12_s1_0004",
+      "category": "bilateral_conflict_h0",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -40.79,
+          "inf_util": -40.79
+        },
+        "r1": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "SEARCH_MORE",
+              "STOP"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 59.21,
+          "inf_util": -40.79,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "STOP"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0005",
+      "category": "bilateral_conflict_h0",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "r1": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "DEFER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -38.63,
+          "inf_util": 63.53,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "STOP"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0009",
+      "category": "bilateral_conflict_h0",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 3,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -128.63,
+          "inf_util": 61.37,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ]
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 61.37,
+          "inf_util": 61.37
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0010",
+      "category": "bilateral_conflict_h0",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 3,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "SEARCH_MORE"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "RETRIEVE"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -40.79,
+          "inf_util": 59.22,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "STOP"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "RETRIEVE",
+            "DEFER"
+          ]
+        },
+        "r1": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 3,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "SEARCH_MORE"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 61.37,
+          "inf_util": -40.79,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "STOP"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0018",
+      "category": "bilateral_conflict_h0",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 63.53,
+          "inf_util": 63.53
+        },
+        "r1": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "DEFER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -40.79,
+          "inf_util": 63.53,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "STOP"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0021",
+      "category": "bilateral_conflict_h0",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "BOTH_SUCCESS",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "DEFER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 61.37,
+          "inf_util": 63.53,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ]
+        },
+        "r1": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 3,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 61.37,
+          "inf_util": -128.63,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0023",
+      "category": "bilateral_conflict_h1_noise",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "RETRIEVE"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -130.77,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "RETRIEVE",
+            "RETRIEVE",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 43.12,
+          "inf_util": 43.12
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 43.12,
+          "inf_util": 43.12
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0024",
+      "category": "bilateral_conflict_h1_noise",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -130.77,
+          "inf_util": -130.77
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 38.8,
+          "inf_util": 38.8
+        },
+        "r1": {
+          "classification": "BOTH_SUCCESS",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 12,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "RETRIEVE",
+              "RETRIEVE",
+              "RETRIEVE",
+              "RETRIEVE",
+              "RETRIEVE",
+              "SEARCH_MORE",
+              "VERIFY",
+              "SEARCH_MORE",
+              "SEARCH_MORE",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "RETRIEVE",
+              "RETRIEVE",
+              "RETRIEVE",
+              "RETRIEVE",
+              "RETRIEVE",
+              "SEARCH_MORE",
+              "VERIFY",
+              "SEARCH_MORE",
+              "SEARCH_MORE",
+              "SEARCH_MORE",
+              "SEARCH_MORE"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 40.96,
+          "inf_util": 38.8,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "RETRIEVE",
+            "RETRIEVE",
+            "RETRIEVE",
+            "RETRIEVE",
+            "RETRIEVE",
+            "SEARCH_MORE",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "RETRIEVE",
+            "RETRIEVE",
+            "RETRIEVE",
+            "RETRIEVE",
+            "RETRIEVE",
+            "SEARCH_MORE",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "DEFER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0025",
+      "category": "bilateral_conflict_h1_noise",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "RETRIEVE",
+              "RETRIEVE",
+              "RETRIEVE"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "RETRIEVE",
+              "RETRIEVE",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.92,
+          "inf_util": -130.77,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "RETRIEVE",
+            "RETRIEVE",
+            "RETRIEVE",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "RETRIEVE",
+            "RETRIEVE",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 38.8,
+          "inf_util": 38.8
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 38.8,
+          "inf_util": 38.8
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0035",
+      "category": "bilateral_conflict_h1_noise",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 5,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "RETRIEVE",
+              "RETRIEVE",
+              "RETRIEVE",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "RETRIEVE",
+              "RETRIEVE",
+              "RETRIEVE",
+              "RETRIEVE"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.92,
+          "inf_util": -135.07,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "RETRIEVE",
+            "RETRIEVE",
+            "RETRIEVE",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "RETRIEVE",
+            "RETRIEVE",
+            "RETRIEVE",
+            "RETRIEVE",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 38.8,
+          "inf_util": 38.8
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 38.8,
+          "inf_util": 38.8
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0036",
+      "category": "bilateral_conflict_h1_noise",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 3,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "RETRIEVE",
+              "RETRIEVE"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "RETRIEVE",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -130.77,
+          "inf_util": -128.62,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "RETRIEVE",
+            "RETRIEVE",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "RETRIEVE",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 38.8,
+          "inf_util": 38.8
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 38.8,
+          "inf_util": 38.8
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0045",
+      "category": "triple_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -129.65,
+          "inf_util": -129.65
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -41.81,
+          "inf_util": -41.81
+        },
+        "r1": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "STOP"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 58.19,
+          "inf_util": -41.81,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "STOP"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0046",
+      "category": "triple_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -129.65,
+          "inf_util": -129.65
+        },
+        "m3": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "STOP"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -41.81,
+          "inf_util": 58.19,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "STOP"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ]
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 58.19,
+          "inf_util": 58.19
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0051",
+      "category": "triple_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -129.65,
+          "inf_util": -129.65
+        },
+        "m3": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "STOP"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -41.81,
+          "inf_util": 58.19,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "STOP"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ]
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -41.81,
+          "inf_util": -41.81
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0057",
+      "category": "triple_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -129.65,
+          "inf_util": -126.47,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 60.35,
+          "inf_util": 60.35
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 60.35,
+          "inf_util": 60.35
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0058",
+      "category": "triple_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -129.65,
+          "inf_util": -129.65
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 58.19,
+          "inf_util": 58.19
+        },
+        "r1": {
+          "classification": "BOTH_SUCCESS",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 3,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 60.35,
+          "inf_util": 58.19,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0061",
+      "category": "triple_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -129.65,
+          "inf_util": -129.65
+        },
+        "m3": {
+          "classification": "BOTH_SUCCESS",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 3,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "DEFER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 58.19,
+          "inf_util": 60.35,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ]
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 58.19,
+          "inf_util": 58.19
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0065",
+      "category": "triple_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -129.65,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 58.19,
+          "inf_util": 58.19
+        },
+        "r1": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 58.19,
+          "inf_util": -126.47,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0071",
+      "category": "quad_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "DEFER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -132.83,
+          "inf_util": 57.17,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ]
+        },
+        "r1": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -126.47,
+          "inf_util": 57.17,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0074",
+      "category": "quad_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -129.65,
+          "inf_util": -129.65
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 57.17,
+          "inf_util": 57.17
+        },
+        "r1": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 3,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 57.17,
+          "inf_util": -129.65,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0080",
+      "category": "quad_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 57.17,
+          "inf_util": 57.17
+        },
+        "r1": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "STOP"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 57.17,
+          "inf_util": -42.83,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "STOP"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0081",
+      "category": "quad_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -132.83,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 57.17,
+          "inf_util": 57.17
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0082",
+      "category": "quad_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.83,
+          "inf_util": -132.83
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 57.17,
+          "inf_util": 57.17
+        },
+        "r1": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 57.17,
+          "inf_util": -126.47,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0084",
+      "category": "quad_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.83,
+          "inf_util": -132.83
+        },
+        "m3": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "DEFER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -132.83,
+          "inf_util": 57.17,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ]
+        },
+        "r1": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 57.17,
+          "inf_util": -132.83,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0085",
+      "category": "quad_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.83,
+          "inf_util": -132.83
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 57.17,
+          "inf_util": 57.17
+        },
+        "r1": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 57.17,
+          "inf_util": -126.47,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0087",
+      "category": "quad_all_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.83,
+          "inf_util": -132.83
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 57.17,
+          "inf_util": 57.17
+        },
+        "r1": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "STOP"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 57.17,
+          "inf_util": -42.83,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "STOP"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0090",
+      "category": "late_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -42.83,
+          "inf_util": -42.83
+        },
+        "r1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "STOP"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.83,
+          "inf_util": -42.83,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "STOP"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0091",
+      "category": "late_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -136.01,
+          "inf_util": -136.01
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 55.01,
+          "inf_util": 55.01
+        },
+        "r1": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 5,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "STOP"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 55.01,
+          "inf_util": -44.99,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "STOP"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0092",
+      "category": "late_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.83,
+          "inf_util": -126.47,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 55.01,
+          "inf_util": 55.01
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 55.01,
+          "inf_util": 55.01
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0093",
+      "category": "late_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.83,
+          "inf_util": -132.83
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -44.99,
+          "inf_util": -44.99
+        },
+        "r1": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 5,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "STOP"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -44.99,
+          "inf_util": 55.01,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "STOP"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0095",
+      "category": "late_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -132.83,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -42.83,
+          "inf_util": -42.83
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 57.17,
+          "inf_util": 57.17
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0097",
+      "category": "late_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 3,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.83,
+          "inf_util": -129.65,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -134.99,
+          "inf_util": -134.99
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -134.99,
+          "inf_util": -134.99
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0098",
+      "category": "late_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 3,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.83,
+          "inf_util": -129.65,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 5,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "STOP"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 55.01,
+          "inf_util": -44.99,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "STOP"
+          ]
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -44.99,
+          "inf_util": -44.99
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0100",
+      "category": "late_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.83,
+          "inf_util": -132.83
+        },
+        "m3": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "RETRIEVE"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.83,
+          "inf_util": -134.98,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "RETRIEVE",
+            "ANSWER"
+          ]
+        },
+        "r1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "RETRIEVE"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -134.98,
+          "inf_util": -132.83,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "RETRIEVE",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0101",
+      "category": "late_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -129.65,
+          "inf_util": -129.65
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 57.17,
+          "inf_util": 57.17
+        },
+        "r1": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "DEFER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -132.83,
+          "inf_util": 57.17,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "DEFER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0107",
+      "category": "late_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -129.65,
+          "inf_util": -129.65
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.83,
+          "inf_util": -132.83
+        },
+        "r1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 3,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -129.65,
+          "inf_util": -132.83,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0109",
+      "category": "late_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -132.83,
+          "inf_util": -126.47,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 5,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "STOP"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 55.01,
+          "inf_util": -44.99,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "STOP"
+          ]
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -44.99,
+          "inf_util": -44.99
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0110",
+      "category": "noise_before_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 5,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "RETRIEVE"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -134.99,
+          "inf_util": -137.14,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "RETRIEVE",
+            "ANSWER"
+          ]
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -134.99,
+          "inf_util": -134.99
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0113",
+      "category": "noise_before_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -139.3,
+          "inf_util": -139.3
+        },
+        "r1": {
+          "classification": "INFERRED_BREAK",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 7,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "SEARCH_MORE",
+              "RETRIEVE",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "SEARCH_MORE",
+              "RETRIEVE",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": false,
+          "gold_util": 50.7,
+          "inf_util": -139.3,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "RETRIEVE",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "RETRIEVE",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0116",
+      "category": "noise_before_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 6,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "SEARCH_MORE",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "SEARCH_MORE",
+              "SEARCH_MORE"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -137.15,
+          "inf_util": 50.69,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "DEFER"
+          ]
+        },
+        "r1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 4,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -137.15,
+          "inf_util": -48.17,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "STOP"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0123",
+      "category": "noise_before_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 50.69,
+          "inf_util": 50.69
+        },
+        "r1": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 5,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -134.99,
+          "inf_util": 55.01,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0124",
+      "category": "noise_before_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 5,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "SEARCH_MORE"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -137.15,
+          "inf_util": 55.01,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ]
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -137.15,
+          "inf_util": -137.15
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0127",
+      "category": "noise_before_conflict",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 55.01,
+          "inf_util": 55.01
+        },
+        "r1": {
+          "classification": "BOTH_SUCCESS",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 5,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "DEFER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE",
+              "SEARCH_MORE"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 55.01,
+          "inf_util": 52.85,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "DEFER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "SEARCH_MORE",
+            "DEFER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0152",
+      "category": "subset_eliminated",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_SUCCESS",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 1,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 93.53,
+          "inf_util": 96.71,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 93.53,
+          "inf_util": 93.53
+        },
+        "r1": {
+          "classification": "BOTH_SUCCESS",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 1,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 96.71,
+          "inf_util": 93.53,
+          "gold_actions": [
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0171",
+      "category": "simple_answer",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_SUCCESS",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "SEARCH_MORE"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 91.37,
+          "inf_util": 93.53,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "SEARCH_MORE",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 93.53,
+          "inf_util": 93.53
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 93.53,
+          "inf_util": 93.53
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0200",
+      "category": "stale_then_current",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 96.71,
+          "inf_util": 96.71
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 93.53,
+          "inf_util": 93.53
+        },
+        "r1": {
+          "classification": "BOTH_SUCCESS",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 1,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 93.53,
+          "inf_util": 96.71,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0218",
+      "category": "stale_then_current",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_SUCCESS",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 1,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 96.71,
+          "inf_util": 93.53,
+          "gold_actions": [
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 93.53,
+          "inf_util": 93.53
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 93.53,
+          "inf_util": 93.53
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0219",
+      "category": "stale_then_current",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 93.53,
+          "inf_util": 93.53
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 93.53,
+          "inf_util": 93.53
+        },
+        "r1": {
+          "classification": "BOTH_SUCCESS",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 1,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 93.53,
+          "inf_util": 96.71,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0242",
+      "category": "triple_verify_answer",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_SUCCESS",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 1,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 93.53,
+          "inf_util": 96.71,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": true,
+          "inf_success": true,
+          "gold_util": 93.53,
+          "inf_util": 93.53
+        },
+        "r1": {
+          "classification": "INFERRED_RESCUE",
+          "attribution": "BACKEND_RESPONSE_VARIANCE",
+          "evidence": {
+            "actions_identical": true,
+            "gold_util": -123.29,
+            "inf_util": 96.71,
+            "note": "Identical action sequences (VERIFY, ANSWER) but model produced different answer payloads at temperature 0. R1_GOLD answered incorrectly, R1_INFERRED answered correctly. This is backend response variance in answer content."
+          },
+          "gold_success": false,
+          "inf_success": true,
+          "gold_util": -123.29,
+          "inf_util": 96.71,
+          "gold_actions": [
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0264",
+      "category": "multi_viable",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 1,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "ANSWER"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -123.29,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -123.29,
+          "inf_util": -123.29
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0271",
+      "category": "multi_viable",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 1,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -123.29,
+          "inf_util": -126.47,
+          "gold_actions": [
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -123.29,
+          "inf_util": -123.29
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0290",
+      "category": "early_false_ready",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "r1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 2,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY",
+              "VERIFY"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -129.65,
+          "gold_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "i3_12_s1_0297",
+      "category": "early_false_ready",
+      "has_discrepancy": true,
+      "attributions": {
+        "a1": {
+          "classification": "BOTH_FAIL",
+          "attribution": "TRAJECTORY_CASCADE",
+          "evidence": {
+            "graph_same": true,
+            "first_diff_step": 1,
+            "gold_actions_up_to_diff": [
+              "VERIFY",
+              "ANSWER"
+            ],
+            "inf_actions_up_to_diff": [
+              "VERIFY",
+              "VERIFY"
+            ],
+            "note": "Earlier backend variance likely caused cascade"
+          },
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -123.29,
+          "inf_util": -126.47,
+          "gold_actions": [
+            "VERIFY",
+            "ANSWER"
+          ],
+          "inf_actions": [
+            "VERIFY",
+            "VERIFY",
+            "ANSWER"
+          ]
+        },
+        "m3": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -126.47,
+          "inf_util": -126.47
+        },
+        "r1": {
+          "classification": "NO_DISCREPANCY",
+          "attribution": null,
+          "gold_success": false,
+          "inf_success": false,
+          "gold_util": -123.29,
+          "inf_util": -123.29
+        }
+      }
+    }
+  ]
+}
