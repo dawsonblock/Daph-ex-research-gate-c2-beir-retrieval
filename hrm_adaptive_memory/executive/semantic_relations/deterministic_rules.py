@@ -88,6 +88,7 @@ CURRENT_STATUS_KEYWORDS = frozenset({
     "current", "recent", "updated", "latest", "active",
     "operational", "sufficient", "available", "present",
     "true", "correct", "accurate", "reliable",
+    "confirmed",
 })
 
 # Status keywords indicating "stale/inactive/expired" claim
@@ -215,7 +216,7 @@ class DeterministicRelationExtractor(SemanticRelationExtractor):
     def __init__(self) -> None:
         identity = compute_extractor_identity(
             extractor_class="DeterministicRelationExtractor",
-            extractor_version="2.5.0",
+            extractor_version="2.6.0",
             relation_schema_version="1",
             normalization_rules=(
                 "lowercase",

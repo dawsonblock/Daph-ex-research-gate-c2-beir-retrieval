@@ -352,3 +352,97 @@ class TestSnapshotIntegration:
         for rel in graph.relations:
             assert rel.evidence_sha256
             assert rel.hypothesis_sha256
+
+
+class TestS0RegressionControl:
+    """I3.12g: S0 regression/control experiment.
+
+    Verifies that the I3.12 generator's tasks run correctly through the
+    existing oracle pipeline and reach the expected terminal actions.
+    """
+
+    @pytest.fixture
+    def budget(self):
+        from hrm_adaptive_memory.executive.resources import ResourceBudget
+        return ResourceBudget(
+            max_executive_steps=24, max_reasoning_tokens=2048,
+            max_retrieval_calls=5, max_verification_calls=5,
+            max_search_calls=5, max_elapsed_ms=10000,
+        )
+
+    def test_s0_oracle_resolution_all_pass(self, budget):
+        """All tasks must reach expected terminal via oracle resolution path."""
+        from hrm_adaptive_memory.executive.evidence_benchmark import (
+            initial_evidence_runtime, EvidenceExecutor,
+        )
+        from hrm_adaptive_memory.executive.resources import ResourceState
+        from hrm_adaptive_memory.cognitive_control.core import DecisionAction
+
+        tasks = generate_i3_12_corpus(n_per_category=3, seed=42)
+        executor = EvidenceExecutor()
+
+        failures = []
+        for task in tasks:
+            runtime = initial_evidence_runtime(task.evidence_task, ResourceState(budget))
+            current = runtime
+            final_action = None
+            for step in task.evidence_task.oracle_resolution_path:
+                parts = step.split(":")
+                action = DecisionAction(parts[0])
+                execution = executor.execute(
+                    current, action,
+                    parts[1] if len(parts) > 1 else None,
+                )
+                current = execution.runtime
+                if execution.terminal:
+                    final_action = action
+                    break
+
+            expected = task.evidence_task.expected_terminal
+            if final_action != expected:
+                failures.append((task.task_id, task.category, expected, final_action))
+
+        assert not failures, f"S0 regression failures: {failures}"
+
+    def test_s0_s1_snapshot_equivalence(self, budget):
+        """S0 and S1 must produce identical snapshots (extractor is 100% accurate)."""
+        from hrm_adaptive_memory.executive.evidence_benchmark import initial_evidence_runtime
+        from hrm_adaptive_memory.executive.semantic_relations.integration import (
+            build_evidence_snapshot_oracle,
+            build_evidence_snapshot_with_inferred_relations,
+        )
+        from hrm_adaptive_memory.executive.resources import ResourceState
+
+        tasks = generate_i3_12_corpus(n_per_category=3, seed=42)
+        ext = DeterministicRelationExtractor()
+
+        mismatches = []
+        for task in tasks:
+            runtime = initial_evidence_runtime(task.evidence_task, ResourceState(budget))
+            snap_s0 = build_evidence_snapshot_oracle(runtime)
+            snap_s1, _ = build_evidence_snapshot_with_inferred_relations(runtime, ext)
+
+            for ev0, ev1 in zip(snap_s0.visible_evidence, snap_s1.visible_evidence):
+                if ev0.supports != ev1.supports or ev0.contradicts != ev1.contradicts:
+                    mismatches.append((
+                        task.task_id, ev0.evidence_id,
+                        ev0.supports, ev1.supports,
+                        ev0.contradicts, ev1.contradicts,
+                    ))
+
+        assert not mismatches, f"S0/S1 snapshot mismatches: {mismatches[:5]}"
+
+    def test_generator_deterministic(self):
+        """Generator must produce identical output for same seed."""
+        tasks1 = generate_i3_12_corpus(n_per_category=2, seed=42)
+        tasks2 = generate_i3_12_corpus(n_per_category=2, seed=42)
+
+        assert len(tasks1) == len(tasks2)
+        for t1, t2 in zip(tasks1, tasks2):
+            assert t1.task_id == t2.task_id
+            assert t1.category == t2.category
+            assert t1.evidence_task.task_summary == t2.evidence_task.task_summary
+            for e1, e2 in zip(t1.evidence_task.evidence_items, t2.evidence_task.evidence_items):
+                assert e1.proposition == e2.proposition
+                assert e1.supports == e2.supports
+                assert e1.contradicts == e2.contradicts
