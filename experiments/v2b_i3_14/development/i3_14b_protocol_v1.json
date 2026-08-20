@@ -1,0 +1,68 @@
+{
+  "experiment": "I3.14b",
+  "title": "Retrieval Qualification",
+  "status": "FROZEN",
+  "date": "2026-08-20",
+  "predecessor": "I3.14a",
+  "motivation": "I3.14a validated the retrieval ladder as development evidence. Q3_RERANKED achieved RecallAll=0.82 vs Q0_BM25=0.60. Before freezing Q3 as production infrastructure, reproduce on a fresh query/task split with retrieval-only metrics (no LLM).",
+
+  "scope": "Retrieval only. No A1, R1, MDSG, T2, or LLM involvement.",
+
+  "frozen_artifacts": {
+    "document_corpus": "I3.13 50-passage corpus (SHA256: 360a1520f01766be...)",
+    "task_corpus": "I3.13 150-task corpus (seed=42, 25 per category, same-domain evidence)",
+    "queries": "task.evidence_task.task_summary for each task",
+    "required_chunk_ids": "passage IDs for evidence with retrieved=True",
+    "chunking": "one chunk per passage, no splitting",
+    "retrievers": {
+      "Q0_BM25": "BM25Retriever (k1=1.5, b=0.75, top_k=5)",
+      "Q1_DENSE": "BGE-small-en-v1.5 (revision 5c38ec7c405ec4b44b94cc5a9bb96e735b38267a, pooling=cls, normalize=True, dim=384, max_seq=512, query_prefix='Represent this sentence for searching relevant passages: ')",
+      "Q2_HYBRID": "BM25 + BGE-small, reciprocal rank fusion (RRF k=60), top_k=5",
+      "Q3_RERANKED": "Q2 hybrid candidate pool (top 20) + gte-reranker-modernbert-base, top_k=5",
+      "Q4_ORACLE": "oracle (all required passages)"
+    },
+    "embedding_model": "BAAI/bge-small-en-v1.5 @ 5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "reranker_model": "Alibaba-NLP/gte-reranker-modernbert-base",
+    "k_values": {"retrieval_top_k": 5, "hybrid_candidate_pool": 20},
+    "fusion_constants": {"rrf_k": 60}
+  },
+
+  "metrics": {
+    "primary": [
+      "RecallAll_Q3 > RecallAll_Q0 (margin >= 15pp)",
+      "RecallAll_Q3 >= 0.75"
+    ],
+    "secondary": [
+      "RequiredEvidenceRecall (mean)",
+      "RecallAny (fraction with >=1 required passage)",
+      "RecallAll (fraction with all required passages)",
+      "RequiredEvidenceRecall_Q3 > RequiredEvidenceRecall_Q1 (reranker justifies cost)"
+    ],
+    "performance": [
+      "latency_ms_per_query",
+      "candidate_count",
+      "embedding_time_ms",
+      "reranker_time_ms",
+      "memory_mb"
+    ]
+  },
+
+  "validation_split": {
+    "method": "The I3.13 task corpus (seed=42) serves as the qualification split. A future confirmation split (seed=43) will be used for clean reproduction.",
+    "n_tasks": 150
+  },
+
+  "success_criteria": {
+    "primary_pass": "RecallAll_Q3 > RecallAll_Q0 + 0.15 AND RecallAll_Q3 >= 0.75",
+    "secondary_pass": "RequiredEvidenceRecall_Q3 > RequiredEvidenceRecall_Q1",
+    "freeze_decision": "If primary passes, freeze Q3_RERANKED as production retrieval stack for I3.15+"
+  },
+
+  "forbidden": [
+    "Involving A1, R1, MDSG, T2, or any LLM component",
+    "Modifying the document corpus",
+    "Modifying the task corpus",
+    "Tuning retriever hyperparameters after observing results",
+    "Using LLM-based retrieval or LLM-based reranking"
+  ]
+}

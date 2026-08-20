@@ -1,0 +1,87 @@
+{
+  "experiment": "I3.14b",
+  "status": "FROZEN",
+  "corpus_sha256": "360a1520f01766be1f2e874db875d6884d9090258e56afcfc2bd6e1fec7b18b8",
+  "n_tasks": 150,
+  "n_passages": 50,
+  "retrievers": {
+    "Q0_BM25": "bm25_k1.5_b0.75",
+    "Q1_DENSE": "bge-small-en-v1.5_5c38ec7c",
+    "Q2_HYBRID": "bm25+bge_rrf_k60",
+    "Q3_RERANKED": "bm25+bge_rrf+gte-reranker-modernbert",
+    "Q4_ORACLE": "oracle"
+  },
+  "results": {
+    "Q0_BM25": {
+      "recall_mean": 0.7356,
+      "recall_any": 0.8267,
+      "recall_all": 0.6267
+    },
+    "Q1_DENSE": {
+      "recall_mean": 0.7911,
+      "recall_any": 0.9133,
+      "recall_all": 0.6867
+    },
+    "Q2_HYBRID": {
+      "recall_mean": 0.75,
+      "recall_any": 0.84,
+      "recall_all": 0.64
+    },
+    "Q3_RERANKED": {
+      "recall_mean": 0.9356,
+      "recall_any": 0.9733,
+      "recall_all": 0.8933
+    },
+    "Q4_ORACLE": {
+      "recall_mean": 1.0,
+      "recall_any": 1.0,
+      "recall_all": 1.0
+    }
+  },
+  "performance": {
+    "Q0_BM25": {
+      "build_time_s": 0.001,
+      "latency_ms_mean": 0.1,
+      "latency_ms_p95": 0.13,
+      "candidate_count": 5
+    },
+    "Q1_DENSE": {
+      "build_time_s": 6.53,
+      "latency_ms_mean": 9.91,
+      "latency_ms_p95": 12.7,
+      "candidate_count": 5
+    },
+    "Q2_HYBRID": {
+      "build_time_s": 0.601,
+      "latency_ms_mean": 10.61,
+      "latency_ms_p95": 17.94,
+      "candidate_count": 5
+    },
+    "Q3_RERANKED": {
+      "build_time_s": 0.525,
+      "latency_ms_mean": 282.32,
+      "latency_ms_p95": 423.98,
+      "candidate_count": 5
+    },
+    "Q4_ORACLE": {
+      "latency_ms": 0.0,
+      "candidate_count": 0
+    }
+  },
+  "primary_criteria": {
+    "RecallAll_Q3_gt_Q0_plus_15pp": {
+      "value": 0.2667,
+      "pass": true
+    },
+    "RecallAll_Q3_ge_0_75": {
+      "value": 0.8933,
+      "pass": true
+    },
+    "Recall_Q3_gt_Q1": {
+      "value": 0.1444,
+      "pass": true
+    },
+    "overall_primary_pass": true
+  },
+  "freeze_recommendation": "Q3_RERANKED"
+}
