@@ -618,7 +618,7 @@ def generate_r1_corpus(split: str = "r1_stress_v1") -> list[EvidenceTask]:
             template = STRUCTURAL_TEMPLATES[task_idx % len(STRUCTURAL_TEMPLATES)]
             rng = _seeded_rng(task_id)
             if category == "bilateral_one_falsified":
-                task = gen_bilateral_one_falsified(task_id, template, rng)
+                task = gen_bilateral_one_side_falsified(task_id, template, rng)
             else:
                 gen = generators[category]
                 task = gen(task_id, template, rng, hidden_count)

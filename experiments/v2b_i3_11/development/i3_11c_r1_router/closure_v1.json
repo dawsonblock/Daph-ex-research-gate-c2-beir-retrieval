@@ -1,0 +1,47 @@
+{
+  "schema": "DAPH_V2B_I3_11C_CLOSURE_V1",
+  "experiment": "I3.11c R1 Epistemic-Conflict Router — A1 → T2 → M3 on fresh decorrelated corpus",
+  "corpus": "r1_stress_v1 (310 tasks under current epistemic algebra)",
+  "protocol_frozen_at": "835588a",
+  "result": "ALL SEVEN FROZEN CLAIMS PASS. R1 beats both A1 and M3 with statistical significance.",
+  "overall_results": {
+    "mean_u": {"A1": 24.43, "M3": 71.11, "R1": 76.30},
+    "success": {"A1": "219/310", "M3": "307/310", "R1": "307/310"},
+    "bootstrap_ci_r1_a1": [43.02, 61.15],
+    "bootstrap_ci_r1_m3": [3.22, 6.76],
+    "bootstrap_ci_m3_a1": [37.43, 56.47]
+  },
+  "frozen_claims": {
+    "C1_r1_a1_ci_positive": {"result": true, "ci": [43.02, 61.15]},
+    "C2_r1_m3_ci_positive": {"result": true, "ci": [3.22, 6.76]},
+    "C3_r1_success_ge_m3_minus_1pp": {"result": true, "values": "R1=307, M3=307"},
+    "C4_r1_steps_lt_m3": {"result": true, "values": "R1=6.06, M3=8.41"},
+    "C5_r1_rescues_gt_breaks_vs_a1": {"result": true, "values": "88 > 0"},
+    "C6_false_activation_lt_5pct": {"result": true, "value": 0.0},
+    "C7_no_catastrophic_subgroup": {"result": true}
+  },
+  "routing_telemetry": {
+    "trigger_rate": 0.29,
+    "trigger_count": "90/310",
+    "trigger_step_mean": 2.0,
+    "trigger_step_median": 2,
+    "useful_activation_precision": 0.9667,
+    "coverage_of_m3_rescues": 0.9886,
+    "false_activation_on_a1_success": 0.0,
+    "a1_prefix_length_mean": 2.0,
+    "m3_post_trigger_length_mean": 7.2
+  },
+  "scientific_conclusion": "Representation should be selected by epistemic phase, not task identity. R1 dynamically switches from A1 (acquisition representation) to M3 (resolution representation) when all hypotheses are eliminated by visible verified evidence. This phase switching beats both fixed arms: R1 captures M3's conflict-resolution benefit (88 rescues, 0 breaks vs A1) while avoiding M3's overhead on ordinary answer tasks (fewer steps, higher utility than M3).",
+  "key_observations": {
+    "r1_beats_a1": "R1 rescues 88/88 conflict_unresolved tasks that A1 fails. CI [+43.02, +61.15].",
+    "r1_beats_m3": "R1 avoids M3's overhead on 220 non-conflict tasks. CI [+3.22, +6.76]. M3 wastes steps on ordinary ANSWER tasks where A1 is already efficient.",
+    "trigger_precision": "T2 fires on 90 tasks. 87 are M3 rescue opportunities (useful_activation_precision=96.67%). 2 are non-beneficial (both-fail tasks). 0 false activations on A1-success tasks.",
+    "trigger_coverage": "R1 triggered on 87/88 M3 rescue opportunities (coverage=98.86%). 1 missed rescue is a task where A1's trajectory didn't reach the all-eliminated state before answering.",
+    "trigger_latency": "T2 fires at step 2 (median), immediately after both pieces of conflicting evidence are verified.",
+    "phase_split": "R1 spends 2 steps in A1 (acquisition) then 7.2 steps in M3 (resolution) on triggered tasks. Non-triggered tasks stay in A1 throughout.",
+    "no_subgroup_regression": "R1 never drops below the better fixed arm by more than 10pp in any category. On non-conflict categories, R1 matches or exceeds A1 (avoiding M3's overhead)."
+  },
+  "architectural_implication": "MDSG does not need a task-level applicability predictor. The observed-state phase transition detector (T2: all hypotheses eliminated) is sufficient. This turns selective routing from task classification into phase switching: acquisition representation → resolution representation. The representation changes only when observed verified evidence justifies it.",
+  "comparison_to_r0": "R0 (hidden_evidence_count==0 → M3) was a generator proxy that failed on decorrelated data. R1 (T2 phase switching) succeeds on decorrelated data because it responds to observed verified epistemic structure, not static surface features.",
+  "next_steps": "This result supports the architectural hypothesis that representation should be selected by epistemic phase. Future work could test: (1) additional phase transitions beyond all-eliminated, (2) R1 on other task distributions, (3) whether T2 generalizes to >2 hypotheses with more complex elimination patterns."
+}
