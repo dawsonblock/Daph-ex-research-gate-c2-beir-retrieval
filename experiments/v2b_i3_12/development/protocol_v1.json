@@ -1,0 +1,123 @@
+{
+  "schema": "DAPH_V2B_I3_12_PROTOCOL_V1",
+  "branch": "i3.12-semantic-relation-ablation",
+  "parent_commit": "89afa2c",
+  "parent_branch": "i3.8-mdsg-validation",
+  "created_before_implementation": true,
+  "title": "I3.12 — Semantic Relation Ablation and Raw-Evidence MDSG",
+  "objective": "Does the MDSG/R1 advantage survive when support/contradiction relations are not handed to the controller?",
+  "research_question": "Does MDSG/R1 still help when support/contradiction edges are not given for free?",
+  "frozen_components_from_i3_11": {
+    "M3": "frozen, not modified",
+    "T2": "frozen, not modified",
+    "R1": "frozen, not modified",
+    "A1": "frozen, not modified",
+    "prompts": "frozen, not modified",
+    "utility": "frozen, not modified",
+    "evidence_executor": "frozen, not modified",
+    "model_config": "frozen, not modified"
+  },
+  "what_is_new_in_i3_12": "The only new capability is the upstream semantic-relation layer. MDSG, T2, R1, A1, prompts, utility, and model config are not modified.",
+  "evidence_conditions": {
+    "S0_oracle_structured": {
+      "description": "Current benchmark condition. Evidence items carry explicit supports/contradicts fields.",
+      "purpose": "Reference / upper-bound symbolic condition. S0 regression must reproduce prior behavior.",
+      "controller_sees": "supports, contradicts fields directly"
+    },
+    "S1_raw_proposition": {
+      "description": "Controller sees only proposition text. A frozen semantic relation extractor infers SUPPORT/CONTRADICT/NEUTRAL relations.",
+      "purpose": "Test whether MDSG/R1 advantage survives when relations are derived, not given.",
+      "controller_sees": "proposition text only; relations are inferred by frozen extractor",
+      "critical_constraint": "A1, M3, and R1 must receive exactly the same inferred relation graph. Never A1=raw, M3=structured."
+    },
+    "S2_semantic_stress": {
+      "description": "Raw propositions with harder semantics: paraphrases, negation, temporal qualifiers, partial support, multi-hop, irrelevant, ambiguous, conflicting sources.",
+      "purpose": "Test robustness to realistic semantic uncertainty. Only after S1 passes.",
+      "status": "not_started"
+    }
+  },
+  "primary_comparison": {
+    "question": "H1: E[U_R1_raw - U_A1_raw] > 0, where both systems operate on the same automatically inferred semantic relation graph.",
+    "criterion": "LCB_95(U_R1_raw - U_A1_raw) > 0 using task-paired bootstrap",
+    "estimand": "per-task mean utility, bootstrap over tasks"
+  },
+  "secondary_criteria": {
+    "success": "Success_R1_raw > Success_A1_raw",
+    "rescues": "R1 rescues > R1 breaks vs A1",
+    "steps": "Steps_R1_raw < Steps_M3_raw (if M3 retained as comparison arm)",
+    "t2_false_activation": "T2 false activation < 5%"
+  },
+  "extractor_constraints": {
+    "must_not_access": [
+      "verify_result",
+      "expected_terminal",
+      "correct_hypothesis_id",
+      "oracle_resolution_path",
+      "hidden evidence",
+      "task category"
+    ],
+    "allowed_inputs": "proposition text + hypothesis text only",
+    "hard_fail_if_supplied": "extractor must raise if any forbidden field is supplied"
+  },
+  "information_parity": "A1, M3, and R1 must share: same extractor, same relation outputs, same extraction timing, same confidence threshold, same errors. Never A1=raw evidence, M3=structured relation graph.",
+  "architecture": {
+    "flow": "Raw propositions -> Frozen semantic relation extractor -> Controller-visible relation graph -> A1 / M3 / R1",
+    "snapshot_still_presents": "supports, contradicts to A1/M3/R1 (inferred, not oracle)",
+    "gold_relations": "Stored evaluator-side only, never enter controller packets",
+    "separation": "Runtime flow (raw -> extractor -> inferred graph -> controller) and evaluator flow (gold graph -> relation scoring) are physically separated"
+  },
+  "qualification_gates_for_s1": {
+    "G01": "extractor macro F1 >= 0.90",
+    "G02": "zero evaluator leakage (extractor cannot access gold relations, correct_hypothesis_id, verify_result, expected_terminal, oracle_path)",
+    "G03": "A1/M3/R1 share identical inferred relations",
+    "G04": "S0 integration reproduces prior behavior",
+    "G05": "R1_RAW utility CI vs A1_RAW > 0 (PRIMARY)",
+    "G06": "R1_RAW success > A1_RAW",
+    "G07": "rescues > breaks",
+    "G08": "T2 false activation < 5%",
+    "G09": "no catastrophic subgroup regression",
+    "G10": "R1_RAW steps < M3_RAW",
+    "G11": "semantic gap quantified (R1_gold vs R1_inferred)",
+    "G12": "provenance hashes complete"
+  },
+  "implementation_sequence": {
+    "i3_12a": "semantic relation schema module",
+    "i3_12b": "controlled raw-semantic task generator",
+    "i3_12c": "deterministic relation extractor",
+    "i3_12d": "extractor-only evaluation (F1 gates)",
+    "i3_12e": "leakage barriers + behavioral equivalence tests",
+    "i3_12f": "integrate inferred relations into EvidenceSnapshot",
+    "i3_12g": "S0 regression/control experiment",
+    "i3_12h": "S1 packet-level equivalence analysis",
+    "i3_12i": "freeze raw-semantic protocol",
+    "i3_12j": "300-task A1/M3/R1 raw experiment",
+    "i3_12k": "gold-vs-inferred semantic gap analysis",
+    "i3_12l": "failure attribution"
+  },
+  "extractor_identity": {
+    "description": "The extractor is scientifically part of the treatment. Hash: extractor source, relation schema, normalization rules, prompt if LLM-based, model/version if LLM-based, thresholds, hypothesis serializer, evidence serializer.",
+    "saved_as": "semantic_extractor_identity.json"
+  },
+  "provenance_lineage": {
+    "description": "Every controller decision traceable: raw evidence text -> hash -> relation extractor -> relation output -> hash -> snapshot -> hash -> MDSG state -> T2 -> representation selected -> model action",
+    "receipt_fields": ["evidence_sha256", "relation_extractor_sha256", "relation_graph_sha256", "snapshot_sha256", "mdsg_packet_sha256", "t2", "representation", "action"]
+  },
+  "probabilistic_t2": {
+    "status": "not_implemented",
+    "rationale": "Do not implement probabilistic T2 yet. First determine whether deterministic T2 survives S1. If it does, uncertainty-aware T2 becomes justified. Otherwise it would be another confounded architecture change."
+  },
+  "decision_tree_if_s1_fails": {
+    "extractor_poor": "improve extractor",
+    "extractor_strong_but_t2_wrong": "relation uncertainty problem",
+    "extractor_and_t2_correct_but_task_fails": "model policy problem",
+    "gold_relations_also_fail": "architecture does not generalize"
+  },
+  "strongest_realistic_claim": "A semantic relation layer can transform raw evidence into a controller-visible epistemic graph on which dynamic MDSG phase routing retains measurable metareasoning value.",
+  "do_not": [
+    "modify M3, T2, or R1 during I3.12",
+    "let A1 and M3/R1 see different relation information",
+    "implement probabilistic T2 before S1 is evaluated",
+    "start S2 before S1 passes",
+    "let the extractor inspect hidden evidence or oracle fields"
+  ]
+}
