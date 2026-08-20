@@ -1,0 +1,29 @@
+{
+  "n_tasks": 150,
+  "n_trajectories": 1800,
+  "elapsed_s": 2007.4,
+  "extractor_sha256": "b00e480af3be88a8ff17c7eeadaea1cf95848d40c19f563ad99bdbc813b78b2a",
+  "corpus_sha256": "360a1520f01766be1f2e874db875d6884d9090258e56afcfc2bd6e1fec7b18b8",
+  "retrieval_conditions": [
+    "R0_ORACLE",
+    "R1_REAL",
+    "R2_DISTRACTORS"
+  ],
+  "arms": [
+    "A1_GOLD",
+    "A1_INFERRED",
+    "R1_GOLD",
+    "R1_INFERRED"
+  ],
+  "failure_attribution": {
+    "NO_ERROR": 695,
+    "RETRIEVAL_ERROR": 505,
+    "SEMANTIC_EXTRACTION": 590,
+    "POLICY_ERROR": 10
+  },
+  "primary_criterion": {
+    "lcb_95": 0.451,
+    "mean_delta": 5.4151,
+    "passes": true
+  }
+}

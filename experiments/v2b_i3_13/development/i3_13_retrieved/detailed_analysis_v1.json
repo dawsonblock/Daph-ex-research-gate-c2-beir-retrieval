@@ -1,0 +1,41 @@
+{
+  "n_tasks": 150,
+  "n_trajectories": 1800,
+  "primary_criterion": {
+    "condition": "R1_REAL",
+    "LCB_95": 0.451,
+    "mean_delta": 5.4151,
+    "passes": true
+  },
+  "gap_decomposition": {
+    "R0_ORACLE": {
+      "R1_GOLD": 18.83,
+      "R1_INFERRED": -5.38,
+      "A1_INFERRED": -21.8,
+      "A1_GOLD": -21.52,
+      "SemanticGap": 24.21,
+      "RoutingGap": 16.42,
+      "GoldRoutingGap": 40.35
+    },
+    "R1_REAL": {
+      "R1_GOLD": -105.41,
+      "R1_INFERRED": -100.57,
+      "A1_INFERRED": -105.99,
+      "A1_GOLD": -105.37,
+      "SemanticGap": -4.84,
+      "RoutingGap": 5.42,
+      "GoldRoutingGap": -0.04
+    },
+    "R2_DISTRACTORS": {
+      "R1_GOLD": 7.46,
+      "R1_INFERRED": -18.65,
+      "A1_INFERRED": -31.3,
+      "A1_GOLD": -29.14,
+      "SemanticGap": 26.11,
+      "RoutingGap": 12.65,
+      "GoldRoutingGap": 36.6
+    }
+  },
+  "t2_analysis": {},
+  "conditional_performance": {}
+}

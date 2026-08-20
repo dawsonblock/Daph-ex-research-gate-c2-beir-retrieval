@@ -1,0 +1,85 @@
+I3.13: Retrieved Real-World Evidence Experiment
+  150 tasks x 3 conditions x 4 arms = 1800 trajectories
+  Extractor: v2.6.0 (FROZEN), SHA256: b00e480af3be88a8...
+  Corpus: 50 passages, SHA256: 360a1520f01766be...
+
+Processing 1800 trajectories with 4 workers...
+  Completed 50/1800 (2.3/s, ETA 777s)
+  Completed 100/1800 (1.6/s, ETA 1034s)
+  Completed 150/1800 (1.5/s, ETA 1132s)
+  Completed 200/1800 (1.5/s, ETA 1085s)
+  Completed 250/1800 (1.5/s, ETA 1005s)
+  Completed 300/1800 (1.6/s, ETA 910s)
+  Completed 350/1800 (1.5/s, ETA 995s)
+  Completed 400/1800 (1.4/s, ETA 1009s)
+  Completed 450/1800 (1.3/s, ETA 1039s)
+  Completed 500/1800 (1.2/s, ETA 1058s)
+  Completed 550/1800 (1.2/s, ETA 1057s)
+  Completed 600/1800 (1.2/s, ETA 1038s)
+  Completed 650/1800 (1.1/s, ETA 1027s)
+  Completed 700/1800 (1.1/s, ETA 1016s)
+  Completed 750/1800 (1.1/s, ETA 997s)
+  Completed 800/1800 (1.0/s, ETA 961s)
+  Completed 850/1800 (1.0/s, ETA 932s)
+  Completed 900/1800 (1.0/s, ETA 897s)
+  Completed 950/1800 (1.0/s, ETA 857s)
+  Completed 1000/1800 (1.0/s, ETA 809s)
+  Completed 1050/1800 (1.0/s, ETA 761s)
+  Completed 1100/1800 (1.0/s, ETA 712s)
+  Completed 1150/1800 (1.0/s, ETA 668s)
+  Completed 1200/1800 (1.0/s, ETA 615s)
+  Completed 1250/1800 (1.0/s, ETA 574s)
+  Completed 1300/1800 (0.9/s, ETA 532s)
+  Completed 1350/1800 (0.9/s, ETA 488s)
+  Completed 1400/1800 (0.9/s, ETA 443s)
+  Completed 1450/1800 (0.9/s, ETA 390s)
+  Completed 1500/1800 (0.9/s, ETA 340s)
+  Completed 1550/1800 (0.9/s, ETA 283s)
+  Completed 1600/1800 (0.9/s, ETA 225s)
+  Completed 1650/1800 (0.9/s, ETA 169s)
+  Completed 1700/1800 (0.9/s, ETA 112s)
+  Completed 1750/1800 (0.9/s, ETA 56s)
+  Completed 1800/1800 (0.9/s, ETA 0s)
+650/1800 (0.9/s, ETA 169s)
+  Completed 1700/1800 (0.9/s, ETA 112s)
+  Completed 1750/1800 (0.9/s, ETA 56s)
+  Completed 1800/1800 (0.9/s, ETA 0s)
+
+Completed 1800 trajectories in 2007.4s
+  Results: /Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/v2b_i3_13/development/i3_13_retrieved/results_v1.jsonl
+
+================================================================================
+I3.13 Results Summary (150 tasks, 1800 trajectories)
+================================================================================
+
+Condition        Arm                  N   Recall  Success    MeanU   RelAcc              TopFail
+  R0_ORACLE        A1_GOLD            150   1.0000   0.4533   -21.52   0.6028  SEMANTIC_EXTRACTION
+  R0_ORACLE        A1_INFERRED        150   1.0000   0.4533   -21.80   0.6028  SEMANTIC_EXTRACTION
+  R0_ORACLE        R1_GOLD            150   1.0000   0.6467    18.83   0.6028             NO_ERROR
+  R0_ORACLE        R1_INFERRED        150   1.0000   0.5400    -5.38   0.6028             NO_ERROR
+  R1_REAL          A1_GOLD            150   0.2189   0.1267  -105.37   0.2105      RETRIEVAL_ERROR
+  R1_REAL          A1_INFERRED        150   0.2189   0.1267  -105.99   0.2105      RETRIEVAL_ERROR
+  R1_REAL          R1_GOLD            150   0.2189   0.1267  -105.41   0.2105      RETRIEVAL_ERROR
+  R1_REAL          R1_INFERRED        150   0.2189   0.1533  -100.57   0.2105      RETRIEVAL_ERROR
+  R2_DISTRACTORS   A1_GOLD            150   1.0000   0.4533   -29.14   0.3212  SEMANTIC_EXTRACTION
+  R2_DISTRACTORS   A1_INFERRED        150   1.0000   0.4533   -31.30   0.3212  SEMANTIC_EXTRACTION
+  R2_DISTRACTORS   R1_GOLD            150   1.0000   0.6000     7.46   0.3212             NO_ERROR
+  R2_DISTRACTORS   R1_INFERRED        150   1.0000   0.5000   -18.65   0.3212             NO_ERROR
+
+Primary criterion (R1_REAL):
+  LCB_95(U_R1_INF - U_A1_INF) = 0.4510
+  Mean delta = 5.4151
+  PASSES: True
+
+Failure attribution (all results):
+  NO_ERROR: 695
+  SEMANTIC_EXTRACTION: 590
+  RETRIEVAL_ERROR: 505
+  POLICY_ERROR: 10
+
+Gap decomposition (mean utility):
+  R0_ORACLE: R1_GOLD=18.83 R1_INF=-5.38 A1_INF=-21.80 A1_GOLD=-21.52 SemGap=24.21 RouteGap=16.42
+  R1_REAL: R1_GOLD=-105.41 R1_INF=-100.57 A1_INF=-105.99 A1_GOLD=-105.37 SemGap=-4.84 RouteGap=5.42
+  R2_DISTRACTORS: R1_GOLD=7.46 R1_INF=-18.65 A1_INF=-31.30 A1_GOLD=-29.14 SemGap=26.11 RouteGap=12.65
+
+  Analysis: /Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/v2b_i3_13/development/i3_13_retrieved/analysis_v1.json

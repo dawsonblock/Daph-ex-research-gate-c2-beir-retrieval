@@ -175,10 +175,14 @@ def build_retrieved_evidence_task(task, retrieved_passages, corpus_by_text):
     et = task.evidence_task
     retrieved_texts = {p["text"] for p in retrieved_passages}
 
-    # Keep original evidence items whose passages were retrieved
+    # Keep original evidence items ONLY if their passages were actually retrieved.
+    # The `ev.retrieved` flag is the task generator's default (True for all
+    # generated evidence), NOT an indicator that the retriever found it.
+    # We must gate on `ev.proposition in retrieved_texts` so that R1_REAL
+    # genuinely tests retrieval recall.
     evidence_items = []
     for ev in et.evidence_items:
-        if ev.proposition in retrieved_texts or ev.retrieved:
+        if ev.proposition in retrieved_texts:
             evidence_items.append(ev)
 
     # Add distractor passages as neutral evidence
