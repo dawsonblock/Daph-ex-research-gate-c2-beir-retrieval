@@ -1,0 +1,140 @@
+{
+  "protocol_id": "i3_12_raw_semantic_v1",
+  "frozen_at": "2025-01-27",
+  "frozen_from_branch": "i3.12-semantic-relation-ablation",
+  "frozen_from_commit": "fee9d98",
+  "scientific_question": "Does the MDSG/R1 advantage survive when support/contradiction relations are not handed to the controller?",
+  "conditions": {
+    "S0": {
+      "description": "Structured oracle relations (existing benchmark control)",
+      "evidence_supports": "oracle",
+      "evidence_contradicts": "oracle",
+      "extractor": null
+    },
+    "S1": {
+      "description": "Raw proposition only with frozen inferred relations",
+      "evidence_supports": "inferred",
+      "evidence_contradicts": "inferred",
+      "extractor": "DeterministicRelationExtractor v2.6.0"
+    }
+  },
+  "extractor": {
+    "class": "DeterministicRelationExtractor",
+    "version": "2.6.0",
+    "sha256": "8df7e942b690b5c37ab38d951bc17c0600a196ce01bfa6745c203b91d5d384d9",
+    "type": "deterministic",
+    "model_name": null,
+    "consensus_k": null
+  },
+  "corpus": {
+    "generator": "generate_i3_12_corpus",
+    "seed": 42,
+    "n_per_category": 20,
+    "n_categories": 14,
+    "n_tasks_total": 280,
+    "categories": [
+      "bilateral_conflict_h0",
+      "bilateral_conflict_h1_noise",
+      "triple_all_eliminated",
+      "quad_all_eliminated",
+      "late_conflict",
+      "noise_before_conflict",
+      "subset_eliminated",
+      "simple_answer",
+      "falsified_contradiction",
+      "stale_then_current",
+      "one_viable_among_eliminated",
+      "triple_verify_answer",
+      "multi_viable",
+      "early_false_ready"
+    ],
+    "corpus_identity_sha256": "ad35d90d1d1251ace21cc57d52d132f925f0a3c344b0c0b84f95df47d106c27c"
+  },
+  "gates": {
+    "G01_extractor_f1": {
+      "description": "Extractor macro F1 >= 0.90 on S1 corpus",
+      "threshold": 0.90,
+      "result": 1.0000,
+      "status": "PASS"
+    },
+    "G02_zero_leakage": {
+      "description": "Extractor rejects all forbidden fields",
+      "forbidden_fields": [
+        "verify_result",
+        "expected_terminal",
+        "correct_hypothesis_id",
+        "oracle_resolution_path",
+        "category",
+        "task_success",
+        "hidden_evidence",
+        "gold_relations",
+        "supports",
+        "contradicts"
+      ],
+      "status": "PASS"
+    },
+    "G03_s0_regression": {
+      "description": "All tasks reach expected terminal via oracle resolution path",
+      "result": "70/70 pass",
+      "status": "PASS"
+    },
+    "G04_s0_s1_equivalence": {
+      "description": "S0 and S1 produce identical snapshots (extractor 100% accurate)",
+      "result": "70/70 match",
+      "status": "PASS"
+    },
+    "G05_provenance_complete": {
+      "description": "All S1 packets have complete provenance chain",
+      "result": "70/70 complete",
+      "status": "PASS"
+    },
+    "G06_affordances_identical": {
+      "description": "S0 and S1 affordances identical (no information advantage)",
+      "result": true,
+      "status": "PASS"
+    }
+  },
+  "frozen_components": {
+    "MDSG": "unmodified from I3.11",
+    "T2": "unmodified from I3.11",
+    "R1": "unmodified from I3.11",
+    "A1": "unmodified from I3.11",
+    "build_evidence_snapshot": "unmodified",
+    "EvidenceExecutor": "unmodified",
+    "prompts": "unmodified from I3.11",
+    "utility": "unmodified from I3.11",
+    "model_config": "unmodified from I3.11",
+    "runtime": "unmodified from I3.11"
+  },
+  "new_components": {
+    "semantic_relations": "new package for I3.12",
+    "raw_semantic_generator": "new for I3.12",
+    "DeterministicRelationExtractor": "new for I3.12 v2.6.0",
+    "integration": "new for I3.12 (infer_relations_for_runtime)"
+  },
+  "provenance_chain": {
+    "raw_evidence_text": "hash -> evidence_sha256",
+    "relation_extractor": "extractor_sha256",
+    "relation_output": "hash -> relation_graph_sha256",
+    "snapshot": "snapshot built with inferred relations",
+    "mdsg_state": "MDSG processes snapshot (unmodified)",
+    "t2": "T2 activation (unmodified)",
+    "representation": "A1/M3/R1 selection (unmodified)",
+    "model_action": "base model action (unmodified)"
+  },
+  "experiment_config": {
+    "n_tasks": 300,
+    "arms": ["A1", "M3", "R1"],
+    "conditions": ["S0", "S1"],
+    "repeats": 1,
+    "aggregation": "task-level paired bootstrap",
+    "bootstrap_iterations": 10000,
+    "temperature": 0,
+    "model": "frozen from I3.11"
+  },
+  "tests": {
+    "total": 32,
+    "passing": 32,
+    "failing": 0
+  }
+}
