@@ -1,10 +1,10 @@
 {
-  "schema": "DAPH_V2B_I3_11E_CLOSURE_V1",
+  "schema": "DAPH_V2B_I3_11E_CLOSURE_V1_FINAL",
   "experiment": "I3.11e Boundary Discontinuity Diagnosis (Phase 1 + Phase 2)",
   "protocol_frozen_at": "4a78873",
   "executable_hashes_committed_before_run": true,
   "research_question": "Why does the identical M3 decision representation yield STOP after an A1 prefix, while always-M3 yields DEFER?",
-  "method": "Replay R1 and M3 trajectories on the 6 I3.11d break tasks. Compare controller-visible state at trigger and divergence steps. Run B0-B5 factorial ablations. Test API nondeterminism by repeating identical calls.",
+  "method": "Replay R1 and M3 trajectories on the 6 I3.11d break tasks. Compare controller-visible state at trigger and divergence steps. Run B0-B5 factorial ablations. Test backend response variance by repeating identical calls.",
   "phase_1_findings": {
     "summary": "At the T2 trigger step, R1 and M3 have IDENTICAL controller-visible state: same evidence IDs, same verification states, same prior_actions, same prior_outcomes, same resource_state, same affordances. All B0-B5 conditions produce the same action distribution (SEARCH_MORE or VERIFY, never STOP). The STOP does NOT occur at the trigger step.",
     "state_comparison": "All 6 break tasks: evidence_ids_match=True, verification_states_match=True, prior_actions identical, prior_outcomes identical, resource_state identical.",
@@ -16,7 +16,7 @@
     "no_divergence_on_replay": {
       "count": 4,
       "tasks": ["r1_confirm_v1_0001", "r1_confirm_v1_0051", "r1_confirm_v1_0114", "r1_confirm_v1_0129"],
-      "finding": "Original STOP did not reproduce. Both R1 and M3 replays produced DEFER (success). These 4 breaks are attributable to API nondeterminism at temperature=0."
+      "finding": "Original STOP did not reproduce. Both R1 and M3 replays produced DEFER (success). These 4 breaks did not reproduce under repeated sampling."
     },
     "divergence_with_identical_state": {
       "count": 2,
@@ -27,9 +27,9 @@
           "r1_action": "STOP",
           "m3_action": "DEFER",
           "states_match": true,
-          "nondeterminism_test": {"STOP": 5, "DEFER": 0},
+          "repeat_test": {"STOP": 5, "DEFER": 0},
           "clarified_terminal": "SEARCH_MORE",
-          "interpretation": "R1 state consistently produces STOP (5/5), but M3 with identical state produced DEFER. Possible hidden variable not captured by state comparison, or API session effect. Clarified terminal does NOT produce DEFER — it produces SEARCH_MORE."
+          "interpretation": "R1 repeated request produced STOP 5/5, while a separate M3 replay call produced DEFER despite byte-identical packet and system prompt. 5/5 versus a single DEFER call does not characterize the distribution. Could reflect temporal routing, server instance, system fingerprint, request-order effects, or another provider-side variable outside the serialized request."
         },
         {
           "task_id": "r1_confirm_v1_0043",
@@ -37,43 +37,35 @@
           "r1_action": "STOP",
           "m3_action": "DEFER",
           "states_match": true,
-          "nondeterminism_test": {"STOP": 4, "DEFER": 1},
+          "repeat_test": {"STOP": 4, "DEFER": 1},
           "clarified_terminal": "RETRIEVE",
-          "interpretation": "Same state produces STOP 4/5 and DEFER 1/5. Clear API nondeterminism. M3 happened to get DEFER, R1 happened to get STOP. Clarified terminal does NOT produce DEFER — it produces RETRIEVE."
+          "interpretation": "Same reconstructed request produced STOP 4/5 and DEFER 1/5. This is unambiguous request-level output variability under nominally identical temperature-0 inputs."
         }
       ]
     }
   },
   "overall_diagnostic_conclusion": {
-    "primary_finding": "The STOP-vs-DEFER boundary effect is PRIMARILY API nondeterminism at temperature=0, not a systematic hybrid-trajectory effect.",
-    "evidence": "4/6 breaks did not reproduce on replay. 1/6 showed clear nondeterminism (STOP 4/5, DEFER 1/5 with identical state). 1/6 showed consistent STOP with R1 state but DEFER with M3 state despite identical controller-visible input — possible hidden variable or API session effect.",
-    "clarified_terminal_did_not_help": "The clarified STOP/DEFER semantics did NOT produce DEFER at the divergence step. Instead, the model produced SEARCH_MORE or RETRIEVE. This means the clarified semantics do not fix the issue — they cause the model to attempt more actions rather than deferring.",
-    "not_a_systematic_boundary_effect": "The majority of breaks (4/6) are pure API nondeterminism. The remaining 2/6 have identical controller-visible state at divergence. There is no evidence that the A1 prefix systematically changes the evidence/resource state in a way that makes STOP more likely.",
-    "what_is_not_explained": "Task 0009: R1 state consistently produces STOP (5/5) while M3 with identical state produced DEFER. This could be: (a) a field not checked by states_equal (e.g., searched, reasoning_complete, verified_count), (b) API session/request-ordering effect, or (c) a subtle packet serialization difference. This 1 task is not fully explained by simple nondeterminism."
+    "frozen_statement": "I3.11e rejects the hypothesis of a systematic hybrid-prefix boundary defect. The observed STOP/DEFER failures are substantially unstable under replay and at least one case directly demonstrates different actions from repeated nominally identical requests. The residual variability is therefore best treated as backend/provider response variance until quantified with repeated randomized trials.",
+    "evidence_summary": "4/6 breaks did not reproduce on replay. 1/6 (task 0043) directly demonstrated different actions from the same reconstructed request (STOP 4/5, DEFER 1/5). 1/6 (task 0009) showed STOP 5/5 on R1 repeats vs DEFER on a separate M3 replay call with byte-identical packet — compatible with backend/provider nondeterminism but not fully characterized by 5/1 sampling.",
+    "clarified_terminal_did_not_help": "The clarified STOP/DEFER semantics did NOT produce DEFER at the divergence step. Instead, the model produced SEARCH_MORE or RETRIEVE. The clarified semantics cause the model to attempt more actions rather than deferring.",
+    "no_systematic_boundary_effect": "There is no evidence that the A1 prefix systematically changes the evidence/resource state in a way that makes STOP more likely. All state comparisons showed identical controller-visible state at both trigger and divergence steps."
   },
   "implications_for_i3_11d": {
-    "c2_failure_reinterpretation": "The C2 failure (R1-M3 CI [-1.57, +1.91]) is partly attributable to API nondeterminism. 4/6 R1 breaks vs M3 did not reproduce on replay. The true R1-M3 difference is smaller than measured.",
-    "c3_failure_reinterpretation": "R1 success 285 vs M3 290 (difference of 5). At least 4 of these 5 are attributable to API nondeterminism. The true success difference is at most 1-2 tasks.",
-    "architectural_status_update": "R1 does NOT have a systematic boundary discontinuity. The STOP-vs-DEFER effect is primarily API nondeterminism. R1 approximates M3 with fewer steps, and the small success difference is within the range of API noise."
+    "c2_reinterpretation": "The frozen I3.11d realization remains Success_R1=285/330, Success_M3=290/330, CI(U_R1-U_M3)=[-1.57,+1.91]. I3.11e tells us those realized outcomes are unstable under repeated sampling. It does not allow retroactively replacing them with replay outcomes. The observed five-task success gap in I3.11d is not stable under replay; four of the six R1-vs-M3 break cases disappear on a subsequent run. Therefore a single realization is insufficient to estimate the expected R1-M3 difference precisely.",
+    "architectural_status_update": "R1 does not have a reproducible systematic boundary discontinuity. The STOP-vs-DEFER effect is substantially unstable under replay. The residual variability is best treated as backend/provider response variance until quantified with repeated randomized trials."
   },
-  "calibrated_architectural_statement": "Within the current evidence-reasoning benchmark family, a deterministic observed-state phase transition detector (T2) correctly identifies when all hypotheses are eliminated across varying hypothesis topology (2-4 positive, 5 negative control). R1's phase switching captures M3's conflict-detection benefit over A1 (125 rescues, 0 breaks). R1 uses fewer steps than M3. The small success difference between R1 and M3 (285 vs 290) is primarily attributable to API nondeterminism at temperature=0, not a systematic hybrid-trajectory boundary effect. R1 approximates M3 with fewer steps.",
+  "calibrated_architectural_statement": "Within the current evidence-reasoning benchmark family, a deterministic observed-state phase transition detector (T2) correctly identifies when all hypotheses are eliminated across varying hypothesis topology (2-4 positive, 5 negative control). R1's phase switching captures M3's conflict-detection benefit over A1 (125 rescues, 0 breaks). R1 uses fewer steps than M3. The observed R1-M3 success difference in I3.11d is not stable under replay and is best treated as backend/provider response variance until quantified with repeated randomized trials.",
   "what_was_ruled_out": [
     "History as a systematic cause: B0=B1=B2 at trigger step, and 4/6 breaks did not reproduce",
     "Terminal semantics as a systematic cause: clarified terminal did not produce DEFER at divergence",
     "Evidence/resource state divergence: all state comparisons showed identical state at trigger and divergence",
-    "A systematic representation-switch boundary effect: the majority of breaks are API nondeterminism"
+    "A systematic representation-switch boundary defect: the observed failures are substantially unstable under replay"
   ],
   "packet_identity_check": {
     "task": "r1_confirm_v1_0009",
-    "finding": "R1 and M3 packet JSON at divergence step are BYTE-IDENTICAL. The system prompt is also identical (MDSG_STATE_WITH_AFFORDANCES_SYSTEM_PROMPT). The backend sends only model, messages, temperature, max_tokens, thinking, and response_format to the API. condition/pair_id/task_id are logging-only, NOT sent to API.",
-    "implication": "The API receives the exact same request bytes, yet produces STOP (R1 replay, 5/5) vs DEFER (M3 replay). This is API nondeterminism at temperature=0 — a known phenomenon with LLM APIs (GPU numerical nondeterminism, batching effects, model instance routing)."
+    "finding": "R1 and M3 packet JSON at divergence step are BYTE-IDENTICAL. The system prompt is also identical (MDSG_STATE_WITH_AFFORDANCES_SYSTEM_PROMPT). The backend sends only model, messages, temperature, max_tokens, thinking, and response_format to the API. condition/pair_id/task_id are receipt metadata and are not serialized into the API request. The backend already computes request_sha256 for this purpose.",
+    "implication": "The API receives the exact same request bytes, yet produces different actions across calls. This is compatible with backend/provider response variance (GPU numerical nondeterminism, batching effects, model instance routing, temporal routing, system fingerprint changes). Task 0009's 5/5 STOP vs 1 DEFER does not fully characterize the distribution."
   },
-  "what_was_not_ruled_out": [
-    "API-level nondeterminism at temperature=0 (confirmed as the primary cause, not ruled out — it IS the explanation)"
-  ],
-  "next_step_options": [
-    "Accept that R1 approximates M3 with fewer steps, and the small success difference is API noise. Freeze R1 as a practical efficiency improvement.",
-    "Re-run I3.11d with multiple seeds per task to estimate the API nondeterminism rate and de-noise the R1-M3 comparison.",
-    "Use a deterministic backend (StubBackend or local model) to eliminate API nondeterminism and re-test C2."
-  ]
+  "backend_instrumentation_available": "The backend already captures system_fingerprint, reported_model, request_sha256, packet_sha256, prompt_sha256, generation_config_sha256, latency_ms, prompt_tokens, completion_tokens, finish_reason, and raw_output in CallReceipt. These should become first-class experimental variables in I3.11f.",
+  "next_step": "I3.11f — Repeated-Measures R1 vs M3. Keep T2, R1, M3, A1, prompts, utility, model/config all frozen. Run K=5 repeats per task per arm with interleaved/counterbalanced call order. Calculate per-task mean utility and success probability, then bootstrap tasks. Report instability metrics: deterministic request rate, unstable request rate, STOP<->DEFER flip rate. Accompany with fingerprint micro-experiment on tasks 0009 and 0043."
 }

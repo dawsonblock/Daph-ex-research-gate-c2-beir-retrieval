@@ -1,0 +1,57 @@
+{
+  "schema": "DAPH_V2B_I3_11F_REPEATED_MEASURES_PROTOCOL_V1",
+  "created_before_model_run": true,
+  "description": "Frozen protocol for I3.11f Repeated-Measures R1 vs M3. Everything frozen: T2, R1, M3, A1, prompts, utility, model/config.",
+  "research_question": "Is the I3.11d R1-M3 success difference stable under repeated sampling, or is it backend/provider response variance?",
+  "method": {
+    "design": "Repeated measures: each task run K=5 times per arm (A1, M3, R1)",
+    "call_ordering": "Interleaved/counterbalanced per task (shuffled by task_id-seeded RNG) to reduce confounding from provider drift or changing backend instances",
+    "estimand": "Per-task mean utility and success probability, then bootstrap over tasks (not individual calls) to avoid pseudo-replication",
+    "n_tasks": "100 (all break-category tasks + random sample of others from I3.11d corpus)",
+    "k_repeats": 5
+  },
+  "frozen_components": {
+    "T2": "unchanged",
+    "R1": "unchanged (exact I3.11c executable)",
+    "M3": "unchanged",
+    "A1": "unchanged",
+    "prompts": "unchanged",
+    "utility": "unchanged",
+    "model_config": "unchanged (deepseek-v4-flash, temperature=0, max_tokens=2048, thinking disabled, json_object)"
+  },
+  "analysis": {
+    "per_task": "U_bar_{arm,i} = (1/K) sum_r U_{arm,i,r}; P_success_{arm,i} = #successful_repeats / K",
+    "delta": "Delta_i = U_bar_{R1,i} - U_bar_{M3,i}; bootstrap tasks, not individual calls",
+    "success_comparison": "Mean per-task success probability comparison between R1 and M3"
+  },
+  "instability_metrics": {
+    "deterministic_request_rate": "fraction of unique request hashes producing one action only",
+    "unstable_request_rate": "fraction producing >1 distinct action",
+    "stop_defer_flip_rate": "fraction of unique requests producing both STOP and DEFER",
+    "fingerprint_distribution": "distribution of system_fingerprint values across calls"
+  },
+  "fingerprint_micro_experiment": {
+    "description": "Take exact request from tasks 0009 and 0043 at divergence step. Make 25 interleaved calls each. Record system_fingerprint.",
+    "goal": "If action distribution changes with fingerprint, backend routing is causal. If fingerprint is constant and output still changes, that is direct stochastic/numerical variability under identical reported backend conditions."
+  },
+  "co_primary_criteria": {
+    "C1": "LCB_95(E[U_R1] - E[U_A1]) > 0 (task-level mean utility)",
+    "C2": "LCB_95(E[U_R1] - E[U_M3]) > 0 (task-level mean utility)"
+  },
+  "secondary_criteria": {
+    "C3": "R1 success probability non-inferior to M3 (mean_p_r1 >= mean_p_m3 - 0.01)",
+    "C4": "R1 mean steps < M3 mean steps",
+    "C5": "LCB_95(P_success_R1 - P_success_A1) > 0"
+  },
+  "decision_rule": {
+    "if_C2_passes": "I3.11d C2 failure was a noisy single-run estimate. R1 dominates M3 in expected utility.",
+    "if_C2_fails_but_C3_passes": "R1 has a genuine efficiency-reliability tradeoff: cheaper but not reliably better than M3.",
+    "if_C2_fails_and_C3_fails": "R1 has a genuine efficiency-reliability tradeoff: M3 is more reliable."
+  },
+  "executable_integrity": {
+    "r1_implementation": "scripts/run_i3_11c_r1_router.py (frozen, not modified)",
+    "m3_implementation": "scripts/run_i3_7e_compact_governor.py (frozen, not modified)",
+    "repeated_measures_script": "scripts/run_i3_11f_repeated_measures.py (new)",
+    "hashes_committed_before_run": true
+  }
+}
