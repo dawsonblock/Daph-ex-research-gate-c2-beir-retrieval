@@ -304,3 +304,85 @@ class StubBackend:
             system_fingerprint=None,
             finish_reason="stop",
         )
+
+
+@dataclass
+class LocalLlamaBackend:
+    """Local llama.cpp server backend (OpenAI-compatible).
+
+    Calls a local llama.cpp server started via ``llama serve``.
+    No API key required.  The server URL defaults to
+    ``http://127.0.0.1:8080/v1``.
+
+    This backend is designed for reproducible local inference using
+    GGUF-quantized models such as LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M.
+
+    Frozen configuration for scientific runs should record:
+      - model repository and quantization
+      - GGUF SHA-256
+      - llama.cpp version (system_fingerprint)
+      - context size, temperature, top_p, top_k, repeat_penalty, seed
+      - threads, GPU layers
+    """
+
+    model_name: str = "LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M"
+    base_url: str = "http://127.0.0.1:8080/v1"
+    timeout_seconds: int = 120
+    # Metadata for call receipts (set by the experiment runner)
+    experiment_id: str = ""
+    pair_id: str = ""
+    task_id: str = ""
+    condition: str = ""
+    _call_counter: int = field(default=0, repr=False, init=False)
+
+    def generate(self, *, system_prompt: str, user_prompt: str,
+                 temperature: float, max_tokens: int) -> ModelCallResult:
+        """Generate a model response via the local llama.cpp server."""
+        import urllib.error
+        import urllib.request
+
+        payload = json.dumps({
+            "model": self.model_name,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+        }).encode()
+
+        request = urllib.request.Request(
+            f"{self.base_url}/chat/completions",
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        start = time.monotonic()
+        try:
+            with urllib.request.urlopen(
+                    request, timeout=self.timeout_seconds) as response:
+                body = json.loads(response.read())
+            latency = int((time.monotonic() - start) * 1000)
+            choice = body["choices"][0]
+            usage = body.get("usage", {})
+            raw_output = choice["message"]["content"] or ""
+            timings = body.get("timings", {})
+            result = ModelCallResult(
+                raw_output=raw_output,
+                prompt_tokens=usage.get("prompt_tokens", 0),
+                completion_tokens=usage.get("completion_tokens", 0),
+                reasoning_tokens=usage.get("completion_tokens_details", {}).get("reasoning_tokens", 0),
+                latency_ms=latency,
+                model_name=body.get("model", self.model_name),
+                system_fingerprint=body.get("system_fingerprint"),
+                finish_reason=choice.get("finish_reason"),
+            )
+            self._call_counter += 1
+            return result
+
+        except urllib.error.HTTPError as exc:
+            raise RuntimeError(
+                f"Local llama server returned HTTP {exc.code}: {exc}") from exc
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            raise RuntimeError(
+                f"Local llama server connection failed: {exc}") from exc

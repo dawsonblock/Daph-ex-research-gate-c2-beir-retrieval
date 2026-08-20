@@ -1,0 +1,93 @@
+{
+  "experiment_id": "i3_15_r1_balanced",
+  "parent_experiment": "i3_15",
+  "description": "Retrieval-fair epistemically-hard benchmark with balanced outcomes, local llama backend, paired bootstrap CIs, and pre-specified hypotheses",
+  "date_created": "2025-01-15",
+  "corpus": {
+    "source": "hrm_adaptive_memory/executive/semantic_relations/i3_15_epistemic_corpus.py",
+    "n_passages": 110,
+    "n_easy": 20,
+    "n_medium": 42,
+    "n_hard": 48,
+    "sha256_prefix": "c26cb330f6e54722"
+  },
+  "task_generator": {
+    "source": "hrm_adaptive_memory/executive/semantic_relations/i3_15_task_generator.py",
+    "n_per_cell": 25,
+    "seed": 42,
+    "n_cells": 6,
+    "n_tasks": 150,
+    "balance": "50/50 ANSWER/DEFER per cell via task_index parity"
+  },
+  "frozen_retrieval": {
+    "Q0_BM25": "BM25 (k1=1.5, b=0.75, top_k=15)",
+    "Q3_RERANKED": "Hybrid BM25+BGE-small + gte-reranker (top_k=15, candidate_pool=20)",
+    "Q4_ORACLE": "oracle ceiling",
+    "note": "top_k=15 for I3.15-r1-balanced. Multi-passage chains (3 passages) need more slots."
+  },
+  "frozen_inference": {
+    "backend": "local_llama",
+    "model_repository": "LiquidAI/LFM2.5-2.6B-GGUF",
+    "quantization": "Q5_K_M",
+    "model_name": "LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M",
+    "llama_cpp_version": "b10217-ddd4ec142",
+    "context_size": 131072,
+    "temperature": 0.0,
+    "max_tokens": 2048,
+    "top_p": 1.0,
+    "top_k": 40,
+    "repeat_penalty": 1.0,
+    "seed": 42,
+    "threads": "auto",
+    "gpu_layers": "all (Metal)",
+    "base_url": "http://127.0.0.1:8080/v1",
+    "determinism_verified": true,
+    "determinism_n_calls": 25,
+    "determinism_unique_outputs": 1
+  },
+  "arms": {
+    "A1_INFERRED": "Baseline with affordances, inferred semantic relations",
+    "R1_INFERRED": "MDSG governor with T2 phase detector, inferred semantic relations"
+  },
+  "factorial_design": {
+    "retrieval_levels": ["Q0_BM25", "Q3_RERANKED", "Q4_ORACLE"],
+    "arms": ["A1_INFERRED", "R1_INFERRED"],
+    "n_trajectories": 900
+  },
+  "pre_specified_hypotheses": {
+    "primary": "Delta_R(Q3 | epistemic_hard) > 0",
+    "secondary": "Delta_R(Q3) > Delta_R(Q0) [positive interaction]",
+    "mechanism": "Better retrieval creates more opportunity for R1 only when the retrieved evidence remains epistemically nontrivial to integrate",
+    "predictions": {
+      "Q0_hard": "Small R1 benefit because required evidence is missing",
+      "Q3_hard": "Largest R1 benefit",
+      "Q4_hard": "Possibly smaller benefit if oracle retrieval makes the full evidence set easy for the base model"
+    }
+  },
+  "statistics": {
+    "primary_estimator": "Delta_R(Q) = U(R1,Q) - U(A1,Q)",
+    "interaction": "E_interaction = Delta_R(Q3) - Delta_R(Q0)",
+    "ci_method": "paired bootstrap (10000 resamples, seed=42, 95% confidence)",
+    "pairing": "by task_id"
+  },
+  "comparability_metrics": {
+    "Q3_vs_Q4": ["candidate_count", "context_tokens", "distractor_load", "passage_ordering"],
+    "rationale": "Q3 and Q4 need information-budget comparability if interpreting the contrast mechanistically"
+  },
+  "nuisance_variables_to_balance": [
+    "expected_terminal",
+    "n_hypotheses",
+    "n_required_passages",
+    "passage_count",
+    "average_passage_length",
+    "query_length",
+    "domain",
+    "gold_relation_counts",
+    "SUPPORT/CONTRADICT edge counts"
+  ],
+  "semantic_extractor": {
+    "version": "v2.6.0",
+    "sha_prefix": "b00e480af3be88a8",
+    "frozen": true
+  }
+}

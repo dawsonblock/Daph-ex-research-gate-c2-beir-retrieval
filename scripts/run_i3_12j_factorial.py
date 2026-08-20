@@ -126,11 +126,16 @@ def run_trajectory_i3_12(
     api_key: str,
     fork_label: str,
     snapshot_builder: Callable,
+    backend_factory: Callable | None = None,
 ) -> dict[str, Any]:
     """Run a full trajectory with parameterized snapshot builder.
 
     Identical to i3_7e.run_trajectory except snapshot construction
     is delegated to snapshot_builder.
+
+    If ``backend_factory`` is provided, it is called to create the model
+    backend instead of ``DeepSeekBackend``.  This allows local llama.cpp
+    backends to be used without modifying the frozen I3.12j logic.
     """
     executor = EvidenceExecutor()
     resources = ResourceState(budget)
@@ -183,7 +188,7 @@ def run_trajectory_i3_12(
 
         user_prompt = i3_7e.evidence_packet_json(packet)
 
-        backend = DeepSeekBackend()
+        backend = (backend_factory() if backend_factory else DeepSeekBackend())
         backend.task_id = task.task_id
         backend.condition = fork_label
         backend.pair_id = f"i3_12j:{task.task_id}:{fork_label}:step{step_id}"
@@ -260,11 +265,15 @@ def run_r1_trajectory_i3_12(
     api_key: str,
     fork_label: str,
     snapshot_builder: Callable,
+    backend_factory: Callable | None = None,
 ) -> dict[str, Any]:
     """Run R1 hybrid trajectory with parameterized snapshot builder.
 
     Identical to i3_11c.run_r1_trajectory except snapshot construction
     is delegated to snapshot_builder.
+
+    If ``backend_factory`` is provided, it is called to create the model
+    backend instead of ``DeepSeekBackend``.
     """
     executor = EvidenceExecutor()
     resources = ResourceState(budget)
@@ -351,7 +360,7 @@ def run_r1_trajectory_i3_12(
 
         user_prompt = i3_7e.evidence_packet_json(packet)
 
-        backend = DeepSeekBackend()
+        backend = (backend_factory() if backend_factory else DeepSeekBackend())
         backend.task_id = task.task_id
         backend.condition = fork_label
         backend.pair_id = f"i3_12j:{task.task_id}:{fork_label}:step{step_id}"
