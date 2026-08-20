@@ -1,0 +1,80 @@
+{
+  "schema": "DAPH_V2B_I3_11D_R1_CONFIRM_PROTOCOL_V1",
+  "created_before_model_run": true,
+  "description": "Frozen protocol for I3.11d R1 confirmation under expanded hypothesis topology. Uses exact repaired R1 executable from I3.11c byte-for-byte.",
+  "research_question": "Is T2 (all_hypotheses_eliminated) a robust representation-phase boundary across varying hypothesis topology (2-5 hypotheses, asymmetric graphs, late conflict, subset eliminated)?",
+  "r1_router": {
+    "name": "R1 — Epistemic-Conflict Router (frozen from I3.11c)",
+    "rule": "A1 until T2 (all_hypotheses_eliminated), then M3 (latched, permanent switch)",
+    "trigger": "T2: len(eliminated_hypotheses) == len(hypotheses) and len(hypotheses) > 0",
+    "trigger_terminology": "T2 is an observed-state phase transition detector, not a predictor.",
+    "implementation": "Exact I3.11c repaired executable (run_r1_trajectory from scripts/run_i3_11c_r1_router.py, imported byte-for-byte)",
+    "no_modifications_to_r1": true
+  },
+  "corpus": {
+    "id": "r1_confirm_v1",
+    "description": "Expanded hypothesis topology corpus with fresh task IDs/seeds",
+    "n_tasks": 330,
+    "structural_variations": {
+      "hypothesis_counts": "2, 3, 4, 5",
+      "t2_should_activate": {
+        "bilateral_conflict_h0": 20,
+        "bilateral_conflict_h1_noise": 20,
+        "triple_all_eliminated": 20,
+        "triple_all_eliminated_noise": 15,
+        "quad_all_eliminated": 15,
+        "late_conflict": 20,
+        "noise_before_conflict": 20,
+        "asymmetric_conflict": 20
+      },
+      "t2_should_not_activate": {
+        "subset_eliminated": 20,
+        "one_viable_among_eliminated": 15,
+        "falsified_contradiction": 20,
+        "stale_then_current": 15,
+        "multi_viable": 20,
+        "simple_answer": 25,
+        "triple_verify_answer": 20,
+        "penta_simple_answer": 15,
+        "early_false_ready": 30
+      }
+    },
+    "key_stress_tests": {
+      "triple_all_eliminated": "T2 with 3 hypotheses — does all-eliminated generalize beyond 2?",
+      "quad_all_eliminated": "T2 with 4 hypotheses",
+      "late_conflict": "T2 fires at step 4+ instead of step 2 — does latency affect R1?",
+      "noise_before_conflict": "Irrelevant evidence before conflict — does noise prevent T2?",
+      "asymmetric_conflict": "H1 eliminated by 2 contradictions, H2 by 1 — does asymmetry affect T2?",
+      "subset_eliminated": "Only 2/3 eliminated — T2 should NOT fire",
+      "one_viable_among_eliminated": "3/4 eliminated, 1 viable — T2 should NOT fire",
+      "penta_simple_answer": "5 hypotheses, simple answer — T2 should NOT fire"
+    }
+  },
+  "arms": {
+    "A1": "baseline + public affordances",
+    "M3": "frozen MDSG-StateWithAffordances",
+    "R1": "A1 until T2, then M3 (latched) — exact I3.11c executable"
+  },
+  "co_primary_criteria": {
+    "C1": "LCB_95(U_R1 - U_A1) > 0",
+    "C2": "LCB_95(U_R1 - U_M3) > 0"
+  },
+  "safety_criteria": {
+    "C3": "Success_R1 >= Success_M3 - 1pp",
+    "C4": "Steps_R1 < Steps_M3",
+    "C5": "Rescues_R1_vs_A1 > Breaks_R1_vs_A1",
+    "C6": "FalseActivation_on_A1_success < 5%",
+    "C7": "No catastrophic subgroup regression (>10pp drop vs better fixed arm)"
+  },
+  "trigger_specific_criterion": {
+    "TriggerPrecision": "P(R1 useful | T2 fires) — reported independently from rescue coverage. Useful = R1 rescues vs A1.",
+    "threshold": "Reported, no frozen threshold. Used for understanding, not promotion."
+  },
+  "architectural_conclusion_calibrated": "Within the current evidence-reasoning benchmark family, a deterministic observed-state phase transition detector is sufficient to route between acquisition and MDSG resolution representations more effectively than either fixed representation. This conclusion is scoped to the current benchmark family.",
+  "decision_rule": "If R1 passes C1+C2 on this expanded topology, the phase-routing claim becomes considerably harder to dismiss as a benchmark artifact.",
+  "executable_integrity": {
+    "r1_implementation": "scripts/run_i3_11c_r1_router.py run_r1_trajectory (repaired version, imported byte-for-byte)",
+    "r1_implementation_not_modified": true,
+    "hashes_committed_before_run": true
+  }
+}
