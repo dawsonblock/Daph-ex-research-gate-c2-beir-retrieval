@@ -32,8 +32,10 @@ def main():
         print("llama.cpp already cloned")
 
     os.chdir("/content/llama.cpp")
-    run("cmake -B build -DGGML_CUDA=ON 2>&1 | tail -5")
-    run("cmake --build build --config Release -j 2 2>&1 | tail -10")
+    # Maximize build parallelism — T4 has 4 CPU cores, use them all
+    nproc = os.cpu_count() or 4
+    run(f"cmake -B build -DGGML_CUDA=ON -DCMAKE_BUILD_TYPE=Release 2>&1 | tail -5")
+    run(f"cmake --build build --config Release -j {nproc} 2>&1 | tail -10")
     os.chdir("/content")
 
     llama_server = "/content/llama.cpp/build/bin/llama-server"

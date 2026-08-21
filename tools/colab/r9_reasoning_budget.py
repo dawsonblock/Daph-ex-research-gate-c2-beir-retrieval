@@ -349,8 +349,16 @@ def build_user_prompt(state: dict) -> str:
 
 
 def start_llama_server(model_path: str, reasoning_budget: int, port: int = 8080,
-                       gpu_layers: int = 99) -> subprocess.Popen:
-    """Start a llama.cpp server with the given reasoning budget."""
+                       gpu_layers: int = 999) -> subprocess.Popen:
+    """Start a llama.cpp server with the given reasoning budget.
+
+    GPU settings are maximized for T4:
+      - ngl 999 = offload ALL layers to GPU (model is only 2.6B Q5, ~2GB, fits easily in 15GB T4)
+      - flash-at on = flash attention for faster KV cache
+      - batch 512 = larger prompt batch for faster prefill
+      - ubatch 512 = larger physical batch
+      - threads 4 = match T4 CPU cores for any CPU-side work
+    """
     llama_server = "/content/llama.cpp/build/bin/llama-server"
 
     cmd = [
@@ -358,14 +366,20 @@ def start_llama_server(model_path: str, reasoning_budget: int, port: int = 8080,
         "-m", model_path,
         "--host", "127.0.0.1",
         "--port", str(port),
-        "-ngl", str(gpu_layers),
+        "-ngl", str(gpu_layers),      # ALL layers on GPU
         "--reasoning-budget", str(reasoning_budget),
         "-c", "4096",
+        "-b", "512",                  # larger prompt batch
+        "-ub", "512",                 # larger physical batch
         "--temp", "0.0",
         "--seed", "42",
+        "--threads", "4",
+        "--flash-at", "1",            # flash attention for speed
+        "--no-mmap",                  # load fully into RAM for speed
+        "--cont-batching",            # enable continuous batching
     ]
 
-    print(f"  Starting llama-server: reasoning_budget={reasoning_budget}, port={port}")
+    print(f"  Starting llama-server: reasoning_budget={reasoning_budget}, port={port}, ngl={gpu_layers}, flash-at=1, batch=512")
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     # Wait for server to be ready
