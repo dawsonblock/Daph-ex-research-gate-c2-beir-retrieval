@@ -1,0 +1,107 @@
+================================================================================
+I3.15c: Phase-Eligible Balanced Benchmark — Full Factorial Runner
+================================================================================
+
+Benchmark: i3_15_t2_eligible (BENCHMARK_V1)
+  Strata: ['T2_CONFLICT_IMMEDIATE', 'T2_CONFLICT_LATE', 'DEFER_CONTROL', 'ANSWER_CONTROL']
+  Retrieval systems (this run): ['Q3_RERANKED']
+  Arms: ['A1_INFERRED', 'R1_INFERRED']
+  Ports: ['8080']
+  Tasks: 25 per cell x 4 strata x 2 retrieval difficulty
+  = 200 unique tasks
+  Trajectories: 200 x 3 retrieval x 2 arms
+  = 1200 potential trajectories
+
+Inference: LOCAL_POLICY_V2
+  Backend: OpenRouter (NOT frozen identity)
+  Model: nvidia/nemotron-3.5-lightning:free
+  Max tokens: 8192
+  Response format: json_schema
+  WARNING: Results from this backend are not the pinned-model experiment.
+
+Protocol: EXPERIMENT_PROTOCOL_V1
+  Pre-registered contrasts: ['Delta_T2+', 'Delta_T2_immediate', 'Delta_T2_late', 'Delta_DEFER-', 'Delta_ANSWER', 'I_phase']
+  Desired: {'Delta_T2+': '> 0', 'I_phase': '> 0', 'Delta_DEFER-': '~ 0', 'Delta_ANSWER': '~ 0', 'false_T2_on_controls': '= 0'}
+
+Generated 80 tasks
+
+================================================================================
+STRUCTURAL QUALIFICATION (zero LLM calls)
+================================================================================
+  T2 positive expected: 40
+  T2 positive reachable (gold): 40
+  T2 negative expected: 40
+  T2 negative incorrectly reachable (gold): 0
+  Late T2 initial false (correct): 20
+  Late T2 initial incorrectly true: 0
+  Immediate T2 initial true (correct): 20
+  Immediate T2 initial incorrectly false: 0
+  PASSED: True
+
+  ANSWER_CONTROL: n=20 t2_initial_true=0 t2_gold_true=0
+  DEFER_CONTROL: n=20 t2_initial_true=0 t2_gold_true=0
+  T2_CONFLICT_IMMEDIATE: n=20 t2_initial_true=20 t2_gold_true=20
+  T2_CONFLICT_LATE: n=20 t2_initial_true=0 t2_gold_true=20
+
+================================================================================
+FULL FACTORIAL EXPERIMENT
+================================================================================
+Corpus: 130 passages, SHA256: 8c4d85a2c4a1a82f...
+Trajectories: 80 tasks x 1 retrieval x 2 arms = 160
+
+Pre-retrieving evidence for all tasks...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 6326.87it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]Loading weights: 100%|██████████| 138/138 [00:00<00:00, 4173.23it/s]
+Pre-retrieval done in 21.4s
+  [10/160] i3_15c_0005 A1_INFERRED Q3_RERANKED (545.3s) ETA: 280min
+  [20/160] i3_15c_0008 A1_INFERRED Q3_RERANKED (844.7s) ETA: 226min
+  [30/160] i3_15c_0014 R1_INFERRED Q3_RERANKED (194.1s) ETA: 174min
+  [40/160] i3_15c_0018 A1_INFERRED Q3_RERANKED (221.9s) ETA: 131min
+  [50/160] i3_15c_0025 A1_INFERRED Q3_RERANKED (138.6s) ETA: 104min
+  [60/160] i3_15c_0030 R1_INFERRED Q3_RERANKED (93.0s) ETA: 84min
+  [70/160] i3_15c_0035 R1_INFERRED Q3_RERANKED (115.8s) ETA: 69min
+  [80/160] i3_15c_0042 A1_INFERRED Q3_RERANKED (29.1s) ETA: 56min
+  [90/160] i3_15c_0046 A1_INFERRED Q3_RERANKED (385.5s) ETA: 51min
+  [100/160] i3_15c_0048 R1_INFERRED Q3_RERANKED (622.9s) ETA: 46min
+  [110/160] i3_15c_0057 R1_INFERRED Q3_RERANKED (6.5s) ETA: 37min
+  [120/160] i3_15c_0062 A1_INFERRED Q3_RERANKED (6.4s) ETA: 27min
+  [130/160] i3_15c_0055 A1_INFERRED Q3_RERANKED (84.0s) ETA: 19min
+  [140/160] i3_15c_0071 A1_INFERRED Q3_RERANKED (6.4s) ETA: 12min
+  [150/160] i3_15c_0076 R1_INFERRED Q3_RERANKED (6.4s) ETA: 5min
+  [160/160] i3_15c_0051 R1_INFERRED Q3_RERANKED (713.0s) ETA: 0min
+
+================================================================================
+RESULTS SUMMARY
+================================================================================
+
+Pre-registered contrasts:
+  Delta_T2+: mean=9.9485 CI=[-7.8762, 27.6020] n=40
+  Delta_T2_immediate: mean=-4.3515 CI=[-29.4470, 19.7235] n=20
+  Delta_T2_late: mean=24.2485 CI=[-0.1430, 48.1700] n=20
+  Delta_DEFER-: mean=-5.4690 CI=[-15.2895, 1.0565] n=20
+  Delta_ANSWER: mean=0.0000 CI=[0.0000, 0.0000] n=20
+  I_phase: mean=15.4175 CI=[0.0000, 0.0000] n=0
+
+Cost metrics:
+  Delta_Steps_T2+: mean=-0.450
+  P_step_limit_R1_T2+: rate=0.200 n=40
+  P_step_limit_A1_T2+: rate=0.325 n=40
+  mean_redundant_R1_T2+: 2.725
+  mean_redundant_A1_T2+: 2.75
+
+False T2 on controls: {'DEFER_CONTROL': 0, 'ANSWER_CONTROL': 0}
+
+Per-stratum:
+  ANSWER_CONTROL: n=20 ΔU=0.0000 ΔSteps=0.00 R1_T2=0 R1_step_limit=0
+  DEFER_CONTROL: n=20 ΔU=-5.4690 ΔSteps=0.70 R1_T2=0 R1_step_limit=2
+  T2_CONFLICT_IMMEDIATE: n=20 ΔU=-4.3515 ΔSteps=0.30 R1_T2=19 R1_step_limit=5
+  T2_CONFLICT_LATE: n=20 ΔU=24.2485 ΔSteps=-1.20 R1_T2=17 R1_step_limit=3
+
+Desired signature check:
+  Delta_T2+ > 0: YES (9.9485)
+  I_phase > 0: YES (15.4175)
+  Delta_DEFER- ~ 0: NO (-5.4690)
+  Delta_ANSWER ~ 0: YES (0.0000)
+  false T2 on controls = 0: YES (0)
+
+Results saved to /Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/v2b_i3_15/development/i3_15c_factorial

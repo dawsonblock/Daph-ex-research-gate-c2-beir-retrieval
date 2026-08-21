@@ -1,42 +1,42 @@
 {
-  "total_tasks": 200,
+  "total_tasks": 80,
   "per_stratum": {
     "T2_CONFLICT_IMMEDIATE": {
-      "n": 50,
-      "t2_initial_true": 50,
+      "n": 20,
+      "t2_initial_true": 20,
       "t2_initial_false": 0,
-      "t2_gold_true": 50,
+      "t2_gold_true": 20,
       "t2_gold_false": 0
     },
     "T2_CONFLICT_LATE": {
-      "n": 50,
+      "n": 20,
       "t2_initial_true": 0,
-      "t2_initial_false": 50,
-      "t2_gold_true": 50,
+      "t2_initial_false": 20,
+      "t2_gold_true": 20,
       "t2_gold_false": 0
     },
     "DEFER_CONTROL": {
-      "n": 50,
+      "n": 20,
       "t2_initial_true": 0,
-      "t2_initial_false": 50,
+      "t2_initial_false": 20,
       "t2_gold_true": 0,
-      "t2_gold_false": 50
+      "t2_gold_false": 20
     },
     "ANSWER_CONTROL": {
-      "n": 50,
+      "n": 20,
       "t2_initial_true": 0,
-      "t2_initial_false": 50,
+      "t2_initial_false": 20,
       "t2_gold_true": 0,
-      "t2_gold_false": 50
+      "t2_gold_false": 20
     }
   },
-  "t2_positive_expected": 100,
-  "t2_negative_expected": 100,
-  "t2_positive_reachable_gold": 100,
+  "t2_positive_expected": 40,
+  "t2_negative_expected": 40,
+  "t2_positive_reachable_gold": 40,
   "t2_negative_incorrectly_reachable_gold": 0,
-  "late_t2_initial_false": 50,
+  "late_t2_initial_false": 20,
   "late_t2_initial_incorrectly_true": 0,
-  "immediate_t2_initial_true": 50,
+  "immediate_t2_initial_true": 20,
   "immediate_t2_initial_incorrectly_false": 0,
   "passed": true
 }

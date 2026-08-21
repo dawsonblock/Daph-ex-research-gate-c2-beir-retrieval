@@ -1,0 +1,7 @@
+Building representative requests...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 5795.49it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]Loading weights: 100%|██████████| 138/138 [00:00<00:00, 4619.87it/s]
+Built 12 requests (3 per stratum)
+Running 36 calls (12 requests x 3 reps)...
+Using 1 parallel workers
+  10/36 calls done (382s)

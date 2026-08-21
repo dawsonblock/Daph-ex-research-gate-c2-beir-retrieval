@@ -1,0 +1,323 @@
+================================================================================
+I3.15c: Phase-Eligible Balanced Benchmark — Full Factorial Runner
+================================================================================
+
+Benchmark: i3_15_t2_eligible (BENCHMARK_V1)
+  Strata: ['T2_CONFLICT_IMMEDIATE', 'T2_CONFLICT_LATE', 'DEFER_CONTROL', 'ANSWER_CONTROL']
+  Retrieval systems (this run): ['Q3_RERANKED']
+  Arms: ['A1_INFERRED', 'R1_INFERRED']
+  Ports: ['8080']
+  Tasks: 25 per cell x 4 strata x 2 retrieval difficulty
+  = 200 unique tasks
+  Trajectories: 200 x 3 retrieval x 2 arms
+  = 1200 potential trajectories
+
+Inference: LOCAL_POLICY_V2
+  Backend: OpenRouter (NOT frozen identity)
+  Model: nvidia/nemotron-3.5-lightning:free
+  Max tokens: 8192
+  Response format: json_schema
+  WARNING: Results from this backend are not the pinned-model experiment.
+
+Protocol: EXPERIMENT_PROTOCOL_V1
+  Pre-registered contrasts: ['Delta_T2+', 'Delta_T2_immediate', 'Delta_T2_late', 'Delta_DEFER-', 'Delta_ANSWER', 'I_phase']
+  Desired: {'Delta_T2+': '> 0', 'I_phase': '> 0', 'Delta_DEFER-': '~ 0', 'Delta_ANSWER': '~ 0', 'false_T2_on_controls': '= 0'}
+
+Generated 80 tasks
+
+================================================================================
+STRUCTURAL QUALIFICATION (zero LLM calls)
+================================================================================
+  T2 positive expected: 40
+  T2 positive reachable (gold): 40
+  T2 negative expected: 40
+  T2 negative incorrectly reachable (gold): 0
+  Late T2 initial false (correct): 20
+  Late T2 initial incorrectly true: 0
+  Immediate T2 initial true (correct): 20
+  Immediate T2 initial incorrectly false: 0
+  PASSED: True
+
+  ANSWER_CONTROL: n=20 t2_initial_true=0 t2_gold_true=0
+  DEFER_CONTROL: n=20 t2_initial_true=0 t2_gold_true=0
+  T2_CONFLICT_IMMEDIATE: n=20 t2_initial_true=20 t2_gold_true=20
+  T2_CONFLICT_LATE: n=20 t2_initial_true=0 t2_gold_true=20
+
+================================================================================
+FULL FACTORIAL EXPERIMENT
+================================================================================
+Corpus: 130 passages, SHA256: 8c4d85a2c4a1a82f...
+Trajectories: 80 tasks x 1 retrieval x 2 arms = 160
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 199/199 [00:00<00:00, 2239.83it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 2501.95it/s]
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[ALoading weights: 100%|██████████| 199/199 [00:00<00:00, 5478.14it/s]
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]
+
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[A[A
+
+
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[A[A[A
+
+
+
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[A[A[A[A
+
+
+
+
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[A[A[A[A[A
+
+
+
+
+
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[A[A[A[A[A[ALoading weights: 100%|██████████| 199/199 [00:00<00:00, 4465.58it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3452.89it/s]
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[A
+
+
+
+
+
+
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[ALoading weights:  89%|████████▉ | 177/199 [00:00<00:00, 1769.44it/s]
+
+
+Loading weights:  85%|████████▌ | 170/199 [00:00<00:00, 1615.48it/s][A[A[A
+
+
+
+Loading weights:  80%|████████  | 160/199 [00:00<00:00, 1540.18it/s][A[A[A[A
+
+
+
+
+Loading weights:  72%|███████▏  | 143/199 [00:00<00:00, 1428.77it/s][A[A[A[A[A
+
+
+
+
+
+Loading weights:  96%|█████████▌| 191/199 [00:00<00:00, 1873.54it/s][A[A[A[A[A[ALoading weights: 100%|██████████| 199/199 [00:00<00:00, 1844.02it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 1643.65it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 1603.99it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 1693.03it/s]
+
+Loading weights:  73%|███████▎  | 146/199 [00:00<00:00, 1458.28it/s][A
+
+Loading weights:  82%|████████▏ | 163/199 [00:00<00:00, 1624.87it/s][A[ALoading weights: 100%|██████████| 199/199 [00:00<00:00, 1484.37it/s]
+
+
+
+
+
+
+
+
+Loading weights:  67%|██████▋   | 133/199 [00:00<00:00, 1311.15it/s][A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+Loading weights:  76%|███████▌  | 151/199 [00:00<00:00, 1493.01it/s][A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+Loading weights:  87%|████████▋ | 173/199 [00:00<00:00, 1677.99it/s][A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+Loading weights:  90%|████████▉ | 179/199 [00:00<00:00, 1785.52it/s][A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+Loading weights:  69%|██████▉   | 138/199 [00:00<00:00, 1371.74it/s][A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+Loading weights:  73%|███████▎  | 146/199 [00:00<00:00, 1452.63it/s][A[A[A[A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+
+
+
+Loading weights:  63%|██████▎   | 126/199 [00:00<00:00, 1228.93it/s][A[A[A[A[A[A[A[A[A[A[A[A[A[ALoading weights: 100%|██████████| 199/199 [00:00<00:00, 1063.63it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 1202.79it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 1335.30it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 1256.15it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 1251.36it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 1106.80it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 1181.80it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 1232.16it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 1222.98it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 1183.54it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]Loading weights: 100%|██████████| 138/138 [00:00<00:00, 3552.20it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]Loading weights: 100%|██████████| 138/138 [00:00<00:00, 11054.30it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]Loading weights:  75%|███████▌  | 104/138 [00:00<00:00, 939.22it/s]Loading weights: 100%|██████████| 138/138 [00:00<00:00, 1136.73it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]Loading weights:  17%|█▋        | 23/138 [00:00<00:00, 223.49it/s]Loading weights: 100%|██████████| 138/138 [00:00<00:00, 1085.07it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]Loading weights: 100%|██████████| 138/138 [00:00<00:00, 2609.79it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 138/138 [00:00<00:00, 2388.45it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 2025.33it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s][ALoading weights: 100%|██████████| 138/138 [00:00<00:00, 3588.41it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 3535.02it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s][ALoading weights:  68%|██████▊   | 94/138 [00:00<00:00, 916.80it/s]
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s][A[A
+Loading weights:  89%|████████▉ | 123/138 [00:00<00:00, 1228.49it/s][ALoading weights: 100%|██████████| 138/138 [00:00<00:00, 1281.49it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 892.46it/s]
+
+
+Loading weights:  79%|███████▉  | 109/138 [00:00<00:00, 1083.64it/s][A[ALoading weights: 100%|██████████| 138/138 [00:00<00:00, 1118.63it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s][ALoading weights:  78%|███████▊  | 107/138 [00:00<00:00, 1062.57it/s]Loading weights: 100%|██████████| 138/138 [00:00<00:00, 1119.00it/s]
+
+Loading weights:  73%|███████▎  | 101/138 [00:00<00:00, 992.26it/s][ALoading weights: 100%|██████████| 138/138 [00:00<00:00, 943.43it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s][A
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s][A[A
+
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s][A[A[ALoading weights:  74%|███████▍  | 102/138 [00:00<00:00, 601.89it/s]
+
+
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s][A[A[A[A
+
+
+
+
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s][A[A[A[A[ALoading weights: 100%|██████████| 138/138 [00:00<00:00, 632.53it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 3132.67it/s]
+
+Loading weights:  60%|██████    | 83/138 [00:00<00:00, 795.77it/s][ALoading weights: 100%|██████████| 138/138 [00:00<00:00, 1512.11it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 1265.98it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 1611.67it/s]
+Loading weights: 100%|██████████| 138/138 [00:00<00:00, 942.90it/s]

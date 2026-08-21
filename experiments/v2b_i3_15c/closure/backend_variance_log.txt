@@ -1,0 +1,56 @@
+Building representative requests...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 6318.68it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]Loading weights: 100%|██████████| 138/138 [00:00<00:00, 4307.65it/s]
+Built 20 requests (5 per stratum)
+Running 100 calls (20 requests x 5 reps)...
+Using 10 parallel workers
+  10/100 calls done (7s)
+  20/100 calls done (13s)
+  30/100 calls done (20s)
+  40/100 calls done (26s)
+  50/100 calls done (33s)
+  60/100 calls done (39s)
+  70/100 calls done (46s)
+  80/100 calls done (52s)
+  90/100 calls done (58s)
+  100/100 calls done (65s)
+All 100 calls done in 65s
+
+================================================================================
+BACKEND RESPONSE VARIANCE CHARACTERIZATION
+================================================================================
+
+Backend: openrouter
+Model: nvidia/nemotron-3.5-lightning:free
+Requests: 20, Repetitions: 5, Total calls: 100
+
+Summary:
+  P(action instability | identical request): 1.0000
+  P(terminal instability | identical request): 1.0000
+  P(any invalid | identical request): 1.0000
+  Action stable: 0/20
+  All valid: 0/20
+
+Per-request details:
+  i3_15c_0000 (T2_CONFLICT_IMMEDIATE): actions=[] valid=0/5 latency=6589.0±10.9ms tokens=0±0 UNSTABLE
+  i3_15c_0001 (T2_CONFLICT_IMMEDIATE): actions=[] valid=0/5 latency=6577.9±9.6ms tokens=0±0 UNSTABLE
+  i3_15c_0002 (T2_CONFLICT_IMMEDIATE): actions=[] valid=0/5 latency=6441.9±127.6ms tokens=0±0 UNSTABLE
+  i3_15c_0003 (T2_CONFLICT_IMMEDIATE): actions=[] valid=0/5 latency=6369.7±15.3ms tokens=0±0 UNSTABLE
+  i3_15c_0004 (T2_CONFLICT_IMMEDIATE): actions=[] valid=0/5 latency=6376.3±10.9ms tokens=0±0 UNSTABLE
+  i3_15c_0020 (T2_CONFLICT_LATE): actions=[] valid=0/5 latency=6372.7±17.5ms tokens=0±0 UNSTABLE
+  i3_15c_0021 (T2_CONFLICT_LATE): actions=[] valid=0/5 latency=6401.1±92.1ms tokens=0±0 UNSTABLE
+  i3_15c_0022 (T2_CONFLICT_LATE): actions=[] valid=0/5 latency=6397.9±69.2ms tokens=0±0 UNSTABLE
+  i3_15c_0023 (T2_CONFLICT_LATE): actions=[] valid=0/5 latency=6420.2±127.4ms tokens=0±0 UNSTABLE
+  i3_15c_0024 (T2_CONFLICT_LATE): actions=[] valid=0/5 latency=6524.9±358.2ms tokens=0±0 UNSTABLE
+  i3_15c_0040 (DEFER_CONTROL): actions=[] valid=0/5 latency=6436.7±139.4ms tokens=0±0 UNSTABLE
+  i3_15c_0041 (DEFER_CONTROL): actions=[] valid=0/5 latency=6385.3±65.4ms tokens=0±0 UNSTABLE
+  i3_15c_0042 (DEFER_CONTROL): actions=[] valid=0/5 latency=6359.5±8.7ms tokens=0±0 UNSTABLE
+  i3_15c_0043 (DEFER_CONTROL): actions=[] valid=0/5 latency=6365.6±63.4ms tokens=0±0 UNSTABLE
+  i3_15c_0044 (DEFER_CONTROL): actions=[] valid=0/5 latency=6346.8±10.1ms tokens=0±0 UNSTABLE
+  i3_15c_0060 (ANSWER_CONTROL): actions=[] valid=0/5 latency=6358.4±30.1ms tokens=0±0 UNSTABLE
+  i3_15c_0061 (ANSWER_CONTROL): actions=[] valid=0/5 latency=6424.9±131.8ms tokens=0±0 UNSTABLE
+  i3_15c_0062 (ANSWER_CONTROL): actions=[] valid=0/5 latency=6364.2±17.4ms tokens=0±0 UNSTABLE
+  i3_15c_0063 (ANSWER_CONTROL): actions=[] valid=0/5 latency=6351.5±8.5ms tokens=0±0 UNSTABLE
+  i3_15c_0064 (ANSWER_CONTROL): actions=[] valid=0/5 latency=6356.7±8.4ms tokens=0±0 UNSTABLE
+
+Saved to experiments/v2b_i3_15c/closure/backend_variance.json

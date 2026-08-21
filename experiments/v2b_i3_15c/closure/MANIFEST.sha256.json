@@ -1,0 +1,218 @@
+{
+  "closure_id": "I3_15C_NEMOTRON_PILOT_CLOSURE_V1",
+  "closure_timestamp": "2025-08-21T03:30:00Z",
+  "classification": "DEVELOPMENT_CROSS_MODEL_PILOT",
+  "classification_note": "Not confirmation. Model/backend (Nemotron via OpenRouter) differs from frozen LOCAL_POLICY_V2 (Liquid LFM2.5). Results are development evidence only.",
+  "git_commit": "122137945502c29dcc723e49c9a13af48f6a5355",
+  "git_dirty": true,
+  "git_dirty_note": "scripts/run_i3_15c_factorial.py and scripts/run_i3_7e_compact_governor.py modified after commit",
+  "python_version": "3.12.0 (main, Apr 26 2026, 15:36:24) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "platform": "macOS-26.2-arm64-arm-64bit",
+  "artifacts": {
+    "results.json": {
+      "path": "experiments/v2b_i3_15/development/i3_15c_factorial/results.json",
+      "sha256": "cb3c08cac148c1f3c3bd3477024ee8fa661789fbb6d5966fd2b9d7602568b8d5",
+      "size_bytes": 4764963
+    },
+    "analysis.json": {
+      "path": "experiments/v2b_i3_15/development/i3_15c_factorial/analysis.json",
+      "sha256": "636f42343413a334d08042eb80bce0807682e2ef2a6a43fb0fe180f0b06fb631",
+      "size_bytes": 43114
+    },
+    "structural_validation.json": {
+      "path": "experiments/v2b_i3_15/development/i3_15c_factorial/structural_validation.json",
+      "sha256": "60af7a8fa877d9e462c2f7f2e2cbad8d9f71ba996972ed055fc4275491d2326a",
+      "size_bytes": 989
+    },
+    "freeze_manifest_v1.json": {
+      "path": "experiments/v2b_i3_15/development/i3_15c_factorial/freeze_manifest_v1.json",
+      "sha256": "52c837298d45c4f48c07f99026a19d1e679f7c385962ff154f52948b804f6442",
+      "size_bytes": 4310
+    },
+    "run_log_nemotron_n10_q3_v3.txt": {
+      "path": "experiments/v2b_i3_15/development/i3_15c_factorial/run_log_nemotron_n10_q3_v3.txt",
+      "sha256": "5b3d1e52d97545c807813bbf5e735c8c7c88790584904e75394a5680b8df1202",
+      "size_bytes": 5098
+    },
+    "task_generator": {
+      "path": "hrm_adaptive_memory/executive/semantic_relations/i3_15c_task_generator.py",
+      "sha256": "99cc4634696a2a0b74edea7b94fedd226033bc9cbd529d1f8b3d4c4f691e6646",
+      "size_bytes": 30169
+    },
+    "deterministic_rules": {
+      "path": "hrm_adaptive_memory/executive/semantic_relations/deterministic_rules.py",
+      "sha256": "b00e480af3be88a8ff17c7eeadaea1cf95848d40c19f563ad99bdbc813b78b2a",
+      "size_bytes": 12923
+    },
+    "extractor": {
+      "path": "hrm_adaptive_memory/executive/semantic_relations/extractor.py",
+      "sha256": "99f9317abeb7f213e85b58ef1111f66f6d262ad676d9e24fd26973aae1779ca3",
+      "size_bytes": 4928
+    },
+    "integration": {
+      "path": "hrm_adaptive_memory/executive/semantic_relations/integration.py",
+      "sha256": "6361c1e91361a122b72c0f61060bd0c43522d1b321bef1692dd6258ae8ea19cd",
+      "size_bytes": 4665
+    },
+    "executor": {
+      "path": "hrm_adaptive_memory/executive/evidence_benchmark/executor.py",
+      "sha256": "e2cb70c5c99279300d81990cdac869e88e8338fabf73b2da270f4dff61ca3a66",
+      "size_bytes": 9391
+    },
+    "schema": {
+      "path": "hrm_adaptive_memory/executive/evidence_benchmark/schema.py",
+      "sha256": "03176c1135cbbe080b3dcf51b2f1abba0364c941624e9d6633628a61274eee5a",
+      "size_bytes": 11126
+    },
+    "model_backend": {
+      "path": "hrm_adaptive_memory/executive/model_backend.py",
+      "sha256": "68e0e71fb607379f69624c12dfa5d676ebbe5b4fe0024089267a83c9a5461659",
+      "size_bytes": 21432
+    },
+    "model_decoder": {
+      "path": "hrm_adaptive_memory/executive/model_decoder.py",
+      "sha256": "64687df823c44ca9633a79b4fa00555e447874135bbd0288c3a694d50b8595b8",
+      "size_bytes": 6759
+    },
+    "governor": {
+      "path": "scripts/run_i3_7e_compact_governor.py",
+      "sha256": "32d043988132c4626d688d327638affe47bd238e89c8afce2275f65bceb27dd4",
+      "size_bytes": 100435
+    },
+    "runner_i3_15c": {
+      "path": "scripts/run_i3_15c_factorial.py",
+      "sha256": "a5bc3bbfd90d3d223d7486f8f52ca8653fddaebbbc60abcbd1cce8f8a8ef6eeb",
+      "size_bytes": 44432
+    },
+    "runner_i3_12j": {
+      "path": "scripts/run_i3_12j_factorial.py",
+      "sha256": "827badd1e2e0f7890c0b8a56b2c534930a6599228b89542f939cb4490d9d72ad",
+      "size_bytes": 40390
+    },
+    "runner_i3_15_balanced": {
+      "path": "scripts/run_i3_15_r1_balanced.py",
+      "sha256": "bb37f54bfbd8c617a4984704b4ca30a721db5a6e8fa7bffa12996e90e1ed5b67",
+      "size_bytes": 59081
+    },
+    "retrieval_ladder": {
+      "path": "hrm_adaptive_memory/retrieval/i3_14_retrieval_ladder.py",
+      "sha256": "7c8cde1a8d70b494334193f3622584717b02cad689e5f896c1539c890712497c",
+      "size_bytes": 7667
+    },
+    "utility_config": {
+      "path": "configs/v2b_i3_1_utility_v1.json",
+      "sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07",
+      "size_bytes": 645
+    }
+  },
+  "frozen_identities": {
+    "benchmark": "BENCHMARK_V1 (i3_15_t2_eligible)",
+    "t2_r1_implementation": "T2_R1_FROM_I3_12J",
+    "experiment_protocol": "EXPERIMENT_PROTOCOL_V1",
+    "utility": "v2b_i3_1_utility_v1.json",
+    "extractor": "DeterministicRelationExtractor (frozen_v2.6.0)",
+    "prompt_adapter": "SHARED_ACTION_SEMANTICS_V1 + PROMPT_V2 decision procedure",
+    "local_policy": "LOCAL_POLICY_V2 (LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M) \u2014 NOT used in this pilot",
+    "openrouter_policy": {
+      "policy_id": "OPENROUTER_POLICY_V1",
+      "model": "nvidia/nemotron-3.5-lightning:free",
+      "max_tokens": 8192,
+      "temperature": 0.0,
+      "response_format": "json_schema",
+      "reasoning_enabled": false,
+      "note": "Nemotron reasons regardless of reasoning flag; reasoning appears in content field"
+    }
+  },
+  "run_parameters": {
+    "n_per_cell": 10,
+    "retrieval_levels": [
+      "Q3_RERANKED"
+    ],
+    "arms": [
+      "A1_INFERRED",
+      "R1_INFERRED"
+    ],
+    "total_trajectories": 160,
+    "seed": 42,
+    "max_tokens": 8192,
+    "n_workers": 8,
+    "backend": "openrouter"
+  },
+  "observed_results": {
+    "Delta_T2_plus": {
+      "mean": 9.9485,
+      "CI": [
+        -7.8762,
+        27.602
+      ],
+      "n": 40
+    },
+    "Delta_T2_immediate": {
+      "mean": -4.3515,
+      "CI": [
+        -29.447,
+        19.7235
+      ],
+      "n": 20
+    },
+    "Delta_T2_late": {
+      "mean": 24.2485,
+      "CI": [
+        -0.143,
+        48.17
+      ],
+      "n": 20
+    },
+    "Delta_DEFER_neg": {
+      "mean": -5.469,
+      "CI": [
+        -15.2895,
+        1.0565
+      ],
+      "n": 20
+    },
+    "Delta_ANSWER": {
+      "mean": 0.0,
+      "CI": [
+        0.0,
+        0.0
+      ],
+      "n": 20
+    },
+    "I_phase": {
+      "mean": 15.4175
+    },
+    "False_T2_controls": {
+      "DEFER_CONTROL": 0,
+      "ANSWER_CONTROL": 0
+    },
+    "R1_T2_triggered": {
+      "immediate": 19,
+      "late": 17
+    },
+    "step_limit_rate": {
+      "R1_T2plus": 0.2,
+      "A1_T2plus": 0.325
+    }
+  },
+  "scientific_status": {
+    "Delta_T2_plus": "POSITIVE_POINT_ESTIMATE",
+    "Delta_T2_late": "POSITIVE_POINT_ESTIMATE",
+    "Delta_T2_immediate": "NEGATIVE_POINT_ESTIMATE",
+    "I_phase": "POSITIVE_POINT_ESTIMATE",
+    "Delta_DEFER_neg": "NEGATIVE_POINT_ESTIMATE",
+    "Delta_ANSWER": "NO_DIFFERENCE_DETECTED",
+    "False_T2_controls": "CONFIRMED_ZERO",
+    "overall": "DEVELOPMENT_POSITIVE \u2014 not confirmatory"
+  },
+  "caveats": [
+    "Model identity differs from frozen LOCAL_POLICY_V2",
+    "CI for Delta_T2+ includes zero \u2014 not statistically confirmed",
+    "CI for Delta_T2_late barely includes zero (-0.14) \u2014 suggestive but not confirmed",
+    "Delta_DEFER- is negative (-5.47) \u2014 control equivalence not established",
+    "Backend response variance not characterized",
+    "A1/R1 arm equivalence on controls not audited",
+    "Prompt was modified (PROMPT_V2) \u2014 not the original frozen prompt",
+    "Nemotron is a reasoning model that produces reasoning in content field; reasoning budget not controlled"
+  ]
+}

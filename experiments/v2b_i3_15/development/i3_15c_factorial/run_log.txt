@@ -1,0 +1,53 @@
+================================================================================
+I3.15c: Phase-Eligible Balanced Benchmark — Full Factorial Runner
+================================================================================
+
+Benchmark: i3_15_t2_eligible (BENCHMARK_V1)
+  Strata: ['T2_CONFLICT_IMMEDIATE', 'T2_CONFLICT_LATE', 'DEFER_CONTROL', 'ANSWER_CONTROL']
+  Retrieval systems: ['Q0_BM25', 'Q3_RERANKED', 'Q4_ORACLE']
+  Arms: ['A1_INFERRED', 'R1_INFERRED']
+  Tasks: 25 per cell x 4 strata x 2 retrieval difficulty
+  = 200 unique tasks
+  Trajectories: 200 x 3 retrieval x 2 arms
+  = 1200 potential trajectories
+
+Inference: LOCAL_POLICY_V2
+  Model: LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M
+  Reasoning: budgeted (budget=1024)
+  Max tokens: 2048
+  Response format: json_schema
+
+Protocol: EXPERIMENT_PROTOCOL_V1
+  Pre-registered contrasts: ['Delta_T2+', 'Delta_T2_immediate', 'Delta_T2_late', 'Delta_DEFER-', 'Delta_ANSWER', 'I_phase']
+  Desired: {'Delta_T2+': '> 0', 'I_phase': '> 0', 'Delta_DEFER-': '~ 0', 'Delta_ANSWER': '~ 0', 'false_T2_on_controls': '= 0'}
+
+Generated 200 tasks
+
+================================================================================
+STRUCTURAL QUALIFICATION (zero LLM calls)
+================================================================================
+  T2 positive expected: 100
+  T2 positive reachable (gold): 100
+  T2 negative expected: 100
+  T2 negative incorrectly reachable (gold): 0
+  Late T2 initial false (correct): 50
+  Late T2 initial incorrectly true: 0
+  Immediate T2 initial true (correct): 50
+  Immediate T2 initial incorrectly false: 0
+  PASSED: True
+
+  ANSWER_CONTROL: n=50 t2_initial_true=0 t2_gold_true=0
+  DEFER_CONTROL: n=50 t2_initial_true=0 t2_gold_true=0
+  T2_CONFLICT_IMMEDIATE: n=50 t2_initial_true=50 t2_gold_true=50
+  T2_CONFLICT_LATE: n=50 t2_initial_true=0 t2_gold_true=50
+
+================================================================================
+FULL FACTORIAL EXPERIMENT
+================================================================================
+Corpus: 130 passages, SHA256: 8c4d85a2c4a1a82f...
+Trajectories: 200 tasks x 3 retrieval x 2 arms = 1200
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 5838.99it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]Loading weights: 100%|██████████| 138/138 [00:00<00:00, 4630.88it/s]
+  [10/1200] i3_15c_0001 R1_INFERRED Q3_RERANKED (118.7s) ETA: 1419min
+  [20/1200] i3_15c_0003 R1_INFERRED Q0_BM25 (144.7s) ETA: 1786min
+  [30/1200] i3_15c_0004 R1_INFERRED Q4_ORACLE (110.4s) ETA: 1798min

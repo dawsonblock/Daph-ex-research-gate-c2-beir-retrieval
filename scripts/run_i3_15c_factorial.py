@@ -50,7 +50,10 @@ import json
 import os
 import sys
 import time
+import urllib.error
+import urllib.request
 from collections import Counter, defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 
@@ -79,7 +82,7 @@ from hrm_adaptive_memory.cognitive_control.state import (
     TemporalStatus, VerificationState,
 )
 from hrm_adaptive_memory.executive.metareasoning_utility import MetareasoningUtility
-from hrm_adaptive_memory.executive.model_backend import LocalLlamaBackend
+from hrm_adaptive_memory.executive.model_backend import LocalLlamaBackend, ModelCallResult
 from hrm_adaptive_memory.executive.model_decoder import decode_output
 from hrm_adaptive_memory.memory.chunking import Chunk
 from hrm_adaptive_memory.retrieval.i3_14_retrieval_ladder import build_retriever
@@ -166,10 +169,143 @@ EXPERIMENT_PROTOCOL_V1 = {
     "abort_without_run_experiment": True,
 }
 
+OPENROUTER_POLICY_V1 = {
+    "policy_id": "OPENROUTER_POLICY_V1",
+    "description": "OpenRouter API backend for rapid execution validation. Not the frozen pinned model.",
+    "base_url": "https://openrouter.ai/api/v1",
+    "default_model": "nvidia/nemotron-3.5-lightning:free",
+    "response_format": "json_schema",
+    "temperature": 0.0,
+    "max_tokens": 2048,
+    "reasoning_enabled": False,
+    "note": "This backend uses a different model than LOCAL_POLICY_V2. Results are not directly comparable to the pinned-model experiment.",
+}
+
 
 # ---------------------------------------------------------------------------
-# Corpus index for I3.15c
+# OpenRouter backend
 # ---------------------------------------------------------------------------
+
+class OpenRouterBackend:
+    """OpenRouter API backend using OpenAI-compatible endpoint.
+
+    WARNING: This is not the frozen LOCAL_POLICY_V2 backend. It uses a
+    hosted model (default nvidia/nemotron-3.5-lightning:free) for speed.
+    It is intended for rapid validation only, not for the pinned-model
+    causal claim.
+    """
+
+    model_name: str = "nvidia/nemotron-3.5-lightning:free"
+    base_url: str = "https://openrouter.ai/api/v1"
+    timeout_seconds: int = 300
+    max_retries: int = 3
+    retry_backoff_seconds: float = 2.0
+    reasoning_enabled: bool = False
+
+    def __init__(self, model_name: str | None = None):
+        import os
+        self.api_key = os.environ.get("OPENROUTER_API_KEY", "")
+        if model_name:
+            self.model_name = model_name
+
+    def generate(self, *, system_prompt: str, user_prompt: str,
+                 temperature: float, max_tokens: int) -> ModelCallResult:
+        import os, json, time, urllib.error, urllib.request
+
+        if not self.api_key:
+            self.api_key = os.environ.get("OPENROUTER_API_KEY", "")
+        if not self.api_key:
+            raise RuntimeError("OPENROUTER_API_KEY not set")
+
+        action_schema = {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
+                        "REASON_MORE", "DEFER", "STOP",
+                    ],
+                },
+                "reason_code": {
+                    "type": "string",
+                    "pattern": "^[A-Z][A-Z0-9_]*$",
+                },
+                "target_id": {"type": ["string", "null"]},
+            },
+            "required": ["action", "reason_code", "target_id"],
+            "additionalProperties": False,
+        }
+
+        body_kwargs = {
+            "model": self.model_name,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "top_p": 1.0,
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "action_proposal",
+                    "strict": True,
+                    "schema": action_schema,
+                },
+            },
+        }
+        if self.reasoning_enabled:
+            body_kwargs["reasoning"] = {"enabled": True}
+        payload = json.dumps(body_kwargs).encode()
+
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://devin.ai",
+            "X-OpenRouter-Title": "DAPH-I3.15c",
+        }
+
+        for attempt in range(self.max_retries):
+            t0 = time.time()
+            try:
+                req = urllib.request.Request(
+                    f"{self.base_url}/chat/completions",
+                    data=payload,
+                    headers=headers,
+                    method="POST",
+                )
+                with urllib.request.urlopen(req, timeout=self.timeout_seconds) as resp:
+                    body = json.loads(resp.read().decode())
+                    choice = body.get("choices", [{}])[0]
+                    message = choice.get("message", {})
+                    raw_output = message.get("content", "") or ""
+                    finish_reason = choice.get("finish_reason", "unknown")
+                    usage = body.get("usage", {})
+                    prompt_tokens = usage.get("prompt_tokens", 0)
+                    completion_tokens = usage.get("completion_tokens", 0)
+                    reasoning_tokens = usage.get("completion_tokens_details", {}).get("reasoning_tokens", 0)
+                    latency_ms = (time.time() - t0) * 1000
+
+                    return ModelCallResult(
+                        raw_output=raw_output,
+                        model_name=body.get("model", self.model_name),
+                        system_fingerprint=body.get("system_fingerprint"),
+                        finish_reason=finish_reason,
+                        prompt_tokens=prompt_tokens,
+                        completion_tokens=completion_tokens,
+                        reasoning_tokens=reasoning_tokens,
+                        latency_ms=int(latency_ms),
+                        provider_raw_output=raw_output,
+                    )
+            except (urllib.error.URLError, urllib.error.HTTPError) as exc:
+                if attempt == self.max_retries - 1:
+                    raise RuntimeError(f"OpenRouter request failed: {exc}") from exc
+                time.sleep(self.retry_backoff_seconds * (2 ** attempt))
+            except Exception:
+                raise
+
+        raise RuntimeError("OpenRouter request failed after retries")
 
 _CORPUS_CACHE: dict[str, Any] = {}
 
@@ -203,11 +339,14 @@ def _get_cached_corpus():
 
 
 _RETRIEVER_CACHE: dict[str, Any] = {}
+_RETRIEVER_LOCK = __import__("threading").Lock()
 
 
 def _get_cached_retriever(retrieval_level: str, chunks):
     if retrieval_level not in _RETRIEVER_CACHE:
-        _RETRIEVER_CACHE[retrieval_level] = build_retriever(retrieval_level, chunks)
+        with _RETRIEVER_LOCK:
+            if retrieval_level not in _RETRIEVER_CACHE:
+                _RETRIEVER_CACHE[retrieval_level] = build_retriever(retrieval_level, chunks)
     return _RETRIEVER_CACHE[retrieval_level]
 
 
@@ -302,13 +441,19 @@ def run_single_trajectory(
     corpus_by_text,
     corpus_by_id,
     max_tokens: int = 2048,
+    base_url: str | None = None,
+    backend_type: str = "local",
+    openrouter_model: str | None = None,
+    pre_retrieved_passages: list | None = None,
 ) -> dict[str, Any]:
     """Run a single trajectory."""
     et = task.evidence_task
     required_ids = get_required_passage_ids(task, corpus_by_text)
 
     # Retrieve
-    if retrieval_level == "Q4_ORACLE":
+    if pre_retrieved_passages is not None:
+        retrieved_passages = pre_retrieved_passages
+    elif retrieval_level == "Q4_ORACLE":
         retrieved_passages = [corpus_by_id[pid] for pid in required_ids if pid in corpus_by_id]
     else:
         retriever = _get_cached_retriever(retrieval_level, chunks)
@@ -331,8 +476,13 @@ def run_single_trajectory(
     utility = MetareasoningUtility.from_file(
         REPO_ROOT / "configs" / "v2b_i3_1_utility_v1.json")
 
-    def backend_factory():
-        return LocalLlamaBackend()
+    def backend_factory(base_url=None, backend_type="local"):
+        if backend_type == "openrouter":
+            return OpenRouterBackend(model_name=openrouter_model)
+        backend = LocalLlamaBackend()
+        if base_url is not None:
+            backend.base_url = base_url
+        return backend
 
     if arm == "A1_INFERRED":
         result = i3_12j.run_trajectory_i3_12(
@@ -340,7 +490,7 @@ def run_single_trajectory(
             mode="BASELINE_WITH_AFFORDANCES",
             api_key="", fork_label=f"i3_15c:{et.task_id}:{arm}:{retrieval_level}",
             snapshot_builder=snapshot_builder,
-            backend_factory=backend_factory,
+            backend_factory=lambda: backend_factory(base_url, backend_type),
             strict_decode=True,
             max_tokens=max_tokens,
             system_prompt_transform=adapt_local_system_prompt,
@@ -350,7 +500,7 @@ def run_single_trajectory(
             new_et, budget, utility,
             api_key="", fork_label=f"i3_15c:{et.task_id}:{arm}:{retrieval_level}",
             snapshot_builder=snapshot_builder,
-            backend_factory=backend_factory,
+            backend_factory=lambda: backend_factory(base_url, backend_type),
             strict_decode=True,
             max_tokens=max_tokens,
             system_prompt_transform=adapt_local_system_prompt,
@@ -559,14 +709,19 @@ def compute_contrasts(results: list[dict[str, Any]]) -> dict[str, Any]:
 
 def main():
     parser = argparse.ArgumentParser(description="I3.15c factorial runner")
-    parser.add_argument("--backend", default="local", choices=["local", "deepseek"])
+    parser.add_argument("--backend", default="local", choices=["local", "deepseek", "openrouter"])
+    parser.add_argument("--openrouter-model", default="openai/gpt-4o-mini-2024-07-18",
+                        help="OpenRouter model to use.")
     parser.add_argument("--n-per-cell", type=int, default=25)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--retrieval-levels", nargs="+",
-                        default=["Q0_BM25", "Q3_RERANKED", "Q4_ORACLE"])
+                        default=["Q3_RERANKED"])
     parser.add_argument("--arms", nargs="+",
                         default=["A1_INFERRED", "R1_INFERRED"])
     parser.add_argument("--max-tokens", type=int, default=2048)
+    parser.add_argument("--ports", nargs="+",
+                        default=["8080"],
+                        help="Local llama.cpp server ports to round-robin across.")
     parser.add_argument("--run-experiment", action="store_true",
                         help="Actually run the full experiment. Without this flag, "
                              "only structural qualification and gates are run.")
@@ -581,8 +736,9 @@ def main():
     # Print frozen identities
     print(f"\nBenchmark: {BENCHMARK_V1['benchmark_id']} ({BENCHMARK_V1['version']})")
     print(f"  Strata: {BENCHMARK_V1['strata']}")
-    print(f"  Retrieval systems: {BENCHMARK_V1['retrieval_systems']}")
+    print(f"  Retrieval systems (this run): {args.retrieval_levels}")
     print(f"  Arms: {BENCHMARK_V1['arms']}")
+    print(f"  Ports: {args.ports}")
     print(f"  Tasks: {BENCHMARK_V1['n_per_cell']} per cell x "
           f"{BENCHMARK_V1['n_strata']} strata x {BENCHMARK_V1['n_retrieval_difficulty']} retrieval difficulty")
     print(f"  = {BENCHMARK_V1['total_unique_tasks']} unique tasks")
@@ -591,10 +747,17 @@ def main():
     print(f"  = {BENCHMARK_V1['total_potential_trajectories']} potential trajectories")
 
     print(f"\nInference: {FROZEN_INFERENCE_CONFIG['config_id']}")
-    print(f"  Model: {FROZEN_INFERENCE_CONFIG['model_name']}")
-    print(f"  Reasoning: {FROZEN_INFERENCE_CONFIG['reasoning']} (budget={FROZEN_INFERENCE_CONFIG['reasoning_budget']})")
-    print(f"  Max tokens: {FROZEN_INFERENCE_CONFIG['max_tokens']}")
-    print(f"  Response format: {FROZEN_INFERENCE_CONFIG['response_format']}")
+    if args.backend == "openrouter":
+        print(f"  Backend: OpenRouter (NOT frozen identity)")
+        print(f"  Model: {args.openrouter_model}")
+        print(f"  Max tokens: {args.max_tokens}")
+        print(f"  Response format: json_schema")
+        print(f"  WARNING: Results from this backend are not the pinned-model experiment.")
+    else:
+        print(f"  Model: {FROZEN_INFERENCE_CONFIG['model_name']}")
+        print(f"  Reasoning: {FROZEN_INFERENCE_CONFIG['reasoning']} (budget={FROZEN_INFERENCE_CONFIG['reasoning_budget']})")
+        print(f"  Max tokens: {FROZEN_INFERENCE_CONFIG['max_tokens']}")
+        print(f"  Response format: {FROZEN_INFERENCE_CONFIG['response_format']}")
 
     print(f"\nProtocol: {EXPERIMENT_PROTOCOL_V1['protocol_id']}")
     print(f"  Pre-registered contrasts: {list(EXPERIMENT_PROTOCOL_V1['pre_registered_contrasts'].keys())}")
@@ -653,24 +816,67 @@ def main():
         corpus_passages, corpus_by_text, corpus_by_id, chunks, corpus_sha = _get_cached_corpus()
         print(f"Corpus: {len(chunks)} passages, SHA256: {corpus_sha[:16]}...")
 
-        results = []
-        for task in selected:
-            et = task.evidence_task
-            for arm in args.arms:
-                t0 = time.time()
-                result = run_single_trajectory(
+        # Build work items for parallel execution
+        smoke_work = []
+        for i, task in enumerate(selected):
+            for j, arm in enumerate(args.arms):
+                if args.backend == "openrouter":
+                    base_url = None
+                else:
+                    port = args.ports[(i + j) % len(args.ports)]
+                    base_url = f"http://127.0.0.1:{port}/v1"
+                smoke_work.append((
                     task, "Q3_RERANKED", arm,
                     chunks, corpus_by_text, corpus_by_id,
-                    max_tokens=args.max_tokens,
+                    args.max_tokens, base_url, args.backend,
+                    args.openrouter_model,
+                ))
+
+        n_smoke_workers = 12 if args.backend == "openrouter" else len(args.ports)
+
+        def _smoke_worker(wi):
+            (task, retrieval_level, arm,
+             chunks, corpus_by_text, corpus_by_id,
+             max_tokens, base_url, backend_type, openrouter_model) = wi
+            et = task.evidence_task
+            try:
+                t0 = time.time()
+                result = run_single_trajectory(
+                    task, retrieval_level, arm,
+                    chunks, corpus_by_text, corpus_by_id,
+                    max_tokens=max_tokens,
+                    base_url=base_url,
+                    backend_type=backend_type,
+                    openrouter_model=openrouter_model,
                 )
                 result["wall_time_s"] = round(time.time() - t0, 1)
+            except Exception as exc:
+                result = {
+                    "task_id": et.task_id,
+                    "category": et.category,
+                    "arm": arm,
+                    "retrieval_level": retrieval_level,
+                    "error": str(exc),
+                    "error_type": type(exc).__name__,
+                    "wall_time_s": 0.0,
+                }
+            return result
+
+        results = []
+        t_start = time.time()
+        with ThreadPoolExecutor(max_workers=n_smoke_workers) as executor:
+            futures = {executor.submit(_smoke_worker, wi): wi for wi in smoke_work}
+            for future in as_completed(futures):
+                result = future.result()
+                results.append(result)
                 actions = result.get("continuation_actions", [])
                 t2 = result.get("r1_triggered", False)
-                print(f"  {et.task_id} {arm}: actions={actions} "
+                print(f"  {result.get('task_id')} {result.get('arm')}: "
+                      f"actions={actions} "
                       f"terminal={result.get('terminal_action')} "
                       f"t2={t2} "
                       f"time={result['wall_time_s']}s")
-                results.append(result)
+        print(f"  Total smoke time: {time.time() - t_start:.1f}s")
 
         # Save smoke results
         with open(output_dir / "smoke_results.json", "w") as f:
@@ -712,41 +918,95 @@ def main():
     total = n_tasks * n_retrieval * n_arms
     print(f"Trajectories: {n_tasks} tasks x {n_retrieval} retrieval x {n_arms} arms = {total}")
 
+    # Pre-retrieve evidence for all tasks (avoids loading retrieval model in workers)
+    print("\nPre-retrieving evidence for all tasks...")
+    t_ret_start = time.time()
+    pre_retrieved: dict[tuple[str, str], list] = {}
+    for task in tasks:
+        et = task.evidence_task
+        required_ids = get_required_passage_ids(task, corpus_by_text)
+        for retrieval_level in args.retrieval_levels:
+            if retrieval_level == "Q4_ORACLE":
+                retrieved_passages = [corpus_by_id[pid] for pid in required_ids if pid in corpus_by_id]
+            else:
+                retriever = _get_cached_retriever(retrieval_level, chunks)
+                retrieved = retriever.search(et.task_summary, top_k=TOP_K)
+                retrieved_passages = [
+                    corpus_by_id[c.chunk_id] for c, _ in retrieved
+                    if c.chunk_id in corpus_by_id
+                ]
+            pre_retrieved[(et.task_id, retrieval_level)] = retrieved_passages
+    print(f"Pre-retrieval done in {time.time() - t_ret_start:.1f}s")
+
+    # Build work items
+    work_items = []
+    for i, task in enumerate(tasks):
+        for j, retrieval_level in enumerate(args.retrieval_levels):
+            for k, arm in enumerate(args.arms):
+                if args.backend == "openrouter":
+                    base_url = None
+                else:
+                    port = args.ports[(i + j + k) % len(args.ports)]
+                    base_url = f"http://127.0.0.1:{port}/v1"
+                retrieved_passages = pre_retrieved[(task.evidence_task.task_id, retrieval_level)]
+                work_items.append((
+                    task, retrieval_level, arm,
+                    chunks, corpus_by_text, corpus_by_id,
+                    args.max_tokens, base_url, args.backend,
+                    args.openrouter_model, retrieved_passages,
+                ))
+
+    n_workers = 8 if args.backend == "openrouter" else len(args.ports)
+
+    def _worker(args_tuple):
+        (task, retrieval_level, arm,
+         chunks, corpus_by_text, corpus_by_id,
+         max_tokens, base_url, backend_type, openrouter_model,
+         retrieved_passages) = args_tuple
+        et = task.evidence_task
+        try:
+            t0 = time.time()
+            result = run_single_trajectory(
+                task, retrieval_level, arm,
+                chunks, corpus_by_text, corpus_by_id,
+                max_tokens=max_tokens,
+                base_url=base_url,
+                backend_type=backend_type,
+                openrouter_model=openrouter_model,
+                pre_retrieved_passages=retrieved_passages,
+            )
+            result["wall_time_s"] = round(time.time() - t0, 1)
+        except Exception as exc:
+            result = {
+                "task_id": et.task_id,
+                "category": et.category,
+                "arm": arm,
+                "retrieval_level": retrieval_level,
+                "error": str(exc),
+                "error_type": type(exc).__name__,
+            }
+            result["wall_time_s"] = 0.0
+        return result
+
     results = []
     completed = 0
     t_start = time.time()
 
-    for task in tasks:
-        et = task.evidence_task
-        for retrieval_level in args.retrieval_levels:
-            for arm in args.arms:
-                t0 = time.time()
-                try:
-                    result = run_single_trajectory(
-                        task, retrieval_level, arm,
-                        chunks, corpus_by_text, corpus_by_id,
-                        max_tokens=args.max_tokens,
-                    )
-                except Exception as exc:
-                    result = {
-                        "task_id": et.task_id,
-                        "category": et.category,
-                        "arm": arm,
-                        "retrieval_level": retrieval_level,
-                        "error": str(exc),
-                        "error_type": type(exc).__name__,
-                    }
-                result["wall_time_s"] = round(time.time() - t0, 1)
-                results.append(result)
-                completed += 1
+    with ThreadPoolExecutor(max_workers=n_workers) as executor:
+        futures = {executor.submit(_worker, wi): wi for wi in work_items}
+        for future in as_completed(futures):
+            result = future.result()
+            results.append(result)
+            completed += 1
 
-                if completed % 10 == 0:
-                    elapsed = time.time() - t_start
-                    rate = completed / elapsed
-                    eta = (total - completed) / rate if rate > 0 else 0
-                    print(f"  [{completed}/{total}] {et.task_id} {arm} {retrieval_level} "
-                          f"({result.get('wall_time_s', 0)}s) "
-                          f"ETA: {eta/60:.0f}min")
+            if completed % 10 == 0:
+                elapsed = time.time() - t_start
+                rate = completed / elapsed
+                eta = (total - completed) / rate if rate > 0 else 0
+                print(f"  [{completed}/{total}] {result.get('task_id')} "
+                      f"{result.get('arm')} {result.get('retrieval_level')} "
+                      f"({result.get('wall_time_s', 0)}s) "
+                      f"ETA: {eta/60:.0f}min")
 
     # Save results
     with open(output_dir / "results.json", "w") as f:

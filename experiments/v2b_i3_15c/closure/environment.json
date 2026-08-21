@@ -1,0 +1,14 @@
+{
+  "python_version": "3.12.0 (main, Apr 26 2026, 15:36:24) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "platform": "macOS-26.2-arm64-arm-64bit",
+  "processor": "arm",
+  "machine": "arm64",
+  "openrouter_model": "nvidia/nemotron-3.5-lightning:free",
+  "local_model": "LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M (not used in this pilot)",
+  "retrieval": "Q3_RERANKED (sentence-transformers + cross-encoder reranker)",
+  "git_commit": "122137945502c29dcc723e49c9a13af48f6a5355",
+  "git_dirty_files": [
+    "scripts/run_i3_15c_factorial.py",
+    "scripts/run_i3_7e_compact_governor.py"
+  ]
+}

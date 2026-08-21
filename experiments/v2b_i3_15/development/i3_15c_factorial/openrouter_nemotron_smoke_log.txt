@@ -1,0 +1,57 @@
+================================================================================
+I3.15c: Phase-Eligible Balanced Benchmark — Full Factorial Runner
+================================================================================
+
+Benchmark: i3_15_t2_eligible (BENCHMARK_V1)
+  Strata: ['T2_CONFLICT_IMMEDIATE', 'T2_CONFLICT_LATE', 'DEFER_CONTROL', 'ANSWER_CONTROL']
+  Retrieval systems (this run): ['Q3_RERANKED']
+  Arms: ['A1_INFERRED', 'R1_INFERRED']
+  Ports: ['8080']
+  Tasks: 25 per cell x 4 strata x 2 retrieval difficulty
+  = 200 unique tasks
+  Trajectories: 200 x 3 retrieval x 2 arms
+  = 1200 potential trajectories
+
+Inference: LOCAL_POLICY_V2
+  Backend: OpenRouter (NOT frozen identity)
+  Model: nvidia/nemotron-3.5-lightning:free
+  Max tokens: 2048
+  Response format: json_schema
+  WARNING: Results from this backend are not the pinned-model experiment.
+
+Protocol: EXPERIMENT_PROTOCOL_V1
+  Pre-registered contrasts: ['Delta_T2+', 'Delta_T2_immediate', 'Delta_T2_late', 'Delta_DEFER-', 'Delta_ANSWER', 'I_phase']
+  Desired: {'Delta_T2+': '> 0', 'I_phase': '> 0', 'Delta_DEFER-': '~ 0', 'Delta_ANSWER': '~ 0', 'false_T2_on_controls': '= 0'}
+
+Generated 40 tasks
+
+================================================================================
+STRUCTURAL QUALIFICATION (zero LLM calls)
+================================================================================
+  T2 positive expected: 20
+  T2 positive reachable (gold): 20
+  T2 negative expected: 20
+  T2 negative incorrectly reachable (gold): 0
+  Late T2 initial false (correct): 10
+  Late T2 initial incorrectly true: 0
+  Immediate T2 initial true (correct): 10
+  Immediate T2 initial incorrectly false: 0
+  PASSED: True
+
+  ANSWER_CONTROL: n=10 t2_initial_true=0 t2_gold_true=0
+  DEFER_CONTROL: n=10 t2_initial_true=0 t2_gold_true=0
+  T2_CONFLICT_IMMEDIATE: n=10 t2_initial_true=10 t2_gold_true=10
+  T2_CONFLICT_LATE: n=10 t2_initial_true=0 t2_gold_true=10
+
+================================================================================
+SMOKE TEST MODE: 12 trajectories
+================================================================================
+Selected 6 tasks for smoke test
+Corpus: 130 passages, SHA256: 8c4d85a2c4a1a82f...
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 7265.99it/s]
+Loading weights:   0%|          | 0/138 [00:00<?, ?it/s]Loading weights: 100%|██████████| 138/138 [00:00<00:00, 4747.14it/s]
+  i3_15c_0000 A1_INFERRED: actions=['DEFER'] terminal=DEFER t2=False time=68.7s
+  i3_15c_0000 R1_INFERRED: actions=['DEFER'] terminal=DEFER t2=True time=104.1s
+  i3_15c_0001 A1_INFERRED: actions=['DEFER'] terminal=DEFER t2=False time=3.6s
+  i3_15c_0001 R1_INFERRED: actions=['DEFER'] terminal=DEFER t2=True time=65.1s
+  i3_15c_0010 A1_INFERRED: actions=['DEFER'] terminal=DEFER t2=False time=62.4s

@@ -1,0 +1,1288 @@
+{
+  "total_control_tasks": 40,
+  "matched_pairs": 40,
+  "request_identity_match_rate": 0.0,
+  "packet_identity_match_rate": 0.0,
+  "prompt_identity_match_rate": 0.0,
+  "retrieval_identity_match_rate": 2.2,
+  "per_task": [
+    {
+      "task_id": "i3_15c_0040",
+      "category": "defer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 4,
+      "n_r1_calls": 10,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 1,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 2,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 3,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": "VERIFY",
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0041",
+      "category": "defer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0042",
+      "category": "defer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 6,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": "VERIFY",
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0043",
+      "category": "defer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 7,
+      "n_r1_calls": 3,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 1,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 2,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0044",
+      "category": "defer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 9,
+      "n_r1_calls": 6,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 1,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 2,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 3,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 4,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 5,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "SEARCH_MORE",
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0045",
+      "category": "defer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 10,
+      "n_r1_calls": 10,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 1,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 2,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 3,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 4,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 5,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "SEARCH_MORE",
+          "r1_action": "SEARCH_MORE",
+          "output_diverges": false
+        },
+        {
+          "step": 6,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "SEARCH_MORE",
+          "r1_action": "RETRIEVE",
+          "output_diverges": true
+        },
+        {
+          "step": 7,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "RETRIEVE",
+          "r1_action": "SEARCH_MORE",
+          "output_diverges": true
+        },
+        {
+          "step": 8,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "RETRIEVE",
+          "r1_action": "RETRIEVE",
+          "output_diverges": false
+        },
+        {
+          "step": 9,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "RETRIEVE",
+          "r1_action": "RETRIEVE",
+          "output_diverges": false
+        }
+      ],
+      "status": "BACKEND_RESPONSE_VARIANCE"
+    },
+    {
+      "task_id": "i3_15c_0046",
+      "category": "defer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 4,
+      "n_r1_calls": 3,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 1,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 2,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0047",
+      "category": "defer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 4,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": "VERIFY",
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0048",
+      "category": "defer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 6,
+      "n_r1_calls": 6,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 1,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 2,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 3,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 4,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 5,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0049",
+      "category": "defer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 7,
+      "n_r1_calls": 10,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 1,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 2,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 3,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 4,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 5,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "SEARCH_MORE",
+          "r1_action": "RETRIEVE",
+          "output_diverges": true
+        },
+        {
+          "step": 6,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": "RETRIEVE",
+          "output_diverges": null
+        }
+      ],
+      "status": "BACKEND_RESPONSE_VARIANCE"
+    },
+    {
+      "task_id": "i3_15c_0050",
+      "category": "defer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 2,
+      "n_r1_calls": 7,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 1,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": "VERIFY",
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0051",
+      "category": "defer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 5,
+      "n_r1_calls": 8,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 1,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 2,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 3,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 4,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": "VERIFY",
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0052",
+      "category": "defer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 6,
+      "n_r1_calls": 7,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 1,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 2,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 3,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 4,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 5,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": "SEARCH_MORE",
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0053",
+      "category": "defer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 6,
+      "n_r1_calls": 6,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 1,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 2,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 3,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 4,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 5,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0054",
+      "category": "defer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 5,
+      "n_r1_calls": 2,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": "VERIFY",
+          "output_diverges": false
+        },
+        {
+          "step": 1,
+          "system_prompt_match": true,
+          "packet_match": false,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0055",
+      "category": "defer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 2,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": "VERIFY",
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0056",
+      "category": "defer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0057",
+      "category": "defer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0058",
+      "category": "defer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0059",
+      "category": "defer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0060",
+      "category": "answer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0061",
+      "category": "answer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0062",
+      "category": "answer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0063",
+      "category": "answer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0064",
+      "category": "answer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0065",
+      "category": "answer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0066",
+      "category": "answer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0067",
+      "category": "answer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0068",
+      "category": "answer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0069",
+      "category": "answer_control_retr_easy",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0070",
+      "category": "answer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0071",
+      "category": "answer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0072",
+      "category": "answer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0073",
+      "category": "answer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0074",
+      "category": "answer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0075",
+      "category": "answer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0076",
+      "category": "answer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0077",
+      "category": "answer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0078",
+      "category": "answer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    },
+    {
+      "task_id": "i3_15c_0079",
+      "category": "answer_control_retr_hard",
+      "retrieval_match": true,
+      "a1_passages": [],
+      "r1_passages": [],
+      "n_a1_calls": 1,
+      "n_r1_calls": 1,
+      "call_comparisons": [
+        {
+          "step": 0,
+          "system_prompt_match": true,
+          "packet_match": true,
+          "request_match": null,
+          "a1_action": null,
+          "r1_action": null,
+          "output_diverges": null
+        }
+      ],
+      "status": "IDENTICAL"
+    }
+  ],
+  "arm_equivalence_status": "BACKEND_RESPONSE_VARIANCE",
+  "backend_response_variance": {
+    "identical_requests": 0,
+    "divergent_outputs": 0,
+    "divergence_rate": 0.0
+  }
+}

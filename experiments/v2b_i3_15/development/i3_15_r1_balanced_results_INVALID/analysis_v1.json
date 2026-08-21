@@ -1,0 +1,141 @@
+{
+  "benchmark_id": "i3_15_r1_balanced",
+  "n_tasks": 150,
+  "n_trajectories": 900,
+  "corpus_sha256": "c26cb330f6e5472233dd768744afad38495f529375bbaaa2a554b9d650fc344e",
+  "top_k": 15,
+  "frozen_inference_config": {
+    "benchmark_id": "i3_15_r1_balanced",
+    "model_repository": "LiquidAI/LFM2.5-2.6B-GGUF",
+    "quantization": "Q5_K_M",
+    "model_name": "LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M",
+    "llama_cpp_version": "b10217-ddd4ec142",
+    "context_size": 131072,
+    "temperature": 0.0,
+    "max_tokens": 2048,
+    "top_p": 1.0,
+    "top_k": 40,
+    "repeat_penalty": 1.0,
+    "seed": 42,
+    "threads": "auto",
+    "gpu_layers": "all (Metal)",
+    "base_url": "http://127.0.0.1:8080/v1",
+    "determinism_verified": true,
+    "determinism_unique_outputs": 1,
+    "determinism_n_calls": 25
+  },
+  "deltas": {
+    "Q0_BM25": 0.0,
+    "Q3_RERANKED": 0.0,
+    "Q4_ORACLE": 0.0
+  },
+  "confidence_intervals": {
+    "Q0_BM25": {
+      "mean_diff": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "n": 150,
+      "n_bootstrap": 10000,
+      "confidence": 0.95,
+      "significant": false
+    },
+    "Q3_RERANKED": {
+      "mean_diff": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "n": 150,
+      "n_bootstrap": 10000,
+      "confidence": 0.95,
+      "significant": false
+    },
+    "Q4_ORACLE": {
+      "mean_diff": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "n": 150,
+      "n_bootstrap": 10000,
+      "confidence": 0.95,
+      "significant": false
+    }
+  },
+  "nuisance_variables": {
+    "epistemic_easy_retr_easy": {
+      "n": 25,
+      "expected_terminal": {
+        "ANSWER": 13,
+        "DEFER": 12
+      },
+      "n_hypotheses_mean": 2.0,
+      "n_evidence_mean": 1.0,
+      "query_length_mean": 7.68,
+      "gold_support_edges": 25,
+      "gold_contradict_edges": 25,
+      "gold_neutral_edges": 0
+    },
+    "epistemic_easy_retr_hard": {
+      "n": 25,
+      "expected_terminal": {
+        "ANSWER": 13,
+        "DEFER": 12
+      },
+      "n_hypotheses_mean": 2.0,
+      "n_evidence_mean": 1.0,
+      "query_length_mean": 11.72,
+      "gold_support_edges": 25,
+      "gold_contradict_edges": 25,
+      "gold_neutral_edges": 0
+    },
+    "epistemic_hard_retr_easy": {
+      "n": 25,
+      "expected_terminal": {
+        "ANSWER": 13,
+        "DEFER": 12
+      },
+      "n_hypotheses_mean": 2.0,
+      "n_evidence_mean": 3.0,
+      "query_length_mean": 7.68,
+      "gold_support_edges": 71,
+      "gold_contradict_edges": 71,
+      "gold_neutral_edges": 8
+    },
+    "epistemic_hard_retr_hard": {
+      "n": 25,
+      "expected_terminal": {
+        "ANSWER": 13,
+        "DEFER": 12
+      },
+      "n_hypotheses_mean": 2.0,
+      "n_evidence_mean": 3.0,
+      "query_length_mean": 11.72,
+      "gold_support_edges": 64,
+      "gold_contradict_edges": 64,
+      "gold_neutral_edges": 22
+    },
+    "epistemic_medium_retr_easy": {
+      "n": 25,
+      "expected_terminal": {
+        "ANSWER": 13,
+        "DEFER": 12
+      },
+      "n_hypotheses_mean": 2.0,
+      "n_evidence_mean": 2.0,
+      "query_length_mean": 7.68,
+      "gold_support_edges": 50,
+      "gold_contradict_edges": 50,
+      "gold_neutral_edges": 0
+    },
+    "epistemic_medium_retr_hard": {
+      "n": 25,
+      "expected_terminal": {
+        "ANSWER": 12,
+        "DEFER": 13
+      },
+      "n_hypotheses_mean": 2.0,
+      "n_evidence_mean": 2.0,
+      "query_length_mean": 11.72,
+      "gold_support_edges": 50,
+      "gold_contradict_edges": 50,
+      "gold_neutral_edges": 0
+    }
+  }
+}

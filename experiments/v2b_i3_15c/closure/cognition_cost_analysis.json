@@ -1,0 +1,49 @@
+{
+  "receipts_count": 160,
+  "cost_contrasts": {
+    "Delta_Steps_T2+": {
+      "mean": -0.45,
+      "median": -1.0,
+      "n": 40
+    },
+    "Delta_Tokens_T2+": {
+      "mean": -2737.025,
+      "median": -5837.0,
+      "n": 40
+    },
+    "Delta_Latency_T2+_ms": {
+      "mean": -1725.0,
+      "median": 500.0,
+      "n": 40
+    },
+    "Delta_Redundant_T2+": {
+      "mean": 0.025,
+      "median": 0.0,
+      "n": 40
+    },
+    "Delta_Steps_immediate": {
+      "mean": 0.3,
+      "n": 20
+    },
+    "Delta_Steps_late": {
+      "mean": -1.2,
+      "n": 20
+    },
+    "Delta_Tokens_immediate": {
+      "mean": 1582.4,
+      "n": 20
+    },
+    "Delta_Tokens_late": {
+      "mean": -7056.45,
+      "n": 20
+    },
+    "PostT2_Steps": {
+      "mean_R1": 6.1667,
+      "n_R1_with_t2": 36
+    },
+    "UtilityPer1kTokens": {
+      "R1_T2plus_mean": 2.2554,
+      "A1_T2plus_mean": 1.6598
+    }
+  }
+}

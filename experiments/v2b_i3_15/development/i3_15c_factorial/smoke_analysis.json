@@ -1,0 +1,266 @@
+{
+  "contrasts": {
+    "Delta_T2+": {
+      "n": 4,
+      "mean": 0.25499999999999723,
+      "ci": [
+        -41.2875,
+        37.792500000000004
+      ]
+    },
+    "Delta_T2_immediate": {
+      "n": 2,
+      "mean": -25.405000000000005,
+      "ci": [
+        -57.17,
+        6.359999999999992
+      ]
+    },
+    "Delta_T2_late": {
+      "n": 2,
+      "mean": 25.915,
+      "ci": [
+        2.1599999999999966,
+        49.67
+      ]
+    },
+    "Delta_DEFER-": {
+      "n": 1,
+      "mean": 8.520000000000003,
+      "ci": [
+        8.520000000000003,
+        8.520000000000003
+      ]
+    },
+    "Delta_ANSWER": {
+      "n": 1,
+      "mean": -9.54,
+      "ci": [
+        -9.54,
+        -9.54
+      ]
+    },
+    "I_phase": {
+      "mean": -8.265000000000006,
+      "note": "Delta_T2+ - Delta_DEFER-. Both groups can have expected terminal DEFER, so this removes the trivial explanation that R1 simply helps DEFER tasks."
+    }
+  },
+  "cost_metrics": {
+    "Delta_Steps_T2+": {
+      "mean": 0.0,
+      "ci": [
+        -4.0,
+        5.5
+      ]
+    },
+    "P_step_limit_R1_T2+": {
+      "rate": 0.0,
+      "n": 4
+    },
+    "P_step_limit_A1_T2+": {
+      "rate": 0.0,
+      "n": 4
+    },
+    "mean_redundant_R1_T2+": 1.5,
+    "mean_redundant_A1_T2+": 1.5
+  },
+  "per_stratum": {
+    "T2_CONFLICT_IMMEDIATE": {
+      "n": 2,
+      "mean_delta_utility": -25.405000000000005,
+      "ci_delta_utility": [
+        -57.17,
+        6.359999999999992
+      ],
+      "mean_delta_steps": -3.5,
+      "ci_delta_steps": [
+        -5.0,
+        -2.0
+      ],
+      "mean_delta_success": -0.5,
+      "r1_t2_triggered_count": 1,
+      "r1_step_limit_count": 0,
+      "r1_step_limit_rate": 0.0,
+      "mean_a1_redundant": 1.5,
+      "mean_r1_redundant": 0.0
+    },
+    "T2_CONFLICT_LATE": {
+      "n": 2,
+      "mean_delta_utility": 25.915,
+      "ci_delta_utility": [
+        2.1599999999999966,
+        49.67
+      ],
+      "mean_delta_steps": 3.5,
+      "ci_delta_steps": [
+        -1.0,
+        8.0
+      ],
+      "mean_delta_success": 0.5,
+      "r1_t2_triggered_count": 2,
+      "r1_step_limit_count": 0,
+      "r1_step_limit_rate": 0.0,
+      "mean_a1_redundant": 1.5,
+      "mean_r1_redundant": 3.0
+    },
+    "DEFER_CONTROL": {
+      "n": 1,
+      "mean_delta_utility": 8.520000000000003,
+      "ci_delta_utility": [
+        8.520000000000003,
+        8.520000000000003
+      ],
+      "mean_delta_steps": -3.0,
+      "ci_delta_steps": [
+        -3.0,
+        -3.0
+      ],
+      "mean_delta_success": 0.0,
+      "r1_t2_triggered_count": 0,
+      "r1_step_limit_count": 0,
+      "r1_step_limit_rate": 0.0,
+      "mean_a1_redundant": 3.0,
+      "mean_r1_redundant": 1.0
+    },
+    "ANSWER_CONTROL": {
+      "n": 1,
+      "mean_delta_utility": -9.54,
+      "ci_delta_utility": [
+        -9.54,
+        -9.54
+      ],
+      "mean_delta_steps": 3.0,
+      "ci_delta_steps": [
+        3.0,
+        3.0
+      ],
+      "mean_delta_success": 0.0,
+      "r1_t2_triggered_count": 0,
+      "r1_step_limit_count": 0,
+      "r1_step_limit_rate": 0.0,
+      "mean_a1_redundant": 0.0,
+      "mean_r1_redundant": 2.0
+    }
+  },
+  "false_t2_on_controls": {
+    "DEFER_CONTROL": 0,
+    "ANSWER_CONTROL": 0
+  },
+  "n_pairs": 6,
+  "deltas": [
+    {
+      "task_id": "i3_15c_0010",
+      "retrieval_level": "Q3_RERANKED",
+      "stratum": "T2_CONFLICT_LATE",
+      "t2_eligible": true,
+      "delta_utility": 49.67,
+      "delta_steps": 8,
+      "delta_success": 1,
+      "a1_utility": 0,
+      "r1_utility": 49.67,
+      "a1_steps": 0,
+      "r1_steps": 8,
+      "a1_success": false,
+      "r1_success": true,
+      "r1_t2_triggered": true,
+      "r1_hit_step_limit": false,
+      "a1_redundant": 0,
+      "r1_redundant": 3
+    },
+    {
+      "task_id": "i3_15c_0000",
+      "retrieval_level": "Q3_RERANKED",
+      "stratum": "T2_CONFLICT_IMMEDIATE",
+      "t2_eligible": true,
+      "delta_utility": -57.17,
+      "delta_steps": -5,
+      "delta_success": -1,
+      "a1_utility": 57.17,
+      "r1_utility": 0,
+      "a1_steps": 5,
+      "r1_steps": 0,
+      "a1_success": true,
+      "r1_success": false,
+      "r1_t2_triggered": false,
+      "r1_hit_step_limit": false,
+      "a1_redundant": 2,
+      "r1_redundant": 0
+    },
+    {
+      "task_id": "i3_15c_0030",
+      "retrieval_level": "Q3_RERANKED",
+      "stratum": "ANSWER_CONTROL",
+      "t2_eligible": false,
+      "delta_utility": -9.54,
+      "delta_steps": 3,
+      "delta_success": 0,
+      "a1_utility": -33.29,
+      "r1_utility": -42.83,
+      "a1_steps": 2,
+      "r1_steps": 5,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": false,
+      "r1_hit_step_limit": false,
+      "a1_redundant": 0,
+      "r1_redundant": 2
+    },
+    {
+      "task_id": "i3_15c_0001",
+      "retrieval_level": "Q3_RERANKED",
+      "stratum": "T2_CONFLICT_IMMEDIATE",
+      "t2_eligible": true,
+      "delta_utility": 6.359999999999992,
+      "delta_steps": -2,
+      "delta_success": 0,
+      "a1_utility": 60.35,
+      "r1_utility": 66.71,
+      "a1_steps": 4,
+      "r1_steps": 2,
+      "a1_success": true,
+      "r1_success": true,
+      "r1_t2_triggered": true,
+      "r1_hit_step_limit": false,
+      "a1_redundant": 1,
+      "r1_redundant": 0
+    },
+    {
+      "task_id": "i3_15c_0020",
+      "retrieval_level": "Q3_RERANKED",
+      "stratum": "DEFER_CONTROL",
+      "t2_eligible": false,
+      "delta_utility": 8.520000000000003,
+      "delta_steps": -3,
+      "delta_success": 0,
+      "a1_utility": 51.83,
+      "r1_utility": 60.35,
+      "a1_steps": 7,
+      "r1_steps": 4,
+      "a1_success": true,
+      "r1_success": true,
+      "r1_t2_triggered": false,
+      "r1_hit_step_limit": false,
+      "a1_redundant": 3,
+      "r1_redundant": 1
+    },
+    {
+      "task_id": "i3_15c_0011",
+      "retrieval_level": "Q3_RERANKED",
+      "stratum": "T2_CONFLICT_LATE",
+      "t2_eligible": true,
+      "delta_utility": 2.1599999999999966,
+      "delta_steps": -1,
+      "delta_success": 0,
+      "a1_utility": 47.52,
+      "r1_utility": 49.68,
+      "a1_steps": 9,
+      "r1_steps": 8,
+      "a1_success": true,
+      "r1_success": true,
+      "r1_t2_triggered": true,
+      "r1_hit_step_limit": false,
+      "a1_redundant": 3,
+      "r1_redundant": 3
+    }
+  ]
+}

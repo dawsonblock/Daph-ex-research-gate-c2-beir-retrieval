@@ -936,6 +936,25 @@ ACTION SEMANTICS:
   DEFER: Give up due to insufficient evidence.
   STOP: Stop without answering.
 
+EVIDENCE VERIFICATION STATES:
+  SUFFICIENT: Verified and reliable. Trust this evidence.
+  UNVERIFIED: Not yet checked. Relations may be wrong. Must be verified before use.
+  MISSING: Not retrieved. Cannot be used.
+
+CRITICAL RULE - DO NOT DEFER IF can_verify IS TRUE:
+  If can_verify is true, there are unverified evidence items that could change
+  the decision. You MUST call VERIFY first. DEFER is only allowed when
+  can_verify is false, can_retrieve is false, and can_search is false.
+  Never DEFER while unverified evidence remains.
+
+DECISION PROCEDURE:
+  1. can_verify=true? -> VERIFY
+  2. All evidence verified, one hypothesis supported, no contradiction? -> ANSWER
+  3. All evidence verified, conflict remains, can_search=true? -> SEARCH_MORE
+  4. All evidence verified, conflict remains, can_retrieve=true? -> RETRIEVE
+  5. All evidence verified, conflict remains, no more evidence available? -> REASON_MORE
+  6. Only DEFER if can_verify=false AND can_retrieve=false AND can_search=false
+
 You are given the evidence state plus a compact decision-state summary:
   - live_hypotheses: hypotheses that are still viable
   - eliminated_hypotheses: hypotheses that have been ruled out
@@ -954,8 +973,6 @@ DECISION STATE MEANINGS (epistemic conditions only, no action recommendations):
   NEEDS_DISCRIMINATION: Multiple hypotheses are viable, or unverified visible evidence could discriminate between them.
   NEEDS_EVIDENCE: No hypothesis has verified support, but evidence-gathering operations are possible.
   INSUFFICIENT: No hypothesis can be resolved with available evidence.
-
-Choose the next action yourself based on the epistemic state and which operations are callable.
 
 OUTPUT FORMAT:
 You must respond with a JSON object containing exactly these three fields:
@@ -1126,12 +1143,29 @@ ACTION SEMANTICS:
   DEFER: Give up due to insufficient evidence.
   STOP: Stop without answering.
 
+EVIDENCE VERIFICATION STATES:
+  SUFFICIENT: Verified and reliable. Trust this evidence.
+  UNVERIFIED: Not yet checked. Relations may be wrong. Must be verified before use.
+  MISSING: Not retrieved. Cannot be used.
+
+CRITICAL RULE - DO NOT DEFER IF can_verify IS TRUE:
+  If can_verify is true, there are unverified evidence items that could change
+  the decision. You MUST call VERIFY first. DEFER is only allowed when
+  can_verify is false, can_retrieve is false, and can_search is false.
+  Never DEFER while unverified evidence remains.
+
+DECISION PROCEDURE:
+  1. can_verify=true? -> VERIFY
+  2. All evidence verified, one hypothesis supported, no contradiction? -> ANSWER
+  3. All evidence verified, conflict remains, can_search=true? -> SEARCH_MORE
+  4. All evidence verified, conflict remains, can_retrieve=true? -> RETRIEVE
+  5. All evidence verified, conflict remains, no more evidence available? -> REASON_MORE
+  6. Only DEFER if can_verify=false AND can_retrieve=false AND can_search=false
+
 You are given the evidence state plus action affordances:
   - can_retrieve: true if RETRIEVE can be called (retrieval budget remains)
   - can_search: true if SEARCH_MORE can be called (search budget remains)
   - can_verify: true if VERIFY can be called (verification budget remains and unverified visible evidence exists)
-
-Choose the next action based on the evidence and available operations.
 
 OUTPUT FORMAT:
 You must respond with a JSON object containing exactly these three fields:

@@ -1,0 +1,171 @@
+{
+  "contrasts": {
+    "Delta_T2+": {
+      "name": "Delta_T2+",
+      "n": 40,
+      "mean": 9.9485,
+      "median": 2.67,
+      "ci_95": [
+        -8.1285,
+        27.3553
+      ],
+      "ci_lower": -8.1285,
+      "ci_upper": 27.3553,
+      "wins": 24,
+      "losses": 15,
+      "ties": 1,
+      "effect_size_cohen_d": 0.1722,
+      "scientific_status": "POSITIVE_POINT_ESTIMATE"
+    },
+    "Delta_T2_immediate": {
+      "name": "Delta_T2_immediate",
+      "n": 20,
+      "mean": -4.3515,
+      "median": 2.155,
+      "ci_95": [
+        -28.6615,
+        19.42
+      ],
+      "ci_lower": -28.6615,
+      "ci_upper": 19.42,
+      "wins": 11,
+      "losses": 9,
+      "ties": 0,
+      "effect_size_cohen_d": -0.0755,
+      "scientific_status": "NEGATIVE_POINT_ESTIMATE"
+    },
+    "Delta_T2_late": {
+      "name": "Delta_T2_late",
+      "n": 20,
+      "mean": 24.2485,
+      "median": 4.31,
+      "ci_95": [
+        -0.529,
+        48.174
+      ],
+      "ci_lower": -0.529,
+      "ci_upper": 48.174,
+      "wins": 13,
+      "losses": 6,
+      "ties": 1,
+      "effect_size_cohen_d": 0.4357,
+      "scientific_status": "POSITIVE_POINT_ESTIMATE"
+    },
+    "Delta_DEFER-": {
+      "name": "Delta_DEFER-",
+      "n": 20,
+      "mean": -5.469,
+      "median": 0.0,
+      "ci_95": [
+        -15.3355,
+        1.127
+      ],
+      "ci_lower": -15.3355,
+      "ci_upper": 1.127,
+      "wins": 5,
+      "losses": 7,
+      "ties": 8,
+      "effect_size_cohen_d": -0.2677,
+      "scientific_status": "NEGATIVE_POINT_ESTIMATE",
+      "equivalence_test": {
+        "equivalent": false,
+        "margin": 5.0,
+        "mean": -5.468999999999999,
+        "ci_90": [
+          -13.808000000000002,
+          0.5295000000000005
+        ],
+        "reject_h0a_mean_le_neg_margin": false,
+        "reject_h0b_mean_ge_pos_margin": true,
+        "status": "NOT_EQUIVALENT"
+      }
+    },
+    "Delta_ANSWER": {
+      "name": "Delta_ANSWER",
+      "n": 20,
+      "mean": 0.0,
+      "median": 0.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 20,
+      "effect_size_cohen_d": 0.0,
+      "scientific_status": "EQUIVALENT",
+      "equivalence_test": {
+        "equivalent": true,
+        "margin": 5.0,
+        "mean": 0.0,
+        "ci_90": [
+          0.0,
+          0.0
+        ],
+        "reject_h0a_mean_le_neg_margin": true,
+        "reject_h0b_mean_ge_pos_margin": true,
+        "status": "EQUIVALENT"
+      }
+    },
+    "I_phase": {
+      "name": "I_phase",
+      "n_t2": 40,
+      "n_defer": 20,
+      "mean": 15.5669,
+      "ci_95": [
+        -4.2788,
+        35.4785
+      ],
+      "ci_lower": -4.2788,
+      "ci_upper": 35.4785,
+      "scientific_status": "POSITIVE_POINT_ESTIMATE",
+      "method": "direct_independent_bootstrap",
+      "note": "T2+ and DEFER- tasks resampled independently; difference computed per bootstrap iteration"
+    }
+  },
+  "false_t2_on_controls": {
+    "DEFER_CONTROL": 0,
+    "ANSWER_CONTROL": 0
+  },
+  "cost_metrics": {
+    "Delta_Steps_T2+": {
+      "mean": -0.45,
+      "ci_95": [
+        -1.625,
+        0.775
+      ],
+      "n": 40
+    },
+    "Delta_Tokens_T2+": {
+      "mean": -2737.025,
+      "ci_95": [
+        -7954.1,
+        2728.925
+      ],
+      "n": 40
+    },
+    "Delta_RedundantActions_T2+": {
+      "mean": 0.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "n": 40
+    },
+    "P_step_limit_R1_T2+": {
+      "rate": 0.2,
+      "n": 40
+    },
+    "P_step_limit_A1_T2+": {
+      "rate": 0.325,
+      "n": 40
+    }
+  },
+  "equivalence_margin": 5.0,
+  "n_bootstrap": 5000,
+  "seed": 42,
+  "n_total_trajectories": 160,
+  "n_paired_tasks": 80
+}
