@@ -6,3 +6,36 @@ Running 36 calls (12 requests x 3 reps)...
 Using 1 parallel workers
   10/36 calls done (382s)
   20/36 calls done (772s)
+  30/36 calls done (1229s)
+All 36 calls done in 1457s
+
+================================================================================
+BACKEND RESPONSE VARIANCE CHARACTERIZATION
+================================================================================
+
+Backend: openrouter
+Model: nvidia/nemotron-3.5-lightning:free
+Requests: 12, Repetitions: 3, Total calls: 36
+
+Summary:
+  P(action instability | identical request): 1.0000
+  P(terminal instability | identical request): 1.0000
+  P(any invalid | identical request): 1.0000
+  Action stable: 0/12
+  All valid: 0/12
+
+Per-request details:
+  i3_15c_0000 (T2_CONFLICT_IMMEDIATE): actions=[] valid=0/3 latency=38175.0±83.9ms tokens=0±0 UNSTABLE
+  i3_15c_0001 (T2_CONFLICT_IMMEDIATE): actions=[] valid=0/3 latency=38138.9±25.3ms tokens=0±0 UNSTABLE
+  i3_15c_0002 (T2_CONFLICT_IMMEDIATE): actions=[] valid=0/3 latency=38180.3±67.7ms tokens=0±0 UNSTABLE
+  i3_15c_0020 (T2_CONFLICT_LATE): actions=[] valid=0/3 latency=38147.8±33.7ms tokens=0±0 UNSTABLE
+  i3_15c_0021 (T2_CONFLICT_LATE): actions=[] valid=0/3 latency=38226.6±141.6ms tokens=0±0 UNSTABLE
+  i3_15c_0022 (T2_CONFLICT_LATE): actions=[] valid=0/3 latency=40888.1±996.2ms tokens=0±0 UNSTABLE
+  i3_15c_0040 (DEFER_CONTROL): actions=[] valid=0/3 latency=38146.1±61.7ms tokens=0±0 UNSTABLE
+  i3_15c_0041 (DEFER_CONTROL): actions=[] valid=0/3 latency=38120.8±46.0ms tokens=0±0 UNSTABLE
+  i3_15c_0042 (DEFER_CONTROL): actions=[] valid=0/3 latency=38176.5±119.6ms tokens=0±0 UNSTABLE
+  i3_15c_0060 (ANSWER_CONTROL): actions=[] valid=0/3 latency=63338.2±43624.7ms tokens=0±0 UNSTABLE
+  i3_15c_0061 (ANSWER_CONTROL): actions=[] valid=0/3 latency=38103.1±15.3ms tokens=0±0 UNSTABLE
+  i3_15c_0062 (ANSWER_CONTROL): actions=[] valid=0/3 latency=38083.6±7.6ms tokens=0±0 UNSTABLE
+
+Saved to experiments/v2b_i3_15c/closure/backend_variance.json

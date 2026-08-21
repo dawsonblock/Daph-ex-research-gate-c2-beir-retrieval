@@ -1,0 +1,152 @@
+{
+  "protocol_id": "I3_15C_CONFIRMATION_PROTOCOL_V1",
+  "created": "2025-08-21",
+  "status": "FROZEN",
+  "classification": "PRE_SPECIFIED_CONFIRMATION",
+
+  "research_question": "Does R1 (phase-conditioned representation routing) improve utility over A1 specifically on late-T2 tasks under Q3 retrieval?",
+
+  "design": {
+    "retrieval": "Q3_RERANKED only",
+    "strata": [
+      "T2_CONFLICT_IMMEDIATE",
+      "T2_CONFLICT_LATE_1",
+      "T2_CONFLICT_LATE_2",
+      "T2_CONFLICT_LATE_3",
+      "MATCHED_NEG_IMMEDIATE",
+      "MATCHED_NEG_LATE",
+      "DEFER_CONTROL",
+      "ANSWER_CONTROL"
+    ],
+    "arms": ["A1_INFERRED", "R1_INFERRED"],
+    "n_per_cell": 40,
+    "retrieval_difficulty_levels": ["easy", "hard"],
+    "total_unique_tasks": 640,
+    "total_trajectories": 1280,
+    "seed": 42
+  },
+
+  "primary_contrast": {
+    "name": "Delta_T2_late",
+    "definition": "U(R1) - U(A1) | T2_CONFLICT_LATE (LATE_1 + LATE_2 + LATE_3)",
+    "hypothesis": "Delta_T2_late > 0",
+    "criterion": "lower_endpoint_95CI > 0",
+    "method": "paired_bootstrap_5000"
+  },
+
+  "secondary_contrasts": [
+    {
+      "name": "I_phase",
+      "definition": "Delta_T2+ - Delta_DEFER-",
+      "hypothesis": "I_phase > 0",
+      "criterion": "lower_endpoint_95CI > 0",
+      "method": "direct_independent_bootstrap_5000"
+    },
+    {
+      "name": "Delta_T2_late_1",
+      "definition": "U(R1) - U(A1) | LATE_1 (one verification)",
+      "hypothesis": "exploratory"
+    },
+    {
+      "name": "Delta_T2_late_2",
+      "definition": "U(R1) - U(A1) | LATE_2 (two verifications)",
+      "hypothesis": "exploratory"
+    },
+    {
+      "name": "Delta_T2_late_3",
+      "definition": "U(R1) - U(A1) | LATE_3 (retrieve + verify)",
+      "hypothesis": "exploratory"
+    },
+    {
+      "name": "Delta_T2_immediate",
+      "definition": "U(R1) - U(A1) | T2_CONFLICT_IMMEDIATE",
+      "hypothesis": "exploratory"
+    }
+  ],
+
+  "control_contrasts": [
+    {
+      "name": "Delta_DEFER-",
+      "definition": "U(R1) - U(A1) | DEFER_CONTROL",
+      "criterion": "|mean| < 5.0 (TOST equivalence, margin=5.0)",
+      "method": "tost_bootstrap_90"
+    },
+    {
+      "name": "Delta_ANSWER",
+      "definition": "U(R1) - U(A1) | ANSWER_CONTROL",
+      "criterion": "|mean| < 5.0 (TOST equivalence, margin=5.0)",
+      "method": "tost_bootstrap_90"
+    },
+    {
+      "name": "Delta_MATCHED_NEG",
+      "definition": "U(R1) - U(A1) | MATCHED_NEG (immediate + late)",
+      "criterion": "|mean| < 5.0 (TOST equivalence, margin=5.0)",
+      "method": "tost_bootstrap_90"
+    }
+  ],
+
+  "safety_checks": [
+    {
+      "name": "FalseT2_controls",
+      "criterion": "FalseT2 <= 1% of control tasks",
+      "ideal": "FalseT2 = 0"
+    },
+    {
+      "name": "FalseT2_matched_neg",
+      "criterion": "FalseT2 = 0 on matched negative controls"
+    }
+  ],
+
+  "cost_thresholds": {
+    "Delta_Steps_T2+": "mean <= 1.5 x Steps_A1 (unless utility improvement justifies)",
+    "P_step_limit_R1_T2+": "<= P_step_limit_A1_T2+ + 0.15",
+    "Delta_Tokens_T2+": "no catastrophic growth (mean < 2x A1 tokens)"
+  },
+
+  "promotion_criteria": {
+    "effectiveness": "lower_endpoint_95CI(Delta_T2_late) > 0",
+    "phase_interaction": "prefer lower_endpoint_95CI(I_phase) > 0",
+    "safety": "FalseT2_controls <= 1%, ideally 0",
+    "controls": "Delta_DEFER-, Delta_ANSWER, Delta_MATCHED_NEG all equivalent (TOST)",
+    "cost": "no catastrophic growth in steps, tokens, latency",
+    "generalization": "at least 2 models show consistent directional benefit (for full promotion)"
+  },
+
+  "frozen_identities": {
+    "benchmark": "i3_15_t2_eligible (BENCHMARK_V2 with trigger-depth strata + matched controls)",
+    "t2_definition": "len(eliminated_hypotheses) == n_hypotheses and n_hypotheses > 0",
+    "t2_r1_implementation": "T2_R1_FROM_I3_12J (frozen_v2.6.0)",
+    "utility": "v2b_i3_1_utility_v1.json",
+    "extractor": "DeterministicRelationExtractor",
+    "action_vocabulary": ["ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"],
+    "prompt": "PROMPT_V2 (with SUFFICIENT/UNVERIFIED definitions and VERIFY-before-DEFER procedure)",
+    "statistical_method": "paired_bootstrap_5000 + direct_i_phase_bootstrap + TOST_equivalence_90",
+    "equivalence_margin": 5.0
+  },
+
+  "backend_requirements": {
+    "primary": "LOCAL_POLICY_V2 (LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M) — frozen pinned model",
+    "validation": "OpenRouter Nemotron (development only, not confirmatory)",
+    "max_tokens": 8192,
+    "temperature": 0.0,
+    "response_format": "json_schema",
+    "note": "Backend must pass schema qualification and policy qualification before entering frozen experiment"
+  },
+
+  "preflight_checks": [
+    "manifest valid",
+    "structural T2 validation passed",
+    "backend schema gate passed",
+    "backend policy gate passed",
+    "retrieval receipts complete",
+    "prompt hashes frozen",
+    "A1/R1 control request equivalence audited",
+    "model identity matches protocol",
+    "utility identity matches",
+    "bootstrap identity matches"
+  ],
+
+  "result_classification": "PRE_SPECIFIED_CONFIRMATION",
+
+  "note": "This protocol is pre-specified BEFORE running the confirmation. Any deviations must be documented and will change the classification."
+}

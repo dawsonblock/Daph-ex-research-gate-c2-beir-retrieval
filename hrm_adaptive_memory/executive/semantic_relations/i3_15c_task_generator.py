@@ -400,12 +400,164 @@ def _gen_t2_conflict_late_task(
 
     et = EvidenceTask(
         task_id=task_id, split="i3_15c",
-        category=f"t2_conflict_late_{'retr_hard' if retrieval_hard else 'retr_easy'}",
+        category=f"t2_conflict_late_1_{'retr_hard' if retrieval_hard else 'retr_easy'}",
         task_summary=query,
         high_stakes=True, budget_profile="STANDARD",
         hypotheses=h, evidence_items=ev,
         retrieve_exposes=(), search_exposes=(),
         oracle_resolution_path=("VERIFY:E2", "DEFER"),
+        expected_terminal=DecisionAction.DEFER, correct_hypothesis_id="H2",
+    )
+    return SemanticTask(et, gold, tier="", semantic_class="real_evidence")
+
+
+def _gen_t2_conflict_late_2_task(
+    task_id: str,
+    domain: str,
+    rng: random.Random,
+    retrieval_hard: bool,
+    task_index: int = 0,
+) -> SemanticTask:
+    """T2_CONFLICT_LATE_2: T2 fires after TWO sequential verifications.
+
+    Both evidence items start UNVERIFIED.
+    E1 becomes SUFFICIENT after VERIFY (contradicts H1 → H1 eliminated).
+    E2 becomes SUFFICIENT after VERIFY (contradicts H2 → H2 eliminated).
+    T2 fires only after BOTH are verified.
+
+    Trajectory:
+      step 0: E1 UNVERIFIED, E2 UNVERIFIED → T2 = False → A1
+      step 1: VERIFY(E1) → E1 SUFFICIENT, H1 eliminated. T2 still False (H2 alive)
+      step 2: VERIFY(E2) → E2 SUFFICIENT, H2 eliminated. T2 = True → M3
+      step 3+: M3 representation
+
+    Expected terminal: DEFER
+    """
+    subject = DOMAIN_SUBJECTS.get(domain, domain)
+    h = _make_hyps(subject)
+
+    text_1 = CONFLICT_H1_EVIDENCE.get(domain, CONFLICT_H1_EVIDENCE["api_gateway"])
+    text_2 = CONFLICT_H2_EVIDENCE.get(domain, CONFLICT_H2_EVIDENCE["api_gateway"])
+
+    ev1 = EvidenceItem(
+        evidence_id="E1",
+        proposition=text_1,
+        source_class="primary",
+        supports=("H2",),
+        contradicts=("H1",),
+        verification_state=VerificationState.UNVERIFIED,
+        temporal_status=TemporalStatus.CURRENT,
+        retrieved=True,
+        verify_result="SUFFICIENT",
+    )
+    ev2 = EvidenceItem(
+        evidence_id="E2",
+        proposition=text_2,
+        source_class="primary",
+        supports=("H1",),
+        contradicts=("H2",),
+        verification_state=VerificationState.UNVERIFIED,
+        temporal_status=TemporalStatus.CURRENT,
+        retrieved=True,
+        verify_result="SUFFICIENT",
+    )
+
+    ev = (ev1, ev2)
+    gold = (
+        GoldRelation("E1", "H1", "CONTRADICT"),
+        GoldRelation("E1", "H2", "SUPPORT"),
+        GoldRelation("E2", "H1", "SUPPORT"),
+        GoldRelation("E2", "H2", "CONTRADICT"),
+    )
+
+    query_template = QUERY_HARD if retrieval_hard else QUERY_EASY
+    query = query_template.format(subject=subject)
+
+    et = EvidenceTask(
+        task_id=task_id, split="i3_15c",
+        category=f"t2_conflict_late_2_{'retr_hard' if retrieval_hard else 'retr_easy'}",
+        task_summary=query,
+        high_stakes=True, budget_profile="STANDARD",
+        hypotheses=h, evidence_items=ev,
+        retrieve_exposes=(), search_exposes=(),
+        oracle_resolution_path=("VERIFY:E1", "VERIFY:E2", "DEFER"),
+        expected_terminal=DecisionAction.DEFER, correct_hypothesis_id="H2",
+    )
+    return SemanticTask(et, gold, tier="", semantic_class="real_evidence")
+
+
+def _gen_t2_conflict_late_3_task(
+    task_id: str,
+    domain: str,
+    rng: random.Random,
+    retrieval_hard: bool,
+    task_index: int = 0,
+) -> SemanticTask:
+    """T2_CONFLICT_LATE_3_PLUS: T2 fires after RETRIEVE + VERIFY.
+
+    E1 starts SUFFICIENT (contradicts H1 → H1 eliminated at step 0).
+    E2 is hidden — must be RETRIEVE'd first, then VERIFY'd.
+    After RETRIEVE + VERIFY(E2), E2 becomes SUFFICIENT (contradicts H2).
+    T2 fires after retrieval + verification transition.
+
+    Trajectory:
+      step 0: E1 SUFFICIENT (H1 eliminated), E2 hidden → T2 = False → A1
+      step 1: RETRIEVE → E2 exposed as UNVERIFIED
+      step 2: VERIFY(E2) → E2 SUFFICIENT, H2 eliminated → T2 = True → M3
+      step 3+: M3 representation
+
+    Expected terminal: DEFER
+    """
+    subject = DOMAIN_SUBJECTS.get(domain, domain)
+    h = _make_hyps(subject)
+
+    text_1 = CONFLICT_H1_EVIDENCE.get(domain, CONFLICT_H1_EVIDENCE["api_gateway"])
+    text_2 = CONFLICT_H2_EVIDENCE.get(domain, CONFLICT_H2_EVIDENCE["api_gateway"])
+
+    ev1 = EvidenceItem(
+        evidence_id="E1",
+        proposition=text_1,
+        source_class="primary",
+        supports=("H2",),
+        contradicts=("H1",),
+        verification_state=VerificationState.SUFFICIENT,
+        temporal_status=TemporalStatus.CURRENT,
+        retrieved=True,
+        verify_result="SUFFICIENT",
+    )
+    # E2 is hidden — exposed by RETRIEVE, then UNVERIFIED
+    ev2 = EvidenceItem(
+        evidence_id="E2",
+        proposition=text_2,
+        source_class="primary",
+        supports=("H1",),
+        contradicts=("H2",),
+        verification_state=VerificationState.UNVERIFIED,
+        temporal_status=TemporalStatus.CURRENT,
+        retrieved=False,  # hidden initially
+        verify_result="SUFFICIENT",
+    )
+
+    ev = (ev1, ev2)
+    gold = (
+        GoldRelation("E1", "H1", "CONTRADICT"),
+        GoldRelation("E1", "H2", "SUPPORT"),
+        GoldRelation("E2", "H1", "SUPPORT"),
+        GoldRelation("E2", "H2", "CONTRADICT"),
+    )
+
+    query_template = QUERY_HARD if retrieval_hard else QUERY_EASY
+    query = query_template.format(subject=subject)
+
+    et = EvidenceTask(
+        task_id=task_id, split="i3_15c",
+        category=f"t2_conflict_late_3_{'retr_hard' if retrieval_hard else 'retr_easy'}",
+        task_summary=query,
+        high_stakes=True, budget_profile="STANDARD",
+        hypotheses=h, evidence_items=ev,
+        retrieve_exposes=("E2",),  # RETRIEVE exposes E2
+        search_exposes=(),
+        oracle_resolution_path=("RETRIEVE", "VERIFY:E2", "DEFER"),
         expected_terminal=DecisionAction.DEFER, correct_hypothesis_id="H2",
     )
     return SemanticTask(et, gold, tier="", semantic_class="real_evidence")
@@ -496,6 +648,132 @@ def _gen_answer_control_task(
         retrieve_exposes=(), search_exposes=(),
         oracle_resolution_path=("VERIFY:E1", "ANSWER"),
         expected_terminal=DecisionAction.ANSWER, correct_hypothesis_id="H1",
+    )
+    return SemanticTask(et, gold, tier="", semantic_class="real_evidence")
+
+
+# ---------------------------------------------------------------------------
+# Matched T2-negative controls (R11)
+# ---------------------------------------------------------------------------
+
+def _gen_matched_t2_negative_immediate(
+    task_id: str,
+    domain: str,
+    rng: random.Random,
+    retrieval_hard: bool,
+    task_index: int = 0,
+) -> SemanticTask:
+    """Matched control for T2_CONFLICT_IMMEDIATE.
+
+    Same domain, same query, same number of evidence items, same source count.
+    Difference: E2 is UNVERIFIED (not SUFFICIENT), so H2 is NOT eliminated.
+    T2 never fires because only H1 is eliminated.
+
+    T2 POSITIVE:  E1 SUFFICIENT contradicts H1, E2 SUFFICIENT contradicts H2 → T2
+    MATCHED CTRL: E1 SUFFICIENT contradicts H1, E2 UNVERIFIED → H2 alive → no T2
+    """
+    subject = DOMAIN_SUBJECTS.get(domain, domain)
+    h = _make_hyps(subject)
+
+    ev1, ev2_verified = _make_conflict_evidence(domain, "E1", "E2", retrieved=True)
+    # Make E2 UNVERIFIED with neutral relations — H2 stays alive
+    from dataclasses import replace
+    ev2 = replace(ev2_verified,
+                  verification_state=VerificationState.UNVERIFIED,
+                  supports=(),
+                  contradicts=())
+
+    ev = (ev1, ev2)
+    gold = (
+        GoldRelation("E1", "H1", "CONTRADICT"),
+        GoldRelation("E1", "H2", "SUPPORT"),
+        GoldRelation("E2", "H1", "NEUTRAL"),
+        GoldRelation("E2", "H2", "NEUTRAL"),
+    )
+
+    query_template = QUERY_HARD if retrieval_hard else QUERY_EASY
+    query = query_template.format(subject=subject)
+
+    et = EvidenceTask(
+        task_id=task_id, split="i3_15c",
+        category=f"matched_neg_immediate_{'retr_hard' if retrieval_hard else 'retr_easy'}",
+        task_summary=query,
+        high_stakes=True, budget_profile="STANDARD",
+        hypotheses=h, evidence_items=ev,
+        retrieve_exposes=(), search_exposes=(),
+        oracle_resolution_path=("VERIFY:E2", "DEFER"),
+        expected_terminal=DecisionAction.DEFER, correct_hypothesis_id="H2",
+    )
+    return SemanticTask(et, gold, tier="", semantic_class="real_evidence")
+
+
+def _gen_matched_t2_negative_late(
+    task_id: str,
+    domain: str,
+    rng: random.Random,
+    retrieval_hard: bool,
+    task_index: int = 0,
+) -> SemanticTask:
+    """Matched control for T2_CONFLICT_LATE_1.
+
+    Same structure as late_1 but E2's verify_result is MISSING (not SUFFICIENT).
+    After VERIFY(E2), E2 becomes MISSING — H2 is NOT eliminated.
+    T2 never fires even after verification.
+
+    T2 POSITIVE:  E1 SUFFICIENT, E2 UNVERIFIED→SUFFICIENT → both eliminated → T2
+    MATCHED CTRL: E1 SUFFICIENT, E2 UNVERIFIED→MISSING → only H1 eliminated → no T2
+    """
+    subject = DOMAIN_SUBJECTS.get(domain, domain)
+    h = _make_hyps(subject)
+
+    text_1 = CONFLICT_H1_EVIDENCE.get(domain, CONFLICT_H1_EVIDENCE["api_gateway"])
+    text_2 = CONFLICT_H2_EVIDENCE.get(domain, CONFLICT_H2_EVIDENCE["api_gateway"])
+
+    ev1 = EvidenceItem(
+        evidence_id="E1",
+        proposition=text_1,
+        source_class="primary",
+        supports=("H2",),
+        contradicts=("H1",),
+        verification_state=VerificationState.SUFFICIENT,
+        temporal_status=TemporalStatus.CURRENT,
+        retrieved=True,
+        verify_result="SUFFICIENT",
+    )
+    # E2: UNVERIFIED, verify_result is MISSING, and NEUTRAL relations
+    # Key difference: no supports/contradicts → verifying E2 eliminates nothing
+    ev2 = EvidenceItem(
+        evidence_id="E2",
+        proposition=text_2,
+        source_class="primary",
+        supports=(),  # No support — key difference
+        contradicts=(),  # No contradiction — key difference
+        verification_state=VerificationState.UNVERIFIED,
+        temporal_status=TemporalStatus.CURRENT,
+        retrieved=True,
+        verify_result="MISSING",  # Not SUFFICIENT
+    )
+
+    ev = (ev1, ev2)
+    gold = (
+        GoldRelation("E1", "H1", "CONTRADICT"),
+        GoldRelation("E1", "H2", "SUPPORT"),
+        GoldRelation("E2", "H1", "NEUTRAL"),  # Neutral, not SUPPORT
+        GoldRelation("E2", "H2", "NEUTRAL"),  # Neutral, not CONTRADICT
+    )
+
+    query_template = QUERY_HARD if retrieval_hard else QUERY_EASY
+    query = query_template.format(subject=subject)
+
+    et = EvidenceTask(
+        task_id=task_id, split="i3_15c",
+        category=f"matched_neg_late_{'retr_hard' if retrieval_hard else 'retr_easy'}",
+        task_summary=query,
+        high_stakes=True, budget_profile="STANDARD",
+        hypotheses=h, evidence_items=ev,
+        retrieve_exposes=(), search_exposes=(),
+        oracle_resolution_path=("VERIFY:E2", "DEFER"),
+        expected_terminal=DecisionAction.DEFER, correct_hypothesis_id="H2",
     )
     return SemanticTask(et, gold, tier="", semantic_class="real_evidence")
 
@@ -597,6 +875,9 @@ def validate_t2_eligibility(tasks: list[SemanticTask]) -> dict[str, Any]:
         elif category.startswith("t2_conflict_late"):
             stratum = "T2_CONFLICT_LATE"
             results["t2_positive_expected"] += 1
+        elif category.startswith("matched_neg"):
+            stratum = "MATCHED_NEG"
+            results["t2_negative_expected"] += 1
         elif category.startswith("defer_control"):
             stratum = "DEFER_CONTROL"
             results["t2_negative_expected"] += 1
@@ -691,7 +972,9 @@ def generate_i3_15c_corpus(
     tasks: list[SemanticTask] = []
     task_idx = 0
 
-    for stratum in ["t2_conflict_immediate", "t2_conflict_late",
+    for stratum in ["t2_conflict_immediate", "t2_conflict_late_1",
+                    "t2_conflict_late_2", "t2_conflict_late_3",
+                    "matched_neg_immediate", "matched_neg_late",
                     "defer_control", "answer_control"]:
         for retrieval_hard in [False, True]:
             for i in range(n_per_cell):
@@ -700,8 +983,20 @@ def generate_i3_15c_corpus(
                 if stratum == "t2_conflict_immediate":
                     task = _gen_t2_conflict_task(
                         task_id, domain, rng, retrieval_hard, task_index=i)
-                elif stratum == "t2_conflict_late":
+                elif stratum == "t2_conflict_late_1":
                     task = _gen_t2_conflict_late_task(
+                        task_id, domain, rng, retrieval_hard, task_index=i)
+                elif stratum == "t2_conflict_late_2":
+                    task = _gen_t2_conflict_late_2_task(
+                        task_id, domain, rng, retrieval_hard, task_index=i)
+                elif stratum == "t2_conflict_late_3":
+                    task = _gen_t2_conflict_late_3_task(
+                        task_id, domain, rng, retrieval_hard, task_index=i)
+                elif stratum == "matched_neg_immediate":
+                    task = _gen_matched_t2_negative_immediate(
+                        task_id, domain, rng, retrieval_hard, task_index=i)
+                elif stratum == "matched_neg_late":
+                    task = _gen_matched_t2_negative_late(
                         task_id, domain, rng, retrieval_hard, task_index=i)
                 elif stratum == "defer_control":
                     task = _gen_defer_control_task(
