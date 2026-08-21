@@ -348,135 +348,132 @@ def build_user_prompt(state: dict) -> str:
     })
 
 
-def start_llama_server(model_path: str, reasoning_budget: int, port: int = 8080,
-                       gpu_layers: int = 999) -> subprocess.Popen:
-    """Start a llama.cpp server with the given reasoning budget.
-
-    GPU settings are maximized for T4:
-      - ngl 999 = offload ALL layers to GPU (model is only 2.6B Q5, ~2GB, fits easily in 15GB T4)
-      - flash-at on = flash attention for faster KV cache
-      - batch 512 = larger prompt batch for faster prefill
-      - ubatch 512 = larger physical batch
-      - threads 4 = match T4 CPU cores for any CPU-side work
-    """
-    llama_server = "/content/llama.cpp/build/bin/llama-server"
-
-    cmd = [
-        llama_server,
-        "-m", model_path,
-        "--host", "127.0.0.1",
-        "--port", str(port),
-        "-ngl", str(gpu_layers),      # ALL layers on GPU
-        "--reasoning-budget", str(reasoning_budget),
-        "-c", "4096",
-        "-b", "512",                  # larger prompt batch
-        "-ub", "512",                 # larger physical batch
-        "--temp", "0.0",
-        "--seed", "42",
-        "--threads", "4",
-        "--flash-at", "1",            # flash attention for speed
-        "--no-mmap",                  # load fully into RAM for speed
-        "--cont-batching",            # enable continuous batching
-    ]
-
-    print(f"  Starting llama-server: reasoning_budget={reasoning_budget}, port={port}, ngl={gpu_layers}, flash-at=1, batch=512")
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-    # Wait for server to be ready
-    import urllib.request
-    for _ in range(60):
-        try:
-            urllib.request.urlopen(f"http://127.0.0.1:{port}/v1/models", timeout=2)
-            print(f"  Server ready on port {port}")
-            return proc
-        except Exception:
-            time.sleep(1)
-
-    proc.terminate()
-    raise RuntimeError(f"llama-server failed to start within 60s (reasoning_budget={reasoning_budget})")
-
-
-def stop_llama_server(proc: subprocess.Popen):
-    """Stop the llama.cpp server."""
-    proc.terminate()
-    try:
-        proc.wait(timeout=10)
-    except subprocess.TimeoutExpired:
-        proc.kill()
-    print(f"  Server stopped")
-
-
 def run_budget_qualification(model_path: str, reasoning_budget: int,
                              max_tokens: int, test_states: list[dict],
                              port: int = 8080) -> dict:
-    """Run qualification for a single reasoning budget."""
+    """Run qualification for a single reasoning budget using llama-cpp-python.
+
+    Uses the Python API directly with GPU offload for maximum speed.
+    No server build required — uses pre-built CUDA wheel.
+    """
+    from llama_cpp import Llama
+
     print(f"\n{'='*80}")
     print(f"REASONING BUDGET = {reasoning_budget}")
     print(f"{'='*80}")
 
-    # Start server
-    proc = start_llama_server(model_path, reasoning_budget, port)
+    # Load model with GPU offload
+    # n_gpu_layers=-1 offloads ALL layers to GPU
+    # The 2.6B Q5_K_M model is ~1.94GB, fits easily in T4's 15GB VRAM
+    llm = Llama(
+        model_path=model_path,
+        n_gpu_layers=-1,
+        n_ctx=4096,
+        n_batch=512,
+        temperature=0.0,
+        seed=42,
+        verbose=False,
+    )
+    print(f"  Model loaded with GPU offload (reasoning_budget={reasoning_budget})")
 
+    results = []
+    for state in test_states:
+        user_prompt = build_user_prompt(state)
+        t0 = time.time()
+        try:
+            # Use chat completion API
+            response = llm.create_chat_completion(
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": user_prompt},
+                ],
+                max_tokens=max_tokens,
+                temperature=0.0,
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "action_proposal",
+                        "strict": True,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "action": {
+                                    "type": "string",
+                                    "enum": ["ANSWER", "RETRIEVE", "VERIFY",
+                                             "SEARCH_MORE", "REASON_MORE",
+                                             "DEFER", "STOP"],
+                                },
+                                "reason_code": {
+                                    "type": "string",
+                                    "pattern": "^[A-Z][A-Z0-9_]*$",
+                                },
+                                "target_id": {"type": ["string", "null"]},
+                            },
+                            "required": ["action", "reason_code", "target_id"],
+                            "additionalProperties": False,
+                        },
+                    },
+                },
+            )
+            latency_ms = int((time.time() - t0) * 1000)
+            choice = response["choices"][0]
+            raw_output = choice["message"]["content"] or ""
+            finish_reason = choice.get("finish_reason")
+            usage = response.get("usage", {})
+            completion_tokens = usage.get("completion_tokens", 0)
+            reasoning_tokens = usage.get("completion_tokens_details", {}).get("reasoning_tokens", 0)
+
+            decoded = decode_output(raw_output, strict=True)
+            action = decoded.proposal.action.value if (decoded.valid and decoded.proposal) else "FAIL_CLOSED"
+            correct = (action == state["expected_action"])
+
+            results.append({
+                "state_id": state["id"],
+                "representation": state["representation"],
+                "expected_action": state["expected_action"],
+                "actual_action": action,
+                "correct": correct,
+                "decoder_valid": decoded.valid,
+                "finish_reason": finish_reason,
+                "completion_tokens": completion_tokens,
+                "reasoning_tokens": reasoning_tokens,
+                "latency_ms": latency_ms,
+                "raw_output": raw_output[:200] if raw_output else "",
+            })
+
+            print(f"  {state['id']:20s}  expected={state['expected_action']:12s}  "
+                  f"got={action:12s}  {'OK' if correct else 'MISS'}  "
+                  f"tokens={completion_tokens}  latency={latency_ms}ms  "
+                  f"finish={finish_reason}")
+
+        except Exception as e:
+            latency_ms = int((time.time() - t0) * 1000)
+            results.append({
+                "state_id": state["id"],
+                "representation": state["representation"],
+                "expected_action": state["expected_action"],
+                "actual_action": "BACKEND_ERROR",
+                "correct": False,
+                "decoder_valid": False,
+                "finish_reason": None,
+                "completion_tokens": 0,
+                "reasoning_tokens": 0,
+                "latency_ms": latency_ms,
+                "raw_output": str(e)[:200],
+            })
+            print(f"  {state['id']:20s}  expected={state['expected_action']:12s}  "
+                  f"got=BACKEND_ERROR  MISS  error={str(e)[:80]}")
+
+    # Free model from memory
+    del llm
+    import gc
+    gc.collect()
     try:
-        backend = LocalLlamaBackend(
-            model_name="LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M",
-            base_url=f"http://127.0.0.1:{port}/v1",
-            timeout_seconds=120,
-        )
-
-        results = []
-        for state in test_states:
-            user_prompt = build_user_prompt(state)
-            t0 = time.time()
-            try:
-                call = backend.generate(
-                    system_prompt=SYSTEM_PROMPT,
-                    user_prompt=user_prompt,
-                    temperature=0.0,
-                    max_tokens=max_tokens,
-                )
-                decoded = decode_output(call.raw_output, strict=True)
-                action = decoded.proposal.action.value if (decoded.valid and decoded.proposal) else "FAIL_CLOSED"
-                correct = (action == state["expected_action"])
-
-                results.append({
-                    "state_id": state["id"],
-                    "representation": state["representation"],
-                    "expected_action": state["expected_action"],
-                    "actual_action": action,
-                    "correct": correct,
-                    "decoder_valid": decoded.valid,
-                    "finish_reason": call.finish_reason,
-                    "completion_tokens": call.completion_tokens,
-                    "reasoning_tokens": call.reasoning_tokens,
-                    "latency_ms": call.latency_ms,
-                    "raw_output": call.raw_output[:200] if call.raw_output else "",
-                })
-
-                print(f"  {state['id']:20s}  expected={state['expected_action']:12s}  "
-                      f"got={action:12s}  {'OK' if correct else 'MISS'}  "
-                      f"tokens={call.completion_tokens}  latency={call.latency_ms}ms  "
-                      f"finish={call.finish_reason}")
-
-            except Exception as e:
-                results.append({
-                    "state_id": state["id"],
-                    "representation": state["representation"],
-                    "expected_action": state["expected_action"],
-                    "actual_action": "BACKEND_ERROR",
-                    "correct": False,
-                    "decoder_valid": False,
-                    "finish_reason": None,
-                    "completion_tokens": 0,
-                    "reasoning_tokens": 0,
-                    "latency_ms": int((time.time() - t0) * 1000),
-                    "raw_output": str(e)[:200],
-                })
-                print(f"  {state['id']:20s}  expected={state['expected_action']:12s}  "
-                      f"got=BACKEND_ERROR  MISS  error={str(e)[:80]}")
-
-    finally:
-        stop_llama_server(proc)
+        import torch
+        torch.cuda.empty_cache()
+    except ImportError:
+        pass
+    print(f"  Model unloaded")
 
     # Compute metrics
     n = len(results)

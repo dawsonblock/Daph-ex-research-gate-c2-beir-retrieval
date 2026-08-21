@@ -1,14 +1,17 @@
-"""R9 runner: Install llama.cpp, download Liquid model, run reasoning-budget qualification.
+"""R9 runner: Install llama-cpp-python (pre-built CUDA wheel), download model, run qualification.
 
 This script runs ON the Colab VM. It:
-1. Installs llama.cpp with CUDA support
+1. Installs llama-cpp-python with CUDA support (pre-built wheel — no build needed)
 2. Downloads LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M
 3. Runs the R9a reasoning-budget qualification
 4. Saves results
+
+Much faster than building llama.cpp from source (~2 min vs ~40 min).
 """
 import os
 import subprocess
 import sys
+import json
 from pathlib import Path
 
 def run(cmd, check=True):
@@ -21,28 +24,28 @@ def run(cmd, check=True):
 def main():
     os.chdir("/content")
 
-    # Step 1: Install llama.cpp with CUDA
+    # Step 1: Install llama-cpp-python with CUDA (pre-built wheel)
     print("=" * 80)
-    print("STEP 1: Install llama.cpp with CUDA")
+    print("STEP 1: Install llama-cpp-python with CUDA")
     print("=" * 80)
 
-    if not os.path.exists("/content/llama.cpp"):
-        run("git clone https://github.com/ggml-org/llama.cpp.git")
-    else:
-        print("llama.cpp already cloned")
+    # Check if already installed
+    try:
+        import llama_cpp
+        print(f"llama-cpp-python already installed: {llama_cpp.__version__}")
+    except ImportError:
+        print("Installing llama-cpp-python with CUDA support...")
+        run(f"{sys.executable} -m pip install llama-cpp-python "
+            f"--extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cu121 2>&1 | tail -5")
+        import llama_cpp
+        print(f"llama-cpp-python installed: {llama_cpp.__version__}")
 
-    os.chdir("/content/llama.cpp")
-    # Maximize build parallelism — T4 has 4 CPU cores, use them all
-    nproc = os.cpu_count() or 4
-    run(f"cmake -B build -DGGML_CUDA=ON -DCMAKE_BUILD_TYPE=Release 2>&1 | tail -5")
-    run(f"cmake --build build --config Release -j {nproc} 2>&1 | tail -10")
-    os.chdir("/content")
-
-    llama_server = "/content/llama.cpp/build/bin/llama-server"
-    if not os.path.exists(llama_server):
-        print(f"ERROR: {llama_server} not found after build")
-        sys.exit(1)
-    print(f"llama-server built: {llama_server}")
+    # Verify CUDA is available
+    import torch
+    print(f"CUDA available: {torch.cuda.is_available()}")
+    if torch.cuda.is_available():
+        print(f"GPU: {torch.cuda.get_device_name(0)}")
+        print(f"VRAM: {torch.cuda.get_device_properties(0).total_memory / 1e9:.2f} GB")
 
     # Step 2: Download Liquid model
     print("\n" + "=" * 80)
@@ -50,16 +53,16 @@ def main():
     print("=" * 80)
 
     model_dir = "/content/models"
-    model_path = f"{model_dir}/LFM2.5-2B-Q5_K_M.gguf"
+    model_path = f"{model_dir}/LFM2.5-2.6B-Q5_K_M.gguf"
     os.makedirs(model_dir, exist_ok=True)
 
     if not os.path.exists(model_path):
-        run("pip install -U huggingface_hub 2>&1 | tail -3")
+        run(f"{sys.executable} -m pip install -U huggingface_hub 2>&1 | tail -3")
         from huggingface_hub import hf_hub_download
         print("Downloading model...")
         downloaded = hf_hub_download(
-            repo_id="LiquidAI/LFM2.5-2B-GGUF",
-            filename="LFM2.5-2B-Q5_K_M.gguf",
+            repo_id="LiquidAI/LFM2.5-2.6B-GGUF",
+            filename="LFM2.5-2.6B-Q5_K_M.gguf",
             local_dir=model_dir,
         )
         model_path = str(downloaded)
@@ -67,7 +70,6 @@ def main():
     else:
         print(f"Model already exists: {model_path}")
 
-    # Verify model file
     size_gb = os.path.getsize(model_path) / 1e9
     print(f"Model size: {size_gb:.2f} GB")
 
@@ -89,7 +91,7 @@ def main():
     print(f"Repo commit: {commit}")
 
     # Install Python deps
-    run("pip install -r requirements.txt 2>&1 | tail -5 || true")
+    run(f"{sys.executable} -m pip install -r requirements.txt 2>&1 | tail -5 || true")
 
     # Step 4: Run R9a reasoning-budget qualification
     print("\n" + "=" * 80)
@@ -98,12 +100,11 @@ def main():
 
     output_path = "/content/r9_results.json"
     cmd = (
-        f"cd {repo_dir} && PYTHONPATH=. python3 tools/colab/r9_reasoning_budget.py "
+        f"cd {repo_dir} && PYTHONPATH=. {sys.executable} tools/colab/r9_reasoning_budget.py "
         f"--model-path {model_path} "
         f"--output {output_path} "
         f"--budgets 0,64,128,256,512,1024 "
-        f"--max-tokens 2048 "
-        f"--port 8080"
+        f"--max-tokens 2048"
     )
     print(f"Running: {cmd}")
     run(cmd)
@@ -113,7 +114,6 @@ def main():
     print("R9a COMPLETE")
     print("=" * 80)
 
-    import json
     with open(output_path) as f:
         results = json.load(f)
 
