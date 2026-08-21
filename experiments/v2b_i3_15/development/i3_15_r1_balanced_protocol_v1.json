@@ -33,18 +33,43 @@
     "llama_cpp_version": "b10217-ddd4ec142",
     "context_size": 131072,
     "temperature": 0.0,
-    "max_tokens": 2048,
+    "max_tokens": 4096,
     "top_p": 1.0,
     "top_k": 40,
     "repeat_penalty": 1.0,
     "seed": 42,
+    "response_format": "json_schema",
+    "strict_decode": true,
     "threads": "auto",
     "gpu_layers": "all (Metal)",
     "base_url": "http://127.0.0.1:8080/v1",
-    "determinism_verified": true,
-    "determinism_n_calls": 25,
-    "determinism_unique_outputs": 1
+    "determinism_verified": false,
+    "determinism_note": "Previous 25-call result predates production JSON-schema constraint and is not applicable to this frozen configuration."
   },
+  "qualification": {
+    "schema_gate": {
+      "json_validity_min": 0.95,
+      "decoder_success_min": 0.95,
+      "fail_closed_max": 0.05,
+      "distinct_actions_min": 4
+    },
+    "production_serializer_policy_gate": {
+      "n_states": 20,
+      "overall_accuracy_min": 0.70,
+      "verify_accuracy_min": 0.75,
+      "answer_accuracy_min": 0.75,
+      "defer_accuracy_min": 0.75,
+      "non_defer_immediate_defer_rate_max": 0.20
+    },
+    "experiment_requires_explicit_flag": "--run-experiment"
+  },
+  "invalidated_runs": [
+    {
+      "path": "i3_15_r1_balanced_results_INVALID",
+      "status": "INVALID_LOCAL_POLICY_COLLAPSE",
+      "reason": "Production responses were not constrained to JSON; tool-call or malformed outputs decoded fail-closed to DEFER, producing 900/900 terminal DEFER actions."
+    }
+  ],
   "arms": {
     "A1_INFERRED": "Baseline with affordances, inferred semantic relations",
     "R1_INFERRED": "MDSG governor with T2 phase detector, inferred semantic relations"

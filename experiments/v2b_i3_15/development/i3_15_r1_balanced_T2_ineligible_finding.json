@@ -1,0 +1,41 @@
+{
+  "benchmark_id": "i3_15_r1_balanced",
+  "status": "T2_INELIGIBLE",
+  "finding_date": "2025-01-15",
+  "finding": "P(T2=1) = 0 for all 150 I3.15-balanced tasks, even with all evidence at gold verification state.",
+  "root_cause": "T2 requires len(eliminated_hypotheses) == n_hypotheses. A hypothesis is ELIMINATED only when there is SUFFICIENT, CURRENT evidence that contradicts it. I3.15 tasks never produce this state: ANSWER tasks have SUFFICIENT evidence supporting H1 (H2 eliminated, H1 VIABLE); DEFER tasks have FALSIFIED evidence (does not trigger elimination).",
+  "consequence": "R1 is functionally identical to A1 on this benchmark. The representation switch (A1->M3) never occurs. The benchmark cannot estimate the R1 representation-switch effect.",
+  "interpretation": "This is a benchmark-design failure, not an R1 result. R1 has not been tested on this benchmark.",
+  "action": "Preserve as negative/control artifact. Do not alter T2. Create i3_15_t2_eligible as successor benchmark.",
+  "oracle_path_analysis": {
+    "total_tasks": 150,
+    "actions_in_oracle_paths": {
+      "VERIFY": {"steps": 200, "tasks": 150, "pct": 57.1},
+      "ANSWER": {"steps": 77, "tasks": 77, "pct": 22.0},
+      "DEFER": {"steps": 73, "tasks": 73, "pct": 20.9},
+      "SEARCH_MORE": {"steps": 0, "tasks": 0, "pct": 0.0},
+      "REASON_MORE": {"steps": 0, "tasks": 0, "pct": 0.0},
+      "RETRIEVE": {"steps": 0, "tasks": 0, "pct": 0.0}
+    },
+    "t2_reachable_with_gold_state": "0/150"
+  },
+  "policy_gate_result": {
+    "passed": true,
+    "backend_classification": "PARTIAL_ACTION_POLICY",
+    "unreliable_actions": ["SEARCH_MORE", "REASON_MORE"],
+    "core_action_accuracy": {
+      "VERIFY": 1.0,
+      "ANSWER": 1.0,
+      "DEFER": 0.75,
+      "RETRIEVE": 1.0
+    },
+    "representation_asymmetry_pp": 12.5
+  },
+  "smoke_test_result": {
+    "passed": false,
+    "criteria_passed": ["S3", "S4", "S5", "S7", "S9", "S10"],
+    "criteria_failed": ["S1", "S2", "S6", "S8", "S11"],
+    "s6_s8_s11_cause": "T2 structurally never fires — not a model or backend issue",
+    "s1_s2_cause": "Empty output at 4096-token budget (finish_reason=length) on DEFER tasks with harder evidence states"
+  }
+}

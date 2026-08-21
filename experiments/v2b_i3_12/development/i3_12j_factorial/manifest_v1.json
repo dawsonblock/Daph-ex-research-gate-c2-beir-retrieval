@@ -12,6 +12,8 @@
   ],
   "seed": 42,
   "n_per_category": 22,
+  "extractor_version": "2.6.0",
+  "extractor_sha256": "8df7e942b690b5c37ab38d951bc17c0600a196ce01bfa6745c203b91d5d384d9",
   "task_ids": [
     "i3_12_s1_0000",
     "i3_12_s1_0001",
@@ -615,6 +617,5 @@
     "early_false_ready",
     "early_false_ready",
     "early_false_ready"
-  ],
-  "corpus_sha256": "f85c9f9686debc2f8b255410c6ba8b7fc5fbac81698dd8ca8e12e8da9da7f8c4"
+  ]
 }

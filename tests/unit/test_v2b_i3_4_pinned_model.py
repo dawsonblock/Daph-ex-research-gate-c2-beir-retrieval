@@ -17,7 +17,7 @@ from hrm_adaptive_memory.executive.controller_protocol import ControllerProtocol
 from hrm_adaptive_memory.executive.metareasoning_controller import (
     ControllerObservation, MatchedMetareasoningController, ObservationMask,
     STATE_AWARE_MASK, STATE_BLIND_MASK, apply_observation_mask)
-from hrm_adaptive_memory.executive.model_backend import StubBackend
+from hrm_adaptive_memory.executive.model_backend import LocalLlamaBackend, StubBackend
 from hrm_adaptive_memory.executive.model_decoder import (
     DecoderOutcome, decode_output, OUTPUT_SCHEMA, VALID_ACTION_NAMES)
 from hrm_adaptive_memory.executive.model_packet import (
@@ -265,6 +265,84 @@ def test_decoder_rejects_trailing_garbage_after_json():
     outcome = decode_output(raw)
     assert outcome.valid
     assert outcome.proposal.action is DecisionAction.STOP
+
+
+def test_local_llama_backend_enforces_action_json_schema(monkeypatch):
+    captured = {}
+    # LOCAL_POLICY_V2: the JSON-schema constraint guarantees structural
+    # validity at the provider level, so the mocked provider response is
+    # already schema-valid (uppercase reason_code matching the pattern).
+    provider_raw = '{"action":"VERIFY","reason_code":"VERIFY_EVIDENCE","target_id":"E1"}'
+
+    class Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return json.dumps({
+                "model": "local-test",
+                "system_fingerprint": "test-fingerprint",
+                "choices": [{
+                    "message": {"content": provider_raw},
+                    "finish_reason": "stop",
+                }],
+                "usage": {"prompt_tokens": 10, "completion_tokens": 4},
+            }).encode()
+
+    def urlopen(request, timeout):
+        captured["payload"] = json.loads(request.data)
+        captured["timeout"] = timeout
+        return Response()
+
+    monkeypatch.setattr("urllib.request.urlopen", urlopen)
+    result = LocalLlamaBackend().generate(
+        system_prompt="system", user_prompt="packet",
+        temperature=0.0, max_tokens=4096)
+
+    response_format = captured["payload"]["response_format"]
+    schema = response_format["json_schema"]["schema"]
+    assert response_format["type"] == "json_schema"
+    assert response_format["json_schema"]["strict"] is True
+    assert schema["properties"]["action"]["enum"] == [
+        "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
+        "REASON_MORE", "DEFER", "STOP",
+    ]
+    assert schema["additionalProperties"] is False
+    assert captured["payload"]["seed"] == 42
+    # LOCAL_POLICY_V2: no normalization — raw_output == provider_raw_output
+    assert result.provider_raw_output == provider_raw
+    assert result.raw_output == provider_raw
+    assert not result.normalization_applied
+    assert result.provider_raw_sha256 == result.normalized_sha256
+    # Provenance hashes are populated
+    assert result.json_schema_sha256
+    assert result.system_prompt_sha256
+    assert result.user_packet_sha256
+    assert result.request_sha256
+    assert decode_output(result.raw_output, strict=True).valid
+
+
+def test_local_llama_backend_does_not_repair_tool_call_syntax():
+    """LOCAL_POLICY_V2: tool-call syntax is passed through unchanged.
+    The strict decoder rejects it — no repair is performed."""
+    raw = (
+        "<|tool_call_start|>[VERIFY(target_id='E1', "
+        "reason_code='CONTRADICTION')]<|tool_call_end|>"
+    )
+    outcome = decode_output(raw, strict=True)
+    assert not outcome.valid
+
+
+def test_local_llama_backend_does_not_invent_target_id():
+    """LOCAL_POLICY_V2: missing target_id is not invented.
+    The strict decoder rejects it with MISSING_TARGET_ID."""
+    raw = '{"action":"VERIFY","reason_code":"VERIFY_EVIDENCE"}'
+    outcome = decode_output(raw, strict=True)
+    assert not outcome.valid
+    assert outcome.rejection_code == "MISSING_TARGET_ID"
 
 
 def test_packet_rejects_condition_identity_in_string_values():

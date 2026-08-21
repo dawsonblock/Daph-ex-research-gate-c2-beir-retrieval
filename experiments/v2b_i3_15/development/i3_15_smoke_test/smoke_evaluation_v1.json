@@ -1,0 +1,59 @@
+{
+  "config_id": "LOCAL_POLICY_V2",
+  "prompt_adapter": "shared_action_semantics_v1",
+  "criteria": {
+    "S1_decoder_failures_zero": {
+      "value": 4,
+      "passed": false
+    },
+    "S2_fail_closed_zero": {
+      "value": 4,
+      "passed": false
+    },
+    "S3_terminal_includes_answer_and_defer": {
+      "terminals": [
+        "ANSWER",
+        "DEFER"
+      ],
+      "passed": true
+    },
+    "S4_intermediate_includes_verify": {
+      "intermediate_actions": [
+        "VERIFY"
+      ],
+      "passed": true
+    },
+    "S5_some_multi_step": {
+      "max_steps": 3,
+      "multi_step_count": 6,
+      "passed": true
+    },
+    "S6_r1_t2_fires": {
+      "t2_fired_count": 0,
+      "n_r1_trajectories": 5,
+      "passed": false
+    },
+    "S7_r1_untriggered": {
+      "t2_not_fired_count": 5,
+      "passed": true
+    },
+    "S8_a1_r1_divergence": {
+      "divergent_count": 0,
+      "n_pairs": 5,
+      "passed": false
+    },
+    "S9_q3_evidence_in_packet": {
+      "trajectories_with_packet_hash": 10,
+      "passed": true
+    },
+    "S10_packet_hash_diversity": {
+      "unique_packet_hashes": 9,
+      "passed": true
+    },
+    "S11_r1_post_t2_packet_differs": {
+      "details": [],
+      "passed": false
+    }
+  },
+  "all_passed": false
+}

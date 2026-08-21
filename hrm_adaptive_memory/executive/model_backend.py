@@ -35,7 +35,23 @@ from .i3_4_retry_policy import (
 
 @dataclass(frozen=True)
 class ModelCallResult:
-    """Raw output and metadata from one model invocation."""
+    """Raw output and metadata from one model invocation.
+
+    For backends that normalize output (e.g. LocalLlamaBackend),
+    ``raw_output`` contains the normalized output that the decoder
+    will consume, while ``provider_raw_output`` preserves the
+    exact bytes returned by the provider for provenance.
+    When no normalization is applied, both fields are identical.
+
+    LOCAL_POLICY_V2 provenance fields (populated by LocalLlamaBackend):
+      - ``json_schema_sha256``: SHA-256 of the JSON schema sent to the
+        provider for constrained generation.
+      - ``system_prompt_sha256``: SHA-256 of the full system prompt
+        (including any action-semantics adapter suffix).
+      - ``user_packet_sha256``: SHA-256 of the user prompt (evidence
+        packet).
+      - ``request_sha256``: SHA-256 of the full request payload.
+    """
 
     raw_output: str
     prompt_tokens: int
@@ -45,6 +61,24 @@ class ModelCallResult:
     model_name: str
     system_fingerprint: str | None
     finish_reason: str | None
+    provider_raw_output: str = ""
+    # LOCAL_POLICY_V2 provenance (optional; populated by LocalLlamaBackend)
+    json_schema_sha256: str = ""
+    system_prompt_sha256: str = ""
+    user_packet_sha256: str = ""
+    request_sha256: str = ""
+
+    @property
+    def provider_raw_sha256(self) -> str:
+        return hashlib.sha256(self.provider_raw_output.encode()).hexdigest()
+
+    @property
+    def normalized_sha256(self) -> str:
+        return hashlib.sha256(self.raw_output.encode()).hexdigest()
+
+    @property
+    def normalization_applied(self) -> bool:
+        return self.provider_raw_output != self.raw_output
 
 
 @runtime_checkable
@@ -192,6 +226,7 @@ class DeepSeekBackend:
                     model_name=body.get("model", self.config.model),
                     system_fingerprint=body.get("system_fingerprint"),
                     finish_reason=choice.get("finish_reason"),
+                    provider_raw_output=raw_output,
                 )
                 # Emit success receipt.
                 receipt = make_call_receipt(
@@ -303,6 +338,7 @@ class StubBackend:
             model_name=self.model_name,
             system_fingerprint=None,
             finish_reason="stop",
+            provider_raw_output=response,
         )
 
 
@@ -317,6 +353,9 @@ class LocalLlamaBackend:
     This backend is designed for reproducible local inference using
     GGUF-quantized models such as LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M.
 
+    Includes retry logic with exponential backoff for connection errors,
+    which is essential when multiple workers hit the server concurrently.
+
     Frozen configuration for scientific runs should record:
       - model repository and quantization
       - GGUF SHA-256
@@ -327,7 +366,9 @@ class LocalLlamaBackend:
 
     model_name: str = "LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M"
     base_url: str = "http://127.0.0.1:8080/v1"
-    timeout_seconds: int = 120
+    timeout_seconds: int = 300
+    max_retries: int = 5
+    retry_backoff_seconds: float = 2.0
     # Metadata for call receipts (set by the experiment runner)
     experiment_id: str = ""
     pair_id: str = ""
@@ -335,12 +376,44 @@ class LocalLlamaBackend:
     condition: str = ""
     _call_counter: int = field(default=0, repr=False, init=False)
 
+    # NOTE: LOCAL_POLICY_V2 removes the previous _normalize_output method.
+    # The llama.cpp JSON-schema constraint (strict=True, with the
+    # ^[A-Z][A-Z0-9_]*$ pattern on reason_code) guarantees structural
+    # validity at the provider level.  Provider output is passed directly
+    # to the strict decoder with no semantic normalization.  If the
+    # provider emits malformed output despite the schema, the decoder
+    # rejects it and the runtime fails closed — no repair is performed.
+
     def generate(self, *, system_prompt: str, user_prompt: str,
                  temperature: float, max_tokens: int) -> ModelCallResult:
-        """Generate a model response via the local llama.cpp server."""
+        """Generate a model response via the local llama.cpp server.
+
+        Retries on connection errors with exponential backoff.
+        The llama.cpp server has a limited number of slots (default 4),
+        so concurrent requests may be rejected temporarily.
+        """
         import urllib.error
         import urllib.request
 
+        action_schema = {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
+                        "REASON_MORE", "DEFER", "STOP",
+                    ],
+                },
+                "reason_code": {
+                    "type": "string",
+                    "pattern": "^[A-Z][A-Z0-9_]*$",
+                },
+                "target_id": {"type": ["string", "null"]},
+            },
+            "required": ["action", "reason_code", "target_id"],
+            "additionalProperties": False,
+        }
         payload = json.dumps({
             "model": self.model_name,
             "messages": [
@@ -349,40 +422,89 @@ class LocalLlamaBackend:
             ],
             "temperature": temperature,
             "max_tokens": max_tokens,
+            "top_p": 1.0,
+            "top_k": 40,
+            "repeat_penalty": 1.0,
+            "seed": 42,
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "action_proposal",
+                    "strict": True,
+                    "schema": action_schema,
+                },
+            },
         }).encode()
 
-        request = urllib.request.Request(
-            f"{self.base_url}/chat/completions",
-            data=payload,
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
-        start = time.monotonic()
-        try:
-            with urllib.request.urlopen(
-                    request, timeout=self.timeout_seconds) as response:
-                body = json.loads(response.read())
-            latency = int((time.monotonic() - start) * 1000)
-            choice = body["choices"][0]
-            usage = body.get("usage", {})
-            raw_output = choice["message"]["content"] or ""
-            timings = body.get("timings", {})
-            result = ModelCallResult(
-                raw_output=raw_output,
-                prompt_tokens=usage.get("prompt_tokens", 0),
-                completion_tokens=usage.get("completion_tokens", 0),
-                reasoning_tokens=usage.get("completion_tokens_details", {}).get("reasoning_tokens", 0),
-                latency_ms=latency,
-                model_name=body.get("model", self.model_name),
-                system_fingerprint=body.get("system_fingerprint"),
-                finish_reason=choice.get("finish_reason"),
-            )
-            self._call_counter += 1
-            return result
+        # LOCAL_POLICY_V2 provenance hashes
+        schema_sha = hashlib.sha256(
+            json.dumps(action_schema, sort_keys=True).encode()).hexdigest()
+        prompt_sha = hashlib.sha256(system_prompt.encode()).hexdigest()
+        packet_sha = hashlib.sha256(user_prompt.encode()).hexdigest()
+        request_sha = hashlib.sha256(payload).hexdigest()
 
-        except urllib.error.HTTPError as exc:
-            raise RuntimeError(
-                f"Local llama server returned HTTP {exc.code}: {exc}") from exc
-        except (urllib.error.URLError, TimeoutError, OSError) as exc:
-            raise RuntimeError(
-                f"Local llama server connection failed: {exc}") from exc
+        last_error: Exception | None = None
+
+        for attempt in range(self.max_retries):
+            request = urllib.request.Request(
+                f"{self.base_url}/chat/completions",
+                data=payload,
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            start = time.monotonic()
+            try:
+                with urllib.request.urlopen(
+                        request, timeout=self.timeout_seconds) as response:
+                    body = json.loads(response.read())
+                latency = int((time.monotonic() - start) * 1000)
+                choice = body["choices"][0]
+                usage = body.get("usage", {})
+                provider_raw = choice["message"]["content"] or ""
+                # LOCAL_POLICY_V2: no normalization.  The JSON-schema
+                # constraint guarantees structural validity at the provider
+                # level.  Provider output is passed directly to the strict
+                # decoder.
+                raw_output = provider_raw
+                result = ModelCallResult(
+                    raw_output=raw_output,
+                    prompt_tokens=usage.get("prompt_tokens", 0),
+                    completion_tokens=usage.get("completion_tokens", 0),
+                    reasoning_tokens=usage.get("completion_tokens_details", {}).get("reasoning_tokens", 0),
+                    latency_ms=latency,
+                    model_name=body.get("model", self.model_name),
+                    system_fingerprint=body.get("system_fingerprint"),
+                    finish_reason=choice.get("finish_reason"),
+                    provider_raw_output=provider_raw,
+                    json_schema_sha256=schema_sha,
+                    system_prompt_sha256=prompt_sha,
+                    user_packet_sha256=packet_sha,
+                    request_sha256=request_sha,
+                )
+                self._call_counter += 1
+                return result
+
+            except urllib.error.HTTPError as exc:
+                latency = int((time.monotonic() - start) * 1000)
+                last_error = exc
+                # HTTP 503 = server busy, retry
+                if exc.code == 503 and attempt < self.max_retries - 1:
+                    backoff = self.retry_backoff_seconds * (2 ** attempt)
+                    time.sleep(backoff)
+                    continue
+                raise RuntimeError(
+                    f"Local llama server returned HTTP {exc.code}: {exc}") from exc
+
+            except (urllib.error.URLError, TimeoutError, OSError) as exc:
+                latency = int((time.monotonic() - start) * 1000)
+                last_error = exc
+                if attempt < self.max_retries - 1:
+                    backoff = self.retry_backoff_seconds * (2 ** attempt)
+                    time.sleep(backoff)
+                    continue
+                raise RuntimeError(
+                    f"Local llama server connection failed after "
+                    f"{self.max_retries} retries: {exc}") from exc
+
+        raise RuntimeError(
+            f"Local llama server failed after {self.max_retries} retries: {last_error}")

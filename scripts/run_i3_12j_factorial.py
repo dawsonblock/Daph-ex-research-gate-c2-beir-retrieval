@@ -127,6 +127,9 @@ def run_trajectory_i3_12(
     fork_label: str,
     snapshot_builder: Callable,
     backend_factory: Callable | None = None,
+    strict_decode: bool = True,
+    max_tokens: int = 2048,
+    system_prompt_transform: Callable[[str], str] | None = None,
 ) -> dict[str, Any]:
     """Run a full trajectory with parameterized snapshot builder.
 
@@ -156,6 +159,7 @@ def run_trajectory_i3_12(
     total_action_cost = 0.0
     terminal_reward = 0.0
     decision_state_log: list[dict[str, Any]] = []
+    model_call_log: list[dict[str, Any]] = []
 
     prior_actions: list[str] = []
     prior_outcomes: list[str] = []
@@ -177,6 +181,9 @@ def run_trajectory_i3_12(
         else:
             raise ValueError(f"Unknown mode: {mode}")
 
+        if system_prompt_transform is not None:
+            system_prompt = system_prompt_transform(system_prompt)
+
         if mode == "MDSG_STATE_WITH_AFFORDANCES":
             ds = packet.get("decision_state_summary", {})
             decision_state_log.append({
@@ -187,6 +194,13 @@ def run_trajectory_i3_12(
             })
 
         user_prompt = i3_7e.evidence_packet_json(packet)
+        call_log: dict[str, Any] = {
+            "step": step_id,
+            "representation": mode,
+            "packet_schema": packet.get("schema"),
+            "system_prompt_sha256": hashlib.sha256(system_prompt.encode()).hexdigest(),
+            "packet_sha256": hashlib.sha256(user_prompt.encode()).hexdigest(),
+        }
 
         backend = (backend_factory() if backend_factory else DeepSeekBackend())
         backend.task_id = task.task_id
@@ -197,16 +211,44 @@ def run_trajectory_i3_12(
         try:
             call_result = backend.generate(
                 system_prompt=system_prompt, user_prompt=user_prompt,
-                temperature=0.0, max_tokens=2048)
-        except Exception:
+                temperature=0.0, max_tokens=max_tokens)
+        except Exception as exc:
             backend_errors += 1
             proposal = i3_7e.BACKEND_ERROR_PROPOSAL
+            call_log.update({
+                "result_class": "backend_error",
+                "error_type": type(exc).__name__,
+                "error_message": str(exc),
+                "decoder_valid": False,
+                "decoder_rejection_code": None,
+                "fail_closed": True,
+            })
         else:
-            outcome = decode_output(call_result.raw_output, strict=True)
+            provider_raw = call_result.provider_raw_output or call_result.raw_output
+            outcome = decode_output(call_result.raw_output, strict=strict_decode)
             if outcome.valid and outcome.proposal:
                 proposal = outcome.proposal
             else:
                 proposal = i3_7e.FAIL_CLOSED_PROPOSAL
+            call_log.update({
+                "result_class": "success",
+                "provider_raw_output": provider_raw,
+                "normalized_output": call_result.raw_output,
+                "provider_raw_sha256": hashlib.sha256(provider_raw.encode()).hexdigest(),
+                "normalized_sha256": hashlib.sha256(call_result.raw_output.encode()).hexdigest(),
+                "normalization_applied": provider_raw != call_result.raw_output,
+                "finish_reason": call_result.finish_reason,
+                "prompt_tokens": call_result.prompt_tokens,
+                "completion_tokens": call_result.completion_tokens,
+                "reasoning_tokens": call_result.reasoning_tokens,
+                "latency_ms": call_result.latency_ms,
+                "decoder_valid": outcome.valid,
+                "decoder_rejection_code": outcome.rejection_code,
+                "decoded_action": outcome.proposal.action.value if outcome.proposal else None,
+                "decoded_reason_code": outcome.proposal.reason_code if outcome.proposal else None,
+                "decoded_target_id": outcome.proposal.target_id if outcome.proposal else None,
+                "fail_closed": not (outcome.valid and outcome.proposal),
+            })
 
         action = proposal.action
         target_id = getattr(proposal, "target_id", None)
@@ -223,6 +265,16 @@ def run_trajectory_i3_12(
         action_str = action.value if hasattr(action, "value") else str(action)
         continuation_actions.append(action_str)
         continuation_outcomes.append(exec_res.outcome_code)
+        call_log.update({
+            "proposal_action": action_str,
+            "proposal_reason_code": proposal.reason_code,
+            "proposal_target_id": target_id,
+            "executed_action": action_str,
+            "execution_outcome": exec_res.outcome_code,
+            "execution_terminal": exec_res.terminal,
+            "task_success": exec_res.task_success,
+        })
+        model_call_log.append(call_log)
 
         if exec_res.terminal:
             tr = utility.terminal_reward(exec_res.action, bool(exec_res.task_success))
@@ -255,6 +307,7 @@ def run_trajectory_i3_12(
         "continuation_outcomes": continuation_outcomes,
         "step_costs": step_costs,
         "decision_state_log": decision_state_log,
+        "model_call_log": model_call_log,
     }
 
 
@@ -266,6 +319,9 @@ def run_r1_trajectory_i3_12(
     fork_label: str,
     snapshot_builder: Callable,
     backend_factory: Callable | None = None,
+    strict_decode: bool = True,
+    max_tokens: int = 2048,
+    system_prompt_transform: Callable[[str], str] | None = None,
 ) -> dict[str, Any]:
     """Run R1 hybrid trajectory with parameterized snapshot builder.
 
@@ -304,6 +360,7 @@ def run_r1_trajectory_i3_12(
 
     routing_log: list[dict[str, Any]] = []
     decision_state_log: list[dict[str, Any]] = []
+    model_call_log: list[dict[str, Any]] = []
 
     prior_actions: list[str] = []
     prior_outcomes: list[str] = []
@@ -341,6 +398,9 @@ def run_r1_trajectory_i3_12(
             system_prompt = i3_7e.BASELINE_WITH_AFFORDANCES_SYSTEM_PROMPT
             current_rep = "A1"
 
+        if system_prompt_transform is not None:
+            system_prompt = system_prompt_transform(system_prompt)
+
         routing_log.append({
             "step": step_id,
             "representation": current_rep,
@@ -359,6 +419,20 @@ def run_r1_trajectory_i3_12(
         })
 
         user_prompt = i3_7e.evidence_packet_json(packet)
+        call_log: dict[str, Any] = {
+            "step": step_id,
+            "representation": current_rep,
+            "packet_schema": packet.get("schema"),
+            "system_prompt_sha256": hashlib.sha256(system_prompt.encode()).hexdigest(),
+            "packet_sha256": hashlib.sha256(user_prompt.encode()).hexdigest(),
+            "t2_fires": t2_fires,
+            "r1_triggered": r1_triggered,
+        }
+        routing_log[-1].update({
+            "packet_schema": packet.get("schema"),
+            "system_prompt_sha256": call_log["system_prompt_sha256"],
+            "packet_sha256": call_log["packet_sha256"],
+        })
 
         backend = (backend_factory() if backend_factory else DeepSeekBackend())
         backend.task_id = task.task_id
@@ -369,16 +443,44 @@ def run_r1_trajectory_i3_12(
         try:
             call_result = backend.generate(
                 system_prompt=system_prompt, user_prompt=user_prompt,
-                temperature=0.0, max_tokens=2048)
-        except Exception:
+                temperature=0.0, max_tokens=max_tokens)
+        except Exception as exc:
             backend_errors += 1
             proposal = i3_7e.BACKEND_ERROR_PROPOSAL
+            call_log.update({
+                "result_class": "backend_error",
+                "error_type": type(exc).__name__,
+                "error_message": str(exc),
+                "decoder_valid": False,
+                "decoder_rejection_code": None,
+                "fail_closed": True,
+            })
         else:
-            outcome = decode_output(call_result.raw_output, strict=True)
+            provider_raw = call_result.provider_raw_output or call_result.raw_output
+            outcome = decode_output(call_result.raw_output, strict=strict_decode)
             if outcome.valid and outcome.proposal:
                 proposal = outcome.proposal
             else:
                 proposal = i3_7e.FAIL_CLOSED_PROPOSAL
+            call_log.update({
+                "result_class": "success",
+                "provider_raw_output": provider_raw,
+                "normalized_output": call_result.raw_output,
+                "provider_raw_sha256": hashlib.sha256(provider_raw.encode()).hexdigest(),
+                "normalized_sha256": hashlib.sha256(call_result.raw_output.encode()).hexdigest(),
+                "normalization_applied": provider_raw != call_result.raw_output,
+                "finish_reason": call_result.finish_reason,
+                "prompt_tokens": call_result.prompt_tokens,
+                "completion_tokens": call_result.completion_tokens,
+                "reasoning_tokens": call_result.reasoning_tokens,
+                "latency_ms": call_result.latency_ms,
+                "decoder_valid": outcome.valid,
+                "decoder_rejection_code": outcome.rejection_code,
+                "decoded_action": outcome.proposal.action.value if outcome.proposal else None,
+                "decoded_reason_code": outcome.proposal.reason_code if outcome.proposal else None,
+                "decoded_target_id": outcome.proposal.target_id if outcome.proposal else None,
+                "fail_closed": not (outcome.valid and outcome.proposal),
+            })
 
         action = proposal.action
         target_id = getattr(proposal, "target_id", None)
@@ -395,6 +497,16 @@ def run_r1_trajectory_i3_12(
         action_str = action.value if hasattr(action, "value") else str(action)
         continuation_actions.append(action_str)
         continuation_outcomes.append(exec_res.outcome_code)
+        call_log.update({
+            "proposal_action": action_str,
+            "proposal_reason_code": proposal.reason_code,
+            "proposal_target_id": target_id,
+            "executed_action": action_str,
+            "execution_outcome": exec_res.outcome_code,
+            "execution_terminal": exec_res.terminal,
+            "task_success": exec_res.task_success,
+        })
+        model_call_log.append(call_log)
 
         if r1_triggered and step_id == r1_trigger_step:
             r1_pre_trigger_steps = step_id
@@ -438,6 +550,7 @@ def run_r1_trajectory_i3_12(
         "continuation_outcomes": continuation_outcomes,
         "step_costs": step_costs,
         "decision_state_log": decision_state_log,
+        "model_call_log": model_call_log,
         "r1_triggered": r1_triggered,
         "r1_trigger_step": r1_trigger_step,
         "r1_trigger_decision_state": r1_trigger_decision_state,

@@ -1,0 +1,57 @@
+{
+  "S1_decoder_failures_zero": {
+    "passed": true,
+    "value": 0,
+    "threshold": 0
+  },
+  "S2_fail_closed_zero": {
+    "passed": true,
+    "value": 0,
+    "threshold": 0
+  },
+  "S3_t2_conflict_t2_fires": {
+    "passed": true,
+    "value": "2/2",
+    "threshold": ">=1"
+  },
+  "S4_defer_control_no_t2": {
+    "passed": true,
+    "value": "0/2",
+    "threshold": 0
+  },
+  "S5_answer_control_no_t2": {
+    "passed": true,
+    "value": "0/2",
+    "threshold": 0
+  },
+  "S6_a1_r1_divergence": {
+    "passed": true,
+    "value": "2/2",
+    "threshold": ">=1"
+  },
+  "S7_r1_post_t2_packet_differs": {
+    "passed": true,
+    "value": 2,
+    "threshold": ">=1"
+  },
+  "S8_t2_conflict_expected_defer": {
+    "passed": true,
+    "value": "{'DEFER'}",
+    "threshold": "{'DEFER'}"
+  },
+  "S9_answer_control_expected_answer": {
+    "passed": true,
+    "value": "{'ANSWER'}",
+    "threshold": "{'ANSWER'}"
+  },
+  "S10_packet_hash_diversity": {
+    "passed": true,
+    "value": 53,
+    "threshold": ">=6"
+  },
+  "S11_provenance_fields_present": {
+    "passed": true,
+    "value": "308/308",
+    "threshold": "all present"
+  }
+}
