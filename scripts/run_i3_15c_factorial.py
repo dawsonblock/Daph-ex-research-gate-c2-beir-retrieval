@@ -445,6 +445,7 @@ def run_single_trajectory(
     backend_type: str = "local",
     openrouter_model: str | None = None,
     pre_retrieved_passages: list | None = None,
+    model_name: str | None = None,
 ) -> dict[str, Any]:
     """Run a single trajectory."""
     et = task.evidence_task
@@ -482,6 +483,8 @@ def run_single_trajectory(
         backend = LocalLlamaBackend()
         if base_url is not None:
             backend.base_url = base_url
+        if model_name is not None:
+            backend.model_name = model_name
         return backend
 
     if arm == "A1_INFERRED":
