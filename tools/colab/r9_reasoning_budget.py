@@ -361,7 +361,7 @@ def build_user_prompt(state: dict) -> str:
 
 
 def start_llama_server(llama_server_bin: str, model_path: str, reasoning_budget: int,
-                       port: int = 8080) -> subprocess.Popen:
+                       port: int = 8081) -> subprocess.Popen:
     """Start the llama.cpp C++ server with --reasoning-budget.
 
     This is the ONLY effective way to control LFM2.5 reasoning tokens.
@@ -556,7 +556,7 @@ def _compute_metrics(results: list[dict], reasoning_budget: int, max_tokens: int
 
 def run_budget_qualification(model_path: str, reasoning_budget: int,
                              max_tokens: int, test_states: list[dict],
-                             port: int = 8080) -> dict:
+                             port: int = 8081) -> dict:
     """Run qualification for a single reasoning budget using llama-cpp-python.
 
     Uses the Python API directly with GPU offload for maximum speed.
@@ -731,7 +731,7 @@ def main():
                         help="Comma-separated reasoning budgets to test")
     parser.add_argument("--max-tokens", type=int, default=2048,
                         help="Max tokens for R9a (reasoning budget phase)")
-    parser.add_argument("--port", type=int, default=8080)
+    parser.add_argument("--port", type=int, default=8081)
     parser.add_argument("--use-server", action="store_true",
                         help="Use llama.cpp C++ server with --reasoning-budget (required for LFM2.5)")
     parser.add_argument("--llama-server", default="/content/llama.cpp/build/bin/llama-server",

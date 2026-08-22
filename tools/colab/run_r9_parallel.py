@@ -184,7 +184,7 @@ def main():
     parser.add_argument("--max-tokens", type=int, default=2048)
     parser.add_argument("--parallel", type=int, default=4,
                         help="Number of parallel server slots and client workers")
-    parser.add_argument("--port", type=int, default=8080)
+    parser.add_argument("--port", type=int, default=8081)
     args = parser.parse_args()
 
     budgets = [int(b) for b in args.budgets.split(",")]

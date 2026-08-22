@@ -10,12 +10,12 @@ set -euo pipefail
 # Defaults:
 #   reasoning_budget = 0
 #   parallel = 8
-#   port = 8080
+#   port = 8081
 
 MODEL_PATH="${1:?Usage: $0 <model_path> [reasoning_budget] [parallel] [port]}"
 REASONING_BUDGET="${2:-0}"
 PARALLEL="${3:-8}"
-PORT="${4:-8080}"
+PORT="${4:-8081}"
 
 LLAMA_SERVER="/content/llama.cpp/build/bin/llama-server"
 

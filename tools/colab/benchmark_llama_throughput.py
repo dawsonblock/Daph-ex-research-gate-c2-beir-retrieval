@@ -289,7 +289,7 @@ def main():
     parser.add_argument("--llama-server", required=True)
     parser.add_argument("--output", default="/content/throughput_benchmark.json")
     parser.add_argument("--max-tokens", type=int, default=2048)
-    parser.add_argument("--port", type=int, default=8080)
+    parser.add_argument("--port", type=int, default=8081)
     parser.add_argument("--slots", default="1,2,4,8",
                         help="Comma-separated parallel slot counts to test")
     args = parser.parse_args()
