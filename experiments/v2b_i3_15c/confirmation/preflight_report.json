@@ -1,0 +1,85 @@
+{
+  "all_passed": true,
+  "n_checks": 10,
+  "checks": [
+    {
+      "name": "structural_t2_validation",
+      "passed": true,
+      "details": {
+        "t2_positive_expected": 320,
+        "t2_positive_reachable_gold": 320,
+        "t2_negative_expected": 320,
+        "t2_negative_incorrectly_reachable_gold": 0
+      }
+    },
+    {
+      "name": "corpus_coverage",
+      "passed": true,
+      "details": {
+        "coverage": 1.0,
+        "missing": []
+      }
+    },
+    {
+      "name": "retrieval_receipts_present",
+      "passed": true,
+      "details": {
+        "n_receipts": 1920,
+        "expected": 1920
+      }
+    },
+    {
+      "name": "q3_retrieval_qualification",
+      "passed": true,
+      "details": {
+        "q3_mean": 0.9469,
+        "q0_mean": 0.8984,
+        "qualified": true
+      }
+    },
+    {
+      "name": "t2_positive_gold_reachability",
+      "passed": true,
+      "details": {
+        "reachable": 320,
+        "expected": 320
+      }
+    },
+    {
+      "name": "t2_negative_gold_reachability",
+      "passed": true,
+      "details": {
+        "incorrectly_reachable": 0
+      }
+    },
+    {
+      "name": "false_t2_controls",
+      "passed": true,
+      "details": {
+        "false_t2_controls": 0
+      }
+    },
+    {
+      "name": "frozen_hashes",
+      "passed": true,
+      "details": {
+        "protocol_id": "I3_15C_CONFIRMATION_PROTOCOL_V2",
+        "status": "FROZEN"
+      }
+    },
+    {
+      "name": "backend_identity",
+      "passed": true,
+      "details": {
+        "backend_primary": "LOCAL_POLICY_GEMMA3_12B_QAT_Q4 (google/gemma-3-12b-it-qat-q4_0-gguf via bartowski mirror) \u2014 frozen pinned model"
+      }
+    },
+    {
+      "name": "utility_identity",
+      "passed": true,
+      "details": {
+        "utility": "v2b_i3_1_utility_v1.json"
+      }
+    }
+  ]
+}
