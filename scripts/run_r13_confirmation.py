@@ -568,6 +568,217 @@ def _tost_equivalence(xs: list[float], margin: float = 5.0,
     }
 
 
+# ---------------------------------------------------------------------------
+# R12.9G: Semantic-to-T2 error attribution
+# ---------------------------------------------------------------------------
+
+def compute_semantic_error_attribution(
+    results: list[dict],
+    tasks: list,
+    receipts: dict[str, dict],
+    corpus_by_id: dict,
+    corpus_by_text: dict,
+) -> dict[str, Any]:
+    """For every R1 trajectory, attribute T2 errors to their causal source.
+
+    Classifies false T2 as:
+      - SEMANTIC_FALSE_CONTRADICTION: extractor inferred wrong relation
+      - STRUCTURAL_BUG: implementation defect (should be 0 after R12.9)
+      - EXPECTED: T2-positive stratum, correct activation
+      - TRUE_NEGATIVE: control stratum, T2 correctly did not fire
+    """
+    from hrm_adaptive_memory.executive.semantic_relations.deterministic_rules import (
+        DeterministicRelationExtractor,
+    )
+    from hrm_adaptive_memory.executive.semantic_relations.integration import (
+        infer_relations_for_runtime,
+    )
+    from hrm_adaptive_memory.executive.evidence_benchmark import (
+        initial_evidence_runtime, build_evidence_snapshot,
+    )
+    from hrm_adaptive_memory.executive.resources import ResourceState, ResourceBudget
+    from scripts.run_i3_15_r1_balanced import build_retrieved_evidence_task
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "i3_7e", str(REPO_ROOT / "scripts" / "run_i3_7e_compact_governor.py"))
+    i3_7e = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(i3_7e)
+
+    extractor = DeterministicRelationExtractor()
+    task_by_id = {t.evidence_task.task_id: t for t in tasks}
+
+    attribution = {
+        "total_r1_trajectories": 0,
+        "t2_triggered": 0,
+        "t2_expected_positive": 0,
+        "t2_expected_negative": 0,
+        "false_t2_semantic": 0,
+        "false_t2_structural": 0,
+        "missed_t2": 0,
+        "true_negative": 0,
+        "true_positive": 0,
+        "per_trajectory": [],
+    }
+
+    budget = ResourceBudget(
+        max_executive_steps=10, max_retrieval_calls=3,
+        max_search_calls=2, max_verification_calls=5,
+    )
+
+    for r in results:
+        if r.get("arm") != "R1_INFERRED":
+            continue
+        attribution["total_r1_trajectories"] += 1
+        task_id = r["task_id"]
+        task = task_by_id.get(task_id)
+        if task is None:
+            continue
+
+        et = task.evidence_task
+        cat = et.category
+        is_t2_positive = cat.startswith("t2_conflict")
+        t2_triggered = r.get("r1_triggered", False)
+
+        receipt = receipts.get(task_id)
+        if receipt is None:
+            continue
+
+        retrieved_passages = [
+            corpus_by_id[pid] for pid in receipt.get("retrieved_chunk_ids", [])
+            if pid in corpus_by_id
+        ]
+        new_et = build_retrieved_evidence_task(task, retrieved_passages, corpus_by_text)
+        runtime = initial_evidence_runtime(new_et, ResourceState(budget))
+        new_runtime, graph = infer_relations_for_runtime(runtime, extractor)
+
+        # Compare gold vs inferred relations
+        gold_rels = {}
+        if hasattr(task, 'gold_relations'):
+            for gr in task.gold_relations:
+                gold_rels[(gr.evidence_id, gr.hypothesis_id)] = gr.relation
+
+        inferred_rels = {}
+        for rel in graph.relations:
+            inferred_rels[(rel.evidence_id, rel.hypothesis_id)] = rel.relation.value
+
+        has_semantic_error = False
+        for (eid, hid), gold in gold_rels.items():
+            inferred = inferred_rels.get((eid, hid), "UNKNOWN")
+            if gold != inferred:
+                has_semantic_error = True
+
+        # Classify
+        if t2_triggered and is_t2_positive:
+            classification = "TRUE_POSITIVE"
+            attribution["true_positive"] += 1
+            attribution["t2_expected_positive"] += 1
+        elif t2_triggered and not is_t2_positive:
+            attribution["t2_expected_negative"] += 1
+            if has_semantic_error:
+                classification = "FALSE_T2_SEMANTIC"
+                attribution["false_t2_semantic"] += 1
+            else:
+                classification = "FALSE_T2_STRUCTURAL"
+                attribution["false_t2_structural"] += 1
+        elif not t2_triggered and is_t2_positive:
+            classification = "MISSED_T2"
+            attribution["missed_t2"] += 1
+            attribution["t2_expected_positive"] += 1
+        else:
+            classification = "TRUE_NEGATIVE"
+            attribution["true_negative"] += 1
+            attribution["t2_expected_negative"] += 1
+
+        attribution["t2_triggered"] += (1 if t2_triggered else 0)
+        attribution["per_trajectory"].append({
+            "task_id": task_id,
+            "category": cat,
+            "t2_triggered": t2_triggered,
+            "is_t2_positive_stratum": is_t2_positive,
+            "has_semantic_error": has_semantic_error,
+            "classification": classification,
+        })
+
+    return attribution
+
+
+# ---------------------------------------------------------------------------
+# R12.9H: Strengthened mechanism receipts with R1 latch invariants
+# ---------------------------------------------------------------------------
+
+def build_strengthened_mechanism_receipt(result: dict, category: str) -> dict:
+    """Build a mechanism receipt with per-step state and R1 latch invariants."""
+    routing_log = result.get("routing_log", [])
+    decision_state_log = result.get("decision_state_log", [])
+    model_calls = result.get("model_call_log", [])
+
+    representation_by_step = [entry.get("representation", "?") for entry in routing_log]
+    t2_state_by_step = [entry.get("t2_fires", False) for entry in routing_log]
+    decision_state_by_step = [entry.get("decision_state", "?") for entry in routing_log]
+    eliminated_by_step = [entry.get("eliminated_hypotheses", []) for entry in routing_log]
+
+    trigger_step = result.get("r1_trigger_step")
+    t2_triggered = result.get("r1_triggered", False)
+    is_t2_positive = category.startswith("t2_conflict")
+    is_immediate = "immediate" in category
+
+    # R1 latch invariants
+    latch_violations = []
+
+    if t2_triggered and trigger_step is not None:
+        # For immediate: trigger should be at step 0, all reps should be M3
+        if is_immediate and is_t2_positive:
+            if trigger_step != 0:
+                latch_violations.append(
+                    f"IMMEDIATE trigger_step={trigger_step}, expected 0")
+            for i, rep in enumerate(representation_by_step):
+                if rep != "M3":
+                    latch_violations.append(
+                        f"IMMEDIATE rep[{i}]={rep}, expected M3")
+
+        # For late: reps before trigger should be A1, after should be M3
+        elif is_t2_positive and not is_immediate:
+            for i, rep in enumerate(representation_by_step):
+                if i < trigger_step and rep != "A1":
+                    latch_violations.append(
+                        f"LATE rep[{i}]={rep} before trigger, expected A1")
+                if i >= trigger_step and rep != "M3":
+                    latch_violations.append(
+                        f"LATE rep[{i}]={rep} at/after trigger, expected M3")
+
+        # For negative controls: all reps should be A1
+        elif not is_t2_positive:
+            for i, rep in enumerate(representation_by_step):
+                if rep != "A1":
+                    latch_violations.append(
+                        f"CONTROL rep[{i}]={rep}, expected A1 (false T2)")
+
+    # Packet hashes by step
+    packet_sha_by_step = [c.get("packet_sha256") for c in model_calls]
+    request_sha_by_step = [c.get("request_sha256") for c in model_calls]
+    response_sha_by_step = [c.get("normalized_sha256") for c in model_calls]
+
+    return {
+        "t2_expected_structurally": is_t2_positive,
+        "t2_triggered_live": t2_triggered,
+        "trigger_step": trigger_step,
+        "representation_by_step": representation_by_step,
+        "t2_state_by_step": t2_state_by_step,
+        "decision_state_by_step": decision_state_by_step,
+        "eliminated_by_step": eliminated_by_step,
+        "packet_sha_by_step": packet_sha_by_step,
+        "request_sha_by_step": request_sha_by_step,
+        "response_sha_by_step": response_sha_by_step,
+        "action_by_step": result.get("continuation_actions", []),
+        "terminal_action": result.get("terminal_action"),
+        "n_steps": result.get("steps", 0),
+        "hit_step_limit": result.get("terminal_result") in ("STEP_LIMIT", "RESOURCE_EXHAUSTED"),
+        "latch_violations": latch_violations,
+        "latch_ok": len(latch_violations) == 0,
+    }
+
+
 def compute_r13_analysis(results: list[dict]) -> dict:
     """Compute all protocol v2 contrasts exactly as preregistered."""
     # Pair A1 and R1 by task_id
@@ -1158,6 +1369,36 @@ def main():
     # Compute protocol v2 contrasts
     analysis = compute_r13_analysis(all_results)
 
+    # R12.9G: Semantic-to-T2 error attribution
+    print("\n[10b] Computing semantic-to-T2 error attribution...")
+    semantic_attr = compute_semantic_error_attribution(
+        all_results, tasks, receipts, corpus_by_id, corpus_by_text)
+    analysis["semantic_error_attribution"] = semantic_attr
+    with open(output_dir / "semantic_error_attribution.json", "w") as f:
+        json.dump(semantic_attr, f, indent=2, default=str)
+    print(f"  False T2 (semantic): {semantic_attr['false_t2_semantic']}")
+    print(f"  False T2 (structural): {semantic_attr['false_t2_structural']}")
+    print(f"  True positive: {semantic_attr['true_positive']}")
+    print(f"  True negative: {semantic_attr['true_negative']}")
+    print(f"  Missed T2: {semantic_attr['missed_t2']}")
+
+    # R12.9H: Strengthened mechanism receipts
+    print("\n[10c] Building strengthened mechanism receipts...")
+    mechanism_receipts = []
+    latch_violations_total = 0
+    for r in all_results:
+        if r.get("arm") != "R1_INFERRED":
+            continue
+        receipt = build_strengthened_mechanism_receipt(r, r.get("category", ""))
+        mechanism_receipts.append(receipt)
+        if not receipt["latch_ok"]:
+            latch_violations_total += len(receipt["latch_violations"])
+    with open(output_dir / "mechanism_receipts_strengthened.jsonl", "w") as f:
+        for rec in mechanism_receipts:
+            f.write(json.dumps(rec, default=str) + "\n")
+    print(f"  Mechanism receipts: {len(mechanism_receipts)}")
+    print(f"  Latch violations: {latch_violations_total}")
+
     # Save analysis
     analysis_path = output_dir / "analysis.json"
     with open(analysis_path, "w") as f:
@@ -1225,6 +1466,22 @@ def main():
 
     print(f"\n  Results: {output_dir / 'results.jsonl'}")
     print(f"  Analysis: {analysis_path}")
+
+    # R12.9L: Compute confirmation executable SHA
+    confirmation_sha = hashlib.sha256(
+        json.dumps({
+            "protocol_sha256": identities.get("protocol_sha256"),
+            "gguf_sha256": identities.get("gguf_sha256"),
+            "receipt_identity_sha256": identities.get("receipt_identity_sha256"),
+            "runtime_config_sha256": identities.get("runtime_config_sha256"),
+            "corpus_sha256": corpus_sha,
+            "r13_config": R13_CONFIG,
+        }, sort_keys=True, default=str).encode()
+    ).hexdigest()
+    with open(output_dir / "confirmation_executable_sha256.txt", "w") as f:
+        f.write(confirmation_sha + "\n")
+    print(f"  Confirmation executable SHA: {confirmation_sha[:16]}...")
+
     print(f"\nR13 COMPLETE.")
 
 
