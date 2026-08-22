@@ -1,0 +1,26 @@
+{
+  "defect_id": "R13-PROV-001",
+  "type": "PROVENANCE_FIELD_ALIAS",
+  "affected_field": "run_manifest.confirmation_executable_sha256",
+  "description": "The frozen runner's build_run_manifest() function (scripts/run_r13_confirmation.py line 475) incorrectly sets confirmation_executable_sha256 to the value of runtime_config_sha256 instead of computing the actual confirmation executable hash. The actual confirmation executable SHA (41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57) is only written to confirmation_executable_sha256.txt at the end of the run.",
+  "incorrect_value_source": "runtime_config_sha256",
+  "incorrect_value": "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+  "correct_value": "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+  "correct_value_location": "confirmation_executable_sha256.txt",
+  "scientific_execution_affected": false,
+  "affected_components": [
+    "model input — NOT affected",
+    "Gemma output — NOT affected",
+    "A1/R1 assignment — NOT affected",
+    "T2 mechanism — NOT affected",
+    "M3 representation — NOT affected",
+    "retrieval — NOT affected",
+    "utility computation — NOT affected",
+    "task execution — NOT affected",
+    "statistical analysis — NOT affected"
+  ],
+  "resolution": "validate executable identity independently from experiment_source_commit, protocol_sha256, gguf_sha256, runtime_config_sha256, backend_identity, receipt_identity_sha256, and confirmation_executable_sha256.txt (when available at end of run). Do NOT require run_manifest.confirmation_executable_sha256 to equal 41cc60b04f506f63... — that field is known to be defective.",
+  "experiment_classification": "PRE_SPECIFIED_CONFIRMATION_WITH_KNOWN_PROVENANCE_FIELD_DEFECT",
+  "frozen_commit": "5454246b7e61adfb7a093eb5a1f731347071270d",
+  "documented_at": "2026-08-22T20:15:00Z"
+}

@@ -259,9 +259,9 @@ except: print('unknown')
 CUDA_VERSION=$(nvcc --version 2>/dev/null | grep "release" | sed 's/.*release //' | awk '{print $1}' || echo "unknown")
 
 cat >> "$SEGMENT_FILE" <<SEGJSON
-{"segment": $SEGMENT_NUM, "session_id": "${COLAB_SESSION_ID:-unknown}", "start_completed": $COMPLETED_COUNT, "end_completed": null, "termination_reason": null, "gpu": "$GPU_INFO", "cuda_version": "$CUDA_VERSION", "llama_cpp_archive": "$(basename $ARCHIVE)", "gguf_sha256": "$EXPECTED_GGUF_SHA", "experiment_source_commit": "$FROZEN_EXPERIMENT_COMMIT", "confirmation_executable_sha256": "$EXPECTED_CONFIRMATION_SHA", "runtime_config_sha256": "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3", "start_timestamp": "$TIMESTAMP", "end_timestamp": null}
+{"segment": $SEGMENT_NUM, "session_id": "${COLAB_SESSION_ID:-unknown}", "start_completed": $COMPLETED_COUNT, "end_completed": null, "termination_reason": null, "gpu": "$GPU_INFO", "cuda_version": "$CUDA_VERSION", "llama_cpp_archive": "$(basename $ARCHIVE)", "gguf_sha256": "$EXPECTED_GGUF_SHA", "experiment_source_commit": "$FROZEN_EXPERIMENT_COMMIT", "confirmation_executable_sha256": "$EXPECTED_CONFIRMATION_SHA", "runtime_config_sha256": "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3", "provenance_status": "RECORDED_AT_RECOVERY", "start_timestamp": "$TIMESTAMP", "end_timestamp": null}
 SEGJSON
-echo "  Segment $SEGMENT_NUM recorded: start_completed=$COMPLETED_COUNT"
+echo "  Segment $SEGMENT_NUM recorded: start_completed=$COMPLETED_COUNT, provenance=RECORDED_AT_RECOVERY"
 
 echo ""
 echo "=== Runtime Restore Complete ==="

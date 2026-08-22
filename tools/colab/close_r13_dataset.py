@@ -51,12 +51,18 @@ def verify_dataset_integrity(results: list[dict], expected: int = 1280) -> dict:
     duplicates = len(keys) - len(unique_keys)
     missing = expected - len(unique_keys)
 
-    # Check ALL frozen identities across every record — must be exactly one value each
+    # Check ALL frozen identities across every record — must be exactly one value each.
     # This is critical because R13 crossed VM boundaries.
+    #
+    # KNOWN DEFECT R13-PROV-001: The frozen runner's build_run_manifest() incorrectly
+    # sets confirmation_executable_sha256 to runtime_config_sha256. The actual
+    # confirmation executable SHA (41cc60b04f506f63...) is only in
+    # confirmation_executable_sha256.txt. We do NOT check the manifest field
+    # for the confirmation SHA. We check the .txt file separately at closure.
+    # See: experiments/v2b_i3_15c/confirmation/r13_known_defects.json
     identity_fields = [
         "protocol_id",
         "backend_identity",
-        "confirmation_executable_sha256",
         "protocol_sha256",
         "gguf_sha256",
         "runtime_config_sha256",
@@ -94,6 +100,8 @@ def verify_dataset_integrity(results: list[dict], expected: int = 1280) -> dict:
         "identity_uniqueness": identity_uniqueness,
         "arm_counts": arm_counts,
         "retrieval_conditions": list(retrieval_conditions),
+        "known_defects": ["R13-PROV-001"],
+        "experiment_classification": "PRE_SPECIFIED_CONFIRMATION_WITH_KNOWN_PROVENANCE_FIELD_DEFECT",
         "passes": (
             len(results) == expected
             and len(unique_keys) == expected
@@ -127,6 +135,15 @@ def create_raw_closed(checkpoint_dir: Path, output_dir: Path) -> Path:
         "execution_segments.jsonl",
         "retry_receipts.jsonl",
     ]
+
+    # Also copy known defects and experiment identity from the repo
+    repo_root = Path(__file__).resolve().parents[2]
+    identity_src = repo_root / "experiments/v2b_i3_15c/confirmation/r13_experiment_identity.json"
+    defects_src = repo_root / "experiments/v2b_i3_15c/confirmation/r13_known_defects.json"
+    if identity_src.exists():
+        shutil.copy2(identity_src, raw_closed / "r13_experiment_identity.json")
+    if defects_src.exists():
+        shutil.copy2(defects_src, raw_closed / "known_defects.json")
 
     for fname in files_to_copy:
         src = checkpoint_dir / fname
@@ -219,30 +236,91 @@ def main():
                 if line:
                     segments.append(json.loads(line))
         print(f"  Found {len(segments)} execution segment(s)")
+
+        # Build multi-segment identity comparison table
+        # Required: all scientific identities must be identical across segments.
+        # Session IDs may differ. GPU class should be same (preferred, not required).
         segment_identity_fields = [
-            "confirmation_executable_sha256",
-            "gguf_sha256",
-            "runtime_config_sha256",
             "experiment_source_commit",
+            "gguf_sha256",
+            "protocol_sha256",
+            "runtime_config_sha256",
+            "confirmation_executable_sha256",
         ]
         segment_violations = []
+        segment_identity_table = {}
+
         for field in segment_identity_fields:
             values = set(s.get(field, "") for s in segments if s.get(field))
+            segment_identity_table[field] = {
+                "values_per_segment": [s.get(field, "MISSING") for s in segments],
+                "unique_count": len(values),
+                "identical": len(values) <= 1,
+            }
             if len(values) > 1:
                 segment_violations.append(f"{field}: {values}")
+
+        # Print multi-segment identity table
+        print(f"\n  Multi-segment identity comparison:")
+        print(f"  {'Property':<30} {'Identical':<12} {'Values'}")
+        for field, info in segment_identity_table.items():
+            status = "OK" if info["identical"] else "VIOLATION"
+            vals = [v[:16] + "..." if len(v) > 16 else v for v in info["values_per_segment"]]
+            print(f"  {field:<30} {status:<12} {vals}")
+
+        # Print segment details
+        print(f"\n  Segment details:")
+        for seg in segments:
+            prov = seg.get("provenance_status", "UNKNOWN")
+            print(f"    Segment {seg.get('segment')}: "
+                  f"start={seg.get('start_completed')} "
+                  f"gpu={seg.get('gpu')} "
+                  f"provenance={prov} "
+                  f"session={seg.get('session_id', 'unknown')[:25]}")
+
         if segment_violations:
-            print(f"  SEGMENT IDENTITY VIOLATIONS: {segment_violations}")
+            print(f"\n  SEGMENT IDENTITY VIOLATIONS: {segment_violations}")
             integrity["passes"] = False
             integrity["segment_violations"] = segment_violations
         else:
-            print(f"  OK: All segments share identical scientific identities")
-            for seg in segments:
-                print(f"    Segment {seg.get('segment')}: "
-                      f"start={seg.get('start_completed')} "
-                      f"gpu={seg.get('gpu')} "
-                      f"session={seg.get('session_id', 'unknown')[:30]}")
+            print(f"\n  OK: All segments share identical scientific identities")
+            print(f"  Session IDs may differ — that is an infrastructure event, not a treatment change")
+
+        integrity["segment_identity_table"] = segment_identity_table
+        integrity["segments"] = segments
     else:
         print("  No execution_segments.jsonl found (single-segment run)")
+
+    # Step 2c: Verify confirmation_executable_sha256.txt (independent of defective manifest)
+    # R13-PROV-001: run_manifest.confirmation_executable_sha256 is defective.
+    # The actual SHA is in confirmation_executable_sha256.txt, written at end of run.
+    print("\n[2c] Verifying confirmation executable SHA (independent of manifest)...")
+    expected_confirmation_sha = "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57"
+    confirmation_sha_path = checkpoint_dir / "confirmation_executable_sha256.txt"
+    if confirmation_sha_path.exists():
+        actual_sha = confirmation_sha_path.read_text().strip()
+        if actual_sha == expected_confirmation_sha:
+            print(f"  OK: confirmation_executable_sha256.txt matches expected value")
+            print(f"    {actual_sha[:20]}...")
+        else:
+            print(f"  ERROR: confirmation_executable_sha256.txt mismatch")
+            print(f"    Expected: {expected_confirmation_sha}")
+            print(f"    Actual:   {actual_sha}")
+            integrity["passes"] = False
+            integrity["confirmation_sha_mismatch"] = True
+    else:
+        print(f"  WARNING: confirmation_executable_sha256.txt not found")
+        print(f"    This file is written at the end of the run.")
+        print(f"    If the run completed, it should exist.")
+        print(f"    Defect R13-PROV-001 means the manifest field is NOT a substitute.")
+        integrity["confirmation_sha_missing"] = True
+
+    # Step 2d: Document known defects
+    print("\n[2d] Known defects:")
+    print(f"  R13-PROV-001: run_manifest.confirmation_executable_sha256")
+    print(f"    incorrectly aliases runtime_config_sha256")
+    print(f"    Scientific execution NOT affected")
+    print(f"    Classification: {integrity.get('experiment_classification', 'UNKNOWN')}")
 
     if not integrity["passes"]:
         print("\n  GATE FAILED — dataset is not complete or has violations")
@@ -254,6 +332,7 @@ def main():
         sys.exit(1)
 
     print("\n  GATE PASSED — dataset is complete, coherent, and identity-consistent")
+    print(f"  Classification: {integrity['experiment_classification']}")
 
     # Step 3: Create raw_closed/ directory
     print("\n[3] Creating immutable raw_closed/ directory...")
