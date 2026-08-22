@@ -102,6 +102,31 @@ def run_single_request(port: int, state: dict, reasoning_budget: int,
         "max_tokens": max_tokens,
         "temperature": 0.0,
         "thinking_budget_tokens": reasoning_budget,
+        "response_format": {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "action_proposal",
+                "strict": True,
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "action": {
+                            "type": "string",
+                            "enum": ["ANSWER", "RETRIEVE", "VERIFY",
+                                     "SEARCH_MORE", "REASON_MORE",
+                                     "DEFER", "STOP"],
+                        },
+                        "reason_code": {
+                            "type": "string",
+                            "pattern": "^[A-Z][A-Z0-9_]*$",
+                        },
+                        "target_id": {"type": ["string", "null"]},
+                    },
+                    "required": ["action", "reason_code", "target_id"],
+                    "additionalProperties": False,
+                },
+            },
+        },
     }).encode()
 
     try:
