@@ -1,0 +1,69 @@
+{
+  "deviation_id": "R13-RUNTIME-001",
+  "status": "QUARANTINED_AND_RERUN",
+  "accepted_in_confirmation": false,
+  "type": "INFERENCE_RUNTIME_CONFIGURATION_CHANGE",
+  "description": "During Segment 3, llama-server was restarted with optimized performance parameters instead of the frozen R13 runtime configuration. Scientific parameters (parallel, ctx, temp, seed, model, max_tokens) were unchanged, but thread count and batch sizes differ from the frozen runtime identity.",
+  "index_terminology": {
+    "completed_index_615": "615 clean frozen-runtime trajectories already existed when the deviation occurred",
+    "first_affected_trajectory_ordinal": 616,
+    "first_affected_completed_index": 615,
+    "note": "0-based completed index 615 = 1-based trajectory ordinal 616. The first 615 trajectories (index 0-614) were produced under the frozen runtime."
+  },
+  "frozen_runtime": {
+    "threads": 4,
+    "batch_size": 2048,
+    "ubatch_size": 512,
+    "parallel": 4,
+    "ctx_size": 32768,
+    "temp": 0.0,
+    "seed": 42,
+    "ngl": 99,
+    "fa": "on",
+    "cont_batching": true,
+    "reasoning_format": "deepseek"
+  },
+  "deviant_runtime": {
+    "threads": 8,
+    "batch_size": 4096,
+    "ubatch_size": 1024,
+    "parallel": 4,
+    "ctx_size": 32768,
+    "temp": 0.0,
+    "seed": 42,
+    "ngl": 99,
+    "fa": "on",
+    "cont_batching": true,
+    "reasoning_format": "deepseek"
+  },
+  "first_affected_key": "i3_15c_0309|A1_INFERRED|Q3_RERANKED|2ad4c9ce431a2d5b",
+  "last_affected_key": "i3_15c_0321|A1_INFERRED|Q3_RERANKED|2ad4c9ce431a2d5b",
+  "affected_execution_count": 28,
+  "affected_files": [
+    "results.jsonl",
+    "model_calls.jsonl",
+    "mechanism_receipts.jsonl",
+    "cognition_cost_receipts.jsonl"
+  ],
+  "quarantine_location": "r13/quarantine/runtime_deviation/",
+  "audit_location": "r13/audit/",
+  "preserved_artifacts": {
+    "pre_quarantine_original": "results_pre_quarantine_original.jsonl — the complete results file before any quarantined records were removed (643 records including 28 deviant)",
+    "quarantined_results": "results.jsonl in quarantine/ — the 28 deviant records extracted from the original",
+    "quarantined_model_calls": "model_calls.jsonl in quarantine/ — 168 model calls from deviant trajectories",
+    "quarantined_mechanism_receipts": "mechanism_receipts.jsonl in quarantine/ — 14 mechanism receipts from deviant trajectories",
+    "quarantined_cognition_cost_receipts": "cognition_cost_receipts.jsonl in quarantine/ — 28 cognition cost receipts from deviant trajectories"
+  },
+  "disposition": "QUARANTINED_AND_RERUN_UNDER_FROZEN_RUNTIME",
+  "rerun_status": "All 28 quarantined keys have been rerun under the restored frozen runtime and are now part of the active results set with frozen-runtime latency/cost measurements.",
+  "closure_invariants": [
+    "set(quarantined_keys) <= set(accepted_keys) — every quarantined key has a frozen-runtime replacement",
+    "for key in quarantined_keys: accepted_runtime_sha[key] == FROZEN_RUNTIME_SHA",
+    "no quarantined record appears in raw_closed/",
+    "N_historically_executed > 1280 (because 28 were executed twice)",
+    "N_accepted_confirmation == 1280",
+    "|{RuntimeSHA}| == 1 across all accepted trajectories"
+  ],
+  "scientific_impact": "Latency, throughput, token-rate, and cognition-cost statistics from the 28 deviant executions are excluded. Even if model actions happened to match, the deviant-runtime measurements cannot contribute to cost analysis. The 28 keys have been rerun under the frozen runtime with correct latency/cost measurements.",
+  "documented_at": "2026-08-22T22:05:00Z"
+}
