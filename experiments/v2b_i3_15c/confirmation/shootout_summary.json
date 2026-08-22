@@ -1,0 +1,45 @@
+{
+  "test": "MODEL_POLICY_SHOOTOUT",
+  "date": "2025-01-20",
+  "models_tested": [
+    {
+      "model": "LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M",
+      "label": "M0",
+      "status": "UNQUALIFIED",
+      "best_core_accuracy": 0.65,
+      "best_budget": 256,
+      "blocking_failures": ["core_accuracy<80%", "DEFER<75%", "RETRIEVE<75%"],
+      "note": "R9.1 full curve tested. Additional reasoning degrades accuracy."
+    },
+    {
+      "model": "LiquidAI/LFM2.5-8B-A1B-GGUF:Q5_K_M",
+      "label": "M1",
+      "status": "EARLY_REJECT",
+      "best_core_accuracy": 0.55,
+      "best_budget": 128,
+      "blocking_failures": ["core_accuracy<75% early gate", "DEFER<75%", "ANSWER<75%", "RETRIEVE<75%"],
+      "per_action_accuracy": {
+        "DEFER": 0.25,
+        "ANSWER": 0.667,
+        "VERIFY": 0.75,
+        "RETRIEVE": 0.667,
+        "SEARCH_MORE": 1.0,
+        "REASON_MORE": 1.0
+      },
+      "decoder_success": 1.0,
+      "length_failures": 0.0,
+      "a1_accuracy": 0.57,
+      "m3_accuracy": 0.50,
+      "a1_m3_asymmetry_pp": 7.1,
+      "mean_latency_ms": 2905,
+      "note": "Early gate only (budget=128). Core accuracy 55% < 75% threshold. No budget sweep needed."
+    }
+  ],
+  "next_candidate": {
+    "model": "google/gemma-3-12b-it-qat-q4_0-gguf",
+    "label": "M2",
+    "rationale": "Different model family. 12B parameters with QAT Q4 quantization. Tests whether a genuinely different architecture can pass the policy gate."
+  },
+  "key_finding": "Both Liquid LFM2.5 models (2.6B and 8B-A1B) fail the policy gate. The 8B model is NOT better than the 2.6B — it's worse (55% vs 65%). This suggests the Liquid model family has a systematic weakness in the DEFER/RETRIEVE action distinctions required by the DAPH controller, regardless of capacity.",
+  "scientific_interpretation": "Increasing model capacity within the Liquid LFM2.5 family does NOT fix the policy interface problem. The 8B-A1B (Mixture-of-Experts, 1B active) actually performs worse than the 2.6B dense model. This is evidence that the bottleneck is not raw capacity but model-family-specific understanding of the action semantics, particularly DEFER vs STOP."
+}
