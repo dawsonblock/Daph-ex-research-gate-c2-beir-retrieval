@@ -78,14 +78,17 @@ cmd_restore() {
     log "=== Uploading runtime archive ==="
     colab upload "$ARCHIVE" /content/llama-server-d775b8967a46-cuda-sm89.tar.gz
 
-    log "=== Uploading checkpoint ==="
+    log "=== Creating output directory and uploading checkpoint ==="
+    # Create the output directory first via exec
+    colab exec -s "$SESSION" -c "import os; os.makedirs('/content/daph_r13', exist_ok=True); print('dir created')" --timeout 30 2>/dev/null || \
+    colab exec -s "$SESSION" --timeout 30 "import os; os.makedirs('/content/daph_r13', exist_ok=True)" 2>/dev/null || true
+
     if [ -d "$CHECKPOINT_DIR" ] && [ -f "$CHECKPOINT_DIR/results.jsonl" ]; then
-        # Upload checkpoint files to VM
         for f in results.jsonl progress.json identity_frozen.json run_manifest.json \
                  model_calls.jsonl mechanism_receipts.jsonl cognition_cost_receipts.jsonl \
                  errors.jsonl context_preflight.json; do
             if [ -f "$CHECKPOINT_DIR/$f" ]; then
-                colab upload "$CHECKPOINT_DIR/$f" "/content/daph_r13/$f" 2>/dev/null || true
+                colab upload "$CHECKPOINT_DIR/$f" "/content/daph_r13/$f" 2>/dev/null || log "  upload $f failed (non-critical)"
             fi
         done
         log "Checkpoint uploaded"
@@ -95,36 +98,48 @@ cmd_restore() {
 
     log "=== Running restore script on VM ==="
     colab upload "$REPO_DIR/tools/colab/restore_daph_runtime.sh" /content/restore_daph_runtime.sh
-    colab exec -s "$SESSION" -- bash /content/restore_daph_runtime.sh --timeout 600
+    # Execute via a helper script since colab exec needs -f
+    cat > /tmp/_run_restore.py <<'PY'
+import subprocess, sys
+r = subprocess.run(["bash", "/content/restore_daph_runtime.sh"],
+                   capture_output=True, text=True, timeout=600)
+print(r.stdout)
+if r.stderr:
+    print("STDERR:", r.stderr, file=sys.stderr)
+sys.exit(r.returncode)
+PY
+    colab upload /tmp/_run_restore.py /content/_run_restore.py
+    colab exec -s "$SESSION" -f /content/_run_restore.py --timeout 600
 }
 
 cmd_launch_r13() {
     log "=== Launching R13 in tmux ==="
-    # Upload the launch script
-    cat > /tmp/r13_tmux_launch.sh <<'INNER'
-#!/usr/bin/env bash
-set -euo pipefail
-cd /content/Daph-ex-research-gate-c2-beir-retrieval
-
+    cat > /tmp/r13_tmux_launch.py <<'INNER'
+import subprocess, sys, os
+os.chdir("/content/Daph-ex-research-gate-c2-beir-retrieval")
 # Kill any existing tmux session
-tmux kill-session -t r13 2>/dev/null || true
-
+subprocess.run("tmux kill-session -t r13 2>/dev/null || true", shell=True)
 # Start R13 in tmux
-tmux new-session -d -s r13 "PYTHONPATH=/content/Daph-ex-research-gate-c2-beir-retrieval \
-  python3 -u scripts/run_r13_confirmation.py \
-    --output-dir /content/daph_r13 \
-    --base-url http://127.0.0.1:8081/v1 \
-    --model-name google/gemma-3-12b-it-qat-q4_0-gguf \
-    --gguf-sha256 2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d \
-    --max-tokens 128 --parallel 4 --n-per-cell 40 \
-    2>&1 | tee /content/daph_r13/r13.log"
-
-echo "R13 launched in tmux session 'r13'"
-echo "  Attach: colab ssh -s daph && tmux attach -t r13"
-echo "  Log:    /content/daph_r13/r13.log"
+cmd = (
+    "tmux new-session -d -s r13 "
+    "'PYTHONPATH=/content/Daph-ex-research-gate-c2-beir-retrieval "
+    "python3 -u scripts/run_r13_confirmation.py "
+    "--output-dir /content/daph_r13 "
+    "--base-url http://127.0.0.1:8081/v1 "
+    "--model-name google/gemma-3-12b-it-qat-q4_0-gguf "
+    "--gguf-sha256 2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d "
+    "--max-tokens 128 --parallel 4 --n-per-cell 40 "
+    "2>&1 | tee /content/daph_r13/r13.log'"
+)
+r = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+if r.returncode != 0:
+    print(f"ERROR: tmux launch failed: {r.stderr}")
+    sys.exit(1)
+print("R13 launched in tmux session 'r13'")
+print("  Log: /content/daph_r13/r13.log")
 INNER
-    colab upload /tmp/r13_tmux_launch.sh /content/r13_tmux_launch.sh
-    colab exec -s "$SESSION" -- bash /content/r13_tmux_launch.sh --timeout 30
+    colab upload /tmp/r13_tmux_launch.py /content/r13_tmux_launch.py
+    colab exec -s "$SESSION" -f /content/r13_tmux_launch.py --timeout 30
     log "R13 is running in tmux (independent of SSH)"
 }
 
