@@ -1,18 +1,22 @@
-"""R9.1: Uncensored reasoning-budget curve with per-request budget control.
+"""MODEL_POLICY_SHOOTOUT: Fast model qualification for the R13 policy role.
 
-Key improvements over R9:
-  - ONE server stays resident for ALL budgets (no restarts)
-  - Per-request thinking_budget_tokens controls reasoning budget
-  - --reasoning-format deepseek captures reasoning_content separately
-  - max_tokens=2048 ensures no truncation (finish_reason=length must be 0)
-  - Reports reasoning tokens separately from answer tokens
+Runs the same 20 frozen qualification states against a candidate model
+with a cheap staged funnel:
+
+  Stage 1: 20 states, budget=128 → if core < 75%, EARLY_REJECT
+  Stage 2: if promising, budgets 128, 256, 384
+  Stage 3: only if >=80%, full qualification + repeats
 
 Usage (on Colab, after llama.cpp is built):
-    PYTHONPATH=. python3 tools/colab/run_r9_1.py \
-        --model-path /content/models/LFM2.5-2.6B-Q5_K_M.gguf \
+    PYTHONPATH=. python3 tools/colab/policy_model_shootout.py \
+        --model-path /content/models/LFM2.5-8B-A1B-Q5_K_M.gguf \
+        --model-name "LiquidAI/LFM2.5-8B-A1B-GGUF:Q5_K_M" \
         --llama-server /content/llama.cpp/build/bin/llama-server \
-        --output /content/r9_1_results.json \
-        --parallel 4
+        --output /content/shootout_results.json \
+        --budget 128
+
+For multi-budget:
+    ... --budgets 128,256,384
 """
 from __future__ import annotations
 
@@ -36,17 +40,53 @@ from tools.colab.r9_reasoning_budget import (
     SYSTEM_PROMPT, make_test_states, build_user_prompt,
 )
 
+# JSON schema for response_format — same as R9.1
+ACTION_SCHEMA = {
+    "type": "json_schema",
+    "json_schema": {
+        "name": "action_proposal",
+        "strict": True,
+        "schema": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": ["ANSWER", "RETRIEVE", "VERIFY",
+                             "SEARCH_MORE", "REASON_MORE",
+                             "DEFER", "STOP"],
+                },
+                "reason_code": {
+                    "type": "string",
+                    "pattern": "^[A-Z][A-Z0-9_]*$",
+                },
+                "target_id": {"type": ["string", "null"]},
+            },
+            "required": ["action", "reason_code", "target_id"],
+            "additionalProperties": False,
+        },
+    },
+}
+
+# Qualification gates
+PROMOTION_GATES = {
+    "decoder_success_100": lambda m: m["decoder_success"] == 1.0,
+    "fail_closed_0": lambda m: m["fail_closed_rate"] == 0.0,
+    "core_accuracy_80": lambda m: m["core_action_accuracy"] >= 0.80,
+    "length_failures_0": lambda m: m["length_failure_rate"] == 0.0,
+    "a1_m3_asymmetry_20pp": lambda m: m["a1_m3_asymmetry_pp"] <= 20.0,
+    "non_defer_to_defer_20": lambda m: m["non_defer_to_defer_rate"] <= 0.20,
+    "defer_75": lambda m: m["per_action_accuracy"].get("DEFER", 0) >= 0.75,
+    "answer_75": lambda m: m["per_action_accuracy"].get("ANSWER", 0) >= 0.75,
+    "verify_75": lambda m: m["per_action_accuracy"].get("VERIFY", 0) >= 0.75,
+    "retrieve_75": lambda m: m["per_action_accuracy"].get("RETRIEVE", 0) >= 0.75,
+}
+
+EARLY_GATE_THRESHOLD = 0.75
+
 
 def start_server(llama_server_bin: str, model_path: str,
                  parallel: int, port: int) -> subprocess.Popen:
-    """Start ONE llama-server with no fixed reasoning budget.
-
-    Uses --reasoning-format deepseek to capture reasoning_content.
-    Per-request thinking_budget_tokens controls the reasoning budget.
-    """
-    # Note: caller must ensure no existing server on this port
-    # (pkill -f llama-server kills this script too since argv contains 'llama-server')
-
+    """Start ONE llama-server with per-request budget support."""
     cmd = [
         llama_server_bin, "-m", model_path,
         "--host", "127.0.0.1", "--port", str(port),
@@ -57,7 +97,7 @@ def start_server(llama_server_bin: str, model_path: str,
         "--reasoning-format", "deepseek",
         "-lv", "1",
     ]
-    print(f"  Starting server: parallel={parallel}, reasoning-format=deepseek", flush=True)
+    print(f"  Starting server: parallel={parallel}", flush=True)
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     for i in range(180):
         try:
@@ -66,13 +106,10 @@ def start_server(llama_server_bin: str, model_path: str,
             return proc
         except Exception:
             if i > 0 and i % 30 == 0:
-                # Check if process is still alive
                 if proc.poll() is not None:
-                    # Process died — read output
                     output = proc.stdout.read().decode() if proc.stdout else ""
-                    print(f"  Server process died (exit={proc.returncode})", flush=True)
-                    print(f"  Output: {output[:1000]}", flush=True)
-                    raise RuntimeError(f"Server process died: {output[:500]}")
+                    print(f"  Server died: {output[:500]}", flush=True)
+                    raise RuntimeError(f"Server died: {output[:300]}")
             time.sleep(1)
     proc.terminate()
     raise RuntimeError(f"Server failed to start within 180s")
@@ -88,13 +125,13 @@ def stop_server(proc: subprocess.Popen):
 
 
 def run_single_request(port: int, state: dict, reasoning_budget: int,
-                       max_tokens: int) -> dict:
+                       max_tokens: int, model_name: str) -> dict:
     """Run a single inference request with per-request thinking_budget_tokens."""
     user_prompt = build_user_prompt(state)
     t0 = time.time()
 
     req_data = json.dumps({
-        "model": "LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M",
+        "model": model_name,
         "messages": [
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt},
@@ -102,31 +139,7 @@ def run_single_request(port: int, state: dict, reasoning_budget: int,
         "max_tokens": max_tokens,
         "temperature": 0.0,
         "thinking_budget_tokens": reasoning_budget,
-        "response_format": {
-            "type": "json_schema",
-            "json_schema": {
-                "name": "action_proposal",
-                "strict": True,
-                "schema": {
-                    "type": "object",
-                    "properties": {
-                        "action": {
-                            "type": "string",
-                            "enum": ["ANSWER", "RETRIEVE", "VERIFY",
-                                     "SEARCH_MORE", "REASON_MORE",
-                                     "DEFER", "STOP"],
-                        },
-                        "reason_code": {
-                            "type": "string",
-                            "pattern": "^[A-Z][A-Z0-9_]*$",
-                        },
-                        "target_id": {"type": ["string", "null"]},
-                    },
-                    "required": ["action", "reason_code", "target_id"],
-                    "additionalProperties": False,
-                },
-            },
-        },
+        "response_format": ACTION_SCHEMA,
     }).encode()
 
     try:
@@ -146,25 +159,16 @@ def run_single_request(port: int, state: dict, reasoning_budget: int,
         finish_reason = choice.get("finish_reason")
         usage = result.get("usage", {})
         completion_tokens = usage.get("completion_tokens", 0)
-        reasoning_tokens = usage.get("completion_tokens_details", {}).get("reasoning_tokens", 0) if usage.get("completion_tokens_details") else 0
+        reasoning_tokens_reported = usage.get("completion_tokens_details", {}).get("reasoning_tokens", 0) if usage.get("completion_tokens_details") else 0
 
-        # Estimate reasoning tokens from reasoning_content if usage doesn't report it.
-        # NOTE: This is a rough estimate (~4 chars/token). The provider-reported
-        # completion_tokens is the TOTAL generated tokens (reasoning + answer).
-        # We report all three independently rather than subtracting, because
-        # the estimate and the provider total use incompatible accounting.
-        estimated_reasoning_tokens = 0
-        if reasoning_tokens == 0 and reasoning_content:
-            estimated_reasoning_tokens = len(reasoning_content) // 4
-
-        # Estimate answer (visible content) tokens independently
-        estimated_answer_tokens = len(content) // 4 if content else 0
+        # Independent estimates (not subtracted from completion_tokens)
+        reasoning_tokens_estimated = len(reasoning_content) // 4 if reasoning_content else 0
+        answer_tokens_estimated = len(content) // 4 if content else 0
 
         decoded = decode_output(content, strict=True)
         action = decoded.proposal.action.value if (decoded.valid and decoded.proposal) else "FAIL_CLOSED"
         correct = (action == state["expected_action"])
 
-        # Compute hashes for provenance
         request_hash = hashlib.sha256(req_data).hexdigest()[:16]
         response_hash = hashlib.sha256(content.encode()).hexdigest()[:16]
 
@@ -177,11 +181,9 @@ def run_single_request(port: int, state: dict, reasoning_budget: int,
             "decoder_valid": decoded.valid,
             "finish_reason": finish_reason,
             "completion_tokens": completion_tokens,
-            "reasoning_tokens_reported": reasoning_tokens,
-            "reasoning_tokens_estimated": estimated_reasoning_tokens,
-            "answer_tokens_estimated": estimated_answer_tokens,
-            "reasoning_content_length": len(reasoning_content),
-            "answer_content_length": len(content),
+            "reasoning_tokens_reported": reasoning_tokens_reported,
+            "reasoning_tokens_estimated": reasoning_tokens_estimated,
+            "answer_tokens_estimated": answer_tokens_estimated,
             "latency_ms": latency_ms,
             "reasoning_budget": reasoning_budget,
             "request_hash": request_hash,
@@ -202,8 +204,6 @@ def run_single_request(port: int, state: dict, reasoning_budget: int,
             "reasoning_tokens_reported": 0,
             "reasoning_tokens_estimated": 0,
             "answer_tokens_estimated": 0,
-            "reasoning_content_length": 0,
-            "answer_content_length": 0,
             "latency_ms": int((time.time() - t0) * 1000),
             "reasoning_budget": reasoning_budget,
             "request_hash": "",
@@ -260,76 +260,107 @@ def compute_metrics(results: list[dict], reasoning_budget: int, max_tokens: int)
         "results": results,
     }
 
-    print(f"\n  Summary (budget={reasoning_budget}):", flush=True)
-    print(f"    Decoder success:      {decoder_success:.1%}", flush=True)
-    print(f"    Core action accuracy: {core_accuracy:.1%}", flush=True)
-    print(f"    Fail-closed rate:     {fail_closed:.1%}", flush=True)
-    print(f"    Length failures:      {length_failures:.1%}", flush=True)
-    print(f"    Mean total tokens:    {mean_tokens:.0f}", flush=True)
-    print(f"    Mean reasoning tokens:{mean_reasoning:.0f}", flush=True)
-    print(f"    Mean answer tokens:   {mean_answer:.0f}", flush=True)
-    print(f"    Mean latency:         {mean_latency:.0f}ms", flush=True)
-    print(f"    A1 accuracy:          {a1_acc:.1%}", flush=True)
-    print(f"    M3 accuracy:          {m3_acc:.1%}", flush=True)
-    print(f"    Per-action: {action_acc}", flush=True)
+    # Evaluate gates
+    gates = {name: check(metrics) for name, check in PROMOTION_GATES.items()}
+    metrics["gates"] = gates
+    metrics["all_gates_pass"] = all(gates.values())
+    metrics["failed_gates"] = [k for k, v in gates.items() if not v]
 
     return metrics
 
 
+def print_shootout_table(model_name: str, all_metrics: list[dict]):
+    """Print the shootout comparison table."""
+    print(f"\n{'='*120}", flush=True)
+    print(f"MODEL POLICY SHOOTOUT: {model_name}", flush=True)
+    print(f"{'='*120}", flush=True)
+    print(f"{'Budget':>7} | {'Decoder':>8} | {'Core Acc':>9} | {'Len Fail':>9} | "
+          f"{'DEFER':>6} | {'ANSWER':>7} | {'VERIFY':>7} | {'RETRIEVE':>9} | "
+          f"{'A1':>5} | {'M3':>5} | {'Asym':>5} | {'Latency':>8} | {'Status':>12}")
+    print("-" * 130)
+    for m in all_metrics:
+        status = "PASS" if m["all_gates_pass"] else (
+            "EARLY_REJECT" if m["core_action_accuracy"] < EARLY_GATE_THRESHOLD else "FAIL"
+        )
+        print(f"{m['reasoning_budget']:7d} | {m['decoder_success']:8.0%} | {m['core_action_accuracy']:9.0%} | "
+              f"{m['length_failure_rate']:9.0%} | "
+              f"{m['per_action_accuracy'].get('DEFER', 0):6.0%} | "
+              f"{m['per_action_accuracy'].get('ANSWER', 0):7.0%} | "
+              f"{m['per_action_accuracy'].get('VERIFY', 0):7.0%} | "
+              f"{m['per_action_accuracy'].get('RETRIEVE', 0):9.0%} | "
+              f"{m['a1_accuracy']:5.0%} | {m['m3_accuracy']:5.0%} | "
+              f"{m['a1_m3_asymmetry_pp']:5.1f} | "
+              f"{m['mean_latency_ms']:8.0f}ms | {status:>12}", flush=True)
+
+
 def main():
-    parser = argparse.ArgumentParser(description="R9.1: Uncensored reasoning-budget curve")
+    parser = argparse.ArgumentParser(description="MODEL_POLICY_SHOOTOUT")
     parser.add_argument("--model-path", required=True)
+    parser.add_argument("--model-name", required=True,
+                        help="Human-readable model name for the results table")
     parser.add_argument("--llama-server", required=True)
     parser.add_argument("--output", required=True)
-    parser.add_argument("--budgets", default="256,384,512,768,1024",
-                        help="Comma-separated reasoning budgets")
-    parser.add_argument("--max-tokens", type=int, default=2048,
-                        help="Max tokens — high enough to prevent truncation")
+    parser.add_argument("--budget", type=int, default=None,
+                        help="Single budget for Stage 1 early gate")
+    parser.add_argument("--budgets", default=None,
+                        help="Comma-separated budgets for Stage 2+ (overrides --budget)")
+    parser.add_argument("--max-tokens", type=int, default=2048)
     parser.add_argument("--parallel", type=int, default=4)
     parser.add_argument("--port", type=int, default=8081)
     args = parser.parse_args()
 
-    budgets = [int(b) for b in args.budgets.split(",")]
+    if args.budgets:
+        budgets = [int(b) for b in args.budgets.split(",")]
+    elif args.budget is not None:
+        budgets = [args.budget]
+    else:
+        budgets = [128]  # Default: Stage 1 early gate
+
     test_states = make_test_states()
+    print(f"MODEL: {args.model_name}", flush=True)
+    print(f"Model path: {args.model_path}", flush=True)
     print(f"Test states: {len(test_states)}", flush=True)
     print(f"Budgets: {budgets}", flush=True)
     print(f"Max tokens: {args.max_tokens}", flush=True)
     print(f"Parallel: {args.parallel}", flush=True)
     print(f"Total requests: {len(budgets) * len(test_states)}", flush=True)
-    print(f"Mode: per-request thinking_budget_tokens (single server)", flush=True)
 
-    # Start ONE server for all budgets
+    # Start ONE server
     proc = start_server(args.llama_server, args.model_path, args.parallel, args.port)
     try:
         # Warmup
         print("  Warmup...", flush=True)
         warmup_data = json.dumps({
-            "model": "test",
+            "model": args.model_name,
             "messages": [
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": build_user_prompt(test_states[0])},
             ],
             "max_tokens": 100, "temperature": 0,
             "thinking_budget_tokens": 0,
+            "response_format": ACTION_SCHEMA,
         }).encode()
         req = urllib.request.Request(
             f"http://127.0.0.1:{args.port}/v1/chat/completions",
             data=warmup_data, headers={"Content-Type": "application/json"},
         )
-        urllib.request.urlopen(req, timeout=60)
+        urllib.request.urlopen(req, timeout=120)
         print("  Warmup done", flush=True)
 
-        all_results = []
-        for budget in budgets:
+        all_metrics = []
+        early_reject = False
+
+        for bi, budget in enumerate(budgets):
             print(f"\n{'='*80}", flush=True)
-            print(f"REASONING BUDGET = {budget} (per-request, parallel={args.parallel})", flush=True)
+            print(f"BUDGET = {budget} (parallel={args.parallel})", flush=True)
             print(f"{'='*80}", flush=True)
 
             t0 = time.time()
             results = []
             with ThreadPoolExecutor(max_workers=args.parallel) as pool:
                 futures = {
-                    pool.submit(run_single_request, args.port, state, budget, args.max_tokens): state
+                    pool.submit(run_single_request, args.port, state, budget,
+                               args.max_tokens, args.model_name): state
                     for state in test_states
                 }
                 for future in as_completed(futures):
@@ -339,8 +370,6 @@ def main():
                     print(f"  {result['state_id']:20s}  expected={result['expected_action']:12s}  "
                           f"got={result['actual_action']:12s}  {status}  "
                           f"tokens={result['completion_tokens']}  "
-                          f"reason={result['reasoning_tokens_estimated']}  "
-                          f"answer={result['answer_tokens_estimated']}  "
                           f"latency={result['latency_ms']}ms  "
                           f"finish={result['finish_reason']}", flush=True)
 
@@ -348,111 +377,72 @@ def main():
             results.sort(key=lambda r: r["state_id"])
             metrics = compute_metrics(results, budget, args.max_tokens)
             metrics["wall_time_s"] = round(wall_time, 2)
-            all_results.append(metrics)
-            print(f"  Wall time: {wall_time:.1f}s", flush=True)
+            all_metrics.append(metrics)
+
+            print(f"\n  Summary (budget={budget}):", flush=True)
+            print(f"    Decoder success:      {metrics['decoder_success']:.1%}", flush=True)
+            print(f"    Core action accuracy: {metrics['core_action_accuracy']:.1%}", flush=True)
+            print(f"    Fail-closed rate:     {metrics['fail_closed_rate']:.1%}", flush=True)
+            print(f"    Length failures:      {metrics['length_failure_rate']:.1%}", flush=True)
+            print(f"    Mean latency:         {metrics['mean_latency_ms']:.0f}ms", flush=True)
+            print(f"    Wall time:            {wall_time:.1f}s", flush=True)
+            print(f"    Per-action: {metrics['per_action_accuracy']}", flush=True)
+
+            # Early gate check (only for first budget)
+            if bi == 0 and len(budgets) > 1:
+                if metrics["core_action_accuracy"] < EARLY_GATE_THRESHOLD:
+                    print(f"\n  *** EARLY REJECT: core accuracy {metrics['core_action_accuracy']:.0%} < {EARLY_GATE_THRESHOLD:.0%} ***", flush=True)
+                    early_reject = True
+                    break
 
     finally:
         stop_server(proc)
 
-    # Compute action agreement vs highest budget with 100% decoder success
-    valid_results = [r for r in all_results if r["decoder_success"] == 1.0 and r["length_failure_rate"] == 0.0]
-    if valid_results:
-        reference = max(valid_results, key=lambda r: r["reasoning_budget"])
-        ref_actions = {r["state_id"]: r["actual_action"] for r in reference["results"]}
-        ref_budget = reference["reasoning_budget"]
-    else:
-        reference = all_results[-1]
-        ref_actions = {r["state_id"]: r["actual_action"] for r in reference["results"]}
-        ref_budget = reference["reasoning_budget"]
+    # Print shootout table
+    print_shootout_table(args.model_name, all_metrics)
 
+    # Final verdict
     print(f"\n{'='*80}", flush=True)
-    print(f"ACTION AGREEMENT vs {ref_budget} (reference, decoder={reference['decoder_success']:.0%})", flush=True)
+    print("VERDICT", flush=True)
     print(f"{'='*80}", flush=True)
-    for metrics in all_results:
-        budget = metrics["reasoning_budget"]
-        if budget == ref_budget:
-            agreement = 1.0
+
+    if early_reject:
+        verdict = "EARLY_REJECT"
+        print(f"  {args.model_name}: EARLY_REJECT (core < {EARLY_GATE_THRESHOLD:.0%})", flush=True)
+    else:
+        any_pass = any(m["all_gates_pass"] for m in all_metrics)
+        if any_pass:
+            passing = [m for m in all_metrics if m["all_gates_pass"]]
+            best = min(passing, key=lambda m: m["reasoning_budget"])
+            verdict = "QUALIFIED"
+            print(f"  {args.model_name}: QUALIFIED at budget={best['reasoning_budget']}", flush=True)
+            print(f"  Core accuracy: {best['core_action_accuracy']:.0%}", flush=True)
+            print(f"  All gates passed", flush=True)
         else:
-            agree = sum(1 for r in metrics["results"]
-                       if r["actual_action"] == ref_actions.get(r["state_id"]))
-            agreement = agree / len(metrics["results"])
-        metrics["action_agreement_vs_reference"] = round(agreement, 4)
-        metrics["reference_budget"] = ref_budget
-        print(f"  Budget {budget:5d}: agreement = {agreement:.1%}", flush=True)
-
-    # Gate evaluation
-    print(f"\n{'='*80}", flush=True)
-    print("GATE EVALUATION", flush=True)
-    print(f"{'='*80}", flush=True)
-    gate_results = []
-    for metrics in all_results:
-        gates = {
-            "decoder_success_100": metrics["decoder_success"] == 1.0,
-            "fail_closed_0": metrics["fail_closed_rate"] == 0.0,
-            "core_accuracy_80": metrics["core_action_accuracy"] >= 0.80,
-            "length_failures_0": metrics["length_failure_rate"] == 0.0,
-            "a1_m3_asymmetry_20pp": metrics["a1_m3_asymmetry_pp"] <= 20.0,
-            "non_defer_to_defer_20": metrics["non_defer_to_defer_rate"] <= 0.20,
-        }
-        for action in ["DEFER", "ANSWER", "VERIFY", "RETRIEVE"]:
-            acc = metrics["per_action_accuracy"].get(action, 0)
-            gates[f"{action.lower()}_75"] = acc >= 0.75
-
-        all_pass = all(gates.values())
-        metrics["gates"] = gates
-        metrics["all_gates_pass"] = all_pass
-        gate_results.append({
-            "budget": metrics["reasoning_budget"],
-            "all_pass": all_pass,
-            "failed_gates": [k for k, v in gates.items() if not v],
-        })
-        status = "PASS" if all_pass else "FAIL"
-        fails = "(" + ", ".join(k for k, v in gates.items() if not v) + ")" if not all_pass else ""
-        print(f"  Budget {metrics['reasoning_budget']:5d}: {status} {fails}", flush=True)
-
-    passing = [g for g in gate_results if g["all_pass"]]
-    if passing:
-        min_budget = min(g["budget"] for g in passing)
-        print(f"\n  MINIMUM PASSING BUDGET: {min_budget}", flush=True)
-    else:
-        min_budget = None
-        print(f"\n  NO BUDGET PASSED ALL GATES", flush=True)
+            verdict = "FAIL"
+            best = max(all_metrics, key=lambda m: m["core_action_accuracy"])
+            print(f"  {args.model_name}: FAIL", flush=True)
+            print(f"  Best core accuracy: {best['core_action_accuracy']:.0%} at budget={best['reasoning_budget']}", flush=True)
+            print(f"  Failed gates: {best['failed_gates']}", flush=True)
 
     # Save
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output = {
-        "test": "R9.1_uncensored_reasoning_budget_curve",
-        "model": "LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M",
+        "test": "MODEL_POLICY_SHOOTOUT",
+        "model": args.model_name,
+        "model_path": args.model_path,
         "n_test_states": len(test_states),
-        "budgets_tested": budgets,
+        "budgets_tested": [m["reasoning_budget"] for m in all_metrics],
         "max_tokens": args.max_tokens,
         "parallel_slots": args.parallel,
-        "total_requests": len(budgets) * len(test_states),
-        "per_request_budget": True,
-        "reasoning_format": "deepseek",
-        "results": all_results,
-        "gate_results": gate_results,
-        "minimum_passing_budget": min_budget,
-        "reference_budget": ref_budget,
+        "early_gate_threshold": EARLY_GATE_THRESHOLD,
+        "verdict": verdict,
+        "results": all_metrics,
     }
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2)
     print(f"\nResults saved to {output_path}", flush=True)
-
-    # Summary table
-    print(f"\n{'='*80}", flush=True)
-    print("R9.1 SUMMARY", flush=True)
-    print(f"{'='*80}", flush=True)
-    print(f"{'Budget':>7} | {'Decoder':>8} | {'Core Acc':>9} | {'Len Fail':>9} | "
-          f"{'Tokens':>7} | {'Reason':>7} | {'Answer':>7} | {'Latency':>8} | {'Wall':>6} | {'Agree':>6}")
-    print("-" * 105)
-    for r in all_results:
-        print(f"{r['reasoning_budget']:7d} | {r['decoder_success']:8.0%} | {r['core_action_accuracy']:9.0%} | "
-              f"{r['length_failure_rate']:9.0%} | {r['mean_completion_tokens']:7.0f} | "
-              f"{r['mean_reasoning_tokens_estimated']:7.0f} | {r['mean_answer_tokens_estimated']:7.0f} | "
-              f"{r['mean_latency_ms']:8.0f}ms | {r.get('wall_time_s', 0):6.1f}s | "
-              f"{r.get('action_agreement_vs_reference', 0):6.0%}")
 
 
 if __name__ == "__main__":

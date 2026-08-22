@@ -1,0 +1,56 @@
+{
+  "test": "R9.1_closure",
+  "model": "LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M",
+  "status": "UNQUALIFIED",
+  "r13_eligible": false,
+  "date": "2025-01-20",
+  "best_clean_tested_condition": {
+    "reasoning_budget": 256,
+    "max_tokens": 2048,
+    "decoder_success": 1.0,
+    "length_failure_rate": 0.0,
+    "core_action_accuracy": 0.65,
+    "per_action_accuracy": {
+      "ANSWER": 1.0,
+      "RETRIEVE": 0.667,
+      "VERIFY": 0.5,
+      "DEFER": 0.0,
+      "SEARCH_MORE": 0.0,
+      "REASON_MORE": 0.0
+    },
+    "a1_accuracy": 0.65,
+    "m3_accuracy": 0.50,
+    "a1_m3_asymmetry_pp": 15.0,
+    "mean_latency_ms": 4306,
+    "wall_time_s": 23.0
+  },
+  "blocking_failures": [
+    "core_accuracy < 80% (best = 65%)",
+    "DEFER < 75% (best = 0%)",
+    "RETRIEVE < 75% (best = 67%)"
+  ],
+  "passing_gates": [
+    "decoder_success_100",
+    "fail_closed_0 (at budget 256)",
+    "length_failures_0 (at budget 256)",
+    "a1_m3_asymmetry_20pp (15pp)"
+  ],
+  "key_findings": [
+    "Reasoning budget has a real effect on generation: tokens increase from 265 to 402 as budget goes 256->1024",
+    "Additional reasoning does NOT improve policy accuracy; it degrades it (65% -> 25%)",
+    "Budgets 512+ are truncated even at max_tokens=2048 because reasoning consumes the token budget before the JSON answer is produced",
+    "The model's fundamental weakness is DEFER (0% accuracy) — it confuses DEFER with STOP or FAIL_CLOSED",
+    "RETRIEVE accuracy (67%) is close but below the 75% gate",
+    "Per-request thinking_budget_tokens works on llama.cpp, enabling single-server multi-budget testing",
+    "The --reasoning-format deepseek mode captures reasoning_content separately from the JSON answer"
+  ],
+  "scientific_interpretation": "LFM2.5-2.6B cannot reliably distinguish DEFER from STOP, nor consistently choose RETRIEVE when retrieval is the correct affordance. The controller interface (7-action vocabulary, JSON schema, frozen policy states) is not the bottleneck — model capacity is. Additional reasoning budget does not compensate; it introduces truncation without improving action selection.",
+  "next_step": "Test LFM2.5-8B-A1B-GGUF:Q5_K_M with the same 20 frozen states and early gate at budget=128",
+  "do_not_modify": [
+    "frozen prompts",
+    "action semantics",
+    "JSON schema",
+    "policy states",
+    "qualification gates"
+  ]
+}
