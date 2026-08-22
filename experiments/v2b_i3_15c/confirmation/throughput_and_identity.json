@@ -1,0 +1,31 @@
+{
+  "throughput": {
+    "parallel": 4,
+    "n_requests": 120,
+    "wall_time_s": 111.0,
+    "requests_per_sec": 1.08,
+    "tokens_per_sec": 26.3,
+    "total_tokens": 2920,
+    "mean_latency_ms": 3689,
+    "p50_latency_ms": 3585,
+    "p95_latency_ms": 4539
+  },
+  "identity": {
+    "model_repository": "bartowski/google_gemma-3-12b-it-qat-GGUF",
+    "gguf_filename": "google_gemma-3-12b-it-qat-Q4_0.gguf",
+    "gguf_sha256": "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+    "llama_cpp_commit": "d775b8967a46",
+    "runtime_archive_sha256": "e30c1e7c5d92737120adfe0c8e52b1d45b9ce720218cfea3306802609fdb47a1",
+    "chat_template_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "json_schema_sha256": "4ca167149ad923e0f70a60e54b9f0a6d61d73578543a7df7e9457d32e9ccb8da",
+    "system_prompt_sha256": "eca6a6c2686aa97f5929b1ec8c3ed9b9fa5553107aba4322b168482b7fb5b0af",
+    "action_semantics_sha256": "9eba55958c254b249e7d13701de9aec7584f7187c29527dd3a94353e4a0efd74",
+    "temperature": 0.0,
+    "max_tokens": 128,
+    "parallel_slots": 4,
+    "reasoning_budget": "NOT_APPLICABLE",
+    "llama_server_version": "version: 0.2.0-dev (build 1, commit d775b89)\nbuilt with GNU 11.4.0 for Linux x86_64",
+    "gpu_info": "NVIDIA L4, 8.9, 23034 MiB",
+    "cuda_arch": "sm_89"
+  }
+}

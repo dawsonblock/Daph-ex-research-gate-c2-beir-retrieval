@@ -142,14 +142,31 @@
 
   "backend_requirements": {
     "primary": "LOCAL_POLICY_GEMMA3_12B_QAT_Q4 (google/gemma-3-12b-it-qat-q4_0-gguf via bartowski mirror) — frozen pinned model",
-    "qualification": "POLICY_QUALIFICATION_V2 (80+ states, all gates passed)",
+    "qualification": "POLICY_QUALIFICATION_V2 (80 states, all gates passed: core=92%, DEFER=85%, ANSWER=100%, VERIFY=100%, RETRIEVE=85%, decoder=100%, len_fail=0%, asym=10pp)",
     "llama_cpp_commit": "d775b8967a46",
+    "llama_cpp_version": "0.2.0-dev (build 1, commit d775b89), built with GNU 11.4.0 for Linux x86_64",
     "llama_runtime_archive_sha256": "e30c1e7c5d92737120adfe0c8e52b1d45b9ce720218cfea3306802609fdb47a1",
+    "gguf_sha256": "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+    "system_prompt_sha256": "eca6a6c2686aa97f5929b1ec8c3ed9b9fa5553107aba4322b168482b7fb5b0af",
+    "json_schema_sha256": "4ca167149ad923e0f70a60e54b9f0a6d61d73578543a7df7e9457d32e9ccb8da",
+    "action_semantics_sha256": "9eba55958c254b249e7d13701de9aec7584f7187c29527dd3a94353e4a0efd74",
+    "chat_template_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 (empty — not exposed by llama-server /v1/models; chat template is embedded in GGUF, captured by gguf_sha256)",
     "reasoning_budget": "NOT_APPLICABLE (validated: budgets 0/128/384 produce identical results, no reasoning_content produced, 20/20 action agreement across budgets)",
-    "max_tokens": "TBD (R9b optimization pending)",
+    "max_tokens": 128,
+    "max_tokens_r9b": "Selected via R9b: lowest ceiling with 100% decoder, 0 length failures, 100% action agreement vs reference (max_tokens=2048)",
     "temperature": 0.0,
     "response_format": "json_schema",
     "parallel_slots": 4,
+    "gpu": "NVIDIA L4, compute_cap=8.9, 23034 MiB",
+    "cuda_arch": "sm_89",
+    "throughput": {
+      "parallel": 4,
+      "requests_per_sec": 1.08,
+      "tokens_per_sec": 26.30,
+      "mean_latency_ms": 3689,
+      "p50_latency_ms": 3585,
+      "p95_latency_ms": 4539
+    },
     "note": "Backend must pass POLICY_QUALIFICATION_V2 before entering frozen experiment. V1 used LiquidAI/LFM2.5-2.6B which failed qualification."
   },
 

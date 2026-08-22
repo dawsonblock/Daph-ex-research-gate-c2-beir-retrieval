@@ -1,0 +1,109 @@
+{
+  "reference": {
+    "max_tokens": 2048,
+    "decoder_success": 1.0,
+    "core_action_accuracy": 0.925,
+    "length_failure_rate": 0.0
+  },
+  "candidates": [
+    {
+      "max_tokens": 64,
+      "decoder_success": 1.0,
+      "length_failure_rate": 0.0,
+      "core_action_accuracy": 0.925,
+      "agreement_vs_reference": 0.9875,
+      "n_agreements": 79,
+      "n_total": 80,
+      "n_disagreements": 1,
+      "disagreements": [
+        {
+          "state_id": "V2_M3_RETRIEVE_004",
+          "reference": "ANSWER",
+          "current": "REASON_MORE",
+          "finish_reason": "stop"
+        }
+      ],
+      "mean_latency_ms": 3662.9,
+      "mean_completion_tokens": 24.4,
+      "passes": false
+    },
+    {
+      "max_tokens": 96,
+      "decoder_success": 1.0,
+      "length_failure_rate": 0.0,
+      "core_action_accuracy": 0.925,
+      "agreement_vs_reference": 0.9875,
+      "n_agreements": 79,
+      "n_total": 80,
+      "n_disagreements": 1,
+      "disagreements": [
+        {
+          "state_id": "V2_M3_RETRIEVE_008",
+          "reference": "ANSWER",
+          "current": "REASON_MORE",
+          "finish_reason": "stop"
+        }
+      ],
+      "mean_latency_ms": 3665.2,
+      "mean_completion_tokens": 24.5,
+      "passes": false
+    },
+    {
+      "max_tokens": 128,
+      "decoder_success": 1.0,
+      "length_failure_rate": 0.0,
+      "core_action_accuracy": 0.925,
+      "agreement_vs_reference": 1.0,
+      "n_agreements": 80,
+      "n_total": 80,
+      "n_disagreements": 0,
+      "disagreements": [],
+      "mean_latency_ms": 3593.3,
+      "mean_completion_tokens": 24.3,
+      "passes": true
+    },
+    {
+      "max_tokens": 192,
+      "decoder_success": 1.0,
+      "length_failure_rate": 0.0,
+      "core_action_accuracy": 0.925,
+      "agreement_vs_reference": 0.9875,
+      "n_agreements": 79,
+      "n_total": 80,
+      "n_disagreements": 1,
+      "disagreements": [
+        {
+          "state_id": "V2_M3_RETRIEVE_004",
+          "reference": "ANSWER",
+          "current": "REASON_MORE",
+          "finish_reason": "stop"
+        }
+      ],
+      "mean_latency_ms": 3672.2,
+      "mean_completion_tokens": 24.4,
+      "passes": false
+    },
+    {
+      "max_tokens": 256,
+      "decoder_success": 1.0,
+      "length_failure_rate": 0.0,
+      "core_action_accuracy": 0.925,
+      "agreement_vs_reference": 0.9875,
+      "n_agreements": 79,
+      "n_total": 80,
+      "n_disagreements": 1,
+      "disagreements": [
+        {
+          "state_id": "V2_M3_RETRIEVE_004",
+          "reference": "ANSWER",
+          "current": "REASON_MORE",
+          "finish_reason": "stop"
+        }
+      ],
+      "mean_latency_ms": 3632.3,
+      "mean_completion_tokens": 24.6,
+      "passes": false
+    }
+  ],
+  "selected_max_tokens": 128
+}

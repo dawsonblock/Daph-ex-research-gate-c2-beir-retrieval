@@ -141,7 +141,9 @@ def main():
 
     # 8. Frozen hashes match (protocol exists)
     print("\n[8/10] Frozen hashes match (protocol exists)...")
-    protocol_path = REPO_DIR / "experiments/v2b_i3_15c/confirmation/confirmation_protocol_v1.json"
+    protocol_path = REPO_DIR / "experiments/v2b_i3_15c/confirmation/confirmation_protocol_v2.json"
+    if not protocol_path.exists():
+        protocol_path = REPO_DIR / "experiments/v2b_i3_15c/confirmation/confirmation_protocol_v1.json"
     if protocol_path.exists():
         with open(protocol_path) as f:
             protocol = json.load(f)
