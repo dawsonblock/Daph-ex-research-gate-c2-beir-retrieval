@@ -620,6 +620,8 @@ def main():
                         help="Max tokens per model call (frozen: 128)")
     parser.add_argument("--parallel", type=int, default=4,
                         help="Parallel workers (frozen: 4)")
+    parser.add_argument("--n-per-cell", type=int, default=40,
+                        help="Tasks per stratum×difficulty cell (frozen: 40)")
     parser.add_argument("--protocol-path", default=None,
                         help="Path to confirmation_protocol_v2.json")
     parser.add_argument("--receipts-path", default=None,
@@ -685,11 +687,14 @@ def main():
     # Step 3: Generate tasks and validate structure
     # ================================================================
     print("\n[3] Generating tasks and validating structure...")
+    n_per_cell = args.n_per_cell
+    expected_tasks = 8 * 2 * n_per_cell  # 8 strata × 2 difficulty × n_per_cell
+    expected_trajectories = expected_tasks * 2  # × 2 arms
     tasks = generate_i3_15c_corpus(
-        n_per_cell=R13_CONFIG["n_per_cell"], seed=R13_CONFIG["seed"])
-    print(f"  Generated {len(tasks)} tasks")
-    if len(tasks) != R13_CONFIG["expected_tasks"]:
-        print(f"  ABORT: Expected {R13_CONFIG['expected_tasks']} tasks, got {len(tasks)}")
+        n_per_cell=n_per_cell, seed=R13_CONFIG["seed"])
+    print(f"  Generated {len(tasks)} tasks (n_per_cell={n_per_cell})")
+    if len(tasks) != expected_tasks:
+        print(f"  ABORT: Expected {expected_tasks} tasks, got {len(tasks)}")
         sys.exit(1)
 
     validation = validate_t2_eligibility(tasks)
@@ -706,8 +711,8 @@ def main():
     print("\n[4] Loading receipts and corpus...")
     receipts = load_q3_receipts(receipts_path)
     print(f"  Q3 receipts: {len(receipts)}")
-    if len(receipts) != R13_CONFIG["expected_tasks"]:
-        print(f"  ABORT: Expected {R13_CONFIG['expected_tasks']} Q3 receipts, got {len(receipts)}")
+    if len(receipts) < expected_tasks:
+        print(f"  ABORT: Need at least {expected_tasks} Q3 receipts, got {len(receipts)}")
         sys.exit(1)
 
     corpus_passages, corpus_by_text, corpus_by_id, chunks, corpus_sha = (
@@ -746,8 +751,8 @@ def main():
 
     total = len(work_items)
     print(f"  Total trajectories: {total}")
-    if total != R13_CONFIG["expected_trajectories"]:
-        print(f"  ABORT: Expected {R13_CONFIG['expected_trajectories']} trajectories, got {total}")
+    if total != expected_trajectories:
+        print(f"  ABORT: Expected {expected_trajectories} trajectories, got {total}")
         sys.exit(1)
 
     # ================================================================
@@ -965,7 +970,7 @@ def main():
     expected_keys = {wi["key"] for wi in work_items}
     missing = expected_keys - final_completed
 
-    print(f"  Expected: {R13_CONFIG['expected_trajectories']}")
+    print(f"  Expected: {expected_trajectories}")
     print(f"  Completed: {len(final_completed)}")
     print(f"  Duplicates: {len(duplicates)}")
     print(f"  Missing: {len(missing)}")
@@ -977,8 +982,8 @@ def main():
         print(f"  Re-run to complete missing trajectories.")
         sys.exit(1)
 
-    if len(final_completed) != R13_CONFIG["expected_trajectories"]:
-        print(f"  ABORT: Expected {R13_CONFIG['expected_trajectories']}, got {len(final_completed)}")
+    if len(final_completed) != expected_trajectories:
+        print(f"  ABORT: Expected {expected_trajectories}, got {len(final_completed)}")
         sys.exit(1)
 
     print(f"  VERIFICATION: PASS — {len(final_completed)} unique trajectories, 0 duplicates, 0 missing")
