@@ -25,6 +25,7 @@ STALE_THRESHOLD=3  # 3 consecutive cycles with no progress = 15 min
 LOG="$DEST/checkpoint_loop.log"
 ALERT_LOG="$DEST/alerts.log"
 STATE_FILE="$DEST/watcher_state.json"
+REPO_ROOT="$HOME/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a"
 
 mkdir -p "$DEST"
 
@@ -151,13 +152,32 @@ while true; do
 
     # Verify checkpoint integrity
     if [ -f "$DEST/results.jsonl" ] && [ -f "$DEST/progress.json" ]; then
-        # R12.9M: Verify remote run_manifest SHA before accepting checkpoint
-        if [ -f "$DEST/run_manifest.json" ]; then
-            REMOTE_SHA=$(python3 -c "import json; print(json.load(open('$DEST/run_manifest.json')).get('confirmation_executable_sha256',''))" 2>/dev/null || echo "")
-            if [ -n "$REMOTE_SHA" ] && [ "$REMOTE_SHA" != "$EXPECTED_CONFIRMATION_SHA" ]; then
-                alert "Remote confirmation_executable_sha mismatch: got ${REMOTE_SHA:0:16}... expected ${EXPECTED_CONFIRMATION_SHA:0:16}..."
-                log "  REJECTING checkpoint — wrong VM or stale session"
-                # Don't update progress or accept this checkpoint
+        # R12.9M: Verify remote identities before accepting checkpoint
+        # R13-PROV-001: run_manifest.confirmation_executable_sha256 is defective
+        # (aliases runtime_config_sha256). Don't check it. Check other identities.
+        if [ -f "$DEST/identity_frozen.json" ]; then
+            IDENTITY_OK=$(python3 -c "
+import json
+with open('$DEST/identity_frozen.json') as f:
+    ident = json.load(f)
+checks = {
+    'protocol_sha256': '9590440d2744a6409cc19bc7ba8168d22cb7cee80952fb520a54134815c312c5',
+    'gguf_sha256': '2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d',
+    'runtime_config_sha256': 'c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3',
+    'backend_identity': '2ad4c9ce431a2d5b',
+}
+all_ok = True
+for field, expected in checks.items():
+    actual = ident.get(field, '')
+    if actual != expected:
+        print(f'MISMATCH:{field}')
+        all_ok = False
+if all_ok:
+    print('OK')
+" 2>/dev/null || echo "ERROR")
+            if [ "$IDENTITY_OK" != "OK" ]; then
+                alert "Identity mismatch in frozen identity file: $IDENTITY_OK"
+                log "  REJECTING checkpoint — identity mismatch"
                 STALE_COUNT=$((STALE_COUNT + 1))
                 log "  Sleeping ${INTERVAL}s..."
                 sleep "$INTERVAL"
@@ -180,6 +200,24 @@ while true; do
                 log "  Progress OK: $CURRENT trajectories"
             fi
             LAST_COMPLETED=$CURRENT
+
+            # Non-blocking audit: runtime replacement validation (R13-RUNTIME-001)
+            QUARANTINE_FILE="$REPO_ROOT/experiments/v2b_i3_15c/confirmation/r13/quarantine/runtime_deviation/results.jsonl"
+            VALIDATOR="$REPO_ROOT/scripts/r13_validate_runtime_replacements.py"
+            if [ -f "$QUARANTINE_FILE" ] && [ -f "$VALIDATOR" ]; then
+                AUDIT=$(python3 "$VALIDATOR" \
+                    --accepted "$DEST/results.jsonl" \
+                    --quarantine "$QUARANTINE_FILE" \
+                    --frozen-runtime-sha c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3 \
+                    --output "$DEST/r13_runtime_replacement_status.json" \
+                    --run-active 2>&1)
+                AUDIT_STATUS=$(echo "$AUDIT" | grep "status:" | awk '{print $2}')
+                if [ "$AUDIT_STATUS" = "VALIDATION_FAILURE" ]; then
+                    alert "R13-RUNTIME-001 validation failure: $AUDIT"
+                elif [ "$AUDIT_STATUS" = "QUARANTINED_AND_FULLY_RERUN" ]; then
+                    log "  R13-RUNTIME-001: all 28 replacements verified (frozen runtime)"
+                fi
+            fi
 
             # Check for completion
             EXPECTED=$(python3 -c "import json; print(json.load(open('$DEST/progress.json'))['expected_trajectories'])" 2>/dev/null || echo 1280)

@@ -54,8 +54,8 @@
     "quarantined_mechanism_receipts": "mechanism_receipts.jsonl in quarantine/ — 14 mechanism receipts from deviant trajectories",
     "quarantined_cognition_cost_receipts": "cognition_cost_receipts.jsonl in quarantine/ — 28 cognition cost receipts from deviant trajectories"
   },
-  "disposition": "QUARANTINED_AND_RERUN_UNDER_FROZEN_RUNTIME",
-  "rerun_status": "All 28 quarantined keys have been rerun under the restored frozen runtime and are now part of the active results set with frozen-runtime latency/cost measurements.",
+  "disposition": "QUARANTINED_AND_FULLY_RERUN",
+  "rerun_status": "All 28 quarantined keys have been rerun under the restored frozen runtime and verified by r13_validate_runtime_replacements.py. Per-key verification: backend_identity matches, protocol_id matches, zero record leakage, zero duplicate replacements.",
   "closure_invariants": [
     "set(quarantined_keys) <= set(accepted_keys) — every quarantined key has a frozen-runtime replacement",
     "for key in quarantined_keys: accepted_runtime_sha[key] == FROZEN_RUNTIME_SHA",

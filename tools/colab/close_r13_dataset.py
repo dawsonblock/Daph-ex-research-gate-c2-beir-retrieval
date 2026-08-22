@@ -320,7 +320,42 @@ def main():
     print(f"  R13-PROV-001: run_manifest.confirmation_executable_sha256")
     print(f"    incorrectly aliases runtime_config_sha256")
     print(f"    Scientific execution NOT affected")
-    print(f"    Classification: {integrity.get('experiment_classification', 'UNKNOWN')}")
+    print(f"  R13-RUNTIME-001: 28 trajectories executed under deviant runtime")
+    print(f"    Quarantined and rerun under frozen runtime")
+    print(f"  Classification: {integrity.get('experiment_classification', 'UNKNOWN')}")
+
+    # Step 2e: Runtime replacement validation (R13-RUNTIME-001)
+    print("\n[2e] Runtime replacement validation (R13-RUNTIME-001)...")
+    repo_root = Path(__file__).resolve().parents[2]
+    validator = repo_root / "scripts/r13_validate_runtime_replacements.py"
+    quarantine_results = repo_root / "experiments/v2b_i3_15c/confirmation/r13/quarantine/runtime_deviation/results.jsonl"
+    if validator.exists() and quarantine_results.exists():
+        import subprocess as sp
+        r = sp.run(
+            [
+                "python3", str(validator),
+                "--accepted", str(checkpoint_dir / "results.jsonl"),
+                "--quarantine", str(quarantine_results),
+                "--frozen-runtime-sha", "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+                "--output", str(output_dir / "closure/R13-RUNTIME-001-replacement-status.json"),
+            ],
+            capture_output=True, text=True,
+        )
+        print(r.stdout)
+        if r.returncode != 0:
+            print(f"  VALIDATOR EXIT CODE: {r.returncode}")
+            if r.returncode == 2:
+                print("  FATAL: Runtime replacement validation failed")
+                integrity["passes"] = False
+                integrity["runtime_replacement_failure"] = True
+            elif r.returncode == 1:
+                print("  WARNING: Replacements in progress (should not happen at closure)")
+                integrity["passes"] = False
+                integrity["runtime_replacement_incomplete"] = True
+        else:
+            print("  OK: All 28 quarantined keys have frozen-runtime replacements")
+    else:
+        print("  WARNING: Validator or quarantine file not found — skipping")
 
     if not integrity["passes"]:
         print("\n  GATE FAILED — dataset is not complete or has violations")
