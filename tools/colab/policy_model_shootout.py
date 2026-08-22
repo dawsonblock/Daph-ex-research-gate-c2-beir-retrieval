@@ -307,6 +307,8 @@ def main():
     parser.add_argument("--max-tokens", type=int, default=2048)
     parser.add_argument("--parallel", type=int, default=4)
     parser.add_argument("--port", type=int, default=8081)
+    parser.add_argument("--states", default="v1",
+                        help="State set: 'v1' (20 states) or 'v2' (80 expanded states)")
     args = parser.parse_args()
 
     if args.budgets:
@@ -316,7 +318,13 @@ def main():
     else:
         budgets = [128]  # Default: Stage 1 early gate
 
-    test_states = make_test_states()
+    if args.states == "v2":
+        from tools.colab.policy_qualification_v2_states import make_qualification_v2_states
+        test_states = make_qualification_v2_states()
+        print(f"Using POLICY_QUALIFICATION_V2 states ({len(test_states)} states)", flush=True)
+    else:
+        test_states = make_test_states()
+        print(f"Using V1 states ({len(test_states)} states)", flush=True)
     print(f"MODEL: {args.model_name}", flush=True)
     print(f"Model path: {args.model_path}", flush=True)
     print(f"Test states: {len(test_states)}", flush=True)

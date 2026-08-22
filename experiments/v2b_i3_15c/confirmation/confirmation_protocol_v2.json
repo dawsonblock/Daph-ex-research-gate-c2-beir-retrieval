@@ -1,0 +1,174 @@
+{
+  "protocol_id": "I3_15C_CONFIRMATION_PROTOCOL_V2",
+  "created": "2025-01-20",
+  "status": "FROZEN",
+  "classification": "PRE_SPECIFIED_CONFIRMATION",
+  "supersedes": "I3_15C_CONFIRMATION_PROTOCOL_V1",
+  "change_log": {
+    "change": "Policy backend replaced with independently qualified Gemma 3 12B IT QAT Q4_0. Liquid LFM2.5-2.6B and LFM2.5-8B-A1B both failed policy qualification (UNQUALIFIED and EARLY_REJECT respectively). Gemma 3 12B passed all gates at 90% core accuracy.",
+    "unchanged": [
+      "research_question",
+      "design (retrieval, strata, arms, n_per_cell, seed)",
+      "primary_contrast",
+      "secondary_contrasts",
+      "control_contrasts",
+      "safety_checks",
+      "cost_thresholds",
+      "promotion_criteria",
+      "frozen_identities (benchmark, t2_definition, t2_r1_implementation, utility, extractor, action_vocabulary, prompt, statistical_method, equivalence_margin)",
+      "preflight_checks"
+    ]
+  },
+
+  "research_question": "Does R1 (phase-conditioned representation routing) improve utility over A1 specifically on late-T2 tasks under Q3 retrieval?",
+
+  "design": {
+    "retrieval": "Q3_RERANKED only",
+    "strata": [
+      "T2_CONFLICT_IMMEDIATE",
+      "T2_CONFLICT_LATE_1",
+      "T2_CONFLICT_LATE_2",
+      "T2_CONFLICT_LATE_3",
+      "MATCHED_NEG_IMMEDIATE",
+      "MATCHED_NEG_LATE",
+      "DEFER_CONTROL",
+      "ANSWER_CONTROL"
+    ],
+    "arms": ["A1_INFERRED", "R1_INFERRED"],
+    "n_per_cell": 40,
+    "retrieval_difficulty_levels": ["easy", "hard"],
+    "total_unique_tasks": 640,
+    "total_trajectories": 1280,
+    "seed": 42
+  },
+
+  "primary_contrast": {
+    "name": "Delta_T2_late",
+    "definition": "U(R1) - U(A1) | T2_CONFLICT_LATE (LATE_1 + LATE_2 + LATE_3)",
+    "hypothesis": "Delta_T2_late > 0",
+    "criterion": "lower_endpoint_95CI > 0",
+    "method": "paired_bootstrap_5000"
+  },
+
+  "secondary_contrasts": [
+    {
+      "name": "I_phase",
+      "definition": "Delta_T2+ - Delta_DEFER-",
+      "hypothesis": "I_phase > 0",
+      "criterion": "lower_endpoint_95CI > 0",
+      "method": "direct_independent_bootstrap_5000"
+    },
+    {
+      "name": "Delta_T2_late_1",
+      "definition": "U(R1) - U(A1) | LATE_1 (one verification)",
+      "hypothesis": "exploratory"
+    },
+    {
+      "name": "Delta_T2_late_2",
+      "definition": "U(R1) - U(A1) | LATE_2 (two verifications)",
+      "hypothesis": "exploratory"
+    },
+    {
+      "name": "Delta_T2_late_3",
+      "definition": "U(R1) - U(A1) | LATE_3 (retrieve + verify)",
+      "hypothesis": "exploratory"
+    },
+    {
+      "name": "Delta_T2_immediate",
+      "definition": "U(R1) - U(A1) | T2_CONFLICT_IMMEDIATE",
+      "hypothesis": "exploratory"
+    }
+  ],
+
+  "control_contrasts": [
+    {
+      "name": "Delta_DEFER-",
+      "definition": "U(R1) - U(A1) | DEFER_CONTROL",
+      "criterion": "|mean| < 5.0 (TOST equivalence, margin=5.0)",
+      "method": "tost_bootstrap_90"
+    },
+    {
+      "name": "Delta_ANSWER",
+      "definition": "U(R1) - U(A1) | ANSWER_CONTROL",
+      "criterion": "|mean| < 5.0 (TOST equivalence, margin=5.0)",
+      "method": "tost_bootstrap_90"
+    },
+    {
+      "name": "Delta_MATCHED_NEG",
+      "definition": "U(R1) - U(A1) | MATCHED_NEG (immediate + late)",
+      "criterion": "|mean| < 5.0 (TOST equivalence, margin=5.0)",
+      "method": "tost_bootstrap_90"
+    }
+  ],
+
+  "safety_checks": [
+    {
+      "name": "FalseT2_controls",
+      "criterion": "FalseT2 <= 1% of control tasks",
+      "ideal": "FalseT2 = 0"
+    },
+    {
+      "name": "FalseT2_matched_neg",
+      "criterion": "FalseT2 = 0 on matched negative controls"
+    }
+  ],
+
+  "cost_thresholds": {
+    "Delta_Steps_T2+": "mean <= 1.5 x Steps_A1 (unless utility improvement justifies)",
+    "P_step_limit_R1_T2+": "<= P_step_limit_A1_T2+ + 0.15",
+    "Delta_Tokens_T2+": "no catastrophic growth (mean < 2x A1 tokens)"
+  },
+
+  "promotion_criteria": {
+    "effectiveness": "lower_endpoint_95CI(Delta_T2_late) > 0",
+    "phase_interaction": "prefer lower_endpoint_95CI(I_phase) > 0",
+    "safety": "FalseT2_controls <= 1%, ideally 0",
+    "controls": "Delta_DEFER-, Delta_ANSWER, Delta_MATCHED_NEG all equivalent (TOST)",
+    "cost": "no catastrophic growth in steps, tokens, latency",
+    "generalization": "at least 2 models show consistent directional benefit (for full promotion)"
+  },
+
+  "frozen_identities": {
+    "benchmark": "i3_15_t2_eligible (BENCHMARK_V2 with trigger-depth strata + matched controls)",
+    "t2_definition": "len(eliminated_hypotheses) == n_hypotheses and n_hypotheses > 0",
+    "t2_r1_implementation": "T2_R1_FROM_I3_12J (frozen_v2.6.0)",
+    "utility": "v2b_i3_1_utility_v1.json",
+    "extractor": "DeterministicRelationExtractor",
+    "action_vocabulary": ["ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"],
+    "prompt": "PROMPT_V2 (with SUFFICIENT/UNVERIFIED definitions and VERIFY-before-DEFER procedure)",
+    "statistical_method": "paired_bootstrap_5000 + direct_i_phase_bootstrap + TOST_equivalence_90",
+    "equivalence_margin": 5.0
+  },
+
+  "backend_requirements": {
+    "primary": "LOCAL_POLICY_GEMMA3_12B_QAT_Q4 (google/gemma-3-12b-it-qat-q4_0-gguf via bartowski mirror) — frozen pinned model",
+    "qualification": "POLICY_QUALIFICATION_V2 (80+ states, all gates passed)",
+    "llama_cpp_commit": "d775b8967a46",
+    "llama_runtime_archive_sha256": "e30c1e7c5d92737120adfe0c8e52b1d45b9ce720218cfea3306802609fdb47a1",
+    "reasoning_budget": "NOT_APPLICABLE (validated: budgets 0/128/384 produce identical results, no reasoning_content produced, 20/20 action agreement across budgets)",
+    "max_tokens": "TBD (R9b optimization pending)",
+    "temperature": 0.0,
+    "response_format": "json_schema",
+    "parallel_slots": 4,
+    "note": "Backend must pass POLICY_QUALIFICATION_V2 before entering frozen experiment. V1 used LiquidAI/LFM2.5-2.6B which failed qualification."
+  },
+
+  "preflight_checks": [
+    "manifest valid",
+    "structural T2 validation passed",
+    "backend schema gate passed",
+    "backend policy gate passed (POLICY_QUALIFICATION_V2)",
+    "retrieval receipts complete",
+    "prompt hashes frozen",
+    "A1/R1 control request equivalence audited",
+    "model identity matches protocol (Gemma 3 12B QAT Q4_0)",
+    "utility identity matches",
+    "bootstrap identity matches",
+    "llama.cpp runtime archive SHA256 verified",
+    "GGUF model fingerprint verified"
+  ],
+
+  "result_classification": "PRE_SPECIFIED_CONFIRMATION",
+
+  "note": "This protocol supersedes V1. The only change is the policy backend: Liquid LFM2.5-2.6B (UNQUALIFIED) is replaced by Gemma 3 12B IT QAT Q4_0 (QUALIFIED). All scientific design, hypotheses, contrasts, thresholds, and frozen identities are unchanged. This change occurs BEFORE R13 and does not contaminate the experiment."
+}
