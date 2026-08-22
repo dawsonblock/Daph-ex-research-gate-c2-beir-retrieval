@@ -44,8 +44,8 @@ def start_server(llama_server_bin: str, model_path: str,
     Uses --reasoning-format deepseek to capture reasoning_content.
     Per-request thinking_budget_tokens controls the reasoning budget.
     """
-    # Kill any existing server on this port
-    subprocess.run("pkill -f llama-server 2>/dev/null || true", shell=True)
+    # Kill any existing server on this port (use exact binary name, not -f which matches our script)
+    subprocess.run("pkill -f '/content/llama.cpp/build/bin/llama-server' 2>/dev/null || true", shell=True)
     time.sleep(2)
 
     cmd = [
@@ -60,15 +60,23 @@ def start_server(llama_server_bin: str, model_path: str,
     ]
     print(f"  Starting server: parallel={parallel}, reasoning-format=deepseek", flush=True)
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    for i in range(120):
+    for i in range(180):
         try:
             urllib.request.urlopen(f"http://127.0.0.1:{port}/v1/models", timeout=2)
             print(f"  Server ready after {i}s", flush=True)
             return proc
         except Exception:
+            if i > 0 and i % 30 == 0:
+                # Check if process is still alive
+                if proc.poll() is not None:
+                    # Process died — read output
+                    output = proc.stdout.read().decode() if proc.stdout else ""
+                    print(f"  Server process died (exit={proc.returncode})", flush=True)
+                    print(f"  Output: {output[:1000]}", flush=True)
+                    raise RuntimeError(f"Server process died: {output[:500]}")
             time.sleep(1)
     proc.terminate()
-    raise RuntimeError(f"Server failed to start within 120s")
+    raise RuntimeError(f"Server failed to start within 180s")
 
 
 def stop_server(proc: subprocess.Popen):
