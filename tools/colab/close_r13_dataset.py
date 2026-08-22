@@ -51,18 +51,38 @@ def verify_dataset_integrity(results: list[dict], expected: int = 1280) -> dict:
     duplicates = len(keys) - len(unique_keys)
     missing = expected - len(unique_keys)
 
-    # Check frozen identities across all records
+    # Check ALL frozen identities across every record — must be exactly one value each
+    # This is critical because R13 crossed VM boundaries.
     identity_fields = [
-        "protocol_id", "backend_identity",
+        "protocol_id",
+        "backend_identity",
+        "confirmation_executable_sha256",
+        "protocol_sha256",
+        "gguf_sha256",
+        "runtime_config_sha256",
+        "receipt_identity_sha256",
     ]
     identity_violations = []
+    identity_uniqueness = {}
     for field in identity_fields:
-        values = set(r.get(field, "") for r in results)
+        values = set(r.get(field, "") for r in results if r.get(field))
+        identity_uniqueness[field] = list(values)
         if len(values) > 1:
             identity_violations.append(f"{field}: {values}")
+        elif len(values) == 0:
+            identity_violations.append(f"{field}: MISSING from all records")
 
     # Check for errors
     error_count = sum(1 for r in results if r.get("terminal_result") == "BACKEND_ERROR")
+
+    # Check A1/R1 balance
+    arm_counts = {}
+    for r in results:
+        arm = r.get("arm", "unknown")
+        arm_counts[arm] = arm_counts.get(arm, 0) + 1
+
+    # Check retrieval condition is Q3 only
+    retrieval_conditions = set(r.get("retrieval_condition", "") for r in results if r.get("retrieval_condition"))
 
     report = {
         "total_records": len(results),
@@ -71,6 +91,9 @@ def verify_dataset_integrity(results: list[dict], expected: int = 1280) -> dict:
         "missing": missing,
         "errors": error_count,
         "identity_violations": identity_violations,
+        "identity_uniqueness": identity_uniqueness,
+        "arm_counts": arm_counts,
+        "retrieval_conditions": list(retrieval_conditions),
         "passes": (
             len(results) == expected
             and len(unique_keys) == expected
@@ -101,6 +124,8 @@ def create_raw_closed(checkpoint_dir: Path, output_dir: Path) -> Path:
         "confirmation_executable_sha256.txt",
         "semantic_error_attribution.json",
         "mechanism_receipts_strengthened.jsonl",
+        "execution_segments.jsonl",
+        "retry_receipts.jsonl",
     ]
 
     for fname in files_to_copy:
@@ -174,6 +199,50 @@ def main():
     print(f"  missing: {integrity['missing']}")
     print(f"  errors: {integrity['errors']}")
     print(f"  identity_violations: {integrity['identity_violations']}")
+    print(f"  arm_counts: {integrity['arm_counts']}")
+    print(f"  retrieval_conditions: {integrity['retrieval_conditions']}")
+    print(f"  identity_uniqueness:")
+    for field, values in integrity.get("identity_uniqueness", {}).items():
+        n = len(values)
+        status = "OK" if n == 1 else "VIOLATION"
+        val = values[0][:20] + "..." if values and len(values[0]) > 20 else (values[0] if values else "MISSING")
+        print(f"    {field}: {n} unique value(s) [{status}] = {val}")
+
+    # Step 2b: Verify execution segments have identical scientific identities
+    print("\n[2b] Verifying execution segments...")
+    segments_path = checkpoint_dir / "execution_segments.jsonl"
+    segments = []
+    if segments_path.exists():
+        with open(segments_path) as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    segments.append(json.loads(line))
+        print(f"  Found {len(segments)} execution segment(s)")
+        segment_identity_fields = [
+            "confirmation_executable_sha256",
+            "gguf_sha256",
+            "runtime_config_sha256",
+            "experiment_source_commit",
+        ]
+        segment_violations = []
+        for field in segment_identity_fields:
+            values = set(s.get(field, "") for s in segments if s.get(field))
+            if len(values) > 1:
+                segment_violations.append(f"{field}: {values}")
+        if segment_violations:
+            print(f"  SEGMENT IDENTITY VIOLATIONS: {segment_violations}")
+            integrity["passes"] = False
+            integrity["segment_violations"] = segment_violations
+        else:
+            print(f"  OK: All segments share identical scientific identities")
+            for seg in segments:
+                print(f"    Segment {seg.get('segment')}: "
+                      f"start={seg.get('start_completed')} "
+                      f"gpu={seg.get('gpu')} "
+                      f"session={seg.get('session_id', 'unknown')[:30]}")
+    else:
+        print("  No execution_segments.jsonl found (single-segment run)")
 
     if not integrity["passes"]:
         print("\n  GATE FAILED — dataset is not complete or has violations")
@@ -184,7 +253,7 @@ def main():
         print(f"  {raw_closed}")
         sys.exit(1)
 
-    print("\n  GATE PASSED — dataset is complete and coherent")
+    print("\n  GATE PASSED — dataset is complete, coherent, and identity-consistent")
 
     # Step 3: Create raw_closed/ directory
     print("\n[3] Creating immutable raw_closed/ directory...")

@@ -85,14 +85,14 @@ import os
 os.makedirs('/content/daph_r13', exist_ok=True)
 print("dir created")
 PY
-    timeout 60 colab exec -s "$SESSION" -f /tmp/_daph_mkdir.py --timeout 30 2>/dev/null || true
+    timeout --kill-after=5s 60s colab exec -s "$SESSION" -f /tmp/_daph_mkdir.py --timeout 30 2>/dev/null || true
 
     if [ -d "$CHECKPOINT_DIR" ] && [ -f "$CHECKPOINT_DIR/results.jsonl" ]; then
         for f in results.jsonl progress.json identity_frozen.json run_manifest.json \
                  model_calls.jsonl mechanism_receipts.jsonl cognition_cost_receipts.jsonl \
                  errors.jsonl context_preflight.json; do
             if [ -f "$CHECKPOINT_DIR/$f" ]; then
-                timeout 60 colab upload -s "$SESSION" "$CHECKPOINT_DIR/$f" "/content/daph_r13/$f" 2>/dev/null || log "  upload $f failed (non-critical)"
+                timeout --kill-after=5s 60s colab upload -s "$SESSION" "$CHECKPOINT_DIR/$f" "/content/daph_r13/$f" 2>/dev/null || log "  upload $f failed (non-critical)"
             fi
         done
         log "Checkpoint uploaded"
@@ -101,7 +101,7 @@ PY
     fi
 
     log "=== Running restore script on VM ==="
-    timeout 60 colab upload -s "$SESSION" "$REPO_DIR/tools/colab/restore_daph_runtime.sh" /content/restore_daph_runtime.sh
+    timeout --kill-after=5s 60s colab upload -s "$SESSION" "$REPO_DIR/tools/colab/restore_daph_runtime.sh" /content/restore_daph_runtime.sh
     # Execute via a local helper script (colab exec -f takes a LOCAL file path)
     cat > /tmp/_run_restore.py <<'PY'
 import subprocess, sys
@@ -112,7 +112,7 @@ if r.stderr:
     print("STDERR:", r.stderr, file=sys.stderr)
 sys.exit(r.returncode)
 PY
-    timeout 600 colab exec -s "$SESSION" -f /tmp/_run_restore.py --timeout 600
+    timeout --kill-after=5s 600s colab exec -s "$SESSION" -f /tmp/_run_restore.py --timeout 600
 }
 
 cmd_launch_r13() {
@@ -142,7 +142,7 @@ print("R13 launched in tmux session 'r13'")
 print("  Log: /content/daph_r13/r13.log")
 INNER
     # colab exec -f takes a LOCAL file path, not a remote path
-    timeout 60 colab exec -s "$SESSION" -f /tmp/r13_tmux_launch.py --timeout 30
+    timeout --kill-after=5s 60s colab exec -s "$SESSION" -f /tmp/r13_tmux_launch.py --timeout 30
     log "R13 is running in tmux (independent of SSH)"
 }
 

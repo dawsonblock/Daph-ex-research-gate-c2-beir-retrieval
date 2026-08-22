@@ -73,7 +73,7 @@ if os.path.exists("/content/daph_r13/progress.json"):
 else:
     print("REMOTE: no progress file")
 PY
-    REMOTE=$(timeout 45 colab exec -s daph -f /tmp/_r13_quick_check.py --timeout 30 2>/dev/null || echo "REMOTE: session unavailable")
+    REMOTE=$(timeout --kill-after=5s 45s colab exec -s daph -f /tmp/_r13_quick_check.py --timeout 30 2>/dev/null || echo "REMOTE: session unavailable")
     log "  $REMOTE"
 
     log "  Sleeping ${POLL_INTERVAL}s..."

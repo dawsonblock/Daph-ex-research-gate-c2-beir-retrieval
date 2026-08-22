@@ -76,9 +76,9 @@ verify_checkpoint() {
 }
 
 check_colab_alive() {
-    colab sessions 2>/dev/null | grep -q "$SESSION" || {
+    timeout --kill-after=3s 20s colab sessions 2>/dev/null | grep -q "$SESSION" || {
         # Try without session name filter
-        colab sessions 2>/dev/null | grep -q "gpu-l4" && return 0
+        timeout --kill-after=3s 20s colab sessions 2>/dev/null | grep -q "gpu-l4" && return 0
         return 1
     }
     return 0
@@ -94,7 +94,7 @@ except Exception as e:
     print(f"SERVER_DOWN: {e}")
     sys.exit(1)
 PY
-    timeout 45 colab exec -s "$SESSION" -f /tmp/_r13_health.py --timeout 30 2>/dev/null | grep -q "SERVER_OK"
+    timeout --kill-after=5s 45s colab exec -s "$SESSION" -f /tmp/_r13_health.py --timeout 30 2>/dev/null | grep -q "SERVER_OK"
     return $?
 }
 
@@ -123,10 +123,10 @@ while true; do
         fi
     fi
 
-    # Download files (with per-file timeout to prevent hangs)
+    # Download files (with per-file timeout + kill-after to prevent hangs)
     DOWNLOAD_OK=true
     for f in "${FILES[@]}"; do
-        if timeout 60 colab download -s "$SESSION" "/content/daph_r13/$f" "$DEST/$f" 2>/dev/null; then
+        if timeout --kill-after=5s 60s colab download -s "$SESSION" "/content/daph_r13/$f" "$DEST/$f" 2>/dev/null; then
             log "  Downloaded $f ($(wc -c < "$DEST/$f" 2>/dev/null || echo 0) bytes)"
         else
             # File might not exist yet (e.g. confirmation SHA at end)
