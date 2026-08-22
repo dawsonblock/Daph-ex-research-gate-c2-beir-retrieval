@@ -1,0 +1,12 @@
+{
+  "max_packet_tokens": 2024,
+  "p95_packet_tokens": 2024,
+  "mean_packet_tokens": 1990,
+  "max_tokens": 128,
+  "max_packet_plus_output": 2152,
+  "effective_slot_context": 8192,
+  "safety_margin": 0.8,
+  "safety_limit": 6553,
+  "passes": true,
+  "n_packets_checked": 16
+}

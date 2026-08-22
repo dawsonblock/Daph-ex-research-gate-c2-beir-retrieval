@@ -1,0 +1,141 @@
+{
+  "total_r1_trajectories": 16,
+  "t2_triggered": 6,
+  "t2_expected_positive": 8,
+  "t2_expected_negative": 8,
+  "false_t2_semantic": 0,
+  "false_t2_structural": 0,
+  "missed_t2": 2,
+  "true_negative": 8,
+  "true_positive": 6,
+  "per_trajectory": [
+    {
+      "task_id": "i3_15c_0001",
+      "category": "t2_conflict_immediate_retr_hard",
+      "t2_triggered": true,
+      "is_t2_positive_stratum": true,
+      "has_semantic_error": false,
+      "classification": "TRUE_POSITIVE"
+    },
+    {
+      "task_id": "i3_15c_0000",
+      "category": "t2_conflict_immediate_retr_easy",
+      "t2_triggered": true,
+      "is_t2_positive_stratum": true,
+      "has_semantic_error": false,
+      "classification": "TRUE_POSITIVE"
+    },
+    {
+      "task_id": "i3_15c_0002",
+      "category": "t2_conflict_late_1_retr_easy",
+      "t2_triggered": true,
+      "is_t2_positive_stratum": true,
+      "has_semantic_error": false,
+      "classification": "TRUE_POSITIVE"
+    },
+    {
+      "task_id": "i3_15c_0003",
+      "category": "t2_conflict_late_1_retr_hard",
+      "t2_triggered": true,
+      "is_t2_positive_stratum": true,
+      "has_semantic_error": false,
+      "classification": "TRUE_POSITIVE"
+    },
+    {
+      "task_id": "i3_15c_0004",
+      "category": "t2_conflict_late_2_retr_easy",
+      "t2_triggered": true,
+      "is_t2_positive_stratum": true,
+      "has_semantic_error": false,
+      "classification": "TRUE_POSITIVE"
+    },
+    {
+      "task_id": "i3_15c_0005",
+      "category": "t2_conflict_late_2_retr_hard",
+      "t2_triggered": true,
+      "is_t2_positive_stratum": true,
+      "has_semantic_error": false,
+      "classification": "TRUE_POSITIVE"
+    },
+    {
+      "task_id": "i3_15c_0006",
+      "category": "t2_conflict_late_3_retr_easy",
+      "t2_triggered": false,
+      "is_t2_positive_stratum": true,
+      "has_semantic_error": true,
+      "classification": "MISSED_T2"
+    },
+    {
+      "task_id": "i3_15c_0007",
+      "category": "t2_conflict_late_3_retr_hard",
+      "t2_triggered": false,
+      "is_t2_positive_stratum": true,
+      "has_semantic_error": true,
+      "classification": "MISSED_T2"
+    },
+    {
+      "task_id": "i3_15c_0008",
+      "category": "matched_neg_immediate_retr_easy",
+      "t2_triggered": false,
+      "is_t2_positive_stratum": false,
+      "has_semantic_error": true,
+      "classification": "TRUE_NEGATIVE"
+    },
+    {
+      "task_id": "i3_15c_0009",
+      "category": "matched_neg_immediate_retr_hard",
+      "t2_triggered": false,
+      "is_t2_positive_stratum": false,
+      "has_semantic_error": true,
+      "classification": "TRUE_NEGATIVE"
+    },
+    {
+      "task_id": "i3_15c_0010",
+      "category": "matched_neg_late_retr_easy",
+      "t2_triggered": false,
+      "is_t2_positive_stratum": false,
+      "has_semantic_error": true,
+      "classification": "TRUE_NEGATIVE"
+    },
+    {
+      "task_id": "i3_15c_0011",
+      "category": "matched_neg_late_retr_hard",
+      "t2_triggered": false,
+      "is_t2_positive_stratum": false,
+      "has_semantic_error": true,
+      "classification": "TRUE_NEGATIVE"
+    },
+    {
+      "task_id": "i3_15c_0012",
+      "category": "defer_control_retr_easy",
+      "t2_triggered": false,
+      "is_t2_positive_stratum": false,
+      "has_semantic_error": true,
+      "classification": "TRUE_NEGATIVE"
+    },
+    {
+      "task_id": "i3_15c_0013",
+      "category": "defer_control_retr_hard",
+      "t2_triggered": false,
+      "is_t2_positive_stratum": false,
+      "has_semantic_error": true,
+      "classification": "TRUE_NEGATIVE"
+    },
+    {
+      "task_id": "i3_15c_0014",
+      "category": "answer_control_retr_easy",
+      "t2_triggered": false,
+      "is_t2_positive_stratum": false,
+      "has_semantic_error": false,
+      "classification": "TRUE_NEGATIVE"
+    },
+    {
+      "task_id": "i3_15c_0015",
+      "category": "answer_control_retr_hard",
+      "t2_triggered": false,
+      "is_t2_positive_stratum": false,
+      "has_semantic_error": false,
+      "classification": "TRUE_NEGATIVE"
+    }
+  ]
+}

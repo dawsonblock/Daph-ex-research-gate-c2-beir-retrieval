@@ -1,0 +1,588 @@
+{
+  "protocol": "confirmation_protocol_v2",
+  "n_pairs": 16,
+  "primary_contrast": {
+    "name": "Delta_T2_late",
+    "n": 6,
+    "mean": 0.0,
+    "ci_95": [
+      0.0,
+      0.0
+    ],
+    "criterion": "lower_endpoint_95CI > 0",
+    "passes": false
+  },
+  "secondary_contrasts": [
+    {
+      "name": "I_phase",
+      "n": 10,
+      "mean": 0.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "criterion": "lower_endpoint_95CI > 0",
+      "passes": false
+    },
+    {
+      "name": "Delta_T2_late_1",
+      "n": 2,
+      "mean": 0.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Delta_T2_late_2",
+      "n": 2,
+      "mean": 0.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Delta_T2_late_3",
+      "n": 2,
+      "mean": 0.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Delta_T2_immediate",
+      "n": 2,
+      "mean": 0.0,
+      "ci_95": [
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "control_contrasts": [
+    {
+      "name": "Delta_DEFER-",
+      "equivalent": true,
+      "mean": 0.0,
+      "ci_90": [
+        0.0,
+        0.0
+      ],
+      "margin": 5.0
+    },
+    {
+      "name": "Delta_ANSWER",
+      "equivalent": true,
+      "mean": 0.0,
+      "ci_90": [
+        0.0,
+        0.0
+      ],
+      "margin": 5.0
+    },
+    {
+      "name": "Delta_MATCHED_NEG",
+      "equivalent": true,
+      "mean": 0.0,
+      "ci_90": [
+        0.0,
+        0.0
+      ],
+      "margin": 5.0
+    }
+  ],
+  "safety_checks": {
+    "false_t2_on_controls": {
+      "DEFER_CONTROL": 0,
+      "ANSWER_CONTROL": 0,
+      "MATCHED_NEG": 0
+    },
+    "false_t2_rate": 0.0,
+    "criterion": "false_t2_rate <= 1%, ideally 0",
+    "passes": true
+  },
+  "cost_metrics": {
+    "Delta_Steps_T2+": {
+      "mean": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ]
+    },
+    "P_step_limit_R1_T2+": {
+      "rate": 0.0,
+      "n": 8
+    },
+    "P_step_limit_A1_T2+": {
+      "rate": 0.0,
+      "n": 8
+    }
+  },
+  "per_stratum": {
+    "T2_CONFLICT_IMMEDIATE": {
+      "n": 2,
+      "mean_delta_utility": 0.0,
+      "ci_delta_utility": [
+        0.0,
+        0.0
+      ],
+      "mean_delta_steps": 0.0,
+      "r1_t2_triggered_count": 2,
+      "r1_step_limit_count": 0
+    },
+    "T2_CONFLICT_LATE_1": {
+      "n": 2,
+      "mean_delta_utility": 0.0,
+      "ci_delta_utility": [
+        0.0,
+        0.0
+      ],
+      "mean_delta_steps": 0.0,
+      "r1_t2_triggered_count": 2,
+      "r1_step_limit_count": 0
+    },
+    "T2_CONFLICT_LATE_2": {
+      "n": 2,
+      "mean_delta_utility": 0.0,
+      "ci_delta_utility": [
+        0.0,
+        0.0
+      ],
+      "mean_delta_steps": 0.0,
+      "r1_t2_triggered_count": 2,
+      "r1_step_limit_count": 0
+    },
+    "T2_CONFLICT_LATE_3": {
+      "n": 2,
+      "mean_delta_utility": 0.0,
+      "ci_delta_utility": [
+        0.0,
+        0.0
+      ],
+      "mean_delta_steps": 0.0,
+      "r1_t2_triggered_count": 0,
+      "r1_step_limit_count": 0
+    },
+    "MATCHED_NEG_IMMEDIATE": {
+      "n": 2,
+      "mean_delta_utility": 0.0,
+      "ci_delta_utility": [
+        0.0,
+        0.0
+      ],
+      "mean_delta_steps": 0.0,
+      "r1_t2_triggered_count": 0,
+      "r1_step_limit_count": 0
+    },
+    "MATCHED_NEG_LATE": {
+      "n": 2,
+      "mean_delta_utility": 0.0,
+      "ci_delta_utility": [
+        0.0,
+        0.0
+      ],
+      "mean_delta_steps": 0.0,
+      "r1_t2_triggered_count": 0,
+      "r1_step_limit_count": 0
+    },
+    "DEFER_CONTROL": {
+      "n": 2,
+      "mean_delta_utility": 0.0,
+      "ci_delta_utility": [
+        0.0,
+        0.0
+      ],
+      "mean_delta_steps": 0.0,
+      "r1_t2_triggered_count": 0,
+      "r1_step_limit_count": 0
+    },
+    "ANSWER_CONTROL": {
+      "n": 2,
+      "mean_delta_utility": 0.0,
+      "ci_delta_utility": [
+        0.0,
+        0.0
+      ],
+      "mean_delta_steps": 0.0,
+      "r1_t2_triggered_count": 0,
+      "r1_step_limit_count": 0
+    }
+  },
+  "promotion_criteria": {
+    "effectiveness": false,
+    "phase_interaction": false,
+    "safety": true,
+    "controls_equivalent": true,
+    "cost_ok": true,
+    "all_criteria": false
+  },
+  "deltas": [
+    {
+      "task_id": "i3_15c_0000",
+      "stratum": "T2_CONFLICT_IMMEDIATE",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": true,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0001",
+      "stratum": "T2_CONFLICT_IMMEDIATE",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": true,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0002",
+      "stratum": "T2_CONFLICT_LATE_1",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": true,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0003",
+      "stratum": "T2_CONFLICT_LATE_1",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": true,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0004",
+      "stratum": "T2_CONFLICT_LATE_2",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": true,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0005",
+      "stratum": "T2_CONFLICT_LATE_2",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": true,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0007",
+      "stratum": "T2_CONFLICT_LATE_3",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": false,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0006",
+      "stratum": "T2_CONFLICT_LATE_3",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": false,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0008",
+      "stratum": "MATCHED_NEG_IMMEDIATE",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": false,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0009",
+      "stratum": "MATCHED_NEG_IMMEDIATE",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": false,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0010",
+      "stratum": "MATCHED_NEG_LATE",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": false,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0011",
+      "stratum": "MATCHED_NEG_LATE",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": false,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0012",
+      "stratum": "DEFER_CONTROL",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": false,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0013",
+      "stratum": "DEFER_CONTROL",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": false,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0014",
+      "stratum": "ANSWER_CONTROL",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": false,
+      "r1_hit_step_limit": false
+    },
+    {
+      "task_id": "i3_15c_0015",
+      "stratum": "ANSWER_CONTROL",
+      "delta_utility": 0.0,
+      "delta_steps": 0,
+      "a1_utility": -135.9,
+      "r1_utility": -135.9,
+      "a1_steps": 6,
+      "r1_steps": 6,
+      "a1_success": false,
+      "r1_success": false,
+      "r1_t2_triggered": false,
+      "r1_hit_step_limit": false
+    }
+  ],
+  "semantic_error_attribution": {
+    "total_r1_trajectories": 16,
+    "t2_triggered": 6,
+    "t2_expected_positive": 8,
+    "t2_expected_negative": 8,
+    "false_t2_semantic": 0,
+    "false_t2_structural": 0,
+    "missed_t2": 2,
+    "true_negative": 8,
+    "true_positive": 6,
+    "per_trajectory": [
+      {
+        "task_id": "i3_15c_0001",
+        "category": "t2_conflict_immediate_retr_hard",
+        "t2_triggered": true,
+        "is_t2_positive_stratum": true,
+        "has_semantic_error": false,
+        "classification": "TRUE_POSITIVE"
+      },
+      {
+        "task_id": "i3_15c_0000",
+        "category": "t2_conflict_immediate_retr_easy",
+        "t2_triggered": true,
+        "is_t2_positive_stratum": true,
+        "has_semantic_error": false,
+        "classification": "TRUE_POSITIVE"
+      },
+      {
+        "task_id": "i3_15c_0002",
+        "category": "t2_conflict_late_1_retr_easy",
+        "t2_triggered": true,
+        "is_t2_positive_stratum": true,
+        "has_semantic_error": false,
+        "classification": "TRUE_POSITIVE"
+      },
+      {
+        "task_id": "i3_15c_0003",
+        "category": "t2_conflict_late_1_retr_hard",
+        "t2_triggered": true,
+        "is_t2_positive_stratum": true,
+        "has_semantic_error": false,
+        "classification": "TRUE_POSITIVE"
+      },
+      {
+        "task_id": "i3_15c_0004",
+        "category": "t2_conflict_late_2_retr_easy",
+        "t2_triggered": true,
+        "is_t2_positive_stratum": true,
+        "has_semantic_error": false,
+        "classification": "TRUE_POSITIVE"
+      },
+      {
+        "task_id": "i3_15c_0005",
+        "category": "t2_conflict_late_2_retr_hard",
+        "t2_triggered": true,
+        "is_t2_positive_stratum": true,
+        "has_semantic_error": false,
+        "classification": "TRUE_POSITIVE"
+      },
+      {
+        "task_id": "i3_15c_0006",
+        "category": "t2_conflict_late_3_retr_easy",
+        "t2_triggered": false,
+        "is_t2_positive_stratum": true,
+        "has_semantic_error": true,
+        "classification": "MISSED_T2"
+      },
+      {
+        "task_id": "i3_15c_0007",
+        "category": "t2_conflict_late_3_retr_hard",
+        "t2_triggered": false,
+        "is_t2_positive_stratum": true,
+        "has_semantic_error": true,
+        "classification": "MISSED_T2"
+      },
+      {
+        "task_id": "i3_15c_0008",
+        "category": "matched_neg_immediate_retr_easy",
+        "t2_triggered": false,
+        "is_t2_positive_stratum": false,
+        "has_semantic_error": true,
+        "classification": "TRUE_NEGATIVE"
+      },
+      {
+        "task_id": "i3_15c_0009",
+        "category": "matched_neg_immediate_retr_hard",
+        "t2_triggered": false,
+        "is_t2_positive_stratum": false,
+        "has_semantic_error": true,
+        "classification": "TRUE_NEGATIVE"
+      },
+      {
+        "task_id": "i3_15c_0010",
+        "category": "matched_neg_late_retr_easy",
+        "t2_triggered": false,
+        "is_t2_positive_stratum": false,
+        "has_semantic_error": true,
+        "classification": "TRUE_NEGATIVE"
+      },
+      {
+        "task_id": "i3_15c_0011",
+        "category": "matched_neg_late_retr_hard",
+        "t2_triggered": false,
+        "is_t2_positive_stratum": false,
+        "has_semantic_error": true,
+        "classification": "TRUE_NEGATIVE"
+      },
+      {
+        "task_id": "i3_15c_0012",
+        "category": "defer_control_retr_easy",
+        "t2_triggered": false,
+        "is_t2_positive_stratum": false,
+        "has_semantic_error": true,
+        "classification": "TRUE_NEGATIVE"
+      },
+      {
+        "task_id": "i3_15c_0013",
+        "category": "defer_control_retr_hard",
+        "t2_triggered": false,
+        "is_t2_positive_stratum": false,
+        "has_semantic_error": true,
+        "classification": "TRUE_NEGATIVE"
+      },
+      {
+        "task_id": "i3_15c_0014",
+        "category": "answer_control_retr_easy",
+        "t2_triggered": false,
+        "is_t2_positive_stratum": false,
+        "has_semantic_error": false,
+        "classification": "TRUE_NEGATIVE"
+      },
+      {
+        "task_id": "i3_15c_0015",
+        "category": "answer_control_retr_hard",
+        "t2_triggered": false,
+        "is_t2_positive_stratum": false,
+        "has_semantic_error": false,
+        "classification": "TRUE_NEGATIVE"
+      }
+    ]
+  }
+}

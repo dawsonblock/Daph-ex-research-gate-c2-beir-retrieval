@@ -351,6 +351,179 @@ def atomic_write_json(path: Path, data: dict):
 
 
 # ---------------------------------------------------------------------------
+# R12.9M: Off-VM checkpoint persistence via Google Drive
+# ---------------------------------------------------------------------------
+
+DRIVE_PERSIST_DIR = "/content/drive/MyDrive/DAPH/R13"
+
+# Files that must be mirrored to Drive
+PERSIST_FILES = [
+    "results.jsonl",
+    "model_calls.jsonl",
+    "mechanism_receipts.jsonl",
+    "cognition_cost_receipts.jsonl",
+    "errors.jsonl",
+    "progress.json",
+    "run_manifest.json",
+    "identity_frozen.json",
+    "context_preflight.json",
+    "confirmation_executable_sha256.txt",
+    "semantic_error_attribution.json",
+    "mechanism_receipts_strengthened.jsonl",
+]
+
+
+class DriveMirror:
+    """Mirror local checkpoint files to Google Drive.
+
+    Writes locally for speed, then atomically mirrors to Drive every
+    CHECKPOINT_INTERVAL completed trajectories.
+    """
+
+    def __init__(self, local_dir: Path, drive_dir: str = DRIVE_PERSIST_DIR,
+                 checkpoint_interval: int = 10):
+        self.local_dir = local_dir
+        self.drive_dir = drive_dir
+        self.checkpoint_interval = checkpoint_interval
+        self._lock = threading.Lock()
+        self._since_last_checkpoint = 0
+        self._available = False
+        self._check_drive()
+
+    def _check_drive(self):
+        """Check if Google Drive is mounted."""
+        if os.path.isdir("/content/drive/MyDrive"):
+            self._available = True
+        else:
+            print(f"  Drive not mounted — attempting mount...")
+            try:
+                import subprocess
+                subprocess.run(
+                    ["python3", "-c",
+                     "from google.colab import drive; drive.mount('/content/drive')"],
+                    timeout=60, capture_output=True, text=True)
+                self._available = os.path.isdir(self.drive_dir) or os.path.isdir("/content/drive/MyDrive")
+            except Exception as e:
+                print(f"  Drive mount failed: {e}")
+                self._available = False
+
+        if self._available:
+            os.makedirs(self.drive_dir, exist_ok=True)
+            print(f"  Drive persistence: {self.drive_dir}")
+        else:
+            print(f"  Drive persistence: UNAVAILABLE (local only)")
+
+    def maybe_checkpoint(self, completed_count: int):
+        """Checkpoint to Drive every N completed trajectories."""
+        with self._lock:
+            self._since_last_checkpoint += 1
+            if self._since_last_checkpoint < self.checkpoint_interval:
+                return
+            self._since_last_checkpoint = 0
+        self.checkpoint()
+
+    def checkpoint(self):
+        """Force an immediate checkpoint to Drive."""
+        if not self._available:
+            return
+        with self._lock:
+            for fname in PERSIST_FILES:
+                local_path = self.local_dir / fname
+                if not local_path.exists():
+                    continue
+                drive_path = os.path.join(self.drive_dir, fname)
+                try:
+                    # Atomic copy: write temp, rename
+                    tmp_path = drive_path + ".tmp"
+                    import shutil
+                    shutil.copy2(str(local_path), tmp_path)
+                    os.rename(tmp_path, drive_path)
+                except Exception as e:
+                    print(f"  Drive mirror warning ({fname}): {e}")
+
+    def final_checkpoint(self):
+        """Final checkpoint at clean shutdown."""
+        if self._available:
+            self.checkpoint()
+            print(f"  Final Drive checkpoint complete")
+
+    def restore(self) -> bool:
+        """Restore files from Drive to local dir.
+
+        Returns True if any files were restored.
+        """
+        if not self._available:
+            return False
+        restored = False
+        for fname in PERSIST_FILES:
+            drive_path = os.path.join(self.drive_dir, fname)
+            local_path = self.local_dir / fname
+            if os.path.exists(drive_path):
+                if not local_path.exists() or \
+                   os.path.getsize(drive_path) > os.path.getsize(local_path):
+                    import shutil
+                    shutil.copy2(drive_path, str(local_path))
+                    restored = True
+                    print(f"  Restored {fname} from Drive "
+                          f"({os.path.getsize(local_path)} bytes)")
+        return restored
+
+
+def build_run_manifest(identities: dict, config: dict) -> dict:
+    """Build the immutable run manifest for R13."""
+    return {
+        "confirmation_executable_sha256": identities.get("runtime_config_sha256", ""),
+        "protocol_sha256": identities.get("protocol_sha256", ""),
+        "gguf_sha256": identities.get("gguf_sha256", ""),
+        "receipt_identity_sha256": identities.get("receipt_identity_sha256", ""),
+        "backend_identity": identities.get("backend_identity", ""),
+        "runtime_config_sha256": identities.get("runtime_config_sha256", ""),
+        "protocol": config.get("protocol_id", ""),
+        "expected_trajectories": config.get("expected_trajectories", 1280),
+        "retrieval": config.get("retrieval_condition", "Q3_RERANKED"),
+        "arms": config.get("arms", []),
+        "model": "Gemma 3 12B IT QAT Q4_0",
+        "max_tokens": config.get("max_tokens", 128),
+        "ctx_size": config.get("runtime", {}).get("server_ctx_size", 32768),
+        "parallel_slots": config.get("runtime", {}).get("parallel_slots", 4),
+        "n_per_cell": config.get("n_per_cell", 40),
+        "seed": config.get("seed", 42),
+    }
+
+
+def verify_run_manifest(local_path: Path, drive_path: str, identities: dict) -> bool:
+    """Verify that the persistent manifest matches current frozen identity.
+
+    Returns True if manifest matches (or doesn't exist yet).
+    Returns False if manifest exists but identity differs (ABORT).
+    """
+    # Check both local and Drive copies
+    manifest = None
+    for p in [local_path, Path(drive_path) if os.path.exists(drive_path) else None]:
+        if p and p.exists():
+            with open(p) as f:
+                manifest = json.load(f)
+            break
+
+    if manifest is None:
+        return True  # No previous manifest, first run
+
+    required_keys = [
+        "protocol_sha256", "gguf_sha256", "receipt_identity_sha256",
+        "backend_identity", "runtime_config_sha256",
+    ]
+    for key in required_keys:
+        prev_val = manifest.get(key, "")
+        curr_val = identities.get(key, "")
+        if prev_val != curr_val:
+            print(f"  MANIFEST MISMATCH: {key} changed")
+            print(f"    Previous: {prev_val[:16]}...")
+            print(f"    Current:  {curr_val[:16]}...")
+            return False
+    return True
+
+
+# ---------------------------------------------------------------------------
 # Load completed keys from existing results
 # ---------------------------------------------------------------------------
 
@@ -1115,9 +1288,27 @@ def main():
         sys.exit(1)
 
     # ================================================================
-    # Step 6: Load completed keys (resume support)
+    # Step 6: Load completed keys (resume support + Drive restore)
     # ================================================================
     print("\n[6] Checking for existing results (resume)...")
+
+    # R12.9M: Try restoring from Drive first
+    print("  Checking Drive for previous checkpoint...")
+    drive_mirror_for_restore = DriveMirror(output_dir, checkpoint_interval=10)
+    if drive_mirror_for_restore._available:
+        # Verify manifest matches before restoring
+        manifest_ok = verify_run_manifest(
+            output_dir / "run_manifest.json",
+            os.path.join(DRIVE_PERSIST_DIR, "run_manifest.json"),
+            identities)
+        if not manifest_ok:
+            print("  ABORT: Drive manifest identity mismatch. Cannot resume.")
+            sys.exit(1)
+        if manifest_ok:
+            restored = drive_mirror_for_restore.restore()
+            if restored:
+                print("  Restored checkpoint from Drive")
+
     results_path = output_dir / "results.jsonl"
     completed_keys = load_completed_keys(results_path)
     print(f"  Completed trajectories from previous runs: {len(completed_keys)}")
@@ -1139,6 +1330,16 @@ def main():
         mechanism_appender = JsonlAppender(output_dir / "mechanism_receipts.jsonl")
         cost_appender = JsonlAppender(output_dir / "cognition_cost_receipts.jsonl")
         errors_appender = JsonlAppender(output_dir / "errors.jsonl")
+
+        # R12.9M: Write run manifest for off-VM persistence
+        manifest = build_run_manifest(identities, R13_CONFIG)
+        atomic_write_json(output_dir / "run_manifest.json", manifest)
+
+        # R12.9M: Set up Drive mirror for off-VM persistence
+        print("\n[7b] Setting up Drive persistence...")
+        drive_mirror = DriveMirror(output_dir, checkpoint_interval=10)
+        # Initial checkpoint with manifest + identity
+        drive_mirror.checkpoint()
 
         progress = ProgressTracker(
             output_dir / "progress.json",
@@ -1237,6 +1438,9 @@ def main():
                 progress.record_completion(key)
                 abort_monitor.record(result)
 
+                # R12.9M: Checkpoint to Drive every N completions
+                drive_mirror.maybe_checkpoint(progress.completed)
+
                 return result
 
             except Exception as exc:
@@ -1291,6 +1495,9 @@ def main():
         mechanism_appender.close()
         cost_appender.close()
         errors_appender.close()
+
+        # R12.9M: Final Drive checkpoint
+        drive_mirror.final_checkpoint()
 
         # Check abort
         should_abort, reason = abort_monitor.should_abort()
