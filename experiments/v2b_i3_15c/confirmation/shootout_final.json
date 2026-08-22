@@ -1,0 +1,51 @@
+{
+  "test": "MODEL_POLICY_SHOOTOUT_FINAL",
+  "date": "2025-01-20",
+  "models_tested": [
+    {
+      "model": "LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M",
+      "label": "M0",
+      "status": "UNQUALIFIED",
+      "best_core_accuracy": 0.65,
+      "best_budget": 256,
+      "note": "R9.1 full curve. DEFER=0%, RETRIEVE=67%."
+    },
+    {
+      "model": "LiquidAI/LFM2.5-8B-A1B-GGUF:Q5_K_M",
+      "label": "M1",
+      "status": "EARLY_REJECT",
+      "best_core_accuracy": 0.55,
+      "best_budget": 128,
+      "note": "Early gate only. Worse than 2.6B. DEFER=25%."
+    },
+    {
+      "model": "google/gemma-3-12b-it-qat-q4_0-gguf",
+      "label": "M2",
+      "status": "QUALIFIED",
+      "best_core_accuracy": 0.90,
+      "best_budget": 128,
+      "all_budgets_pass": true,
+      "budgets_tested": [128, 256, 384],
+      "per_action_accuracy": {
+        "DEFER": 0.75,
+        "ANSWER": 1.0,
+        "VERIFY": 1.0,
+        "RETRIEVE": 1.0,
+        "SEARCH_MORE": 1.0,
+        "REASON_MORE": 1.0
+      },
+      "decoder_success": 1.0,
+      "length_failures": 0.0,
+      "a1_accuracy": 0.93,
+      "m3_accuracy": 0.83,
+      "a1_m3_asymmetry_pp": 9.5,
+      "mean_latency_ms": 3566,
+      "note": "All three budgets (128, 256, 384) produce identical results. Stable across reasoning budgets."
+    }
+  ],
+  "selected_model": "google/gemma-3-12b-it-qat-q4_0-gguf",
+  "selected_reasoning_budget": 128,
+  "r13_eligible": true,
+  "key_finding": "Gemma 3 12B IT QAT Q4_0 passes all qualification gates at 90% core accuracy. The Liquid LFM2.5 family (both 2.6B and 8B-A1B) fails, with the 8B actually worse than the 2.6B. The bottleneck was model-family-specific understanding of DAPH action semantics, not raw capacity.",
+  "next_step": "R9b: optimize max_tokens for Gemma 3 12B at budget=128, then proceed to R13."
+}
