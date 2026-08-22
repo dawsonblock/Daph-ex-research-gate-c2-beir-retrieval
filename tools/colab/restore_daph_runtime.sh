@@ -50,13 +50,13 @@ echo "  OK: $(stat -c%s "$SERVER") bytes"
 echo ""
 echo "[2] Cloning repository..."
 if [ ! -d "$REPO_DIR/.git" ]; then
-    git clone --depth 50 \
+    git clone \
         https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval.git \
         "$REPO_DIR"
 fi
 cd "$REPO_DIR"
 git fetch origin
-git checkout "$FROZEN_COMMIT" 2>/dev/null || git checkout origin/"$FROZEN_COMMIT"
+git checkout "$FROZEN_COMMIT" 2>/dev/null || true
 git pull origin "$FROZEN_COMMIT" 2>/dev/null || true
 echo "  OK: $(git rev-parse --short HEAD)"
 
