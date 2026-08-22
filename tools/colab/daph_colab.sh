@@ -76,19 +76,23 @@ cmd_provision() {
 
 cmd_restore() {
     log "=== Uploading runtime archive ==="
-    colab upload "$ARCHIVE" /content/llama-server-d775b8967a46-cuda-sm89.tar.gz
+    colab upload -s "$SESSION" "$ARCHIVE" /content/llama-server-d775b8967a46-cuda-sm89.tar.gz
 
     log "=== Creating output directory and uploading checkpoint ==="
-    # Create the output directory first via exec
-    colab exec -s "$SESSION" -c "import os; os.makedirs('/content/daph_r13', exist_ok=True); print('dir created')" --timeout 30 2>/dev/null || \
-    colab exec -s "$SESSION" --timeout 30 "import os; os.makedirs('/content/daph_r13', exist_ok=True)" 2>/dev/null || true
+    # Create the output directory first via a local helper script
+    cat > /tmp/_daph_mkdir.py <<'PY'
+import os
+os.makedirs('/content/daph_r13', exist_ok=True)
+print("dir created")
+PY
+    timeout 60 colab exec -s "$SESSION" -f /tmp/_daph_mkdir.py --timeout 30 2>/dev/null || true
 
     if [ -d "$CHECKPOINT_DIR" ] && [ -f "$CHECKPOINT_DIR/results.jsonl" ]; then
         for f in results.jsonl progress.json identity_frozen.json run_manifest.json \
                  model_calls.jsonl mechanism_receipts.jsonl cognition_cost_receipts.jsonl \
                  errors.jsonl context_preflight.json; do
             if [ -f "$CHECKPOINT_DIR/$f" ]; then
-                colab upload "$CHECKPOINT_DIR/$f" "/content/daph_r13/$f" 2>/dev/null || log "  upload $f failed (non-critical)"
+                timeout 60 colab upload -s "$SESSION" "$CHECKPOINT_DIR/$f" "/content/daph_r13/$f" 2>/dev/null || log "  upload $f failed (non-critical)"
             fi
         done
         log "Checkpoint uploaded"
@@ -97,8 +101,8 @@ cmd_restore() {
     fi
 
     log "=== Running restore script on VM ==="
-    colab upload "$REPO_DIR/tools/colab/restore_daph_runtime.sh" /content/restore_daph_runtime.sh
-    # Execute via a helper script since colab exec needs -f
+    timeout 60 colab upload -s "$SESSION" "$REPO_DIR/tools/colab/restore_daph_runtime.sh" /content/restore_daph_runtime.sh
+    # Execute via a local helper script (colab exec -f takes a LOCAL file path)
     cat > /tmp/_run_restore.py <<'PY'
 import subprocess, sys
 r = subprocess.run(["bash", "/content/restore_daph_runtime.sh"],
@@ -108,8 +112,7 @@ if r.stderr:
     print("STDERR:", r.stderr, file=sys.stderr)
 sys.exit(r.returncode)
 PY
-    colab upload /tmp/_run_restore.py /content/_run_restore.py
-    colab exec -s "$SESSION" -f /content/_run_restore.py --timeout 600
+    timeout 600 colab exec -s "$SESSION" -f /tmp/_run_restore.py --timeout 600
 }
 
 cmd_launch_r13() {
@@ -138,8 +141,8 @@ if r.returncode != 0:
 print("R13 launched in tmux session 'r13'")
 print("  Log: /content/daph_r13/r13.log")
 INNER
-    colab upload /tmp/r13_tmux_launch.py /content/r13_tmux_launch.py
-    colab exec -s "$SESSION" -f /content/r13_tmux_launch.py --timeout 30
+    # colab exec -f takes a LOCAL file path, not a remote path
+    timeout 60 colab exec -s "$SESSION" -f /tmp/r13_tmux_launch.py --timeout 30
     log "R13 is running in tmux (independent of SSH)"
 }
 
