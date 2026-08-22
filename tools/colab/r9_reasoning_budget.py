@@ -40,12 +40,24 @@ SYSTEM_PROMPT = (
     "No markdown. No explanation. No additional keys.\n"
     'Schema: {"action":"<ACTION>","reason_code":"<CODE>","target_id":null}\n'
     "Allowed ACTION values: ANSWER, DEFER, STOP, VERIFY, RETRIEVE, SEARCH_MORE, REASON_MORE\n\n"
-    "SUFFICIENT means the evidence has been verified and is enough to decide.\n"
-    "UNVERIFIED means the evidence has not been checked yet.\n"
-    "If evidence is UNVERIFIED, you must VERIFY it before DEFERring.\n"
-    "If all hypotheses are eliminated by SUFFICIENT contradicting evidence, DEFER.\n"
-    "If a hypothesis is supported by SUFFICIENT evidence, ANSWER with that hypothesis."
+    "ACTION SEMANTICS\n\n"
+    "ANSWER: Provide the final answer when the currently verified evidence is sufficient.\n"
+    "RETRIEVE: Expose additional evidence using the available retrieval mechanism.\n"
+    "VERIFY: Verify a visible evidence item whose status has not yet been established.\n"
+    "SEARCH_MORE: Search additional sources when evidence may be insufficient.\n"
+    "REASON_MORE: Continue reasoning over currently available evidence.\n"
+    "DEFER: Terminate because available evidence is insufficient.\n"
+    "STOP: Terminate without answering for a non-epistemic execution reason.\n"
+    "Do not use STOP merely because evidence is insufficient; use DEFER for that."
 )
+
+# GBNF grammar for constrained JSON generation
+# This enforces valid JSON at the token level, equivalent to the
+# llama.cpp server's json_schema response_format with strict=True
+ACTION_GRAMMAR = r'''root ::= "{" "\"action\":\"" action "\",\"reason_code\":\"" reasoncode "\",\"target_id\":null}"
+action ::= "ANSWER" | "RETRIEVE" | "VERIFY" | "SEARCH_MORE" | "REASON_MORE" | "DEFER" | "STOP"
+reasoncode ::= [A-Z] [A-Z0-9_]*
+'''
 
 
 def make_test_states() -> list[dict]:
@@ -356,7 +368,7 @@ def run_budget_qualification(model_path: str, reasoning_budget: int,
     Uses the Python API directly with GPU offload for maximum speed.
     No server build required — uses pre-built CUDA wheel.
     """
-    from llama_cpp import Llama
+    from llama_cpp import Llama, LlamaGrammar
 
     print(f"\n{'='*80}")
     print(f"REASONING BUDGET = {reasoning_budget}")
@@ -365,6 +377,7 @@ def run_budget_qualification(model_path: str, reasoning_budget: int,
     # Load model with GPU offload
     # n_gpu_layers=-1 offloads ALL layers to GPU
     # The 2.6B Q5_K_M model is ~1.94GB, fits easily in T4's 15GB VRAM
+    grammar = LlamaGrammar.from_string(ACTION_GRAMMAR)
     llm = Llama(
         model_path=model_path,
         n_gpu_layers=-1,
@@ -381,7 +394,7 @@ def run_budget_qualification(model_path: str, reasoning_budget: int,
         user_prompt = build_user_prompt(state)
         t0 = time.time()
         try:
-            # Use chat completion API
+            # Use chat completion API with GBNF grammar constraint
             response = llm.create_chat_completion(
                 messages=[
                     {"role": "system", "content": SYSTEM_PROMPT},
@@ -389,31 +402,7 @@ def run_budget_qualification(model_path: str, reasoning_budget: int,
                 ],
                 max_tokens=max_tokens,
                 temperature=0.0,
-                response_format={
-                    "type": "json_schema",
-                    "json_schema": {
-                        "name": "action_proposal",
-                        "strict": True,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "action": {
-                                    "type": "string",
-                                    "enum": ["ANSWER", "RETRIEVE", "VERIFY",
-                                             "SEARCH_MORE", "REASON_MORE",
-                                             "DEFER", "STOP"],
-                                },
-                                "reason_code": {
-                                    "type": "string",
-                                    "pattern": "^[A-Z][A-Z0-9_]*$",
-                                },
-                                "target_id": {"type": ["string", "null"]},
-                            },
-                            "required": ["action", "reason_code", "target_id"],
-                            "additionalProperties": False,
-                        },
-                    },
-                },
+                grammar=grammar,
             )
             latency_ms = int((time.time() - t0) * 1000)
             choice = response["choices"][0]
