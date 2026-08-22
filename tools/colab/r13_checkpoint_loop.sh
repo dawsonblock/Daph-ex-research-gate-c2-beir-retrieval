@@ -39,6 +39,7 @@ FILES=(
     "identity_frozen.json"
     "run_manifest.json"
     "context_preflight.json"
+    "execution_segments.jsonl"
 )
 
 # State tracking
