@@ -1,26 +1,43 @@
 {
-  "defect_id": "R13-PROV-001",
-  "type": "PROVENANCE_FIELD_ALIAS",
-  "affected_field": "run_manifest.confirmation_executable_sha256",
-  "description": "The frozen runner's build_run_manifest() function (scripts/run_r13_confirmation.py line 475) incorrectly sets confirmation_executable_sha256 to the value of runtime_config_sha256 instead of computing the actual confirmation executable hash. The actual confirmation executable SHA (41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57) is only written to confirmation_executable_sha256.txt at the end of the run.",
-  "incorrect_value_source": "runtime_config_sha256",
-  "incorrect_value": "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
-  "correct_value": "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
-  "correct_value_location": "confirmation_executable_sha256.txt",
-  "scientific_execution_affected": false,
-  "affected_components": [
-    "model input — NOT affected",
-    "Gemma output — NOT affected",
-    "A1/R1 assignment — NOT affected",
-    "T2 mechanism — NOT affected",
-    "M3 representation — NOT affected",
-    "retrieval — NOT affected",
-    "utility computation — NOT affected",
-    "task execution — NOT affected",
-    "statistical analysis — NOT affected"
+  "defects": [
+    {
+      "defect_id": "R13-PROV-001",
+      "type": "PROVENANCE_FIELD_ALIAS",
+      "affected_field": "run_manifest.confirmation_executable_sha256",
+      "description": "The frozen runner's build_run_manifest() function (scripts/run_r13_confirmation.py line 475) incorrectly sets confirmation_executable_sha256 to the value of runtime_config_sha256 instead of computing the actual confirmation executable hash. The actual confirmation executable SHA (41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57) is only written to confirmation_executable_sha256.txt at the end of the run.",
+      "incorrect_value_source": "runtime_config_sha256",
+      "incorrect_value": "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+      "correct_value": "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+      "correct_value_location": "confirmation_executable_sha256.txt",
+      "scientific_execution_affected": false,
+      "resolution": "validate executable identity independently from experiment_source_commit, protocol_sha256, gguf_sha256, runtime_config_sha256, backend_identity, receipt_identity_sha256, and confirmation_executable_sha256.txt (when available at end of run). Do NOT require run_manifest.confirmation_executable_sha256 to equal 41cc60b04f506f63... — that field is known to be defective.",
+      "documented_at": "2026-08-22T20:15:00Z"
+    },
+    {
+      "defect_id": "R13-RUNTIME-001",
+      "type": "INFERENCE_RUNTIME_CONFIGURATION_CHANGE",
+      "description": "During Segment 3, the llama-server was restarted with optimized performance parameters (-t 8, --batch-size 4096, --ubatch-size 1024) instead of the frozen R13 runtime configuration (-t 4, --batch-size 2048, --ubatch-size 512). Scientific parameters (parallel=4, ctx=32768, temp=0.0, seed=42, model, max_tokens) were unchanged, but thread count and batch sizes differ from the frozen runtime identity. This could affect latency/cost measurements and potentially generated actions depending on llama.cpp execution/numerics.",
+      "frozen_runtime_config": {
+        "threads": 4, "batch_size": 2048, "ubatch_size": 512,
+        "parallel": 4, "ctx_size": 32768, "temp": 0.0, "seed": 42,
+        "ngl": 99, "fa": "on", "cont_batching": true,
+        "reasoning_format": "deepseek"
+      },
+      "deviant_runtime_config": {
+        "threads": 8, "batch_size": 4096, "ubatch_size": 1024,
+        "parallel": 4, "ctx_size": 32768, "temp": 0.0, "seed": 42,
+        "ngl": 99, "fa": "on", "cont_batching": true,
+        "reasoning_format": "deepseek"
+      },
+      "first_affected_key": "i3_15c_0309|A1_INFERRED|Q3_RERANKED|2ad4c9ce431a2d5b",
+      "last_affected_key": "i3_15c_0321|A1_INFERRED|Q3_RERANKED|2ad4c9ce431a2d5b",
+      "affected_trajectory_count": 28,
+      "disposition": "QUARANTINED_AND_RERUN_UNDER_FROZEN_RUNTIME",
+      "quarantine_location": "r13/quarantine/runtime_deviation/",
+      "scientific_execution_affected": "potentially — latency/cost measurements affected; generated actions may differ depending on llama.cpp numerics with different thread/batch config",
+      "resolution": "28 deviant trajectories quarantined. results.jsonl rewritten to contain only 615 frozen-runtime trajectories. Server reverted to exact frozen config (-t 4, --batch-size 2048, --ubatch-size 512). R13 resumed from 615/1280. The 28 quarantined keys will be rerun under the frozen runtime and the new results will be part of the clean confirmation set.",
+      "documented_at": "2026-08-22T22:05:00Z"
+    }
   ],
-  "resolution": "validate executable identity independently from experiment_source_commit, protocol_sha256, gguf_sha256, runtime_config_sha256, backend_identity, receipt_identity_sha256, and confirmation_executable_sha256.txt (when available at end of run). Do NOT require run_manifest.confirmation_executable_sha256 to equal 41cc60b04f506f63... — that field is known to be defective.",
-  "experiment_classification": "PRE_SPECIFIED_CONFIRMATION_WITH_KNOWN_PROVENANCE_FIELD_DEFECT",
-  "frozen_commit": "5454246b7e61adfb7a093eb5a1f731347071270d",
-  "documented_at": "2026-08-22T20:15:00Z"
+  "experiment_classification": "PRE_SPECIFIED_CONFIRMATION_WITH_KNOWN_PROVENANCE_FIELD_DEFECT_AND_QUARANTINED_RUNTIME_DEVIATION"
 }
