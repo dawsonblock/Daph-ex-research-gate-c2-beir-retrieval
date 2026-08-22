@@ -44,9 +44,8 @@ def start_server(llama_server_bin: str, model_path: str,
     Uses --reasoning-format deepseek to capture reasoning_content.
     Per-request thinking_budget_tokens controls the reasoning budget.
     """
-    # Kill any existing server on this port (use exact binary name, not -f which matches our script)
-    subprocess.run("pkill -f '/content/llama.cpp/build/bin/llama-server' 2>/dev/null || true", shell=True)
-    time.sleep(2)
+    # Note: caller must ensure no existing server on this port
+    # (pkill -f llama-server kills this script too since argv contains 'llama-server')
 
     cmd = [
         llama_server_bin, "-m", model_path,
