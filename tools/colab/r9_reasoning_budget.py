@@ -360,6 +360,200 @@ def build_user_prompt(state: dict) -> str:
     })
 
 
+def start_llama_server(llama_server_bin: str, model_path: str, reasoning_budget: int,
+                       port: int = 8080) -> subprocess.Popen:
+    """Start the llama.cpp C++ server with --reasoning-budget.
+
+    This is the ONLY effective way to control LFM2.5 reasoning tokens.
+    The llama-cpp-python Python API does not support --reasoning-budget.
+    """
+    cmd = [
+        llama_server_bin,
+        "-m", model_path,
+        "--host", "127.0.0.1",
+        "--port", str(port),
+        "-ngl", "999",              # ALL layers on GPU
+        "--reasoning-budget", str(reasoning_budget),
+        "-c", "4096",
+        "-b", "512",
+        "-ub", "512",
+        "--temp", "0.0",
+        "--seed", "42",
+        "--threads", "4",
+        "--flash-at", "1",
+        "--no-mmap",
+    ]
+
+    print(f"  Starting llama-server: reasoning_budget={reasoning_budget}, port={port}, ngl=999, flash-at=1", flush=True)
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # Wait for server to be ready
+    import urllib.request
+    for _ in range(120):
+        try:
+            urllib.request.urlopen(f"http://127.0.0.1:{port}/v1/models", timeout=2)
+            print(f"  Server ready on port {port}", flush=True)
+            return proc
+        except Exception:
+            time.sleep(1)
+
+    # Server didn't start — print stderr for debugging
+    proc.terminate()
+    stderr = proc.stderr.read().decode() if proc.stderr else ""
+    print(f"  Server stderr: {stderr[:500]}", flush=True)
+    raise RuntimeError(f"llama-server failed to start within 120s (reasoning_budget={reasoning_budget})")
+
+
+def stop_llama_server(proc: subprocess.Popen):
+    """Stop the llama.cpp server."""
+    proc.terminate()
+    try:
+        proc.wait(timeout=10)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+    print(f"  Server stopped", flush=True)
+
+
+def run_budget_qualification_server(model_path: str, reasoning_budget: int,
+                                    max_tokens: int, test_states: list[dict],
+                                    port: int, llama_server_bin: str) -> dict:
+    """Run qualification using the llama.cpp C++ server with --reasoning-budget.
+
+    Uses the existing LocalLlamaBackend to make OpenAI-compatible requests.
+    The server enforces JSON schema constraints with strict=True.
+    """
+    print(f"\n{'='*80}", flush=True)
+    print(f"REASONING BUDGET = {reasoning_budget} (server mode)", flush=True)
+    print(f"{'='*80}", flush=True)
+
+    proc = start_llama_server(llama_server_bin, model_path, reasoning_budget, port)
+
+    try:
+        backend = LocalLlamaBackend(
+            model_name="LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M",
+            base_url=f"http://127.0.0.1:{port}/v1",
+            timeout_seconds=300,
+        )
+
+        results = []
+        for state in test_states:
+            user_prompt = build_user_prompt(state)
+            t0 = time.time()
+            try:
+                call = backend.generate(
+                    system_prompt=SYSTEM_PROMPT,
+                    user_prompt=user_prompt,
+                    temperature=0.0,
+                    max_tokens=max_tokens,
+                )
+                decoded = decode_output(call.raw_output, strict=True)
+                action = decoded.proposal.action.value if (decoded.valid and decoded.proposal) else "FAIL_CLOSED"
+                correct = (action == state["expected_action"])
+
+                results.append({
+                    "state_id": state["id"],
+                    "representation": state["representation"],
+                    "expected_action": state["expected_action"],
+                    "actual_action": action,
+                    "correct": correct,
+                    "decoder_valid": decoded.valid,
+                    "finish_reason": call.finish_reason,
+                    "completion_tokens": call.completion_tokens,
+                    "reasoning_tokens": call.reasoning_tokens,
+                    "latency_ms": call.latency_ms,
+                    "raw_output": call.raw_output[:200] if call.raw_output else "",
+                })
+
+                print(f"  {state['id']:20s}  expected={state['expected_action']:12s}  "
+                      f"got={action:12s}  {'OK' if correct else 'MISS'}  "
+                      f"tokens={call.completion_tokens}  reasoning={call.reasoning_tokens}  "
+                      f"latency={call.latency_ms}ms  finish={call.finish_reason}", flush=True)
+
+            except Exception as e:
+                results.append({
+                    "state_id": state["id"],
+                    "representation": state["representation"],
+                    "expected_action": state["expected_action"],
+                    "actual_action": "BACKEND_ERROR",
+                    "correct": False,
+                    "decoder_valid": False,
+                    "finish_reason": None,
+                    "completion_tokens": 0,
+                    "reasoning_tokens": 0,
+                    "latency_ms": int((time.time() - t0) * 1000),
+                    "raw_output": str(e)[:200],
+                })
+                print(f"  {state['id']:20s}  expected={state['expected_action']:12s}  "
+                      f"got=BACKEND_ERROR  MISS  error={str(e)[:80]}", flush=True)
+
+    finally:
+        stop_llama_server(proc)
+
+    return _compute_metrics(results, reasoning_budget, max_tokens)
+
+
+def _compute_metrics(results: list[dict], reasoning_budget: int, max_tokens: int) -> dict:
+    """Compute qualification metrics from results list."""
+    n = len(results)
+    decoder_success = sum(1 for r in results if r["decoder_valid"]) / n
+    fail_closed = sum(1 for r in results if r["actual_action"] == "FAIL_CLOSED") / n
+    core_accuracy = sum(1 for r in results if r["correct"]) / n
+    length_failures = sum(1 for r in results if r["finish_reason"] == "length") / n
+    mean_tokens = sum(r["completion_tokens"] for r in results) / n
+    mean_reasoning = sum(r["reasoning_tokens"] for r in results) / n
+    mean_latency = sum(r["latency_ms"] for r in results) / n
+
+    action_acc = {}
+    for action in ["DEFER", "ANSWER", "VERIFY", "RETRIEVE", "SEARCH_MORE", "REASON_MORE"]:
+        relevant = [r for r in results if r["expected_action"] == action]
+        if relevant:
+            action_acc[action] = sum(1 for r in relevant if r["correct"]) / len(relevant)
+
+    a1_results = [r for r in results if r["representation"] == "A1"]
+    m3_results = [r for r in results if r["representation"] == "M3"]
+    a1_acc = sum(1 for r in a1_results if r["correct"]) / len(a1_results) if a1_results else 0
+    m3_acc = sum(1 for r in m3_results if r["correct"]) / len(m3_results) if m3_results else 0
+    a1_m3_asymmetry = abs(a1_acc - m3_acc)
+
+    non_defer_expected = [r for r in results if r["expected_action"] != "DEFER"]
+    non_defer_to_defer = sum(1 for r in non_defer_expected if r["actual_action"] == "DEFER") / len(non_defer_expected) if non_defer_expected else 0
+
+    metrics = {
+        "reasoning_budget": reasoning_budget,
+        "max_tokens": max_tokens,
+        "n_states": n,
+        "decoder_success": round(decoder_success, 4),
+        "fail_closed_rate": round(fail_closed, 4),
+        "core_action_accuracy": round(core_accuracy, 4),
+        "length_failure_rate": round(length_failures, 4),
+        "mean_completion_tokens": round(mean_tokens, 1),
+        "mean_reasoning_tokens": round(mean_reasoning, 1),
+        "mean_latency_ms": round(mean_latency, 1),
+        "per_action_accuracy": {k: round(v, 4) for k, v in action_acc.items()},
+        "a1_accuracy": round(a1_acc, 4),
+        "m3_accuracy": round(m3_acc, 4),
+        "a1_m3_asymmetry_pp": round(a1_m3_asymmetry * 100, 1),
+        "non_defer_to_defer_rate": round(non_defer_to_defer, 4),
+        "results": results,
+    }
+
+    print(f"\n  Summary (budget={reasoning_budget}):", flush=True)
+    print(f"    Decoder success:     {decoder_success:.1%}", flush=True)
+    print(f"    Core action accuracy: {core_accuracy:.1%}", flush=True)
+    print(f"    Fail-closed rate:    {fail_closed:.1%}", flush=True)
+    print(f"    Length failures:     {length_failures:.1%}", flush=True)
+    print(f"    Mean tokens:         {mean_tokens:.0f}", flush=True)
+    print(f"    Mean reasoning:      {mean_reasoning:.0f}", flush=True)
+    print(f"    Mean latency:        {mean_latency:.0f}ms", flush=True)
+    print(f"    A1 accuracy:         {a1_acc:.1%}", flush=True)
+    print(f"    M3 accuracy:         {m3_acc:.1%}", flush=True)
+    print(f"    A1/M3 asymmetry:     {a1_m3_asymmetry*100:.1f}pp", flush=True)
+    print(f"    Non-DEFER→DEFER:     {non_defer_to_defer:.1%}", flush=True)
+    print(f"    Per-action: {action_acc}", flush=True)
+
+    return metrics
+
+
 def run_budget_qualification(model_path: str, reasoning_budget: int,
                              max_tokens: int, test_states: list[dict],
                              port: int = 8080) -> dict:
@@ -538,6 +732,10 @@ def main():
     parser.add_argument("--max-tokens", type=int, default=2048,
                         help="Max tokens for R9a (reasoning budget phase)")
     parser.add_argument("--port", type=int, default=8080)
+    parser.add_argument("--use-server", action="store_true",
+                        help="Use llama.cpp C++ server with --reasoning-budget (required for LFM2.5)")
+    parser.add_argument("--llama-server", default="/content/llama.cpp/build/bin/llama-server",
+                        help="Path to llama-server binary (for --use-server mode)")
     args = parser.parse_args()
 
     budgets = [int(b) for b in args.budgets.split(",")]
@@ -545,13 +743,20 @@ def main():
     print(f"Test states: {len(test_states)}")
     print(f"Budgets: {budgets}")
     print(f"Max tokens: {args.max_tokens}")
+    print(f"Mode: {'server (--reasoning-budget)' if args.use_server else 'python API (grammar)'}")
 
     # Run qualification for each budget
     all_results = []
     for budget in budgets:
-        metrics = run_budget_qualification(
-            args.model_path, budget, args.max_tokens, test_states, args.port
-        )
+        if args.use_server:
+            metrics = run_budget_qualification_server(
+                args.model_path, budget, args.max_tokens, test_states,
+                args.port, args.llama_server
+            )
+        else:
+            metrics = run_budget_qualification(
+                args.model_path, budget, args.max_tokens, test_states, args.port
+            )
         all_results.append(metrics)
 
     # Compute action agreement vs 1024 (reference)
