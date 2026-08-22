@@ -172,21 +172,67 @@ echo ""
 echo "[6] Verifying frozen identities..."
 if [ -f "$DAPH_OUTPUT/identity_frozen.json" ]; then
     cat "$DAPH_OUTPUT/identity_frozen.json"
-    # Verify confirmation executable SHA matches expected
-    ACTUAL_CONFIRMATION_SHA=$(python3 -c "
+    
+    # Verify all scientific identities from the manifest.
+    # NOTE: The run_manifest.json has a known bug where confirmation_executable_sha256
+    # is set to runtime_config_sha256 (a copy error in build_run_manifest()).
+    # The real confirmation executable SHA is only written to
+    # confirmation_executable_sha256.txt at the END of the run.
+    # During mid-run recovery, we verify the other frozen identities instead.
+    # The experiment_source_commit (checked out above) is the primary identity.
+    
+    MANIFEST_OK=true
+    EXPECTED_PROTOCOL_SHA="9590440d2744a6409cc19bc7ba8168d22cb7cee80952fb520a54134815c312c5"
+    EXPECTED_GGUF_SHA="2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d"
+    EXPECTED_RUNTIME_SHA="c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3"
+    EXPECTED_BACKEND="2ad4c9ce431a2d5b"
+    EXPECTED_RECEIPT_SHA="bb612a2c2f06eeeb2640161451a8893a4d519c9025bce058a6bebceb49c2ca11"
+    
+    for field_expected in \
+        "protocol_sha256:$EXPECTED_PROTOCOL_SHA" \
+        "gguf_sha256:$EXPECTED_GGUF_SHA" \
+        "runtime_config_sha256:$EXPECTED_RUNTIME_SHA" \
+        "backend_identity:$EXPECTED_BACKEND" \
+        "receipt_identity_sha256:$EXPECTED_RECEIPT_SHA"; do
+        field="${field_expected%%:*}"
+        expected_val="${field_expected#*:}"
+        actual_val=$(python3 -c "
 import json
 with open('$DAPH_OUTPUT/run_manifest.json') as f:
     m = json.load(f)
-print(m.get('confirmation_executable_sha256', ''))
+print(m.get('$field', ''))
 " 2>/dev/null || echo "")
-    if [ -n "$ACTUAL_CONFIRMATION_SHA" ] && [ "$ACTUAL_CONFIRMATION_SHA" != "$EXPECTED_CONFIRMATION_SHA" ]; then
-        echo "  ERROR: Confirmation executable SHA mismatch"
-        echo "    Expected: $EXPECTED_CONFIRMATION_SHA"
-        echo "    Actual:   $ACTUAL_CONFIRMATION_SHA"
-        echo "  ABORT: Identity failure — do not resume with mismatched executable"
+        if [ "$actual_val" != "$expected_val" ]; then
+            echo "  ERROR: $field mismatch"
+            echo "    Expected: $expected_val"
+            echo "    Actual:   $actual_val"
+            MANIFEST_OK=false
+        else
+            echo "  OK: $field matches"
+        fi
+    done
+    
+    # If confirmation_executable_sha256.txt exists (end-of-run), verify it too
+    if [ -f "$DAPH_OUTPUT/confirmation_executable_sha256.txt" ]; then
+        ACTUAL_CONFIRMATION_SHA=$(cat "$DAPH_OUTPUT/confirmation_executable_sha256.txt" | tr -d '[:space:]')
+        if [ "$ACTUAL_CONFIRMATION_SHA" != "$EXPECTED_CONFIRMATION_SHA" ]; then
+            echo "  ERROR: confirmation_executable_sha256.txt mismatch"
+            echo "    Expected: $EXPECTED_CONFIRMATION_SHA"
+            echo "    Actual:   $ACTUAL_CONFIRMATION_SHA"
+            MANIFEST_OK=false
+        else
+            echo "  OK: confirmation_executable_sha256.txt matches"
+        fi
+    else
+        echo "  NOTE: confirmation_executable_sha256.txt not yet present (mid-run recovery)"
+        echo "        Will be verified at closure"
+    fi
+    
+    if [ "$MANIFEST_OK" = false ]; then
+        echo "  ABORT: Identity failure — do not resume with mismatched identities"
         exit 1
     fi
-    echo "  OK: Confirmation executable SHA matches"
+    echo "  OK: All available frozen identities verified"
 else
     echo "  No identity file yet (will be created on first run)"
 fi
