@@ -676,12 +676,18 @@ def _gen_matched_t2_negative_immediate(
     h = _make_hyps(subject)
 
     ev1, ev2_verified = _make_conflict_evidence(domain, "E1", "E2", retrieved=True)
-    # Make E2 UNVERIFIED with neutral relations — H2 stays alive
+    # Make E2 UNVERIFIED with neutral relations — H2 stays alive.
+    # R12.9D: Also set verify_result="MISSING" so that after VERIFY(E2),
+    # E2 becomes MISSING (not SUFFICIENT). This prevents the inferred
+    # CONTRADICT relation from being actionable for hypothesis elimination.
+    # Without this fix, E2 inherits verify_result="SUFFICIENT" from the
+    # conflict evidence template, causing false T2 on matched-negative controls.
     from dataclasses import replace
     ev2 = replace(ev2_verified,
                   verification_state=VerificationState.UNVERIFIED,
                   supports=(),
-                  contradicts=())
+                  contradicts=(),
+                  verify_result="MISSING")
 
     ev = (ev1, ev2)
     gold = (

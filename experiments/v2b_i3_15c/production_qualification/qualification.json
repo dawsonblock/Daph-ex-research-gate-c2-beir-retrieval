@@ -1,0 +1,29 @@
+{
+  "R12.9A_false_t2": {
+    "total_r1_trajectories": 8,
+    "false_t2_count": 2,
+    "classifications": {
+      "EXPECTED_T2": 2,
+      "NO_FALSE_T2": 6,
+      "MISSED_T2": 2
+    },
+    "false_t2_task_ids": [
+      "i3_15c_0008",
+      "i3_15c_0009"
+    ]
+  },
+  "R12.9B_verify_loops": {
+    "total_verify_calls": 192,
+    "useful_verify": 8,
+    "noop_verify": 184,
+    "repeated_target_verify": 22,
+    "already_verified_target": 30,
+    "verify_trajectories": 32,
+    "verify_loop_step_limit": 32,
+    "useful_verify_rate": 0.041666666666666664,
+    "noop_verify_rate": 0.9583333333333334,
+    "repeated_target_rate": 0.11458333333333333,
+    "already_verified_rate": 0.15625,
+    "mean_verify_per_trajectory": 6.0
+  }
+}

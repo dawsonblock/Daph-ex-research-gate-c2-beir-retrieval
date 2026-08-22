@@ -1,0 +1,14 @@
+{
+  "total_verify_calls": 192,
+  "useful_verify": 8,
+  "noop_verify": 184,
+  "repeated_target_verify": 22,
+  "already_verified_target": 30,
+  "verify_trajectories": 32,
+  "verify_loop_step_limit": 32,
+  "useful_verify_rate": 0.041666666666666664,
+  "noop_verify_rate": 0.9583333333333334,
+  "repeated_target_rate": 0.11458333333333333,
+  "already_verified_rate": 0.15625,
+  "mean_verify_per_trajectory": 6.0
+}

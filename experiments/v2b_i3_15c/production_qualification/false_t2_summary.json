@@ -1,0 +1,13 @@
+{
+  "total_r1_trajectories": 8,
+  "false_t2_count": 2,
+  "classifications": {
+    "EXPECTED_T2": 2,
+    "NO_FALSE_T2": 6,
+    "MISSED_T2": 2
+  },
+  "false_t2_task_ids": [
+    "i3_15c_0008",
+    "i3_15c_0009"
+  ]
+}

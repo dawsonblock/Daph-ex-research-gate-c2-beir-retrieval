@@ -83,7 +83,28 @@ R13_CONFIG = {
     "max_tokens": 128,
     "parallel_slots": 4,
     "reasoning_budget": "NOT_APPLICABLE",
+    # R12.9E: Frozen runtime context configuration
+    "runtime": {
+        "llama_cpp_commit": "d775b8967a46",
+        "server_ctx_size": 32768,
+        "parallel_slots": 4,
+        "max_tokens": 128,
+        "temperature": 0.0,
+        "effective_ctx_per_slot": 8192,
+        "reasoning_budget": "NOT_APPLICABLE",
+        "reasoning_format": "deepseek",
+    },
 }
+
+# R12.9E: Compute runtime config SHA for provenance
+RUNTIME_CONFIG_SHA256 = hashlib.sha256(
+    json.dumps(R13_CONFIG["runtime"], sort_keys=True).encode()
+).hexdigest()
+
+# R12.9F: Context-capacity preflight parameters
+CONTEXT_SAFETY_MARGIN = 0.80  # max_packet + max_tokens must fit within 80% of slot
+EFFECTIVE_SLOT_CONTEXT = R13_CONFIG["runtime"]["effective_ctx_per_slot"]
+MAX_ALLOWED_INPUT_TOKENS = int(CONTEXT_SAFETY_MARGIN * EFFECTIVE_SLOT_CONTEXT) - R13_CONFIG["max_tokens"]
 
 # Abort thresholds
 FAIL_CLOSED_ABORT_RATE = 0.15  # >15% FAIL_CLOSED in any 50-trajectory window
@@ -147,12 +168,15 @@ def verify_identity(
     # Backend identity = GGUF SHA (first 16 chars)
     identities["backend_identity"] = gguf_sha256[:16]
 
+    # R12.9E: Runtime config SHA
+    identities["runtime_config_sha256"] = RUNTIME_CONFIG_SHA256
+
     # Check for identity drift from previous run
     identity_file = output_dir / "identity_frozen.json"
     if identity_file.exists():
         with open(identity_file) as f:
             prev = json.load(f)
-        for key in ["protocol_sha256", "gguf_sha256", "receipt_identity_sha256", "backend_identity"]:
+        for key in ["protocol_sha256", "gguf_sha256", "receipt_identity_sha256", "backend_identity", "runtime_config_sha256"]:
             if prev.get(key) != identities[key]:
                 raise RuntimeError(
                     f"IDENTITY DRIFT: {key} changed from {prev.get(key)} to {identities[key]}. "
@@ -174,6 +198,118 @@ def make_trajectory_key(task_id: str, arm: str, retrieval_condition: str,
                         backend_identity: str) -> str:
     """Stable unique key for a trajectory."""
     return f"{task_id}|{arm}|{retrieval_condition}|{backend_identity}"
+
+
+# ---------------------------------------------------------------------------
+# R12.9F: Context-capacity preflight
+# ---------------------------------------------------------------------------
+
+def run_context_preflight(
+    tasks: list,
+    receipts: dict[str, dict],
+    corpus_by_id: dict,
+    corpus_by_text: dict,
+    extractor,
+    output_dir: Path,
+) -> dict[str, Any]:
+    """Serialize all possible initial production packets and verify they fit
+    safely within the per-slot context window.
+
+    Requirement: max_packet_tokens + max_tokens <= 0.8 * effective_ctx_per_slot
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "i3_7e", str(REPO_ROOT / "scripts" / "run_i3_7e_compact_governor.py"))
+    i3_7e = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(i3_7e)
+
+    from scripts.run_i3_15_r1_balanced import build_retrieved_evidence_task
+    from scripts.run_i3_12j_factorial import make_inferred_snapshot_builder
+    from hrm_adaptive_memory.executive.evidence_benchmark import (
+        initial_evidence_runtime, build_evidence_snapshot,
+    )
+    from hrm_adaptive_memory.executive.resources import ResourceState, ResourceBudget
+
+    snapshot_builder = make_inferred_snapshot_builder(extractor)
+    budget = ResourceBudget(
+        max_executive_steps=10, max_retrieval_calls=3,
+        max_search_calls=2, max_verification_calls=5,
+    )
+
+    # Estimate token count: ~4 chars per token (conservative)
+    def estimate_tokens(text: str) -> int:
+        return len(text) // 4 + 1
+
+    max_tokens = 0
+    p95_tokens = 0
+    mean_tokens = 0
+    all_tokens = []
+
+    for task in tasks:
+        et = task.evidence_task
+        receipt = receipts.get(et.task_id)
+        if receipt is None:
+            continue
+        retrieved_passages = [
+            corpus_by_id[pid] for pid in receipt.get("retrieved_chunk_ids", [])
+            if pid in corpus_by_id
+        ]
+        new_et = build_retrieved_evidence_task(task, retrieved_passages, corpus_by_text)
+        runtime = initial_evidence_runtime(new_et, ResourceState(budget))
+        snap = snapshot_builder(runtime)
+
+        # Build A1 packet (worst case — A1 is typically larger than M3)
+        packet = i3_7e.build_baseline_with_affordances_packet(snap)
+        system_prompt = i3_7e.BASELINE_WITH_AFFORDANCES_SYSTEM_PROMPT
+        user_prompt = i3_7e.evidence_packet_json(packet)
+
+        total_chars = len(system_prompt) + len(user_prompt)
+        token_estimate = estimate_tokens(system_prompt) + estimate_tokens(user_prompt)
+        all_tokens.append(token_estimate)
+        if token_estimate > max_tokens:
+            max_tokens = token_estimate
+
+    if all_tokens:
+        all_tokens.sort()
+        mean_tokens = sum(all_tokens) // len(all_tokens)
+        p95_idx = int(len(all_tokens) * 0.95)
+        p95_tokens = all_tokens[min(p95_idx, len(all_tokens) - 1)]
+
+    max_with_output = max_tokens + R13_CONFIG["max_tokens"]
+    capacity = EFFECTIVE_SLOT_CONTEXT
+    safety_limit = int(CONTEXT_SAFETY_MARGIN * capacity)
+    passes = max_with_output <= safety_limit
+
+    result = {
+        "max_packet_tokens": max_tokens,
+        "p95_packet_tokens": p95_tokens,
+        "mean_packet_tokens": mean_tokens,
+        "max_tokens": R13_CONFIG["max_tokens"],
+        "max_packet_plus_output": max_with_output,
+        "effective_slot_context": capacity,
+        "safety_margin": CONTEXT_SAFETY_MARGIN,
+        "safety_limit": safety_limit,
+        "passes": passes,
+        "n_packets_checked": len(all_tokens),
+    }
+
+    print(f"  Context preflight: {'PASS' if passes else 'FAIL'}")
+    print(f"    Max packet tokens: {max_tokens}")
+    print(f"    P95 packet tokens: {p95_tokens}")
+    print(f"    Max + output: {max_with_output}")
+    print(f"    Safety limit (80%): {safety_limit}")
+    print(f"    Effective slot context: {capacity}")
+
+    if not passes:
+        print(f"    EXPERIMENT_BLOCKED_CONTEXT_OVERFLOW")
+        print(f"    Max packet ({max_tokens}) + max_tokens ({R13_CONFIG['max_tokens']}) "
+              f"= {max_with_output} > {safety_limit} (80% of {capacity})")
+
+    # Save preflight result
+    with open(output_dir / "context_preflight.json", "w") as f:
+        json.dump(result, f, indent=2)
+
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -718,6 +854,18 @@ def main():
     corpus_passages, corpus_by_text, corpus_by_id, chunks, corpus_sha = (
         i3_15c._get_cached_corpus())
     print(f"  Corpus: {len(chunks)} passages, SHA: {corpus_sha[:16]}...")
+
+    # R12.9F: Context-capacity preflight
+    print("\n[4b] Running context-capacity preflight...")
+    from hrm_adaptive_memory.executive.semantic_relations.deterministic_rules import (
+        DeterministicRelationExtractor,
+    )
+    extractor = DeterministicRelationExtractor()
+    context_result = run_context_preflight(
+        tasks, receipts, corpus_by_id, corpus_by_text, extractor, output_dir)
+    if not context_result["passes"]:
+        print(f"  ABORT: Context overflow detected. Fix server configuration before R13.")
+        sys.exit(1)
 
     # ================================================================
     # Step 5: Build work items
