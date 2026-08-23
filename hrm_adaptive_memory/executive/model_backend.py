@@ -362,6 +362,13 @@ class LocalLlamaBackend:
       - llama.cpp version (system_fingerprint)
       - context size, temperature, top_p, top_k, repeat_penalty, seed
       - threads, GPU layers
+
+    R2-DEV-V2: The backend now accepts an optional ``allowed_actions``
+    parameter in ``generate()``.  When provided, the JSON schema sent
+    to the provider is built dynamically from the allowed action set,
+    physically preventing the model from generating gated actions.
+    When not provided, the full seven-action vocabulary is used
+    (matching the frozen R13 static schema).
     """
 
     model_name: str = "LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M"
@@ -384,26 +391,32 @@ class LocalLlamaBackend:
     # provider emits malformed output despite the schema, the decoder
     # rejects it and the runtime fails closed — no repair is performed.
 
-    def generate(self, *, system_prompt: str, user_prompt: str,
-                 temperature: float, max_tokens: int) -> ModelCallResult:
-        """Generate a model response via the local llama.cpp server.
+    # R2-DEV-V2: Full seven-action vocabulary for default schema.
+    _FULL_ACTION_VOCAB = frozenset({
+        "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
+        "REASON_MORE", "DEFER", "STOP",
+    })
 
-        Retries on connection errors with exponential backoff.
-        The llama.cpp server has a limited number of slots (default 4),
-        so concurrent requests may be rejected temporarily.
+    def _build_action_schema(self, allowed_actions: frozenset[str] | None) -> dict:
+        """Build the JSON schema for constrained generation.
+
+        When ``allowed_actions`` is provided, the action enum is restricted
+        to exactly those actions.  When None, the full seven-action
+        vocabulary is used (matching the frozen R13 static schema).
         """
-        import urllib.error
-        import urllib.request
-
-        action_schema = {
+        actions = allowed_actions if allowed_actions is not None else self._FULL_ACTION_VOCAB
+        # Use canonical R13 order for the enum
+        canonical_order = (
+            "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
+            "REASON_MORE", "DEFER", "STOP",
+        )
+        enum = [a for a in canonical_order if a in actions]
+        return {
             "type": "object",
             "properties": {
                 "action": {
                     "type": "string",
-                    "enum": [
-                        "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
-                        "REASON_MORE", "DEFER", "STOP",
-                    ],
+                    "enum": enum,
                 },
                 "reason_code": {
                     "type": "string",
@@ -414,6 +427,24 @@ class LocalLlamaBackend:
             "required": ["action", "reason_code", "target_id"],
             "additionalProperties": False,
         }
+
+    def generate(self, *, system_prompt: str, user_prompt: str,
+                 temperature: float, max_tokens: int,
+                 allowed_actions: frozenset[str] | None = None) -> ModelCallResult:
+        """Generate a model response via the local llama.cpp server.
+
+        Retries on connection errors with exponential backoff.
+        The llama.cpp server has a limited number of slots (default 4),
+        so concurrent requests may be rejected temporarily.
+
+        R2-DEV-V2: When ``allowed_actions`` is provided, the JSON schema
+        sent to the provider restricts the action enum to exactly those
+        actions, physically preventing generation of gated actions.
+        """
+        import urllib.error
+        import urllib.request
+
+        action_schema = self._build_action_schema(allowed_actions)
         payload = json.dumps({
             "model": self.model_name,
             "messages": [

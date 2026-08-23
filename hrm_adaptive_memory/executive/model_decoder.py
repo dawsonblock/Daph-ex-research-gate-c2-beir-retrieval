@@ -52,15 +52,18 @@ def decode_output(raw_output: str, *, strict: bool = False) -> DecoderOutcome:
     This function never raises.  Every failure mode is returned as a
     ``DecoderOutcome`` with ``valid=False`` and a structured ``rejection_code``.
 
-    When ``strict`` is False (default, development mode), the decoder
+    When ``strict`` is False (default, **diagnostic-only** mode), the decoder
     extracts candidate JSON objects from prose using brace-balanced
     substring scanning.  This is permissive and allows reasoning text
-    before or after the JSON.
+    before or after the JSON.  **This mode must NOT be used for scientific
+    runs.**  It is retained only as a diagnostic utility for inspecting
+    model outputs that violate the schema constraint.
 
     When ``strict`` is True (scientific mode), the decoder requires the
     entire response to be a single JSON object with no surrounding prose.
-    This is the correct mode when the backend sends
-    ``response_format: {"type": "json_object"}`` to the API.
+    This is the only mode that satisfies the frozen R2 qualification
+    boundary (Q11/Q12).  No markdown-fence stripping, brace-balanced
+    extraction, or post-hoc repair is performed.
     """
     if not raw_output or not raw_output.strip():
         return _reject(raw_output, "EMPTY_OUTPUT")
@@ -69,12 +72,16 @@ def decode_output(raw_output: str, *, strict: bool = False) -> DecoderOutcome:
 
     if strict:
         # Scientific mode: require the entire response to be valid JSON.
+        # No markdown stripping, no brace-balanced extraction, no repair.
         try:
             parsed = json.loads(stripped)
         except (json.JSONDecodeError, ValueError):
             return _reject(raw_output, "STRICT_MODE_NOT_PURE_JSON")
     else:
-        # Development mode: extract candidate JSON objects from prose.
+        # DIAGNOSTIC-ONLY mode: extract candidate JSON objects from prose.
+        # This mode must NOT be used for scientific runs.  It is retained
+        # only as a diagnostic utility for inspecting model outputs that
+        # violate the schema constraint.
         candidates = _extract_json_candidates(stripped)
         if not candidates:
             return _reject(raw_output, "NO_JSON_FOUND")
@@ -134,6 +141,35 @@ def decode_output(raw_output: str, *, strict: bool = False) -> DecoderOutcome:
     return DecoderOutcome(
         proposal=proposal, raw_output=raw_output, valid=True,
         rejection_code=None, parsed_json=parsed)
+
+
+def decode_output_strict(raw_output: str) -> DecoderOutcome:
+    """Scientific decoder: strict JSON-only, no repair, no markdown stripping.
+
+    This is the only decoder function that satisfies the frozen R2
+    qualification boundary (Q11/Q12).  It requires the entire response
+    to be a single valid JSON object with no surrounding prose, markdown
+    fences, or any other non-JSON content.
+
+    Equivalent to ``decode_output(raw_output, strict=True)`` but provided
+    as a separate function so the scientific path is explicit and cannot
+    accidentally regress to permissive mode.
+    """
+    return decode_output(raw_output, strict=True)
+
+
+def decode_output_diagnostic(raw_output: str) -> DecoderOutcome:
+    """Diagnostic decoder: permissive JSON extraction from prose.
+
+    This function extracts candidate JSON objects from prose using
+    brace-balanced substring scanning.  It is retained ONLY as a
+    diagnostic utility for inspecting model outputs that violate the
+    schema constraint.  It must NOT be used for scientific runs.
+
+    Equivalent to ``decode_output(raw_output, strict=False)`` but provided
+    as a separate function so the diagnostic path is explicit.
+    """
+    return decode_output(raw_output, strict=False)
 
 
 def _extract_json_candidates(text: str) -> list[str]:

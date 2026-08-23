@@ -207,6 +207,7 @@ class TrajectoryResult:
     terminal_result: str
     model_calls: int
     backend_errors: int
+    decoder_errors: int = 0
     call_log: list[dict] = field(default_factory=list)
     decision_state_log: list[dict] = field(default_factory=list)
     gold_t2: bool = False
@@ -249,8 +250,8 @@ def run_trajectory(
     backend_factory: Callable,
     *,
     max_tokens: int = 128,
-    strict_decode: bool = True,
     i3_7e=None,
+    fail_on_decoder_error: bool = True,
 ) -> TrajectoryResult:
     """Run a single trajectory for one arm.
 
@@ -258,6 +259,11 @@ def run_trajectory(
     two intervention hooks:
         1. apply_semantics_intervention (R2e label)
         2. compute_allowed_actions (R2d gate)
+
+    R2-DEV-V2: Always uses strict decoding (no markdown stripping).
+    When ``fail_on_decoder_error`` is True (default), a decoder failure
+    terminates the trajectory with ``DECODER_ERROR`` status — no silent
+    repair or fail-closed substitution.
     """
     if i3_7e is None:
         i3_7e = _load_i3_7e()
@@ -268,7 +274,7 @@ def run_trajectory(
     from hrm_adaptive_memory.executive.evidence_benchmark.executor import EvidenceExecutor
     from hrm_adaptive_memory.executive.resources import ResourceBudget, ResourceState
     from hrm_adaptive_memory.executive.metareasoning_utility import MetareasoningUtility
-    from hrm_adaptive_memory.executive.model_decoder import decode_output
+    from hrm_adaptive_memory.executive.model_decoder import decode_output_strict
     from hrm_adaptive_memory.executive.pinned_model_controller import (
         BACKEND_ERROR_PROPOSAL, FAIL_CLOSED_PROPOSAL,
     )
@@ -298,6 +304,7 @@ def run_trajectory(
     terminal_result = "STEP_LIMIT"
     terminal_action = None
     backend_errors = 0
+    decoder_errors = 0
 
     call_log: list[dict] = []
     decision_state_log: list[dict] = []
@@ -410,30 +417,91 @@ def run_trajectory(
             )
         except Exception as exc:
             backend_errors += 1
-            proposal = BACKEND_ERROR_PROPOSAL
             receipt.update({
                 "result_class": "backend_error",
                 "error_type": type(exc).__name__,
                 "error_message": str(exc),
+                "raw_output": "",
                 "decoder_valid": False,
+                "schema_valid": False,
+                "schema_gate_violation": False,
+                "executor_admissibility_violation": False,
                 "selected_action": None,
                 "admissibility_assertion_passed": False,
             })
             call_log.append(receipt)
-            # Continue to next step with error proposal
+            if fail_on_decoder_error:
+                terminal_result = "BACKEND_ERROR"
+                terminal_action = None
+                break
+            proposal = BACKEND_ERROR_PROPOSAL
         else:
-            # Decode
-            outcome = decode_output(call_result.raw_output, strict=strict_decode)
+            # R2-DEV-V2: Always strict decoding. No markdown stripping.
+            outcome = decode_output_strict(call_result.raw_output)
+
+            # Check schema validity (action in schema enum)
+            schema_enum = set(schema_action_enum(schema))
+            schema_valid = (
+                outcome.valid
+                and outcome.parsed_json is not None
+                and outcome.parsed_json.get("action") in schema_enum
+            )
+
+            # Check for schema gate violation (action not in allowed set
+            # but would have been valid under full vocabulary)
+            schema_gate_violation = False
+            if outcome.valid and outcome.parsed_json is not None:
+                parsed_action = outcome.parsed_json.get("action")
+                if parsed_action and parsed_action not in allowed_decision.allowed:
+                    schema_gate_violation = True
+
             if outcome.valid and outcome.proposal:
                 proposal = outcome.proposal
             else:
+                # R2-DEV-V2: Fail the trajectory on decoder error.
+                # No silent repair, no fail-closed substitution.
+                receipt.update({
+                    "result_class": "decoder_error",
+                    "raw_output": call_result.raw_output,
+                    "provider_raw_output": call_result.provider_raw_output or call_result.raw_output,
+                    "decoder_valid": False,
+                    "decoder_rejection_code": outcome.rejection_code,
+                    "schema_valid": schema_valid,
+                    "schema_gate_violation": schema_gate_violation,
+                    "executor_admissibility_violation": False,
+                    "selected_action": None,
+                    "admissibility_assertion_passed": False,
+                    "json_schema_sha256": getattr(call_result, "json_schema_sha256", ""),
+                })
+                call_log.append(receipt)
+                decoder_errors += 1
+                if fail_on_decoder_error:
+                    terminal_result = "DECODER_ERROR"
+                    terminal_action = None
+                    break
+                # If not failing, use fail-closed (diagnostic only)
                 proposal = FAIL_CLOSED_PROPOSAL
 
             action_str = proposal.action.value if hasattr(proposal.action, "value") else str(proposal.action)
 
             # Layer 2: Defense-in-depth admissibility check
             admissibility_passed = action_str in allowed_decision.allowed
+            executor_admissibility_violation = not admissibility_passed
             if not admissibility_passed:
+                receipt.update({
+                    "result_class": "admissibility_violation",
+                    "raw_output": call_result.raw_output,
+                    "provider_raw_output": call_result.provider_raw_output or call_result.raw_output,
+                    "decoder_valid": outcome.valid,
+                    "decoder_rejection_code": outcome.rejection_code,
+                    "schema_valid": schema_valid,
+                    "schema_gate_violation": schema_gate_violation,
+                    "executor_admissibility_violation": executor_admissibility_violation,
+                    "selected_action": action_str,
+                    "admissibility_assertion_passed": False,
+                    "json_schema_sha256": getattr(call_result, "json_schema_sha256", ""),
+                })
+                call_log.append(receipt)
                 raise EpistemicAdmissibilityViolation(
                     action=action_str,
                     allowed=allowed_decision.allowed,
@@ -442,9 +510,13 @@ def run_trajectory(
 
             receipt.update({
                 "result_class": "success",
+                "raw_output": call_result.raw_output,
                 "provider_raw_output": call_result.provider_raw_output or call_result.raw_output,
                 "decoder_valid": outcome.valid,
                 "decoder_rejection_code": outcome.rejection_code,
+                "schema_valid": schema_valid,
+                "schema_gate_violation": schema_gate_violation,
+                "executor_admissibility_violation": executor_admissibility_violation,
                 "selected_action": action_str,
                 "selected_reason_code": proposal.reason_code,
                 "selected_target_id": getattr(proposal, "target_id", None),
@@ -489,6 +561,7 @@ def run_trajectory(
         terminal_result=terminal_result,
         model_calls=model_calls,
         backend_errors=backend_errors,
+        decoder_errors=decoder_errors,
         call_log=call_log,
         decision_state_log=decision_state_log,
         gold_t2=task.gold.gold_t2,
@@ -595,14 +668,18 @@ def analyze_results(results: list[TrajectoryResult]) -> dict:
     # 4. Hard-gate invariants
     schema_violations = 0
     executor_violations = 0
+    decoder_error_count = 0
     for r in results:
+        decoder_error_count += r.decoder_errors
         for call in r.call_log:
-            if call.get("result_class") == "success":
-                if not call.get("admissibility_assertion_passed", True):
-                    executor_violations += 1
+            if call.get("schema_gate_violation", False):
+                schema_violations += 1
+            if call.get("executor_admissibility_violation", False):
+                executor_violations += 1
     analysis["hard_gate_invariants"] = {
         "schema_gate_violations": schema_violations,
         "executor_admissibility_violations": executor_violations,
+        "decoder_errors": decoder_error_count,
     }
 
     # 5. Replacement-action distribution (when VERIFY is gated)
@@ -804,6 +881,7 @@ def main():
                 "terminal_result": r.terminal_result,
                 "model_calls": r.model_calls,
                 "backend_errors": r.backend_errors,
+                "decoder_errors": r.decoder_errors,
                 "gold_t2": r.gold_t2,
                 "gold_should_gate": r.gold_should_gate,
                 "stratum": r.stratum,
