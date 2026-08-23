@@ -1,0 +1,141 @@
+{
+  "arm_isolation": {
+    "D": {
+      "expected_diffs": 0,
+      "n_common": 5
+    },
+    "DE": {
+      "expected_diffs": 0,
+      "n_common": 5
+    },
+    "E": {
+      "expected_diffs": 0,
+      "n_common": 5
+    }
+  },
+  "dataset_integrity": {
+    "per_arm": {
+      "C0": 5,
+      "D": 5,
+      "DE": 5,
+      "E": 5
+    },
+    "strata": {
+      "T2_IMMEDIATE": 20
+    },
+    "total_trajectories": 20
+  },
+  "gate_safety": {
+    "confusion_matrix": {
+      "fn": 0,
+      "fp": 0,
+      "tn": 0,
+      "tp": 10
+    },
+    "false_gate_rate": 0.0,
+    "missed_gate_rate": 0.0
+  },
+  "hard_gate_invariants": {
+    "executor_admissibility_violations": 0,
+    "schema_gate_violations": 0
+  },
+  "loop_metrics": {
+    "REASON_MORE": {
+      "max_run_mean": 5.0,
+      "repeated_action_rate_mean": 0.8
+    },
+    "RETRIEVE": {
+      "max_run_mean": 4.0,
+      "repeated_action_rate_mean": 0.75
+    },
+    "SEARCH": {
+      "max_run_mean": 0.0,
+      "repeated_action_rate_mean": 0
+    },
+    "VERIFY": {
+      "max_run_mean": 0.0,
+      "repeated_action_rate_mean": 0
+    }
+  },
+  "loop_migration": {
+    "C0": {
+      "loop_migration_rate": 0.0,
+      "n_exhausted_non_verify": 0,
+      "n_t2": 5
+    },
+    "D": {
+      "loop_migration_rate": 0.0,
+      "n_exhausted_non_verify": 0,
+      "n_t2": 5
+    },
+    "DE": {
+      "loop_migration_rate": 0.0,
+      "n_exhausted_non_verify": 0,
+      "n_t2": 5
+    },
+    "E": {
+      "loop_migration_rate": 0.0,
+      "n_exhausted_non_verify": 0,
+      "n_t2": 5
+    }
+  },
+  "replacement_action_distribution": {
+    "REASON_MORE": 50,
+    "RETRIEVE": 40,
+    "SEARCH_MORE": 30
+  },
+  "success_breakdown": {
+    "C0": {
+      "answer_rate": 0.0,
+      "defer_rate": 0.0,
+      "n": 5,
+      "step_limit_rate": 0.0,
+      "success_rate": 0.0
+    },
+    "D": {
+      "answer_rate": 0.0,
+      "defer_rate": 0.0,
+      "n": 5,
+      "step_limit_rate": 0.0,
+      "success_rate": 0.0
+    },
+    "DE": {
+      "answer_rate": 0.0,
+      "defer_rate": 0.0,
+      "n": 5,
+      "step_limit_rate": 0.0,
+      "success_rate": 0.0
+    },
+    "E": {
+      "answer_rate": 0.0,
+      "defer_rate": 0.0,
+      "n": 5,
+      "step_limit_rate": 0.0,
+      "success_rate": 0.0
+    }
+  },
+  "utility_contrasts": {
+    "delta_D": 0.0,
+    "delta_DE": 0.0,
+    "delta_E": 0.0,
+    "interaction_DxE": 0.0,
+    "per_arm": {
+      "C0": {
+        "mean": -143.64,
+        "n": 5
+      },
+      "D": {
+        "mean": -143.64,
+        "n": 5
+      },
+      "DE": {
+        "mean": -143.64,
+        "n": 5
+      },
+      "E": {
+        "mean": -143.64,
+        "n": 5
+      }
+    }
+  }
+}

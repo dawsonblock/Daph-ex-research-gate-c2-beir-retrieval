@@ -106,8 +106,13 @@ def apply_semantics_intervention(
     decision_state_exposed = decision_state_internal
 
     if arm.corrected_t2_semantics and state.t2:
-        # R2e: relabel NEEDS_DISCRIMINATION → NO_VIABLE_HYPOTHESIS at T2
-        if decision_state_internal == "NEEDS_DISCRIMINATION":
+        # R2e: relabel to NO_VIABLE_HYPOTHESIS at T2
+        # At T2 (all hypotheses eliminated), the internal decision state may be
+        # NEEDS_DISCRIMINATION, INSUFFICIENT, or another label depending on
+        # evidence/budget state. R2e relabels ALL of these to NO_VIABLE_HYPOTHESIS
+        # because the underlying condition is the same: no viable hypothesis remains.
+        if decision_state_internal in ("NEEDS_DISCRIMINATION", "INSUFFICIENT",
+                                        "NEEDS_EVIDENCE", "SUPPORTED_BUT_UNRESOLVED"):
             decision_state_exposed = "NO_VIABLE_HYPOTHESIS"
             # Create a shallow copy with the modified label
             packet = dict(packet)
@@ -272,7 +277,12 @@ def run_trajectory(
     if et is None:
         raise ValueError(f"Task {task.task_id} has no evidence_task")
 
-    budget = ResourceBudget()
+    # Use the SAME budget as R13 (max_verification_calls=5, not default 3)
+    # This ensures VERIFY can still be legal at T2, making the gate meaningful
+    budget = ResourceBudget(
+        max_executive_steps=10, max_retrieval_calls=3,
+        max_search_calls=2, max_verification_calls=5,
+    )
     utility = MetareasoningUtility.from_file(
         REPO_ROOT / "configs" / "v2b_i3_1_utility_v1.json"
     )
