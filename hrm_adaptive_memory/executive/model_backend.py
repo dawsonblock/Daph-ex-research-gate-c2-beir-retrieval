@@ -396,42 +396,26 @@ class LocalLlamaBackend:
     # provider emits malformed output despite the schema, the decoder
     # rejects it and the runtime fails closed — no repair is performed.
 
-    # R2-DEV-V2: Full seven-action vocabulary for default schema.
-    _FULL_ACTION_VOCAB = frozenset({
-        "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
-        "REASON_MORE", "DEFER", "STOP",
-    })
+    # R2-DEV-V2: Schema construction is delegated to r2_schema.py
+    # (canonical source). No duplicated schema logic here.
 
     def _build_action_schema(self, allowed_actions: frozenset[str] | None) -> dict:
         """Build the JSON schema for constrained generation.
 
-        When ``allowed_actions`` is provided, the action enum is restricted
-        to exactly those actions.  When None, the full seven-action
-        vocabulary is used (matching the frozen R13 static schema).
+        Delegates to the canonical ``r2_schema.build_action_schema()``.
+        When ``allowed_actions`` is None, the full seven-action vocabulary
+        is used (matching the frozen R13 static schema).
         """
-        actions = allowed_actions if allowed_actions is not None else self._FULL_ACTION_VOCAB
-        # Use canonical R13 order for the enum
-        canonical_order = (
-            "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
-            "REASON_MORE", "DEFER", "STOP",
-        )
-        enum = [a for a in canonical_order if a in actions]
-        return {
-            "type": "object",
-            "properties": {
-                "action": {
-                    "type": "string",
-                    "enum": enum,
-                },
-                "reason_code": {
-                    "type": "string",
-                    "pattern": "^[A-Z][A-Z0-9_]*$",
-                },
-                "target_id": {"type": ["string", "null"]},
-            },
-            "required": ["action", "reason_code", "target_id"],
-            "additionalProperties": False,
-        }
+        import sys
+        from pathlib import Path
+        scripts_dir = Path(__file__).resolve().parent.parent.parent / "scripts"
+        if str(scripts_dir) not in sys.path:
+            sys.path.insert(0, str(scripts_dir))
+        from r2_schema import build_action_schema
+        from r2_allowed_actions import ACTION_VOCABULARY
+
+        actions = allowed_actions if allowed_actions is not None else ACTION_VOCABULARY
+        return build_action_schema(actions)
 
     def generate(self, *, system_prompt: str, user_prompt: str,
                  temperature: float, max_tokens: int,
@@ -477,8 +461,14 @@ class LocalLlamaBackend:
         }).encode()
 
         # LOCAL_POLICY_V2 provenance hashes
-        schema_sha = hashlib.sha256(
-            json.dumps(action_schema, sort_keys=True).encode()).hexdigest()
+        # Use canonical schema_sha256 from r2_schema.py (single SHA implementation)
+        import sys as _sys
+        from pathlib import Path as _Path
+        _scripts_dir = _Path(__file__).resolve().parent.parent.parent / "scripts"
+        if str(_scripts_dir) not in _sys.path:
+            _sys.path.insert(0, str(_scripts_dir))
+        from r2_schema import schema_sha256 as _schema_sha256
+        schema_sha = _schema_sha256(action_schema)
         prompt_sha = hashlib.sha256(system_prompt.encode()).hexdigest()
         packet_sha = hashlib.sha256(user_prompt.encode()).hexdigest()
         request_sha = hashlib.sha256(payload).hexdigest()
@@ -565,12 +555,16 @@ class R2DirectLlamaBackend:
 
     R2-DEV-V2: This is the canonical backend for strict schema-constrained
     generation.  The ``allowed_actions`` parameter is used to build a
-    dynamic JSON schema, which is converted to a GBNF grammar via
+    dynamic JSON schema via the canonical ``r2_schema.build_action_schema()``
+    (single source of truth), which is converted to a GBNF grammar via
     ``LlamaGrammar.from_json_schema()`` and passed to
     ``create_chat_completion()``.
+
+    Schema identity: Uses ``r2_schema.schema_sha256()`` for the schema SHA,
+    ensuring one canonical serialization and one SHA implementation.
     """
 
-    model_name: str = "gemma-3-12b-it-qat-q4_0"
+    model_name: str = "qwen2.5-7b-instruct"
     model_path: str = ""
     n_gpu_layers: int = -1  # -1 = offload all to GPU
     n_ctx: int = 4096
@@ -581,37 +575,6 @@ class R2DirectLlamaBackend:
     condition: str = ""
     _call_counter: int = field(default=0, repr=False, init=False)
     _llm: Any = field(default=None, repr=False, init=False)
-
-    # Full seven-action vocabulary for default schema.
-    _FULL_ACTION_VOCAB = frozenset({
-        "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
-        "REASON_MORE", "DEFER", "STOP",
-    })
-
-    def _build_action_schema(self, allowed_actions: frozenset[str] | None) -> dict:
-        """Build the JSON schema for constrained generation."""
-        actions = allowed_actions if allowed_actions is not None else self._FULL_ACTION_VOCAB
-        canonical_order = (
-            "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
-            "REASON_MORE", "DEFER", "STOP",
-        )
-        enum = [a for a in canonical_order if a in actions]
-        return {
-            "type": "object",
-            "properties": {
-                "action": {
-                    "type": "string",
-                    "enum": enum,
-                },
-                "reason_code": {
-                    "type": "string",
-                    "pattern": "^[A-Z][A-Z0-9_]*$",
-                },
-                "target_id": {"type": ["string", "null"]},
-            },
-            "required": ["action", "reason_code", "target_id"],
-            "additionalProperties": False,
-        }
 
     def _get_llm(self):
         """Lazily load the model on first use."""
@@ -630,16 +593,31 @@ class R2DirectLlamaBackend:
                  allowed_actions: frozenset[str] | None = None) -> ModelCallResult:
         """Generate a model response with LlamaGrammar enforcement.
 
-        The JSON schema is built from ``allowed_actions`` and converted to
-        a GBNF grammar via ``LlamaGrammar.from_json_schema()``.  This
+        The JSON schema is built from ``allowed_actions`` using the
+        canonical ``r2_schema.build_action_schema()`` and converted to a
+        GBNF grammar via ``LlamaGrammar.from_json_schema()``.  This
         physically prevents the model from generating actions outside the
         allowed set at the token level.
+
+        Schema SHA is computed via ``r2_schema.schema_sha256()`` (canonical
+        compact serialization), ensuring one SHA implementation across
+        the entire system.
         """
         from llama_cpp import LlamaGrammar
 
-        action_schema = self._build_action_schema(allowed_actions)
-        schema_sha = hashlib.sha256(
-            json.dumps(action_schema, sort_keys=True).encode()).hexdigest()
+        # Use the canonical schema builder from r2_schema.py.
+        # This is the single source of truth — no duplicated schema logic.
+        import sys
+        from pathlib import Path
+        scripts_dir = Path(__file__).resolve().parent.parent.parent / "scripts"
+        if str(scripts_dir) not in sys.path:
+            sys.path.insert(0, str(scripts_dir))
+        from r2_schema import build_action_schema, schema_sha256
+        from r2_allowed_actions import ACTION_VOCABULARY
+
+        actions = allowed_actions if allowed_actions is not None else ACTION_VOCABULARY
+        action_schema = build_action_schema(actions)
+        schema_sha = schema_sha256(action_schema)
         prompt_sha = hashlib.sha256(system_prompt.encode()).hexdigest()
         packet_sha = hashlib.sha256(user_prompt.encode()).hexdigest()
 
