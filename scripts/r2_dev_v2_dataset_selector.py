@@ -52,7 +52,7 @@ TARGET_COUNTS = {
     "ONE_LIVE_NEAR_BOUNDARY": 5,
 
     # Two live hypotheses (D must not gate)
-    "TWO_LIVE_DISCRIMINATION": 5,
+    "TWO_HYPOTHESIS_DISCRIMINATION_SCENARIO": 5,
 
     # Semantic error cases
     "FALSE_CONTRADICTION": 5,
@@ -102,17 +102,34 @@ def select_balanced_dataset(
     selected = []
 
     # Select from each stratum
+    # Rename TWO_LIVE_DISCRIMINATION → TWO_HYPOTHESIS_DISCRIMINATION_SCENARIO
+    # to avoid semantic mismatch (gold state has 1 live, not 2)
+    STRATUM_RENAME = {
+        "TWO_LIVE_DISCRIMINATION": "TWO_HYPOTHESIS_DISCRIMINATION_SCENARIO",
+    }
+
     for stratum, count in TARGET_COUNTS.items():
-        pool = by_stratum.get(stratum, [])
+        # Look up under original name if renamed
+        source_stratum = stratum
+        for orig, renamed in STRATUM_RENAME.items():
+            if stratum == renamed:
+                source_stratum = orig
+                break
+
+        pool = by_stratum.get(source_stratum, [])
         if len(pool) < count:
-            print(f"WARNING: stratum {stratum} has only {len(pool)} tasks, "
+            print(f"WARNING: stratum {source_stratum} has only {len(pool)} tasks, "
                   f"need {count}. Using all available.")
             chosen = pool
         else:
             chosen = rng.sample(pool, count)
 
         for task in chosen:
-            selected.append(dict(task))
+            task_copy = dict(task)
+            # Apply rename
+            if task_copy["stratum"] in STRATUM_RENAME:
+                task_copy["stratum"] = STRATUM_RENAME[task_copy["stratum"]]
+            selected.append(task_copy)
 
     # Synthesize budget-exhausted variants for T2 cases
     # Take T2_IMMEDIATE tasks and create budget variants
@@ -161,7 +178,7 @@ def print_dataset_summary(tasks: list[dict]):
             sum(1 for t in tasks if t["gold_n_live"] == 1 and not t["gold_t2"]) > 0
         ),
         ">=2 live hypotheses (D must not gate)": (
-            sum(1 for t in tasks if t["stratum"] == "TWO_LIVE_DISCRIMINATION") > 0
+            sum(1 for t in tasks if t["stratum"] == "TWO_HYPOTHESIS_DISCRIMINATION_SCENARIO") > 0
         ),
         "false-contradiction inferred T2": (
             sum(1 for t in tasks if t.get("semantic_error_class") == "FALSE_CONTRADICTION") > 0
