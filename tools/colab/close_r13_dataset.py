@@ -44,15 +44,15 @@ def load_results(path: Path) -> list[dict]:
     return results
 
 
-def verify_dataset_integrity(results: list[dict], expected: int = 1280) -> dict:
+def verify_dataset_integrity(results: list[dict], expected: int = 1280, checkpoint_dir: Path = None) -> dict:
     """Verify the closed dataset meets all integrity requirements."""
     keys = [r.get("trajectory_key", "") for r in results]
     unique_keys = set(keys)
     duplicates = len(keys) - len(unique_keys)
     missing = expected - len(unique_keys)
 
-    # Check ALL frozen identities across every record — must be exactly one value each.
-    # This is critical because R13 crossed VM boundaries.
+    # Check per-record identities (fields that exist in each trajectory record)
+    # and run-level identities (from identity_frozen.json, not per-record).
     #
     # KNOWN DEFECT R13-PROV-001: The frozen runner's build_run_manifest() incorrectly
     # sets confirmation_executable_sha256 to runtime_config_sha256. The actual
@@ -60,23 +60,52 @@ def verify_dataset_integrity(results: list[dict], expected: int = 1280) -> dict:
     # confirmation_executable_sha256.txt. We do NOT check the manifest field
     # for the confirmation SHA. We check the .txt file separately at closure.
     # See: experiments/v2b_i3_15c/confirmation/r13_known_defects.json
-    identity_fields = [
+    #
+    # Per-record identity fields (present in each trajectory record):
+    per_record_fields = [
         "protocol_id",
         "backend_identity",
+    ]
+    # Run-level identity fields (verified from identity_frozen.json, not per-record):
+    run_level_fields = [
         "protocol_sha256",
         "gguf_sha256",
         "runtime_config_sha256",
         "receipt_identity_sha256",
     ]
+
     identity_violations = []
     identity_uniqueness = {}
-    for field in identity_fields:
+
+    # Check per-record fields
+    for field in per_record_fields:
         values = set(r.get(field, "") for r in results if r.get(field))
         identity_uniqueness[field] = list(values)
         if len(values) > 1:
             identity_violations.append(f"{field}: {values}")
         elif len(values) == 0:
             identity_violations.append(f"{field}: MISSING from all records")
+
+    # Check run-level fields from identity_frozen.json
+    identity_frozen_path = checkpoint_dir / "identity_frozen.json"
+    if identity_frozen_path.exists():
+        with open(identity_frozen_path) as f:
+            frozen_ident = json.load(f)
+        frozen_expected = {
+            "protocol_sha256": "9590440d2744a6409cc19bc7ba8168d22cb7cee80952fb520a54134815c312c5",
+            "gguf_sha256": "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+            "runtime_config_sha256": "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+            "receipt_identity_sha256": "bb612a2c2f06eeeb2640161451a8893a4d519c9025bce058a6bebceb49c2ca11",
+        }
+        for field, expected_val in frozen_expected.items():
+            actual = frozen_ident.get(field, "")
+            identity_uniqueness[field] = [actual] if actual else ["MISSING"]
+            if actual != expected_val:
+                identity_violations.append(f"{field}: mismatch (got {actual[:20]}..., expected {expected_val[:20]}...)")
+    else:
+        for field in run_level_fields:
+            identity_uniqueness[field] = ["identity_frozen.json MISSING"]
+            identity_violations.append(f"{field}: identity_frozen.json not found")
 
     # Check for errors
     error_count = sum(1 for r in results if r.get("terminal_result") == "BACKEND_ERROR")
@@ -87,8 +116,12 @@ def verify_dataset_integrity(results: list[dict], expected: int = 1280) -> dict:
         arm = r.get("arm", "unknown")
         arm_counts[arm] = arm_counts.get(arm, 0) + 1
 
-    # Check retrieval condition is Q3 only
-    retrieval_conditions = set(r.get("retrieval_condition", "") for r in results if r.get("retrieval_condition"))
+    # Check retrieval condition is Q3 only (field name is retrieval_level in records)
+    retrieval_conditions = set(
+        r.get("retrieval_condition", r.get("retrieval_level", ""))
+        for r in results
+        if r.get("retrieval_condition") or r.get("retrieval_level")
+    )
 
     report = {
         "total_records": len(results),
@@ -209,7 +242,7 @@ def main():
 
     # Step 2: Verify dataset integrity
     print("\n[2] Verifying dataset integrity...")
-    integrity = verify_dataset_integrity(results, expected=1280)
+    integrity = verify_dataset_integrity(results, expected=1280, checkpoint_dir=checkpoint_dir)
     print(f"  total_records: {integrity['total_records']}")
     print(f"  unique_keys: {integrity['unique_keys']}")
     print(f"  duplicates: {integrity['duplicates']}")

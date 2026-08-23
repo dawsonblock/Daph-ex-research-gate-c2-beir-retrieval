@@ -1,0 +1,289 @@
+{
+  "timestamp": "2026-08-23T05:13:53.290988Z",
+  "r13_dataset_sha256": "56cff26a4f13d519810a77f61f7a8280cb6d665e729270ff421966cdeccb62db",
+  "integrity": {
+    "total_records": 1280,
+    "unique_keys": 1280,
+    "duplicates": 0,
+    "missing": 0,
+    "errors": 0,
+    "identity_violations": [],
+    "identity_uniqueness": {
+      "protocol_id": [
+        "I3_15C_CONFIRMATION_PROTOCOL_V2"
+      ],
+      "backend_identity": [
+        "2ad4c9ce431a2d5b"
+      ],
+      "protocol_sha256": [
+        "9590440d2744a6409cc19bc7ba8168d22cb7cee80952fb520a54134815c312c5"
+      ],
+      "gguf_sha256": [
+        "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d"
+      ],
+      "runtime_config_sha256": [
+        "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3"
+      ],
+      "receipt_identity_sha256": [
+        "bb612a2c2f06eeeb2640161451a8893a4d519c9025bce058a6bebceb49c2ca11"
+      ]
+    },
+    "arm_counts": {
+      "A1_INFERRED": 640,
+      "R1_INFERRED": 640
+    },
+    "retrieval_conditions": [
+      "Q3_RERANKED"
+    ],
+    "known_defects": [
+      "R13-PROV-001"
+    ],
+    "experiment_classification": "PRE_SPECIFIED_CONFIRMATION_WITH_KNOWN_PROVENANCE_FIELD_DEFECT",
+    "passes": true,
+    "segment_identity_table": {
+      "experiment_source_commit": {
+        "values_per_segment": [
+          "5454246b7e61adfb7a093eb5a1f731347071270d",
+          "5454246b7e61adfb7a093eb5a1f731347071270d",
+          "5454246b7e61adfb7a093eb5a1f731347071270d",
+          "5454246b7e61adfb7a093eb5a1f731347071270d",
+          "5454246b7e61adfb7a093eb5a1f731347071270d",
+          "5454246b7e61adfb7a093eb5a1f731347071270d",
+          "5454246b7e61adfb7a093eb5a1f731347071270d"
+        ],
+        "unique_count": 1,
+        "identical": true
+      },
+      "gguf_sha256": {
+        "values_per_segment": [
+          "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+          "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+          "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+          "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+          "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+          "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+          "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d"
+        ],
+        "unique_count": 1,
+        "identical": true
+      },
+      "protocol_sha256": {
+        "values_per_segment": [
+          "MISSING",
+          "MISSING",
+          "MISSING",
+          "MISSING",
+          "MISSING",
+          "MISSING",
+          "MISSING"
+        ],
+        "unique_count": 0,
+        "identical": true
+      },
+      "runtime_config_sha256": {
+        "values_per_segment": [
+          "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+          "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+          "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+          "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+          "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+          "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+          "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3"
+        ],
+        "unique_count": 1,
+        "identical": true
+      },
+      "confirmation_executable_sha256": {
+        "values_per_segment": [
+          "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+          "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+          "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+          "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+          "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+          "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+          "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57"
+        ],
+        "unique_count": 1,
+        "identical": true
+      }
+    },
+    "segments": [
+      {
+        "segment": 1,
+        "session_id": "gpu-l4-s-kkb-ass1a0-bpgajmsj1sr7",
+        "start_completed": 0,
+        "end_completed": 357,
+        "termination_reason": "COLAB_VM_RECYCLED",
+        "gpu": "NVIDIA L4",
+        "cuda_version": null,
+        "llama_cpp_archive": "llama-server-d775b8967a46-cuda-sm89.tar.gz",
+        "gguf_sha256": "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+        "experiment_source_commit": "5454246b7e61adfb7a093eb5a1f731347071270d",
+        "confirmation_executable_sha256": "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+        "runtime_config_sha256": "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+        "provenance_status": "RECONSTRUCTED_FROM_CHECKPOINT_AND_LOG",
+        "start_timestamp": null,
+        "end_timestamp": null,
+        "notes": "Original segment record lost with ephemeral VM. Reconstructed from checkpoint progression: local checkpoint showed 197 trajectories at first VM loss, then 357 at second VM loss. Segment 1 covers the original run from 0 to 357 across two Colab sessions (gpu-l4-s-kkb-ass1a0-bpgajmsj1sr7 and gpu-l4-s-kkb-ass1a0-ekwh7yzazv1w). The boundary at 197 was the first VM death within this segment."
+      },
+      {
+        "segment": 2,
+        "session_id": "gpu-l4-s-kkb-ass1a0-ekwh7yzazv1w",
+        "start_completed": 357,
+        "end_completed": 517,
+        "termination_reason": "COLAB_VM_LOSS",
+        "gpu": "NVIDIA L4",
+        "cuda_version": null,
+        "llama_cpp_archive": "llama-server-d775b8967a46-cuda-sm89.tar.gz",
+        "gguf_sha256": "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+        "experiment_source_commit": "5454246b7e61adfb7a093eb5a1f731347071270d",
+        "confirmation_executable_sha256": "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+        "runtime_config_sha256": "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+        "provenance_status": "RECONSTRUCTED_FROM_CHECKPOINT_AND_LOG",
+        "start_timestamp": "2026-08-22T20:10:12Z",
+        "end_timestamp": null,
+        "notes": "Original segment record lost with ephemeral VM. Reconstructed from checkpoint progression and recovery logs. This session restored at frozen commit 5454246, verified all identities, resumed from 357, and reached 517 before VM loss."
+      },
+      {
+        "segment": 3,
+        "session_id": "gpu-l4-s-kkb-ass1a0-x0539cw5kufz",
+        "start_completed": 517,
+        "end_completed": null,
+        "termination_reason": null,
+        "gpu": "NVIDIA L4",
+        "cuda_version": null,
+        "llama_cpp_archive": "llama-server-d775b8967a46-cuda-sm89.tar.gz",
+        "gguf_sha256": "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+        "experiment_source_commit": "5454246b7e61adfb7a093eb5a1f731347071270d",
+        "confirmation_executable_sha256": "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+        "runtime_config_sha256": "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+        "provenance_status": "RECORDED_AT_RECOVERY",
+        "start_timestamp": "2026-08-22T21:22:42Z",
+        "end_timestamp": null,
+        "notes": "Recorded at recovery. Server restarted with optimized performance params (-t 8, --batch-size 4096, --ubatch-size 1024) at segment 3 midpoint. Scientific params unchanged (parallel=4, ctx=32768, temp=0.0, seed=42)."
+      },
+      {
+        "segment": 4,
+        "session_id": "unknown",
+        "start_completed": 651,
+        "end_completed": null,
+        "termination_reason": null,
+        "gpu": "NVIDIA L4",
+        "cuda_version": "12.8,",
+        "llama_cpp_archive": "llama-server-d775b8967a46-cuda-sm89.tar.gz",
+        "gguf_sha256": "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+        "experiment_source_commit": "5454246b7e61adfb7a093eb5a1f731347071270d",
+        "confirmation_executable_sha256": "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+        "runtime_config_sha256": "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+        "provenance_status": "RECORDED_AT_RECOVERY",
+        "start_timestamp": "2026-08-22T22:35:52Z",
+        "end_timestamp": null
+      },
+      {
+        "segment": 5,
+        "session_id": "unknown",
+        "start_completed": 818,
+        "end_completed": null,
+        "termination_reason": null,
+        "gpu": "NVIDIA L4",
+        "cuda_version": "12.8,",
+        "llama_cpp_archive": "llama-server-d775b8967a46-cuda-sm89.tar.gz",
+        "gguf_sha256": "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+        "experiment_source_commit": "5454246b7e61adfb7a093eb5a1f731347071270d",
+        "confirmation_executable_sha256": "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+        "runtime_config_sha256": "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+        "provenance_status": "RECORDED_AT_RECOVERY",
+        "start_timestamp": "2026-08-23T00:57:03Z",
+        "end_timestamp": null
+      },
+      {
+        "segment": 6,
+        "session_id": "unknown",
+        "start_completed": 991,
+        "end_completed": null,
+        "termination_reason": null,
+        "gpu": "NVIDIA L4",
+        "cuda_version": "12.8,",
+        "llama_cpp_archive": "llama-server-d775b8967a46-cuda-sm89.tar.gz",
+        "gguf_sha256": "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+        "experiment_source_commit": "5454246b7e61adfb7a093eb5a1f731347071270d",
+        "confirmation_executable_sha256": "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+        "runtime_config_sha256": "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+        "provenance_status": "RECORDED_AT_RECOVERY",
+        "start_timestamp": "2026-08-23T02:26:22Z",
+        "end_timestamp": null
+      },
+      {
+        "segment": 7,
+        "session_id": "unknown",
+        "start_completed": 1163,
+        "end_completed": null,
+        "termination_reason": null,
+        "gpu": "NVIDIA L4",
+        "cuda_version": "12.8,",
+        "llama_cpp_archive": "llama-server-d775b8967a46-cuda-sm89.tar.gz",
+        "gguf_sha256": "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+        "experiment_source_commit": "5454246b7e61adfb7a093eb5a1f731347071270d",
+        "confirmation_executable_sha256": "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+        "runtime_config_sha256": "c64eb7b828feeac599e4bb001bf14a790efabe0d8e39c4f9cc4486062ad024c3",
+        "provenance_status": "RECORDED_AT_RECOVERY",
+        "start_timestamp": "2026-08-23T04:14:51Z",
+        "end_timestamp": null
+      }
+    ]
+  },
+  "dataset_manifest": {
+    "cognition_cost_receipts.jsonl": {
+      "sha256": "69178f2615f24f058e2b761a88d823655afeda1d3b15c981e43b0f2e127c8e3e",
+      "bytes": 544485
+    },
+    "confirmation_executable_sha256.txt": {
+      "sha256": "d30ceb44514605bea3ccc29b1cb4fb76a998f493e9521630a16bf5bd554e72b8",
+      "bytes": 64
+    },
+    "context_preflight.json": {
+      "sha256": "725267c3f82ceb12bc30241a6605046dfd84982b8139eb913342aec6e33f606f",
+      "bytes": 273
+    },
+    "errors.jsonl": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "execution_segments.jsonl": {
+      "sha256": "a946fe61c3a79811faa7151b3638275213fef9a1fb73844c3bb547fe865f01fc",
+      "bytes": 5792
+    },
+    "identity_frozen.json": {
+      "sha256": "b2113f5f5d8712cdda1a1feab6ef61d4b0de22c8c6357ac694bdac42ec4751e4",
+      "bytes": 462
+    },
+    "known_defects.json": {
+      "sha256": "536068b3097233d7c587bf332a76f817afe2ba1832d6e60f361e3ea65bd7fa05",
+      "bytes": 3685
+    },
+    "mechanism_receipts.jsonl": {
+      "sha256": "cf54c3e2a9630ff18fdcd77d178726c9c5ff8cdf4d6daa66fbe9c35007d93066",
+      "bytes": 258062
+    },
+    "model_calls.jsonl": {
+      "sha256": "541a033785f478e2459fea0f2e3f867cb42a671ad48bbe42a903ae229cfbd866",
+      "bytes": 11222762
+    },
+    "progress.json": {
+      "sha256": "484b703feaec0719381b3882216cb73755852c88736367445a04115b4fc87cc4",
+      "bytes": 241
+    },
+    "r13_experiment_identity.json": {
+      "sha256": "3b6962b5ea373940e1137ddeaeed73562089bae834dbd9db35bfcc32478fdd75",
+      "bytes": 1327
+    },
+    "results.jsonl": {
+      "sha256": "ad600240bf97cbbdb09126f542d1dc56605b11089b387684883be5784bb8a463",
+      "bytes": 14052290
+    },
+    "run_manifest.json": {
+      "sha256": "d20b7a7c5ae634698ccf078fe35f02d787b429c27ca7738092f4ef42f8c03c0e",
+      "bytes": 817
+    }
+  }
+}

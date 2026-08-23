@@ -1,0 +1,54 @@
+{
+  "cognition_cost_receipts.jsonl": {
+    "sha256": "69178f2615f24f058e2b761a88d823655afeda1d3b15c981e43b0f2e127c8e3e",
+    "bytes": 544485
+  },
+  "confirmation_executable_sha256.txt": {
+    "sha256": "d30ceb44514605bea3ccc29b1cb4fb76a998f493e9521630a16bf5bd554e72b8",
+    "bytes": 64
+  },
+  "context_preflight.json": {
+    "sha256": "725267c3f82ceb12bc30241a6605046dfd84982b8139eb913342aec6e33f606f",
+    "bytes": 273
+  },
+  "errors.jsonl": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "execution_segments.jsonl": {
+    "sha256": "a946fe61c3a79811faa7151b3638275213fef9a1fb73844c3bb547fe865f01fc",
+    "bytes": 5792
+  },
+  "identity_frozen.json": {
+    "sha256": "b2113f5f5d8712cdda1a1feab6ef61d4b0de22c8c6357ac694bdac42ec4751e4",
+    "bytes": 462
+  },
+  "known_defects.json": {
+    "sha256": "536068b3097233d7c587bf332a76f817afe2ba1832d6e60f361e3ea65bd7fa05",
+    "bytes": 3685
+  },
+  "mechanism_receipts.jsonl": {
+    "sha256": "cf54c3e2a9630ff18fdcd77d178726c9c5ff8cdf4d6daa66fbe9c35007d93066",
+    "bytes": 258062
+  },
+  "model_calls.jsonl": {
+    "sha256": "541a033785f478e2459fea0f2e3f867cb42a671ad48bbe42a903ae229cfbd866",
+    "bytes": 11222762
+  },
+  "progress.json": {
+    "sha256": "484b703feaec0719381b3882216cb73755852c88736367445a04115b4fc87cc4",
+    "bytes": 241
+  },
+  "r13_experiment_identity.json": {
+    "sha256": "3b6962b5ea373940e1137ddeaeed73562089bae834dbd9db35bfcc32478fdd75",
+    "bytes": 1327
+  },
+  "results.jsonl": {
+    "sha256": "ad600240bf97cbbdb09126f542d1dc56605b11089b387684883be5784bb8a463",
+    "bytes": 14052290
+  },
+  "run_manifest.json": {
+    "sha256": "d20b7a7c5ae634698ccf078fe35f02d787b429c27ca7738092f4ef42f8c03c0e",
+    "bytes": 817
+  }
+}
