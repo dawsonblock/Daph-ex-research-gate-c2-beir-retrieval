@@ -1,0 +1,59 @@
+{
+  "dataset_integrity": {
+    "per_arm": {
+      "C0": 10,
+      "D": 10,
+      "DE": 10,
+      "E": 10
+    },
+    "total_trajectories": 40
+  },
+  "gate_safety": {
+    "confusion_matrix": {
+      "fn": 0,
+      "fp": 0,
+      "tn": 0,
+      "tp": 20
+    },
+    "false_gate_rate": 0.0,
+    "missed_gate_rate": 0.0
+  },
+  "hard_gate_invariants": {
+    "executor_admissibility_violations": 0,
+    "schema_gate_violations": 0
+  },
+  "replacement_action_distribution": {
+    "DEFER": 2,
+    "REASON_MORE": 24,
+    "SEARCH_MORE": 21,
+    "STOP": 18
+  },
+  "success_breakdown": {
+    "C0": {
+      "n": 10,
+      "step_limit_rate": 0.0,
+      "success_rate": 0.4
+    },
+    "D": {
+      "n": 10,
+      "step_limit_rate": 0.0,
+      "success_rate": 0.2
+    },
+    "DE": {
+      "n": 10,
+      "step_limit_rate": 0.0,
+      "success_rate": 0.0
+    },
+    "E": {
+      "n": 10,
+      "step_limit_rate": 0.0,
+      "success_rate": 0.0
+    }
+  },
+  "utility_contrasts": {
+    "delta_D": -20.428,
+    "delta_DE": -39.784,
+    "delta_E": -39.784,
+    "interaction_DxE": 20.428
+  }
+}
