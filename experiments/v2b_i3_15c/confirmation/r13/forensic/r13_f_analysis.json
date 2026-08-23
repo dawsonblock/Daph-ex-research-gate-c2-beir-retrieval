@@ -1,0 +1,378 @@
+{
+  "label": "POST_HOC_EXPLORATORY",
+  "r13_dataset_sha256": "56cff26a4f13d519810a77f61f7a8280cb6d665e729270ff421966cdeccb62db",
+  "n_pairs": 640,
+  "prefix_classification": {
+    "IMMEDIATE_T2": 76,
+    "NO_TRIGGER": 412,
+    "PREFIX_IDENTICAL": 152
+  },
+  "first_divergence_transitions": {
+    "VERIFY\u2192VERIFY": 185,
+    "VERIFY\u2192RETRIEVE": 4
+  },
+  "action_distribution": {
+    "ALL_T2": {
+      "stratum": "ALL_T2",
+      "r1_total_post_t2_steps": 1159,
+      "a1_total_post_t2_steps": 1140,
+      "action_probabilities": {
+        "ANSWER": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "DEFER": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "VERIFY": {
+          "P_R1": 0.9836,
+          "P_A1": 1.0,
+          "R1_count": 1140,
+          "A1_count": 1140
+        },
+        "RETRIEVE": {
+          "P_R1": 0.0164,
+          "P_A1": 0.0,
+          "R1_count": 19,
+          "A1_count": 0
+        },
+        "SEARCH_MORE": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "REASON_MORE": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "STOP": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        }
+      },
+      "displacement": {
+        "ANSWER": 0.0,
+        "DEFER": 0.0,
+        "VERIFY": -0.0164,
+        "RETRIEVE": 0.0164,
+        "SEARCH_MORE": 0.0,
+        "REASON_MORE": 0.0,
+        "STOP": 0.0
+      }
+    },
+    "IMMEDIATE": {
+      "stratum": "IMMEDIATE",
+      "r1_total_post_t2_steps": 466,
+      "a1_total_post_t2_steps": 456,
+      "action_probabilities": {
+        "ANSWER": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "DEFER": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "VERIFY": {
+          "P_R1": 0.9785,
+          "P_A1": 1.0,
+          "R1_count": 456,
+          "A1_count": 456
+        },
+        "RETRIEVE": {
+          "P_R1": 0.0215,
+          "P_A1": 0.0,
+          "R1_count": 10,
+          "A1_count": 0
+        },
+        "SEARCH_MORE": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "REASON_MORE": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "STOP": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        }
+      },
+      "displacement": {
+        "ANSWER": 0.0,
+        "DEFER": 0.0,
+        "VERIFY": -0.0215,
+        "RETRIEVE": 0.0215,
+        "SEARCH_MORE": 0.0,
+        "REASON_MORE": 0.0,
+        "STOP": 0.0
+      }
+    },
+    "LATE_1": {
+      "stratum": "LATE_1",
+      "r1_total_post_t2_steps": 381,
+      "a1_total_post_t2_steps": 380,
+      "action_probabilities": {
+        "ANSWER": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "DEFER": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "VERIFY": {
+          "P_R1": 0.9974,
+          "P_A1": 1.0,
+          "R1_count": 380,
+          "A1_count": 380
+        },
+        "RETRIEVE": {
+          "P_R1": 0.0026,
+          "P_A1": 0.0,
+          "R1_count": 1,
+          "A1_count": 0
+        },
+        "SEARCH_MORE": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "REASON_MORE": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "STOP": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        }
+      },
+      "displacement": {
+        "ANSWER": 0.0,
+        "DEFER": 0.0,
+        "VERIFY": -0.0026,
+        "RETRIEVE": 0.0026,
+        "SEARCH_MORE": 0.0,
+        "REASON_MORE": 0.0,
+        "STOP": 0.0
+      }
+    },
+    "LATE_2": {
+      "stratum": "LATE_2",
+      "r1_total_post_t2_steps": 312,
+      "a1_total_post_t2_steps": 304,
+      "action_probabilities": {
+        "ANSWER": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "DEFER": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "VERIFY": {
+          "P_R1": 0.9744,
+          "P_A1": 1.0,
+          "R1_count": 304,
+          "A1_count": 304
+        },
+        "RETRIEVE": {
+          "P_R1": 0.0256,
+          "P_A1": 0.0,
+          "R1_count": 8,
+          "A1_count": 0
+        },
+        "SEARCH_MORE": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "REASON_MORE": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "STOP": {
+          "P_R1": 0.0,
+          "P_A1": 0.0,
+          "R1_count": 0,
+          "A1_count": 0
+        }
+      },
+      "displacement": {
+        "ANSWER": 0.0,
+        "DEFER": 0.0,
+        "VERIFY": -0.0256,
+        "RETRIEVE": 0.0256,
+        "SEARCH_MORE": 0.0,
+        "REASON_MORE": 0.0,
+        "STOP": 0.0
+      }
+    },
+    "LATE_3": {
+      "stratum": "LATE_3",
+      "r1_total_post_t2_steps": 0,
+      "a1_total_post_t2_steps": 0,
+      "action_probabilities": {
+        "ANSWER": {
+          "P_R1": 0,
+          "P_A1": 0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "DEFER": {
+          "P_R1": 0,
+          "P_A1": 0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "VERIFY": {
+          "P_R1": 0,
+          "P_A1": 0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "RETRIEVE": {
+          "P_R1": 0,
+          "P_A1": 0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "SEARCH_MORE": {
+          "P_R1": 0,
+          "P_A1": 0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "REASON_MORE": {
+          "P_R1": 0,
+          "P_A1": 0,
+          "R1_count": 0,
+          "A1_count": 0
+        },
+        "STOP": {
+          "P_R1": 0,
+          "P_A1": 0,
+          "R1_count": 0,
+          "A1_count": 0
+        }
+      },
+      "displacement": {
+        "ANSWER": 0,
+        "DEFER": 0,
+        "VERIFY": 0,
+        "RETRIEVE": 0,
+        "SEARCH_MORE": 0,
+        "REASON_MORE": 0,
+        "STOP": 0
+      }
+    }
+  },
+  "verify_audit": {
+    "R1": {
+      "total_verify": 1140,
+      "outcomes": {
+        "VERIFY_COMPLETED": 912,
+        "RESOURCE_EXHAUSTED": 228
+      },
+      "verify_completed_rate": 0.8,
+      "invalid_verify_rate": 0.0,
+      "resource_exhausted_rate": 0.2,
+      "repeated_target_rate": 0.0,
+      "useful_verify_count": 0,
+      "usefulness_observable_count": 912,
+      "useful_verify_rate": 0.0,
+      "epistemic_usefulness": "OBSERVABLE"
+    },
+    "A1": {
+      "total_verify": 1140,
+      "outcomes": {
+        "VERIFY_COMPLETED": 639,
+        "INVALID_VERIFY_TARGET": 273,
+        "RESOURCE_EXHAUSTED": 228
+      },
+      "verify_completed_rate": 0.5605,
+      "invalid_verify_rate": 0.2395,
+      "resource_exhausted_rate": 0.2,
+      "repeated_target_rate": 0.2493
+    }
+  },
+  "harm_by_divergence": {
+    "VERIFY\u2192VERIFY": {
+      "n": 185,
+      "mean_delta_u": -0.1743,
+      "mean_delta_steps": 0.0811,
+      "r1_breaks": 0,
+      "r1_rescues": 0
+    },
+    "VERIFY\u2192RETRIEVE": {
+      "n": 4,
+      "mean_delta_u": -2.15,
+      "mean_delta_steps": 1.0,
+      "r1_breaks": 0,
+      "r1_rescues": 0
+    }
+  },
+  "persistent_m3_analysis": {
+    "n": 228,
+    "mean_consecutive_verify": 4.9167,
+    "mean_delta_u": -0.1792,
+    "first_post_t2_action_distribution": {
+      "VERIFY": 228
+    },
+    "harm_by_consecutive_verify_bucket": {
+      "3-4": {
+        "n": 77,
+        "mean_delta_u": -0.2513,
+        "mean_repeated": 0.0,
+        "mean_invalid": 0.0
+      },
+      "5+": {
+        "n": 151,
+        "mean_delta_u": -0.1424,
+        "mean_repeated": 0.0,
+        "mean_invalid": 0.0
+      }
+    }
+  },
+  "rescue_break_summary": {
+    "breaks": 0,
+    "rescues": 0
+  },
+  "methodological_note": "R13-F can identify likely failure mechanisms; it cannot confirm them causally. Any hypothesis produced by R13-F must be tested in new held-out development data."
+}

@@ -1,5 +1,7 @@
 # R13 Confirmation Results — I3.15c
 
+> **Documentation revision (R13-F):** The original closing statement "the governor identifies a useful direction, but the model cannot execute it" has been corrected to "T2 reliably identifies the intended epistemic phase, but the tested R1 representation switch is counterproductive under the qualified Gemma policy backend." R13 does not establish that the detected direction is intrinsically useful — only that T2 detection is accurate and the R1 intervention is harmful. Raw R13 artifacts are unchanged.
+
 ## Stage A: Dataset Closure
 
 ### Closure Gate
@@ -185,7 +187,7 @@ R1 demonstrates convincing harm on this frozen benchmark. The primary endpoint �
 
 3. **R1 is safe but ineffective.** Safety is perfect (0% false T2 rate). Controls are perfectly equivalent. R1 does nothing when T2 is absent. But when T2 is present, R1 makes things worse.
 
-4. **The governor identifies a useful direction, but the model cannot execute it.** This confirms the central conceptual distinction: the governor can correctly detect that a conflict exists (T2 triggers), but directing the model to re-verify does not improve its decisions — it adds steps and reduces utility.
+4. **T2 reliably identifies the intended epistemic phase, but the tested R1 representation switch is counterproductive under the qualified Gemma policy backend.** T2 correctly detects the conflict phase (76/80 trigger rate in eligible strata, 0% false activation on controls). However, routing the model into persistent M3 representation at that phase does not improve outcomes — it adds steps and reduces utility. R13 does not establish that the detected direction itself is intrinsically useful; it establishes that the specific R1 intervention at that phase is harmful.
 
 5. **The infrastructure works.** 7 VM deaths, 1 runtime deviation, and 1 provenance defect were all contained without data loss or scientific contamination. The recovery harness is operationally qualified.
 
@@ -193,7 +195,7 @@ R1 demonstrates convincing harm on this frozen benchmark. The primary endpoint �
 
 1. **Does not prove that phase-conditioned representation routing is universally harmful.** This is one model (Gemma-3-12B Q4), one benchmark (I3.15c), one retrieval condition (Q3_RERANKED), and one governor configuration. The negative result is specific to this frozen configuration.
 
-2. **Does not prove that MDSG/T2 is useless.** T2 triggers correctly and safely. The failure is in execution, not detection. A different model, different prompt, or different routing target might benefit from the same detected conflicts.
+2. **Does not prove that MDSG/T2 is useless.** T2 triggers correctly and safely. The failure is in the R1 representation switch, not in T2 detection. A different model, different prompt, or different routing target might benefit from the same detected conflicts.
 
 3. **Does not prove that the DAPH V2B executive is worthless.** It proves that R1 (re-verification routing) does not help this model on this benchmark. Other mechanisms (different routing targets, different decision-state compressions) remain untested.
 
