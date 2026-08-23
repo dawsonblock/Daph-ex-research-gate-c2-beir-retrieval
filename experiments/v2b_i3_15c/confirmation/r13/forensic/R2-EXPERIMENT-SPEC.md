@@ -166,30 +166,74 @@ legal_actions.update({"ANSWER", "DEFER", "STOP", "REASON_MORE"})
 
 ### 3.2 Epistemically admissible actions (new)
 
-```python
-epistemically_admissible = set(legal_actions)  # start from all legal
+Epistemic admissibility is initialized from the full action vocabulary, NOT from legal_actions. This makes the architecture real: `EpistemicallyAdmissible` is independent of `Legal`, and `Allowed = Legal ∩ EpistemicallyAdmissible` combines them.
 
-if arm.structural_verify_gate:
-    t2 = (n_hypotheses > 0 and len(eliminated_hypotheses) == n_hypotheses)
-    if t2:
-        epistemically_admissible.discard("VERIFY")
-        verify_gate_applied = True
-        verify_gate_reason = "ALL_HYPOTHESES_ELIMINATED"
-    else:
-        verify_gate_applied = False
-        verify_gate_reason = None
-else:
-    verify_gate_applied = False
-    verify_gate_reason = None
+```python
+ACTION_VOCABULARY = frozenset({
+    "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
+    "REASON_MORE", "DEFER", "STOP",
+})
+
+def epistemically_admissible_actions(state, arm):
+    actions = set(ACTION_VOCABULARY)
+    if arm.structural_verify_gate and state.t2:
+        actions.remove("VERIFY")
+    return frozenset(actions)
 ```
 
 ### 3.3 Allowed actions
 
 ```python
-allowed_actions = legal_actions & epistemically_admissible
+allowed_actions = legal_actions & epistemically_admissible_actions(state, arm)
 ```
 
-Since `EpistemicallyAdmissible` is defined independently of `Legal` (per §1.1), the intersection is correct. In practice, `epistemically_admissible` starts as a copy of `legal_actions` and only removes VERIFY when the gate fires, so `allowed_actions = epistemically_admissible` in the current implementation. The intersection formulation is kept for future extensibility.
+This is the correct intersection. When no epistemic rule fires, `epistemically_admissible = ACTION_VOCABULARY`, so `allowed = legal_actions` (unchanged behavior). When the VERIFY gate fires at T2, `VERIFY` is removed from the epistemically admissible set, so `VERIFY ∉ allowed` regardless of whether it is legal.
+
+### 3.4 Empty-action-set invariant
+
+Require:
+
+```
+|Allowed(s)| ≥ 1
+```
+
+for every model call. If `allowed_actions` is empty, fail closed before calling the model:
+
+```python
+if not allowed_actions:
+    raise EmptyAllowedActionSet(state=state, arm=arm)
+```
+
+This is qualification-fatal. ANSWER, DEFER, STOP, and REASON_MORE are always legal and always epistemically admissible under the current rules, so this should never fire. But the check must exist as a defense-in-depth invariant.
+
+### 3.5 C0 schema identity (critical confound prevention)
+
+R13 uses a static seven-action schema. R2 uses a dynamic action enum. If C0 goes through newly serialized schema code while the historical baseline did not, differences could be caused by schema serialization/order rather than D/E.
+
+**Mandatory golden test**:
+
+```
+Schema_R2(Allowed = ACTION_VOCABULARY) == Schema_R13
+```
+
+byte-for-byte after canonical serialization, or at minimum identical canonical SHA.
+
+```python
+C0_FULL_ACTION_SCHEMA_SHA == R13_STATIC_SCHEMA_SHA
+```
+
+If this fails, do NOT start R2-DEV. This is critical because the spec requires C0 to remain unchanged.
+
+### 3.6 Two-layer enforcement metrics
+
+Track layer violations separately:
+
+| Metric | Layer | Meaning |
+|--------|-------|---------|
+| `schema_gate_violations` | Layer 1 | Gated action generated despite not being in schema enum (should be 0 by construction) |
+| `executor_admissibility_violations` | Layer 2 | Decoded action not in allowed_actions (should be 0; infrastructure/protocol failure if it fires) |
+
+Do NOT retry an admissibility violation. If Layer 2 ever fires, that is an infrastructure/protocol failure, not model behavior. Abort the run.
 
 ---
 
@@ -258,38 +302,61 @@ For D and DE, this should be zero when the structural rule applies.
 
 ## 6. Qualification
 
-### 6.1 Mechanical qualification suite (before any efficacy run)
+### 6.1 Mechanical qualification suite (12 hard gates, before any efficacy run)
 
-| Requirement | Criterion |
-|-------------|-----------|
-| decoder_valid_rate | 100% |
-| schema_valid_rate | 100% |
-| gated_action_execution_count | 0 |
-| allowed_action/schema mismatches | 0 |
-| FalseGateRate | 0 on structural gold cases |
-| MissedGateRate | 0 on structural gold cases |
-| C0 behavior | unchanged from baseline implementation |
-| E changes | label only (no other packet field changes) |
-| D changes | admissibility only (no label changes) |
-| DE | exactly D + E (both changes, nothing else) |
+| Gate | ID | Criterion |
+|------|----|-----------|
+| Q1 | dynamic schema exactness | schema construction is deterministic and canonical |
+| Q2 | C0 schema identity | `C0_FULL_ACTION_SCHEMA_SHA == R13_STATIC_SCHEMA_SHA` |
+| Q3 | E packet diff | `decision_state` only (no other field changes) |
+| Q4 | D packet diff | action admissibility/schema only (no label changes) |
+| Q5 | DE diff | union(D, E), nothing else |
+| Q6 | FalseGateRate | 0 on structural-gold cases |
+| Q7 | MissedGateRate | 0 on structural-gold cases |
+| Q8 | empty allowed set | 0 occurrences |
+| Q9 | schema gate violations | 0 |
+| Q10 | executor admissibility violations | 0 |
+| Q11 | decoder valid | 100% |
+| Q12 | schema valid | 100% |
 
-### 6.2 Policy qualification
+All 12 are hard gates. Any failure aborts R2-DEV.
 
-Because the constrained output space changes Gemma's behavior, requalify with policy tests.
+### 6.2 Policy qualification matrix
 
-Test states where:
-- VERIFY is allowed — Gemma can still select VERIFY
-- VERIFY is structurally gated — Gemma selects from remaining actions
-- RETRIEVE+SEARCH remain — Gemma can redirect to evidence acquisition
-- Only DEFER/ANSWER remain — Gemma must choose termination
+| State | Allowed set includes | Expected capability |
+|-------|---------------------|---------------------|
+| ordinary | VERIFY | Gemma can select VERIFY |
+| T2/D | no VERIFY | selects valid replacement |
+| T2 + retrieval available | RETRIEVE | can retrieve |
+| T2 + search available | SEARCH_MORE | can search |
+| T2 + neither available | ANSWER/DEFER/etc. | clean termination |
+| non-T2 near-boundary | VERIFY | gate does not suppress it |
 
-Measure replacement-action distribution:
+Do NOT require a particular replacement action yet. Qualification asks whether the model remains operable, not whether D improves efficacy.
+
+### 6.3 Gold structural labels (for FalseGateRate/MissedGateRate)
+
+The dataset generator emits gold labels separately from the inferred semantic pipeline:
+
+```json
+{
+  "gold_t2": true,
+  "gold_verify_relevant": false,
+  "gold_should_gate_verify": true,
+  "expected_terminal": "DEFER",
+  "stratum": "T2_IMMEDIATE",
+  "semantic_error_class": null,
+  "retrieval_budget_case": "available",
+  "search_budget_case": "exhausted"
+}
+```
+
+Do NOT define gold using the same inferred semantic pipeline that drives T2, or the safety metric becomes circular.
 
 ```
-P(RETRIEVE), P(SEARCH), P(DEFER), P(ANSWER), P(REASON_MORE)
+FalseGateRate = #(gate=1 ∧ gold_should_gate=0) / #(gold_should_gate=0)
+MissedGateRate = #(gate=0 ∧ gold_should_gate=1) / #(gold_should_gate=1)
 ```
-
-The first important development result will not be utility. It will be the replacement-action distribution.
 
 ---
 
@@ -301,21 +368,25 @@ For every model call, record:
 
 ```json
 {
-  "legal_actions": ["ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"],
+  "arm": "D",
+  "t2": true,
+  "gold_t2": true,
+  "decision_state_internal": "NEEDS_DISCRIMINATION",
+  "decision_state_exposed": "NEEDS_DISCRIMINATION",
+  "legal_actions": ["ANSWER", "RETRIEVE", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"],
   "epistemically_admissible_actions": ["ANSWER", "RETRIEVE", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"],
   "allowed_actions": ["ANSWER", "RETRIEVE", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"],
   "allowed_actions_sha256": "<hash of sorted allowed_actions>",
-  "schema_sha256": "<hash of instantiated JSON schema>",
   "verify_gate_applied": true,
   "verify_gate_reason": "ALL_HYPOTHESES_ELIMINATED",
-  "t2": true,
-  "decision_state": "NEEDS_DISCRIMINATION",
-  "n_live_hypotheses": 0,
-  "n_eliminated_hypotheses": 2,
-  "valid_verify_target_count": 13,
-  "selected_action": "RETRIEVE"
+  "schema_sha256": "<hash of instantiated JSON schema>",
+  "schema_action_enum": ["ANSWER", "DEFER", "REASON_MORE", "RETRIEVE", "SEARCH_MORE", "STOP"],
+  "selected_action": "RETRIEVE",
+  "admissibility_assertion_passed": true
 }
 ```
+
+For E/DE, logging both `decision_state_internal` and `decision_state_exposed` proves E is truly presentation-only. When `arm.corrected_t2_semantics and t2`, `decision_state_exposed = "NO_VIABLE_HYPOTHESIS"` while `decision_state_internal = "NEEDS_DISCRIMINATION"`.
 
 ### 7.2 Dynamic schema hashing
 
@@ -401,6 +472,42 @@ P(ANSWER | T2, D), P(REASON_MORE | T2, D)
 
 ## 9. Progression Pipeline
 
+### 9.1 R2-DEV analysis order
+
+Do NOT start with utility. Analyze in this order:
+
+1. Dataset integrity
+2. Arm isolation/diff audit
+3. FalseGate/MissedGate
+4. Hard-gate invariants (schema_gate_violations=0, executor_admissibility_violations=0)
+5. Replacement-action distribution
+6. Loop migration
+7. Success/rescue/break
+8. Utility contrasts
+9. D×E interaction
+
+### 9.2 Loop migration metrics
+
+Beyond `MaxRun(action)` and `RepeatedActionRate(action)`, calculate:
+
+```
+P(ResourceExhausted | terminal_action = a)
+```
+
+for each action. This directly tells whether R2 changed VERIFY exhaustion into RETRIEVE exhaustion, or genuinely escaped the pathological policy basin.
+
+Composite metric:
+
+```
+LoopMigrationRate = P(ResourceExhausted ∧ terminal_action ≠ VERIFY | D/DE, T2)
+```
+
+### 9.3 The primary scientific question
+
+> Does structural epistemic admissibility redirect policy toward productive actions rather than merely relocate the loop?
+
+### 9.4 Pipeline
+
 ```
 R2-QUAL (mechanical + policy qualification)
     ↓
@@ -425,35 +532,81 @@ R2-CONFIRM on untouched tasks (fresh frozen confirmation corpus)
 
 ## 10. Implementation Notes
 
-### 10.1 Backend modification
+### 10.1 Module: r2_allowed_actions.py
 
-The `LocalLlamaBackend.generate()` method currently hardcodes the action enum. For R2, it must accept an optional `allowed_actions` parameter:
+Pure logic only. No backend, no executor mutation, no counterfactual simulator.
 
 ```python
-def generate(self, *, system_prompt, user_prompt, temperature, max_tokens,
-             allowed_actions: list[str] | None = None) -> ModelCallResult:
-    if allowed_actions is None:
-        allowed_actions = ["ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
-                          "REASON_MORE", "DEFER", "STOP"]
-    action_schema = {
-        "type": "object",
-        "properties": {
-            "action": {"type": "string", "enum": sorted(allowed_actions)},
-            ...
-        },
-        ...
-    }
+@dataclass(frozen=True)
+class ActionState:
+    t2: bool
+    executive_steps_remaining: int
+    can_retrieve: bool
+    can_search: bool
+    can_verify: bool
+
+@dataclass(frozen=True)
+class AllowedActionDecision:
+    legal: frozenset[str]
+    epistemically_admissible: frozenset[str]
+    allowed: frozenset[str]
+    verify_gate_applied: bool
+    verify_gate_reason: str | None
 ```
 
-### 10.2 Runner modification
+This module has exhaustive unit tests because it is part of the scientific intervention.
 
-The R2 runner uses `R2Arm` to configure behavior per trajectory. The trajectory runner computes `allowed_actions` from the snapshot + arm, passes it to the backend, and logs the full instrumentation.
+### 10.2 Module: r2_schema.py
 
-### 10.3 No changes to executor
+Canonical dynamic-schema construction only:
+
+```python
+def build_action_schema(allowed_actions: frozenset[str]) -> dict
+def canonical_schema_json(schema: dict) -> str
+def schema_sha256(schema: dict) -> str
+```
+
+Invariant: `assert set(schema["properties"]["action"]["enum"]) == set(allowed_actions)`
+
+Sort only for deterministic serialization. Do NOT introduce any new action descriptions, reason-code hints, target hints, or wording changes between arms.
+
+### 10.3 Module: r2_dataset_generator.py
+
+Emits tasks plus gold structural labels separately from inferred state. Gold labels include: `gold_t2`, `gold_verify_relevant`, `gold_should_gate_verify`, `expected_terminal`, `stratum`, `semantic_error_class`, `retrieval_budget_case`, `search_budget_case`.
+
+Do NOT define gold using the same inferred semantic pipeline that drives T2, or the safety metric becomes circular.
+
+### 10.4 Module: r2_qualification.py
+
+Two phases: mechanical (12 hard gates) then policy (6-state matrix).
+
+### 10.5 Module: run_r2_development.py
+
+One execution function for all arms:
+
+```python
+def run_trajectory(task, arm, backend, ...):
+    ...
+```
+
+The arm flows through exactly two intervention hooks:
+
+```python
+packet = apply_semantics_intervention(packet, state, arm)
+allowed = compute_allowed_actions(state, arm)
+```
+
+Everything else must be shared.
+
+### 10.6 Backend modification
+
+The `LocalLlamaBackend.generate()` method currently hardcodes the action enum. For R2, it must accept an optional `allowed_actions` parameter. When `allowed_actions` is None or equals the full vocabulary, the schema must be byte-identical to the R13 static schema (verified by Q2).
+
+### 10.7 No changes to executor
 
 The `EvidenceExecutor` is NOT modified. It remains the frozen deterministic executor. The gate is enforced before generation (schema) and before execution (invariant check), not inside the executor.
 
-### 10.4 No changes to MDSG computation
+### 10.8 No changes to MDSG computation
 
 The `_classify_from_snapshot` and `build_mdsg_state_with_affordances_packet` functions are NOT modified. R2e is a post-hoc label override on the packet, not a change to the underlying computation.
 
@@ -490,12 +643,22 @@ If D improves utility without harming controls, that would be the first direct e
 
 | File | Purpose |
 |------|---------|
-| `scripts/run_r2_development.py` | R2 runner with R2Arm configuration |
-| `scripts/r2_allowed_actions.py` | Allowed-action computation + EpistemicallyAdmissible |
-| `scripts/r2_qualification.py` | Mechanical + policy qualification suite |
-| `scripts/r2_dataset_generator.py` | New held-out dataset with structural perturbations |
+| `scripts/r2_allowed_actions.py` | Pure logic: ActionState, AllowedActionDecision, compute_allowed_actions |
+| `scripts/r2_schema.py` | Canonical dynamic schema construction + SHA |
+| `scripts/r2_dataset_generator.py` | New held-out dataset with gold structural labels |
+| `scripts/r2_qualification.py` | 12 mechanical gates + policy qualification matrix |
+| `scripts/run_r2_development.py` | R2 runner: single execution function, arm hooks, per-call receipts |
+| `tests/test_r2_allowed_actions.py` | Exhaustive unit tests for allowed-action logic |
 | `experiments/v2b_i3_15c/development/r2-dev/` | R2-DEV output directory |
 | `experiments/v2b_i3_15c/development/r2-qual/` | R2-QUAL output directory |
+
+### 12.1 Module separation
+
+- `r2_allowed_actions.py`: pure logic only. No backend, no executor mutation, no counterfactual simulator.
+- `r2_schema.py`: canonical schema construction only. No action descriptions, reason-code hints, target hints, or wording changes between arms.
+- `r2_dataset_generator.py`: emits tasks plus gold structural labels separately from inferred state.
+- `r2_qualification.py`: two phases (mechanical then policy).
+- `run_r2_development.py`: one execution function for all arms, arm flows through exactly two intervention hooks.
 
 ---
 
