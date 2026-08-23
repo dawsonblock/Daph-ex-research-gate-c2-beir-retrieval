@@ -1,5 +1,6 @@
 {
   "label": "POST_HOC_EXPLORATORY",
+  "version": "R13-F1.1",
   "r13_dataset_sha256": "56cff26a4f13d519810a77f61f7a8280cb6d665e729270ff421966cdeccb62db",
   "n_pairs": 640,
   "prefix_classification": {
@@ -7,6 +8,7 @@
     "NO_TRIGGER": 412,
     "PREFIX_IDENTICAL": 152
   },
+  "prefix_classification_note": "Uses full step signatures (action, target_id, execution_outcome) for comparison, not just action labels. This corrects the R13-F1 issue where VERIFY(Ex) vs VERIFY(Ey) would have been classified as identical.",
   "first_divergence_transitions": {
     "VERIFY\u2192VERIFY": 185,
     "VERIFY\u2192RETRIEVE": 4
@@ -314,10 +316,16 @@
       "invalid_verify_rate": 0.0,
       "resource_exhausted_rate": 0.2,
       "repeated_target_rate": 0.0,
-      "useful_verify_count": 0,
-      "usefulness_observable_count": 912,
-      "useful_verify_rate": 0.0,
-      "epistemic_usefulness": "OBSERVABLE"
+      "repeated_target_count": 0,
+      "adjacent_target_pairs": 912,
+      "useful_verify_v1_count": 0,
+      "useful_verify_v1_observable": 912,
+      "useful_verify_v1_not_observable": 228,
+      "useful_verify_v1_rate": 0.0,
+      "useful_verify_v2_count": 0,
+      "useful_verify_v2_observable": 912,
+      "useful_verify_v2_rate": 0.0,
+      "epistemic_usefulness_note": "Among 912 R1 VERIFY transitions with adjacent state snapshots, none changed live- or eliminated-hypothesis sets (V1). V2 (also checking decision_state and representation): 0/912. 228 VERIFY actions had no following state snapshot (terminal)."
     },
     "A1": {
       "total_verify": 1140,
@@ -329,9 +337,12 @@
       "verify_completed_rate": 0.5605,
       "invalid_verify_rate": 0.2395,
       "resource_exhausted_rate": 0.2,
-      "repeated_target_rate": 0.2493
+      "repeated_target_rate": 0.3114,
+      "repeated_target_count": 284,
+      "adjacent_target_pairs": 912
     }
   },
+  "verify_audit_note": "RepeatedTargetRate is computed trajectory-locally (not cross-trajectory). UsefulVerifyV1 checks hypothesis set changes only. UsefulVerifyV2 also checks decision_state and representation changes. Denominator explicitly reported: VERIFY actions without adjacent state snapshots are classified as NOT_OBSERVABLE, not as useless.",
   "harm_by_divergence": {
     "VERIFY\u2192VERIFY": {
       "n": 185,
@@ -374,5 +385,26 @@
     "breaks": 0,
     "rescues": 0
   },
-  "methodological_note": "R13-F can identify likely failure mechanisms; it cannot confirm them causally. Any hypothesis produced by R13-F must be tested in new held-out development data."
+  "verify_target_value": {
+    "n_t2_triggered": 228,
+    "state_at_t2": {
+      "ALL_ELIMINATED": 228
+    },
+    "n_has_live_hypotheses": 0,
+    "n_all_eliminated": 228,
+    "n_empty_state": 0,
+    "n_any_state_change_post_t2": 0,
+    "pct_structurally_useless_verify": 1.0,
+    "interpretation": "Of 228 T2-triggered trajectories, 228 (100.0%) had no live hypotheses at T2 time, making VERIFY structurally useless regardless of target. Only 0 had live hypotheses that verification could potentially resolve. Across all 228 trajectories, 0 had any post-T2 state change."
+  },
+  "a1_r1_target_quality": {
+    "n": 228,
+    "identical_target_sets": 48,
+    "pct_identical": 0.2105,
+    "mean_shared_targets": 3.0877,
+    "mean_r1_only_targets": 1.9123,
+    "mean_a1_only_targets": 0.4079
+  },
+  "a1_baseline_note": "A1 is also stuck in VERIFY ~100% of the time post-T2. P(VERIFY|A1,T2)=1.0 vs P(VERIFY|R1,T2)=0.9836. R1 does not introduce VERIFY behavior from nowhere. Both policies are trapped in the same broad action mode. The difference is target selection and cost, not action type.",
+  "methodological_note": "R13-F can identify likely failure mechanisms; it cannot confirm them causally. Any hypothesis produced by R13-F must be tested in new held-out development data. R13-F1.1 corrections: (1) prefix comparison uses (action,target,outcome) signatures, (2) repeated target rate is trajectory-local, (3) UsefulVerify denominator is explicit with V1 (hypothesis sets) and V2 (expanded) variants."
 }

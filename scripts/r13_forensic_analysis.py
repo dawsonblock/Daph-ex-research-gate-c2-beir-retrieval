@@ -67,13 +67,30 @@ def build_pairs(results: list[dict]) -> list[dict]:
     return pairs
 
 
+def step_signature(call: dict) -> tuple:
+    """
+    Define a step signature for comparison: (action, target_id, execution_outcome).
+    This is the primary divergence tuple — two steps with the same action but
+    different targets are NOT identical.
+    """
+    return (
+        call.get("executed_action", ""),
+        call.get("decoded_target_id", call.get("proposal_target_id", "")),
+        call.get("execution_outcome", ""),
+    )
+
+
 def classify_prefix_variance(pair: dict) -> str:
     """
     Classify pre-T2 variance vs intervention divergence.
 
+    Uses full step signatures (action, target_id, execution_outcome) for comparison,
+    NOT just action labels. This is critical because the primary divergence mode
+    is VERIFY→VERIFY with different targets.
+
     Returns:
         IMMEDIATE_T2: trigger at step 0, no pre-T2 prefix
-        PREFIX_IDENTICAL: A1/R1 actions agree through trigger_step-1
+        PREFIX_IDENTICAL: A1/R1 step signatures agree through trigger_step-1
         PRE_T2_DIVERGED: trajectories already diverged before R1 saw M3
         NO_TRIGGER: R1 did not trigger T2
     """
@@ -87,13 +104,17 @@ def classify_prefix_variance(pair: dict) -> str:
     if trigger_step == 0:
         return "IMMEDIATE_T2"
 
-    r1_pre = r1.get("continuation_actions", [])[:trigger_step]
-    a1_pre = a1.get("continuation_actions", [])[:trigger_step]
+    r1_calls = r1.get("model_call_log", [])
+    a1_calls = a1.get("model_call_log", [])
 
-    if r1_pre == a1_pre:
-        return "PREFIX_IDENTICAL"
-    else:
-        return "PRE_T2_DIVERGED"
+    # Compare full step signatures up to trigger_step
+    for step in range(trigger_step):
+        if step >= len(r1_calls) or step >= len(a1_calls):
+            return "PRE_T2_DIVERGED"  # Length mismatch
+        if step_signature(r1_calls[step]) != step_signature(a1_calls[step]):
+            return "PRE_T2_DIVERGED"
+
+    return "PREFIX_IDENTICAL"
 
 
 def find_first_divergence(pair: dict) -> dict | None:
@@ -240,18 +261,40 @@ def audit_verify_actions(pairs: list[dict]) -> dict:
 
     Compute:
     - InvalidVerifyRate
-    - RepeatedTargetRate
+    - RepeatedTargetRate (trajectory-local, not cross-trajectory)
     - VerifyCompletedRate
-    - EpistemicUsefulness (if observable from decision_state_log)
+    - UsefulVerifyV1: Δ eliminated/live hypothesis sets (narrow)
+    - UsefulVerifyV2: Δ decision_state OR Δ hypothesis sets OR Δ representation
+      (expanded, but limited to fields available in decision_state_log)
+
+    Important: RepeatedTargetRate is computed TRAJECTORY-LOCALLY.
+    We aggregate numerator (repeated targets within each trajectory) and
+    denominator (total intra-trajectory adjacent pairs) across trajectories.
+    We NEVER compare targets across trajectory boundaries.
+
+    Important: UsefulVerify denominator is explicitly reported.
+    VERIFY actions without an adjacent state snapshot (e.g., terminal
+    RESOURCE_EXHAUSTED) are classified as NOT_OBSERVABLE, not as useless.
     """
     r1_verify_outcomes = Counter()
     a1_verify_outcomes = Counter()
-    r1_verify_targets = []
-    a1_verify_targets = []
-    r1_useful_verify = 0
-    r1_total_verify = 0
-    r1_usefulness_observable = 0
 
+    # Trajectory-local repeated target tracking
+    r1_repeated_total = 0  # numerator: repeated targets across all trajectories
+    r1_adjacent_total = 0  # denominator: total adjacent pairs across all trajectories
+    a1_repeated_total = 0
+    a1_adjacent_total = 0
+
+    # UsefulVerify V1 (narrow: hypothesis sets only)
+    r1_useful_v1 = 0
+    r1_observable_v1 = 0
+    r1_not_observable = 0
+
+    # UsefulVerify V2 (expanded: decision_state OR hypothesis sets OR representation)
+    r1_useful_v2 = 0
+    r1_observable_v2 = 0
+
+    # Per-trajectory target lists for repeated target computation
     for pair in pairs:
         r1 = pair["r1"]
         a1 = pair["a1"]
@@ -264,37 +307,63 @@ def audit_verify_actions(pairs: list[dict]) -> dict:
         a1_calls = a1.get("model_call_log", [])
         r1_states = r1.get("decision_state_log", [])
 
+        # R1: collect per-trajectory VERIFY targets
+        r1_traj_targets = []
         for step in range(trigger_step, len(r1_calls)):
             call = r1_calls[step]
             if call.get("executed_action") == "VERIFY":
-                r1_total_verify += 1
                 outcome = call.get("execution_outcome", "UNKNOWN")
                 r1_verify_outcomes[outcome] += 1
                 target = call.get("decoded_target_id", call.get("proposal_target_id", ""))
-                r1_verify_targets.append(target)
+                r1_traj_targets.append(target)
 
-                # Check epistemic usefulness from decision state log
+                # UsefulVerifyV1: check hypothesis set changes
                 if step < len(r1_states) - 1:
                     curr_state = r1_states[step]
                     next_state = r1_states[step + 1]
-                    # Useful if MDSG state changes (hypotheses or eliminated changes)
                     curr_elim = set(curr_state.get("eliminated_hypotheses", []))
                     next_elim = set(next_state.get("eliminated_hypotheses", []))
                     curr_live = set(curr_state.get("live_hypotheses", []))
                     next_live = set(next_state.get("live_hypotheses", []))
-                    if curr_elim != next_elim or curr_live != next_live:
-                        r1_useful_verify += 1
-                    r1_usefulness_observable += 1
 
+                    v1_useful = (curr_elim != next_elim or curr_live != next_live)
+                    if v1_useful:
+                        r1_useful_v1 += 1
+                    r1_observable_v1 += 1
+
+                    # UsefulVerifyV2: also check decision_state and representation
+                    v2_useful = (
+                        v1_useful
+                        or curr_state.get("decision_state", "") != next_state.get("decision_state", "")
+                        or curr_state.get("representation", "") != next_state.get("representation", "")
+                    )
+                    if v2_useful:
+                        r1_useful_v2 += 1
+                    r1_observable_v2 += 1
+                else:
+                    r1_not_observable += 1
+
+        # Trajectory-local repeated target count
+        for i in range(1, len(r1_traj_targets)):
+            r1_adjacent_total += 1
+            if r1_traj_targets[i] == r1_traj_targets[i - 1]:
+                r1_repeated_total += 1
+
+        # A1: collect per-trajectory VERIFY targets
+        a1_traj_targets = []
         for step in range(trigger_step, len(a1_calls)):
             call = a1_calls[step]
             if call.get("executed_action") == "VERIFY":
                 a1_verify_outcomes[call.get("execution_outcome", "UNKNOWN")] += 1
-                a1_verify_targets.append(call.get("decoded_target_id", call.get("proposal_target_id", "")))
+                a1_traj_targets.append(call.get("decoded_target_id", call.get("proposal_target_id", "")))
 
-    # Repeated target rate
-    r1_repeated = sum(1 for i in range(1, len(r1_verify_targets)) if r1_verify_targets[i] == r1_verify_targets[i-1])
-    a1_repeated = sum(1 for i in range(1, len(a1_verify_targets)) if a1_verify_targets[i] == a1_verify_targets[i-1])
+        for i in range(1, len(a1_traj_targets)):
+            a1_adjacent_total += 1
+            if a1_traj_targets[i] == a1_traj_targets[i - 1]:
+                a1_repeated_total += 1
+
+    r1_total_verify = sum(r1_verify_outcomes.values())
+    a1_total_verify = sum(a1_verify_outcomes.values())
 
     return {
         "R1": {
@@ -303,19 +372,32 @@ def audit_verify_actions(pairs: list[dict]) -> dict:
             "verify_completed_rate": round(r1_verify_outcomes.get("VERIFY_COMPLETED", 0) / r1_total_verify, 4) if r1_total_verify > 0 else 0,
             "invalid_verify_rate": round(r1_verify_outcomes.get("INVALID_VERIFY_TARGET", 0) / r1_total_verify, 4) if r1_total_verify > 0 else 0,
             "resource_exhausted_rate": round(r1_verify_outcomes.get("RESOURCE_EXHAUSTED", 0) / r1_total_verify, 4) if r1_total_verify > 0 else 0,
-            "repeated_target_rate": round(r1_repeated / max(len(r1_verify_targets) - 1, 1), 4),
-            "useful_verify_count": r1_useful_verify,
-            "usefulness_observable_count": r1_usefulness_observable,
-            "useful_verify_rate": round(r1_useful_verify / r1_usefulness_observable, 4) if r1_usefulness_observable > 0 else 0,
-            "epistemic_usefulness": "OBSERVABLE" if r1_usefulness_observable > 0 else "EPISTEMIC_USEFULNESS_NOT_OBSERVABLE",
+            "repeated_target_rate": round(r1_repeated_total / max(r1_adjacent_total, 1), 4),
+            "repeated_target_count": r1_repeated_total,
+            "adjacent_target_pairs": r1_adjacent_total,
+            "useful_verify_v1_count": r1_useful_v1,
+            "useful_verify_v1_observable": r1_observable_v1,
+            "useful_verify_v1_not_observable": r1_not_observable,
+            "useful_verify_v1_rate": round(r1_useful_v1 / r1_observable_v1, 4) if r1_observable_v1 > 0 else 0,
+            "useful_verify_v2_count": r1_useful_v2,
+            "useful_verify_v2_observable": r1_observable_v2,
+            "useful_verify_v2_rate": round(r1_useful_v2 / r1_observable_v2, 4) if r1_observable_v2 > 0 else 0,
+            "epistemic_usefulness_note": (
+                f"Among {r1_observable_v1} R1 VERIFY transitions with adjacent state snapshots, "
+                f"none changed live- or eliminated-hypothesis sets (V1). "
+                f"V2 (also checking decision_state and representation): {r1_useful_v2}/{r1_observable_v2}. "
+                f"{r1_not_observable} VERIFY actions had no following state snapshot (terminal)."
+            ),
         },
         "A1": {
-            "total_verify": len(a1_verify_targets),
+            "total_verify": a1_total_verify,
             "outcomes": dict(a1_verify_outcomes),
-            "verify_completed_rate": round(a1_verify_outcomes.get("VERIFY_COMPLETED", 0) / max(len(a1_verify_targets), 1), 4),
-            "invalid_verify_rate": round(a1_verify_outcomes.get("INVALID_VERIFY_TARGET", 0) / max(len(a1_verify_targets), 1), 4),
-            "resource_exhausted_rate": round(a1_verify_outcomes.get("RESOURCE_EXHAUSTED", 0) / max(len(a1_verify_targets), 1), 4),
-            "repeated_target_rate": round(a1_repeated / max(len(a1_verify_targets) - 1, 1), 4),
+            "verify_completed_rate": round(a1_verify_outcomes.get("VERIFY_COMPLETED", 0) / max(a1_total_verify, 1), 4),
+            "invalid_verify_rate": round(a1_verify_outcomes.get("INVALID_VERIFY_TARGET", 0) / max(a1_total_verify, 1), 4),
+            "resource_exhausted_rate": round(a1_verify_outcomes.get("RESOURCE_EXHAUSTED", 0) / max(a1_total_verify, 1), 4),
+            "repeated_target_rate": round(a1_repeated_total / max(a1_adjacent_total, 1), 4),
+            "repeated_target_count": a1_repeated_total,
+            "adjacent_target_pairs": a1_adjacent_total,
         },
     }
 
@@ -538,6 +620,168 @@ def build_rescue_break_cases(pairs: list[dict], max_cases: int = 10) -> dict:
     }
 
 
+def analyze_verify_target_value(pairs: list[dict]) -> dict:
+    """
+    VERIFY target-value analysis.
+
+    For each T2-triggered trajectory, determine whether ANY verification target
+    available at T2 time could theoretically change the epistemic state.
+
+    The key question: is the failure "model chose a bad target" or
+    "there were no useful VERIFY targets left at all"?
+
+    We classify the state at T2 trigger time:
+    - HAS_LIVE_HYPOTHESES: live_hypotheses is non-empty → verification could
+      potentially confirm/eliminate a live hypothesis
+    - ALL_ELIMINATED: live_hypotheses is empty, eliminated_hypotheses is non-empty →
+      no hypothesis can be changed by verification
+    - EMPTY_STATE: both sets empty → no epistemic content to verify against
+
+    If ALL_ELIMINATED or EMPTY_STATE, then VERIFY is structurally useless
+    regardless of target selection. The affordance itself is wrong.
+    """
+    state_at_t2 = Counter()
+    target_quality = []
+
+    for pair in pairs:
+        r1 = pair["r1"]
+        trigger_step = r1.get("r1_trigger_step")
+
+        if trigger_step is None or not r1.get("r1_triggered", False):
+            continue
+
+        states = r1.get("decision_state_log", [])
+        if trigger_step >= len(states):
+            continue
+
+        t2_state = states[trigger_step]
+        live = set(t2_state.get("live_hypotheses", []))
+        eliminated = set(t2_state.get("eliminated_hypotheses", []))
+        decision_state = t2_state.get("decision_state", "")
+
+        if live:
+            state_class = "HAS_LIVE_HYPOTHESES"
+        elif eliminated:
+            state_class = "ALL_ELIMINATED"
+        else:
+            state_class = "EMPTY_STATE"
+
+        state_at_t2[state_class] += 1
+
+        # Track whether any subsequent state change occurs
+        any_state_change = False
+        for step in range(trigger_step, len(states) - 1):
+            curr = states[step]
+            nxt = states[step + 1]
+            if (set(curr.get("live_hypotheses", [])) != set(nxt.get("live_hypotheses", []))
+                or set(curr.get("eliminated_hypotheses", [])) != set(nxt.get("eliminated_hypotheses", []))
+                or curr.get("decision_state", "") != nxt.get("decision_state", "")):
+                any_state_change = True
+                break
+
+        target_quality.append({
+            "task_id": pair["task_id"],
+            "state_class": state_class,
+            "decision_state": decision_state,
+            "n_live": len(live),
+            "n_eliminated": len(eliminated),
+            "any_state_change_post_t2": any_state_change,
+        })
+
+    # Aggregate
+    n = len(target_quality)
+    n_with_live = sum(1 for t in target_quality if t["state_class"] == "HAS_LIVE_HYPOTHESES")
+    n_all_elim = sum(1 for t in target_quality if t["state_class"] == "ALL_ELIMINATED")
+    n_empty = sum(1 for t in target_quality if t["state_class"] == "EMPTY_STATE")
+    n_any_change = sum(1 for t in target_quality if t["any_state_change_post_t2"])
+
+    return {
+        "n_t2_triggered": n,
+        "state_at_t2": dict(state_at_t2),
+        "n_has_live_hypotheses": n_with_live,
+        "n_all_eliminated": n_all_elim,
+        "n_empty_state": n_empty,
+        "n_any_state_change_post_t2": n_any_change,
+        "pct_structurally_useless_verify": round((n_all_elim + n_empty) / max(n, 1), 4),
+        "interpretation": (
+            f"Of {n} T2-triggered trajectories, {n_all_elim + n_empty} ({round((n_all_elim + n_empty) / max(n, 1) * 100, 1)}%) "
+            f"had no live hypotheses at T2 time, making VERIFY structurally useless regardless of target. "
+            f"Only {n_with_live} had live hypotheses that verification could potentially resolve. "
+            f"Across all {n} trajectories, {n_any_change} had any post-T2 state change."
+        ),
+        "per_trajectory": target_quality,
+    }
+
+
+def compare_a1_r1_target_quality(pairs: list[dict]) -> dict:
+    """
+    Compare A1 and R1 VERIFY target quality after T2.
+
+    Both arms are stuck in VERIFY ~100% of the time. The question is whether
+    A1 and R1 select different targets, and whether one set is better.
+
+    We compare:
+    - Target overlap: do A1 and R1 verify the same targets?
+    - A1 invalid target rate vs R1 invalid target rate
+    - A1 state change rate vs R1 state change rate (if A1 state logs available)
+    """
+    target_overlap = []
+    a1_target_sets = []
+    r1_target_sets = []
+
+    for pair in pairs:
+        r1 = pair["r1"]
+        a1 = pair["a1"]
+        trigger_step = r1.get("r1_trigger_step")
+
+        if trigger_step is None or not r1.get("r1_triggered", False):
+            continue
+
+        r1_calls = r1.get("model_call_log", [])
+        a1_calls = a1.get("model_call_log", [])
+
+        r1_targets = [c.get("decoded_target_id", "") for c in r1_calls[trigger_step:] if c.get("executed_action") == "VERIFY"]
+        a1_targets = [c.get("decoded_target_id", "") for c in a1_calls[trigger_step:] if c.get("executed_action") == "VERIFY"]
+
+        r1_set = set(r1_targets)
+        a1_set = set(a1_targets)
+
+        overlap = r1_set & a1_set
+        r1_only = r1_set - a1_set
+        a1_only = a1_set - r1_set
+
+        target_overlap.append({
+            "task_id": pair["task_id"],
+            "r1_targets": r1_targets,
+            "a1_targets": a1_targets,
+            "r1_unique_targets": len(r1_set),
+            "a1_unique_targets": len(a1_set),
+            "shared_targets": len(overlap),
+            "r1_only_targets": len(r1_only),
+            "a1_only_targets": len(a1_only),
+            "identical_target_sets": r1_set == a1_set,
+        })
+
+    n = len(target_overlap)
+    if n == 0:
+        return {"n": 0}
+
+    identical = sum(1 for t in target_overlap if t["identical_target_sets"])
+    mean_shared = sum(t["shared_targets"] for t in target_overlap) / n
+    mean_r1_only = sum(t["r1_only_targets"] for t in target_overlap) / n
+    mean_a1_only = sum(t["a1_only_targets"] for t in target_overlap) / n
+
+    return {
+        "n": n,
+        "identical_target_sets": identical,
+        "pct_identical": round(identical / n, 4),
+        "mean_shared_targets": round(mean_shared, 4),
+        "mean_r1_only_targets": round(mean_r1_only, 4),
+        "mean_a1_only_targets": round(mean_a1_only, 4),
+        "per_pair": target_overlap,
+    }
+
+
 def compute_sha256(path: Path) -> str:
     """Compute SHA256 of a file."""
     h = hashlib.sha256()
@@ -593,13 +837,13 @@ def main():
     print(f"  Built {len(pairs)} pairs")
 
     # Classify prefix variance
-    print(f"\n[3] Classifying pre-T2 variance...")
+    print(f"\n[3] Classifying pre-T2 variance (using (action, target, outcome) signatures)...")
     prefix_classes = Counter()
     for pair in pairs:
         cls = classify_prefix_variance(pair)
         pair["prefix_class"] = cls
         prefix_classes[cls] += 1
-    print(f"  Prefix classification:")
+    print(f"  Prefix classification (full step signatures):")
     for cls, count in sorted(prefix_classes.items()):
         print(f"    {cls}: {count}")
 
@@ -632,16 +876,19 @@ def main():
             if abs(disp) > 0.001:
                 print(f"    ΔP({action}) = {disp:+.4f}")
 
-    # VERIFY audit
-    print(f"\n[6] VERIFY forensic audit...")
+    # VERIFY audit (corrected: trajectory-local repeated targets, V1+V2 usefulness)
+    print(f"\n[6] VERIFY forensic audit (corrected)...")
     verify_audit = audit_verify_actions(pairs)
     print(f"  R1 VERIFY outcomes: {verify_audit['R1']['outcomes']}")
     print(f"  R1 verify_completed_rate: {verify_audit['R1']['verify_completed_rate']}")
     print(f"  R1 invalid_verify_rate: {verify_audit['R1']['invalid_verify_rate']}")
-    print(f"  R1 repeated_target_rate: {verify_audit['R1']['repeated_target_rate']}")
-    print(f"  R1 useful_verify_rate: {verify_audit['R1']['useful_verify_rate']}")
-    print(f"  R1 epistemic_usefulness: {verify_audit['R1']['epistemic_usefulness']}")
+    print(f"  R1 repeated_target_rate (trajectory-local): {verify_audit['R1']['repeated_target_rate']} ({verify_audit['R1']['repeated_target_count']}/{verify_audit['R1']['adjacent_target_pairs']})")
+    print(f"  R1 useful_verify_v1 (hypothesis sets): {verify_audit['R1']['useful_verify_v1_count']}/{verify_audit['R1']['useful_verify_v1_observable']}")
+    print(f"  R1 useful_verify_v2 (expanded): {verify_audit['R1']['useful_verify_v2_count']}/{verify_audit['R1']['useful_verify_v2_observable']}")
+    print(f"  R1 not_observable (terminal): {verify_audit['R1']['useful_verify_v1_not_observable']}")
+    print(f"  R1 note: {verify_audit['R1']['epistemic_usefulness_note']}")
     print(f"  A1 VERIFY outcomes: {verify_audit['A1']['outcomes']}")
+    print(f"  A1 repeated_target_rate (trajectory-local): {verify_audit['A1']['repeated_target_rate']} ({verify_audit['A1']['repeated_target_count']}/{verify_audit['A1']['adjacent_target_pairs']})")
 
     # Harm by divergence
     print(f"\n[7] Harm conditioned on first divergence...")
@@ -665,8 +912,28 @@ def main():
     print(f"  Breaks (A1 success, R1 fail): {rescue_break['breaks']['count']}")
     print(f"  Rescues (A1 fail, R1 success): {rescue_break['rescues']['count']}")
 
+    # VERIFY target-value analysis
+    print(f"\n[10] VERIFY target-value analysis...")
+    target_value = analyze_verify_target_value(pairs)
+    print(f"  State at T2: {target_value['state_at_t2']}")
+    print(f"  Has live hypotheses: {target_value['n_has_live_hypotheses']}")
+    print(f"  All eliminated: {target_value['n_all_eliminated']}")
+    print(f"  Empty state: {target_value['n_empty_state']}")
+    print(f"  Pct structurally useless VERIFY: {target_value['pct_structurally_useless_verify']}")
+    print(f"  Any state change post-T2: {target_value['n_any_state_change_post_t2']}")
+    print(f"  Interpretation: {target_value['interpretation']}")
+
+    # A1 vs R1 target quality comparison
+    print(f"\n[11] A1 vs R1 target quality comparison...")
+    target_quality = compare_a1_r1_target_quality(pairs)
+    print(f"  n={target_quality['n']}")
+    print(f"  Identical target sets: {target_quality['identical_target_sets']}/{target_quality['n']} ({target_quality['pct_identical']})")
+    print(f"  Mean shared targets: {target_quality['mean_shared_targets']}")
+    print(f"  Mean R1-only targets: {target_quality['mean_r1_only_targets']}")
+    print(f"  Mean A1-only targets: {target_quality['mean_a1_only_targets']}")
+
     # Write outputs
-    print(f"\n[10] Writing outputs...")
+    print(f"\n[12] Writing outputs...")
 
     # r13_f_pairs.jsonl
     pairs_path = output_dir / "r13_f_pairs.jsonl"
@@ -714,21 +981,46 @@ def main():
     analysis_path = output_dir / "r13_f_analysis.json"
     full_analysis = {
         "label": LABEL,
+        "version": "R13-F1.1",
         "r13_dataset_sha256": args.r13_dataset_sha,
         "n_pairs": len(pairs),
         "prefix_classification": dict(prefix_classes),
+        "prefix_classification_note": (
+            "Uses full step signatures (action, target_id, execution_outcome) for comparison, "
+            "not just action labels. This corrects the R13-F1 issue where VERIFY(Ex) vs VERIFY(Ey) "
+            "would have been classified as identical."
+        ),
         "first_divergence_transitions": dict(divergence_transitions),
         "action_distribution": action_dist,
         "verify_audit": verify_audit,
+        "verify_audit_note": (
+            "RepeatedTargetRate is computed trajectory-locally (not cross-trajectory). "
+            "UsefulVerifyV1 checks hypothesis set changes only. "
+            "UsefulVerifyV2 also checks decision_state and representation changes. "
+            "Denominator explicitly reported: VERIFY actions without adjacent state snapshots "
+            "are classified as NOT_OBSERVABLE, not as useless."
+        ),
         "harm_by_divergence": harm_by_div,
         "persistent_m3_analysis": {k: v for k, v in persistent_m3.items() if k != "per_trajectory"},
         "rescue_break_summary": {
             "breaks": rescue_break["breaks"]["count"],
             "rescues": rescue_break["rescues"]["count"],
         },
+        "verify_target_value": {k: v for k, v in target_value.items() if k != "per_trajectory"},
+        "a1_r1_target_quality": {k: v for k, v in target_quality.items() if k != "per_pair"},
+        "a1_baseline_note": (
+            "A1 is also stuck in VERIFY ~100% of the time post-T2. "
+            "P(VERIFY|A1,T2)=1.0 vs P(VERIFY|R1,T2)=0.9836. "
+            "R1 does not introduce VERIFY behavior from nowhere. "
+            "Both policies are trapped in the same broad action mode. "
+            "The difference is target selection and cost, not action type."
+        ),
         "methodological_note": (
             "R13-F can identify likely failure mechanisms; it cannot confirm them causally. "
-            "Any hypothesis produced by R13-F must be tested in new held-out development data."
+            "Any hypothesis produced by R13-F must be tested in new held-out development data. "
+            "R13-F1.1 corrections: (1) prefix comparison uses (action,target,outcome) signatures, "
+            "(2) repeated target rate is trajectory-local, (3) UsefulVerify denominator is explicit "
+            "with V1 (hypothesis sets) and V2 (expanded) variants."
         ),
     }
     with open(analysis_path, "w") as f:
@@ -747,6 +1039,20 @@ def main():
         for entry in persistent_m3.get("per_trajectory", []):
             f.write(json.dumps({"label": LABEL, **entry}) + "\n")
     print(f"  {pm3_path}")
+
+    # VERIFY target-value per-trajectory data
+    tv_path = output_dir / "r13_f_target_value.jsonl"
+    with open(tv_path, "w") as f:
+        for entry in target_value.get("per_trajectory", []):
+            f.write(json.dumps({"label": LABEL, **entry}) + "\n")
+    print(f"  {tv_path}")
+
+    # A1 vs R1 target quality per-pair data
+    tq_path = output_dir / "r13_f_target_quality.jsonl"
+    with open(tq_path, "w") as f:
+        for entry in target_quality.get("per_pair", []):
+            f.write(json.dumps({"label": LABEL, **entry}) + "\n")
+    print(f"  {tq_path}")
 
     # Compute analysis SHA
     analysis_sha = compute_sha256(analysis_path)
