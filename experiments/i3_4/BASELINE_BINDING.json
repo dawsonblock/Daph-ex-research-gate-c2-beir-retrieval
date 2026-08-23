@@ -1,0 +1,76 @@
+{
+  "program": "DAPH I3.4 — Phase-Aware Pinned Model Executive",
+  "baseline": "R2-DEV-V2 (frozen)",
+  "baseline_commit": "781332e",
+  "created": "2026-08-24",
+  "purpose": "I3.4 explicitly descends from this frozen R2 baseline. Do not modify R2 code/results after I3.4 begins.",
+
+  "r2_results_sha256": "9cbd5c16abfec1d40bdbc60a310d503d305f7ac80a131602939cf8172373d957",
+  "r2_receipts_sha256": "76aa0c7781a34a08bc2182f60f5e72c532e798055cc1868e9cd557c39d315dd5",
+  "r2_model_calls_sha256": "76aa0c7781a34a08bc2182f60f5e72c532e798055cc1868e9cd557c39d315dd5",
+  "r2_dataset_sha256": "1f6a5cb38011282722b3fb22b835d40e7199fa9a61983c8dfccbb437ef033e43",
+  "r2_analysis_sha256": "818bd8b04e26e43a8b39d206aff8e3ca5065eade6268fdff0250e6d10ccda432",
+  "r2_runner_sha256": "85edd121bc1648369628ae2b6023ded4f2df9447d7fee611b84e7fdfc46ba53e",
+  "r2_backend_identity_sha256": "e2e5c3732e40298da2fc8703327e870a2099dbc7b49ed021dc8c84c61df41d63",
+  "r2_schema_sha256": "c20cd3a5adf976ddce2296ded11e21d1b2d9c972cd94c205404e5d6b410a3b0e",
+  "r2_allowed_actions_sha256": "482e9f6a9ab6d8c00c2f9d9e50ce5ab1e440e679f39da08dea554b3b3f50cd16",
+
+  "semantic_relation_module_sha256": "99f9317abeb7f213e85b58ef1111f66f6d262ad676d9e24fd26973aae1779ca3",
+  "semantic_relation_extractor_sha256": "99f9317abeb7f213e85b58ef1111f66f6d262ad676d9e24fd26973aae1779ca3",
+  "mdsg_implementation_sha256": "902a0c4d202159b464627e320eae5e11ff109d8102159c07fd5ab2a3ec9dd52c",
+  "executor_sha256": "48714eb576b25fb2b6543d7cf5ec3b54f8b900363dc86b6a772b0ae9c54d03e6",
+  "evidence_schema_sha256": "03176c1135cbbe080b3dcf51b2f1abba0364c941624e9d6633628a61274eee5a",
+  "metareasoning_utility_sha256": "4ff057c790589662ac2c0656f41ad7c90537c8a7fa8e30aa3a6f8949d1f04790",
+  "model_backend_sha256": "a9f1c8888b702c458300096006760dc43c26a17e81a8067fa0509e1c6e6ed988",
+  "model_decoder_sha256": "b7d76db76ae841e4fe4eb7abc7976dc146e25b42037fe2b1927299ec7e382ec1",
+  "resources_sha256": "d520b54bdcf91d88420ae9d4ec782d6d7c5aaea546ee49287f6c8f984e0f6e17",
+
+  "backend_identity_sha": "08dd528f6fc9e67c574ec766ea15ab7be80bdaa7a615625244122db533c2772d",
+  "backend_gguf_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+  "backend_gguf_size_bytes": 4683074240,
+  "backend_runtime": "llama-cpp-python 0.3.35",
+  "backend_model_file": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+  "backend_repo": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+
+  "r2_key_findings": {
+    "useful_verify_pre_t2": 1.0,
+    "useful_verify_at_t2": null,
+    "verify_events_at_t2": 0,
+    "delta_D_mean": 0.0269,
+    "delta_D_ci": [0.0, 0.0806],
+    "delta_D_excludes_zero": false,
+    "delta_E_mean": 1.6199,
+    "delta_E_ci": [1.1609, 2.079],
+    "delta_E_excludes_zero": true,
+    "delta_DE_mean": 1.593,
+    "delta_DE_ci": [1.134, 2.052],
+    "delta_DE_excludes_zero": true,
+    "I_DxE_mean": -0.0537,
+    "I_DxE_ci": [-0.1885, 0.054],
+    "I_DxE_excludes_zero": false,
+    "r2d_gate_fired": false,
+    "verify_removed_by_epistemic_gate_count": 0,
+    "total_trajectories": 320,
+    "total_model_calls": 760,
+    "decoder_valid_rate": 1.0,
+    "schema_valid_rate": 1.0,
+    "interpretation": "VERIFY is phase-dependent: 100% useful pre-T2, never used at T2. R2d is a no-op. E improves efficiency (+1.62, CI excludes 0) without changing success."
+  },
+
+  "i3_4_central_question": "Does an explicit epistemic phase representation improve action selection when combined with learned estimates of action value?",
+
+  "i3_4_hypotheses": {
+    "H1_phase_structure": "The controller-visible state contains enough information to distinguish meaningful reasoning phases.",
+    "H2_action_values_differ_by_phase": "There exist meaningful differences in E[delta_U | phase, action].",
+    "H3_phase_values_improve_policy": "Policy(x, z, Q) > Policy(x) on utility/reliability without creating new safety failures."
+  },
+
+  "i3_4_progression": [
+    "I3.4a Phase Model",
+    "I3.4b Phase-Conditioned Action-Value Estimator",
+    "I3.4c P0/P1/P2 Executive Experiment",
+    "Mechanism audit",
+    "Freeze winning executive",
+    "Cross-backend replication"
+  ]
+}

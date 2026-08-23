@@ -1,0 +1,180 @@
+{
+  "action_distribution_by_phase": {
+    "ANSWER_READY": {
+      "ANSWER": 0.9375,
+      "SEARCH_MORE": 0.0625
+    },
+    "DISCRIMINATION": {
+      "DEFER": 0.136986301369863,
+      "RETRIEVE": 0.4520547945205479,
+      "SEARCH_MORE": 0.273972602739726,
+      "VERIFY": 0.136986301369863
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "DEFER": 0.5521472392638037,
+      "SEARCH_MORE": 0.44785276073619634
+    },
+    "RESOLUTION": {
+      "RETRIEVE": 0.125,
+      "VERIFY": 0.875
+    }
+  },
+  "go_no_go": {
+    "conditions": {
+      "action_values_differ": true,
+      "multiple_phases_present": true,
+      "phase_separation_significant": true
+    },
+    "result": "GO"
+  },
+  "n_transitions": 760,
+  "phase_action_matrix": {
+    "ANSWER_READY|ANSWER": {
+      "E_delta_U": -1.0,
+      "E_delta_epi": 0.0,
+      "N": 120,
+      "P_exhaustion": 0.0,
+      "P_loop": 0.0,
+      "P_success": 0.3333,
+      "action": "ANSWER",
+      "phase": "ANSWER_READY"
+    },
+    "ANSWER_READY|SEARCH_MORE": {
+      "E_delta_U": -6.0,
+      "E_delta_epi": 0.0,
+      "N": 8,
+      "P_exhaustion": 0.0,
+      "P_loop": 0.0,
+      "P_success": 0.0,
+      "action": "SEARCH_MORE",
+      "phase": "ANSWER_READY"
+    },
+    "DISCRIMINATION|DEFER": {
+      "E_delta_U": -1.0,
+      "E_delta_epi": 0.0,
+      "N": 20,
+      "P_exhaustion": 0.0,
+      "P_loop": 0.0,
+      "P_success": 1.0,
+      "action": "DEFER",
+      "phase": "DISCRIMINATION"
+    },
+    "DISCRIMINATION|RETRIEVE": {
+      "E_delta_U": -5.0,
+      "E_delta_epi": 0.0,
+      "N": 66,
+      "P_exhaustion": 0.303,
+      "P_loop": 0.0,
+      "P_success": 1.0,
+      "action": "RETRIEVE",
+      "phase": "DISCRIMINATION"
+    },
+    "DISCRIMINATION|SEARCH_MORE": {
+      "E_delta_U": -6.0,
+      "E_delta_epi": 0.0,
+      "N": 40,
+      "P_exhaustion": 0.5,
+      "P_loop": 0.0,
+      "P_success": 1.0,
+      "action": "SEARCH_MORE",
+      "phase": "DISCRIMINATION"
+    },
+    "DISCRIMINATION|VERIFY": {
+      "E_delta_U": -7.0,
+      "E_delta_epi": 1.0,
+      "N": 20,
+      "P_exhaustion": 0.0,
+      "P_loop": 0.0,
+      "P_success": 1.0,
+      "action": "VERIFY",
+      "phase": "DISCRIMINATION"
+    },
+    "NO_VIABLE_HYPOTHESIS|DEFER": {
+      "E_delta_U": -1.0,
+      "E_delta_epi": 0.0,
+      "N": 180,
+      "P_exhaustion": 0.0,
+      "P_loop": 0.0,
+      "P_success": 1.0,
+      "action": "DEFER",
+      "phase": "NO_VIABLE_HYPOTHESIS"
+    },
+    "NO_VIABLE_HYPOTHESIS|SEARCH_MORE": {
+      "E_delta_U": -6.0,
+      "E_delta_epi": 0.0,
+      "N": 146,
+      "P_exhaustion": 0.4932,
+      "P_loop": 0.0,
+      "P_success": 1.0,
+      "action": "SEARCH_MORE",
+      "phase": "NO_VIABLE_HYPOTHESIS"
+    },
+    "RESOLUTION|RETRIEVE": {
+      "E_delta_U": -5.0,
+      "E_delta_epi": 0.0,
+      "N": 20,
+      "P_exhaustion": 0.0,
+      "P_loop": 0.0,
+      "P_success": 1.0,
+      "action": "RETRIEVE",
+      "phase": "RESOLUTION"
+    },
+    "RESOLUTION|VERIFY": {
+      "E_delta_U": -6.0,
+      "E_delta_epi": 2.0,
+      "N": 140,
+      "P_exhaustion": 0.0,
+      "P_loop": 0.0,
+      "P_success": 0.4286,
+      "action": "VERIFY",
+      "phase": "RESOLUTION"
+    }
+  },
+  "phase_distribution": {
+    "ANSWER_READY": 128,
+    "DISCRIMINATION": 146,
+    "NO_VIABLE_HYPOTHESIS": 326,
+    "RESOLUTION": 160
+  },
+  "phase_separation": {
+    "all_actions": [
+      "ANSWER",
+      "DEFER",
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "VERIFY"
+    ],
+    "max_pairwise_l1": 2.0,
+    "mean_pairwise_l1": 1.734,
+    "n_phases": 4,
+    "pairwise_distances": {
+      "ANSWER_READY|DISCRIMINATION": 1.875,
+      "ANSWER_READY|NO_VIABLE_HYPOTHESIS": 1.875,
+      "ANSWER_READY|RESOLUTION": 2.0,
+      "DISCRIMINATION|NO_VIABLE_HYPOTHESIS": 1.1781,
+      "DISCRIMINATION|RESOLUTION": 1.476,
+      "NO_VIABLE_HYPOTHESIS|RESOLUTION": 2.0
+    }
+  },
+  "transition_matrix": {
+    "ANSWER_READY": {
+      "ANSWER_READY": 1.0
+    },
+    "DISCRIMINATION": {
+      "DISCRIMINATION": 0.863013698630137,
+      "RESOLUTION": 0.136986301369863
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "NO_VIABLE_HYPOTHESIS": 1.0
+    },
+    "RESOLUTION": {
+      "ANSWER_READY": 0.5,
+      "NO_VIABLE_HYPOTHESIS": 0.375,
+      "RESOLUTION": 0.125
+    }
+  },
+  "transition_type_distribution": {
+    "expected": 160,
+    "same_phase": 600
+  }
+}
