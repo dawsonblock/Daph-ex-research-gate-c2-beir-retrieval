@@ -1,7 +1,21 @@
 {
   "label": "POST_HOC_EXPLORATORY",
-  "version": "R13-F1.2",
-  "r13_dataset_sha256": "56cff26a4f13d519810a77f61f7a8280cb6d665e729270ff421966cdeccb62db",
+  "version": "R13-F1.2a",
+  "r13_results_sha256": "ad600240bf97cbbdb09126f542d1dc56605b11089b387684883be5784bb8a463",
+  "r13_experiment_source_commit": "5454246b7e61adfb7a093eb5a1f731347071270d",
+  "r13_confirmation_executable_sha256": "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57",
+  "r13_retrieval_receipts_sha256": "2329bfe2cf7f5c002ec019b0b9554a2727ee810957b9f74a364a203b99db8e1e",
+  "source_file_shas": {
+    "results_jsonl_sha": "ad600240bf97cbbdb09126f542d1dc56605b11089b387684883be5784bb8a463",
+    "manifest_results_sha": "ad600240bf97cbbdb09126f542d1dc56605b11089b387684883be5784bb8a463",
+    "retrieval_receipts_sha": "2329bfe2cf7f5c002ec019b0b9554a2727ee810957b9f74a364a203b99db8e1e",
+    "executor_sha": "48714eb576b25fb2b6543d7cf5ec3b54f8b900363dc86b6a772b0ae9c54d03e6",
+    "schema_sha": "03176c1135cbbe080b3dcf51b2f1abba0364c941624e9d6633628a61274eee5a",
+    "task_generator_sha": "b6ccafd9a085ad0a11fdbbbc7bd78d9aa000250969dae2f7074e5e44890dfdb9",
+    "i3_7e_sha": "32d043988132c4626d688d327638affe47bd238e89c8afce2275f65bceb27dd4",
+    "i3_12j_sha": "827badd1e2e0f7890c0b8a56b2c534930a6599228b89542f939cb4490d9d72ad",
+    "i3_15_r1_sha": "bb37f54bfbd8c617a4984704b4ca30a721db5a6e8fa7bffa12996e90e1ed5b67"
+  },
   "n_t2_triggered": 228,
   "t2_state_classification": {
     "T2_VERIFY_DEAD_END": 228
@@ -13,51 +27,14 @@
     "0_live_2_eliminated\u2192NEEDS_DISCRIMINATION": 228
   },
   "elimination_monotonicity": {
-    "n_checked": 10,
-    "n_monotonic": 10,
+    "n_checked": 228,
+    "n_monotonic": 228,
     "n_violations": 0,
-    "results": [
-      {
-        "monotonic": true,
-        "violations": []
-      },
-      {
-        "monotonic": true,
-        "violations": []
-      },
-      {
-        "monotonic": true,
-        "violations": []
-      },
-      {
-        "monotonic": true,
-        "violations": []
-      },
-      {
-        "monotonic": true,
-        "violations": []
-      },
-      {
-        "monotonic": true,
-        "violations": []
-      },
-      {
-        "monotonic": true,
-        "violations": []
-      },
-      {
-        "monotonic": true,
-        "violations": []
-      },
-      {
-        "monotonic": true,
-        "violations": []
-      },
-      {
-        "monotonic": true,
-        "violations": []
-      }
-    ]
+    "exhaustive": true,
+    "theorem": "For all s in S_T2, for all v in ValidVerify(s): Eliminated(s) subseteq Eliminated(T(s,v)). This is empirically exhaustive for the frozen R13 benchmark.",
+    "violations": []
   },
-  "methodological_note": "R13-F1.2 reconstructs runtime state at T2 by replaying actions through the frozen deterministic executor. Counterfactual VERIFY simulations use the same executor with frozen task effects. No LLM calls are made. R13-F can identify likely failure mechanisms; it cannot confirm them causally."
+  "useful_target_definition": "Epistemically useful = changes to decision_state, live_hypotheses, eliminated_hypotheses, or T2 status ONLY. Changes to verification_state, resource_state, evidence metadata (verified_count, supporting_count, etc.), or prior_actions/outcomes are NOT counted as epistemically useful.",
+  "methodological_note": "R13-F1.2a reconstructs runtime state at T2 by replaying actions through the frozen deterministic executor. Counterfactual VERIFY simulations use the same executor with frozen task effects (post-hoc oracle). No LLM calls are made. This post-hoc oracle simulation is legitimate for diagnosis but MUST NOT be used at runtime \u2014 R2d gating must derive from visible structural state only. R13-F can identify likely failure mechanisms; it cannot confirm them causally.",
+  "r2d_note": "R2d (Structural Dead-End Affordance Gating) must use the runtime-visible rule: can_verify = budget>0 AND valid_targets>0 AND NOT all_hypotheses_eliminated. This is deterministic and public, requiring no counterfactual simulation. The F1.2a counterfactual audit validates this rule post-hoc but is not needed at runtime."
 }

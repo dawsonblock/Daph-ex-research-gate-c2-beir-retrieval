@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-R13-F1.2: Counterfactual Affordance Audit.
+R13-F1.2a: Counterfactual Affordance Audit (Hardened).
 
 Reads ONLY from raw_closed/ — never mutates R13 artifacts.
 All outputs are labeled POST_HOC_EXPLORATORY.
@@ -9,12 +9,24 @@ This script reconstructs the runtime state at T2 trigger time for each
 T2-triggered trajectory, then simulates counterfactual VERIFY actions
 on every valid target to determine whether any could change the MDSG state.
 
+F1.2a hardening from F1.2:
+  - Hard preflight identity verification (dataset manifest, retrieval receipts,
+    executor/schema/task-generator source SHAs, experiment source commit)
+  - Exhaustive monotonicity over ALL 228 T2 states and every valid target
+  - Precise useful-target definition: epistemically useful = changes to
+    decision_state, live/eliminated hypothesis sets, or T2 status ONLY.
+    Changes to verification_state, resource_state, or evidence metadata
+    are NOT counted as epistemically useful.
+  - Explicit distinction between post-hoc oracle simulation (this script)
+    and runtime-visible structural logic (the R2d gating rule)
+
 Key questions answered:
   1. What affordances were actually exposed at T2? (not just what was selected)
   2. For each valid VERIFY target at T2, could verifying it change any
-     decision-relevant state (hypothesis sets, decision_state, T2 status)?
+     epistemically decision-relevant state (hypothesis sets, decision_state,
+     T2 status)?
   3. Are T2 states VERIFY_DEAD_END, VERIFY_RESOLVABLE, or NO_VERIFY?
-  4. Is MDSG elimination monotonic within a trajectory?
+  4. Is MDSG elimination monotonic within a trajectory? (exhaustive)
   5. Is NEEDS_DISCRIMINATION semantically correct when 0 hypotheses are live?
 
 R13-F can identify likely failure mechanisms; it cannot confirm them causally.
@@ -25,6 +37,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import subprocess
 import sys
 from collections import Counter, defaultdict
 from dataclasses import replace
@@ -35,7 +48,24 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 LABEL = "POST_HOC_EXPLORATORY"
-R13_DATASET_SHA256 = "56cff26a4f13d519810a77f61f7a8280cb6d665e729270ff421966cdeccb62db"
+VERSION = "R13-F1.2a"
+
+# --- Frozen identity constants (from r13_experiment_identity.json) ---
+R13_EXPECTED_RESULTS_SHA = "ad600240bf97cbbdb09126f542d1dc56605b11089b387684883be5784bb8a463"
+R13_EXPECTED_DATASET_MANIFEST_RESULTS_SHA = "ad600240bf97cbbdb09126f542d1dc56605b11089b387684883be5784bb8a463"
+R13_EXPECTED_EXPERIMENT_SOURCE_COMMIT = "5454246b7e61adfb7a093eb5a1f731347071270d"
+R13_EXPECTED_CONFIRMATION_EXECUTABLE_SHA = "41cc60b04f506f63b80c91e036d330d61d79992a86fb975cbe21597bd2d84f57"
+R13_EXPECTED_PROTOCOL_SHA = "9590440d2744a6409cc19bc7ba8168d22cb7cee80952fb520a54134815c312c5"
+R13_EXPECTED_GGUF_SHA = "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d"
+
+# Source file SHAs at the experiment source commit (verified invariant)
+R13_EXPECTED_EXECUTOR_SHA = "48714eb576b25fb2b6543d7cf5ec3b54f8b900363dc86b6a772b0ae9c54d03e6"
+R13_EXPECTED_SCHEMA_SHA = "03176c1135cbbe080b3dcf51b2f1abba0364c941624e9d6633628a61274eee5a"
+R13_EXPECTED_TASK_GEN_SHA = "b6ccafd9a085ad0a11fdbbbc7bd78d9aa000250969dae2f7074e5e44890dfdb9"
+R13_EXPECTED_I3_7E_SHA = "32d043988132c4626d688d327638affe47bd238e89c8afce2275f65bceb27dd4"
+R13_EXPECTED_I3_12J_SHA = "827badd1e2e0f7890c0b8a56b2c534930a6599228b89542f939cb4490d9d72ad"
+R13_EXPECTED_I3_15_R1_SHA = "bb37f54bfbd8c617a4984704b4ca30a721db5a6e8fa7bffa12996e90e1ed5b67"
+R13_EXPECTED_RETRIEVAL_RECEIPTS_SHA = "2329bfe2cf7f5c002ec019b0b9554a2727ee810957b9f74a364a203b99db8e1e"
 
 
 def load_results(raw_closed: Path) -> list[dict]:
@@ -69,6 +99,118 @@ def load_cognition_receipts(raw_closed: Path) -> dict[str, dict]:
                 r = json.loads(line)
                 receipts[r.get("trajectory_key", "")] = r
         return receipts
+
+
+def sha256_file(path: Path) -> str:
+    """Compute SHA256 of a file."""
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def sha256_git_blob(commit: str, rel_path: str) -> str:
+    """Compute SHA256 of a file as it existed at a given commit."""
+    result = subprocess.run(
+        ["git", "show", f"{commit}:{rel_path}"],
+        capture_output=True, text=True, cwd=REPO_ROOT,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"git show {commit}:{rel_path} failed: {result.stderr}")
+    return hashlib.sha256(result.stdout.encode()).hexdigest()
+
+
+def preflight_identity(raw_closed: Path, receipts_path: Path) -> dict:
+    """Hard preflight: verify that reconstruction uses precisely the same
+    task/retrieval/executor identities as R13.
+
+    Returns a dict of verified identities. Aborts on mismatch.
+    """
+    print(f"\n[0] Hard preflight identity verification...")
+    checks = {}
+    failures = []
+
+    # 1. Verify dataset_manifest.json exists and results.jsonl SHA matches
+    manifest_path = raw_closed / "dataset_manifest.json"
+    if not manifest_path.exists():
+        failures.append(f"Missing {manifest_path}")
+    else:
+        with open(manifest_path) as f:
+            manifest = json.load(f)
+        manifest_results_sha = manifest.get("results.jsonl", {}).get("sha256")
+        actual_results_sha = sha256_file(raw_closed / "results.jsonl")
+        checks["results_jsonl_sha"] = actual_results_sha
+        checks["manifest_results_sha"] = manifest_results_sha
+        if actual_results_sha != R13_EXPECTED_RESULTS_SHA:
+            failures.append(f"results.jsonl SHA mismatch: {actual_results_sha} != {R13_EXPECTED_RESULTS_SHA}")
+        if manifest_results_sha != actual_results_sha:
+            failures.append(f"manifest results SHA != actual: {manifest_results_sha} != {actual_results_sha}")
+
+    # 2. Verify experiment identity
+    identity_path = raw_closed / "r13_experiment_identity.json"
+    if not identity_path.exists():
+        failures.append(f"Missing {identity_path}")
+    else:
+        with open(identity_path) as f:
+            identity = json.load(f)
+        exp_commit = identity.get("experiment_source_commit")
+        checks["experiment_source_commit"] = exp_commit
+        if exp_commit != R13_EXPECTED_EXPERIMENT_SOURCE_COMMIT:
+            failures.append(f"experiment_source_commit mismatch: {exp_commit} != {R13_EXPECTED_EXPERIMENT_SOURCE_COMMIT}")
+
+        exec_sha = identity.get("confirmation_executable_sha256")
+        checks["confirmation_executable_sha256"] = exec_sha
+        if exec_sha != R13_EXPECTED_CONFIRMATION_EXECUTABLE_SHA:
+            failures.append(f"confirmation_executable_sha256 mismatch: {exec_sha} != {R13_EXPECTED_CONFIRMATION_EXECUTABLE_SHA}")
+
+        proto_sha = identity.get("protocol_sha256")
+        checks["protocol_sha256"] = proto_sha
+        if proto_sha != R13_EXPECTED_PROTOCOL_SHA:
+            failures.append(f"protocol_sha256 mismatch: {proto_sha} != {R13_EXPECTED_PROTOCOL_SHA}")
+
+        gguf_sha = identity.get("gguf_sha256")
+        checks["gguf_sha256"] = gguf_sha
+        if gguf_sha != R13_EXPECTED_GGUF_SHA:
+            failures.append(f"gguf_sha256 mismatch: {gguf_sha} != {R13_EXPECTED_GGUF_SHA}")
+
+    # 3. Verify retrieval receipts SHA
+    actual_receipts_sha = sha256_file(receipts_path)
+    checks["retrieval_receipts_sha"] = actual_receipts_sha
+    if actual_receipts_sha != R13_EXPECTED_RETRIEVAL_RECEIPTS_SHA:
+        failures.append(f"retrieval_receipts SHA mismatch: {actual_receipts_sha} != {R13_EXPECTED_RETRIEVAL_RECEIPTS_SHA}")
+
+    # 4. Verify source file SHAs match experiment source commit
+    source_files = {
+        "executor": ("hrm_adaptive_memory/executive/evidence_benchmark/executor.py", R13_EXPECTED_EXECUTOR_SHA),
+        "schema": ("hrm_adaptive_memory/executive/evidence_benchmark/schema.py", R13_EXPECTED_SCHEMA_SHA),
+        "task_generator": ("hrm_adaptive_memory/executive/semantic_relations/i3_15c_task_generator.py", R13_EXPECTED_TASK_GEN_SHA),
+        "i3_7e": ("scripts/run_i3_7e_compact_governor.py", R13_EXPECTED_I3_7E_SHA),
+        "i3_12j": ("scripts/run_i3_12j_factorial.py", R13_EXPECTED_I3_12J_SHA),
+        "i3_15_r1": ("scripts/run_i3_15_r1_balanced.py", R13_EXPECTED_I3_15_R1_SHA),
+    }
+
+    for name, (rel_path, expected_sha) in source_files.items():
+        actual_sha = sha256_file(REPO_ROOT / rel_path)
+        commit_sha = sha256_git_blob(R13_EXPECTED_EXPERIMENT_SOURCE_COMMIT, rel_path)
+        checks[f"{name}_sha"] = actual_sha
+        checks[f"{name}_sha_at_source_commit"] = commit_sha
+        if actual_sha != expected_sha:
+            failures.append(f"{name} SHA mismatch: {actual_sha} != {expected_sha}")
+        if actual_sha != commit_sha:
+            failures.append(f"{name} SHA != source commit SHA: {actual_sha} != {commit_sha}")
+
+    # Report
+    print(f"  Verified {len(checks)} identity properties")
+    if failures:
+        print(f"\n  *** PREFLIGHT FAILED: {len(failures)} mismatches ***")
+        for f in failures:
+            print(f"    - {f}")
+        sys.exit(1)
+    else:
+        print(f"  All identity checks passed.")
+
+    return checks
 
 
 def setup_imports():
@@ -320,7 +462,23 @@ def audit_affordances_at_t2(runtime, imports, extractor):
 
 def counterfactual_verify_audit(runtime, imports, extractor):
     """For each valid VERIFY target at T2, simulate verification and check
-    whether it changes any decision-relevant state."""
+    whether it changes any epistemically decision-relevant state.
+
+    Epistemically useful is defined STRICTLY as a change to any of:
+      - decision_state (MDSG label)
+      - live_hypotheses set
+      - eliminated_hypotheses set
+      - T2 status (all-eliminated flag)
+
+    Changes to the following are NOT counted as epistemically useful:
+      - verification_state of individual evidence items
+      - resource_state (budgets remaining)
+      - evidence metadata (verified_count, supporting_count, etc.)
+      - prior_actions / prior_outcomes logs
+
+    This precise scope prevents the "0 useful" finding from sounding broader
+    than the exact implementation.
+    """
     valid_verify_targets = imports["valid_verify_targets"]
     targets = valid_verify_targets(runtime)
 
@@ -336,15 +494,14 @@ def counterfactual_verify_audit(runtime, imports, extractor):
             results.append({
                 "target_id": target_id,
                 "outcome": outcome,
-                "state_changed": False,
+                "epistemically_useful": False,
                 "decision_state_changed": False,
                 "hypothesis_sets_changed": False,
                 "t2_status_changed": False,
-                "useful": False,
             })
             continue
 
-        # Check what changed
+        # Check epistemically decision-relevant changes ONLY
         ds_changed = (current_state["decision_state"] != new_state["decision_state"])
         hs_changed = (
             set(current_state["live_hypotheses"]) != set(new_state["live_hypotheses"])
@@ -365,11 +522,10 @@ def counterfactual_verify_audit(runtime, imports, extractor):
         results.append({
             "target_id": target_id,
             "outcome": outcome,
-            "state_changed": useful,
+            "epistemically_useful": useful,
             "decision_state_changed": ds_changed,
             "hypothesis_sets_changed": hs_changed,
             "t2_status_changed": t2_changed,
-            "useful": useful,
             "new_decision_state": new_state["decision_state"] if ds_changed else None,
             "new_live": new_state["live_hypotheses"] if hs_changed else None,
             "new_eliminated": new_state["eliminated_hypotheses"] if hs_changed else None,
@@ -377,8 +533,8 @@ def counterfactual_verify_audit(runtime, imports, extractor):
 
     return {
         "n_valid_targets": len(targets),
-        "n_useful_targets": n_useful,
-        "n_useless_targets": len(targets) - n_useful,
+        "n_epistemically_useful_targets": n_useful,
+        "n_not_useful_targets": len(targets) - n_useful,
         "per_target": results,
     }
 
@@ -387,25 +543,30 @@ def classify_t2_state(cf_result):
     """Classify T2 state into VERIFY_DEAD_END, VERIFY_RESOLVABLE, or NO_VERIFY."""
     if cf_result["n_valid_targets"] == 0:
         return "T2_NO_VERIFY"
-    if cf_result["n_useful_targets"] > 0:
+    if cf_result["n_epistemically_useful_targets"] > 0:
         return "T2_VERIFY_RESOLVABLE"
     return "T2_VERIFY_DEAD_END"
 
 
 def main():
-    parser = argparse.ArgumentParser(description="R13-F1.2 Counterfactual Affordance Audit")
+    parser = argparse.ArgumentParser(description="R13-F1.2a Counterfactual Affordance Audit (Hardened)")
     parser.add_argument("--raw-closed", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
-    parser.add_argument("--r13-dataset-sha", default=R13_DATASET_SHA256)
     args = parser.parse_args()
 
     raw_closed = args.raw_closed
     output_dir = args.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"R13-F1.2 Counterfactual Affordance Audit")
+    receipts_path = REPO_ROOT / "experiments/v2b_i3_15c/confirmation/retrieval_receipts.jsonl"
+
+    print(f"R13-F1.2a Counterfactual Affordance Audit (Hardened)")
     print(f"  Label: {LABEL}")
+    print(f"  Version: {VERSION}")
     print(f"  Source: {raw_closed}")
+
+    # Hard preflight identity verification
+    identity_checks = preflight_identity(raw_closed, receipts_path)
 
     # Load data
     print(f"\n[1] Loading data...")
@@ -433,9 +594,8 @@ def main():
     chunks, corpus_by_text, corpus_by_id = build_corpus_index(corpus_passages)
     print(f"  Corpus index: {len(corpus_by_id)} passages")
 
-    # Load Q3_RERANKED retrieval receipts
+    # Load Q3_RERANKED retrieval receipts (SHA already verified in preflight)
     print(f"\n[4b] Loading Q3_RERANKED retrieval receipts...")
-    receipts_path = REPO_ROOT / "experiments/v2b_i3_15c/confirmation/retrieval_receipts.jsonl"
     q3_receipts = {}
     with open(receipts_path) as f:
         for line in f:
@@ -529,10 +689,12 @@ def main():
         t2_class = classify_t2_state(cf_result)
         t2_class_counts[t2_class] += 1
 
-        # Check elimination monotonicity (only for first few to save time)
-        if i < 10:
-            mono = check_elimination_monotonicity(runtime_at_t2, imports, extractor)
-            monotonicity_results.append(mono)
+        # Check elimination monotonicity — EXHAUSTIVE over all 228 states
+        mono = check_elimination_monotonicity(runtime_at_t2, imports, extractor)
+        monotonicity_results.append({
+            "task_id": task_id,
+            **mono,
+        })
 
         # Audit decision-state semantics
         state = compute_mdsg_state(runtime_at_t2, imports, extractor)
@@ -555,8 +717,8 @@ def main():
             "affordances": affordances,
             "counterfactual": {
                 "n_valid_targets": cf_result["n_valid_targets"],
-                "n_useful_targets": cf_result["n_useful_targets"],
-                "n_useless_targets": cf_result["n_useless_targets"],
+                "n_epistemically_useful_targets": cf_result["n_epistemically_useful_targets"],
+                "n_not_useful_targets": cf_result["n_not_useful_targets"],
                 "per_target": cf_result["per_target"],
             },
             "mdsg_state_at_t2": {
@@ -588,12 +750,15 @@ def main():
     for pat, count in sorted(decision_state_semantics.items(), key=lambda x: -x[1]):
         print(f"    {pat}: {count}")
 
-    print(f"\n  Elimination monotonicity (first 10):")
+    print(f"\n  Elimination monotonicity (EXHAUSTIVE, all {len(monotonicity_results)} states):")
     mono_count = sum(1 for m in monotonicity_results if m["monotonic"])
+    mono_violations = [m for m in monotonicity_results if not m["monotonic"]]
     print(f"    Monotonic: {mono_count}/{len(monotonicity_results)}")
-    for m in monotonicity_results:
-        if not m["monotonic"]:
+    if mono_violations:
+        for m in mono_violations:
             print(f"    VIOLATION: {m}")
+    else:
+        print(f"    0 violations — elimination is monotonic across all T2 states and all valid targets")
 
     # Write outputs
     print(f"\n[8] Writing outputs...")
@@ -602,15 +767,22 @@ def main():
     audit_path = output_dir / "r13_f1_2_counterfactual_audit.jsonl"
     with open(audit_path, "w") as f:
         for audit in all_audits:
-            f.write(json.dumps({"label": LABEL, **audit}) + "\n")
+            f.write(json.dumps({"label": LABEL, "version": VERSION, **audit}) + "\n")
     print(f"  {audit_path}")
 
     # Summary JSON
     summary_path = output_dir / "r13_f1_2_summary.json"
     summary = {
         "label": LABEL,
-        "version": "R13-F1.2",
-        "r13_dataset_sha256": args.r13_dataset_sha,
+        "version": VERSION,
+        "r13_results_sha256": identity_checks.get("results_jsonl_sha"),
+        "r13_experiment_source_commit": identity_checks.get("experiment_source_commit"),
+        "r13_confirmation_executable_sha256": identity_checks.get("confirmation_executable_sha256"),
+        "r13_retrieval_receipts_sha256": identity_checks.get("retrieval_receipts_sha"),
+        "source_file_shas": {
+            k: v for k, v in identity_checks.items()
+            if k.endswith("_sha") and not k.endswith("_at_source_commit")
+        },
         "n_t2_triggered": len(all_audits),
         "t2_state_classification": dict(t2_class_counts),
         "affordance_patterns": dict(affordance_patterns),
@@ -619,13 +791,35 @@ def main():
             "n_checked": len(monotonicity_results),
             "n_monotonic": mono_count,
             "n_violations": len(monotonicity_results) - mono_count,
-            "results": monotonicity_results,
+            "exhaustive": True,
+            "theorem": (
+                "For all s in S_T2, for all v in ValidVerify(s): "
+                "Eliminated(s) subseteq Eliminated(T(s,v)). "
+                "This is empirically exhaustive for the frozen R13 benchmark."
+            ),
+            "violations": mono_violations,
         },
+        "useful_target_definition": (
+            "Epistemically useful = changes to decision_state, live_hypotheses, "
+            "eliminated_hypotheses, or T2 status ONLY. "
+            "Changes to verification_state, resource_state, evidence metadata "
+            "(verified_count, supporting_count, etc.), or prior_actions/outcomes "
+            "are NOT counted as epistemically useful."
+        ),
         "methodological_note": (
-            "R13-F1.2 reconstructs runtime state at T2 by replaying actions through "
+            "R13-F1.2a reconstructs runtime state at T2 by replaying actions through "
             "the frozen deterministic executor. Counterfactual VERIFY simulations use "
-            "the same executor with frozen task effects. No LLM calls are made. "
+            "the same executor with frozen task effects (post-hoc oracle). "
+            "No LLM calls are made. "
+            "This post-hoc oracle simulation is legitimate for diagnosis but MUST NOT "
+            "be used at runtime — R2d gating must derive from visible structural state only. "
             "R13-F can identify likely failure mechanisms; it cannot confirm them causally."
+        ),
+        "r2d_note": (
+            "R2d (Structural Dead-End Affordance Gating) must use the runtime-visible rule: "
+            "can_verify = budget>0 AND valid_targets>0 AND NOT all_hypotheses_eliminated. "
+            "This is deterministic and public, requiring no counterfactual simulation. "
+            "The F1.2a counterfactual audit validates this rule post-hoc but is not needed at runtime."
         ),
     }
     with open(summary_path, "w") as f:
@@ -644,7 +838,7 @@ def main():
         f.write(analysis_sha)
     print(f"  {sha_path}")
 
-    print(f"\nR13-F1.2 counterfactual affordance audit complete.")
+    print(f"\nR13-F1.2a counterfactual affordance audit complete.")
 
 
 if __name__ == "__main__":
