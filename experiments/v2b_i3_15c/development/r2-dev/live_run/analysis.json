@@ -1,4 +1,18 @@
 {
+  "classification": "R2-LIVE-SMOKE-001",
+  "classification_note": "Exploratory cross-runtime development smoke. NOT a qualified R2-DEV efficacy result. See MECHANISM_AUDIT.md section 9.",
+  "provenance_caveat": "Session was lost after run; trajectories reconstructed from console output, not from preserved raw model-call receipts.",
+  "backend": {
+    "runtime": "llama-cpp-python",
+    "hardware": "Colab T4 GPU",
+    "decoding": "non-strict",
+    "decoding_note": "Model wraps JSON in markdown code fences; brace-balanced extraction used. Strict Q11/Q12 qualification NOT demonstrated.",
+    "model_sha256_observed": "dd53172ff3a7b1b16c8fb3d944b87f42a6228ff2de3825b8813ae90d988434cd",
+    "model_sha256_r13_frozen_reference": "2ad4c9ce431a2d5b80af37983828c2cfb8f4909792ca5075e0370e3a71ca013d",
+    "model_sha_match": false,
+    "model_sha_mismatch_cause": "NOT_ESTABLISHED",
+    "backend_runtime_replication_change": true
+  },
   "dataset_integrity": {
     "per_arm": {
       "C0": 10,
@@ -6,54 +20,86 @@
       "DE": 10,
       "E": 10
     },
-    "total_trajectories": 40
+    "total_trajectories": 40,
+    "stratum_coverage_note": "All 10 tasks were gold-gate cases (gold_should_gate=true). No gold no-gate cases included."
   },
   "gate_safety": {
     "confusion_matrix": {
-      "fn": 0,
+      "tp": 20,
       "fp": 0,
-      "tn": 0,
-      "tp": 20
+      "fn": 0,
+      "tn": 0
     },
-    "false_gate_rate": 0.0,
-    "missed_gate_rate": 0.0
+    "missed_gate_rate": {
+      "value": 0.0,
+      "formula": "FN/(FN+TP) = 0/20",
+      "status": "OBSERVED_PASS"
+    },
+    "false_gate_rate": {
+      "value": null,
+      "formula": "FP/(FP+TN) = 0/0",
+      "status": "NOT_ESTIMABLE",
+      "note": "Undefined: no gold no-gate cases in this smoke. Previous claim of 0.0 is retracted."
+    }
   },
   "hard_gate_invariants": {
+    "schema_gate_violations": 0,
     "executor_admissibility_violations": 0,
-    "schema_gate_violations": 0
+    "qualification_caveat": "Reconstructed record only. Strict decoder/schema qualification (Q11/Q12) NOT demonstrated under non-strict decoding."
   },
-  "replacement_action_distribution": {
-    "DEFER": 2,
-    "REASON_MORE": 24,
-    "SEARCH_MORE": 21,
-    "STOP": 18
+  "utility_contrasts": {
+    "delta_D": -20.428,
+    "delta_E": -39.784,
+    "delta_DE": -39.784,
+    "interaction_DxE": 20.428,
+    "interaction_interpretation": "Floor/saturation effect. U(DE)=U(E), so conditional effect of D given E is 0. D does NOT rescue E. Previous 'D mitigates E' claim is retracted."
   },
   "success_breakdown": {
     "C0": {
       "n": 10,
-      "step_limit_rate": 0.0,
-      "success_rate": 0.4
+      "success_rate": 0.4,
+      "step_limit_rate": 0.0
     },
     "D": {
       "n": 10,
-      "step_limit_rate": 0.0,
-      "success_rate": 0.2
-    },
-    "DE": {
-      "n": 10,
-      "step_limit_rate": 0.0,
-      "success_rate": 0.0
+      "success_rate": 0.2,
+      "step_limit_rate": 0.0
     },
     "E": {
       "n": 10,
-      "step_limit_rate": 0.0,
-      "success_rate": 0.0
+      "success_rate": 0.0,
+      "step_limit_rate": 0.0
+    },
+    "DE": {
+      "n": 10,
+      "success_rate": 0.0,
+      "step_limit_rate": 0.0
     }
   },
-  "utility_contrasts": {
-    "delta_D": -20.428,
-    "delta_DE": -39.784,
-    "delta_E": -39.784,
-    "interaction_DxE": 20.428
-  }
+  "replacement_action_distribution": {
+    "REASON_MORE": 24,
+    "SEARCH_MORE": 21,
+    "STOP": 18,
+    "DEFER": 2
+  },
+  "terminal_actions": {
+    "C0": {"STOP": 6, "DEFER": 4},
+    "D": {"STOP": 8, "DEFER": 2},
+    "E": {"STOP": 10, "DEFER": 0},
+    "DE": {"STOP": 10, "DEFER": 0}
+  },
+  "key_findings_supported": [
+    "E shows a strong STOP-collapse signal: 10/10 E and 10/10 DE terminate with STOP.",
+    "NO_VIABLE_HYPOTHESIS is probably a poor model-facing label (logically accurate, pragmatically loaded).",
+    "D shows a smaller negative signal: success 4/10 -> 2/10. Directional warning, not powered.",
+    "Preserving VERIFY in C0 is associated with better outcomes than hard-gating it in D (association only)."
+  ],
+  "key_findings_not_supported": [
+    "Model uses VERIFY productively (requires per-call transition receipts, which were lost).",
+    "D mitigates E (U(DE)=U(E); interaction is a floor effect).",
+    "FalseGateRate = 0 (undefined; no gold no-gate cases).",
+    "Strict decoder/schema qualification (non-strict decoding used).",
+    "Either intervention should be scientifically rejected (10 tasks, no false-gate controls, unqualified decoder, different backend, lost traces)."
+  ],
+  "next_run_protocol": "R2-DEV-V2. See MECHANISM_AUDIT.md section 11 for the six requirements and mechanism-first analysis template."
 }
