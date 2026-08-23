@@ -1,0 +1,63 @@
+{
+  "label": "POST_HOC_EXPLORATORY",
+  "version": "R13-F1.2",
+  "r13_dataset_sha256": "56cff26a4f13d519810a77f61f7a8280cb6d665e729270ff421966cdeccb62db",
+  "n_t2_triggered": 228,
+  "t2_state_classification": {
+    "T2_VERIFY_DEAD_END": 228
+  },
+  "affordance_patterns": {
+    "VERIFY+RETRIEVE+SEARCH": 228
+  },
+  "decision_state_semantics": {
+    "0_live_2_eliminated\u2192NEEDS_DISCRIMINATION": 228
+  },
+  "elimination_monotonicity": {
+    "n_checked": 10,
+    "n_monotonic": 10,
+    "n_violations": 0,
+    "results": [
+      {
+        "monotonic": true,
+        "violations": []
+      },
+      {
+        "monotonic": true,
+        "violations": []
+      },
+      {
+        "monotonic": true,
+        "violations": []
+      },
+      {
+        "monotonic": true,
+        "violations": []
+      },
+      {
+        "monotonic": true,
+        "violations": []
+      },
+      {
+        "monotonic": true,
+        "violations": []
+      },
+      {
+        "monotonic": true,
+        "violations": []
+      },
+      {
+        "monotonic": true,
+        "violations": []
+      },
+      {
+        "monotonic": true,
+        "violations": []
+      },
+      {
+        "monotonic": true,
+        "violations": []
+      }
+    ]
+  },
+  "methodological_note": "R13-F1.2 reconstructs runtime state at T2 by replaying actions through the frozen deterministic executor. Counterfactual VERIFY simulations use the same executor with frozen task effects. No LLM calls are made. R13-F can identify likely failure mechanisms; it cannot confirm them causally."
+}

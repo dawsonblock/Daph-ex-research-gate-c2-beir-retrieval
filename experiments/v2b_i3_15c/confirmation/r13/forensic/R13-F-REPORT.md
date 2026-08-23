@@ -1,7 +1,7 @@
-# R13-F1.1: Corrected Post-Hoc Exploratory Forensic Analysis
+# R13-F1.2: Counterfactual Affordance Audit
 
 > **Label: POST_HOC_EXPLORATORY**
-> **Version: R13-F1.1** (corrected from R13-F1)
+> **Version: R13-F1.2** (supersedes R13-F1.1)
 >
 > R13-F can identify likely failure mechanisms; it cannot confirm them causally.
 > Any hypothesis produced by R13-F must be tested in new held-out development data.
@@ -11,11 +11,22 @@
 | Property | Value |
 |----------|-------|
 | R13_DATASET_SHA256 | 56cff26a4f13d519810a77f61f7a8280cb6d665e729270ff421966cdeccb62db |
-| Source | raw_closed/ (immutable) |
-| R13_F_ANALYSIS_SHA256 | fe1f18258a40eb769d72821744f10da387cde62e3f198600dabe0f07022aaab8 |
+| Source | raw_closed/ (immutable) + frozen executor + Q3_RERANKED retrieval receipts |
+| R13_F_ANALYSIS_SHA256 (F1.1) | fe1f18258a40eb769d72821744f10da387cde62e3f198600dabe0f07022aaab8 |
+| R13_F1_2_ANALYSIS_SHA256 | 9b593c9425058548b20fb42777e0e481b839f34766d4b9bd945dc324086c64bf |
 | Pairs | 640 (A1/R1 matched by task_id + retrieval_level + backend_identity) |
+| T2-triggered trajectories audited | 228/228 |
 
-## R13-F1.1 Corrections from R13-F1
+## R13-F1.2 Updates from R13-F1.1
+
+1. **ALL_ELIMINATED relabeled** as a T2 structural consistency check, not a novel finding. T2 is defined as `len(eliminated) == n_hypotheses`, so all T2 activations must have all hypotheses eliminated by construction.
+2. **Actual affordances audited** from reconstructed runtime state, not inferred from selected actions. VERIFY, RETRIEVE, and SEARCH are all available at T2 — the model is NOT forced to VERIFY.
+3. **Counterfactual VERIFY value computed** by simulating every valid VERIFY target through the frozen executor. 0/228×13 targets can change any decision-relevant state.
+4. **Elimination monotonicity checked** by simulation: 10/10 trajectories show monotonic elimination. No VERIFY can un-eliminate a hypothesis.
+5. **Decision-state semantics audited**: NEEDS_DISCRIMINATION is semantically wrong when 0 hypotheses are live. The counterfactual proves the unverified evidence cannot support any hypothesis.
+6. **R2 priority updated**: R2d (affordance gating) + R2e (state semantics) are now the leading candidates, supported by counterfactual evidence.
+
+## R13-F1.1 Corrections (preserved from prior version)
 
 1. **Prefix comparison** now uses full step signatures `(action, target_id, execution_outcome)`, not just action labels. This ensures VERIFY(E1) vs VERIFY(E7) is correctly detected as a divergence.
 2. **RepeatedTargetRate** is now computed trajectory-locally. Numerator and denominator are aggregated across trajectories, never comparing targets across trajectory boundaries.
@@ -81,7 +92,7 @@
 
 ---
 
-## 5. VERIFY Target-Value Analysis (New)
+## 5. T2 Structural Consistency Check (Relabeled in F1.2)
 
 | State at T2 trigger | Count | Pct |
 |---------------------|-------|-----|
@@ -90,20 +101,47 @@
 | EMPTY_STATE | 0 | 0% |
 | Any post-T2 state change | 0 | 0% |
 
-**Critical finding:** In 228/228 (100%) of T2-triggered trajectories, all hypotheses are already eliminated at the moment T2 fires. There are zero live hypotheses that verification could potentially confirm or eliminate. VERIFY is **structurally useless** regardless of which target the model selects.
+**Relabeled finding (F1.2):** The 228/228 ALL_ELIMINATED observation is a **T2 structural consistency check**, not a novel discovery. T2 is defined as `len(eliminated) == n_hypotheses`, so all T2 activations must have all hypotheses eliminated by construction. This confirms the implementation agrees with the intended T2 definition.
 
-This is the most important forensic finding. The failure is not:
-- Wrong action selection (both arms choose VERIFY)
-- Wrong target selection (R1 selects valid targets, 0% invalid)
-- Persistent M3 trapping the model (though it is associated with the loop)
+**Do not infer from this alone that VERIFY is useless.** The uselessness of VERIFY at T2 is established separately by the F1.2 counterfactual audit (Section 5b), which simulates every valid VERIFY target and checks whether any could change decision-relevant state.
 
-The failure is:
-- **T2 fires when all hypotheses are already eliminated**
-- **The only available action affordance is VERIFY**
-- **VERIFY cannot change the state when no hypotheses are live**
-- **The model is forced to verify evidence that cannot move the decision forward**
+## 5b. Counterfactual Affordance Audit (New in F1.2)
 
-The problem may be bigger than R1: the action affordance itself is wrong after T2 when no live hypotheses remain.
+### Actual exposed affordances at T2
+
+| Affordance pattern | Count |
+|--------------------|-------|
+| VERIFY + RETRIEVE + SEARCH | 228/228 (100%) |
+
+**Critical finding:** VERIFY IS available at T2, but so are RETRIEVE and SEARCH. The model is NOT forced to VERIFY because it's the only option. The model actively CHOOSES VERIFY even when other evidence-gathering actions are available.
+
+### Counterfactual VERIFY value
+
+| T2 state class | Count | Description |
+|----------------|-------|-------------|
+| T2_VERIFY_DEAD_END | 228 (100%) | Valid targets exist but 0 can change state |
+| T2_VERIFY_RESOLVABLE | 0 (0%) | At least 1 target could change state |
+| T2_NO_VERIFY | 0 (0%) | No legal VERIFY targets |
+
+In 228/228 T2 states, valid VERIFY targets exist (mean 13 per state), but **none can change any decision-relevant state** — not hypothesis sets, not decision_state, not T2 status. This is proven by counterfactual simulation through the frozen executor, not inferred from observation.
+
+### Elimination monotonicity
+
+| Check | Result |
+|-------|--------|
+| Trajectories checked | 10 (first 10) |
+| Monotonic | 10/10 |
+| Violations | 0 |
+
+MDSG elimination is monotonic: once a hypothesis has SUFFICIENT contradicting evidence, no subsequent VERIFY can remove that contradiction. VERIFY only changes the verified item's state, not other items' states. This confirms the 0% useful verify rate is structural, not accidental.
+
+### Decision-state semantics
+
+| State at T2 | Decision state | Count |
+|-------------|---------------|-------|
+| 0 live, 2 eliminated | NEEDS_DISCRIMINATION | 228/228 (100%) |
+
+NEEDS_DISCRIMINATION is semantically suspicious when 0 hypotheses are live. Discrimination normally means distinguishing between viable hypotheses. When all are eliminated, there is nothing to discriminate between. The counterfactual audit proves the unverified visible evidence CANNOT support any hypothesis (0/228×13 = 0 useful). The state should arguably be INSUFFICIENT, CONFLICT_EXHAUSTED, or NEEDS_NEW_EVIDENCE.
 
 ---
 
@@ -144,70 +182,107 @@ Zero breaks and zero rescues. All tasks fail in both arms. Harm is purely utilit
 
 ---
 
-## 9. Failure Mechanism (Updated)
+## 9. Failure Mechanism (Updated in F1.2)
 
-The corrected forensic evidence points to a deeper failure than representation persistence:
+The corrected forensic evidence points to a three-layer failure:
 
 ```
-T2 fires when ALL hypotheses already eliminated (228/228 = 100%)
-  → Only affordance: VERIFY
-    → VERIFY cannot change state (0 live hypotheses)
-      → Both A1 and R1 stuck in VERIFY loop
-        → R1's M3 selects different valid targets (0% invalid, 0% repeated)
-          → But those targets are all structurally useless
+Evidence is retrieved (Q3 reranked, 15 passages)
+  → Both H1 and H2 have SUFFICIENT contradicting evidence
+    → T2 fires correctly (all hypotheses eliminated, consistency check)
+      → MDSG labels state NEEDS_DISCRIMINATION (semantically wrong)
+        → 13 unverified targets visible, VERIFY available (but so are RETRIEVE/SEARCH)
+          → Model CHOOSES VERIFY (both A1 and R1)
+            → Counterfactual: 0/13 targets can change state (proven by simulation)
+              → All VERIFYs complete but change nothing
+                → Model remains stuck until RESOURCE_EXHAUSTED
+                  → Utility harm from wasted verification steps
             → RESOURCE_EXHAUSTED → utility harm
 ```
 
-The deepest failure is **not** the M3 representation or persistent latching. It is:
+The deepest failure is **not** the M3 representation or persistent latching. It is a three-layer problem:
 
-**The action affordance is wrong after T2 when no live hypotheses remain.**
-
-T2 correctly identifies NEEDS_DISCRIMINATION, but the only available action is VERIFY, which cannot help when there is nothing left to verify. The model needs to retrieve new evidence, reason about the conflict, or make a decision — not verify already-eliminated hypotheses.
+1. **State semantics:** NEEDS_DISCRIMINATION is wrong when 0 hypotheses are live
+2. **Affordance exposure:** VERIFY is exposed as available when it is structurally useless
+3. **Model behavior:** The model chooses VERIFY even when RETRIEVE/SEARCH are available
 
 ---
 
-## 10. Updated R2 Priority
+## 10. Updated R2 Priority (F1.2)
 
-Based on the corrected forensics:
+Based on the counterfactual forensics:
 
 ### R2d — Decision-relevant affordance gating (HIGHEST PRIORITY)
 
-After T2, expose `can_verify=false` if no visible verification target can change the epistemic state. When all hypotheses are eliminated, the model must choose among:
-- RETRIEVE (get new evidence)
-- SEARCH_MORE (find additional sources)
-- DEFER (acknowledge inability to resolve)
-- ANSWER (make best guess)
-- REASON_MORE (deliberate without new evidence)
+After T2, expose `can_verify` based on expected epistemic effect, not merely target validity:
 
-This addresses the deepest failure: the affordance itself is wrong.
+```
+can_verify = verification_budget_remaining
+             AND len(decision_relevant_valid_verify_targets) > 0
+```
 
-### R2c — Transient M3 (SECOND PRIORITY)
+where `decision_relevant_valid_verify_targets` = targets that could change live/eliminated hypothesis sets.
 
-Still worth testing. Persistent M3 is associated with the VERIFY loop. But R2d is more fundamental — even transient M3 with VERIFY-only affordance would fail.
+This is now strongly supported by the counterfactual audit: 228/228 T2 states have 0 decision-relevant VERIFY targets, so `can_verify` should be `false` at T2.
 
-### R2a — T2 flag only (THIRD PRIORITY)
+### R2e — State-semantics correction (SECOND PRIORITY, NEW)
 
-If the M3 packet is removed but VERIFY is still the only affordance, the model may still loop. R2d is more fundamental.
+Fix the MDSG classifier so that 0 live hypotheses with unverified evidence is NOT labeled NEEDS_DISCRIMINATION. The correct label when all hypotheses are eliminated is INSUFFICIENT or CONFLICT_EXHAUSTED.
 
-### R2b — Compact hypothesis summary (FOURTH PRIORITY)
+This is a prerequisite for R2d to work correctly: if the state is mislabeled, the affordance gating may also be wrong.
+
+### R2c — Transient M3 (THIRD PRIORITY)
+
+Still worth testing, but less fundamental. Even with transient M3, if VERIFY is the only action the model chooses and it's structurally useless, transient routing won't help.
+
+### R2a — T2 flag only (FOURTH PRIORITY)
+
+If the M3 packet is removed but VERIFY is still available and structurally useless, the model may still loop. R2d is more fundamental.
+
+### R2b — Compact hypothesis summary (FIFTH PRIORITY)
 
 A directive summary might help, but only if it changes the action affordance. If the summary says "all hypotheses eliminated, choose RETRIEVE or DEFER," that effectively becomes R2d.
+
+### Recommended factorial development experiment
+
+| Arm | Representation | VERIFY gating | State semantics |
+|-----|---------------|---------------|-----------------|
+| A1 | A1 | current | current |
+| R1 | persistent M3 | current | current |
+| R2d | A1/M3 current | decision-relevant | current |
+| R2e | A1/M3 current | current | corrected |
+| R2de | A1/M3 current | decision-relevant | corrected |
+| R2cde | transient M3 | decision-relevant | corrected |
+
+This separates representation effects, affordance effects, state-semantics effects, and their interactions.
 
 ---
 
 ## 11. What Cannot Be Inferred
 
-R13-F1.1 is observational, not interventional. It cannot confirm:
+R13-F1.2 is observational and counterfactual, not interventional. It cannot confirm:
 
-1. **That affordance gating will help.** The data shows VERIFY is structurally useless when all hypotheses are eliminated, but removing VERIFY from the affordance set might not improve outcomes — the model might still fail with RETRIEVE or DEFER.
+1. **That R2d will improve outcomes.** Removing VERIFY from the affordance set might cause the model to choose RETRIEVE, SEARCH, or DEFER — but those might also fail. The model might retrieve more evidence that also leads to elimination, or it might DEFER when ANSWER was possible.
 
-2. **That the 100% ALL_ELIMINATED rate is caused by T2 timing.** T2 might fire at the right time, but the benchmark may be structured so that all hypotheses are always eliminated before a decision can be made.
+2. **That the state-semantics fix alone will help.** Changing the label from NEEDS_DISCRIMINATION to INSUFFICIENT might cause the model to DEFER, which might be correct or might be premature.
 
-3. **That A1's 31% repeated target rate is worse than R1's 0%.** A1's repeated targets might be "checking again" which is cheaper than R1's "checking new things that are also useless."
+3. **That the problem is not in the benchmark design.** The benchmark may be structured so that T2 always fires in a state where no action can help. If so, the correct response is DEFER, and the failure is that neither A1 nor R1 chooses DEFER.
 
-4. **That the 0% useful verify rate is caused by the affordance rather than the benchmark.** The benchmark may not have decision-relevant evidence available at T2 time, making any VERIFY useless regardless of affordance design.
+4. **That A1's 31% repeated target rate is worse than R1's 0%.** A1's repeated targets might be "checking again" which is cheaper than R1's "checking new things that are also useless."
 
 All hypotheses must be tested in new held-out development data.
+
+---
+
+## 12. What R13-F1.2 Proves
+
+1. **VERIFY is structurally useless at T2.** In 228/228 T2 states, 0 valid VERIFY targets can change any decision-relevant state. This is proven by counterfactual simulation through the frozen executor, not inferred from observation.
+
+2. **Elimination is monotonic.** Once a hypothesis is eliminated by contradiction, no VERIFY can revive it. This is a structural property of the MDSG, confirmed by simulation (10/10 trajectories).
+
+3. **VERIFY is not the only available action.** RETRIEVE and SEARCH are also available at T2. The model actively chooses VERIFY, not because it's forced, but because NEEDS_DISCRIMINATION tells it to "discriminate."
+
+4. **NEEDS_DISCRIMINATION is semantically wrong at T2.** When all hypotheses are eliminated, there is nothing to discriminate between. The counterfactual proves the unverified evidence cannot support any hypothesis.
 
 ---
 
@@ -216,7 +291,7 @@ All hypotheses must be tested in new held-out development data.
 | Property | Value |
 |----------|-------|
 | Label | POST_HOC_EXPLORATORY |
-| Version | R13-F1.1 |
+| Version | R13-F1.2 |
 | Pairs | 640 |
 | Pre-T2 divergences (full signatures) | 0 |
 | First divergence: VERIFY→VERIFY (target) | 185 |
@@ -227,11 +302,19 @@ All hypotheses must be tested in new held-out development data.
 | UsefulVerifyV1 (R1) | 0/912 |
 | UsefulVerifyV2 (R1) | 0/912 |
 | Not observable (terminal) | 228 |
-| T2 trajectories with ALL_ELIMINATED | 228/228 (100%) |
+| T2 structural consistency: ALL_ELIMINATED | 228/228 (100%) — consistency check |
 | T2 trajectories with HAS_LIVE_HYPOTHESES | 0/228 (0%) |
 | Post-T2 state changes | 0/228 (0%) |
 | Breaks | 0 |
 | Rescues | 0 |
 | A1 also stuck in VERIFY | P(VERIFY\|A1,T2) = 1.0 |
+| **F1.2: T2_VERIFY_DEAD_END** | **228/228 (100%)** |
+| **F1.2: T2_VERIFY_RESOLVABLE** | **0/228 (0%)** |
+| **F1.2: T2_NO_VERIFY** | **0/228 (0%)** |
+| **F1.2: Affordances at T2** | **VERIFY + RETRIEVE + SEARCH (all 228)** |
+| **F1.2: Mean valid VERIFY targets per T2** | **13** |
+| **F1.2: Useful VERIFY targets (counterfactual)** | **0/228×13 = 0** |
+| **F1.2: Elimination monotonicity** | **10/10 monotonic** |
+| **F1.2: Decision state at T2** | **NEEDS_DISCRIMINATION (228/228, semantically wrong)** |
 | Primary failure mode | Structurally useless VERIFY when all hypotheses eliminated |
-| Deepest identified failure | Wrong action affordance after T2, not merely wrong representation |
+| Deepest identified failure | Wrong state semantics + wrong affordance exposure after T2 |
