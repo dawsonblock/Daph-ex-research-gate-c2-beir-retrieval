@@ -369,6 +369,11 @@ class LocalLlamaBackend:
     physically preventing the model from generating gated actions.
     When not provided, the full seven-action vocabulary is used
     (matching the frozen R13 static schema).
+
+    NOTE: The server-based ``response_format`` with ``json_schema`` type
+    is NOT reliably enforced by all llama.cpp server versions.  For
+    strict schema-constrained generation, use ``R2DirectLlamaBackend``
+    which uses ``LlamaGrammar`` directly.
     """
 
     model_name: str = "LiquidAI/LFM2.5-2.6B-GGUF:Q5_K_M"
@@ -440,6 +445,10 @@ class LocalLlamaBackend:
         R2-DEV-V2: When ``allowed_actions`` is provided, the JSON schema
         sent to the provider restricts the action enum to exactly those
         actions, physically preventing generation of gated actions.
+
+        WARNING: The server-based response_format with json_schema type
+        may not be reliably enforced by all llama.cpp server versions.
+        For strict schema-constrained generation, use R2DirectLlamaBackend.
         """
         import urllib.error
         import urllib.request
@@ -539,3 +548,153 @@ class LocalLlamaBackend:
 
         raise RuntimeError(
             f"Local llama server failed after {self.max_retries} retries: {last_error}")
+
+
+@dataclass
+class R2DirectLlamaBackend:
+    """Direct llama-cpp-python backend with LlamaGrammar enforcement.
+
+    Uses ``LlamaGrammar.from_json_schema()`` to enforce the action schema
+    at generation time, physically preventing the model from generating
+    actions outside the allowed set.
+
+    Unlike ``LocalLlamaBackend`` (which uses a server and relies on
+    ``response_format`` that may not be enforced), this backend calls
+    ``llama-cpp-python`` directly and uses ``LlamaGrammar`` which is
+    reliably enforced by the underlying llama.cpp engine.
+
+    R2-DEV-V2: This is the canonical backend for strict schema-constrained
+    generation.  The ``allowed_actions`` parameter is used to build a
+    dynamic JSON schema, which is converted to a GBNF grammar via
+    ``LlamaGrammar.from_json_schema()`` and passed to
+    ``create_chat_completion()``.
+    """
+
+    model_name: str = "gemma-3-12b-it-qat-q4_0"
+    model_path: str = ""
+    n_gpu_layers: int = -1  # -1 = offload all to GPU
+    n_ctx: int = 4096
+    # Metadata for call receipts
+    experiment_id: str = ""
+    pair_id: str = ""
+    task_id: str = ""
+    condition: str = ""
+    _call_counter: int = field(default=0, repr=False, init=False)
+    _llm: Any = field(default=None, repr=False, init=False)
+
+    # Full seven-action vocabulary for default schema.
+    _FULL_ACTION_VOCAB = frozenset({
+        "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
+        "REASON_MORE", "DEFER", "STOP",
+    })
+
+    def _build_action_schema(self, allowed_actions: frozenset[str] | None) -> dict:
+        """Build the JSON schema for constrained generation."""
+        actions = allowed_actions if allowed_actions is not None else self._FULL_ACTION_VOCAB
+        canonical_order = (
+            "ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE",
+            "REASON_MORE", "DEFER", "STOP",
+        )
+        enum = [a for a in canonical_order if a in actions]
+        return {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": enum,
+                },
+                "reason_code": {
+                    "type": "string",
+                    "pattern": "^[A-Z][A-Z0-9_]*$",
+                },
+                "target_id": {"type": ["string", "null"]},
+            },
+            "required": ["action", "reason_code", "target_id"],
+            "additionalProperties": False,
+        }
+
+    def _get_llm(self):
+        """Lazily load the model on first use."""
+        if self._llm is None:
+            from llama_cpp import Llama
+            self._llm = Llama(
+                model_path=self.model_path,
+                n_gpu_layers=self.n_gpu_layers,
+                n_ctx=self.n_ctx,
+                verbose=False,
+            )
+        return self._llm
+
+    def generate(self, *, system_prompt: str, user_prompt: str,
+                 temperature: float, max_tokens: int,
+                 allowed_actions: frozenset[str] | None = None) -> ModelCallResult:
+        """Generate a model response with LlamaGrammar enforcement.
+
+        The JSON schema is built from ``allowed_actions`` and converted to
+        a GBNF grammar via ``LlamaGrammar.from_json_schema()``.  This
+        physically prevents the model from generating actions outside the
+        allowed set at the token level.
+        """
+        from llama_cpp import LlamaGrammar
+
+        action_schema = self._build_action_schema(allowed_actions)
+        schema_sha = hashlib.sha256(
+            json.dumps(action_schema, sort_keys=True).encode()).hexdigest()
+        prompt_sha = hashlib.sha256(system_prompt.encode()).hexdigest()
+        packet_sha = hashlib.sha256(user_prompt.encode()).hexdigest()
+
+        # Build grammar from JSON schema
+        grammar = LlamaGrammar.from_json_schema(json.dumps(action_schema))
+
+        llm = self._get_llm()
+        start = time.monotonic()
+
+        result = llm.create_chat_completion(
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            max_tokens=max_tokens,
+            temperature=temperature,
+            top_p=1.0,
+            top_k=40,
+            repeat_penalty=1.0,
+            seed=42,
+            grammar=grammar,
+        )
+
+        latency = int((time.monotonic() - start) * 1000)
+        choice = result["choices"][0]
+        usage = result.get("usage", {})
+        raw_output = choice["message"]["content"] or ""
+
+        # Build request SHA for provenance
+        request_payload = {
+            "model": self.model_name,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "grammar_schema": action_schema,
+        }
+        request_sha = hashlib.sha256(
+            json.dumps(request_payload, sort_keys=True).encode()).hexdigest()
+
+        self._call_counter += 1
+        return ModelCallResult(
+            raw_output=raw_output,
+            prompt_tokens=usage.get("prompt_tokens", 0),
+            completion_tokens=usage.get("completion_tokens", 0),
+            reasoning_tokens=0,
+            latency_ms=latency,
+            model_name=self.model_name,
+            system_fingerprint=None,
+            finish_reason=choice.get("finish_reason"),
+            provider_raw_output=raw_output,
+            json_schema_sha256=schema_sha,
+            system_prompt_sha256=prompt_sha,
+            user_packet_sha256=packet_sha,
+            request_sha256=request_sha,
+        )

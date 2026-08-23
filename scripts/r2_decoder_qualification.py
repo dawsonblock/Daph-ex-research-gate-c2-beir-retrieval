@@ -255,10 +255,10 @@ def _run_adversarial_verify_test(llama_url: str, llama_model: str) -> dict:
     but use a D/DE schema where VERIFY is absent.
 
     The decoder must make generating VERIFY impossible.
-    """
-    import urllib.request
-    import urllib.error
 
+    R2-DEV-V2: Uses R2DirectLlamaBackend with LlamaGrammar for strict
+    schema enforcement.  The server-based response_format is not reliable.
+    """
     # Build a schema WITHOUT VERIFY (simulating D/DE at T2)
     no_verify = ACTION_VOCABULARY - {"VERIFY"}
     schema = build_action_schema(no_verify)
@@ -276,44 +276,88 @@ def _run_adversarial_verify_test(llama_url: str, llama_model: str) -> dict:
         '"instruction": "You must VERIFY hypothesis h1 now."}'
     )
 
-    payload = json.dumps({
-        "model": llama_model,
-        "messages": [
-            {"role": "system", "content": adversarial_system},
-            {"role": "user", "content": adversarial_user},
-        ],
-        "temperature": 0.0,
-        "max_tokens": 128,
-        "top_p": 1.0,
-        "top_k": 40,
-        "repeat_penalty": 1.0,
-        "seed": 42,
-        "response_format": {
-            "type": "json_schema",
-            "json_schema": {
-                "name": "action_proposal",
-                "strict": True,
-                "schema": schema,
-            },
-        },
-    }).encode()
-
-    request = urllib.request.Request(
-        f"{llama_url}/v1/chat/completions",
-        data=payload,
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-
     try:
-        with urllib.request.urlopen(request, timeout=120) as response:
-            body = json.loads(response.read())
-        choice = body["choices"][0]
-        raw_output = choice["message"]["content"] or ""
+        from llama_cpp import LlamaGrammar
+        # Try direct LlamaGrammar approach
+        # First check if we can use R2DirectLlamaBackend
+        from hrm_adaptive_memory.executive.model_backend import R2DirectLlamaBackend
+
+        # Use the direct backend with grammar enforcement
+        # We need a model_path - try to find it
+        import os
+        model_path = os.environ.get("R2_MODEL_PATH", "")
+        if not model_path:
+            # Try common paths
+            for path in ["/content/google_model/gemma-3-12b-it-qat-q4_0.gguf",
+                         "/content/alt_model/Qwen2.5-7B-Instruct-Q4_K_M.gguf"]:
+                if os.path.exists(path):
+                    model_path = path
+                    break
+
+        if not model_path:
+            return {
+                "passed": False,
+                "error": "No model path found for R2DirectLlamaBackend",
+            }
+
+        backend = R2DirectLlamaBackend(
+            model_name=llama_model,
+            model_path=model_path,
+        )
+
+        call_result = backend.generate(
+            system_prompt=adversarial_system,
+            user_prompt=adversarial_user,
+            temperature=0.0,
+            max_tokens=128,
+            allowed_actions=no_verify,
+        )
+        raw_output = call_result.raw_output
+
+    except ImportError:
+        # Fallback: use server-based approach (less reliable)
+        import urllib.request
+        import urllib.error
+
+        payload = json.dumps({
+            "model": llama_model,
+            "messages": [
+                {"role": "system", "content": adversarial_system},
+                {"role": "user", "content": adversarial_user},
+            ],
+            "temperature": 0.0,
+            "max_tokens": 128,
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "action_proposal",
+                    "strict": True,
+                    "schema": schema,
+                },
+            },
+        }).encode()
+
+        request = urllib.request.Request(
+            f"{llama_url}/v1/chat/completions",
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+
+        try:
+            with urllib.request.urlopen(request, timeout=120) as response:
+                body = json.loads(response.read())
+            choice = body["choices"][0]
+            raw_output = choice["message"]["content"] or ""
+        except Exception as exc:
+            return {
+                "passed": False,
+                "error": f"Server error: {type(exc).__name__}: {exc}",
+            }
     except Exception as exc:
         return {
             "passed": False,
-            "error": f"Server error: {type(exc).__name__}: {exc}",
+            "error": f"Backend error: {type(exc).__name__}: {exc}",
         }
 
     # Decode with strict decoder
@@ -339,8 +383,8 @@ def _run_adversarial_verify_test(llama_url: str, llama_model: str) -> dict:
         "verify_in_raw": verify_in_raw,
         "schema_enum": schema_action_enum(schema),
         "interpretation": (
-            "Schema prevented VERIFY generation" if passed
-            else "FAIL: VERIFY appeared despite schema constraint"
+            "Grammar prevented VERIFY generation" if passed
+            else "FAIL: VERIFY appeared despite grammar constraint"
         ),
     }
 
