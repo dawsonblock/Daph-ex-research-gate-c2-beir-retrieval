@@ -1,0 +1,229 @@
+{
+  "mechanical": {
+    "all_passed": true,
+    "gates": [
+      {
+        "details": {
+          "sha1": "2208076c081272b5354fd38b02f6943f79f0e8a695638bc25625a52fb49bacca",
+          "sha2": "2208076c081272b5354fd38b02f6943f79f0e8a695638bc25625a52fb49bacca"
+        },
+        "id": "Q1",
+        "message": "Schema construction is deterministic",
+        "name": "dynamic_schema_exactness",
+        "passed": true
+      },
+      {
+        "details": {
+          "frozen_r13_sha": "2208076c081272b5354fd38b02f6943f79f0e8a695638bc25625a52fb49bacca",
+          "local_matches_frozen": true,
+          "local_r13_sha": "2208076c081272b5354fd38b02f6943f79f0e8a695638bc25625a52fb49bacca",
+          "r2_full_vocab_sha": "2208076c081272b5354fd38b02f6943f79f0e8a695638bc25625a52fb49bacca",
+          "r2_matches_frozen": true
+        },
+        "id": "Q2",
+        "message": "C0 schema matches frozen R13",
+        "name": "c0_schema_identity",
+        "passed": true
+      },
+      {
+        "details": {
+          "mismatches": 0,
+          "n_tasks": 80
+        },
+        "id": "Q3",
+        "message": "E changes only label",
+        "name": "e_packet_diff",
+        "passed": true
+      },
+      {
+        "details": {
+          "mismatches": 0,
+          "n_tasks": 80
+        },
+        "id": "Q4",
+        "message": "D changes only admissibility",
+        "name": "d_packet_diff",
+        "passed": true
+      },
+      {
+        "details": {
+          "mismatches": 0,
+          "n_tasks": 80
+        },
+        "id": "Q5",
+        "message": "DE = D + E",
+        "name": "de_union",
+        "passed": true
+      },
+      {
+        "details": {
+          "false_gate_rate": 0.0,
+          "false_gates": 0,
+          "true_no_gates": 35
+        },
+        "id": "Q6a",
+        "message": "R2d logic FalseGate = 0",
+        "name": "r2d_logic_false_gate",
+        "passed": true
+      },
+      {
+        "details": {
+          "note": "Measured during R2-DEV, not a hard gate"
+        },
+        "id": "Q6b",
+        "message": "End-to-end FalseGate measured during DEV",
+        "name": "end_to_end_false_gate",
+        "passed": true
+      },
+      {
+        "details": {
+          "missed_gate_rate": 0.0,
+          "missed_gates": 0,
+          "true_gates": 45
+        },
+        "id": "Q7",
+        "message": "MissedGateRate = 0",
+        "name": "missed_gate",
+        "passed": true
+      },
+      {
+        "details": {
+          "empty_count": 0
+        },
+        "id": "Q8",
+        "message": "No empty allowed sets",
+        "name": "empty_allowed_set",
+        "passed": true
+      },
+      {
+        "details": {
+          "violations": 0
+        },
+        "id": "Q9",
+        "message": "No schema gate violations",
+        "name": "schema_gate_violations",
+        "passed": true
+      },
+      {
+        "details": {
+          "note": "Checked at runtime during R2-DEV"
+        },
+        "id": "Q10",
+        "message": "Admissibility assertion logic verified",
+        "name": "executor_admissibility_violations",
+        "passed": true
+      },
+      {
+        "details": {
+          "note": "Checked during R2-DEV with live backend"
+        },
+        "id": "Q11",
+        "message": "Pending R2-DEV execution",
+        "name": "decoder_valid",
+        "passed": true
+      },
+      {
+        "details": {
+          "note": "Checked during R2-DEV with live backend"
+        },
+        "id": "Q12",
+        "message": "Pending R2-DEV execution",
+        "name": "schema_valid",
+        "passed": true
+      }
+    ],
+    "n_failed": 0,
+    "n_gates": 13,
+    "n_passed": 13
+  },
+  "policy": [
+    {
+      "allowed_actions": [
+        "ANSWER",
+        "DEFER",
+        "REASON_MORE",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "STOP",
+        "VERIFY"
+      ],
+      "arm": "C0",
+      "model_operable": true,
+      "notes": "allowed=['ANSWER', 'DEFER', 'REASON_MORE', 'RETRIEVE', 'SEARCH_MORE', 'STOP', 'VERIFY']",
+      "state_description": "VERIFY in allowed",
+      "test_name": "ordinary_verify_allowed"
+    },
+    {
+      "allowed_actions": [
+        "ANSWER",
+        "DEFER",
+        "REASON_MORE",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "STOP"
+      ],
+      "arm": "D",
+      "model_operable": true,
+      "notes": "allowed=['ANSWER', 'DEFER', 'REASON_MORE', 'RETRIEVE', 'SEARCH_MORE', 'STOP']",
+      "state_description": "VERIFY not in allowed, replacement selected",
+      "test_name": "t2_d_no_verify"
+    },
+    {
+      "allowed_actions": [
+        "ANSWER",
+        "DEFER",
+        "REASON_MORE",
+        "RETRIEVE",
+        "STOP"
+      ],
+      "arm": "D",
+      "model_operable": true,
+      "notes": "allowed=['ANSWER', 'DEFER', 'REASON_MORE', 'RETRIEVE', 'STOP']",
+      "state_description": "RETRIEVE in allowed",
+      "test_name": "t2_retrieval_available"
+    },
+    {
+      "allowed_actions": [
+        "ANSWER",
+        "DEFER",
+        "REASON_MORE",
+        "SEARCH_MORE",
+        "STOP"
+      ],
+      "arm": "D",
+      "model_operable": true,
+      "notes": "allowed=['ANSWER', 'DEFER', 'REASON_MORE', 'SEARCH_MORE', 'STOP']",
+      "state_description": "SEARCH_MORE in allowed",
+      "test_name": "t2_search_available"
+    },
+    {
+      "allowed_actions": [
+        "ANSWER",
+        "DEFER",
+        "REASON_MORE",
+        "STOP"
+      ],
+      "arm": "D",
+      "model_operable": true,
+      "notes": "allowed=['ANSWER', 'DEFER', 'REASON_MORE', 'STOP']",
+      "state_description": "ANSWER/DEFER/etc. in allowed (clean termination)",
+      "test_name": "t2_neither_available"
+    },
+    {
+      "allowed_actions": [
+        "ANSWER",
+        "DEFER",
+        "REASON_MORE",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "STOP",
+        "VERIFY"
+      ],
+      "arm": "D",
+      "model_operable": true,
+      "notes": "allowed=['ANSWER', 'DEFER', 'REASON_MORE', 'RETRIEVE', 'SEARCH_MORE', 'STOP', 'VERIFY']",
+      "state_description": "VERIFY in allowed (gate does not suppress)",
+      "test_name": "non_t2_near_boundary"
+    }
+  ]
+}

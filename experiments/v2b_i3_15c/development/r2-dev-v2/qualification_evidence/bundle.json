@@ -1,0 +1,69 @@
+{
+  "bundle_name": "R2_DECODER_MECHANISM_QUAL_001 + R2_POLICY_BACKEND_V2",
+  "bundle_version": "1.0",
+  "qualification_timestamp_utc": "2026-08-23T14:30:00Z",
+  "source_commit": "e455f6d3aca70878e103f9ceb1e66d08fcbe560e",
+  "source_branch": "i3.12-semantic-relation-ablation",
+  "source_remote": "https://github.com/dawsonblock/Daph-ex-research-gate-c2-beir-retrieval.git",
+
+  "qualification_command": "PYTHONPATH=scripts:. python3 scripts/r2_decoder_qualification.py --llama-url http://127.0.0.1:8081 --llama-model qwen2.5-7b-instruct --require-live-q6 --gguf-path /content/alt_model/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+
+  "qualification_result": "PASS",
+  "qualification_tests_total": 14,
+  "qualification_tests_passed": 14,
+  "qualification_tests_failed": 0,
+
+  "backend_identity": {
+    "version": "R2_POLICY_BACKEND_V2",
+    "gguf_filename": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "gguf_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+    "gguf_repository": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+    "gguf_size_bytes": 4683074240,
+    "runtime": "llama-cpp-python",
+    "runtime_version": "llama-cpp-python 0.3.35",
+    "cuda_enabled": true,
+    "gpu_model": "Tesla T4",
+    "context_size": 4096,
+    "temperature": 0.0,
+    "max_tokens": 128,
+    "top_p": 1.0,
+    "top_k": 40,
+    "repeat_penalty": 1.0,
+    "seed": 42,
+    "schema_builder_sha256": "c20cd3a5adf976ddce2296ded11e21d1b2d9c972cd94c205404e5d6b410a3b0e",
+    "decoder_mode": "strict",
+    "grammar_enforcement": "LlamaGrammar.from_json_schema",
+    "identity_sha256": "08dd528f6fc9e67c574ec766ea15ab7be80bdaa7a615625244122db533c2772d"
+  },
+
+  "source_file_shas": {
+    "scripts/r2_schema.py": "c20cd3a5adf976ddce2296ded11e21d1b2d9c972cd94c205404e5d6b410a3b0e",
+    "scripts/r2_decoder_qualification.py": "46f49153c9d3085ec223949e00ca585df80227dfb4534b38bb174085ce05ace0",
+    "scripts/r2_backend_identity.py": "e2e5c3732e40298da2fc8703327e870a2099dbc7b49ed021dc8c84c61df41d63",
+    "scripts/r2_allowed_actions.py": "482e9f6a9ab6d8c00c2f9d9e50ce5ab1e440e679f39da08dea554b3b3f50cd16",
+    "hrm_adaptive_memory/executive/model_backend.py": "a9f1c8888b702c458300096006760dc43c26a17e81a8067fa0509e1c6e6ed988",
+    "hrm_adaptive_memory/executive/model_decoder.py": "b7d76db76ae841e4fe4eb7abc7976dc146e25b42037fe2b1927299ec7e382ec1"
+  },
+
+  "test_results_summary": {
+    "Q1": {"name": "c0_schema_identity", "passed": true, "detail": "r2_sha=2208076c... frozen_sha=2208076c..."},
+    "Q1b": {"name": "three_way_schema_tieout", "passed": true, "detail": "all_match=True"},
+    "Q2": {"name": "verify_absent_at_t2", "passed": true, "detail": "VERIFY absent from D and DE enums at T2"},
+    "Q3a": {"name": "local_backend_schema_identity", "passed": true, "detail": "sha=2208076c..."},
+    "Q3b": {"name": "direct_backend_schema_identity", "passed": true, "detail": "sha=2208076c..., matches_local=True"},
+    "Q4": {"name": "strict_rejects_markdown", "passed": true, "detail": "rejection_code=STRICT_MODE_NOT_PURE_JSON"},
+    "Q5": {"name": "strict_accepts_pure_json", "passed": true, "detail": "action=SEARCH_MORE"},
+    "Q5b": {"name": "strict_rejects_unknown_action", "passed": true, "detail": "rejection_code=UNKNOWN_ACTION"},
+    "Q6": {"name": "adversarial_grammar_enforcement", "passed": true, "detail": "model prompted to VERIFY, grammar forced RETRIEVE. verify_in_raw=False, decoder_valid=True"},
+    "Q7": {"name": "receipt_completeness", "passed": true, "detail": "10 fields present, schema_sha matches R13"},
+    "Q8": {"name": "no_placeholders", "passed": true, "detail": "identity_sha=08dd528f..."},
+    "Q9": {"name": "gguf_sha_recompute", "passed": true, "detail": "sha_match=True, size_match=True"},
+    "Q10": {"name": "schema_builder_sha_recompute", "passed": true, "detail": "sha=c20cd3a5..."},
+    "Q11": {"name": "runtime_version_match", "passed": true, "detail": "runtime=llama-cpp-python 0.3.35"}
+  },
+
+  "frozen_r13_schema_sha256": "2208076c081272b5354fd38b02f6943f79f0e8a695638bc25625a52fb49bacca",
+  "model_lineage_note": "Qwen2.5-7B is a new backend development line, NOT a continuation of the R13 Gemma lineage. Within-model contrasts (D vs C0, E vs C0) are valid. Absolute utilities must NOT be compared directly to R13 Gemma.",
+
+  "immutability": "This bundle is frozen after qualification. Do not alter during R2-DEV-V2."
+}
