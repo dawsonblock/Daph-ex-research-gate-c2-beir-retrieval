@@ -1,24 +1,24 @@
 {
-  "false_gate_rate": 1.0,
+  "false_gate_rate": 0.0,
   "false_gate_rate_estimable": true,
-  "fn": 0,
-  "fp": 70,
-  "missed_gate_rate": 0.0,
+  "fn": 90,
+  "fp": 0,
+  "missed_gate_rate": 1.0,
   "missed_gate_rate_estimable": true,
   "per_arm": {
     "D": {
-      "fn": 0,
-      "fp": 35,
-      "tn": 0,
-      "tp": 30
+      "fn": 45,
+      "fp": 0,
+      "tn": 35,
+      "tp": 0
     },
     "DE": {
-      "fn": 0,
-      "fp": 35,
-      "tn": 0,
-      "tp": 30
+      "fn": 45,
+      "fp": 0,
+      "tn": 35,
+      "tp": 0
     }
   },
-  "tn": 0,
-  "tp": 60
+  "tn": 70,
+  "tp": 0
 }

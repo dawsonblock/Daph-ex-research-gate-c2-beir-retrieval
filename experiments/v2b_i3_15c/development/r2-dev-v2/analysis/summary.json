@@ -1,47 +1,70 @@
 {
   "dxe_interaction": {
-    "I_DxE": -0.06615384615384556,
-    "U_C0": 11.099538461538458,
-    "U_D": 11.13261538461538,
-    "U_DE": 12.927230769230768,
+    "I_DxE": {
+      "ci_lower": -0.1885,
+      "ci_upper": 0.054,
+      "excludes_zero": false,
+      "mean": -0.0537,
+      "n": 80
+    },
+    "U_C0": 21.8527,
+    "U_D": 21.8796,
+    "U_DE": 23.4457,
     "U_DE_equals_U_D": false,
     "U_DE_equals_U_E": false,
-    "U_E": 12.96030769230769,
-    "interpretation": "Negative interaction: D worsens E's harm"
+    "U_E": 23.4726,
+    "interpretation": "Negative interaction: D worsens E's harm",
+    "n_paired": 80
   },
   "gate_assessment": {
-    "false_gate_rate": 1.0,
+    "false_gate_rate": 0.0,
     "false_gate_rate_estimable": true,
-    "fn": 0,
-    "fp": 70,
-    "missed_gate_rate": 0.0,
+    "fn": 90,
+    "fp": 0,
+    "missed_gate_rate": 1.0,
     "missed_gate_rate_estimable": true,
     "per_arm": {
       "D": {
-        "fn": 0,
-        "fp": 35,
-        "tn": 0,
-        "tp": 30
+        "fn": 45,
+        "fp": 0,
+        "tn": 35,
+        "tp": 0
       },
       "DE": {
-        "fn": 0,
-        "fp": 35,
-        "tn": 0,
-        "tp": 30
+        "fn": 45,
+        "fp": 0,
+        "tn": 35,
+        "tp": 0
       }
     },
-    "tn": 0,
-    "tp": 60
+    "tn": 70,
+    "tp": 0
   },
-  "integrity_ok": false,
+  "integrity_ok": true,
   "invariants_hold": true,
   "steps_completed": 11,
   "utility_contrasts": {
-    "U_DE_minus_U_D": 1.794615384615387,
-    "U_DE_minus_U_E": -0.03307692307692278,
-    "delta_D": 0.03307692307692278,
-    "delta_DE": 1.8276923076923097,
-    "delta_E": 1.8607692307692325
+    "delta_D": {
+      "ci_lower": 0.0,
+      "ci_upper": 0.0806,
+      "excludes_zero": false,
+      "mean": 0.0269,
+      "n": 80
+    },
+    "delta_DE": {
+      "ci_lower": 1.134,
+      "ci_upper": 2.052,
+      "excludes_zero": true,
+      "mean": 1.593,
+      "n": 80
+    },
+    "delta_E": {
+      "ci_lower": 1.1609,
+      "ci_upper": 2.079,
+      "excludes_zero": true,
+      "mean": 1.6199,
+      "n": 80
+    }
   },
   "verify_usefulness": {
     "rate": 1.0,

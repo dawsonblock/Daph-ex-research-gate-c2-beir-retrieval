@@ -1,28 +1,37 @@
 #!/usr/bin/env python3
 """
-R2-DEV-V2 Immutable Analysis Pipeline.
+R2-DEV-V2 Analysis Pipeline (corrective revision 1).
 
 11-step analysis, run in order. Each step reads from the previous
-step's output and writes to a separate file. The pipeline is immutable:
-once R2-DEV-V2 trajectories are collected, this analysis runs
-deterministically and does not modify the trajectories.
+step's output and writes to a separate file.
+
+Revision history:
+  - Original: committed with the initial R2-DEV-V2 run. Had two bugs:
+    Step 10 used binary success instead of realized_utility; Step 6
+    compared state across adjacent calls incorrectly.
+  - Corrective rev 1 (this version): Fixes Step 3 to use
+    verify_removed_by_epistemic_gate; fixes Step 5 likewise; splits
+    Step 6 into pre-T2 and at-T2 VERIFY usefulness; adds paired
+    bootstrap CIs to Steps 10 and 11. Classified as a post-run
+    corrective analysis revision, not preregistered.
 
 Steps:
  1. Integrity/provenance
  2. Qualification invariants
- 3. Gold vs inferred gate confusion matrix
+ 3. Gold vs inferred gate confusion matrix (uses verify_removed_by_epistemic_gate)
  4. T2 frequency by arm/task
- 5. Replacement-action distribution
- 6. VERIFY usefulness in C0/E
+ 5. Replacement-action distribution (uses verify_removed_by_epistemic_gate)
+ 6. VERIFY usefulness in C0/E (split: pre-T2 vs at-T2)
  7. Loop migration
  8. Terminal-action distribution
  9. Success/rescue/break
-10. Utility contrasts
-11. D×E interaction
+10. Utility contrasts (with paired bootstrap 95% CIs)
+11. D×E interaction (with paired bootstrap 95% CI)
 
 Usage:
     PYTHONPATH=scripts:. python3 scripts/r2_dev_v2_analysis.py \
-        --trajectories /path/to/trajectories.jsonl \
+        --trajectories /path/to/results.jsonl \
+        --receipts /path/to/mechanism_receipts.jsonl \
         --dataset /path/to/balanced_dataset.jsonl \
         --output /path/to/analysis/
 """
@@ -30,6 +39,7 @@ Usage:
 from __future__ import annotations
 
 import json
+import random
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -49,6 +59,50 @@ def save_json(path: Path, data: Any):
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w") as f:
         json.dump(data, f, indent=2, sort_keys=True, default=str)
+
+
+def paired_bootstrap_ci(
+    diffs: list[float],
+    n_bootstrap: int = 10000,
+    confidence: float = 0.95,
+    seed: int = 42,
+) -> dict:
+    """Compute a paired bootstrap confidence interval.
+
+    Args:
+        diffs: list of per-task paired differences d_i = U(treated_i) - U(control_i)
+        n_bootstrap: number of bootstrap resamples
+        confidence: confidence level (0.95 = 95% CI)
+        seed: random seed for reproducibility
+
+    Returns:
+        dict with mean, ci_lower, ci_upper, n, excludes_zero
+    """
+    if not diffs:
+        return {"mean": None, "ci_lower": None, "ci_upper": None, "n": 0, "excludes_zero": None}
+
+    rng = random.Random(seed)
+    n = len(diffs)
+    boot_means = []
+    for _ in range(n_bootstrap):
+        sample = [diffs[rng.randrange(n)] for _ in range(n)]
+        boot_means.append(sum(sample) / n)
+
+    boot_means.sort()
+    alpha = (1 - confidence) / 2
+    lower_idx = int(alpha * n_bootstrap)
+    upper_idx = int((1 - alpha) * n_bootstrap)
+    lower = boot_means[lower_idx]
+    upper = boot_means[upper_idx]
+    mean = sum(diffs) / n
+
+    return {
+        "mean": round(mean, 4),
+        "ci_lower": round(lower, 4),
+        "ci_upper": round(upper, 4),
+        "n": n,
+        "excludes_zero": (lower > 0) or (upper < 0),
+    }
 
 
 def step1_integrity_provenance(
@@ -159,10 +213,13 @@ def step3_gate_confusion_matrix(
         task = task_lookup.get(task_id, {})
         gold_should_gate = task.get("gold_should_gate_verify", False)
 
-        # Check if gate fired: was VERIFY ever gated in this trajectory?
+        # Check if gate fired: R2d removed VERIFY via epistemic gate.
+        # Use verify_removed_by_epistemic_gate (the exact field designed
+        # for this), NOT "VERIFY not in allowed_actions" — VERIFY can be
+        # absent for ordinary runtime reasons (no valid target, budget
+        # exhausted, etc.) that have nothing to do with R2d.
         gate_fired = any(
-            call.get("schema_gate_violation") or
-            (call.get("allowed_actions") and "VERIFY" not in call.get("allowed_actions", []))
+            call.get("verify_removed_by_epistemic_gate", False)
             for call in traj.get("model_calls", [])
         )
 
@@ -258,11 +315,13 @@ def step5_replacement_action_distribution(
         task = task_lookup.get(task_id, {})
         gold_t2 = task.get("gold_t2", False)
 
-        # Find the first action chosen when VERIFY was gated (at T2)
+        # Find the first action chosen when VERIFY was removed by the
+        # epistemic gate (R2d), NOT merely absent from allowed_actions.
+        # Use verify_removed_by_epistemic_gate to distinguish R2d removal
+        # from ordinary illegality (no valid target, budget exhausted, etc.)
         calls = traj.get("model_calls", [])
         for call in calls:
-            allowed = call.get("allowed_actions", [])
-            if allowed and "VERIFY" not in allowed and call.get("selected_action"):
+            if call.get("verify_removed_by_epistemic_gate", False) and call.get("selected_action"):
                 action = call["selected_action"]
                 if gold_t2:
                     replacements[arm][action] += 1
@@ -280,12 +339,19 @@ def step6_verify_usefulness(
     dataset: list[dict],
     output: Path,
 ) -> dict:
-    """Step 6: VERIFY usefulness in C0/E.
+    """Step 6: VERIFY usefulness in C0/E, split by T2 phase.
 
     For each VERIFY in C0/E:
         UsefulVerify = Δdecision_state OR Δlive/eliminated OR ΔT2
+
+    Split into:
+        UsefulVerify_preT2  = P(useful | VERIFY, T2_before=false)
+        UsefulVerify_atT2   = P(useful | VERIFY, T2_before=true)
+
+    The at-T2 metric is the one directly relevant to R2d, since R2d
+    only removes VERIFY when T2=true. Pre-T2 VERIFY is untouched by D.
     """
-    print("Step 6: VERIFY usefulness in C0/E")
+    print("Step 6: VERIFY usefulness in C0/E (split by T2 phase)")
 
     task_lookup = {t["task_id"]: t for t in dataset}
     verify_events: list[dict] = []
@@ -301,12 +367,12 @@ def step6_verify_usefulness(
 
         for i, call in enumerate(calls):
             if call.get("selected_action") == "VERIFY":
+                # T2 phase is determined by the state when VERIFY was chosen
+                t2_before = call.get("t2", False)
+
                 # Check if state changed after this VERIFY.
-                # calls[i] is the state when VERIFY was chosen.
-                # calls[i+1] is the state after VERIFY was executed.
                 state_before = call.get("decision_state_exposed")
                 state_after = calls[i + 1].get("decision_state_exposed") if i + 1 < len(calls) else None
-                t2_before = call.get("t2")
                 t2_after = calls[i + 1].get("t2") if i + 1 < len(calls) else None
                 live_before = call.get("n_live_hypotheses")
                 live_after = calls[i + 1].get("n_live_hypotheses") if i + 1 < len(calls) else None
@@ -324,6 +390,8 @@ def step6_verify_usefulness(
                     "task_id": task_id,
                     "arm": arm,
                     "stratum": task.get("stratum"),
+                    "t2_before": t2_before,
+                    "phase": "at_T2" if t2_before else "pre_T2",
                     "useful": useful,
                     "state_changed": state_before != state_after,
                     "live_changed": live_before != live_after,
@@ -335,13 +403,27 @@ def step6_verify_usefulness(
                     "live_after": live_after,
                 })
 
-    useful_count = sum(1 for e in verify_events if e["useful"])
-    total = len(verify_events)
+    # Split by phase
+    pre_t2_events = [e for e in verify_events if not e["t2_before"]]
+    at_t2_events = [e for e in verify_events if e["t2_before"]]
+
+    pre_t2_useful = sum(1 for e in pre_t2_events if e["useful"])
+    at_t2_useful = sum(1 for e in at_t2_events if e["useful"])
 
     result = {
-        "total_verify_events": total,
-        "useful_verify_events": useful_count,
-        "useful_verify_rate": useful_count / total if total > 0 else None,
+        "total_verify_events": len(verify_events),
+        "useful_verify_events": pre_t2_useful + at_t2_useful,
+        "useful_verify_rate": (pre_t2_useful + at_t2_useful) / len(verify_events) if verify_events else None,
+        "pre_T2": {
+            "total": len(pre_t2_events),
+            "useful": pre_t2_useful,
+            "useful_rate": pre_t2_useful / len(pre_t2_events) if pre_t2_events else None,
+        },
+        "at_T2": {
+            "total": len(at_t2_events),
+            "useful": at_t2_useful,
+            "useful_rate": at_t2_useful / len(at_t2_events) if at_t2_events else None,
+        },
         "events": verify_events,
     }
     save_json(output / "06_verify_usefulness.json", result)
@@ -462,48 +544,68 @@ def step10_utility_contrasts(
     dataset: list[dict],
     output: Path,
 ) -> dict:
-    """Step 10: Utility contrasts (D vs C0, E vs C0, DE vs C0)."""
-    print("Step 10: Utility contrasts")
+    """Step 10: Utility contrasts with paired bootstrap CIs.
 
-    task_lookup = {t["task_id"]: t for t in dataset}
+    Computes task-paired differences:
+        d_i = U(treated_i) - U(C0_i)
+    and bootstrap 95% CIs over those paired differences.
+    """
+    print("Step 10: Utility contrasts (paired bootstrap CIs)")
 
-    # Compute utility per arm
+    # Build per-task, per-arm utility lookup
+    task_arm_utility: dict[str, dict[str, float]] = defaultdict(dict)
     arm_utilities: dict[str, list[float]] = defaultdict(list)
 
     for traj in trajectories:
         arm = traj.get("condition", traj.get("arm", "?"))
         task_id = traj.get("task_id")
-        task = task_lookup.get(task_id, {})
-        expected = task.get("expected_terminal")
-        terminal = traj.get("terminal_action") or traj.get("final_action")
-        # Use realized_utility from the trajectory if available
         if "realized_utility" in traj:
             utility = float(traj["realized_utility"])
         else:
+            # Fallback for older format
+            task_lookup = {t["task_id"]: t for t in dataset}
+            task = task_lookup.get(task_id, {})
+            expected = task.get("expected_terminal")
+            terminal = traj.get("terminal_action") or traj.get("final_action")
             utility = 1.0 if (terminal == expected) else 0.0
+        task_arm_utility[task_id][arm] = utility
         arm_utilities[arm].append(utility)
 
-    # Compute mean utility per arm
+    # Mean utility per arm
     mean_utility = {}
     for arm, utils in arm_utilities.items():
         mean_utility[arm] = sum(utils) / len(utils) if utils else 0.0
 
-    # Contrasts
-    c0_util = mean_utility.get("C0", 0.0)
-    d_util = mean_utility.get("D", 0.0)
-    e_util = mean_utility.get("E", 0.0)
-    de_util = mean_utility.get("DE", 0.0)
+    # Paired differences (only tasks that have both arms)
+    def paired_diffs(treated_arm: str, control_arm: str = "C0") -> list[float]:
+        diffs = []
+        for task_id, arms in task_arm_utility.items():
+            if treated_arm in arms and control_arm in arms:
+                diffs.append(arms[treated_arm] - arms[control_arm])
+        return diffs
+
+    d_diffs = paired_diffs("D")
+    e_diffs = paired_diffs("E")
+    de_diffs = paired_diffs("DE")
+
+    # Bootstrap CIs
+    d_ci = paired_bootstrap_ci(d_diffs)
+    e_ci = paired_bootstrap_ci(e_diffs)
+    de_ci = paired_bootstrap_ci(de_diffs)
 
     result = {
         "mean_utility": mean_utility,
         "contrasts": {
-            "delta_D": d_util - c0_util,
-            "delta_E": e_util - c0_util,
-            "delta_DE": de_util - c0_util,
-            "U_DE_minus_U_E": de_util - e_util,
-            "U_DE_minus_U_D": de_util - d_util,
+            "delta_D": d_ci,
+            "delta_E": e_ci,
+            "delta_DE": de_ci,
         },
         "n_per_arm": {arm: len(utils) for arm, utils in arm_utilities.items()},
+        "n_paired": {
+            "D": len(d_diffs),
+            "E": len(e_diffs),
+            "DE": len(de_diffs),
+        },
     }
     save_json(output / "10_utility_contrasts.json", result)
     return result
@@ -514,40 +616,58 @@ def step11_dxe_interaction(
     dataset: list[dict],
     output: Path,
 ) -> dict:
-    """Step 11: D×E interaction."""
-    print("Step 11: D×E interaction")
+    """Step 11: D×E interaction with paired bootstrap CI.
 
-    task_lookup = {t["task_id"]: t for t in dataset}
-    arm_utilities: dict[str, list[float]] = defaultdict(list)
+    I_{D×E} = (U_DE - U_E) - (U_D - U_C0) = U_DE - U_E - U_D + U_C0
+
+    Computes per-task interaction terms and bootstrap 95% CI.
+    """
+    print("Step 11: D×E interaction (paired bootstrap CI)")
+
+    # Build per-task, per-arm utility lookup
+    task_arm_utility: dict[str, dict[str, float]] = defaultdict(dict)
 
     for traj in trajectories:
         arm = traj.get("condition", traj.get("arm", "?"))
         task_id = traj.get("task_id")
-        task = task_lookup.get(task_id, {})
-        expected = task.get("expected_terminal")
-        terminal = traj.get("terminal_action") or traj.get("final_action")
-        # Use realized_utility from the trajectory if available
         if "realized_utility" in traj:
             utility = float(traj["realized_utility"])
         else:
+            task_lookup = {t["task_id"]: t for t in dataset}
+            task = task_lookup.get(task_id, {})
+            expected = task.get("expected_terminal")
+            terminal = traj.get("terminal_action") or traj.get("final_action")
             utility = 1.0 if (terminal == expected) else 0.0
-        arm_utilities[arm].append(utility)
+        task_arm_utility[task_id][arm] = utility
+
+    # Per-task interaction: i_k = U_DE_k - U_E_k - U_D_k + U_C0_k
+    interaction_diffs = []
+    for task_id, arms in task_arm_utility.items():
+        if all(a in arms for a in ("C0", "D", "E", "DE")):
+            i_k = arms["DE"] - arms["E"] - arms["D"] + arms["C0"]
+            interaction_diffs.append(i_k)
+
+    # Mean utilities
+    arm_utilities: dict[str, list[float]] = defaultdict(list)
+    for task_id, arms in task_arm_utility.items():
+        for arm, util in arms.items():
+            arm_utilities[arm].append(util)
 
     c0 = sum(arm_utilities.get("C0", [0])) / max(len(arm_utilities.get("C0", [1])), 1)
     d = sum(arm_utilities.get("D", [0])) / max(len(arm_utilities.get("D", [1])), 1)
     e = sum(arm_utilities.get("E", [0])) / max(len(arm_utilities.get("E", [1])), 1)
     de = sum(arm_utilities.get("DE", [0])) / max(len(arm_utilities.get("DE", [1])), 1)
 
-    # I_{D×E} = (U_DE - U_E) - (U_D - U_C0)
-    #        = U_DE - U_E - U_D + U_C0
     interaction = de - e - d + c0
+    interaction_ci = paired_bootstrap_ci(interaction_diffs)
 
     result = {
-        "U_C0": c0,
-        "U_D": d,
-        "U_E": e,
-        "U_DE": de,
-        "I_DxE": interaction,
+        "U_C0": round(c0, 4),
+        "U_D": round(d, 4),
+        "U_E": round(e, 4),
+        "U_DE": round(de, 4),
+        "I_DxE": interaction_ci,
+        "n_paired": len(interaction_diffs),
         "interpretation": (
             "Positive interaction: D mitigates E's harm (or floor effect)" if interaction > 0
             else "Negative interaction: D worsens E's harm" if interaction < 0
@@ -602,7 +722,7 @@ def run_full_analysis(
     print(f"  Integrity OK: {summary['integrity_ok']}")
     print(f"  Invariants hold: {summary['invariants_hold']}")
     print(f"  Utility contrasts: {summary['utility_contrasts']}")
-    print(f"  D×E interaction: {summary['dxe_interaction']['I_DxE']:.4f}")
+    print(f"  D×E interaction: {summary['dxe_interaction']['I_DxE']}")
     print(f"  VERIFY usefulness: {summary['verify_usefulness']}")
 
     return results

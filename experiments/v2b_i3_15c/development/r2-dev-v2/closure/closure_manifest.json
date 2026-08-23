@@ -1,0 +1,14 @@
+{
+  "backend_identity_sha256": "08dd528f6fc9e67c574ec766ea15ab7be80bdaa7a615625244122db533c2772d",
+  "closure_completed": 60,
+  "closure_failed": 0,
+  "closure_trajectories": 60,
+  "closure_type": "budget_variant_rerun",
+  "dataset_sha256": "1f6a5cb38011282722b3fb22b835d40e7199fa9a61983c8dfccbb437ef033e43",
+  "fix": "Construct ResourceState with retrieval_calls_used/search_calls_used pre-set",
+  "original_completed": 260,
+  "reason": "ResourceState.consume_retrieval/consume_search API mismatch",
+  "run_end_timestamp": "2026-08-23T22:19:56Z",
+  "run_start_timestamp": "2026-08-23T22:17:02Z",
+  "total_time_seconds": 173.97690892219543
+}

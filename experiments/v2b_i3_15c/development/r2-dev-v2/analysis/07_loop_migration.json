@@ -2,31 +2,31 @@
   "per_arm": {
     "C0": {
       "avg_reason_count": 0.0,
-      "avg_retrieve_count": 0.3384615384615385,
-      "avg_search_count": 1.0461538461538462,
-      "avg_steps": 3.0,
-      "avg_verify_count": 0.6153846153846154
+      "avg_retrieve_count": 0.275,
+      "avg_search_count": 0.975,
+      "avg_steps": 2.75,
+      "avg_verify_count": 0.5
     },
     "D": {
       "avg_reason_count": 0.0,
-      "avg_retrieve_count": 0.3230769230769231,
-      "avg_search_count": 1.0461538461538462,
-      "avg_steps": 2.9846153846153847,
-      "avg_verify_count": 0.6153846153846154
+      "avg_retrieve_count": 0.2625,
+      "avg_search_count": 0.975,
+      "avg_steps": 2.7375,
+      "avg_verify_count": 0.5
     },
     "DE": {
       "avg_reason_count": 0.0,
-      "avg_retrieve_count": 0.3384615384615385,
-      "avg_search_count": 0.2,
-      "avg_steps": 2.1538461538461537,
-      "avg_verify_count": 0.6153846153846154
+      "avg_retrieve_count": 0.275,
+      "avg_search_count": 0.2375,
+      "avg_steps": 2.0125,
+      "avg_verify_count": 0.5
     },
     "E": {
       "avg_reason_count": 0.0,
-      "avg_retrieve_count": 0.3230769230769231,
-      "avg_search_count": 0.2,
-      "avg_steps": 2.1384615384615384,
-      "avg_verify_count": 0.6153846153846154
+      "avg_retrieve_count": 0.2625,
+      "avg_search_count": 0.2375,
+      "avg_steps": 2.0,
+      "avg_verify_count": 0.5
     }
   }
 }

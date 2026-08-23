@@ -554,17 +554,20 @@ def run_trajectory(
         REPO_ROOT / "configs" / "v2b_i3_1_utility_v1.json"
     )
     executor = EvidenceExecutor()
-    resources = ResourceState(budget)
-    runtime = initial_evidence_runtime(et, resources)
 
-    # Apply budget overrides for synthesized variants
-    if task_record["retrieval_budget_case"] == "exhausted":
-        # Exhaust retrieval budget
-        for _ in range(budget.max_retrieval_calls):
-            resources.consume_retrieval()
-    if task_record["search_budget_case"] == "exhausted":
-        for _ in range(budget.max_search_calls):
-            resources.consume_search()
+    # Apply budget overrides for synthesized variants.
+    # ResourceState is frozen, so construct it with the appropriate
+    # *_used fields already set to the maximum, simulating prior
+    # consumption that exhausted that resource.
+    retrieval_used = budget.max_retrieval_calls if task_record["retrieval_budget_case"] == "exhausted" else 0
+    search_used = budget.max_search_calls if task_record["search_budget_case"] == "exhausted" else 0
+
+    resources = ResourceState(
+        budget,
+        retrieval_calls_used=retrieval_used,
+        search_calls_used=search_used,
+    )
+    runtime = initial_evidence_runtime(et, resources)
 
     realized = 0.0
     model_calls = 0

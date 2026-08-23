@@ -1,10 +1,17 @@
 {
-  "I_DxE": -0.06615384615384556,
-  "U_C0": 11.099538461538458,
-  "U_D": 11.13261538461538,
-  "U_DE": 12.927230769230768,
+  "I_DxE": {
+    "ci_lower": -0.1885,
+    "ci_upper": 0.054,
+    "excludes_zero": false,
+    "mean": -0.0537,
+    "n": 80
+  },
+  "U_C0": 21.8527,
+  "U_D": 21.8796,
+  "U_DE": 23.4457,
   "U_DE_equals_U_D": false,
   "U_DE_equals_U_E": false,
-  "U_E": 12.96030769230769,
-  "interpretation": "Negative interaction: D worsens E's harm"
+  "U_E": 23.4726,
+  "interpretation": "Negative interaction: D worsens E's harm",
+  "n_paired": 80
 }
