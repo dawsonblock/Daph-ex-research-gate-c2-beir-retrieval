@@ -784,6 +784,12 @@ def main():
             if k.endswith("_sha") and not k.endswith("_at_source_commit")
         },
         "n_t2_triggered": len(all_audits),
+        "total_valid_verify_targets_tested": sum(
+            a["counterfactual"]["n_valid_targets"] for a in all_audits
+        ),
+        "total_epistemically_useful_targets": sum(
+            a["counterfactual"]["n_epistemically_useful_targets"] for a in all_audits
+        ),
         "t2_state_classification": dict(t2_class_counts),
         "affordance_patterns": dict(affordance_patterns),
         "decision_state_semantics": dict(decision_state_semantics),
@@ -792,10 +798,13 @@ def main():
             "n_monotonic": mono_count,
             "n_violations": len(monotonicity_results) - mono_count,
             "exhaustive": True,
-            "theorem": (
+            "invariant": (
                 "For all s in S_T2, for all v in ValidVerify(s): "
                 "Eliminated(s) subseteq Eliminated(T(s,v)). "
-                "This is empirically exhaustive for the frozen R13 benchmark."
+                "This is an empirically exhaustive invariant over the 228 audited "
+                "R13 T2 states. It is not a mathematical theorem over all possible "
+                "DAPH states. A formal lemma from transition semantics is documented "
+                "in R13-F1-2-REPORT.md."
             ),
             "violations": mono_violations,
         },

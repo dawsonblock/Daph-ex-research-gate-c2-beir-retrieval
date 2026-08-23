@@ -17,6 +17,8 @@
     "i3_15_r1_sha": "bb37f54bfbd8c617a4984704b4ca30a721db5a6e8fa7bffa12996e90e1ed5b67"
   },
   "n_t2_triggered": 228,
+  "total_valid_verify_targets_tested": 2964,
+  "total_epistemically_useful_targets": 0,
   "t2_state_classification": {
     "T2_VERIFY_DEAD_END": 228
   },
@@ -31,7 +33,7 @@
     "n_monotonic": 228,
     "n_violations": 0,
     "exhaustive": true,
-    "theorem": "For all s in S_T2, for all v in ValidVerify(s): Eliminated(s) subseteq Eliminated(T(s,v)). This is empirically exhaustive for the frozen R13 benchmark.",
+    "invariant": "For all s in S_T2, for all v in ValidVerify(s): Eliminated(s) subseteq Eliminated(T(s,v)). This is an empirically exhaustive invariant over the 228 audited R13 T2 states. It is not a mathematical theorem over all possible DAPH states. A formal lemma from transition semantics is documented in R13-F1-2-REPORT.md.",
     "violations": []
   },
   "useful_target_definition": "Epistemically useful = changes to decision_state, live_hypotheses, eliminated_hypotheses, or T2 status ONLY. Changes to verification_state, resource_state, evidence metadata (verified_count, supporting_count, etc.), or prior_actions/outcomes are NOT counted as epistemically useful.",

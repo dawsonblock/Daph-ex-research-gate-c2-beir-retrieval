@@ -133,20 +133,20 @@
 
 **Precise definition**: A VERIFY target is "epistemically useful" if and only if simulating it changes any of: decision_state, live_hypotheses, eliminated_hypotheses, or T2 status. Changes to verification_state, resource_state, evidence metadata, or prior_actions are NOT counted.
 
-**Finding**: Across all counterfactually simulated valid VERIFY targets, none changed the MDSG decision state, live/eliminated hypothesis sets, or T2 status.
+**Finding**: Across all 2964 counterfactually simulated valid VERIFY targets (228 states × 13 targets each), none changed the MDSG decision state, live/eliminated hypothesis sets, or T2 status.
 
 ### Elimination monotonicity (exhaustive)
 
 | Check | Result |
 |-------|--------|
 | T2 states checked | 228/228 (exhaustive) |
-| Valid targets tested per state | All (mean 13) |
+| Total valid VERIFY targets tested | 2964 |
 | Monotonic | 228/228 |
 | Violations | 0 |
 
-**Empirically exhaustive theorem**: For all s ∈ S_T2, for all v ∈ ValidVerify(s): Eliminated(s) ⊆ Eliminated(T(s,v)).
+**Empirically exhaustive invariant**: For all s ∈ S_T2, for all v ∈ ValidVerify(s): Eliminated(s) ⊆ Eliminated(T(s,v)).
 
-MDSG elimination is monotonic: once a hypothesis has SUFFICIENT contradicting evidence, no subsequent VERIFY can remove that contradiction. This is a structural property of the MDSG, confirmed exhaustively.
+This is an empirically exhaustive invariant over the 228 audited R13 T2 states, not a mathematical theorem over all possible DAPH states. The property follows from the executor's transition semantics (formal lemma in R13-F1-2-REPORT.md): VERIFY only changes the target item's state, not other items' states, so the contradiction responsible for elimination persists.
 
 ### Decision-state semantics
 
@@ -228,6 +228,20 @@ R2d and R2e address layers 1 and 2 independently. The 2×2 factorial separates t
 
 **Renamed** from "decision-relevant affordance gating" — the rule is structural, not predictive.
 
+**Hard epistemic admissibility gate** (not soft affordance hint):
+
+```
+Legal(a, s)              = budget_remaining(a) AND valid_target_exists(a, s)
+EpistemicallyAdmissible(a, s) = Legal(a, s) AND NOT EpistemicDeadEnd(s)
+Allowed(a, s)            = Legal(a, s) AND EpistemicallyAdmissible(a, s)
+```
+
+For VERIFY: `EpistemicallyAdmissible(VERIFY, s) = NOT T2(s)`
+
+Equivalently: `T2 = true ⟹ VERIFY ∉ Allowed(s)`
+
+VERIFY is removed from the admissible action set and cannot be executed. The LLM still owns policy selection — the controller restricts the action space, not the policy. Prefer enforcing before generation via allowed-action schema/enum to avoid: model chooses VERIFY → executor rejects → model chooses VERIFY again → new loop.
+
 **Rule** (runtime-visible, non-leaky):
 
 ```python
@@ -238,13 +252,7 @@ can_verify = (
 )
 ```
 
-where `all_hypotheses_eliminated = (n_hypotheses > 0 and len(eliminated_hypotheses) == n_hypotheses)`.
-
-Equivalently: `T2 = true ⟹ can_verify = false`
-
-This does NOT require counterfactual simulation, hidden verification outcomes, or oracle access. It requires ONLY the current visible hypothesis sets, verification budget, and valid target set — all already computed.
-
-The F1.2a exhaustive counterfactual audit (228/228) validates this rule post-hoc. No runtime simulation is needed.
+This does NOT require counterfactual simulation, hidden verification outcomes, or oracle access. The F1.2a exhaustive counterfactual audit (228/228, 2964 targets) validates this rule post-hoc.
 
 **Critical**: R2d must NOT be implemented as `can_verify = any(simulate_verify(t).changes_state for t in targets)`. That would recreate the future-information contamination that invalidated M2.
 
@@ -254,12 +262,15 @@ R2e is **NOT a prerequisite** for R2d. The two are orthogonal causal questions:
 - R2d: Does changing the affordance help? (gate vs no-gate)
 - R2e: Does changing the semantic label help? (NEEDS_DISCRIMINATION vs corrected)
 
-R2d can key directly from T2/all-eliminated state regardless of what label is displayed. This separation allows independent measurement of each effect.
+R2d can key directly from T2/all-eliminated state regardless of what label is displayed.
 
-Candidate corrected labels (semantics to be defined before naming):
-- `CONFLICT_EXHAUSTED` — all hypotheses eliminated by contradiction
-- `INSUFFICIENT` — no hypothesis can be resolved
-- `NEEDS_NEW_EVIDENCE` — only RETRIEVE/SEARCH could help
+**Corrected label**: `NO_VIABLE_HYPOTHESIS`
+
+```
+NO_VIABLE_HYPOTHESIS ⟺ |H| > 0 AND ∀h ∈ H, status(h) = ELIMINATED
+```
+
+Descriptive, non-prescriptive, narrow (all-eliminated case only), maps directly onto T2. Preserves NEEDS_DISCRIMINATION for its proper use: |H_viable| ≥ 2.
 
 ### R2c — Transient M3 (SECOND STAGE)
 
@@ -273,33 +284,39 @@ If the M3 packet is removed but VERIFY is still available and structurally usele
 
 **Core 2×2 factorial** (gate × semantics):
 
-| Arm | State label | VERIFY gate |
-|-----|-------------|-------------|
-| R1/current | NEEDS_DISCRIMINATION | current |
-| R2d | NEEDS_DISCRIMINATION | structural dead-end gate |
-| R2e | corrected label | current |
-| R2de | corrected label | structural dead-end gate |
+| Arm | State label | VERIFY admissibility |
+|-----|-------------|----------------------|
+| C0 | NEEDS_DISCRIMINATION | current |
+| D | NEEDS_DISCRIMINATION | R2d structural hard gate |
+| E | NO_VIABLE_HYPOTHESIS | current |
+| DE | NO_VIABLE_HYPOTHESIS | R2d structural hard gate |
+
+Everything else identical: same backend, prompt, retrieval, extractor, MDSG, T2, budgets, utility, model parameters, representation routing. No transient M3 yet.
 
 Contrasts:
 
 ```
-Effect_gate       = U(R2d)  - U(R1)
-Effect_semantics  = U(R2e)  - U(R1)
-Interaction       = [U(R2de) - U(R2e)] - [U(R2d) - U(R1)]
+Δ_D       = U(D)  - U(C0)
+Δ_E       = U(E)  - U(C0)
+I_{D×E}   = [U(DE) - U(E)] - [U(D) - U(C0)]
 ```
 
-**Second stage** (representation factor):
+**Second stage** (representation factor, only after choosing best):
 
 | Arm | Representation |
 |-----|---------------|
-| R2de | persistent M3 / current routing |
+| best(C0,D,E,DE) | persistent M3 / current routing |
 | R2cde | transient M3 |
 
-```
-Effect_transient = U(R2cde) - U(R2de)
-```
+**Development dataset**: new held-out seed (do NOT reuse R13 efficacy trajectories). Include semantic-error cases where false contradictions produce all-eliminated. Add FalseGateRate = P(gate false | gold says VERIFY relevant) as first-class safety gate.
 
-This is cleaner than running six loosely related variants.
+**Instrumentation**: log legal_actions, epistemically_admissible_actions, allowed_actions, can_verify_legal, can_verify_epistemic, t2, decision_state, n_live, n_eliminated, valid_verify_target_count, selected_action, verify_gate_reason.
+
+**Qualification before efficacy**: requalify Gemma with hard action mask (decoder valid=100%, no gated action emitted, no schema failure).
+
+**Primary endpoints**: Δ_D = E[U_D - U_C0]. Mechanistic: P(VERIFY|T2,R2d)=0. Track P(RETRIEVE), P(SEARCH), P(DEFER), P(ANSWER), P(REASON_MORE).
+
+**Failure modes**: VERIFY loop → RETRIEVE/SEARCH loop, premature DEFER, unsupported ANSWER. Success requires ΔU > 0 without control harm.
 
 ---
 
@@ -307,9 +324,9 @@ This is cleaner than running six loosely related variants.
 
 R13-F1.2a is observational and counterfactual, not interventional. It cannot confirm:
 
-1. **That R2d will improve outcomes.** Removing VERIFY from the affordance set might cause the model to choose RETRIEVE, SEARCH, or DEFER — but those might also fail. The model might retrieve more evidence that also leads to elimination, or it might DEFER when ANSWER was possible.
+1. **That R2d will improve outcomes.** Removing VERIFY from the admissible action set might cause the model to choose RETRIEVE, SEARCH, or DEFER — but those might also fail. Possible failure modes: VERIFY loop → RETRIEVE loop, VERIFY loop → SEARCH loop, VERIFY loop → premature DEFER, VERIFY loop → unsupported ANSWER. Success requires ΔU > 0 without control harm, not just "VERIFY disappears."
 
-2. **That the state-semantics fix alone will help.** Changing the label from NEEDS_DISCRIMINATION to INSUFFICIENT might cause the model to DEFER, which might be correct or might be premature.
+2. **That the state-semantics fix alone will help.** Changing the label from NEEDS_DISCRIMINATION to NO_VIABLE_HYPOTHESIS might cause the model to DEFER, which might be correct or might be premature.
 
 3. **That the problem is not in the benchmark design.** The benchmark may be structured so that T2 always fires in a state where no action can help. If so, the correct response is DEFER, and the failure is that neither A1 nor R1 chooses DEFER.
 
@@ -333,19 +350,33 @@ The F1.2a audit proves that no such simulation is needed. The structural rule `T
 
 > **A valid action is not necessarily an epistemically admissible action.**
 
-DAPH currently computes legal VERIFY from budget + target validity:
+DAPH currently has:
 
 ```
-Legal(a, s) = budget_remaining(a) AND valid_target_exists(a, s)
+ExecutableAction(s)
 ```
 
-F1.2a suggests it needs a second layer:
+The evidence supports adding:
 
 ```
+EpistemicallyAdmissibleAction(s)
+```
+
+So the action pipeline becomes:
+
+```
+ActionVocabulary → Legal → EpistemicallyAdmissible → LLM_Policy → Executor
+```
+
+Where:
+
+```
+Legal(a, s)              = budget_remaining(a) AND valid_target_exists(a, s)
 EpistemicallyAdmissible(a, s) = Legal(a, s) AND NOT EpistemicDeadEnd(s)
+Allowed(a, s)            = Legal(a, s) AND EpistemicallyAdmissible(a, s)
 ```
 
-The controller should expose an action only when it is both executable AND capable, under the public structural semantics, of advancing the epistemic state.
+The controller should expose an action only when it is both executable AND capable, under the public structural semantics, of advancing the epistemic state. The LLM still owns policy selection — the controller restricts the action space, not the policy.
 
 This distinction could become more important than R1 itself. R1 changed the representation but not the affordance logic. R2d changes the affordance logic itself — the set of actions the model is permitted to consider.
 
@@ -353,15 +384,15 @@ This distinction could become more important than R1 itself. R1 changed the repr
 
 ## 14. What R13-F1.2a Proves
 
-1. **VERIFY is structurally useless at T2.** In 228/228 T2 states, 0 valid VERIFY targets can change any epistemically decision-relevant state (decision_state, live/eliminated hypothesis sets, T2 status). Proven by counterfactual simulation.
+1. **VERIFY is structurally useless at T2.** In 228/228 T2 states, 0/2964 valid VERIFY targets can change any epistemically decision-relevant state. Proven by counterfactual simulation.
 
-2. **Elimination is monotonic (exhaustive).** For all 228 T2 states and all valid targets: Eliminated(s) ⊆ Eliminated(T(s,v)). No VERIFY can un-eliminate a hypothesis.
+2. **Elimination is monotonic (empirically exhaustive invariant + formal lemma).** For all 228 T2 states and all 2964 valid targets: Eliminated(s) ⊆ Eliminated(T(s,v)). The property follows from the executor's transition semantics.
 
-3. **VERIFY is not the only available action.** RETRIEVE and SEARCH are also available at T2. The model actively chooses VERIFY, not because it's forced, but because NEEDS_DISCRIMINATION tells it to "discriminate."
+3. **VERIFY is not the only available action.** RETRIEVE and SEARCH are also available at T2. The model actively chooses VERIFY.
 
-4. **NEEDS_DISCRIMINATION is semantically wrong at T2.** When all hypotheses are eliminated, there is nothing to discriminate between. The counterfactual proves the unverified evidence cannot support any hypothesis.
+4. **NEEDS_DISCRIMINATION is semantically wrong at T2.** Corrected label: NO_VIABLE_HYPOTHESIS.
 
-5. **The structural gating rule is sufficient.** `T2=true ⟹ can_verify=false` is validated by exhaustive counterfactual audit. No runtime simulation is needed.
+5. **The structural gating rule is sufficient.** `T2=true ⟹ VERIFY ∉ Allowed(s)` is validated by exhaustive counterfactual audit. No runtime simulation is needed.
 
 ---
 
@@ -392,12 +423,13 @@ This distinction could become more important than R1 itself. R1 changed the repr
 | **F1.2a: T2_VERIFY_RESOLVABLE** | **0/228 (0%)** |
 | **F1.2a: T2_NO_VERIFY** | **0/228 (0%)** |
 | **F1.2a: Affordances at T2** | **VERIFY + RETRIEVE + SEARCH (all 228)** |
-| **F1.2a: Mean valid VERIFY targets per T2** | **13** |
-| **F1.2a: Epistemically useful targets** | **0/228×13 = 0** |
-| **F1.2a: Elimination monotonicity** | **228/228 (exhaustive)** |
+| **F1.2a: Total valid VERIFY targets tested** | **2964** |
+| **F1.2a: Epistemically useful targets** | **0/2964 = 0** |
+| **F1.2a: Elimination monotonicity** | **228/228 (empirically exhaustive invariant + formal lemma)** |
 | **F1.2a: Decision state at T2** | **NEEDS_DISCRIMINATION (228/228, semantically wrong)** |
-| **F1.2a: R2d rule** | **T2=true ⟹ can_verify=false (structural, non-leaky)** |
-| **F1.2a: R2e** | **Orthogonal to R2d (not a prerequisite)** |
-| **F1.2a: Core experiment** | **2×2 factorial: gate × semantics** |
+| **F1.2a: R2d** | **Hard epistemic admissibility gate: T2=true ⟹ VERIFY ∉ Allowed(s)** |
+| **F1.2a: R2e** | **NO_VIABLE_HYPOTHESIS label (orthogonal to R2d)** |
+| **F1.2a: Core experiment** | **2×2 factorial: C0, D, E, DE (gate × semantics)** |
+| **F1.2a: Safety metric** | **FalseGateRate** |
 | Primary failure mode | Structurally useless VERIFY when all hypotheses eliminated |
 | Architectural lesson | Legal(a,s) ≠ EpistemicallyAdmissible(a,s) |
