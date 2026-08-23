@@ -21,6 +21,7 @@ from r2_allowed_actions import (
     R2Arm,
     C0, D, E, DE,
     ALL_ARMS,
+    EmptyAllowedActionSet,
     compute_legal_actions,
     compute_epistemically_admissible_actions,
     compute_allowed_actions,
@@ -30,6 +31,8 @@ from r2_schema import (
     build_action_schema,
     schema_sha256,
     c0_schema_identity_check,
+    three_way_schema_tieout,
+    FROZEN_R13_ACTION_SCHEMA_SHA256,
     verify_schema_invariant,
 )
 
@@ -84,6 +87,18 @@ class TestLegalActions:
         legal = compute_legal_actions(state)
         assert legal == ALWAYS_LEGAL | {"SEARCH_MORE"}
 
+    def test_step_exhaustion_fail_closed(self):
+        """No executive steps remaining → empty legal set (fail closed)."""
+        state = make_state(steps_remaining=0)
+        legal = compute_legal_actions(state)
+        assert legal == frozenset()
+
+    def test_step_exhaustion_negative(self):
+        """Negative steps remaining → also empty."""
+        state = make_state(steps_remaining=-1)
+        legal = compute_legal_actions(state)
+        assert legal == frozenset()
+
 
 # ---------------------------------------------------------------------------
 # Epistemically admissible actions
@@ -93,50 +108,50 @@ class TestEpistemicallyAdmissible:
     def test_c0_no_gate(self):
         """C0 never gates VERIFY."""
         state = make_state(t2=True)
-        epistemic, gate_applied, reason = compute_epistemically_admissible_actions(state, C0)
+        epistemic, condition_active, reason = compute_epistemically_admissible_actions(state, C0)
         assert epistemic == ACTION_VOCABULARY
-        assert gate_applied is False
+        assert condition_active is False
         assert reason is None
 
     def test_e_no_gate(self):
         """E does not gate VERIFY (only label change)."""
         state = make_state(t2=True)
-        epistemic, gate_applied, reason = compute_epistemically_admissible_actions(state, E)
+        epistemic, condition_active, reason = compute_epistemically_admissible_actions(state, E)
         assert epistemic == ACTION_VOCABULARY
-        assert gate_applied is False
+        assert condition_active is False
         assert reason is None
 
     def test_d_gate_at_t2(self):
         """D gates VERIFY at T2."""
         state = make_state(t2=True)
-        epistemic, gate_applied, reason = compute_epistemically_admissible_actions(state, D)
+        epistemic, condition_active, reason = compute_epistemically_admissible_actions(state, D)
         assert "VERIFY" not in epistemic
         assert epistemic == ACTION_VOCABULARY - {"VERIFY"}
-        assert gate_applied is True
+        assert condition_active is True
         assert reason == "ALL_HYPOTHESES_ELIMINATED"
 
     def test_de_gate_at_t2(self):
         """DE gates VERIFY at T2."""
         state = make_state(t2=True)
-        epistemic, gate_applied, reason = compute_epistemically_admissible_actions(state, DE)
+        epistemic, condition_active, reason = compute_epistemically_admissible_actions(state, DE)
         assert "VERIFY" not in epistemic
-        assert gate_applied is True
+        assert condition_active is True
         assert reason == "ALL_HYPOTHESES_ELIMINATED"
 
     def test_d_no_gate_when_not_t2(self):
         """D does not gate VERIFY when T2 is false."""
         state = make_state(t2=False)
-        epistemic, gate_applied, reason = compute_epistemically_admissible_actions(state, D)
+        epistemic, condition_active, reason = compute_epistemically_admissible_actions(state, D)
         assert epistemic == ACTION_VOCABULARY
-        assert gate_applied is False
+        assert condition_active is False
         assert reason is None
 
     def test_de_no_gate_when_not_t2(self):
         """DE does not gate VERIFY when T2 is false."""
         state = make_state(t2=False)
-        epistemic, gate_applied, reason = compute_epistemically_admissible_actions(state, DE)
+        epistemic, condition_active, reason = compute_epistemically_admissible_actions(state, DE)
         assert epistemic == ACTION_VOCABULARY
-        assert gate_applied is False
+        assert condition_active is False
         assert reason is None
 
     def test_epistemic_independent_of_legal(self):
@@ -158,21 +173,22 @@ class TestAllowedActions:
         state = make_state(t2=False)
         decision = compute_allowed_actions(state, C0)
         assert decision.allowed == ACTION_VOCABULARY
-        assert decision.verify_gate_applied is False
+        assert decision.verify_gate_condition_active is False
 
     def test_c0_t2_all_available(self):
         """C0 at T2 still has all actions (no gate)."""
         state = make_state(t2=True)
         decision = compute_allowed_actions(state, C0)
         assert decision.allowed == ACTION_VOCABULARY
-        assert decision.verify_gate_applied is False
+        assert decision.verify_gate_condition_active is False
 
     def test_d_t2_verify_removed(self):
         """D at T2 removes VERIFY from allowed."""
         state = make_state(t2=True)
         decision = compute_allowed_actions(state, D)
         assert "VERIFY" not in decision.allowed
-        assert decision.verify_gate_applied is True
+        assert decision.verify_gate_condition_active is True
+        assert decision.verify_removed_by_epistemic_gate is True
         assert decision.verify_gate_reason == "ALL_HYPOTHESES_ELIMINATED"
 
     def test_d_not_t2_verify_present(self):
@@ -180,21 +196,22 @@ class TestAllowedActions:
         state = make_state(t2=False)
         decision = compute_allowed_actions(state, D)
         assert "VERIFY" in decision.allowed
-        assert decision.verify_gate_applied is False
+        assert decision.verify_gate_condition_active is False
+        assert decision.verify_removed_by_epistemic_gate is False
 
     def test_de_t2_verify_removed(self):
         """DE at T2 removes VERIFY from allowed."""
         state = make_state(t2=True)
         decision = compute_allowed_actions(state, DE)
         assert "VERIFY" not in decision.allowed
-        assert decision.verify_gate_applied is True
+        assert decision.verify_gate_condition_active is True
 
     def test_e_t2_verify_present(self):
         """E at T2 keeps VERIFY (only label change)."""
         state = make_state(t2=True)
         decision = compute_allowed_actions(state, E)
         assert "VERIFY" in decision.allowed
-        assert decision.verify_gate_applied is False
+        assert decision.verify_gate_condition_active is False
 
     def test_allowed_is_intersection(self):
         """Allowed = Legal ∩ EpistemicallyAdmissible."""
@@ -235,6 +252,60 @@ class TestAllowedActions:
         c0_decision = compute_allowed_actions(state, C0)
         d_decision = compute_allowed_actions(state, D)
         assert allowed_actions_sha256(c0_decision.allowed) != allowed_actions_sha256(d_decision.allowed)
+
+    def test_step_exhaustion_raises_empty(self):
+        """Step exhaustion → EmptyAllowedActionSet."""
+        state = make_state(steps_remaining=0, t2=True)
+        for arm in ALL_ARMS:
+            with pytest.raises(EmptyAllowedActionSet):
+                compute_allowed_actions(state, arm)
+
+
+class TestGateConditionVsRemoval:
+    """Distinguish gate condition activation from actual VERIFY removal."""
+
+    def test_condition_active_but_verify_already_illegal(self):
+        """Gate condition fires at T2, but VERIFY was already illegal (budget=0).
+        condition_active=True, removed_by_epistemic_gate=False.
+        """
+        state = make_state(t2=True, can_verify=False)
+        decision = compute_allowed_actions(state, D)
+        assert decision.verify_gate_condition_active is True
+        assert decision.verify_removed_by_epistemic_gate is False
+        assert "VERIFY" not in decision.legal  # already illegal
+        assert "VERIFY" not in decision.allowed
+
+    def test_condition_active_and_verify_legal(self):
+        """Gate condition fires at T2, VERIFY was legal → actually removed.
+        condition_active=True, removed_by_epistemic_gate=True.
+        """
+        state = make_state(t2=True, can_verify=True)
+        decision = compute_allowed_actions(state, D)
+        assert decision.verify_gate_condition_active is True
+        assert decision.verify_removed_by_epistemic_gate is True
+        assert "VERIFY" in decision.legal  # was legal
+        assert "VERIFY" not in decision.allowed  # but not allowed
+
+    def test_condition_inactive_no_removal(self):
+        """No T2 → condition inactive, no removal."""
+        state = make_state(t2=False, can_verify=True)
+        decision = compute_allowed_actions(state, D)
+        assert decision.verify_gate_condition_active is False
+        assert decision.verify_removed_by_epistemic_gate is False
+
+    def test_c0_never_has_condition_active(self):
+        """C0 never activates the gate condition."""
+        state = make_state(t2=True, can_verify=True)
+        decision = compute_allowed_actions(state, C0)
+        assert decision.verify_gate_condition_active is False
+        assert decision.verify_removed_by_epistemic_gate is False
+
+    def test_e_never_has_condition_active(self):
+        """E never activates the gate condition."""
+        state = make_state(t2=True, can_verify=True)
+        decision = compute_allowed_actions(state, E)
+        assert decision.verify_gate_condition_active is False
+        assert decision.verify_removed_by_epistemic_gate is False
 
 
 # ---------------------------------------------------------------------------
@@ -300,16 +371,32 @@ class TestExhaustive:
 # ---------------------------------------------------------------------------
 
 class TestC0SchemaIdentity:
-    def test_c0_schema_equals_r13(self):
-        """Schema_R2(Allowed=ACTION_VOCABULARY) == Schema_R13."""
-        passed, r2_sha, r13_sha = c0_schema_identity_check()
-        assert passed, f"C0 schema mismatch: {r2_sha} != {r13_sha}"
+    def test_c0_schema_equals_frozen_r13(self):
+        """Schema_R2(Allowed=ACTION_VOCABULARY) == FROZEN_R13_ACTION_SCHEMA_SHA256."""
+        passed, r2_sha, frozen_sha = c0_schema_identity_check()
+        assert passed, f"C0 schema mismatch: {r2_sha} != {frozen_sha}"
 
     def test_c0_schema_sha_stable(self):
         """C0 schema SHA is stable across calls."""
         _, sha1, _ = c0_schema_identity_check()
         _, sha2, _ = c0_schema_identity_check()
         assert sha1 == sha2
+
+    def test_three_way_tieout(self):
+        """Three-way schema tie-out: R2, local R13, frozen R13 all match."""
+        result = three_way_schema_tieout()
+        assert result["all_match"], (
+            f"Three-way tie-out failed: "
+            f"r2={result['r2_full_vocab_sha']} "
+            f"local={result['local_r13_static_sha']} "
+            f"frozen={result['frozen_r13_sha']}"
+        )
+
+    def test_frozen_sha_matches_known_value(self):
+        """Frozen R13 SHA is the expected value."""
+        assert FROZEN_R13_ACTION_SCHEMA_SHA256 == (
+            "2208076c081272b5354fd38b02f6943f79f0e8a695638bc25625a52fb49bacca"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -338,7 +425,7 @@ class TestArmIsolation:
             d0 = compute_allowed_actions(state, C0)
             d1 = compute_allowed_actions(state, E)
             assert d0.allowed == d1.allowed
-            assert d0.verify_gate_applied == d1.verify_gate_applied
+            assert d0.verify_gate_condition_active == d1.verify_gate_condition_active
 
     def test_de_equals_d_at_t2(self):
         """DE and D have the same allowed actions (both gate at T2)."""
@@ -346,7 +433,7 @@ class TestArmIsolation:
         d_dec = compute_allowed_actions(state, D)
         de_dec = compute_allowed_actions(state, DE)
         assert d_dec.allowed == de_dec.allowed
-        assert d_dec.verify_gate_applied == de_dec.verify_gate_applied
+        assert d_dec.verify_gate_condition_active == de_dec.verify_gate_condition_active
 
     def test_de_equals_e_when_not_t2(self):
         """DE and E have the same allowed actions when T2 is false."""

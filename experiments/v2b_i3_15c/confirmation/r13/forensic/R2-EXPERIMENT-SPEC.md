@@ -358,6 +358,39 @@ FalseGateRate = #(gate=1 ∧ gold_should_gate=0) / #(gold_should_gate=0)
 MissedGateRate = #(gate=0 ∧ gold_should_gate=1) / #(gold_should_gate=1)
 ```
 
+### 6.4 FalseGate decomposition
+
+FalseGateRate = 0 cannot be guaranteed if R2d keys off inferred T2 and the semantic extractor can make false contradictions. That is expected. So decompose:
+
+```
+FalseGate = FalseGate_semantic + FalseGate_MDSG/T2 + FalseGate_R2d
+```
+
+Where:
+- `FalseGate_semantic`: gate fired due to upstream semantic error (false contradiction → false T2 → gate fires)
+- `FalseGate_MDSG/T2`: gate fired due to MDSG/T2 computation error
+- `FalseGate_R2d`: gate fired due to R2d logic error (no semantic error, but gate still fired wrongly)
+
+For qualification, report separately:
+
+| Gate | Criterion |
+|------|-----------|
+| Q6a R2d logic FalseGate | 0 (structural logic must be perfect) |
+| Q6b end-to-end FalseGate under semantic inference | measured (may be nonzero due to semantic errors) |
+
+If end-to-end FalseGateRate=0 is required as a hard gate, the semantic-error strata may make the system impossible to qualify even though the R2d implementation is perfectly correct. That could be scientifically useful, but it should be intentional.
+
+The confusion matrix:
+
+```
+              GoldGate    GoldNoGate
+InferredGate     TP          FP
+InferredNoGate   FN          TN
+
+FalseGateRate = FP / (FP + TN)
+MissedGateRate = FN / (FN + TP)
+```
+
 ---
 
 ## 7. Instrumentation

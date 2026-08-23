@@ -93,7 +93,9 @@ def verify_schema_invariant(schema: dict, allowed_actions: frozenset[str]) -> No
     )
 
 
-# The R13 static schema for comparison (from model_backend.py)
+# The R13 static schema for comparison (from model_backend.py).
+# Kept for reference and three-way tie-out, but the authoritative check
+# uses FROZEN_R13_ACTION_SCHEMA_SHA256 below.
 R13_STATIC_SCHEMA = {
     "type": "object",
     "properties": {
@@ -114,18 +116,61 @@ R13_STATIC_SCHEMA = {
     "additionalProperties": False,
 }
 
+# Authoritative frozen R13 schema SHA.
+# This is the canonical SHA of the action schema used by the R13 confirmation
+# run (computed from model_backend.py's static schema with sort_keys=True and
+# separators=(",",":")). It is frozen here as an independent constant so that
+# accidental modification of both R13_STATIC_SCHEMA and build_action_schema()
+# together would still be caught.
+FROZEN_R13_ACTION_SCHEMA_SHA256 = (
+    "2208076c081272b5354fd38b02f6943f79f0e8a695638bc25625a52fb49bacca"
+)
+
 
 def r13_static_schema_sha256() -> str:
-    """SHA256 of the R13 static schema (canonical serialization)."""
+    """SHA256 of the R13 static schema (canonical serialization).
+
+    This computes from the local R13_STATIC_SCHEMA copy. For the authoritative
+    check, use FROZEN_R13_ACTION_SCHEMA_SHA256 instead.
+    """
     return schema_sha256(R13_STATIC_SCHEMA)
 
 
 def c0_schema_identity_check() -> tuple[bool, str, str]:
-    """Verify that Schema_R2(Allowed=ACTION_VOCABULARY) == Schema_R13.
+    """Verify that Schema_R2(Allowed=ACTION_VOCABULARY) matches the frozen R13 SHA.
 
-    Returns (passed, r2_sha, r13_sha).
+    This checks against the independently frozen constant, NOT against a
+    local copy of the R13 schema. This prevents accidental co-modification.
+
+    Returns (passed, actual_r2_sha, frozen_r13_sha).
     """
     r2_schema = build_action_schema(ACTION_VOCABULARY)
     r2_sha = schema_sha256(r2_schema)
-    r13_sha = r13_static_schema_sha256()
-    return (r2_sha == r13_sha, r2_sha, r13_sha)
+    return (r2_sha == FROZEN_R13_ACTION_SCHEMA_SHA256, r2_sha, FROZEN_R13_ACTION_SCHEMA_SHA256)
+
+
+def three_way_schema_tieout() -> dict:
+    """Three-way schema identity tie-out.
+
+    Verifies:
+    1. R2 full-vocab schema SHA == frozen R13 expected SHA
+    2. Local R13 static schema SHA == frozen R13 expected SHA
+
+    Both must pass. If only one passes, there's a drift in one of the
+    schema definitions.
+
+    Returns dict with all three SHAs and pass/fail status.
+    """
+    r2_schema = build_action_schema(ACTION_VOCABULARY)
+    r2_sha = schema_sha256(r2_schema)
+    local_r13_sha = r13_static_schema_sha256()
+    frozen_sha = FROZEN_R13_ACTION_SCHEMA_SHA256
+
+    return {
+        "r2_full_vocab_sha": r2_sha,
+        "local_r13_static_sha": local_r13_sha,
+        "frozen_r13_sha": frozen_sha,
+        "r2_matches_frozen": r2_sha == frozen_sha,
+        "local_matches_frozen": local_r13_sha == frozen_sha,
+        "all_match": r2_sha == frozen_sha and local_r13_sha == frozen_sha,
+    }
