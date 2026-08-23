@@ -231,12 +231,14 @@ R2d and R2e address layers 1 and 2 independently. The 2×2 factorial separates t
 **Hard epistemic admissibility gate** (not soft affordance hint):
 
 ```
-Legal(a, s)              = budget_remaining(a) AND valid_target_exists(a, s)
-EpistemicallyAdmissible(a, s) = Legal(a, s) AND NOT EpistemicDeadEnd(s)
-Allowed(a, s)            = Legal(a, s) AND EpistemicallyAdmissible(a, s)
+Legal(a, s)                  = executable under budgets, targets, and runtime
+EpistemicallyAdmissible(a, s) = allowed by public epistemic structure
+Allowed(a, s)                = Legal(a, s) ∩ EpistemicallyAdmissible(a, s)
 ```
 
-For VERIFY: `EpistemicallyAdmissible(VERIFY, s) = NOT T2(s)`
+Note: `EpistemicallyAdmissible` is defined independently of `Legal` (not as `Legal AND ...`), otherwise legality would be applied twice.
+
+For VERIFY: `EpistemicallyAdmissible(VERIFY, s) = ¬T2(s)`
 
 Equivalently: `T2 = true ⟹ VERIFY ∉ Allowed(s)`
 
@@ -371,10 +373,12 @@ ActionVocabulary → Legal → EpistemicallyAdmissible → LLM_Policy → Execut
 Where:
 
 ```
-Legal(a, s)              = budget_remaining(a) AND valid_target_exists(a, s)
-EpistemicallyAdmissible(a, s) = Legal(a, s) AND NOT EpistemicDeadEnd(s)
-Allowed(a, s)            = Legal(a, s) AND EpistemicallyAdmissible(a, s)
+Legal(a, s)                  = executable under budgets, targets, and runtime
+EpistemicallyAdmissible(a, s) = allowed by public epistemic structure
+Allowed(a, s)                = Legal(a, s) ∩ EpistemicallyAdmissible(a, s)
 ```
+
+`EpistemicallyAdmissible` is defined independently of `Legal` (not as `Legal AND ...`), otherwise legality would be applied twice. The intersection `Allowed = Legal ∩ EpistemicallyAdmissible` combines them.
 
 The controller should expose an action only when it is both executable AND capable, under the public structural semantics, of advancing the epistemic state. The LLM still owns policy selection — the controller restricts the action space, not the policy.
 
