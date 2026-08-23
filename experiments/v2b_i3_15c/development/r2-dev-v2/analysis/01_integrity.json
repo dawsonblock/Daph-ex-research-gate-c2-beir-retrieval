@@ -1,0 +1,17 @@
+{
+  "arms": [
+    "C0",
+    "D",
+    "DE",
+    "E"
+  ],
+  "decoder_errors": 0,
+  "expected_trajectories": 320,
+  "n_tasks": 80,
+  "n_trajectories": 260,
+  "no_decoder_errors": true,
+  "task_ids_in_dataset": 80,
+  "task_ids_in_trajectories": 65,
+  "task_ids_match": false,
+  "trajectory_count_matches": false
+}

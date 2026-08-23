@@ -209,7 +209,7 @@ def step4_t2_frequency(
 
     task_lookup = {t["task_id"]: t for t in dataset}
     per_arm: dict[str, dict] = defaultdict(lambda: {
-        "gold_t2_count": 0, "inferred_t2_count": 0, "total": 0,
+        "gold_t2_count": 0, "t2_count": 0, "total": 0,
     })
 
     for traj in trajectories:
@@ -219,16 +219,16 @@ def step4_t2_frequency(
         gold_t2 = task.get("gold_t2", False)
 
         # Count inferred T2 occurrences during the trajectory
-        inferred_t2_count = sum(
+        t2_count = sum(
             1 for call in traj.get("model_calls", [])
-            if call.get("inferred_t2", False)
+            if call.get("t2", False)
         )
 
         per_arm[arm]["total"] += 1
         if gold_t2:
             per_arm[arm]["gold_t2_count"] += 1
-        if inferred_t2_count > 0:
-            per_arm[arm]["inferred_t2_count"] += 1
+        if t2_count > 0:
+            per_arm[arm]["t2_count"] += 1
 
     result = {"per_arm": dict(per_arm)}
     save_json(output / "04_t2_frequency.json", result)
@@ -262,8 +262,8 @@ def step5_replacement_action_distribution(
         calls = traj.get("model_calls", [])
         for call in calls:
             allowed = call.get("allowed_actions", [])
-            if allowed and "VERIFY" not in allowed and call.get("decoded_action"):
-                action = call["decoded_action"]
+            if allowed and "VERIFY" not in allowed and call.get("selected_action"):
+                action = call["selected_action"]
                 if gold_t2:
                     replacements[arm][action] += 1
                 break  # first replacement only
@@ -300,20 +300,24 @@ def step6_verify_usefulness(
         calls = traj.get("model_calls", [])
 
         for i, call in enumerate(calls):
-            if call.get("decoded_action") == "VERIFY":
-                # Check if state changed after this VERIFY
-                # Compare state before and after
-                state_before = calls[i - 1].get("decision_state") if i > 0 else None
-                state_after = calls[i + 1].get("decision_state") if i + 1 < len(calls) else None
-                t2_before = calls[i - 1].get("inferred_t2") if i > 0 else None
-                t2_after = calls[i + 1].get("inferred_t2") if i + 1 < len(calls) else None
-                live_before = calls[i - 1].get("n_live_hypotheses") if i > 0 else None
+            if call.get("selected_action") == "VERIFY":
+                # Check if state changed after this VERIFY.
+                # calls[i] is the state when VERIFY was chosen.
+                # calls[i+1] is the state after VERIFY was executed.
+                state_before = call.get("decision_state_exposed")
+                state_after = calls[i + 1].get("decision_state_exposed") if i + 1 < len(calls) else None
+                t2_before = call.get("t2")
+                t2_after = calls[i + 1].get("t2") if i + 1 < len(calls) else None
+                live_before = call.get("n_live_hypotheses")
                 live_after = calls[i + 1].get("n_live_hypotheses") if i + 1 < len(calls) else None
+                elim_before = call.get("n_eliminated_hypotheses")
+                elim_after = calls[i + 1].get("n_eliminated_hypotheses") if i + 1 < len(calls) else None
 
                 useful = (
                     (state_before != state_after)
                     or (live_before != live_after)
                     or (t2_before != t2_after)
+                    or (elim_before != elim_after)
                 )
 
                 verify_events.append({
@@ -324,6 +328,11 @@ def step6_verify_usefulness(
                     "state_changed": state_before != state_after,
                     "live_changed": live_before != live_after,
                     "t2_changed": t2_before != t2_after,
+                    "elim_changed": elim_before != elim_after,
+                    "state_before": state_before,
+                    "state_after": state_after,
+                    "live_before": live_before,
+                    "live_after": live_after,
                 })
 
     useful_count = sum(1 for e in verify_events if e["useful"])
@@ -361,7 +370,7 @@ def step7_loop_migration(
     for traj in trajectories:
         arm = traj.get("condition", traj.get("arm", "?"))
         calls = traj.get("model_calls", [])
-        actions = [c.get("decoded_action") for c in calls if c.get("decoded_action")]
+        actions = [c.get("selected_action") for c in calls if c.get("selected_action")]
 
         arm_counts[arm].append({
             "n_steps": len(calls),
@@ -467,7 +476,11 @@ def step10_utility_contrasts(
         task = task_lookup.get(task_id, {})
         expected = task.get("expected_terminal")
         terminal = traj.get("terminal_action") or traj.get("final_action")
-        utility = 1.0 if (terminal == expected) else 0.0
+        # Use realized_utility from the trajectory if available
+        if "realized_utility" in traj:
+            utility = float(traj["realized_utility"])
+        else:
+            utility = 1.0 if (terminal == expected) else 0.0
         arm_utilities[arm].append(utility)
 
     # Compute mean utility per arm
@@ -513,7 +526,11 @@ def step11_dxe_interaction(
         task = task_lookup.get(task_id, {})
         expected = task.get("expected_terminal")
         terminal = traj.get("terminal_action") or traj.get("final_action")
-        utility = 1.0 if (terminal == expected) else 0.0
+        # Use realized_utility from the trajectory if available
+        if "realized_utility" in traj:
+            utility = float(traj["realized_utility"])
+        else:
+            utility = 1.0 if (terminal == expected) else 0.0
         arm_utilities[arm].append(utility)
 
     c0 = sum(arm_utilities.get("C0", [0])) / max(len(arm_utilities.get("C0", [1])), 1)
@@ -596,15 +613,30 @@ def main():
     parser = argparse.ArgumentParser(
         description="R2-DEV-V2 Immutable Analysis Pipeline")
     parser.add_argument("--trajectories", type=Path, required=True,
-                        help="Path to trajectories JSONL")
+                        help="Path to trajectories JSONL (results.jsonl)")
     parser.add_argument("--dataset", type=Path, required=True,
                         help="Path to balanced dataset JSONL")
+    parser.add_argument("--receipts", type=Path, default=None,
+                        help="Path to mechanism_receipts.jsonl")
     parser.add_argument("--output", type=Path, required=True,
                         help="Output directory for analysis")
     args = parser.parse_args()
 
     trajectories = load_jsonl(args.trajectories)
     dataset = load_jsonl(args.dataset)
+
+    # Load mechanism receipts and join with trajectories
+    receipts_by_key: dict[str, list[dict]] = defaultdict(list)
+    if args.receipts and args.receipts.exists():
+        for receipt in load_jsonl(args.receipts):
+            key = receipt.get("trajectory_key", "")
+            receipts_by_key[key].append(receipt)
+        print(f"Mechanism receipts: {sum(len(v) for v in receipts_by_key.values())}")
+
+    # Attach receipts to trajectories
+    for traj in trajectories:
+        key = traj.get("trajectory_key", "")
+        traj["model_calls"] = receipts_by_key.get(key, [])
 
     print(f"Trajectories: {len(trajectories)}")
     print(f"Dataset tasks: {len(dataset)}")

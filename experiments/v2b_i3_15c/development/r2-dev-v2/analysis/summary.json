@@ -1,0 +1,51 @@
+{
+  "dxe_interaction": {
+    "I_DxE": -0.06615384615384556,
+    "U_C0": 11.099538461538458,
+    "U_D": 11.13261538461538,
+    "U_DE": 12.927230769230768,
+    "U_DE_equals_U_D": false,
+    "U_DE_equals_U_E": false,
+    "U_E": 12.96030769230769,
+    "interpretation": "Negative interaction: D worsens E's harm"
+  },
+  "gate_assessment": {
+    "false_gate_rate": 1.0,
+    "false_gate_rate_estimable": true,
+    "fn": 0,
+    "fp": 70,
+    "missed_gate_rate": 0.0,
+    "missed_gate_rate_estimable": true,
+    "per_arm": {
+      "D": {
+        "fn": 0,
+        "fp": 35,
+        "tn": 0,
+        "tp": 30
+      },
+      "DE": {
+        "fn": 0,
+        "fp": 35,
+        "tn": 0,
+        "tp": 30
+      }
+    },
+    "tn": 0,
+    "tp": 60
+  },
+  "integrity_ok": false,
+  "invariants_hold": true,
+  "steps_completed": 11,
+  "utility_contrasts": {
+    "U_DE_minus_U_D": 1.794615384615387,
+    "U_DE_minus_U_E": -0.03307692307692278,
+    "delta_D": 0.03307692307692278,
+    "delta_DE": 1.8276923076923097,
+    "delta_E": 1.8607692307692325
+  },
+  "verify_usefulness": {
+    "rate": 1.0,
+    "total": 80,
+    "useful": 80
+  }
+}

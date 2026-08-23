@@ -1,0 +1,1928 @@
+{
+  "n_arms": 4,
+  "n_tasks": 80,
+  "schedule": [
+    {
+      "arm": "E",
+      "order": 0,
+      "task_id": "i3_15c_0009",
+      "task_index": 0
+    },
+    {
+      "arm": "D",
+      "order": 1,
+      "task_id": "i3_15c_0009",
+      "task_index": 0
+    },
+    {
+      "arm": "DE",
+      "order": 2,
+      "task_id": "i3_15c_0009",
+      "task_index": 0
+    },
+    {
+      "arm": "C0",
+      "order": 3,
+      "task_id": "i3_15c_0009",
+      "task_index": 0
+    },
+    {
+      "arm": "E",
+      "order": 4,
+      "task_id": "i3_15c_0023",
+      "task_index": 1
+    },
+    {
+      "arm": "C0",
+      "order": 5,
+      "task_id": "i3_15c_0023",
+      "task_index": 1
+    },
+    {
+      "arm": "D",
+      "order": 6,
+      "task_id": "i3_15c_0023",
+      "task_index": 1
+    },
+    {
+      "arm": "DE",
+      "order": 7,
+      "task_id": "i3_15c_0023",
+      "task_index": 1
+    },
+    {
+      "arm": "C0",
+      "order": 8,
+      "task_id": "i3_15c_0052",
+      "task_index": 2
+    },
+    {
+      "arm": "E",
+      "order": 9,
+      "task_id": "i3_15c_0052",
+      "task_index": 2
+    },
+    {
+      "arm": "DE",
+      "order": 10,
+      "task_id": "i3_15c_0052",
+      "task_index": 2
+    },
+    {
+      "arm": "D",
+      "order": 11,
+      "task_id": "i3_15c_0052",
+      "task_index": 2
+    },
+    {
+      "arm": "DE",
+      "order": 12,
+      "task_id": "i3_15c_0041",
+      "task_index": 3
+    },
+    {
+      "arm": "C0",
+      "order": 13,
+      "task_id": "i3_15c_0041",
+      "task_index": 3
+    },
+    {
+      "arm": "D",
+      "order": 14,
+      "task_id": "i3_15c_0041",
+      "task_index": 3
+    },
+    {
+      "arm": "E",
+      "order": 15,
+      "task_id": "i3_15c_0041",
+      "task_index": 3
+    },
+    {
+      "arm": "C0",
+      "order": 16,
+      "task_id": "i3_15c_0024",
+      "task_index": 4
+    },
+    {
+      "arm": "D",
+      "order": 17,
+      "task_id": "i3_15c_0024",
+      "task_index": 4
+    },
+    {
+      "arm": "E",
+      "order": 18,
+      "task_id": "i3_15c_0024",
+      "task_index": 4
+    },
+    {
+      "arm": "DE",
+      "order": 19,
+      "task_id": "i3_15c_0024",
+      "task_index": 4
+    },
+    {
+      "arm": "D",
+      "order": 20,
+      "task_id": "i3_15c_0109",
+      "task_index": 5
+    },
+    {
+      "arm": "DE",
+      "order": 21,
+      "task_id": "i3_15c_0109",
+      "task_index": 5
+    },
+    {
+      "arm": "C0",
+      "order": 22,
+      "task_id": "i3_15c_0109",
+      "task_index": 5
+    },
+    {
+      "arm": "E",
+      "order": 23,
+      "task_id": "i3_15c_0109",
+      "task_index": 5
+    },
+    {
+      "arm": "DE",
+      "order": 24,
+      "task_id": "i3_15c_0142",
+      "task_index": 6
+    },
+    {
+      "arm": "D",
+      "order": 25,
+      "task_id": "i3_15c_0142",
+      "task_index": 6
+    },
+    {
+      "arm": "C0",
+      "order": 26,
+      "task_id": "i3_15c_0142",
+      "task_index": 6
+    },
+    {
+      "arm": "E",
+      "order": 27,
+      "task_id": "i3_15c_0142",
+      "task_index": 6
+    },
+    {
+      "arm": "DE",
+      "order": 28,
+      "task_id": "i3_15c_0124",
+      "task_index": 7
+    },
+    {
+      "arm": "D",
+      "order": 29,
+      "task_id": "i3_15c_0124",
+      "task_index": 7
+    },
+    {
+      "arm": "E",
+      "order": 30,
+      "task_id": "i3_15c_0124",
+      "task_index": 7
+    },
+    {
+      "arm": "C0",
+      "order": 31,
+      "task_id": "i3_15c_0124",
+      "task_index": 7
+    },
+    {
+      "arm": "E",
+      "order": 32,
+      "task_id": "i3_15c_0081",
+      "task_index": 8
+    },
+    {
+      "arm": "C0",
+      "order": 33,
+      "task_id": "i3_15c_0081",
+      "task_index": 8
+    },
+    {
+      "arm": "DE",
+      "order": 34,
+      "task_id": "i3_15c_0081",
+      "task_index": 8
+    },
+    {
+      "arm": "D",
+      "order": 35,
+      "task_id": "i3_15c_0081",
+      "task_index": 8
+    },
+    {
+      "arm": "D",
+      "order": 36,
+      "task_id": "i3_15c_0131",
+      "task_index": 9
+    },
+    {
+      "arm": "DE",
+      "order": 37,
+      "task_id": "i3_15c_0131",
+      "task_index": 9
+    },
+    {
+      "arm": "E",
+      "order": 38,
+      "task_id": "i3_15c_0131",
+      "task_index": 9
+    },
+    {
+      "arm": "C0",
+      "order": 39,
+      "task_id": "i3_15c_0131",
+      "task_index": 9
+    },
+    {
+      "arm": "DE",
+      "order": 40,
+      "task_id": "i3_15c_0225",
+      "task_index": 10
+    },
+    {
+      "arm": "E",
+      "order": 41,
+      "task_id": "i3_15c_0225",
+      "task_index": 10
+    },
+    {
+      "arm": "D",
+      "order": 42,
+      "task_id": "i3_15c_0225",
+      "task_index": 10
+    },
+    {
+      "arm": "C0",
+      "order": 43,
+      "task_id": "i3_15c_0225",
+      "task_index": 10
+    },
+    {
+      "arm": "D",
+      "order": 44,
+      "task_id": "i3_15c_0201",
+      "task_index": 11
+    },
+    {
+      "arm": "DE",
+      "order": 45,
+      "task_id": "i3_15c_0201",
+      "task_index": 11
+    },
+    {
+      "arm": "C0",
+      "order": 46,
+      "task_id": "i3_15c_0201",
+      "task_index": 11
+    },
+    {
+      "arm": "E",
+      "order": 47,
+      "task_id": "i3_15c_0201",
+      "task_index": 11
+    },
+    {
+      "arm": "D",
+      "order": 48,
+      "task_id": "i3_15c_0210",
+      "task_index": 12
+    },
+    {
+      "arm": "C0",
+      "order": 49,
+      "task_id": "i3_15c_0210",
+      "task_index": 12
+    },
+    {
+      "arm": "DE",
+      "order": 50,
+      "task_id": "i3_15c_0210",
+      "task_index": 12
+    },
+    {
+      "arm": "E",
+      "order": 51,
+      "task_id": "i3_15c_0210",
+      "task_index": 12
+    },
+    {
+      "arm": "DE",
+      "order": 52,
+      "task_id": "i3_15c_0227",
+      "task_index": 13
+    },
+    {
+      "arm": "C0",
+      "order": 53,
+      "task_id": "i3_15c_0227",
+      "task_index": 13
+    },
+    {
+      "arm": "D",
+      "order": 54,
+      "task_id": "i3_15c_0227",
+      "task_index": 13
+    },
+    {
+      "arm": "E",
+      "order": 55,
+      "task_id": "i3_15c_0227",
+      "task_index": 13
+    },
+    {
+      "arm": "DE",
+      "order": 56,
+      "task_id": "i3_15c_0220",
+      "task_index": 14
+    },
+    {
+      "arm": "D",
+      "order": 57,
+      "task_id": "i3_15c_0220",
+      "task_index": 14
+    },
+    {
+      "arm": "E",
+      "order": 58,
+      "task_id": "i3_15c_0220",
+      "task_index": 14
+    },
+    {
+      "arm": "C0",
+      "order": 59,
+      "task_id": "i3_15c_0220",
+      "task_index": 14
+    },
+    {
+      "arm": "D",
+      "order": 60,
+      "task_id": "r2_one_live_0008",
+      "task_index": 15
+    },
+    {
+      "arm": "E",
+      "order": 61,
+      "task_id": "r2_one_live_0008",
+      "task_index": 15
+    },
+    {
+      "arm": "C0",
+      "order": 62,
+      "task_id": "r2_one_live_0008",
+      "task_index": 15
+    },
+    {
+      "arm": "DE",
+      "order": 63,
+      "task_id": "r2_one_live_0008",
+      "task_index": 15
+    },
+    {
+      "arm": "E",
+      "order": 64,
+      "task_id": "r2_one_live_0027",
+      "task_index": 16
+    },
+    {
+      "arm": "C0",
+      "order": 65,
+      "task_id": "r2_one_live_0027",
+      "task_index": 16
+    },
+    {
+      "arm": "DE",
+      "order": 66,
+      "task_id": "r2_one_live_0027",
+      "task_index": 16
+    },
+    {
+      "arm": "D",
+      "order": 67,
+      "task_id": "r2_one_live_0027",
+      "task_index": 16
+    },
+    {
+      "arm": "D",
+      "order": 68,
+      "task_id": "r2_one_live_0033",
+      "task_index": 17
+    },
+    {
+      "arm": "C0",
+      "order": 69,
+      "task_id": "r2_one_live_0033",
+      "task_index": 17
+    },
+    {
+      "arm": "DE",
+      "order": 70,
+      "task_id": "r2_one_live_0033",
+      "task_index": 17
+    },
+    {
+      "arm": "E",
+      "order": 71,
+      "task_id": "r2_one_live_0033",
+      "task_index": 17
+    },
+    {
+      "arm": "E",
+      "order": 72,
+      "task_id": "r2_one_live_0021",
+      "task_index": 18
+    },
+    {
+      "arm": "D",
+      "order": 73,
+      "task_id": "r2_one_live_0021",
+      "task_index": 18
+    },
+    {
+      "arm": "C0",
+      "order": 74,
+      "task_id": "r2_one_live_0021",
+      "task_index": 18
+    },
+    {
+      "arm": "DE",
+      "order": 75,
+      "task_id": "r2_one_live_0021",
+      "task_index": 18
+    },
+    {
+      "arm": "DE",
+      "order": 76,
+      "task_id": "r2_one_live_0000",
+      "task_index": 19
+    },
+    {
+      "arm": "D",
+      "order": 77,
+      "task_id": "r2_one_live_0000",
+      "task_index": 19
+    },
+    {
+      "arm": "E",
+      "order": 78,
+      "task_id": "r2_one_live_0000",
+      "task_index": 19
+    },
+    {
+      "arm": "C0",
+      "order": 79,
+      "task_id": "r2_one_live_0000",
+      "task_index": 19
+    },
+    {
+      "arm": "C0",
+      "order": 80,
+      "task_id": "r2_two_live_0039",
+      "task_index": 20
+    },
+    {
+      "arm": "D",
+      "order": 81,
+      "task_id": "r2_two_live_0039",
+      "task_index": 20
+    },
+    {
+      "arm": "DE",
+      "order": 82,
+      "task_id": "r2_two_live_0039",
+      "task_index": 20
+    },
+    {
+      "arm": "E",
+      "order": 83,
+      "task_id": "r2_two_live_0039",
+      "task_index": 20
+    },
+    {
+      "arm": "D",
+      "order": 84,
+      "task_id": "r2_two_live_0001",
+      "task_index": 21
+    },
+    {
+      "arm": "C0",
+      "order": 85,
+      "task_id": "r2_two_live_0001",
+      "task_index": 21
+    },
+    {
+      "arm": "DE",
+      "order": 86,
+      "task_id": "r2_two_live_0001",
+      "task_index": 21
+    },
+    {
+      "arm": "E",
+      "order": 87,
+      "task_id": "r2_two_live_0001",
+      "task_index": 21
+    },
+    {
+      "arm": "DE",
+      "order": 88,
+      "task_id": "r2_two_live_0009",
+      "task_index": 22
+    },
+    {
+      "arm": "E",
+      "order": 89,
+      "task_id": "r2_two_live_0009",
+      "task_index": 22
+    },
+    {
+      "arm": "C0",
+      "order": 90,
+      "task_id": "r2_two_live_0009",
+      "task_index": 22
+    },
+    {
+      "arm": "D",
+      "order": 91,
+      "task_id": "r2_two_live_0009",
+      "task_index": 22
+    },
+    {
+      "arm": "D",
+      "order": 92,
+      "task_id": "r2_two_live_0030",
+      "task_index": 23
+    },
+    {
+      "arm": "DE",
+      "order": 93,
+      "task_id": "r2_two_live_0030",
+      "task_index": 23
+    },
+    {
+      "arm": "E",
+      "order": 94,
+      "task_id": "r2_two_live_0030",
+      "task_index": 23
+    },
+    {
+      "arm": "C0",
+      "order": 95,
+      "task_id": "r2_two_live_0030",
+      "task_index": 23
+    },
+    {
+      "arm": "D",
+      "order": 96,
+      "task_id": "r2_two_live_0023",
+      "task_index": 24
+    },
+    {
+      "arm": "E",
+      "order": 97,
+      "task_id": "r2_two_live_0023",
+      "task_index": 24
+    },
+    {
+      "arm": "DE",
+      "order": 98,
+      "task_id": "r2_two_live_0023",
+      "task_index": 24
+    },
+    {
+      "arm": "C0",
+      "order": 99,
+      "task_id": "r2_two_live_0023",
+      "task_index": 24
+    },
+    {
+      "arm": "E",
+      "order": 100,
+      "task_id": "r2_false_contra_0011",
+      "task_index": 25
+    },
+    {
+      "arm": "D",
+      "order": 101,
+      "task_id": "r2_false_contra_0011",
+      "task_index": 25
+    },
+    {
+      "arm": "C0",
+      "order": 102,
+      "task_id": "r2_false_contra_0011",
+      "task_index": 25
+    },
+    {
+      "arm": "DE",
+      "order": 103,
+      "task_id": "r2_false_contra_0011",
+      "task_index": 25
+    },
+    {
+      "arm": "D",
+      "order": 104,
+      "task_id": "r2_false_contra_0022",
+      "task_index": 26
+    },
+    {
+      "arm": "DE",
+      "order": 105,
+      "task_id": "r2_false_contra_0022",
+      "task_index": 26
+    },
+    {
+      "arm": "C0",
+      "order": 106,
+      "task_id": "r2_false_contra_0022",
+      "task_index": 26
+    },
+    {
+      "arm": "E",
+      "order": 107,
+      "task_id": "r2_false_contra_0022",
+      "task_index": 26
+    },
+    {
+      "arm": "D",
+      "order": 108,
+      "task_id": "r2_false_contra_0015",
+      "task_index": 27
+    },
+    {
+      "arm": "DE",
+      "order": 109,
+      "task_id": "r2_false_contra_0015",
+      "task_index": 27
+    },
+    {
+      "arm": "C0",
+      "order": 110,
+      "task_id": "r2_false_contra_0015",
+      "task_index": 27
+    },
+    {
+      "arm": "E",
+      "order": 111,
+      "task_id": "r2_false_contra_0015",
+      "task_index": 27
+    },
+    {
+      "arm": "DE",
+      "order": 112,
+      "task_id": "r2_false_contra_0031",
+      "task_index": 28
+    },
+    {
+      "arm": "C0",
+      "order": 113,
+      "task_id": "r2_false_contra_0031",
+      "task_index": 28
+    },
+    {
+      "arm": "E",
+      "order": 114,
+      "task_id": "r2_false_contra_0031",
+      "task_index": 28
+    },
+    {
+      "arm": "D",
+      "order": 115,
+      "task_id": "r2_false_contra_0031",
+      "task_index": 28
+    },
+    {
+      "arm": "D",
+      "order": 116,
+      "task_id": "r2_false_contra_0024",
+      "task_index": 29
+    },
+    {
+      "arm": "C0",
+      "order": 117,
+      "task_id": "r2_false_contra_0024",
+      "task_index": 29
+    },
+    {
+      "arm": "DE",
+      "order": 118,
+      "task_id": "r2_false_contra_0024",
+      "task_index": 29
+    },
+    {
+      "arm": "E",
+      "order": 119,
+      "task_id": "r2_false_contra_0024",
+      "task_index": 29
+    },
+    {
+      "arm": "C0",
+      "order": 120,
+      "task_id": "r2_missed_contra_0020",
+      "task_index": 30
+    },
+    {
+      "arm": "E",
+      "order": 121,
+      "task_id": "r2_missed_contra_0020",
+      "task_index": 30
+    },
+    {
+      "arm": "D",
+      "order": 122,
+      "task_id": "r2_missed_contra_0020",
+      "task_index": 30
+    },
+    {
+      "arm": "DE",
+      "order": 123,
+      "task_id": "r2_missed_contra_0020",
+      "task_index": 30
+    },
+    {
+      "arm": "E",
+      "order": 124,
+      "task_id": "r2_missed_contra_0000",
+      "task_index": 31
+    },
+    {
+      "arm": "D",
+      "order": 125,
+      "task_id": "r2_missed_contra_0000",
+      "task_index": 31
+    },
+    {
+      "arm": "C0",
+      "order": 126,
+      "task_id": "r2_missed_contra_0000",
+      "task_index": 31
+    },
+    {
+      "arm": "DE",
+      "order": 127,
+      "task_id": "r2_missed_contra_0000",
+      "task_index": 31
+    },
+    {
+      "arm": "C0",
+      "order": 128,
+      "task_id": "r2_missed_contra_0025",
+      "task_index": 32
+    },
+    {
+      "arm": "D",
+      "order": 129,
+      "task_id": "r2_missed_contra_0025",
+      "task_index": 32
+    },
+    {
+      "arm": "E",
+      "order": 130,
+      "task_id": "r2_missed_contra_0025",
+      "task_index": 32
+    },
+    {
+      "arm": "DE",
+      "order": 131,
+      "task_id": "r2_missed_contra_0025",
+      "task_index": 32
+    },
+    {
+      "arm": "DE",
+      "order": 132,
+      "task_id": "r2_missed_contra_0021",
+      "task_index": 33
+    },
+    {
+      "arm": "E",
+      "order": 133,
+      "task_id": "r2_missed_contra_0021",
+      "task_index": 33
+    },
+    {
+      "arm": "C0",
+      "order": 134,
+      "task_id": "r2_missed_contra_0021",
+      "task_index": 33
+    },
+    {
+      "arm": "D",
+      "order": 135,
+      "task_id": "r2_missed_contra_0021",
+      "task_index": 33
+    },
+    {
+      "arm": "D",
+      "order": 136,
+      "task_id": "r2_missed_contra_0004",
+      "task_index": 34
+    },
+    {
+      "arm": "C0",
+      "order": 137,
+      "task_id": "r2_missed_contra_0004",
+      "task_index": 34
+    },
+    {
+      "arm": "DE",
+      "order": 138,
+      "task_id": "r2_missed_contra_0004",
+      "task_index": 34
+    },
+    {
+      "arm": "E",
+      "order": 139,
+      "task_id": "r2_missed_contra_0004",
+      "task_index": 34
+    },
+    {
+      "arm": "DE",
+      "order": 140,
+      "task_id": "i3_15c_0285",
+      "task_index": 35
+    },
+    {
+      "arm": "E",
+      "order": 141,
+      "task_id": "i3_15c_0285",
+      "task_index": 35
+    },
+    {
+      "arm": "C0",
+      "order": 142,
+      "task_id": "i3_15c_0285",
+      "task_index": 35
+    },
+    {
+      "arm": "D",
+      "order": 143,
+      "task_id": "i3_15c_0285",
+      "task_index": 35
+    },
+    {
+      "arm": "DE",
+      "order": 144,
+      "task_id": "i3_15c_0305",
+      "task_index": 36
+    },
+    {
+      "arm": "E",
+      "order": 145,
+      "task_id": "i3_15c_0305",
+      "task_index": 36
+    },
+    {
+      "arm": "D",
+      "order": 146,
+      "task_id": "i3_15c_0305",
+      "task_index": 36
+    },
+    {
+      "arm": "C0",
+      "order": 147,
+      "task_id": "i3_15c_0305",
+      "task_index": 36
+    },
+    {
+      "arm": "DE",
+      "order": 148,
+      "task_id": "i3_15c_0255",
+      "task_index": 37
+    },
+    {
+      "arm": "C0",
+      "order": 149,
+      "task_id": "i3_15c_0255",
+      "task_index": 37
+    },
+    {
+      "arm": "E",
+      "order": 150,
+      "task_id": "i3_15c_0255",
+      "task_index": 37
+    },
+    {
+      "arm": "D",
+      "order": 151,
+      "task_id": "i3_15c_0255",
+      "task_index": 37
+    },
+    {
+      "arm": "E",
+      "order": 152,
+      "task_id": "i3_15c_0265",
+      "task_index": 38
+    },
+    {
+      "arm": "C0",
+      "order": 153,
+      "task_id": "i3_15c_0265",
+      "task_index": 38
+    },
+    {
+      "arm": "D",
+      "order": 154,
+      "task_id": "i3_15c_0265",
+      "task_index": 38
+    },
+    {
+      "arm": "DE",
+      "order": 155,
+      "task_id": "i3_15c_0265",
+      "task_index": 38
+    },
+    {
+      "arm": "C0",
+      "order": 156,
+      "task_id": "i3_15c_0245",
+      "task_index": 39
+    },
+    {
+      "arm": "E",
+      "order": 157,
+      "task_id": "i3_15c_0245",
+      "task_index": 39
+    },
+    {
+      "arm": "D",
+      "order": 158,
+      "task_id": "i3_15c_0245",
+      "task_index": 39
+    },
+    {
+      "arm": "DE",
+      "order": 159,
+      "task_id": "i3_15c_0245",
+      "task_index": 39
+    },
+    {
+      "arm": "D",
+      "order": 160,
+      "task_id": "i3_15c_0396",
+      "task_index": 40
+    },
+    {
+      "arm": "E",
+      "order": 161,
+      "task_id": "i3_15c_0396",
+      "task_index": 40
+    },
+    {
+      "arm": "DE",
+      "order": 162,
+      "task_id": "i3_15c_0396",
+      "task_index": 40
+    },
+    {
+      "arm": "C0",
+      "order": 163,
+      "task_id": "i3_15c_0396",
+      "task_index": 40
+    },
+    {
+      "arm": "C0",
+      "order": 164,
+      "task_id": "i3_15c_0361",
+      "task_index": 41
+    },
+    {
+      "arm": "D",
+      "order": 165,
+      "task_id": "i3_15c_0361",
+      "task_index": 41
+    },
+    {
+      "arm": "E",
+      "order": 166,
+      "task_id": "i3_15c_0361",
+      "task_index": 41
+    },
+    {
+      "arm": "DE",
+      "order": 167,
+      "task_id": "i3_15c_0361",
+      "task_index": 41
+    },
+    {
+      "arm": "DE",
+      "order": 168,
+      "task_id": "i3_15c_0389",
+      "task_index": 42
+    },
+    {
+      "arm": "E",
+      "order": 169,
+      "task_id": "i3_15c_0389",
+      "task_index": 42
+    },
+    {
+      "arm": "C0",
+      "order": 170,
+      "task_id": "i3_15c_0389",
+      "task_index": 42
+    },
+    {
+      "arm": "D",
+      "order": 171,
+      "task_id": "i3_15c_0389",
+      "task_index": 42
+    },
+    {
+      "arm": "DE",
+      "order": 172,
+      "task_id": "i3_15c_0392",
+      "task_index": 43
+    },
+    {
+      "arm": "D",
+      "order": 173,
+      "task_id": "i3_15c_0392",
+      "task_index": 43
+    },
+    {
+      "arm": "C0",
+      "order": 174,
+      "task_id": "i3_15c_0392",
+      "task_index": 43
+    },
+    {
+      "arm": "E",
+      "order": 175,
+      "task_id": "i3_15c_0392",
+      "task_index": 43
+    },
+    {
+      "arm": "DE",
+      "order": 176,
+      "task_id": "i3_15c_0390",
+      "task_index": 44
+    },
+    {
+      "arm": "C0",
+      "order": 177,
+      "task_id": "i3_15c_0390",
+      "task_index": 44
+    },
+    {
+      "arm": "E",
+      "order": 178,
+      "task_id": "i3_15c_0390",
+      "task_index": 44
+    },
+    {
+      "arm": "D",
+      "order": 179,
+      "task_id": "i3_15c_0390",
+      "task_index": 44
+    },
+    {
+      "arm": "D",
+      "order": 180,
+      "task_id": "i3_15c_0475",
+      "task_index": 45
+    },
+    {
+      "arm": "C0",
+      "order": 181,
+      "task_id": "i3_15c_0475",
+      "task_index": 45
+    },
+    {
+      "arm": "E",
+      "order": 182,
+      "task_id": "i3_15c_0475",
+      "task_index": 45
+    },
+    {
+      "arm": "DE",
+      "order": 183,
+      "task_id": "i3_15c_0475",
+      "task_index": 45
+    },
+    {
+      "arm": "E",
+      "order": 184,
+      "task_id": "i3_15c_0443",
+      "task_index": 46
+    },
+    {
+      "arm": "D",
+      "order": 185,
+      "task_id": "i3_15c_0443",
+      "task_index": 46
+    },
+    {
+      "arm": "DE",
+      "order": 186,
+      "task_id": "i3_15c_0443",
+      "task_index": 46
+    },
+    {
+      "arm": "C0",
+      "order": 187,
+      "task_id": "i3_15c_0443",
+      "task_index": 46
+    },
+    {
+      "arm": "DE",
+      "order": 188,
+      "task_id": "i3_15c_0404",
+      "task_index": 47
+    },
+    {
+      "arm": "C0",
+      "order": 189,
+      "task_id": "i3_15c_0404",
+      "task_index": 47
+    },
+    {
+      "arm": "E",
+      "order": 190,
+      "task_id": "i3_15c_0404",
+      "task_index": 47
+    },
+    {
+      "arm": "D",
+      "order": 191,
+      "task_id": "i3_15c_0404",
+      "task_index": 47
+    },
+    {
+      "arm": "C0",
+      "order": 192,
+      "task_id": "i3_15c_0430",
+      "task_index": 48
+    },
+    {
+      "arm": "E",
+      "order": 193,
+      "task_id": "i3_15c_0430",
+      "task_index": 48
+    },
+    {
+      "arm": "D",
+      "order": 194,
+      "task_id": "i3_15c_0430",
+      "task_index": 48
+    },
+    {
+      "arm": "DE",
+      "order": 195,
+      "task_id": "i3_15c_0430",
+      "task_index": 48
+    },
+    {
+      "arm": "C0",
+      "order": 196,
+      "task_id": "i3_15c_0472",
+      "task_index": 49
+    },
+    {
+      "arm": "D",
+      "order": 197,
+      "task_id": "i3_15c_0472",
+      "task_index": 49
+    },
+    {
+      "arm": "E",
+      "order": 198,
+      "task_id": "i3_15c_0472",
+      "task_index": 49
+    },
+    {
+      "arm": "DE",
+      "order": 199,
+      "task_id": "i3_15c_0472",
+      "task_index": 49
+    },
+    {
+      "arm": "E",
+      "order": 200,
+      "task_id": "i3_15c_0492",
+      "task_index": 50
+    },
+    {
+      "arm": "D",
+      "order": 201,
+      "task_id": "i3_15c_0492",
+      "task_index": 50
+    },
+    {
+      "arm": "DE",
+      "order": 202,
+      "task_id": "i3_15c_0492",
+      "task_index": 50
+    },
+    {
+      "arm": "C0",
+      "order": 203,
+      "task_id": "i3_15c_0492",
+      "task_index": 50
+    },
+    {
+      "arm": "DE",
+      "order": 204,
+      "task_id": "i3_15c_0529",
+      "task_index": 51
+    },
+    {
+      "arm": "C0",
+      "order": 205,
+      "task_id": "i3_15c_0529",
+      "task_index": 51
+    },
+    {
+      "arm": "E",
+      "order": 206,
+      "task_id": "i3_15c_0529",
+      "task_index": 51
+    },
+    {
+      "arm": "D",
+      "order": 207,
+      "task_id": "i3_15c_0529",
+      "task_index": 51
+    },
+    {
+      "arm": "DE",
+      "order": 208,
+      "task_id": "i3_15c_0546",
+      "task_index": 52
+    },
+    {
+      "arm": "C0",
+      "order": 209,
+      "task_id": "i3_15c_0546",
+      "task_index": 52
+    },
+    {
+      "arm": "D",
+      "order": 210,
+      "task_id": "i3_15c_0546",
+      "task_index": 52
+    },
+    {
+      "arm": "E",
+      "order": 211,
+      "task_id": "i3_15c_0546",
+      "task_index": 52
+    },
+    {
+      "arm": "DE",
+      "order": 212,
+      "task_id": "i3_15c_0480",
+      "task_index": 53
+    },
+    {
+      "arm": "C0",
+      "order": 213,
+      "task_id": "i3_15c_0480",
+      "task_index": 53
+    },
+    {
+      "arm": "E",
+      "order": 214,
+      "task_id": "i3_15c_0480",
+      "task_index": 53
+    },
+    {
+      "arm": "D",
+      "order": 215,
+      "task_id": "i3_15c_0480",
+      "task_index": 53
+    },
+    {
+      "arm": "D",
+      "order": 216,
+      "task_id": "i3_15c_0507",
+      "task_index": 54
+    },
+    {
+      "arm": "E",
+      "order": 217,
+      "task_id": "i3_15c_0507",
+      "task_index": 54
+    },
+    {
+      "arm": "DE",
+      "order": 218,
+      "task_id": "i3_15c_0507",
+      "task_index": 54
+    },
+    {
+      "arm": "C0",
+      "order": 219,
+      "task_id": "i3_15c_0507",
+      "task_index": 54
+    },
+    {
+      "arm": "C0",
+      "order": 220,
+      "task_id": "i3_15c_0602",
+      "task_index": 55
+    },
+    {
+      "arm": "D",
+      "order": 221,
+      "task_id": "i3_15c_0602",
+      "task_index": 55
+    },
+    {
+      "arm": "E",
+      "order": 222,
+      "task_id": "i3_15c_0602",
+      "task_index": 55
+    },
+    {
+      "arm": "DE",
+      "order": 223,
+      "task_id": "i3_15c_0602",
+      "task_index": 55
+    },
+    {
+      "arm": "C0",
+      "order": 224,
+      "task_id": "i3_15c_0591",
+      "task_index": 56
+    },
+    {
+      "arm": "D",
+      "order": 225,
+      "task_id": "i3_15c_0591",
+      "task_index": 56
+    },
+    {
+      "arm": "E",
+      "order": 226,
+      "task_id": "i3_15c_0591",
+      "task_index": 56
+    },
+    {
+      "arm": "DE",
+      "order": 227,
+      "task_id": "i3_15c_0591",
+      "task_index": 56
+    },
+    {
+      "arm": "C0",
+      "order": 228,
+      "task_id": "i3_15c_0589",
+      "task_index": 57
+    },
+    {
+      "arm": "E",
+      "order": 229,
+      "task_id": "i3_15c_0589",
+      "task_index": 57
+    },
+    {
+      "arm": "DE",
+      "order": 230,
+      "task_id": "i3_15c_0589",
+      "task_index": 57
+    },
+    {
+      "arm": "D",
+      "order": 231,
+      "task_id": "i3_15c_0589",
+      "task_index": 57
+    },
+    {
+      "arm": "DE",
+      "order": 232,
+      "task_id": "i3_15c_0629",
+      "task_index": 58
+    },
+    {
+      "arm": "C0",
+      "order": 233,
+      "task_id": "i3_15c_0629",
+      "task_index": 58
+    },
+    {
+      "arm": "D",
+      "order": 234,
+      "task_id": "i3_15c_0629",
+      "task_index": 58
+    },
+    {
+      "arm": "E",
+      "order": 235,
+      "task_id": "i3_15c_0629",
+      "task_index": 58
+    },
+    {
+      "arm": "D",
+      "order": 236,
+      "task_id": "i3_15c_0617",
+      "task_index": 59
+    },
+    {
+      "arm": "E",
+      "order": 237,
+      "task_id": "i3_15c_0617",
+      "task_index": 59
+    },
+    {
+      "arm": "C0",
+      "order": 238,
+      "task_id": "i3_15c_0617",
+      "task_index": 59
+    },
+    {
+      "arm": "DE",
+      "order": 239,
+      "task_id": "i3_15c_0617",
+      "task_index": 59
+    },
+    {
+      "arm": "D",
+      "order": 240,
+      "task_id": "i3_15c_0009__retrieval_available",
+      "task_index": 60
+    },
+    {
+      "arm": "C0",
+      "order": 241,
+      "task_id": "i3_15c_0009__retrieval_available",
+      "task_index": 60
+    },
+    {
+      "arm": "DE",
+      "order": 242,
+      "task_id": "i3_15c_0009__retrieval_available",
+      "task_index": 60
+    },
+    {
+      "arm": "E",
+      "order": 243,
+      "task_id": "i3_15c_0009__retrieval_available",
+      "task_index": 60
+    },
+    {
+      "arm": "D",
+      "order": 244,
+      "task_id": "i3_15c_0009__retrieval_exhausted",
+      "task_index": 61
+    },
+    {
+      "arm": "E",
+      "order": 245,
+      "task_id": "i3_15c_0009__retrieval_exhausted",
+      "task_index": 61
+    },
+    {
+      "arm": "C0",
+      "order": 246,
+      "task_id": "i3_15c_0009__retrieval_exhausted",
+      "task_index": 61
+    },
+    {
+      "arm": "DE",
+      "order": 247,
+      "task_id": "i3_15c_0009__retrieval_exhausted",
+      "task_index": 61
+    },
+    {
+      "arm": "DE",
+      "order": 248,
+      "task_id": "i3_15c_0009__search_exhausted",
+      "task_index": 62
+    },
+    {
+      "arm": "C0",
+      "order": 249,
+      "task_id": "i3_15c_0009__search_exhausted",
+      "task_index": 62
+    },
+    {
+      "arm": "E",
+      "order": 250,
+      "task_id": "i3_15c_0009__search_exhausted",
+      "task_index": 62
+    },
+    {
+      "arm": "D",
+      "order": 251,
+      "task_id": "i3_15c_0009__search_exhausted",
+      "task_index": 62
+    },
+    {
+      "arm": "D",
+      "order": 252,
+      "task_id": "i3_15c_0009__both_exhausted",
+      "task_index": 63
+    },
+    {
+      "arm": "C0",
+      "order": 253,
+      "task_id": "i3_15c_0009__both_exhausted",
+      "task_index": 63
+    },
+    {
+      "arm": "DE",
+      "order": 254,
+      "task_id": "i3_15c_0009__both_exhausted",
+      "task_index": 63
+    },
+    {
+      "arm": "E",
+      "order": 255,
+      "task_id": "i3_15c_0009__both_exhausted",
+      "task_index": 63
+    },
+    {
+      "arm": "E",
+      "order": 256,
+      "task_id": "i3_15c_0023__retrieval_available",
+      "task_index": 64
+    },
+    {
+      "arm": "C0",
+      "order": 257,
+      "task_id": "i3_15c_0023__retrieval_available",
+      "task_index": 64
+    },
+    {
+      "arm": "D",
+      "order": 258,
+      "task_id": "i3_15c_0023__retrieval_available",
+      "task_index": 64
+    },
+    {
+      "arm": "DE",
+      "order": 259,
+      "task_id": "i3_15c_0023__retrieval_available",
+      "task_index": 64
+    },
+    {
+      "arm": "E",
+      "order": 260,
+      "task_id": "i3_15c_0023__retrieval_exhausted",
+      "task_index": 65
+    },
+    {
+      "arm": "D",
+      "order": 261,
+      "task_id": "i3_15c_0023__retrieval_exhausted",
+      "task_index": 65
+    },
+    {
+      "arm": "C0",
+      "order": 262,
+      "task_id": "i3_15c_0023__retrieval_exhausted",
+      "task_index": 65
+    },
+    {
+      "arm": "DE",
+      "order": 263,
+      "task_id": "i3_15c_0023__retrieval_exhausted",
+      "task_index": 65
+    },
+    {
+      "arm": "C0",
+      "order": 264,
+      "task_id": "i3_15c_0023__search_exhausted",
+      "task_index": 66
+    },
+    {
+      "arm": "DE",
+      "order": 265,
+      "task_id": "i3_15c_0023__search_exhausted",
+      "task_index": 66
+    },
+    {
+      "arm": "E",
+      "order": 266,
+      "task_id": "i3_15c_0023__search_exhausted",
+      "task_index": 66
+    },
+    {
+      "arm": "D",
+      "order": 267,
+      "task_id": "i3_15c_0023__search_exhausted",
+      "task_index": 66
+    },
+    {
+      "arm": "C0",
+      "order": 268,
+      "task_id": "i3_15c_0023__both_exhausted",
+      "task_index": 67
+    },
+    {
+      "arm": "DE",
+      "order": 269,
+      "task_id": "i3_15c_0023__both_exhausted",
+      "task_index": 67
+    },
+    {
+      "arm": "D",
+      "order": 270,
+      "task_id": "i3_15c_0023__both_exhausted",
+      "task_index": 67
+    },
+    {
+      "arm": "E",
+      "order": 271,
+      "task_id": "i3_15c_0023__both_exhausted",
+      "task_index": 67
+    },
+    {
+      "arm": "DE",
+      "order": 272,
+      "task_id": "i3_15c_0052__retrieval_available",
+      "task_index": 68
+    },
+    {
+      "arm": "E",
+      "order": 273,
+      "task_id": "i3_15c_0052__retrieval_available",
+      "task_index": 68
+    },
+    {
+      "arm": "C0",
+      "order": 274,
+      "task_id": "i3_15c_0052__retrieval_available",
+      "task_index": 68
+    },
+    {
+      "arm": "D",
+      "order": 275,
+      "task_id": "i3_15c_0052__retrieval_available",
+      "task_index": 68
+    },
+    {
+      "arm": "D",
+      "order": 276,
+      "task_id": "i3_15c_0052__retrieval_exhausted",
+      "task_index": 69
+    },
+    {
+      "arm": "C0",
+      "order": 277,
+      "task_id": "i3_15c_0052__retrieval_exhausted",
+      "task_index": 69
+    },
+    {
+      "arm": "DE",
+      "order": 278,
+      "task_id": "i3_15c_0052__retrieval_exhausted",
+      "task_index": 69
+    },
+    {
+      "arm": "E",
+      "order": 279,
+      "task_id": "i3_15c_0052__retrieval_exhausted",
+      "task_index": 69
+    },
+    {
+      "arm": "D",
+      "order": 280,
+      "task_id": "i3_15c_0052__search_exhausted",
+      "task_index": 70
+    },
+    {
+      "arm": "DE",
+      "order": 281,
+      "task_id": "i3_15c_0052__search_exhausted",
+      "task_index": 70
+    },
+    {
+      "arm": "E",
+      "order": 282,
+      "task_id": "i3_15c_0052__search_exhausted",
+      "task_index": 70
+    },
+    {
+      "arm": "C0",
+      "order": 283,
+      "task_id": "i3_15c_0052__search_exhausted",
+      "task_index": 70
+    },
+    {
+      "arm": "E",
+      "order": 284,
+      "task_id": "i3_15c_0052__both_exhausted",
+      "task_index": 71
+    },
+    {
+      "arm": "D",
+      "order": 285,
+      "task_id": "i3_15c_0052__both_exhausted",
+      "task_index": 71
+    },
+    {
+      "arm": "C0",
+      "order": 286,
+      "task_id": "i3_15c_0052__both_exhausted",
+      "task_index": 71
+    },
+    {
+      "arm": "DE",
+      "order": 287,
+      "task_id": "i3_15c_0052__both_exhausted",
+      "task_index": 71
+    },
+    {
+      "arm": "E",
+      "order": 288,
+      "task_id": "i3_15c_0041__retrieval_available",
+      "task_index": 72
+    },
+    {
+      "arm": "D",
+      "order": 289,
+      "task_id": "i3_15c_0041__retrieval_available",
+      "task_index": 72
+    },
+    {
+      "arm": "DE",
+      "order": 290,
+      "task_id": "i3_15c_0041__retrieval_available",
+      "task_index": 72
+    },
+    {
+      "arm": "C0",
+      "order": 291,
+      "task_id": "i3_15c_0041__retrieval_available",
+      "task_index": 72
+    },
+    {
+      "arm": "D",
+      "order": 292,
+      "task_id": "i3_15c_0041__retrieval_exhausted",
+      "task_index": 73
+    },
+    {
+      "arm": "C0",
+      "order": 293,
+      "task_id": "i3_15c_0041__retrieval_exhausted",
+      "task_index": 73
+    },
+    {
+      "arm": "DE",
+      "order": 294,
+      "task_id": "i3_15c_0041__retrieval_exhausted",
+      "task_index": 73
+    },
+    {
+      "arm": "E",
+      "order": 295,
+      "task_id": "i3_15c_0041__retrieval_exhausted",
+      "task_index": 73
+    },
+    {
+      "arm": "DE",
+      "order": 296,
+      "task_id": "i3_15c_0041__search_exhausted",
+      "task_index": 74
+    },
+    {
+      "arm": "C0",
+      "order": 297,
+      "task_id": "i3_15c_0041__search_exhausted",
+      "task_index": 74
+    },
+    {
+      "arm": "E",
+      "order": 298,
+      "task_id": "i3_15c_0041__search_exhausted",
+      "task_index": 74
+    },
+    {
+      "arm": "D",
+      "order": 299,
+      "task_id": "i3_15c_0041__search_exhausted",
+      "task_index": 74
+    },
+    {
+      "arm": "DE",
+      "order": 300,
+      "task_id": "i3_15c_0041__both_exhausted",
+      "task_index": 75
+    },
+    {
+      "arm": "D",
+      "order": 301,
+      "task_id": "i3_15c_0041__both_exhausted",
+      "task_index": 75
+    },
+    {
+      "arm": "C0",
+      "order": 302,
+      "task_id": "i3_15c_0041__both_exhausted",
+      "task_index": 75
+    },
+    {
+      "arm": "E",
+      "order": 303,
+      "task_id": "i3_15c_0041__both_exhausted",
+      "task_index": 75
+    },
+    {
+      "arm": "E",
+      "order": 304,
+      "task_id": "i3_15c_0024__retrieval_available",
+      "task_index": 76
+    },
+    {
+      "arm": "DE",
+      "order": 305,
+      "task_id": "i3_15c_0024__retrieval_available",
+      "task_index": 76
+    },
+    {
+      "arm": "D",
+      "order": 306,
+      "task_id": "i3_15c_0024__retrieval_available",
+      "task_index": 76
+    },
+    {
+      "arm": "C0",
+      "order": 307,
+      "task_id": "i3_15c_0024__retrieval_available",
+      "task_index": 76
+    },
+    {
+      "arm": "C0",
+      "order": 308,
+      "task_id": "i3_15c_0024__retrieval_exhausted",
+      "task_index": 77
+    },
+    {
+      "arm": "D",
+      "order": 309,
+      "task_id": "i3_15c_0024__retrieval_exhausted",
+      "task_index": 77
+    },
+    {
+      "arm": "E",
+      "order": 310,
+      "task_id": "i3_15c_0024__retrieval_exhausted",
+      "task_index": 77
+    },
+    {
+      "arm": "DE",
+      "order": 311,
+      "task_id": "i3_15c_0024__retrieval_exhausted",
+      "task_index": 77
+    },
+    {
+      "arm": "E",
+      "order": 312,
+      "task_id": "i3_15c_0024__search_exhausted",
+      "task_index": 78
+    },
+    {
+      "arm": "DE",
+      "order": 313,
+      "task_id": "i3_15c_0024__search_exhausted",
+      "task_index": 78
+    },
+    {
+      "arm": "C0",
+      "order": 314,
+      "task_id": "i3_15c_0024__search_exhausted",
+      "task_index": 78
+    },
+    {
+      "arm": "D",
+      "order": 315,
+      "task_id": "i3_15c_0024__search_exhausted",
+      "task_index": 78
+    },
+    {
+      "arm": "DE",
+      "order": 316,
+      "task_id": "i3_15c_0024__both_exhausted",
+      "task_index": 79
+    },
+    {
+      "arm": "D",
+      "order": 317,
+      "task_id": "i3_15c_0024__both_exhausted",
+      "task_index": 79
+    },
+    {
+      "arm": "C0",
+      "order": 318,
+      "task_id": "i3_15c_0024__both_exhausted",
+      "task_index": 79
+    },
+    {
+      "arm": "E",
+      "order": 319,
+      "task_id": "i3_15c_0024__both_exhausted",
+      "task_index": 79
+    }
+  ],
+  "seed": 137,
+  "total_trajectories": 320
+}
