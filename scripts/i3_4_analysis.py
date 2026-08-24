@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""DAPH I3.4c — Phase-specific analysis with paired bootstrap CIs.
+"""DAPH I3.4d — Phase-specific analysis with paired bootstrap CIs.
 
-Analyzes the P0/P1/P2 executive experiment:
-  - Utility contrasts: ΔU_P1, ΔU_P2, ΔU_P2-P1 (paired bootstrap CIs)
+Analyzes the P0/P1/P2/PS executive experiment:
+  - Utility contrasts: ΔU_P1, ΔU_P2, ΔU_PS, ΔU_P2-P1, ΔU_P2-PS (paired bootstrap CIs)
   - Phase-specific analysis: per-phase action distribution, utility, success
   - Terminal-action distribution
   - Success rates
   - Phase transition analysis
-  - Shuffled-value control (if available)
+  - PS causal control: P2 > PS shows correct values matter, not just structure
 
 Usage:
     PYTHONPATH=scripts:. python3 scripts/i3_4_analysis.py \
@@ -78,17 +78,19 @@ def step1_integrity(results: list[dict], dataset: list[dict], output: Path) -> d
     task_ids_results = set(r["task_id"] for r in results)
     arms = set(r["arm"] for r in results)
     decoder_errors = sum(r.get("decoder_errors", 0) for r in results)
+    n_arms = len(arms)
 
     result = {
         "n_trajectories": n_traj,
         "n_tasks": n_tasks,
+        "n_arms": n_arms,
         "task_ids_match": task_ids_dataset == task_ids_results,
         "arms": sorted(arms),
         "decoder_errors": decoder_errors,
-        "trajectory_count_matches": n_traj == n_tasks * 3,
+        "trajectory_count_matches": n_traj == n_tasks * n_arms,
     }
     save_json(output / "01_integrity.json", result)
-    print(f"  Trajectories: {n_traj}, Tasks: {n_tasks}, Match: {result['task_ids_match']}")
+    print(f"  Trajectories: {n_traj}, Tasks: {n_tasks}, Arms: {n_arms}, Match: {result['task_ids_match']}")
     return result
 
 
@@ -113,21 +115,29 @@ def step2_utility_contrasts(results: list[dict], output: Path) -> dict:
             if treated in arms and control in arms
         ]
 
+    contrasts = {}
+
+    # Standard contrasts (always present)
     p1_diffs = paired_diffs("P1")
     p2_diffs = paired_diffs("P2")
     p2_p1_diffs = paired_diffs("P2", "P1")
 
-    p1_ci = paired_bootstrap_ci(p1_diffs)
-    p2_ci = paired_bootstrap_ci(p2_diffs)
-    p2_p1_ci = paired_bootstrap_ci(p2_p1_diffs)
+    contrasts["delta_P1"] = paired_bootstrap_ci(p1_diffs)
+    contrasts["delta_P2"] = paired_bootstrap_ci(p2_diffs)
+    contrasts["delta_P2_minus_P1"] = paired_bootstrap_ci(p2_p1_diffs)
+
+    # PS contrasts (only if PS arm exists)
+    if "PS" in arm_utilities:
+        ps_diffs = paired_diffs("PS")
+        p2_ps_diffs = paired_diffs("P2", "PS")
+        ps_p1_diffs = paired_diffs("PS", "P1")
+        contrasts["delta_PS"] = paired_bootstrap_ci(ps_diffs)
+        contrasts["delta_P2_minus_PS"] = paired_bootstrap_ci(p2_ps_diffs)
+        contrasts["delta_PS_minus_P1"] = paired_bootstrap_ci(ps_p1_diffs)
 
     result = {
         "mean_utility": {k: round(v, 4) for k, v in mean_utility.items()},
-        "contrasts": {
-            "delta_P1": p1_ci,
-            "delta_P2": p2_ci,
-            "delta_P2_minus_P1": p2_p1_ci,
-        },
+        "contrasts": contrasts,
         "n_per_arm": {arm: len(us) for arm, us in arm_utilities.items()},
     }
     save_json(output / "02_utility_contrasts.json", result)
@@ -254,22 +264,41 @@ def step7_ablation_summary(contrasts: dict, success: dict, output: Path) -> dict
     p2_ci = contrasts.get("delta_P2", {})
     p1_ci = contrasts.get("delta_P1", {})
     p2_p1_ci = contrasts.get("delta_P2_minus_P1", {})
+    p2_ps_ci = contrasts.get("delta_P2_minus_PS", {})
+    ps_ci = contrasts.get("delta_PS", {})
 
     p2_positive = p2_ci.get("excludes_zero", False) and p2_ci.get("mean", 0) > 0
     p1_neutral = not p1_ci.get("excludes_zero", False)
     p2_better_than_p1 = p2_p1_ci.get("excludes_zero", False) and p2_p1_ci.get("mean", 0) > 0
+
+    # PS causal control checks
+    has_ps = "delta_P2_minus_PS" in contrasts
+    p2_better_than_ps = (
+        has_ps and p2_ps_ci.get("excludes_zero", False) and p2_ps_ci.get("mean", 0) > 0
+    )
+    ps_not_better_than_p0 = (
+        has_ps and not (ps_ci.get("excludes_zero", False) and ps_ci.get("mean", 0) > 0)
+    )
 
     # Success non-inferiority check
     p0_success = success.get("P0", {}).get("rate", 0)
     p2_success = success.get("P2", {}).get("rate", 0)
     success_non_inferior = p2_success >= p0_success - 0.05  # 5% margin
 
+    # Promotion requires P2 positive, non-inferior success, and (if PS exists) P2 > PS
+    p2_promotion = p2_positive and success_non_inferior
+    if has_ps:
+        p2_promotion = p2_promotion and p2_better_than_ps
+
     result = {
         "P2_positive": p2_positive,
         "P1_neutral": p1_neutral,
         "P2_better_than_P1": p2_better_than_p1,
+        "has_PS_control": has_ps,
+        "P2_better_than_PS": p2_better_than_ps,
+        "PS_not_better_than_P0": ps_not_better_than_p0,
         "success_non_inferior": success_non_inferior,
-        "P2_promotion": p2_positive and success_non_inferior,
+        "P2_promotion": p2_promotion,
         "contrasts": contrasts,
         "success_rates": success,
     }
@@ -277,6 +306,9 @@ def step7_ablation_summary(contrasts: dict, success: dict, output: Path) -> dict
     print(f"  P2 positive (CI excludes 0): {p2_positive}")
     print(f"  P1 neutral: {p1_neutral}")
     print(f"  P2 > P1: {p2_better_than_p1}")
+    if has_ps:
+        print(f"  P2 > PS (correct values matter): {p2_better_than_ps}")
+        print(f"  PS not > P0 (structure alone doesn't help): {ps_not_better_than_p0}")
     print(f"  Success non-inferior: {success_non_inferior}")
     print(f"  P2 promotion: {result['P2_promotion']}")
 

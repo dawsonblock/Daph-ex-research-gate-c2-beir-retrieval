@@ -9,7 +9,10 @@ don't deploy it.
 
 from __future__ import annotations
 
+import hashlib
+import json
 from collections import defaultdict
+from pathlib import Path
 from typing import Any
 
 
@@ -99,3 +102,65 @@ class PhaseActionTable:
         for (phase, action), count in self._counts.items():
             result[phase][action] = count
         return dict(result)
+
+    def save(self, path: Path) -> str:
+        """Serialize the B1 table to a JSON file. Returns the SHA256 of the file."""
+        data = {
+            "model": "B1_phase_action_table",
+            "min_samples": self._min_samples,
+            "values": {
+                f"{phase}|{action}": value
+                for (phase, action), value in self._values.items()
+            },
+            "counts": {
+                f"{phase}|{action}": count
+                for (phase, action), count in self._counts.items()
+            },
+            "fallback": None,
+        }
+        if self._fallback is not None:
+            data["fallback"] = {
+                "values": self._fallback._values,
+                "counts": self._fallback._counts,
+            }
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w") as f:
+            json.dump(data, f, indent=2, sort_keys=True)
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+
+    @classmethod
+    def load(cls, path: Path) -> "PhaseActionTable":
+        """Load a frozen B1 table from a JSON file."""
+        with open(path) as f:
+            data = json.load(f)
+        table = cls(min_samples=data["min_samples"])
+        table._values = {}
+        for key, value in data["values"].items():
+            phase, action = key.split("|", 1)
+            table._values[(phase, action)] = value
+        table._counts = {}
+        for key, count in data["counts"].items():
+            phase, action = key.split("|", 1)
+            table._counts[(phase, action)] = count
+        if data.get("fallback"):
+            fb = GlobalActionMean()
+            fb._values = data["fallback"]["values"]
+            fb._counts = data["fallback"]["counts"]
+            table._fallback = fb
+        return table
+
+    def sha256(self) -> str:
+        """Compute SHA256 of the table's serialized form."""
+        data = {
+            "values": {
+                f"{phase}|{action}": value
+                for (phase, action), value in sorted(self._values.items())
+            },
+            "counts": {
+                f"{phase}|{action}": count
+                for (phase, action), count in sorted(self._counts.items())
+            },
+        }
+        return hashlib.sha256(
+            json.dumps(data, sort_keys=True).encode()
+        ).hexdigest()

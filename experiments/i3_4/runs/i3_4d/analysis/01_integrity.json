@@ -1,0 +1,14 @@
+{
+  "arms": [
+    "P0",
+    "P1",
+    "P2",
+    "PS"
+  ],
+  "decoder_errors": 0,
+  "n_arms": 4,
+  "n_tasks": 80,
+  "n_trajectories": 320,
+  "task_ids_match": true,
+  "trajectory_count_matches": true
+}

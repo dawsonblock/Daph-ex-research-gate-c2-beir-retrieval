@@ -1,0 +1,24 @@
+{
+  "arms": [
+    "P0",
+    "P1",
+    "P2",
+    "PS"
+  ],
+  "b1_model_sha256": "c72b8641c5452d79e92fd9cb14ca289948b54385f2481a893ecb8c6bf22f1f68",
+  "b1_table_path": "/content/r2_repo/experiments/i3_4/value/frozen_b1_table.json",
+  "backend_identity_sha256": "08dd528f6fc9e67c574ec766ea15ab7be80bdaa7a615625244122db533c2772d",
+  "completed": 12,
+  "dataset_sha256": "e1813d7ebfd10255e974c606e41c514b4b4db33df48be21effdf59d049ca22ab",
+  "experiment": "i3_4d_heldout_p0_p1_p2_ps",
+  "failed": 0,
+  "generator_seed": 9137,
+  "leakage_verified": true,
+  "run_end": "2026-08-24T02:35:36Z",
+  "run_start": "2026-08-24T02:34:48Z",
+  "shuffle_seed": 42,
+  "skipped": 308,
+  "total_time_seconds": 48.79291915893555,
+  "total_trajectories": 320,
+  "value_model": "B1_phase_action_table_FROZEN"
+}

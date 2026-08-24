@@ -1,0 +1,18 @@
+{
+  "b1_file_sha256": "6ee1f735b8a7508769ec872d01678dac9607345adfd3a8209d558cb0500704b2",
+  "b1_model_sha256": "c72b8641c5452d79e92fd9cb14ca289948b54385f2481a893ecb8c6bf22f1f68",
+  "b1_training_base_task_sha": "e8d87e13a95c5ad9514fbe46b708705a9d7324c039a9906afe84370a63220c26",
+  "b1_training_task_sha": "c9ff14699d11c79938578ea24b144e391efce97717d7bf0513aa98be157479e0",
+  "base_intersection_count": 0,
+  "evaluation_base_task_sha": "8a08bd293a276329833e59c8d2c0a9ea82f69dfb50786ee4426b4da59406d56e",
+  "evaluation_n_base_tasks": 60,
+  "evaluation_n_tasks": 80,
+  "evaluation_task_sha": "a1f52af5f7835ab873fd43d9cae458a33e28de8a2fe584472f957654c44239aa",
+  "experiment": "i3_4d_heldout",
+  "heldout_dataset_sha256": "e1813d7ebfd10255e974c606e41c514b4b4db33df48be21effdf59d049ca22ab",
+  "heldout_seed": 9137,
+  "heldout_source_sha256": "2289afd1d37cf1f93d7c4ce863ffd7c5ab8d655c5edd5ef1a44b696d503555d5",
+  "intersection_count": 0,
+  "training_n_base_tasks": 60,
+  "training_n_tasks": 80
+}

@@ -1,0 +1,123 @@
+{
+  "P0": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 1.0
+      },
+      "n": 30
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.2632,
+        "RETRIEVE": 0.1105,
+        "SEARCH_MORE": 0.4158,
+        "VERIFY": 0.2105
+      },
+      "n": 190
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  },
+  "P1": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 1.0
+      },
+      "n": 30
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.1889,
+        "RETRIEVE": 0.3593,
+        "SEARCH_MORE": 0.3037,
+        "VERIFY": 0.1481
+      },
+      "n": 270
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  },
+  "P2": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 0.3077,
+        "DEFER": 0.1538,
+        "RETRIEVE": 0.0615,
+        "SEARCH_MORE": 0.4769
+      },
+      "n": 65
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.1754,
+        "RETRIEVE": 0.4737,
+        "SEARCH_MORE": 0.207,
+        "VERIFY": 0.1439
+      },
+      "n": 285
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  },
+  "PS": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 0.431,
+        "DEFER": 0.0862,
+        "SEARCH_MORE": 0.4828
+      },
+      "n": 58
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.1976,
+        "RETRIEVE": 0.4941,
+        "SEARCH_MORE": 0.1462,
+        "VERIFY": 0.1621
+      },
+      "n": 253
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  }
+}
