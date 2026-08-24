@@ -1,0 +1,238 @@
+{
+  "action_stats": {
+    "ANSWER": {
+      "mean_utility": -0.6,
+      "n": 220,
+      "success_rate": 0.2
+    },
+    "DEFER": {
+      "mean_utility": -0.6,
+      "n": 220,
+      "success_rate": 0.2
+    },
+    "REASON_MORE": {
+      "mean_utility": 1.0,
+      "n": 220,
+      "success_rate": 1.0
+    },
+    "RETRIEVE": {
+      "mean_utility": 1.0,
+      "n": 44,
+      "success_rate": 1.0
+    },
+    "SEARCH_MORE": {
+      "mean_utility": 1.0,
+      "n": 176,
+      "success_rate": 1.0
+    },
+    "VERIFY": {
+      "mean_utility": 1.0,
+      "n": 176,
+      "success_rate": 1.0
+    }
+  },
+  "backend_identity_sha256": "deda16b2c41434cd9704c5eff97f09abb25e30129bd724db0421a07aa51ccc23",
+  "category_action_stats": {
+    "ol_answer:ANSWER": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_answer:DEFER": {
+      "mean_utility": -1.0,
+      "n": 24
+    },
+    "ol_answer:REASON_MORE": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_answer:SEARCH_MORE": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_defer:ANSWER": {
+      "mean_utility": -1.0,
+      "n": 24
+    },
+    "ol_defer:DEFER": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_defer:REASON_MORE": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_defer:VERIFY": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_retrieve:ANSWER": {
+      "mean_utility": -1.0,
+      "n": 24
+    },
+    "ol_retrieve:DEFER": {
+      "mean_utility": -1.0,
+      "n": 24
+    },
+    "ol_retrieve:REASON_MORE": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_retrieve:RETRIEVE": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_retrieve:SEARCH_MORE": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_retrieve:VERIFY": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_search:ANSWER": {
+      "mean_utility": -1.0,
+      "n": 24
+    },
+    "ol_search:DEFER": {
+      "mean_utility": -1.0,
+      "n": 24
+    },
+    "ol_search:REASON_MORE": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_search:SEARCH_MORE": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_search:VERIFY": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_verify:ANSWER": {
+      "mean_utility": -1.0,
+      "n": 24
+    },
+    "ol_verify:DEFER": {
+      "mean_utility": -1.0,
+      "n": 24
+    },
+    "ol_verify:REASON_MORE": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_verify:SEARCH_MORE": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "ol_verify:VERIFY": {
+      "mean_utility": 1.0,
+      "n": 24
+    },
+    "tl_answer:ANSWER": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_answer:DEFER": {
+      "mean_utility": -1.0,
+      "n": 20
+    },
+    "tl_answer:REASON_MORE": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_answer:SEARCH_MORE": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_defer:ANSWER": {
+      "mean_utility": -1.0,
+      "n": 20
+    },
+    "tl_defer:DEFER": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_defer:REASON_MORE": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_defer:VERIFY": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_retrieve:ANSWER": {
+      "mean_utility": -1.0,
+      "n": 20
+    },
+    "tl_retrieve:DEFER": {
+      "mean_utility": -1.0,
+      "n": 20
+    },
+    "tl_retrieve:REASON_MORE": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_retrieve:RETRIEVE": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_retrieve:SEARCH_MORE": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_retrieve:VERIFY": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_search:ANSWER": {
+      "mean_utility": -1.0,
+      "n": 20
+    },
+    "tl_search:DEFER": {
+      "mean_utility": -1.0,
+      "n": 20
+    },
+    "tl_search:REASON_MORE": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_search:SEARCH_MORE": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_search:VERIFY": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_verify:ANSWER": {
+      "mean_utility": -1.0,
+      "n": 20
+    },
+    "tl_verify:DEFER": {
+      "mean_utility": -1.0,
+      "n": 20
+    },
+    "tl_verify:REASON_MORE": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_verify:SEARCH_MORE": {
+      "mean_utility": 1.0,
+      "n": 20
+    },
+    "tl_verify:VERIFY": {
+      "mean_utility": 1.0,
+      "n": 20
+    }
+  },
+  "causal_data_sha256": "01d13e462ba624ddafa4effe14138d31aa5d4fe3debd22fcecc66f73af74b8d4",
+  "n_checkpoints": 220,
+  "n_records": 1056,
+  "overall_success_rate": 0.6667,
+  "premature_answer_rate": 0.1667,
+  "premature_defer_rate": 0.1667,
+  "schedule_id": "71b7cc6d6b00c5e3314c93f9a46189fa835ce434540fefc7863e30f6a259037f",
+  "terminal_rate": 1.0,
+  "timestamp": "2026-08-24T10:01:44.707526+00:00"
+}

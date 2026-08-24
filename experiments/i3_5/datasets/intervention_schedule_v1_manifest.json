@@ -1,0 +1,25 @@
+{
+  "benchmark_sha256": "9cae0ffba718634b380ddc10cf4a48b263e19338e21492f2da10ceaafd338124",
+  "budget": {
+    "max_executive_steps": 10,
+    "max_retrieval_calls": 3,
+    "max_search_calls": 2,
+    "max_verification_calls": 5
+  },
+  "by_action": {
+    "ANSWER": 220,
+    "DEFER": 220,
+    "REASON_MORE": 220,
+    "RETRIEVE": 44,
+    "SEARCH_MORE": 176,
+    "VERIFY": 176
+  },
+  "by_intervention_type": {
+    "CAUSAL_DETERMINISTIC": 616,
+    "FORCED_ACTION_ROLLOUT": 440
+  },
+  "checkpoints_sha256": "8d895129b62d75efe26b5a99611d50f37d3caee9c131ba77e73417f0de85ace0",
+  "n_checkpoints": 220,
+  "n_interventions": 1056,
+  "schedule_id": "71b7cc6d6b00c5e3314c93f9a46189fa835ce434540fefc7863e30f6a259037f"
+}
