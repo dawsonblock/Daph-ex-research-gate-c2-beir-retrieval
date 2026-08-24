@@ -1,0 +1,94 @@
+{
+  "P0": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 0.9375,
+        "SEARCH_MORE": 0.0625
+      },
+      "n": 32
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.2604,
+        "RETRIEVE": 0.1146,
+        "SEARCH_MORE": 0.4167,
+        "VERIFY": 0.2083
+      },
+      "n": 192
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  },
+  "P1": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 0.9375,
+        "SEARCH_MORE": 0.0625
+      },
+      "n": 32
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.2041,
+        "RETRIEVE": 0.298,
+        "SEARCH_MORE": 0.3347,
+        "VERIFY": 0.1633
+      },
+      "n": 245
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  },
+  "P2": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 0.2267,
+        "DEFER": 0.1867,
+        "RETRIEVE": 0.0533,
+        "SEARCH_MORE": 0.5333
+      },
+      "n": 75
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.1838,
+        "RETRIEVE": 0.5,
+        "SEARCH_MORE": 0.1618,
+        "VERIFY": 0.1544
+      },
+      "n": 272
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  }
+}

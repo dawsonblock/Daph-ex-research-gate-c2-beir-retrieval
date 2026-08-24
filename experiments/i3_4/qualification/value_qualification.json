@@ -1,0 +1,58 @@
+{
+  "checks": {
+    "Q1_finite_predictions": {
+      "n_finite": 922,
+      "n_total": 922,
+      "passed": true,
+      "rate": 1.0
+    },
+    "Q2_legal_coverage": {
+      "n_covered": 161,
+      "n_states": 161,
+      "passed": true
+    },
+    "Q3_no_action_missing": {
+      "all_actions": [
+        "ANSWER",
+        "DEFER",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "VERIFY"
+      ],
+      "missing": [],
+      "model_actions": [
+        "ANSWER",
+        "DEFER",
+        "REASON_MORE",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "STOP",
+        "VERIFY"
+      ],
+      "passed": true
+    },
+    "Q4_better_than_random": {
+      "b3_top1": 0.37267080745341613,
+      "passed": true,
+      "random_top1": 0.17391304347826086
+    },
+    "Q5_calibration": {
+      "actual_mean": 45.946645962732916,
+      "calibration_error": 12.064723406048103,
+      "passed": false,
+      "pred_mean": 33.88192255668481
+    },
+    "Q6_regret_vs_b1": {
+      "b1_regret": 0.0,
+      "b3_regret": 0.0,
+      "passed": true
+    },
+    "Q7_uncertainty_finite": {
+      "n_finite": 302,
+      "n_total": 302,
+      "passed": true
+    }
+  },
+  "n_test_transitions": 161,
+  "overall_passed": false
+}

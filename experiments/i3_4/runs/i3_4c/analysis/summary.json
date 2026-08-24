@@ -1,0 +1,33 @@
+{
+  "P2_promotion": true,
+  "integrity_ok": true,
+  "n_trajectories": 240,
+  "success_rates": {
+    "P0": 0.75,
+    "P1": 0.75,
+    "P2": 0.9125
+  },
+  "utility_contrasts": {
+    "delta_P1": {
+      "ci_lower": -2.0426,
+      "ci_upper": -0.9137,
+      "excludes_zero": true,
+      "mean": -1.4515,
+      "n": 80
+    },
+    "delta_P2": {
+      "ci_lower": 14.1263,
+      "ci_upper": 43.6554,
+      "excludes_zero": true,
+      "mean": 27.8918,
+      "n": 80
+    },
+    "delta_P2_minus_P1": {
+      "ci_lower": 15.658,
+      "ci_upper": 44.9448,
+      "excludes_zero": true,
+      "mean": 29.3433,
+      "n": 80
+    }
+  }
+}

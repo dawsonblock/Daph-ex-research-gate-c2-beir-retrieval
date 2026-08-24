@@ -1,0 +1,17 @@
+{
+  "arms": [
+    "P0",
+    "P1",
+    "P2"
+  ],
+  "backend_identity_sha256": "08dd528f6fc9e67c574ec766ea15ab7be80bdaa7a615625244122db533c2772d",
+  "completed": 7,
+  "dataset_sha256": "1f6a5cb38011282722b3fb22b835d40e7199fa9a61983c8dfccbb437ef033e43",
+  "experiment": "i3_4c_p0_p1_p2",
+  "failed": 0,
+  "run_end": "2026-08-24T00:12:31Z",
+  "run_start": "2026-08-24T00:12:07Z",
+  "total_time_seconds": 23.65760040283203,
+  "total_trajectories": 240,
+  "value_model": "B1_phase_action_table"
+}
