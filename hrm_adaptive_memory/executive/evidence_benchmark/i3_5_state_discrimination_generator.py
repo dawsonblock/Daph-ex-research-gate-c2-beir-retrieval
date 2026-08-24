@@ -398,6 +398,248 @@ def _gen_ol_search(task_id: str, domain: str, rng: random.Random) -> EvidenceTas
 
 
 # ---------------------------------------------------------------------------
+# Two-live subtypes: both hypotheses live, different optimal actions
+# ---------------------------------------------------------------------------
+
+def _gen_tl_answer(task_id: str, domain: str, rng: random.Random) -> EvidenceTask:
+    """TL-A: two live, answer ready. Correct first action: ANSWER.
+
+    Both hypotheses have verified evidence, but H1 has sufficient support
+    and H2 has a verified contradiction. The controller should ANSWER.
+    """
+    subject = DOMAIN_SUBJECTS[domain]
+    h1, h2 = _make_hyps(subject)
+
+    evidence = (
+        EvidenceItem(
+            evidence_id="E1",
+            proposition=f"An authoritative source confirms {subject} is operational with all checks passing.",
+            source_class="initial",
+            supports=("H1",),
+            contradicts=("H2",),
+            verification_state=VerificationState.SUFFICIENT,
+            temporal_status=TemporalStatus.CURRENT,
+            retrieved=True,
+            verify_result="SUFFICIENT",
+        ),
+        EvidenceItem(
+            evidence_id="E2",
+            proposition=f"An initial source mentions {subject} might be unavailable.",
+            source_class="initial",
+            supports=("H2",),
+            contradicts=("H1",),
+            verification_state=VerificationState.FALSIFIED,
+            temporal_status=TemporalStatus.CURRENT,
+            retrieved=True,
+            verify_result="FALSIFIED",
+        ),
+    )
+    return EvidenceTask(
+        task_id=task_id, split="i3_5_state_discrimination", category="tl_answer",
+        task_summary=f"Determine {subject}.", high_stakes=rng.random() > 0.5,
+        budget_profile="STANDARD", hypotheses=(h1, h2), evidence_items=evidence,
+        retrieve_exposes=(), search_exposes=(),
+        oracle_resolution_path=("ANSWER",),
+        expected_terminal=DecisionAction.ANSWER, correct_hypothesis_id="H1",
+    )
+
+
+def _gen_tl_defer(task_id: str, domain: str, rng: random.Random) -> EvidenceTask:
+    """TL-D: two live, must defer. Correct first action: DEFER.
+
+    Both hypotheses have unverified evidence. No budget to retrieve/search/verify.
+    The controller cannot discriminate and must DEFER.
+    """
+    subject = DOMAIN_SUBJECTS[domain]
+    h1, h2 = _make_hyps(subject)
+
+    evidence = (
+        EvidenceItem(
+            evidence_id="E1",
+            proposition=f"An initial source mentions {subject} is operational, unverified.",
+            source_class="initial",
+            supports=("H1",),
+            contradicts=(),
+            verification_state=VerificationState.UNVERIFIED,
+            temporal_status=TemporalStatus.CURRENT,
+            retrieved=True,
+            verify_result="MISSING",
+        ),
+        EvidenceItem(
+            evidence_id="E2",
+            proposition=f"Another source mentions {subject} might be unavailable, unverified.",
+            source_class="initial",
+            supports=("H2",),
+            contradicts=("H1",),
+            verification_state=VerificationState.UNVERIFIED,
+            temporal_status=TemporalStatus.CURRENT,
+            retrieved=True,
+            verify_result="MISSING",
+        ),
+    )
+    return EvidenceTask(
+        task_id=task_id, split="i3_5_state_discrimination", category="tl_defer",
+        task_summary=f"Determine {subject}.", high_stakes=rng.random() > 0.5,
+        budget_profile="STANDARD_NO_RETRIEVE_NO_SEARCH", hypotheses=(h1, h2),
+        evidence_items=evidence, retrieve_exposes=(), search_exposes=(),
+        oracle_resolution_path=("DEFER",),
+        expected_terminal=DecisionAction.DEFER, correct_hypothesis_id="H2",
+    )
+
+
+def _gen_tl_retrieve(task_id: str, domain: str, rng: random.Random) -> EvidenceTask:
+    """TL-R: two live, retrieve to discriminate. Correct first action: RETRIEVE.
+
+    Both hypotheses have unverified evidence. Hidden retrievable evidence
+    will discriminate between them. The controller should RETRIVE first.
+    """
+    subject = DOMAIN_SUBJECTS[domain]
+    h1, h2 = _make_hyps(subject)
+
+    evidence = (
+        EvidenceItem(
+            evidence_id="E1",
+            proposition=f"An initial source mentions {subject} is operational, unverified.",
+            source_class="initial",
+            supports=("H1",),
+            contradicts=(),
+            verification_state=VerificationState.UNVERIFIED,
+            temporal_status=TemporalStatus.CURRENT,
+            retrieved=True,
+            verify_result="MISSING",
+        ),
+        EvidenceItem(
+            evidence_id="E2",
+            proposition=f"Another source mentions {subject} might be unavailable, unverified.",
+            source_class="initial",
+            supports=("H2",),
+            contradicts=("H1",),
+            verification_state=VerificationState.UNVERIFIED,
+            temporal_status=TemporalStatus.CURRENT,
+            retrieved=True,
+            verify_result="FALSIFIED",
+        ),
+        EvidenceItem(
+            evidence_id="E3",
+            proposition=f"The primary documentation explicitly confirms {subject} is operational.",
+            source_class="primary",
+            supports=("H1",),
+            contradicts=("H2",),
+            verification_state=VerificationState.UNVERIFIED,
+            temporal_status=TemporalStatus.CURRENT,
+            retrieved=False,
+            verify_result="SUFFICIENT",
+        ),
+    )
+    return EvidenceTask(
+        task_id=task_id, split="i3_5_state_discrimination", category="tl_retrieve",
+        task_summary=f"Determine {subject}.", high_stakes=rng.random() > 0.5,
+        budget_profile="STANDARD", hypotheses=(h1, h2), evidence_items=evidence,
+        retrieve_exposes=("E3",), search_exposes=(),
+        oracle_resolution_path=("RETRIEVE:E3", "VERIFY:E3", "ANSWER"),
+        expected_terminal=DecisionAction.ANSWER, correct_hypothesis_id="H1",
+    )
+
+
+def _gen_tl_verify(task_id: str, domain: str, rng: random.Random) -> EvidenceTask:
+    """TL-V: two live, verify to discriminate. Correct first action: VERIFY.
+
+    Both hypotheses have visible but unverified evidence. The controller
+    should VERIFY the evidence that will discriminate between them.
+    No retrieval needed — evidence is already visible.
+    """
+    subject = DOMAIN_SUBJECTS[domain]
+    h1, h2 = _make_hyps(subject)
+
+    evidence = (
+        EvidenceItem(
+            evidence_id="E1",
+            proposition=f"A source claims {subject} is operational, unverified.",
+            source_class="initial",
+            supports=("H1",),
+            contradicts=("H2",),
+            verification_state=VerificationState.UNVERIFIED,
+            temporal_status=TemporalStatus.CURRENT,
+            retrieved=True,
+            verify_result="SUFFICIENT",
+        ),
+        EvidenceItem(
+            evidence_id="E2",
+            proposition=f"Another source claims {subject} is unavailable, unverified.",
+            source_class="initial",
+            supports=("H2",),
+            contradicts=("H1",),
+            verification_state=VerificationState.UNVERIFIED,
+            temporal_status=TemporalStatus.CURRENT,
+            retrieved=True,
+            verify_result="FALSIFIED",
+        ),
+    )
+    return EvidenceTask(
+        task_id=task_id, split="i3_5_state_discrimination", category="tl_verify",
+        task_summary=f"Determine {subject}.", high_stakes=rng.random() > 0.5,
+        budget_profile="STANDARD_NO_RETRIEVE", hypotheses=(h1, h2),
+        evidence_items=evidence, retrieve_exposes=(), search_exposes=(),
+        oracle_resolution_path=("VERIFY:E1", "ANSWER"),
+        expected_terminal=DecisionAction.ANSWER, correct_hypothesis_id="H1",
+    )
+
+
+def _gen_tl_search(task_id: str, domain: str, rng: random.Random) -> EvidenceTask:
+    """TL-S: two live, search for external evidence. Correct first action: SEARCH_MORE.
+
+    Both hypotheses have stale/unverified local evidence. Local retrieval
+    is exhausted. External search has the discriminating evidence.
+    """
+    subject = DOMAIN_SUBJECTS[domain]
+    h1, h2 = _make_hyps(subject)
+
+    evidence = (
+        EvidenceItem(
+            evidence_id="E1",
+            proposition=f"An older source claims {subject} is operational, but outdated.",
+            source_class="initial",
+            supports=("H1",),
+            contradicts=(),
+            verification_state=VerificationState.UNVERIFIED,
+            temporal_status=TemporalStatus.STALE,
+            retrieved=True,
+            verify_result="STALE",
+        ),
+        EvidenceItem(
+            evidence_id="E2",
+            proposition=f"Another older source claims {subject} is unavailable, but outdated.",
+            source_class="initial",
+            supports=("H2",),
+            contradicts=("H1",),
+            verification_state=VerificationState.UNVERIFIED,
+            temporal_status=TemporalStatus.STALE,
+            retrieved=True,
+            verify_result="STALE",
+        ),
+        EvidenceItem(
+            evidence_id="E3",
+            proposition=f"A recent update confirms {subject} is currently operational with all systems green.",
+            source_class="search",
+            supports=("H1",),
+            contradicts=("H2",),
+            verification_state=VerificationState.UNVERIFIED,
+            temporal_status=TemporalStatus.CURRENT,
+            retrieved=False,
+            verify_result="SUFFICIENT",
+        ),
+    )
+    return EvidenceTask(
+        task_id=task_id, split="i3_5_state_discrimination", category="tl_search",
+        task_summary=f"Determine {subject}.", high_stakes=rng.random() > 0.5,
+        budget_profile="STANDARD_NO_RETRIEVE", hypotheses=(h1, h2),
+        evidence_items=evidence, retrieve_exposes=(), search_exposes=("E3",),
+        oracle_resolution_path=("SEARCH_MORE:E3", "VERIFY:E3", "ANSWER"),
+        expected_terminal=DecisionAction.ANSWER, correct_hypothesis_id="H1",
+    )
+
+
+# ---------------------------------------------------------------------------
 # Main generator
 # ---------------------------------------------------------------------------
 
@@ -407,6 +649,11 @@ SUBTYPE_GENERATORS = {
     "ol_retrieve": _gen_ol_retrieve,
     "ol_verify": _gen_ol_verify,
     "ol_search": _gen_ol_search,
+    "tl_answer": _gen_tl_answer,
+    "tl_defer": _gen_tl_defer,
+    "tl_retrieve": _gen_tl_retrieve,
+    "tl_verify": _gen_tl_verify,
+    "tl_search": _gen_tl_search,
 }
 
 CORRECT_FIRST_ACTION = {
@@ -415,31 +662,48 @@ CORRECT_FIRST_ACTION = {
     "ol_retrieve": DecisionAction.RETRIEVE,
     "ol_verify": DecisionAction.VERIFY,
     "ol_search": DecisionAction.SEARCH_MORE,
+    "tl_answer": DecisionAction.ANSWER,
+    "tl_defer": DecisionAction.DEFER,
+    "tl_retrieve": DecisionAction.RETRIEVE,
+    "tl_verify": DecisionAction.VERIFY,
+    "tl_search": DecisionAction.SEARCH_MORE,
 }
 
 
 def generate_i3_5_state_discrimination_benchmark(
     n_per_subtype: int = 24,
     seed: int = 9137,
+    n_per_two_live_subtype: int = 20,
 ) -> tuple[EvidenceTask, ...]:
     """Generate the I3.5 state-discrimination benchmark.
 
     Args:
         n_per_subtype: number of tasks per one_live subtype (default 24)
+        n_per_two_live_subtype: number of tasks per two_live subtype (default 20)
         seed: random seed for domain assignment
 
     Returns:
         Tuple of EvidenceTask objects with correct_first_action metadata.
-        Total: 5 * n_per_subtype tasks.
+        Total: 5 * n_per_subtype + 5 * n_per_two_live_subtype tasks.
     """
     rng = random.Random(seed)
     tasks: list[EvidenceTask] = []
 
-    subtypes = list(SUBTYPE_GENERATORS.keys())
+    ol_subtypes = ["ol_answer", "ol_defer", "ol_retrieve", "ol_verify", "ol_search"]
+    tl_subtypes = ["tl_answer", "tl_defer", "tl_retrieve", "tl_verify", "tl_search"]
 
-    for subtype in subtypes:
+    for subtype in ol_subtypes:
         gen_func = SUBTYPE_GENERATORS[subtype]
         for i in range(n_per_subtype):
+            task_id = f"i3_5_{subtype}_{i:04d}"
+            domain = DOMAINS[rng.randrange(len(DOMAINS))]
+            task_rng = _seeded_rng(task_id)
+            task = gen_func(task_id, domain, task_rng)
+            tasks.append(task)
+
+    for subtype in tl_subtypes:
+        gen_func = SUBTYPE_GENERATORS[subtype]
+        for i in range(n_per_two_live_subtype):
             task_id = f"i3_5_{subtype}_{i:04d}"
             domain = DOMAINS[rng.randrange(len(DOMAINS))]
             task_rng = _seeded_rng(task_id)

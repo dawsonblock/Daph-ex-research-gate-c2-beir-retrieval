@@ -40,9 +40,11 @@ def main():
 
     # Generate the benchmark
     n_per_subtype = 24
+    n_per_two_live_subtype = 20
     seed = 9137
     tasks = generate_i3_5_state_discrimination_benchmark(
         n_per_subtype=n_per_subtype,
+        n_per_two_live_subtype=n_per_two_live_subtype,
         seed=seed,
     )
 
@@ -65,19 +67,16 @@ def main():
             cfa_str = cfa.value if hasattr(cfa, "value") else str(cfa)
 
             # Determine budget cases
-            if task.category == "ol_answer":
+            if task.category in ("ol_answer", "ol_retrieve", "tl_answer", "tl_retrieve"):
                 retrieval_budget_case = "available"
                 search_budget_case = "available"
-            elif task.category == "ol_defer":
+            elif task.category in ("ol_defer", "tl_defer"):
                 retrieval_budget_case = "exhausted"
                 search_budget_case = "exhausted"
-            elif task.category == "ol_retrieve":
-                retrieval_budget_case = "available"
-                search_budget_case = "available"
-            elif task.category == "ol_verify":
+            elif task.category in ("ol_verify", "tl_verify"):
                 retrieval_budget_case = "exhausted"  # no retrieval needed
                 search_budget_case = "available"
-            elif task.category == "ol_search":
+            elif task.category in ("ol_search", "tl_search"):
                 retrieval_budget_case = "exhausted"  # local retrieval exhausted
                 search_budget_case = "available"
             else:
@@ -92,11 +91,14 @@ def main():
                 "correct_first_action": cfa_str,
                 "retrieval_budget_case": retrieval_budget_case,
                 "search_budget_case": search_budget_case,
-                "gold_n_live": 1,  # all one_live tasks
-                "gold_n_eliminated": 1,
+                "gold_n_live": 2 if task.category.startswith("tl_") else 1,
+                "gold_n_eliminated": 0 if task.category.startswith("tl_") else 1,
                 "gold_t2": False,
                 "gold_all_eliminated": False,
-                "gold_verify_epistemically_relevant": task.category in ("ol_verify", "ol_retrieve", "ol_search"),
+                "gold_verify_epistemically_relevant": task.category in (
+                    "ol_verify", "ol_retrieve", "ol_search",
+                    "tl_verify", "tl_retrieve", "tl_search",
+                ),
                 "gold_should_gate_verify": False,
                 "semantic_error_class": None,
                 "budget_profile": task.budget_profile,
@@ -108,14 +110,20 @@ def main():
         "benchmark_name": "i3_5_state_discrimination_v1",
         "seed": seed,
         "n_per_subtype": n_per_subtype,
+        "n_per_two_live_subtype": n_per_two_live_subtype,
         "n_total": len(tasks),
         "sha256": sha,
         "subtypes": {
-            "ol_answer": {"n": n_per_subtype, "correct_first_action": "ANSWER"},
-            "ol_defer": {"n": n_per_subtype, "correct_first_action": "DEFER"},
-            "ol_retrieve": {"n": n_per_subtype, "correct_first_action": "RETRIEVE"},
-            "ol_verify": {"n": n_per_subtype, "correct_first_action": "VERIFY"},
-            "ol_search": {"n": n_per_subtype, "correct_first_action": "SEARCH_MORE"},
+            "ol_answer": {"n": n_per_subtype, "correct_first_action": "ANSWER", "family": "one_live"},
+            "ol_defer": {"n": n_per_subtype, "correct_first_action": "DEFER", "family": "one_live"},
+            "ol_retrieve": {"n": n_per_subtype, "correct_first_action": "RETRIEVE", "family": "one_live"},
+            "ol_verify": {"n": n_per_subtype, "correct_first_action": "VERIFY", "family": "one_live"},
+            "ol_search": {"n": n_per_subtype, "correct_first_action": "SEARCH_MORE", "family": "one_live"},
+            "tl_answer": {"n": n_per_two_live_subtype, "correct_first_action": "ANSWER", "family": "two_live"},
+            "tl_defer": {"n": n_per_two_live_subtype, "correct_first_action": "DEFER", "family": "two_live"},
+            "tl_retrieve": {"n": n_per_two_live_subtype, "correct_first_action": "RETRIEVE", "family": "two_live"},
+            "tl_verify": {"n": n_per_two_live_subtype, "correct_first_action": "VERIFY", "family": "two_live"},
+            "tl_search": {"n": n_per_two_live_subtype, "correct_first_action": "SEARCH_MORE", "family": "two_live"},
         },
         "trivial_policy_expected_scores": {
             "always_ANSWER": f"~{n_per_subtype}/{len(tasks)} = ~20%",

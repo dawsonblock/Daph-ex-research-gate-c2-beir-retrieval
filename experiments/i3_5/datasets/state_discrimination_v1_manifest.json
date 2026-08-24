@@ -2,58 +2,94 @@
   "benchmark_name": "i3_5_state_discrimination_v1",
   "gate_requirement": "Success(simple heuristic) < 70%",
   "n_per_subtype": 24,
-  "n_total": 120,
+  "n_per_two_live_subtype": 20,
+  "n_total": 220,
   "seed": 9137,
-  "sha256": "26ca604a52900d7c4d2007da51bf46d1f12aaa8d4c00dc68b0dd333976e25e74",
+  "sha256": "9cae0ffba718634b380ddc10cf4a48b263e19338e21492f2da10ceaafd338124",
   "subtypes": {
     "ol_answer": {
       "correct_first_action": "ANSWER",
+      "family": "one_live",
       "n": 24
     },
     "ol_defer": {
       "correct_first_action": "DEFER",
+      "family": "one_live",
       "n": 24
     },
     "ol_retrieve": {
       "correct_first_action": "RETRIEVE",
+      "family": "one_live",
       "n": 24
     },
     "ol_search": {
       "correct_first_action": "SEARCH_MORE",
+      "family": "one_live",
       "n": 24
     },
     "ol_verify": {
       "correct_first_action": "VERIFY",
+      "family": "one_live",
       "n": 24
+    },
+    "tl_answer": {
+      "correct_first_action": "ANSWER",
+      "family": "two_live",
+      "n": 20
+    },
+    "tl_defer": {
+      "correct_first_action": "DEFER",
+      "family": "two_live",
+      "n": 20
+    },
+    "tl_retrieve": {
+      "correct_first_action": "RETRIEVE",
+      "family": "two_live",
+      "n": 20
+    },
+    "tl_search": {
+      "correct_first_action": "SEARCH_MORE",
+      "family": "two_live",
+      "n": 20
+    },
+    "tl_verify": {
+      "correct_first_action": "VERIFY",
+      "family": "two_live",
+      "n": 20
     }
   },
   "summary": {
-    "balanced": true,
+    "balanced": false,
     "categories": {
       "ol_answer": 24,
       "ol_defer": 24,
       "ol_retrieve": 24,
       "ol_search": 24,
-      "ol_verify": 24
+      "ol_verify": 24,
+      "tl_answer": 20,
+      "tl_defer": 20,
+      "tl_retrieve": 20,
+      "tl_search": 20,
+      "tl_verify": 20
     },
     "correct_first_actions": {
-      "ANSWER": 24,
-      "DEFER": 24,
-      "RETRIEVE": 24,
-      "SEARCH_MORE": 24,
-      "VERIFY": 24
+      "ANSWER": 44,
+      "DEFER": 44,
+      "RETRIEVE": 44,
+      "SEARCH_MORE": 44,
+      "VERIFY": 44
     },
     "expected_terminals": {
-      "ANSWER": 96,
-      "DEFER": 24
+      "ANSWER": 176,
+      "DEFER": 44
     },
-    "total_tasks": 120
+    "total_tasks": 220
   },
   "trivial_policy_expected_scores": {
-    "always_ANSWER": "~24/120 = ~20%",
-    "always_DEFER": "~24/120 = ~20%",
-    "always_RETRIEVE": "~24/120 = ~20%",
-    "always_SEARCH_MORE": "~24/120 = ~20%",
-    "always_VERIFY": "~24/120 = ~20%"
+    "always_ANSWER": "~24/220 = ~20%",
+    "always_DEFER": "~24/220 = ~20%",
+    "always_RETRIEVE": "~24/220 = ~20%",
+    "always_SEARCH_MORE": "~24/220 = ~20%",
+    "always_VERIFY": "~24/220 = ~20%"
   }
 }
