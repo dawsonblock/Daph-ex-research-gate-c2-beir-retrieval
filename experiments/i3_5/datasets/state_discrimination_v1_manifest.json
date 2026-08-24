@@ -1,0 +1,59 @@
+{
+  "benchmark_name": "i3_5_state_discrimination_v1",
+  "gate_requirement": "Success(simple heuristic) < 70%",
+  "n_per_subtype": 24,
+  "n_total": 120,
+  "seed": 9137,
+  "sha256": "26ca604a52900d7c4d2007da51bf46d1f12aaa8d4c00dc68b0dd333976e25e74",
+  "subtypes": {
+    "ol_answer": {
+      "correct_first_action": "ANSWER",
+      "n": 24
+    },
+    "ol_defer": {
+      "correct_first_action": "DEFER",
+      "n": 24
+    },
+    "ol_retrieve": {
+      "correct_first_action": "RETRIEVE",
+      "n": 24
+    },
+    "ol_search": {
+      "correct_first_action": "SEARCH_MORE",
+      "n": 24
+    },
+    "ol_verify": {
+      "correct_first_action": "VERIFY",
+      "n": 24
+    }
+  },
+  "summary": {
+    "balanced": true,
+    "categories": {
+      "ol_answer": 24,
+      "ol_defer": 24,
+      "ol_retrieve": 24,
+      "ol_search": 24,
+      "ol_verify": 24
+    },
+    "correct_first_actions": {
+      "ANSWER": 24,
+      "DEFER": 24,
+      "RETRIEVE": 24,
+      "SEARCH_MORE": 24,
+      "VERIFY": 24
+    },
+    "expected_terminals": {
+      "ANSWER": 96,
+      "DEFER": 24
+    },
+    "total_tasks": 120
+  },
+  "trivial_policy_expected_scores": {
+    "always_ANSWER": "~24/120 = ~20%",
+    "always_DEFER": "~24/120 = ~20%",
+    "always_RETRIEVE": "~24/120 = ~20%",
+    "always_SEARCH_MORE": "~24/120 = ~20%",
+    "always_VERIFY": "~24/120 = ~20%"
+  }
+}
