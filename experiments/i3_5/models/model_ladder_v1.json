@@ -1,0 +1,178 @@
+{
+  "B0": {
+    "model": "B0",
+    "q_values": {
+      "ANSWER": -0.6,
+      "DEFER": -0.6,
+      "REASON_MORE": 1.0,
+      "RETRIEVE": 1.0,
+      "SEARCH_MORE": 1.0,
+      "VERIFY": 1.0
+    }
+  },
+  "B1": {
+    "model": "B1",
+    "q_table": {
+      "ALL_ELIMINATED": {
+        "ANSWER": -1.0,
+        "DEFER": -0.5,
+        "REASON_MORE": 1.0,
+        "RETRIEVE": 1.0,
+        "SEARCH_MORE": 1.0,
+        "VERIFY": 1.0
+      },
+      "ONE_LIVE": {
+        "ANSWER": 1.0,
+        "DEFER": -1.0,
+        "REASON_MORE": 1.0,
+        "SEARCH_MORE": 1.0
+      },
+      "UNTESTED": {
+        "ANSWER": -1.0,
+        "DEFER": -0.5,
+        "REASON_MORE": 1.0,
+        "RETRIEVE": 1.0,
+        "SEARCH_MORE": 1.0,
+        "VERIFY": 1.0
+      }
+    }
+  },
+  "LINEAR": {
+    "mean_actual_utility": 0.3333,
+    "mean_selected_q": 1.1392,
+    "model": "LINEAR",
+    "n_records": 1056,
+    "top_action_accuracy": 0.25
+  },
+  "Q_CAUSAL": {
+    "mean_actual_utility": 0.3333,
+    "mean_selected_q": 1.0,
+    "model": "Q_CAUSAL",
+    "n_records": 1056,
+    "top_action_accuracy": 0.25
+  },
+  "Q_OBS": {
+    "mean_actual_utility": 0.3333,
+    "mean_selected_q": 1.0,
+    "model": "Q_OBS",
+    "n_records": 1056,
+    "top_action_accuracy": 0.3333
+  },
+  "action_names": [
+    "ANSWER",
+    "DEFER",
+    "RETRIEVE",
+    "VERIFY",
+    "SEARCH_MORE",
+    "REASON_MORE"
+  ],
+  "comparisons": [
+    {
+      "ci_lower": 0.1455,
+      "ci_upper": 0.2545,
+      "comparison": "B1 - B0",
+      "mean_diff": 0.2,
+      "n_tasks": 220,
+      "significant": true
+    },
+    {
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "comparison": "LINEAR - B0",
+      "mean_diff": 0.0,
+      "n_tasks": 220,
+      "significant": false
+    },
+    {
+      "ci_lower": 0.1455,
+      "ci_upper": 0.2545,
+      "comparison": "Q_CAUSAL - B0",
+      "mean_diff": 0.2,
+      "n_tasks": 220,
+      "significant": true
+    },
+    {
+      "ci_lower": -0.5591,
+      "ci_upper": -0.2409,
+      "comparison": "Q_OBS - B0",
+      "mean_diff": -0.4,
+      "n_tasks": 220,
+      "significant": true
+    }
+  ],
+  "cv_mse": {
+    "LINEAR": 0.232937,
+    "Q_CAUSAL": 0.0,
+    "Q_OBS": 0.0
+  },
+  "evaluations": {
+    "B0": {
+      "mean_actual_utility": 0.3333,
+      "mean_selected_q": 1.0,
+      "model": "B0",
+      "n_records": 1056,
+      "top_action_accuracy": 0.25
+    },
+    "B1": {
+      "mean_actual_utility": 0.3333,
+      "mean_selected_q": 1.0,
+      "model": "B1",
+      "n_records": 1056,
+      "top_action_accuracy": 0.4167
+    },
+    "LINEAR": {
+      "mean_actual_utility": 0.3333,
+      "mean_selected_q": 1.1392,
+      "model": "LINEAR",
+      "n_records": 1056,
+      "top_action_accuracy": 0.25
+    },
+    "Q_CAUSAL": {
+      "mean_actual_utility": 0.3333,
+      "mean_selected_q": 1.0,
+      "model": "Q_CAUSAL",
+      "n_records": 1056,
+      "top_action_accuracy": 0.25
+    },
+    "Q_OBS": {
+      "mean_actual_utility": 0.3333,
+      "mean_selected_q": 1.0,
+      "model": "Q_OBS",
+      "n_records": 1056,
+      "top_action_accuracy": 0.3333
+    }
+  },
+  "feature_keys": [
+    "n_live",
+    "n_eliminated",
+    "n_untested",
+    "n_total_hypotheses",
+    "n_visible_evidence",
+    "n_hidden_evidence",
+    "n_verified",
+    "n_supporting",
+    "n_contradicting",
+    "n_stale",
+    "retrieval_remaining",
+    "search_remaining",
+    "verify_remaining",
+    "steps_remaining",
+    "can_retrieve",
+    "can_search",
+    "can_verify",
+    "searched",
+    "reasoning_complete",
+    "same_action_run_length",
+    "retrieval_count",
+    "search_count",
+    "verify_count",
+    "action_ANSWER",
+    "action_DEFER",
+    "action_RETRIEVE",
+    "action_VERIFY",
+    "action_SEARCH_MORE",
+    "action_REASON_MORE"
+  ],
+  "n_observational_records": 220,
+  "n_records": 1056
+}

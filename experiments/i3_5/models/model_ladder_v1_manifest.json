@@ -1,0 +1,14 @@
+{
+  "causal_data_sha256": "01d13e462ba624ddafa4effe14138d31aa5d4fe3debd22fcecc66f73af74b8d4",
+  "feature_dim": 29,
+  "gbt_params": {
+    "learning_rate": 0.1,
+    "max_depth": 4,
+    "n_estimators": 200,
+    "random_state": 42,
+    "subsample": 0.8
+  },
+  "model_ladder_sha256": "235fca222ebbe9b7086dd0925160893e9720039dbb039fb479dbb6089f19e088",
+  "n_observational_records": 220,
+  "n_records": 1056
+}
