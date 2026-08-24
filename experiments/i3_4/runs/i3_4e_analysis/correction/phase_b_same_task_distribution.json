@@ -1,0 +1,35 @@
+{
+  "b0_mean_on_phase_b_tasks": 41.1907,
+  "correction_id": "I3.4E-ANALYSIS-CORRECTION-001",
+  "n_phase_b_tasks": 30,
+  "p0_mean_on_phase_b_tasks": 38.1517,
+  "p2_mean_on_phase_b_tasks": 47.74,
+  "ps_distribution_on_phase_b_tasks": {
+    "iqr_lower": 37.674,
+    "iqr_upper": 47.9153,
+    "max_mean": 64.7273,
+    "mean_of_means": 43.6162,
+    "median_of_means": 42.6322,
+    "min_mean": 32.559,
+    "n_permutations": 16,
+    "per_arm": {
+      "PS01": 43.8367,
+      "PS02": 39.2363,
+      "PS03": 47.3763,
+      "PS04": 51.4157,
+      "PS05": 64.7273,
+      "PS06": 41.7037,
+      "PS07": 44.2083,
+      "PS08": 58.3957,
+      "PS09": 37.936,
+      "PS10": 43.5607,
+      "PS11": 38.2233,
+      "PS12": 35.577,
+      "PS13": 33.4217,
+      "PS14": 32.559,
+      "PS15": 37.5867,
+      "PS16": 48.095
+    },
+    "sd_of_means": 8.8352
+  }
+}

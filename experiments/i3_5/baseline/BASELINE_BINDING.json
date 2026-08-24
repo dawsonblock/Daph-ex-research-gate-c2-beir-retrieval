@@ -1,0 +1,66 @@
+{
+  "baseline_id": "i3_4e",
+  "commit": "766e3af21314069e5d328d64ec78dc4bb5d6e568",
+  "branch": "i3.12-semantic-relation-ablation",
+  "frozen_at": "2025-01-24",
+  "correction_id": "I3.4E-ANALYSIS-CORRECTION-001",
+  "runtime_identity": {
+    "model_name": "qwen2.5-7b-instruct",
+    "gguf_filename": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "gguf_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+    "backend_identity_sha256": "08dd528f6fc9e67c574ec766ea15ab7be80bdaa7a615625244122db533c2772d",
+    "llama_cpp_version": "0.3.35"
+  },
+  "dataset": {
+    "heldout_balanced_seed9137_sha256": "e1813d7ebfd10255e974c606e41c514b4b4db33df48be21effdf59d049ca22ab",
+    "n_tasks_phaseA": 80,
+    "n_tasks_phaseB": 30,
+    "generator_seed": 9137,
+    "shuffle_seed": 42
+  },
+  "b1_model_sha256": "c72b8641c5452d79e92fd9cb14ca289948b54385f2481a893ecb8c6bf22f1f68",
+  "source_shas": {
+    "packet_builder": "93e1b5767589143a7d7fde4c4cfb8260151dfa9b1fa30ffb41c4328c587cc8ef",
+    "run_i3_4e": "bc4634763278d2616a386d6e41710b03b253dbeda9b5aa7510ad8f37b580df6c",
+    "i3_4_analysis": "eaad47b9b9e53ac46ba020818a3e8a08a31d0f28114c6135f7207b1cbf3c3bed",
+    "i3_4e_analysis": "141733a2a9d8881e731be6ae30c600a9c49b299307f3a1c41db893b37ec77860",
+    "i3_4e_correction": "d0f2ea901c5bc120d182e7226e5361cf5e1c23cff3b871ea814297ad5177449d",
+    "phase_classifier": "337f00fd38116678e5153fb206edaf225f0fef70bde0a0688bf611a60ff10232"
+  },
+  "mapping_shas": {
+    "b0_global_prior": "d0b929ab87bf1ca5f5886b46d7662ff79b89abf186a922cd5f4de94c6cb36a74",
+    "b1_table": "6ee1f735b8a7508769ec872d01678dac9607345adfd3a8209d558cb0500704b2",
+    "const_mapping": "dcd5dc4d62055f6ff220f6cb2ac5e7206b3989eb1f0a8c06a84225bc00f90a45",
+    "defer_heuristic_mapping": "a947404b510a7b3e28f6f9268f78ccf8a19456a99105a78296e7b8f984bd45ef",
+    "i3_4e_control_receipt": "5d280b6546f0bed0f3d379a35156bc87124c559f3bafd4a59a94d6467aabd942",
+    "ps01_mapping": "aa9cef08cda9f3759e9f3060ad0be56fb74168dd1c64ef64cce5737e4a260663",
+    "ps02_mapping": "2786c79a06d44392c9bee691bd0f898604828b9e9df85374dd9ab0a84d7f60ec",
+    "ps03_mapping": "d2791b69d7b072153ed938f2fe457eb666ee5556a2a245cc173a4e40ad438fb0",
+    "ps04_mapping": "44693d18cc30f602d06b3f8076b00d9b4979eb3744993da49a46f0e42127996d",
+    "ps05_mapping": "3691cbb61b7c110f542e867a83931d7af396ef979d413c0a89a6d1574f6c7496",
+    "ps06_mapping": "e78babc23ad53e1ef8ff750a36093d6f5b05a10e62e25a23ab0081bee20c7b74",
+    "ps07_mapping": "19b6870c09a0f466ae24c17ab96750604c9064db21127e1e235a48a5995238d8",
+    "ps08_mapping": "6cdf246cf13e64c94fe49eeed44fa728c50133f8030fa3178a9f7f175005ec80",
+    "ps09_mapping": "836f44fbf5907388c93ff205a707f51d7a20f984ce56479509a1502bf64d9f31",
+    "ps10_mapping": "31d5831340b9add6ad5479db5d39634821e619a1636072fcba8e963f20605fbe",
+    "ps11_mapping": "e1b90f491829c6fd46999aa36aef4ffb62a9cf413c1e564559ac9a790b0b46ed",
+    "ps12_mapping": "ccc56dccf925c9271e8bda076c1e90fc70fa20d5f8d2b2e20407436a1f6b2771",
+    "ps13_mapping": "0ce829d8c681b95deccc44b1c20eb2959447fcef7a2afbd66bbd049d749df718",
+    "ps14_mapping": "49913a97224fe960d5937b33a9529c4d276178ace2876c331e48da979e1f74ac",
+    "ps15_mapping": "eeac96201adc00f00a529329a8264c7c77b0e9b15ed9e05bcaa9780445868600",
+    "ps16_mapping": "8606f45b41480ce191bcad4c487235aa6ca843820518491bf19e1c01932154e7"
+  },
+  "result_shas": {
+    "phaseA_results": "ad76348be67a11ecc6b7bb42690531b504218584e2b5265b93044a3a2493f6dc",
+    "phaseA_receipts": "9ecf0826902a7a68df064e8246d3cc24fdd81b2b9f1da63fa98aa9df08fbea98",
+    "phaseA_manifest": "935ae6b897fdcb63512858a4bc45e10c726c957e4f457e6296ced2a6f1351375",
+    "phaseB_results": "aaea788627ebb2804495594e5e41ed89a854b7510eece7ddfecfe7847a3191b6",
+    "phaseB_receipts": "397b8906ee8281471a293531a9224d356728bad5a8db5afc949d0f897a874c67",
+    "phaseB_manifest": "054b93d727326f1304c43ce42d78250c571fcb2080dd3eeda3bd752fb234d2ab"
+  },
+  "corrected_analysis_shas": {
+    "phase_b_same_task_distribution": "computed_at_freeze",
+    "phase_b_corrected_percentiles": "computed_at_freeze",
+    "correction_note": "computed_at_freeze"
+  }
+}
