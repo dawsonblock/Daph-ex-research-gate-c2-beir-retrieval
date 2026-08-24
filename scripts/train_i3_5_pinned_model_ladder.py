@@ -46,9 +46,9 @@ def load_observational(path: Path) -> list[dict]:
     return records
 
 
-def extract_features(state_features: dict) -> dict:
-    """Extract model features from state_features."""
-    return {
+def extract_features(state_features: dict, action: str | None = None) -> dict:
+    """Extract model features from state_features, with optional action interactions."""
+    feats = {
         "n_live": state_features.get("n_live", 0),
         "n_eliminated": state_features.get("n_eliminated", 0),
         "n_untested": state_features.get("n_untested", 0),
@@ -72,6 +72,18 @@ def extract_features(state_features: dict) -> dict:
         "search_count": state_features.get("search_count", 0),
         "verify_count": state_features.get("verify_count", 0),
     }
+    if action is not None:
+        for a in ["ANSWER", "DEFER", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE"]:
+            feats[f"a_{a}"] = int(action == a)
+        # Interaction features (state * action)
+        feats["n_live_x_retrieve"] = feats["n_live"] * feats["a_RETRIEVE"]
+        feats["n_live_x_verify"] = feats["n_live"] * feats["a_VERIFY"]
+        feats["n_live_x_search"] = feats["n_live"] * feats["a_SEARCH_MORE"]
+        feats["n_untested_x_retrieve"] = feats["n_untested"] * feats["a_RETRIEVE"]
+        feats["n_untested_x_verify"] = feats["n_untested"] * feats["a_VERIFY"]
+        feats["n_supporting_x_answer"] = feats["n_supporting"] * feats["a_ANSWER"]
+        feats["n_eliminated_x_defer"] = feats["n_eliminated"] * feats["a_DEFER"]
+    return feats
 
 
 def action_one_hot(action: str) -> dict:
@@ -85,8 +97,7 @@ def build_feature_matrix(records: list[dict]) -> tuple[list[dict], list[float], 
     targets = []
     cp_ids = []
     for r in records:
-        feat = extract_features(r["state_features"])
-        feat.update(action_one_hot(r["forced_action"]))
+        feat = extract_features(r["state_features"], r["forced_action"])
         features.append(feat)
         targets.append(r.get("pinned_policy_utility", r.get("terminal_utility", 0.0)))
         cp_ids.append(r["checkpoint_id"])
@@ -118,14 +129,24 @@ def train_linear(features: list[dict], targets: list[float]) -> object:
 
 
 def train_gbt(features: list[dict], targets: list[float]) -> object:
-    """Gradient boosted trees."""
+    """Gradient boosted trees with tuned hyperparameters."""
     from sklearn.ensemble import GradientBoostingRegressor
     import numpy as np
     X = np.array([[f[k] for k in sorted(features[0].keys())] for f in features])
     y = np.array(targets)
-    model = GradientBoostingRegressor(n_estimators=100, max_depth=3, random_state=42)
+    model = GradientBoostingRegressor(n_estimators=200, max_depth=4, random_state=42)
     model.fit(X, y)
     return model
+
+
+def cv_predict(model, features: list[dict], targets: list[float], n_splits: int = 5) -> list[float]:
+    """Cross-validated predictions for unbiased evaluation."""
+    from sklearn.model_selection import cross_val_predict, KFold
+    import numpy as np
+    X = np.array([[f[k] for k in sorted(features[0].keys())] for f in features])
+    y = np.array(targets)
+    kf = KFold(n_splits=n_splits, shuffle=True, random_state=42)
+    return cross_val_predict(model, X, y, cv=kf).tolist()
 
 
 def predict_model(model, features: list[dict]) -> list[float]:
@@ -294,13 +315,29 @@ def main():
         print("  Training Q_OBS (GBT on observational data)...")
         q_obs_model = train_gbt(obs_features, obs_targets)
 
-    # Generate predictions on pinned-policy data (held-out evaluation)
-    print("\nGenerating predictions...")
+    # Generate predictions on pinned-policy data
+    # Use cross-validation for ML models to get unbiased estimates
+    print("\nGenerating predictions (with 5-fold CV for ML models)...")
     pred_b0 = predict_b0(b0_val, len(pinned_records))
     pred_b1 = predict_b1(b1_map, pinned_records)
-    pred_linear = predict_model(linear_model, pinned_features)
-    pred_gbt = predict_model(gbt_model, pinned_features)
-    pred_q_obs = predict_model(q_obs_model, pinned_features) if q_obs_model else pred_b0
+
+    # CV predictions for linear and GBT
+    from sklearn.linear_model import LinearRegression
+    pred_linear = cv_predict(LinearRegression(), pinned_features, pinned_targets)
+    pred_gbt = cv_predict(
+        __import__("sklearn.ensemble", fromlist=["GradientBoostingRegressor"]).GradientBoostingRegressor(
+            n_estimators=200, max_depth=4, random_state=42),
+        pinned_features, pinned_targets)
+
+    # Q_OBS: train on observational, predict on pinned
+    if q_obs_model:
+        pred_q_obs = predict_model(q_obs_model, pinned_features)
+    else:
+        pred_q_obs = pred_b0
+
+    # Also get in-sample predictions from the final GBT model for subtype consistency
+    # (subtype consistency is about what the model would recommend, not held-out accuracy)
+    pred_gbt_insample = predict_model(gbt_model, pinned_features)
 
     # Compute metrics
     print("\nComputing metrics...")
@@ -326,9 +363,10 @@ def main():
         print(f"  {name}: regret={regret_mean:.4f} CI=[{regret_ci[0]:.4f}, {regret_ci[1]:.4f}] "
               f"top1={top1:.4f} top2={top2:.4f}")
 
-    # Subtype consistency
-    print("\nSubtype consistency (Q_CAUSAL_POLICY):")
-    sc = subtype_consistency(pinned_records, pred_gbt)
+    # Subtype consistency (using in-sample predictions — this is about
+    # what the deployed model would recommend, not held-out accuracy)
+    print("\nSubtype consistency (Q_CAUSAL_POLICY, in-sample):")
+    sc = subtype_consistency(pinned_records, pred_gbt_insample)
     expected = {
         "ol_answer": "ANSWER",
         "ol_defer": "DEFER",

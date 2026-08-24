@@ -1,0 +1,21 @@
+{
+  "backend_identity_sha256": "a265db3abd34715a7445ad0e6c623081ad03c5d9acfb0ebbc452df9e24112493",
+  "binding_id": "I3_5_PINNED_POLICY_V1",
+  "dataset_sha256": "4383b7727ae38811d57db2de8294666405775745678db9b6ca70803a8afaae13",
+  "downstream_policy": "QWEN_PINNED_V1",
+  "max_rollout_steps": 8,
+  "n_backend_errors": 0,
+  "n_ctx": 4096,
+  "n_decoder_errors": 0,
+  "n_premature_answer": 176,
+  "n_premature_defer": 176,
+  "n_records": 1056,
+  "n_success": 620,
+  "n_terminal": 972,
+  "overall_success_rate": 0.5871,
+  "premature_answer_rate": 0.1667,
+  "premature_defer_rate": 0.1667,
+  "schedule_id": "71b7cc6d6b00c5e3314c93f9a46189fa835ce434540fefc7863e30f6a259037f",
+  "terminal_rate": 0.9205,
+  "timestamp": "2026-08-24T21:47:59.479839+00:00"
+}
