@@ -1,0 +1,96 @@
+{
+  "causal_coverage": {
+    "by_action": {
+      "ANSWER": 220,
+      "DEFER": 220,
+      "REASON_MORE": 220,
+      "RETRIEVE": 44,
+      "SEARCH_MORE": 176,
+      "VERIFY": 176
+    },
+    "by_subtype": {
+      "ol_answer": 96,
+      "ol_defer": 96,
+      "ol_retrieve": 144,
+      "ol_search": 120,
+      "ol_verify": 120,
+      "tl_answer": 80,
+      "tl_defer": 80,
+      "tl_retrieve": 120,
+      "tl_search": 100,
+      "tl_verify": 100
+    }
+  },
+  "comparisons": [
+    {
+      "ci_lower": 0.4636,
+      "ci_upper": 0.7318,
+      "comparison": "Q_CAUSAL - Q_OBS",
+      "mean_diff": 0.6,
+      "n_tasks": 220,
+      "significant": true
+    },
+    {
+      "ci_lower": 0.1455,
+      "ci_upper": 0.2545,
+      "comparison": "Q_CAUSAL - B0",
+      "mean_diff": 0.2,
+      "n_tasks": 220,
+      "significant": true
+    },
+    {
+      "ci_lower": -0.5591,
+      "ci_upper": -0.2409,
+      "comparison": "Q_OBS - B0",
+      "mean_diff": -0.4,
+      "n_tasks": 220,
+      "significant": true
+    }
+  ],
+  "confounding_analysis": {
+    "causal_answer_coverage_fraction": 0.2,
+    "causal_answer_n": 220,
+    "causal_answer_with_support": 44,
+    "confounding_present": true,
+    "observational_answer_coverage_fraction": 1.0,
+    "observational_answer_n": 24,
+    "observational_answer_with_support": 24
+  },
+  "gbt_params": {
+    "learning_rate": 0.1,
+    "max_depth": 4,
+    "n_estimators": 200,
+    "random_state": 42,
+    "subsample": 0.8
+  },
+  "n_causal_records": 1056,
+  "n_observational_records": 220,
+  "observational_coverage": {
+    "by_action": {
+      "ANSWER": 24,
+      "DEFER": 96,
+      "RETRIEVE": 20,
+      "SEARCH_MORE": 20,
+      "VERIFY": 60
+    },
+    "by_subtype": {
+      "ol_answer": 24,
+      "ol_defer": 24,
+      "ol_retrieve": 24,
+      "ol_search": 24,
+      "ol_verify": 24,
+      "tl_answer": 20,
+      "tl_defer": 20,
+      "tl_retrieve": 20,
+      "tl_search": 20,
+      "tl_verify": 20
+    }
+  },
+  "q_estimate_accuracy": {
+    "B0_mse": 0.266667,
+    "Q_CAUSAL_better_than_B0": true,
+    "Q_CAUSAL_better_than_Q_OBS": true,
+    "Q_CAUSAL_mse": 0.0,
+    "Q_OBS_mse": 0.666667
+  }
+}
