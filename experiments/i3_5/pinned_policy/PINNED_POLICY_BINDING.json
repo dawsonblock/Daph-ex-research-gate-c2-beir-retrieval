@@ -1,0 +1,142 @@
+{
+  "binding_id": "I3_5_PINNED_POLICY_V1",
+  "commit": "a9e46d909fe19edf5649cdb68a63e277c30063f5",
+  "branch": "i3.12-semantic-relation-ablation",
+  "frozen_at": "2025-01-24",
+  "description": "Pinned downstream policy for I3.5-PQ counterfactual action value collection. The pinned Qwen2.5-7B model is used as the downstream policy after forced actions. This binding freezes every component that affects the pinned-policy Q values.",
+
+  "model": {
+    "model_name": "qwen2.5-7b-instruct",
+    "gguf_filename": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "gguf_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+    "quantization": "Q4_K_M",
+    "backend_class": "R2DirectLlamaBackend",
+    "llama_cpp_version_required": "0.3.35"
+  },
+
+  "generation_config": {
+    "temperature": 0.0,
+    "max_tokens": 256,
+    "top_p": 1.0,
+    "top_k": 40,
+    "repeat_penalty": 1.0,
+    "seed": 42,
+    "n_ctx": 4096,
+    "n_gpu_layers": -1
+  },
+
+  "schema": {
+    "schema_builder": "r2_schema.build_action_schema",
+    "schema_sha256_source": "r2_schema.schema_sha256",
+    "grammar_enforcement": "LlamaGrammar.from_json_schema",
+    "action_vocabulary_source": "r2_allowed_actions.ACTION_VOCABULARY"
+  },
+
+  "system_prompt": {
+    "source": "run_i3_7e_compact_governor.MDSG_STATE_WITH_AFFORDANCES_SYSTEM_PROMPT",
+    "prompt_sha256": "computed_at_runtime",
+    "note": "The system prompt is the frozen MDSG_STATE_WITH_AFFORDANCES prompt. It is loaded from the i3_7e module at runtime. Its SHA is recorded in each model call receipt."
+  },
+
+  "utility": {
+    "config_file": "configs/v2b_i3_1_utility_v1.json",
+    "config_sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07",
+    "terminal_rewards": {
+      "correct_answer": 100.0,
+      "incorrect_answer": -120.0,
+      "correct_defer": 70.0,
+      "incorrect_defer": -30.0,
+      "correct_stop": 0.0,
+      "incorrect_stop": -30.0
+    },
+    "resource_weights": {
+      "executive_step": 0.1,
+      "retrieval": 2.0,
+      "verification": 3.0,
+      "search": 2.0,
+      "reasoning_128_tokens": 2.0,
+      "logical_ms": 0.01
+    }
+  },
+
+  "executor": {
+    "class": "EvidenceExecutor",
+    "source_sha256": "48714eb576b25fb2b6543d7cf5ec3b54f8b900363dc86b6a772b0ae9c54d03e6",
+    "note": "Frozen executor with deterministic action effects. No LLM calls during execution."
+  },
+
+  "budget": {
+    "max_executive_steps": 10,
+    "max_retrieval_calls": 3,
+    "max_search_calls": 2,
+    "max_verification_calls": 5,
+    "max_reasoning_tokens": 512,
+    "max_elapsed_ms": 10000
+  },
+
+  "benchmark": {
+    "name": "i3_5_state_discrimination_v1",
+    "sha256": "9cae0ffba718634b380ddc10cf4a48b263e19338e21492f2da10ceaafd338124",
+    "n_tasks": 220,
+    "seed": 9137,
+    "dataset_sha256": "cf684726db5ef6ee847df24a5aa8620c3f639e384c08a1dbac2864957305fb14"
+  },
+
+  "checkpoints": {
+    "n_checkpoints": 220,
+    "checkpoints_sha256": "732abe0f65839d1f17d0e137615dfd3147bdf8fc2de06d24d07843466c8f9ca1",
+    "schedule_sha256": "246eee30d7da88eda6d918664ef090acd948a87fc63e777ee149b94c0810c3e2",
+    "n_interventions": 1056
+  },
+
+  "source_shas": {
+    "run_i3_7e_compact_governor": "32d043988132c4626d688d327638affe47bd238e89c8afce2275f65bceb27dd4",
+    "model_backend": "a9f1c8888b702c458300096006760dc43c26a17e81a8067fa0509e1c6e6ed988",
+    "model_decoder": "b7d76db76ae841e4fe4eb7abc7976dc146e25b42037fe2b1927299ec7e382ec1",
+    "evidence_executor": "48714eb576b25fb2b6543d7cf5ec3b54f8b900363dc86b6a772b0ae9c54d03e6",
+    "evidence_serializer": "88d16465c6c146a6d7217cc24aef023dcc30cfde65b660c2ed25b8e756e40aa1",
+    "evidence_schema": "03176c1135cbbe080b3dcf51b2f1abba0364c941624e9d6633628a61274eee5a",
+    "resources": "d520b54bdcf91d88420ae9d4ec782d6d7c5aaea546ee49287f6c8f984e0f6e17",
+    "metareasoning_utility": "4ff057c790589662ac2c0656f41ad7c90537c8a7fa8e30aa3a6f8949d1f04790",
+    "r2_schema": "c20cd3a5adf976ddce2296ded11e21d1b2d9c972cd94c205404e5d6b410a3b0e",
+    "r2_allowed_actions": "482e9f6a9ab6d8c00c2f9d9e50ce5ab1e440e679f39da08dea554b3b3f50cd16",
+    "intervention_checkpoint": "caaa71ad98ab58f3bfae3e2c2d5b8c42257088f332c0aa01680cd12aa327ac5a",
+    "intervention_restore": "9b8c2b6ad1f9ad744a21f0f1ee4e9f6a04fb75877bbb8c0ed3dd714c22c815c7",
+    "intervention_force_action": "bd18c3eecaa9c9984cd0951242bd486892f65c65b5938bc5e01a168673397249"
+  },
+
+  "provenance_requirements": {
+    "per_intervention": [
+      "checkpoint_id",
+      "forced_action",
+      "target_evidence_id",
+      "state_sha_before",
+      "state_sha_after (if non-terminal)",
+      "downstream_policy_actions",
+      "downstream_policy_raw_outputs",
+      "terminal_utility",
+      "terminal_action",
+      "success",
+      "premature_defer",
+      "premature_answer",
+      "resource_exhaustion",
+      "loop",
+      "model_call_receipts (with prompt_sha, schema_sha, request_sha)"
+    ],
+    "per_trajectory": [
+      "all model call receipts",
+      "all executor outcomes",
+      "realized utility breakdown"
+    ]
+  },
+
+  "invariants": [
+    "The pinned Qwen model must not be retrained or altered during data collection.",
+    "temperature must be 0.0 for deterministic generation.",
+    "The same 220 checkpoints from I3.5-DEV must be used (no new checkpoints).",
+    "The same 1056-intervention schedule must be used (no new interventions).",
+    "Every model call must produce a receipt with prompt_sha, schema_sha, and request_sha.",
+    "State hash verification must pass on every checkpoint restore.",
+    "The oracle Q* values from causal_actions_v1.jsonl must be preserved alongside pinned-policy Q values for direct comparison."
+  ]
+}

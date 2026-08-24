@@ -153,10 +153,63 @@ all recoverable with optimal downstream policy.
 3. **Q_CAUSAL behaves identically to B0 on non-terminal actions**
    (the GBT learns the same global prior for non-terminal actions)
 
-### Next Steps (Phase 15-20)
+### Audit: Why Q_CAUSAL_ORACLE Achieves Zero MSE
 
-The remaining phases require the pinned LLM policy (Qwen2.5-7B) for:
-- Realistic Q values for non-terminal actions (pinned-policy rollout)
+The reported MSE(Q_CAUSAL) = 0.000 sounds excellent but is evidence that
+the current target is too easy, not that the action-value problem is solved.
+
+The oracle continuation collapses all recoverable non-terminal actions
+to the same target:
+
+```
+correct terminal action   -> +1
+incorrect terminal action -> -1
+all recoverable continuation actions (RETRIEVE, VERIFY, SEARCH, REASON) -> +1
+```
+
+This means the target function is nearly deterministic and trivially
+learnable: the GBT needs only to learn the terminal-action discrimination
+(ANSWER vs DEFER), since all continuation actions share the same Q* = +1.0.
+
+A realistic action-value problem should not ordinarily produce perfect
+held-out MSE unless the environment is nearly deterministic and the label
+function trivial. In this case it is because the target effectively
+collapses to a binary terminal-action classification.
+
+**This is a target-resolution limitation, not evidence of a solved
+general action-value problem.**
+
+The fix is to replace the oracle continuation with the pinned Qwen
+policy (Phase 15: I3.5-PQ). This produces:
+
+```
+Q^{pi_Qwen}(s, a) = E[U | do(a), s, pi_Qwen downstream]
+```
+
+which will show real separation between RETRIEVE, VERIFY, and SEARCH
+because Qwen may fail to recover after some actions.
+
+### Next Steps: I3.5-PQ (Pinned-Policy Counterfactual Action Values)
+
+The next milestone is I3.5-PQ, which replaces the oracle continuation
+with the pinned Qwen2.5-7B policy:
+
+```
+checkpoint s
+   ├── FORCE RETRIEVE -> return control to frozen Qwen -> terminal utility
+   ├── FORCE VERIFY   -> return control to frozen Qwen -> terminal utility
+   ├── FORCE SEARCH   -> return control to frozen Qwen -> terminal utility
+   ├── FORCE ANSWER   -> terminal utility
+   └── FORCE DEFER    -> terminal utility
+```
+
+This estimates Q^{pi_Qwen}(s,a) instead of Q*(s,a).
+
+The pinned policy binding is frozen in:
+`experiments/i3_5/pinned_policy/PINNED_POLICY_BINDING.json`
+
+The same 220 checkpoints and 1056-intervention schedule are reused,
+giving direct comparison between Q_oracle(s,a) and Q_qwen(s,a).
 - The 6-arm development experiment (P0/B0/B1/PS05/Q_OBS/Q_CAUSAL)
 - Mechanism audit with LLM behavior
 - Final confirmation on an unseen benchmark
