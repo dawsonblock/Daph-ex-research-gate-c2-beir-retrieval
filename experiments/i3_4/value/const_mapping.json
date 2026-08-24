@@ -1,0 +1,41 @@
+{
+  "mapping": {
+    "ANSWER_READY": {
+      "ANSWER": 0.5,
+      "DEFER": 0.5,
+      "RETRIEVE": 0.5,
+      "SEARCH_MORE": 0.5,
+      "VERIFY": 0.5
+    },
+    "DISCRIMINATION": {
+      "ANSWER": 0.5,
+      "DEFER": 0.5,
+      "RETRIEVE": 0.5,
+      "SEARCH_MORE": 0.5,
+      "VERIFY": 0.5
+    },
+    "EVIDENCE_ACQUISITION": {
+      "ANSWER": 0.5,
+      "DEFER": 0.5,
+      "RETRIEVE": 0.5,
+      "SEARCH_MORE": 0.5,
+      "VERIFY": 0.5
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "ANSWER": 0.5,
+      "DEFER": 0.5,
+      "RETRIEVE": 0.5,
+      "SEARCH_MORE": 0.5,
+      "VERIFY": 0.5
+    },
+    "RESOLUTION": {
+      "ANSWER": 0.5,
+      "DEFER": 0.5,
+      "RETRIEVE": 0.5,
+      "SEARCH_MORE": 0.5,
+      "VERIFY": 0.5
+    }
+  },
+  "model": "CONST_uniform",
+  "value": 0.5
+}

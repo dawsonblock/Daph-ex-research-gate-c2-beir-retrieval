@@ -1,0 +1,268 @@
+{
+  "n_one_live_tasks": 5,
+  "per_arm": {
+    "B0": {
+      "answer_rate": 0.8,
+      "defer_rate": 0.2,
+      "mean_utility": -94.768,
+      "n": 5,
+      "success_rate": 0.2
+    },
+    "P0": {
+      "answer_rate": 1.0,
+      "defer_rate": 0.0,
+      "mean_utility": -123.29,
+      "n": 5,
+      "success_rate": 0.0
+    },
+    "P2": {
+      "answer_rate": 0.6,
+      "defer_rate": 0.4,
+      "mean_utility": -56.334,
+      "n": 5,
+      "success_rate": 0.4
+    },
+    "PS01": {
+      "answer_rate": 0.8,
+      "defer_rate": 0.2,
+      "mean_utility": -89.61,
+      "n": 5,
+      "success_rate": 0.2
+    },
+    "PS02": {
+      "answer_rate": 1.0,
+      "defer_rate": 0.0,
+      "mean_utility": -127.178,
+      "n": 5,
+      "success_rate": 0.0
+    },
+    "PS03": {
+      "answer_rate": 0.6,
+      "defer_rate": 0.4,
+      "mean_utility": -55.472,
+      "n": 5,
+      "success_rate": 0.4
+    },
+    "PS04": {
+      "answer_rate": 0.4,
+      "defer_rate": 0.6,
+      "mean_utility": -20.06,
+      "n": 5,
+      "success_rate": 0.6
+    },
+    "PS05": {
+      "answer_rate": 0.0,
+      "defer_rate": 1.0,
+      "mean_utility": 59.81,
+      "n": 5,
+      "success_rate": 1.0
+    },
+    "PS06": {
+      "answer_rate": 0.4,
+      "defer_rate": 0.0,
+      "mean_utility": -78.332,
+      "n": 5,
+      "success_rate": 0.0
+    },
+    "PS07": {
+      "answer_rate": 0.8,
+      "defer_rate": 0.2,
+      "mean_utility": -93.044,
+      "n": 5,
+      "success_rate": 0.2
+    },
+    "PS08": {
+      "answer_rate": 0.2,
+      "defer_rate": 0.8,
+      "mean_utility": 19.232,
+      "n": 5,
+      "success_rate": 0.8
+    },
+    "PS09": {
+      "answer_rate": 1.0,
+      "defer_rate": 0.0,
+      "mean_utility": -124.154,
+      "n": 5,
+      "success_rate": 0.0
+    },
+    "PS10": {
+      "answer_rate": 0.8,
+      "defer_rate": 0.2,
+      "mean_utility": -89.61,
+      "n": 5,
+      "success_rate": 0.2
+    },
+    "PS11": {
+      "answer_rate": 1.0,
+      "defer_rate": 0.0,
+      "mean_utility": -123.29,
+      "n": 5,
+      "success_rate": 0.0
+    },
+    "PS12": {
+      "answer_rate": 1.0,
+      "defer_rate": 0.0,
+      "mean_utility": -125.01,
+      "n": 5,
+      "success_rate": 0.0
+    },
+    "PS13": {
+      "answer_rate": 1.0,
+      "defer_rate": 0.0,
+      "mean_utility": -126.3,
+      "n": 5,
+      "success_rate": 0.0
+    },
+    "PS14": {
+      "answer_rate": 1.0,
+      "defer_rate": 0.0,
+      "mean_utility": -133.2,
+      "n": 5,
+      "success_rate": 0.0
+    },
+    "PS15": {
+      "answer_rate": 1.0,
+      "defer_rate": 0.0,
+      "mean_utility": -128.464,
+      "n": 5,
+      "success_rate": 0.0
+    },
+    "PS16": {
+      "answer_rate": 0.6,
+      "defer_rate": 0.4,
+      "mean_utility": -51.592,
+      "n": 5,
+      "success_rate": 0.4
+    }
+  },
+  "rescues_breaks_vs_p0": {
+    "PS01": {
+      "both_fail": 4,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 1,
+      "rescue": 1,
+      "total": 5
+    },
+    "PS02": {
+      "both_fail": 5,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 0,
+      "rescue": 0,
+      "total": 5
+    },
+    "PS03": {
+      "both_fail": 3,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 2,
+      "rescue": 2,
+      "total": 5
+    },
+    "PS04": {
+      "both_fail": 2,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 3,
+      "rescue": 3,
+      "total": 5
+    },
+    "PS05": {
+      "both_fail": 0,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 5,
+      "rescue": 5,
+      "total": 5
+    },
+    "PS06": {
+      "both_fail": 5,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 0,
+      "rescue": 0,
+      "total": 5
+    },
+    "PS07": {
+      "both_fail": 4,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 1,
+      "rescue": 1,
+      "total": 5
+    },
+    "PS08": {
+      "both_fail": 1,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 4,
+      "rescue": 4,
+      "total": 5
+    },
+    "PS09": {
+      "both_fail": 5,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 0,
+      "rescue": 0,
+      "total": 5
+    },
+    "PS10": {
+      "both_fail": 4,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 1,
+      "rescue": 1,
+      "total": 5
+    },
+    "PS11": {
+      "both_fail": 5,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 0,
+      "rescue": 0,
+      "total": 5
+    },
+    "PS12": {
+      "both_fail": 5,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 0,
+      "rescue": 0,
+      "total": 5
+    },
+    "PS13": {
+      "both_fail": 5,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 0,
+      "rescue": 0,
+      "total": 5
+    },
+    "PS14": {
+      "both_fail": 5,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 0,
+      "rescue": 0,
+      "total": 5
+    },
+    "PS15": {
+      "both_fail": 5,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 0,
+      "rescue": 0,
+      "total": 5
+    },
+    "PS16": {
+      "both_fail": 3,
+      "both_success": 0,
+      "break": 0,
+      "net_rescue": 2,
+      "rescue": 2,
+      "total": 5
+    }
+  }
+}

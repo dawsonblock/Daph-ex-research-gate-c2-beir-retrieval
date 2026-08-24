@@ -135,6 +135,16 @@ def step2_utility_contrasts(results: list[dict], output: Path) -> dict:
             if "P1" in arm_utilities:
                 contrasts[f"delta_{ps_arm}_minus_P1"] = paired_bootstrap_ci(paired_diffs(ps_arm, "P1"))
 
+    # I3.4e control decomposition contrasts (only if arms exist)
+    i3_4e_arms = ["B0", "CONST", "DEFER", "PV", "PR"]
+    for arm in i3_4e_arms:
+        if arm in arm_utilities:
+            contrasts[f"delta_{arm}"] = paired_bootstrap_ci(paired_diffs(arm))
+            if "P2" in arm_utilities:
+                contrasts[f"delta_P2_minus_{arm}"] = paired_bootstrap_ci(paired_diffs("P2", arm))
+            if "P0" in arm_utilities:
+                contrasts[f"delta_{arm}_minus_P0"] = paired_bootstrap_ci(paired_diffs(arm, "P0"))
+
     result = {
         "mean_utility": {k: round(v, 4) for k, v in mean_utility.items()},
         "contrasts": contrasts,
@@ -418,6 +428,88 @@ def step8_paired_success_analysis(
     return result
 
 
+def step9_permutation_distribution(
+    results: list[dict], output: Path, reference_arm: str = "P2"
+) -> dict:
+    """Analyze the permutation distribution from PS ensemble arms.
+
+    For each PSxx arm, compute mean utility and success rate. Then
+    determine what fraction of random permutations beat the reference
+    arm (P2 or B1). This establishes whether B1 is genuinely poor or
+    the original PSF was a lucky draw.
+    """
+    print(f"Step 9: Permutation distribution (reference: {reference_arm})")
+
+    # Identify PS ensemble arms (PS01-PS16)
+    ps_arms = sorted(set(r["arm"] for r in results if r["arm"].startswith("PS") and len(r["arm"]) > 2))
+
+    if not ps_arms:
+        print("  No PS ensemble arms found — skipping")
+        return {"n_ps_arms": 0}
+
+    # Compute per-arm stats
+    arm_stats: dict[str, dict] = {}
+    for arm in ps_arms + [reference_arm]:
+        arm_results = [r for r in results if r["arm"] == arm]
+        if not arm_results:
+            continue
+        mean_util = sum(r["realized_utility"] for r in arm_results) / len(arm_results)
+        success_rate = sum(1 for r in arm_results if r["success"]) / len(arm_results)
+        arm_stats[arm] = {
+            "n": len(arm_results),
+            "mean_utility": round(mean_util, 4),
+            "success_rate": round(success_rate, 4),
+        }
+
+    ref_stats = arm_stats.get(reference_arm)
+    if ref_stats is None:
+        print(f"  Reference arm {reference_arm} not found")
+        return {"n_ps_arms": len(ps_arms), "arm_stats": arm_stats}
+
+    # How many PS arms beat the reference?
+    ps_better_util = sum(1 for a in ps_arms if arm_stats.get(a, {}).get("mean_utility", 0) > ref_stats["mean_utility"])
+    ps_better_success = sum(1 for a in ps_arms if arm_stats.get(a, {}).get("success_rate", 0) > ref_stats["success_rate"])
+
+    # Distribution stats
+    ps_utils = [arm_stats[a]["mean_utility"] for a in ps_arms if a in arm_stats]
+    ps_successes = [arm_stats[a]["success_rate"] for a in ps_arms if a in arm_stats]
+
+    result = {
+        "reference_arm": reference_arm,
+        "reference_mean_utility": ref_stats["mean_utility"],
+        "reference_success_rate": ref_stats["success_rate"],
+        "n_ps_arms": len(ps_arms),
+        "ps_arms_better_than_reference_utility": ps_better_util,
+        "ps_arms_better_than_reference_success": ps_better_success,
+        "fraction_ps_better_utility": round(ps_better_util / len(ps_arms), 4) if ps_arms else 0,
+        "fraction_ps_better_success": round(ps_better_success / len(ps_arms), 4) if ps_arms else 0,
+        "ps_utility_distribution": {
+            "min": round(min(ps_utils), 4) if ps_utils else 0,
+            "max": round(max(ps_utils), 4) if ps_utils else 0,
+            "mean": round(sum(ps_utils) / len(ps_utils), 4) if ps_utils else 0,
+            "median": round(sorted(ps_utils)[len(ps_utils) // 2], 4) if ps_utils else 0,
+        },
+        "arm_stats": arm_stats,
+        "interpretation": (
+            f"{ps_better_util}/{len(ps_arms)} random permutations beat {reference_arm} on utility. "
+            f"If >50%, {reference_arm} is genuinely poor (not just unlucky PSF). "
+            f"If <20%, the original PSF was a lucky draw."
+        ),
+    }
+
+    save_json(output / "09_permutation_distribution.json", result)
+    print(f"  PS ensemble arms: {len(ps_arms)}")
+    print(f"  Reference ({reference_arm}): U={ref_stats['mean_utility']:.2f}, success={ref_stats['success_rate']:.2%}")
+    print(f"  PS arms beating reference on utility: {ps_better_util}/{len(ps_arms)} ({result['fraction_ps_better_utility']:.1%})")
+    print(f"  PS arms beating reference on success: {ps_better_success}/{len(ps_arms)} ({result['fraction_ps_better_success']:.1%})")
+    print(f"  PS utility distribution: min={result['ps_utility_distribution']['min']:.2f} "
+          f"max={result['ps_utility_distribution']['max']:.2f} "
+          f"mean={result['ps_utility_distribution']['mean']:.2f}")
+    print(f"  Interpretation: {result['interpretation']}")
+
+    return result
+
+
 def main():
     import argparse
 
@@ -458,6 +550,14 @@ def main():
         treated_arm=args.treated_arm,
         control_arm=args.control_arm,
     )
+    print()
+
+    # Step 9: Permutation distribution (only if PS ensemble arms present)
+    has_ps_ensemble = any(r["arm"].startswith("PS") and len(r["arm"]) > 2 for r in results)
+    s9 = None
+    if has_ps_ensemble:
+        s9 = step9_permutation_distribution(results, args.output, reference_arm="P2")
+        print()
 
     # Summary
     summary = {
@@ -475,6 +575,13 @@ def main():
             "mcnemar_significant": s8["mcnemar_significant_005"],
         },
     }
+    if s9:
+        summary["permutation_distribution"] = {
+            "n_ps_arms": s9["n_ps_arms"],
+            "fraction_ps_better_utility": s9["fraction_ps_better_utility"],
+            "fraction_ps_better_success": s9["fraction_ps_better_success"],
+            "interpretation": s9["interpretation"],
+        }
     save_json(args.output / "summary.json", summary)
 
     print(f"\n=== Analysis Summary ===")

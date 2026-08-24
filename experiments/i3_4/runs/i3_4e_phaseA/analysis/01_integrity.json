@@ -1,0 +1,17 @@
+{
+  "arms": [
+    "B0",
+    "CONST",
+    "DEFER",
+    "P0",
+    "P2",
+    "PR",
+    "PV"
+  ],
+  "decoder_errors": 0,
+  "n_arms": 7,
+  "n_tasks": 80,
+  "n_trajectories": 560,
+  "task_ids_match": true,
+  "trajectory_count_matches": true
+}

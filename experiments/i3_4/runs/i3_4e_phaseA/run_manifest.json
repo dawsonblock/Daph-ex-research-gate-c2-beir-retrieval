@@ -1,0 +1,33 @@
+{
+  "arms": [
+    "P0",
+    "P2",
+    "B0",
+    "CONST",
+    "DEFER",
+    "PV",
+    "PR"
+  ],
+  "b1_model_sha256": "c72b8641c5452d79e92fd9cb14ca289948b54385f2481a893ecb8c6bf22f1f68",
+  "b1_table_path": "/content/r2_repo/experiments/i3_4/value/frozen_b1_table.json",
+  "backend_identity_sha256": "08dd528f6fc9e67c574ec766ea15ab7be80bdaa7a615625244122db533c2772d",
+  "completed": 66,
+  "control_receipt_path": "/content/r2_repo/experiments/i3_4/value/i3_4e_control_receipt.json",
+  "dataset_sha256": "e1813d7ebfd10255e974c606e41c514b4b4db33df48be21effdf59d049ca22ab",
+  "experiment": "i3_4e_phaseA",
+  "failed": 0,
+  "frozen_mappings": {
+    "B0": "d0b929ab87bf1ca5f5886b46d7662ff79b89abf186a922cd5f4de94c6cb36a74",
+    "CONST": "dcd5dc4d62055f6ff220f6cb2ac5e7206b3989eb1f0a8c06a84225bc00f90a45",
+    "DEFER": "a947404b510a7b3e28f6f9268f78ccf8a19456a99105a78296e7b8f984bd45ef"
+  },
+  "generator_seed": 9137,
+  "n_tasks": 80,
+  "phase": "A",
+  "run_end": "2026-08-24T06:23:55Z",
+  "run_start": "2026-08-24T06:20:16Z",
+  "shuffle_seed": 42,
+  "skipped": 494,
+  "total_time_seconds": 219.4460849761963,
+  "total_trajectories": 560
+}

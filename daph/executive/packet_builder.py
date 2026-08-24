@@ -132,23 +132,38 @@ def build_packet(
     epsilon: float = 1e-8,
     shuffle_seed: int = 0,
     ps_frozen_mapping: dict[str, dict[str, float]] | None = None,
+    frozen_mapping: dict[str, dict[str, float]] | None = None,
+    include_values: bool = True,
+    include_ranking: bool = True,
 ) -> dict:
     """Build a model packet for the given arm.
 
     Args:
         base_packet: The R2-style MDSG packet (from build_mdsg_state_with_affordances_packet)
-        arm: "P0", "P1", "P2", or "PS"
+        arm: One of:
+            "P0"     — baseline (no phase, no values)
+            "P1"     — phase only
+            "P2"     — phase + correct B1 values + ranking
+            "PS"     — phase + shuffled B1 values (legacy / fallback)
+            "PSF"    — alias for PS with frozen mapping
+            "B0"     — phase + global action prior (no phase conditioning)
+            "CONST"  — phase + uniform values (structure-only control)
+            "DEFER"  — phase + DEFER heuristic (DEFER=1.0, others=0.5)
+            "PV"     — phase + numeric values only (no ranking field)
+            "PR"     — phase + ranking only (no numeric values)
+            "PS01"-"PS16" — frozen shuffled mappings from the ensemble
         phase: The classified EpistemicPhase
-        value_table: The B1 phase×action table (required for P2/PS)
+        value_table: The B1 phase×action table (required for P2/PS/PV)
         legal_actions: Legal actions at this state
         features: Feature dict for value lookup
         normalize: Whether to normalize values to [0, 1]
         epsilon: Small constant for normalization
         shuffle_seed: Seed for PS arm shuffling (deterministic per phase via SHA-256)
-        ps_frozen_mapping: Pre-computed frozen PS mapping (phase→action→value).
-            If provided for PS arm, uses the frozen values directly instead of
-            shuffling dynamically. This guarantees the same permutation across
-            all processes and sessions.
+        ps_frozen_mapping: Pre-computed frozen PS mapping (legacy field, use frozen_mapping)
+        frozen_mapping: Pre-computed frozen mapping (phase→action→value) for any
+            arm that uses a frozen mapping (PS, PSF, B0, CONST, DEFER, PS01-PS16).
+        include_values: Whether to include action_value_estimates (PV vs PR decomposition)
+        include_ranking: Whether to include action_value_ranking (PV vs PR decomposition)
 
     Returns:
         Modified packet dict
@@ -164,44 +179,66 @@ def build_packet(
         packet["epistemic_phase"] = phase.value
         return packet
 
-    if arm in ("P2", "PS"):
-        # Add phase + action value estimates
+    # All remaining arms add phase + some form of value/ranking information
+    # Arms that use frozen mappings: PS, PSF, B0, CONST, DEFER, PS01-PS16
+    # Arms that use value_table directly: P2, PV, PR
+    # PV: values only (no ranking)
+    # PR: ranking only (no values) — derived from value_table
+    # P2: both values and ranking
+
+    frozen_arms = {"PS", "PSF", "B0", "CONST", "DEFER"}
+    is_ps_ensemble = arm.startswith("PS") and len(arm) > 2 and arm[2:].isdigit()
+    uses_frozen = arm in frozen_arms or is_ps_ensemble
+    uses_value_table = arm in ("P2", "PV", "PR")
+
+    if uses_frozen or uses_value_table:
         packet["epistemic_phase"] = phase.value
 
-        if value_table is not None and legal_actions:
-            # Get raw values for each legal action
-            raw_values = {}
+        if not legal_actions:
+            return packet
+
+        # Get raw values for each legal action
+        raw_values = {}
+        if uses_frozen:
+            # Use frozen mapping (fall back to ps_frozen_mapping for legacy PS)
+            mapping = frozen_mapping or ps_frozen_mapping
+            if mapping is None:
+                raise ValueError(f"Arm {arm} requires frozen_mapping or ps_frozen_mapping")
+            phase_mapping = mapping.get(phase.value, {})
+            # Get B1 values as the base (for normalization context)
+            if value_table is not None:
+                base_values = {
+                    a: value_table.predict(phase.value, a, features or {})
+                    for a in legal_actions
+                }
+            else:
+                base_values = {a: 0.0 for a in legal_actions}
+            # Override with frozen mapping values
+            raw_values = {
+                a: phase_mapping.get(a, base_values[a]) for a in legal_actions
+            }
+        elif uses_value_table:
+            if value_table is None:
+                raise ValueError(f"Arm {arm} requires value_table")
             for action in legal_actions:
                 raw_values[action] = value_table.predict(
                     phase.value, action, features or {}
                 )
 
-            # PS: shuffle the action→value association
-            if arm == "PS":
-                if ps_frozen_mapping is not None:
-                    # Use pre-computed frozen mapping (deterministic across processes)
-                    phase_mapping = ps_frozen_mapping.get(phase.value, {})
-                    raw_values = {
-                        a: phase_mapping.get(a, raw_values[a])
-                        for a in legal_actions
-                    }
-                else:
-                    # Fallback: deterministic SHA-256 seeded shuffle
-                    raw_values = _shuffle_values(raw_values, phase.value, shuffle_seed)
+        # Normalize
+        if normalize:
+            min_v = min(raw_values.values()) if raw_values else 0.0
+            max_v = max(raw_values.values()) if raw_values else 0.0
+            range_v = max_v - min_v + epsilon
+            normalized = {
+                a: round((v - min_v) / range_v, 4)
+                for a, v in raw_values.items()
+            }
+        else:
+            normalized = {a: round(v, 4) for a, v in raw_values.items()}
 
-            if normalize:
-                # Monotonic normalization to [0, 1]
-                min_v = min(raw_values.values()) if raw_values else 0.0
-                max_v = max(raw_values.values()) if raw_values else 0.0
-                range_v = max_v - min_v + epsilon
-                normalized = {
-                    a: round((v - min_v) / range_v, 4)
-                    for a, v in raw_values.items()
-                }
-            else:
-                normalized = {a: round(v, 4) for a, v in raw_values.items()}
-
-            # Build action value estimates (no explanatory prose)
+        # Build action value estimates (controlled by include_values)
+        if include_values:
             packet["action_value_estimates"] = {
                 action: {
                     "normalized_value": normalized.get(action, 0.0),
@@ -209,7 +246,8 @@ def build_packet(
                 for action in legal_actions
             }
 
-            # Also include ranking (descending by normalized value)
+        # Build ranking (controlled by include_ranking)
+        if include_ranking:
             ranking = sorted(legal_actions, key=lambda a: -normalized.get(a, 0.0))
             packet["action_value_ranking"] = ranking
 

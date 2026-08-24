@@ -1,0 +1,17 @@
+{
+  "both_fail": 10,
+  "both_success": 60,
+  "break": 0,
+  "break_rate": 0.0,
+  "control_arm": "P0",
+  "mcnemar_exact_p_one_sided_greater": 0.000977,
+  "mcnemar_exact_p_two_sided": 0.001953,
+  "mcnemar_significant_005": "True",
+  "n_discordant": 10,
+  "n_paired": 80,
+  "n_unpaired": 0,
+  "net_rescue": 10,
+  "rescue": 10,
+  "rescue_rate": 0.125,
+  "treated_arm": "P2"
+}

@@ -1,0 +1,144 @@
+{
+  "b0": {
+    "description": "E[U | a] \u2014 global action prior, no phase info",
+    "file_sha": "d0b929ab87bf1ca5f5886b46d7662ff79b89abf186a922cd5f4de94c6cb36a74",
+    "model_sha": "b1034cb16df52ad82b1f4302a1fe524eeebc73ea7c144c051943d13479256f75",
+    "path": "experiments/i3_4/value/b0_global_prior.json"
+  },
+  "b1_reference": {
+    "model_sha": "c72b8641c5452d79e92fd9cb14ca289948b54385f2481a893ecb8c6bf22f1f68",
+    "path": "experiments/i3_4/value/frozen_b1_table.json"
+  },
+  "const": {
+    "description": "All actions = 0.5 \u2014 tests packet-structure effect",
+    "file_sha": "dcd5dc4d62055f6ff220f6cb2ac5e7206b3989eb1f0a8c06a84225bc00f90a45",
+    "model_sha": "e32aac008f09332389e10e321d43105eab13f217f90ba82c2ccacc4a4c7c22df",
+    "path": "experiments/i3_4/value/const_mapping.json"
+  },
+  "defer_heuristic": {
+    "description": "DEFER=1.0, others=0.5 \u2014 tests DEFER-bias hypothesis",
+    "file_sha": "a947404b510a7b3e28f6f9268f78ccf8a19456a99105a78296e7b8f984bd45ef",
+    "model_sha": "39ae9b0151af4e765c8f2585eb7c9804249c6d35426858e1d2d984408a1a5cd9",
+    "path": "experiments/i3_4/value/defer_heuristic_mapping.json"
+  },
+  "experiment": "i3_4e_control_decomposition",
+  "note": "All mappings are frozen BEFORE any evaluation. No mapping is selected by performance. The PS ensemble establishes the permutation distribution against which B1 and any future Q_phi must be compared.",
+  "ps_ensemble": {
+    "description": "16 frozen shuffled B1 mappings \u2014 permutation distribution",
+    "mappings": [
+      {
+        "file_sha": "aa9cef08cda9f3759e9f3060ad0be56fb74168dd1c64ef64cce5737e4a260663",
+        "model_sha": "8e66db7a34ec4f6b82892e3fe44bc41ea216dae6f72052e745b9deb7682f2bec",
+        "name": "PS01",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps01_mapping.json",
+        "shuffle_seed": 101
+      },
+      {
+        "file_sha": "2786c79a06d44392c9bee691bd0f898604828b9e9df85374dd9ab0a84d7f60ec",
+        "model_sha": "404a72bb0dcd1d3e0a96f8180d994072629736cca06201efb3e8897219d50e66",
+        "name": "PS02",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps02_mapping.json",
+        "shuffle_seed": 102
+      },
+      {
+        "file_sha": "d2791b69d7b072153ed938f2fe457eb666ee5556a2a245cc173a4e40ad438fb0",
+        "model_sha": "472575122e3785430f22b1f154517ed5c3117bde60a2d73af7ba86eb242eda75",
+        "name": "PS03",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps03_mapping.json",
+        "shuffle_seed": 103
+      },
+      {
+        "file_sha": "44693d18cc30f602d06b3f8076b00d9b4979eb3744993da49a46f0e42127996d",
+        "model_sha": "9708f5d6f7ee3429ecba8ab9da90f7be63580fa494dc477d4c6c1bf979a61a5f",
+        "name": "PS04",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps04_mapping.json",
+        "shuffle_seed": 104
+      },
+      {
+        "file_sha": "3691cbb61b7c110f542e867a83931d7af396ef979d413c0a89a6d1574f6c7496",
+        "model_sha": "b4248469b681fbae3a0284ff74c026de0a9f704cc8f1ee8ef2bdda3eac7d90d1",
+        "name": "PS05",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps05_mapping.json",
+        "shuffle_seed": 105
+      },
+      {
+        "file_sha": "e78babc23ad53e1ef8ff750a36093d6f5b05a10e62e25a23ab0081bee20c7b74",
+        "model_sha": "dc6d223ab5e503884994c30377bec249ded34ad7021327972be2c19711a67d86",
+        "name": "PS06",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps06_mapping.json",
+        "shuffle_seed": 106
+      },
+      {
+        "file_sha": "19b6870c09a0f466ae24c17ab96750604c9064db21127e1e235a48a5995238d8",
+        "model_sha": "e15860676427a13f73c5adeeba092130c9d0e0def45bde85a19702ab9769bdb2",
+        "name": "PS07",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps07_mapping.json",
+        "shuffle_seed": 107
+      },
+      {
+        "file_sha": "6cdf246cf13e64c94fe49eeed44fa728c50133f8030fa3178a9f7f175005ec80",
+        "model_sha": "ccdde42aa9bb3da71e5f8b6bff6ee4bad0989bdd854510b92418816c7424ad8b",
+        "name": "PS08",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps08_mapping.json",
+        "shuffle_seed": 108
+      },
+      {
+        "file_sha": "836f44fbf5907388c93ff205a707f51d7a20f984ce56479509a1502bf64d9f31",
+        "model_sha": "9c3810fbad5a43c5f737b6a6552cb9834b9376ba863438b4e8f51f834e476ee8",
+        "name": "PS09",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps09_mapping.json",
+        "shuffle_seed": 109
+      },
+      {
+        "file_sha": "31d5831340b9add6ad5479db5d39634821e619a1636072fcba8e963f20605fbe",
+        "model_sha": "7c95b27e1b71671e559eaf70f5aa948493fce69879e62f63f7c052d98a525918",
+        "name": "PS10",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps10_mapping.json",
+        "shuffle_seed": 110
+      },
+      {
+        "file_sha": "e1b90f491829c6fd46999aa36aef4ffb62a9cf413c1e564559ac9a790b0b46ed",
+        "model_sha": "254a54cc8173954c53086894df0284377708f9ef8e6b95c61c78c10b471e1bf9",
+        "name": "PS11",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps11_mapping.json",
+        "shuffle_seed": 111
+      },
+      {
+        "file_sha": "ccc56dccf925c9271e8bda076c1e90fc70fa20d5f8d2b2e20407436a1f6b2771",
+        "model_sha": "1d870020eab89c3c0b098de6cb7e12de62b25e17710fa08bc424be8be694eab9",
+        "name": "PS12",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps12_mapping.json",
+        "shuffle_seed": 112
+      },
+      {
+        "file_sha": "0ce829d8c681b95deccc44b1c20eb2959447fcef7a2afbd66bbd049d749df718",
+        "model_sha": "3db63c4024246a4d4dbc6b9f4a786d10efbe628d0e629bc81fd9b1d8a6a63c3a",
+        "name": "PS13",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps13_mapping.json",
+        "shuffle_seed": 113
+      },
+      {
+        "file_sha": "49913a97224fe960d5937b33a9529c4d276178ace2876c331e48da979e1f74ac",
+        "model_sha": "a87f197afb92512d75e0f3dbbb40425e598ffd377775edaba21cfb70168972bc",
+        "name": "PS14",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps14_mapping.json",
+        "shuffle_seed": 114
+      },
+      {
+        "file_sha": "eeac96201adc00f00a529329a8264c7c77b0e9b15ed9e05bcaa9780445868600",
+        "model_sha": "12de3ff6d2d903145ff43f26e9bbbd0c286ad1b9094191a43cc2b79a15272bd2",
+        "name": "PS15",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps15_mapping.json",
+        "shuffle_seed": 115
+      },
+      {
+        "file_sha": "8606f45b41480ce191bcad4c487235aa6ca843820518491bf19e1c01932154e7",
+        "model_sha": "4325c9fab93b62110747b8cf169cdc075096e843fc1124c2c3d372909c19c044",
+        "name": "PS16",
+        "path": "/Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/i3_4/value/ps_ensemble/ps16_mapping.json",
+        "shuffle_seed": 116
+      }
+    ],
+    "n_mappings": 16
+  }
+}

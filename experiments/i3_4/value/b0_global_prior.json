@@ -1,0 +1,54 @@
+{
+  "counts": {
+    "ANSWER": 120,
+    "DEFER": 200,
+    "RETRIEVE": 86,
+    "SEARCH_MORE": 194,
+    "VERIFY": 160
+  },
+  "mapping": {
+    "ANSWER_READY": {
+      "ANSWER": -49.040667,
+      "DEFER": 65.6847,
+      "RETRIEVE": 59.889767,
+      "SEARCH_MORE": 54.785773,
+      "VERIFY": -30.703
+    },
+    "DISCRIMINATION": {
+      "ANSWER": -49.040667,
+      "DEFER": 65.6847,
+      "RETRIEVE": 59.889767,
+      "SEARCH_MORE": 54.785773,
+      "VERIFY": -30.703
+    },
+    "EVIDENCE_ACQUISITION": {
+      "ANSWER": -49.040667,
+      "DEFER": 65.6847,
+      "RETRIEVE": 59.889767,
+      "SEARCH_MORE": 54.785773,
+      "VERIFY": -30.703
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "ANSWER": -49.040667,
+      "DEFER": 65.6847,
+      "RETRIEVE": 59.889767,
+      "SEARCH_MORE": 54.785773,
+      "VERIFY": -30.703
+    },
+    "RESOLUTION": {
+      "ANSWER": -49.040667,
+      "DEFER": 65.6847,
+      "RETRIEVE": 59.889767,
+      "SEARCH_MORE": 54.785773,
+      "VERIFY": -30.703
+    }
+  },
+  "model": "B0_global_action_mean",
+  "values": {
+    "ANSWER": -49.040667,
+    "DEFER": 65.6847,
+    "RETRIEVE": 59.889767,
+    "SEARCH_MORE": 54.785773,
+    "VERIFY": -30.703
+  }
+}

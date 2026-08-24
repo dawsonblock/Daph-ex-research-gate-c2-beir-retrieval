@@ -1,0 +1,160 @@
+{
+  "cautionary_note": "One particular fixed alternative action-value mapping substantially outperforms B1 on this held-out task distribution. This does not prove that arbitrary rankings help. The permutation distribution reveals which mappings succeed and why, but the sample of 16 frozen permutations is not a random sample from the space of all possible mappings.",
+  "experiment": "i3_4e",
+  "phase_a_summary": {
+    "B0": {
+      "mean_utility": 37.5726,
+      "n": 80,
+      "success_rate": 0.85
+    },
+    "CONST": {
+      "mean_utility": 22.7171,
+      "n": 80,
+      "success_rate": 0.75
+    },
+    "DEFER": {
+      "mean_utility": 30.7324,
+      "n": 80,
+      "success_rate": 0.7875
+    },
+    "P0": {
+      "mean_utility": 21.8526,
+      "n": 80,
+      "success_rate": 0.75
+    },
+    "P2": {
+      "mean_utility": 42.4305,
+      "n": 80,
+      "success_rate": 0.875
+    },
+    "PR": {
+      "mean_utility": 22.0955,
+      "n": 80,
+      "success_rate": 0.75
+    },
+    "PV": {
+      "mean_utility": 27.1995,
+      "n": 80,
+      "success_rate": 0.775
+    }
+  },
+  "phase_b_summary": {
+    "PS01": {
+      "mean_utility": 43.8367,
+      "n": 30,
+      "success_rate": 0.8667
+    },
+    "PS02": {
+      "mean_utility": 39.2363,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS03": {
+      "mean_utility": 47.3763,
+      "n": 30,
+      "success_rate": 0.9
+    },
+    "PS04": {
+      "mean_utility": 51.4157,
+      "n": 30,
+      "success_rate": 0.9333
+    },
+    "PS05": {
+      "mean_utility": 64.7273,
+      "n": 30,
+      "success_rate": 1.0
+    },
+    "PS06": {
+      "mean_utility": 41.7037,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS07": {
+      "mean_utility": 44.2083,
+      "n": 30,
+      "success_rate": 0.8667
+    },
+    "PS08": {
+      "mean_utility": 58.3957,
+      "n": 30,
+      "success_rate": 0.9667
+    },
+    "PS09": {
+      "mean_utility": 37.936,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS10": {
+      "mean_utility": 43.5607,
+      "n": 30,
+      "success_rate": 0.8667
+    },
+    "PS11": {
+      "mean_utility": 38.2233,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS12": {
+      "mean_utility": 35.577,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS13": {
+      "mean_utility": 33.4217,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS14": {
+      "mean_utility": 32.559,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS15": {
+      "mean_utility": 37.5867,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS16": {
+      "mean_utility": 48.095,
+      "n": 30,
+      "success_rate": 0.9
+    }
+  },
+  "phases": {
+    "A": {
+      "arms": [
+        "P0",
+        "P2",
+        "B0",
+        "CONST",
+        "DEFER",
+        "PV",
+        "PR"
+      ],
+      "n_tasks": 80,
+      "n_trajectories": 560
+    },
+    "B": {
+      "arms": [
+        "PS01",
+        "PS02",
+        "PS03",
+        "PS04",
+        "PS05",
+        "PS06",
+        "PS07",
+        "PS08",
+        "PS09",
+        "PS10",
+        "PS11",
+        "PS12",
+        "PS13",
+        "PS14",
+        "PS15",
+        "PS16"
+      ],
+      "n_tasks": 30,
+      "n_trajectories": 480
+    }
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "B0": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 0.3235,
+        "DEFER": 0.1176,
+        "RETRIEVE": 0.0588,
+        "SEARCH_MORE": 0.5
+      },
+      "n": 68
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.1779,
+        "RETRIEVE": 0.4804,
+        "SEARCH_MORE": 0.1957,
+        "VERIFY": 0.1459
+      },
+      "n": 281
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  },
+  "CONST": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 0.9677,
+        "SEARCH_MORE": 0.0323
+      },
+      "n": 31
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.3185,
+        "RETRIEVE": 0.1592,
+        "SEARCH_MORE": 0.2675,
+        "VERIFY": 0.2548
+      },
+      "n": 157
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  },
+  "DEFER": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 0.9,
+        "DEFER": 0.1
+      },
+      "n": 30
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.4048,
+        "RETRIEVE": 0.1508,
+        "SEARCH_MORE": 0.127,
+        "VERIFY": 0.3175
+      },
+      "n": 126
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  },
+  "P0": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 1.0
+      },
+      "n": 30
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.2632,
+        "RETRIEVE": 0.1105,
+        "SEARCH_MORE": 0.4158,
+        "VERIFY": 0.2105
+      },
+      "n": 190
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  },
+  "P2": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 0.2941,
+        "DEFER": 0.1618,
+        "RETRIEVE": 0.0588,
+        "SEARCH_MORE": 0.4853
+      },
+      "n": 68
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.1724,
+        "RETRIEVE": 0.4793,
+        "SEARCH_MORE": 0.2034,
+        "VERIFY": 0.1448
+      },
+      "n": 290
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  },
+  "PR": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 1.0
+      },
+      "n": 31
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.2703,
+        "RETRIEVE": 0.1081,
+        "SEARCH_MORE": 0.3946,
+        "VERIFY": 0.227
+      },
+      "n": 185
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  },
+  "PV": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 0.7838,
+        "DEFER": 0.0541,
+        "RETRIEVE": 0.027,
+        "SEARCH_MORE": 0.1351
+      },
+      "n": 37
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.3086,
+        "RETRIEVE": 0.2654,
+        "SEARCH_MORE": 0.179,
+        "VERIFY": 0.2469
+      },
+      "n": 162
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  }
+}

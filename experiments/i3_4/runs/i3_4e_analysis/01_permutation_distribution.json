@@ -1,0 +1,112 @@
+{
+  "b0_mean_phaseA": 37.5726,
+  "b0_percentile_in_PS_distribution": 18.75,
+  "iqr_lower": 37.674,
+  "iqr_upper": 47.9153,
+  "max_mean": 64.7273,
+  "mean_of_means": 43.6162,
+  "median_of_means": 42.6322,
+  "min_mean": 32.559,
+  "n_permutations": 16,
+  "p2_mean_phaseA": 42.4305,
+  "p2_percentile_in_PS_distribution": 50.0,
+  "per_arm": {
+    "PS01": {
+      "mean_utility": 43.8367,
+      "median_utility": 63.98,
+      "n": 30,
+      "success_rate": 0.8667
+    },
+    "PS02": {
+      "mean_utility": 39.2363,
+      "median_utility": 66.15,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS03": {
+      "mean_utility": 47.3763,
+      "median_utility": 62.915,
+      "n": 30,
+      "success_rate": 0.9
+    },
+    "PS04": {
+      "mean_utility": 51.4157,
+      "median_utility": 57.53,
+      "n": 30,
+      "success_rate": 0.9333
+    },
+    "PS05": {
+      "mean_utility": 64.7273,
+      "median_utility": 59.12,
+      "n": 30,
+      "success_rate": 1.0
+    },
+    "PS06": {
+      "mean_utility": 41.7037,
+      "median_utility": 57.53,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS07": {
+      "mean_utility": 44.2083,
+      "median_utility": 66.15,
+      "n": 30,
+      "success_rate": 0.8667
+    },
+    "PS08": {
+      "mean_utility": 58.3957,
+      "median_utility": 57.53,
+      "n": 30,
+      "success_rate": 0.9667
+    },
+    "PS09": {
+      "mean_utility": 37.936,
+      "median_utility": 63.98,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS10": {
+      "mean_utility": 43.5607,
+      "median_utility": 64.515,
+      "n": 30,
+      "success_rate": 0.8667
+    },
+    "PS11": {
+      "mean_utility": 38.2233,
+      "median_utility": 63.98,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS12": {
+      "mean_utility": 35.577,
+      "median_utility": 59.12,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS13": {
+      "mean_utility": 33.4217,
+      "median_utility": 57.53,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS14": {
+      "mean_utility": 32.559,
+      "median_utility": 57.53,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS15": {
+      "mean_utility": 37.5867,
+      "median_utility": 66.15,
+      "n": 30,
+      "success_rate": 0.8333
+    },
+    "PS16": {
+      "mean_utility": 48.095,
+      "median_utility": 62.915,
+      "n": 30,
+      "success_rate": 0.9
+    }
+  },
+  "sd_of_means": 8.8352
+}

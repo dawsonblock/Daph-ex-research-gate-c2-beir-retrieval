@@ -1,0 +1,35 @@
+{
+  "interpretation": "If P2-B0 CI includes 0 and multiple PS arms match or exceed P2, the parsimonious champion is B0 unless P2 shows a distinct advantage on specific hard strata.",
+  "p2_vs_b0_phaseA_all": {
+    "ci_lower": -4.3727,
+    "ci_upper": 14.3848,
+    "excludes_zero": false,
+    "mean": 4.8579,
+    "n": 80
+  },
+  "p2_vs_b0_phaseB_tasks": {
+    "ci_lower": -0.574,
+    "ci_upper": 19.7917,
+    "excludes_zero": false,
+    "mean": 6.5493,
+    "n": 30
+  },
+  "ps_minus_p2_per_arm": {
+    "PS01": -3.9033,
+    "PS02": -8.5037,
+    "PS03": -0.3637,
+    "PS04": 3.6757,
+    "PS05": 16.9873,
+    "PS06": -6.0363,
+    "PS07": -3.5317,
+    "PS08": 10.6557,
+    "PS09": -9.804,
+    "PS10": -4.1793,
+    "PS11": -9.5167,
+    "PS12": -12.163,
+    "PS13": -14.3183,
+    "PS14": -15.181,
+    "PS15": -10.1533,
+    "PS16": 0.355
+  }
+}

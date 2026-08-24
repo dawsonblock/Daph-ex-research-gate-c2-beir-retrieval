@@ -1,0 +1,90 @@
+{
+  "b0_mean_on_b_tasks": 41.1907,
+  "n_ps_beating_b0": 9,
+  "n_ps_beating_p2": 4,
+  "p2_mean_on_b_tasks": 47.74,
+  "p_ps_beat_b0": 0.5625,
+  "p_ps_beat_p2": 0.25,
+  "paired_per_arm": {
+    "PS01": {
+      "beat_b0_tasks": 16,
+      "beat_p2_tasks": 14,
+      "total_comparable_tasks": 30
+    },
+    "PS02": {
+      "beat_b0_tasks": 17,
+      "beat_p2_tasks": 18,
+      "total_comparable_tasks": 30
+    },
+    "PS03": {
+      "beat_b0_tasks": 4,
+      "beat_p2_tasks": 3,
+      "total_comparable_tasks": 30
+    },
+    "PS04": {
+      "beat_b0_tasks": 2,
+      "beat_p2_tasks": 2,
+      "total_comparable_tasks": 30
+    },
+    "PS05": {
+      "beat_b0_tasks": 5,
+      "beat_p2_tasks": 4,
+      "total_comparable_tasks": 30
+    },
+    "PS06": {
+      "beat_b0_tasks": 2,
+      "beat_p2_tasks": 1,
+      "total_comparable_tasks": 30
+    },
+    "PS07": {
+      "beat_b0_tasks": 19,
+      "beat_p2_tasks": 19,
+      "total_comparable_tasks": 30
+    },
+    "PS08": {
+      "beat_b0_tasks": 3,
+      "beat_p2_tasks": 3,
+      "total_comparable_tasks": 30
+    },
+    "PS09": {
+      "beat_b0_tasks": 16,
+      "beat_p2_tasks": 14,
+      "total_comparable_tasks": 30
+    },
+    "PS10": {
+      "beat_b0_tasks": 16,
+      "beat_p2_tasks": 16,
+      "total_comparable_tasks": 30
+    },
+    "PS11": {
+      "beat_b0_tasks": 16,
+      "beat_p2_tasks": 14,
+      "total_comparable_tasks": 30
+    },
+    "PS12": {
+      "beat_b0_tasks": 8,
+      "beat_p2_tasks": 7,
+      "total_comparable_tasks": 30
+    },
+    "PS13": {
+      "beat_b0_tasks": 4,
+      "beat_p2_tasks": 3,
+      "total_comparable_tasks": 30
+    },
+    "PS14": {
+      "beat_b0_tasks": 0,
+      "beat_p2_tasks": 0,
+      "total_comparable_tasks": 30
+    },
+    "PS15": {
+      "beat_b0_tasks": 15,
+      "beat_p2_tasks": 16,
+      "total_comparable_tasks": 30
+    },
+    "PS16": {
+      "beat_b0_tasks": 7,
+      "beat_p2_tasks": 6,
+      "total_comparable_tasks": 30
+    }
+  }
+}

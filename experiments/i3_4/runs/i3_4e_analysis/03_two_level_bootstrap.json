@@ -1,0 +1,266 @@
+{
+  "level1_paired_cis": {
+    "PS01": {
+      "vs_b0": {
+        "ci_lower": 1.0693,
+        "ci_upper": 4.1527,
+        "excludes_zero": true,
+        "mean": 2.646,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -17.217,
+        "ci_upper": 3.507,
+        "excludes_zero": false,
+        "mean": -3.9033,
+        "n": 30
+      }
+    },
+    "PS02": {
+      "vs_b0": {
+        "ci_lower": -15.4127,
+        "ci_upper": 5.5987,
+        "excludes_zero": false,
+        "mean": -1.9543,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -27.6477,
+        "ci_upper": 4.8093,
+        "excludes_zero": false,
+        "mean": -8.5037,
+        "n": 30
+      }
+    },
+    "PS03": {
+      "vs_b0": {
+        "ci_lower": -0.87,
+        "ci_upper": 19.573,
+        "excludes_zero": false,
+        "mean": 6.1857,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -1.3697,
+        "ci_upper": 0.642,
+        "excludes_zero": false,
+        "mean": -0.3637,
+        "n": 30
+      }
+    },
+    "PS04": {
+      "vs_b0": {
+        "ci_lower": -3.2313,
+        "ci_upper": 29.7993,
+        "excludes_zero": false,
+        "mean": 10.225,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -16.0423,
+        "ci_upper": 24.6147,
+        "excludes_zero": false,
+        "mean": 3.6757,
+        "n": 30
+      }
+    },
+    "PS05": {
+      "vs_b0": {
+        "ci_lower": 3.46,
+        "ci_upper": 49.6583,
+        "excludes_zero": true,
+        "mean": 23.5367,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -2.228,
+        "ci_upper": 38.141,
+        "excludes_zero": false,
+        "mean": 16.9873,
+        "n": 30
+      }
+    },
+    "PS06": {
+      "vs_b0": {
+        "ci_lower": -9.3947,
+        "ci_upper": 10.852,
+        "excludes_zero": false,
+        "mean": 0.513,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -16.6363,
+        "ci_upper": 3.989,
+        "excludes_zero": false,
+        "mean": -6.0363,
+        "n": 30
+      }
+    },
+    "PS07": {
+      "vs_b0": {
+        "ci_lower": 1.8677,
+        "ci_upper": 4.2397,
+        "excludes_zero": true,
+        "mean": 3.0177,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -17.06,
+        "ci_upper": 3.8063,
+        "excludes_zero": false,
+        "mean": -3.5317,
+        "n": 30
+      }
+    },
+    "PS08": {
+      "vs_b0": {
+        "ci_lower": -1.8673,
+        "ci_upper": 42.1077,
+        "excludes_zero": false,
+        "mean": 17.205,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -2.801,
+        "ci_upper": 30.1587,
+        "excludes_zero": false,
+        "mean": 10.6557,
+        "n": 30
+      }
+    },
+    "PS09": {
+      "vs_b0": {
+        "ci_lower": -16.2077,
+        "ci_upper": 4.084,
+        "excludes_zero": false,
+        "mean": -3.2547,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -28.591,
+        "ci_upper": 3.1503,
+        "excludes_zero": false,
+        "mean": -9.804,
+        "n": 30
+      }
+    },
+    "PS10": {
+      "vs_b0": {
+        "ci_lower": 1.0783,
+        "ci_upper": 3.7337,
+        "excludes_zero": true,
+        "mean": 2.37,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -17.2797,
+        "ci_upper": 2.873,
+        "excludes_zero": false,
+        "mean": -4.1793,
+        "n": 30
+      }
+    },
+    "PS11": {
+      "vs_b0": {
+        "ci_lower": -15.9187,
+        "ci_upper": 4.4423,
+        "excludes_zero": false,
+        "mean": -2.9673,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -28.1567,
+        "ci_upper": 3.437,
+        "excludes_zero": false,
+        "mean": -9.5167,
+        "n": 30
+      }
+    },
+    "PS12": {
+      "vs_b0": {
+        "ci_lower": -18.4243,
+        "ci_upper": 1.5813,
+        "excludes_zero": false,
+        "mean": -5.6137,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -30.3743,
+        "ci_upper": 0.5043,
+        "excludes_zero": false,
+        "mean": -12.163,
+        "n": 30
+      }
+    },
+    "PS13": {
+      "vs_b0": {
+        "ci_lower": -20.6517,
+        "ci_upper": -0.4293,
+        "excludes_zero": true,
+        "mean": -7.769,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -32.744,
+        "ci_upper": -1.4363,
+        "excludes_zero": true,
+        "mean": -14.3183,
+        "n": 30
+      }
+    },
+    "PS14": {
+      "vs_b0": {
+        "ci_lower": -21.9443,
+        "ci_upper": -1.293,
+        "excludes_zero": true,
+        "mean": -8.6317,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -34.1807,
+        "ci_upper": -2.083,
+        "excludes_zero": true,
+        "mean": -15.181,
+        "n": 30
+      }
+    },
+    "PS15": {
+      "vs_b0": {
+        "ci_lower": -16.8457,
+        "ci_upper": 3.6623,
+        "excludes_zero": false,
+        "mean": -3.604,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -29.1537,
+        "ci_upper": 2.873,
+        "excludes_zero": false,
+        "mean": -10.1533,
+        "n": 30
+      }
+    },
+    "PS16": {
+      "vs_b0": {
+        "ci_lower": -0.3653,
+        "ci_upper": 20.4323,
+        "excludes_zero": false,
+        "mean": 6.9043,
+        "n": 30
+      },
+      "vs_p2": {
+        "ci_lower": -18.0703,
+        "ci_upper": 19.428,
+        "excludes_zero": false,
+        "mean": 0.355,
+        "n": 30
+      }
+    }
+  },
+  "level2_ensemble_ci": {
+    "ci_lower": 39.6862,
+    "ci_upper": 48.1874,
+    "mean": 43.6162
+  },
+  "note": "Level 1: paired task-level bootstrap within each PS arm. Level 2: bootstrap over the 16 PS arm means. Do not infer general random-mapping performance from the single best PS arm."
+}

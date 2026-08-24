@@ -1,0 +1,42 @@
+{
+  "mapping": {
+    "ANSWER_READY": {
+      "ANSWER": -49.040667,
+      "DEFER": 65.6847,
+      "RETRIEVE": -125.45,
+      "SEARCH_MORE": 59.889767,
+      "VERIFY": -30.703
+    },
+    "DISCRIMINATION": {
+      "ANSWER": 59.12,
+      "DEFER": 60.725,
+      "RETRIEVE": 59.129091,
+      "SEARCH_MORE": 59.12,
+      "VERIFY": -49.040667
+    },
+    "EVIDENCE_ACQUISITION": {
+      "ANSWER": -30.703,
+      "DEFER": -49.040667,
+      "RETRIEVE": 65.6847,
+      "SEARCH_MORE": 54.785773,
+      "VERIFY": 59.889767
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "ANSWER": -30.703,
+      "DEFER": 63.474247,
+      "RETRIEVE": 66.414111,
+      "SEARCH_MORE": -49.040667,
+      "VERIFY": 59.889767
+    },
+    "RESOLUTION": {
+      "ANSWER": -43.764143,
+      "DEFER": -49.040667,
+      "RETRIEVE": 54.785773,
+      "SEARCH_MORE": 62.4,
+      "VERIFY": 65.6847
+    }
+  },
+  "model": "PS05",
+  "seed_algorithm": "SHA-256(phase|shuffle_seed) \u2192 first 8 bytes as uint64",
+  "shuffle_seed": 105
+}
