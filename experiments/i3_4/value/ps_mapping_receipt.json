@@ -1,0 +1,21 @@
+{
+  "actions": [
+    "ANSWER",
+    "VERIFY",
+    "DEFER",
+    "SEARCH_MORE",
+    "RETRIEVE"
+  ],
+  "b1_model_sha256": "c72b8641c5452d79e92fd9cb14ca289948b54385f2481a893ecb8c6bf22f1f68",
+  "note": "Replaces Python hash() which is process-randomized via PYTHONHASHSEED",
+  "phases": [
+    "EVIDENCE_ACQUISITION",
+    "DISCRIMINATION",
+    "RESOLUTION",
+    "ANSWER_READY",
+    "NO_VIABLE_HYPOTHESIS"
+  ],
+  "ps_mapping_sha256": "9c33d5e5354b7f53144566b62917699ce9d9f611d7e891635c38d95a148d4726",
+  "seed_algorithm": "SHA-256(phase|shuffle_seed) \u2192 first 8 bytes as uint64",
+  "shuffle_seed": 42
+}

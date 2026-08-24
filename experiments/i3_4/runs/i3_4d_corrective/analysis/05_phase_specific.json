@@ -1,0 +1,66 @@
+{
+  "P2": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 0.2632,
+        "DEFER": 0.1316,
+        "RETRIEVE": 0.1447,
+        "SEARCH_MORE": 0.4605
+      },
+      "n": 76
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.1835,
+        "RETRIEVE": 0.464,
+        "SEARCH_MORE": 0.2086,
+        "VERIFY": 0.1439
+      },
+      "n": 278
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  },
+  "PSF": {
+    "ANSWER_READY": {
+      "action_distribution": {
+        "ANSWER": 0.1154,
+        "DEFER": 0.1731,
+        "RETRIEVE": 0.3077,
+        "SEARCH_MORE": 0.4038
+      },
+      "n": 104
+    },
+    "DISCRIMINATION": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "EVIDENCE_ACQUISITION": {
+      "action_distribution": {
+        "DEFER": 0.2273,
+        "RETRIEVE": 0.3909,
+        "SEARCH_MORE": 0.1955,
+        "VERIFY": 0.1864
+      },
+      "n": 220
+    },
+    "NO_VIABLE_HYPOTHESIS": {
+      "action_distribution": {},
+      "n": 0
+    },
+    "RESOLUTION": {
+      "action_distribution": {},
+      "n": 0
+    }
+  }
+}

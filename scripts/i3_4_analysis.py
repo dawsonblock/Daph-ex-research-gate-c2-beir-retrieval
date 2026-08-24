@@ -117,23 +117,23 @@ def step2_utility_contrasts(results: list[dict], output: Path) -> dict:
 
     contrasts = {}
 
-    # Standard contrasts (always present)
-    p1_diffs = paired_diffs("P1")
-    p2_diffs = paired_diffs("P2")
-    p2_p1_diffs = paired_diffs("P2", "P1")
+    # Standard contrasts (only if both arms exist)
+    for treated, control, name in [
+        ("P1", "P0", "delta_P1"),
+        ("P2", "P0", "delta_P2"),
+        ("P2", "P1", "delta_P2_minus_P1"),
+    ]:
+        if treated in arm_utilities and control in arm_utilities:
+            contrasts[name] = paired_bootstrap_ci(paired_diffs(treated, control))
 
-    contrasts["delta_P1"] = paired_bootstrap_ci(p1_diffs)
-    contrasts["delta_P2"] = paired_bootstrap_ci(p2_diffs)
-    contrasts["delta_P2_minus_P1"] = paired_bootstrap_ci(p2_p1_diffs)
-
-    # PS contrasts (only if PS arm exists)
-    if "PS" in arm_utilities:
-        ps_diffs = paired_diffs("PS")
-        p2_ps_diffs = paired_diffs("P2", "PS")
-        ps_p1_diffs = paired_diffs("PS", "P1")
-        contrasts["delta_PS"] = paired_bootstrap_ci(ps_diffs)
-        contrasts["delta_P2_minus_PS"] = paired_bootstrap_ci(p2_ps_diffs)
-        contrasts["delta_PS_minus_P1"] = paired_bootstrap_ci(ps_p1_diffs)
+    # PS/PSF contrasts (only if arm exists)
+    for ps_arm in ("PS", "PSF"):
+        if ps_arm in arm_utilities:
+            contrasts[f"delta_{ps_arm}"] = paired_bootstrap_ci(paired_diffs(ps_arm))
+            if "P2" in arm_utilities:
+                contrasts[f"delta_P2_minus_{ps_arm}"] = paired_bootstrap_ci(paired_diffs("P2", ps_arm))
+            if "P1" in arm_utilities:
+                contrasts[f"delta_{ps_arm}_minus_P1"] = paired_bootstrap_ci(paired_diffs(ps_arm, "P1"))
 
     result = {
         "mean_utility": {k: round(v, 4) for k, v in mean_utility.items()},
@@ -144,8 +144,11 @@ def step2_utility_contrasts(results: list[dict], output: Path) -> dict:
 
     print(f"  Mean utility: {result['mean_utility']}")
     for name, ci in result["contrasts"].items():
-        excl = "EXCLUDES 0" if ci["excludes_zero"] else "includes 0"
-        print(f"  {name}: mean={ci['mean']:+.4f} CI=[{ci['ci_lower']:+.4f}, {ci['ci_upper']:+.4f}] {excl}")
+        if ci["mean"] is not None:
+            excl = "EXCLUDES 0" if ci["excludes_zero"] else "includes 0"
+            print(f"  {name}: mean={ci['mean']:+.4f} CI=[{ci['ci_lower']:+.4f}, {ci['ci_upper']:+.4f}] {excl}")
+        else:
+            print(f"  {name}: (no paired data)")
     return result
 
 
@@ -264,20 +267,23 @@ def step7_ablation_summary(contrasts: dict, success: dict, output: Path) -> dict
     p2_ci = contrasts.get("delta_P2", {})
     p1_ci = contrasts.get("delta_P1", {})
     p2_p1_ci = contrasts.get("delta_P2_minus_P1", {})
-    p2_ps_ci = contrasts.get("delta_P2_minus_PS", {})
-    ps_ci = contrasts.get("delta_PS", {})
 
-    p2_positive = p2_ci.get("excludes_zero", False) and p2_ci.get("mean", 0) > 0
-    p1_neutral = not p1_ci.get("excludes_zero", False)
-    p2_better_than_p1 = p2_p1_ci.get("excludes_zero", False) and p2_p1_ci.get("mean", 0) > 0
+    # Handle PS or PSF
+    p2_ps_ci = contrasts.get("delta_P2_minus_PS", contrasts.get("delta_P2_minus_PSF", {}))
+    ps_ci = contrasts.get("delta_PS", contrasts.get("delta_PSF", {}))
+    ps_label = "PS" if "delta_P2_minus_PS" in contrasts else ("PSF" if "delta_P2_minus_PSF" in contrasts else None)
 
-    # PS causal control checks
-    has_ps = "delta_P2_minus_PS" in contrasts
+    p2_positive = p2_ci.get("excludes_zero", False) and (p2_ci.get("mean") or 0) > 0
+    p1_neutral = not p1_ci.get("excludes_zero", False) if p1_ci else True
+    p2_better_than_p1 = p2_p1_ci.get("excludes_zero", False) and (p2_p1_ci.get("mean") or 0) > 0 if p2_p1_ci else False
+
+    # PS/PSF causal control checks
+    has_ps = ps_label is not None and bool(p2_ps_ci)
     p2_better_than_ps = (
-        has_ps and p2_ps_ci.get("excludes_zero", False) and p2_ps_ci.get("mean", 0) > 0
+        has_ps and p2_ps_ci.get("excludes_zero", False) and (p2_ps_ci.get("mean") or 0) > 0
     )
     ps_not_better_than_p0 = (
-        has_ps and not (ps_ci.get("excludes_zero", False) and ps_ci.get("mean", 0) > 0)
+        has_ps and not (ps_ci.get("excludes_zero", False) and (ps_ci.get("mean") or 0) > 0)
     )
 
     # Success non-inferiority check
@@ -304,11 +310,13 @@ def step7_ablation_summary(contrasts: dict, success: dict, output: Path) -> dict
     }
 
     print(f"  P2 positive (CI excludes 0): {p2_positive}")
-    print(f"  P1 neutral: {p1_neutral}")
-    print(f"  P2 > P1: {p2_better_than_p1}")
+    if p1_ci:
+        print(f"  P1 neutral: {p1_neutral}")
+    if p2_p1_ci:
+        print(f"  P2 > P1: {p2_better_than_p1}")
     if has_ps:
-        print(f"  P2 > PS (correct values matter): {p2_better_than_ps}")
-        print(f"  PS not > P0 (structure alone doesn't help): {ps_not_better_than_p0}")
+        print(f"  P2 > {ps_label} (correct values matter): {p2_better_than_ps}")
+        print(f"  {ps_label} not > P0 (structure alone doesn't help): {ps_not_better_than_p0}")
     print(f"  Success non-inferior: {success_non_inferior}")
     print(f"  P2 promotion: {result['P2_promotion']}")
 
@@ -316,14 +324,112 @@ def step7_ablation_summary(contrasts: dict, success: dict, output: Path) -> dict
     return result
 
 
+def step8_paired_success_analysis(
+    results: list[dict], output: Path, treated_arm: str = "P2", control_arm: str = "P0"
+) -> dict:
+    """McNemar's exact test and rescue/break analysis for paired success.
+
+    For each task, compare success under the treated arm vs the control arm:
+      - rescue: control FAIL → treated SUCCESS
+      - break:  control SUCCESS → treated FAIL
+      - both_success: both succeed
+      - both_fail: both fail
+
+    McNemar's exact test uses the binomial distribution on the discordant
+    pairs (rescues + breaks), testing whether rescues > breaks.
+    """
+    from scipy.stats import binomtest
+    print(f"Step 8: Paired success analysis ({treated_arm} vs {control_arm})")
+
+    # Build task→success mapping for each arm
+    task_success: dict[str, dict[str, bool]] = defaultdict(dict)
+    for r in results:
+        arm = r["arm"]
+        task_id = r["task_id"]
+        task_success[task_id][arm] = bool(r.get("success", False))
+
+    # Count paired outcomes
+    both_success = 0
+    both_fail = 0
+    rescue = 0  # control fail → treated success
+    break_ = 0  # control success → treated fail
+    unpaired = 0
+
+    for task_id, arms_dict in task_success.items():
+        if treated_arm not in arms_dict or control_arm not in arms_dict:
+            unpaired += 1
+            continue
+        t_success = arms_dict[treated_arm]
+        c_success = arms_dict[control_arm]
+        if t_success and c_success:
+            both_success += 1
+        elif t_success and not c_success:
+            rescue += 1
+        elif not t_success and c_success:
+            break_ += 1
+        else:
+            both_fail += 1
+
+    n_paired = both_success + both_fail + rescue + break_
+    n_discordant = rescue + break_
+
+    # McNemar's exact test (two-sided binomial test on discordant pairs)
+    # H0: P(rescue) = P(break), i.e. rescue = break = n_discordant / 2
+    if n_discordant > 0:
+        mcnemar_p = binomtest(rescue, n_discordant, 0.5, alternative="two-sided").pvalue
+        mcnemar_p_onesided = binomtest(rescue, n_discordant, 0.5, alternative="greater").pvalue
+    else:
+        mcnemar_p = 1.0
+        mcnemar_p_onesided = 1.0
+
+    rescue_rate = rescue / n_paired if n_paired else 0
+    break_rate = break_ / n_paired if n_paired else 0
+    net_rescue = rescue - break_
+
+    result = {
+        "treated_arm": treated_arm,
+        "control_arm": control_arm,
+        "n_paired": n_paired,
+        "n_unpaired": unpaired,
+        "both_success": both_success,
+        "both_fail": both_fail,
+        "rescue": rescue,
+        "break": break_,
+        "rescue_rate": round(rescue_rate, 4),
+        "break_rate": round(break_rate, 4),
+        "net_rescue": net_rescue,
+        "n_discordant": n_discordant,
+        "mcnemar_exact_p_two_sided": round(mcnemar_p, 6),
+        "mcnemar_exact_p_one_sided_greater": round(mcnemar_p_onesided, 6),
+        "mcnemar_significant_005": mcnemar_p < 0.05,
+    }
+
+    save_json(output / "08_paired_success.json", result)
+    print(f"  Paired tasks: {n_paired} (unpaired: {unpaired})")
+    print(f"  Both success: {both_success}")
+    print(f"  Both fail:    {both_fail}")
+    print(f"  Rescue:       {rescue} ({rescue_rate:.2%})")
+    print(f"  Break:        {break_} ({break_rate:.2%})")
+    print(f"  Net rescue:   {net_rescue:+d}")
+    print(f"  McNemar exact p (two-sided): {mcnemar_p:.6f}")
+    print(f"  McNemar exact p (one-sided >): {mcnemar_p_onesided:.6f}")
+    print(f"  Significant at 0.05: {result['mcnemar_significant_005']}")
+
+    return result
+
+
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description="I3.4c Analysis")
+    parser = argparse.ArgumentParser(description="I3.4 Analysis")
     parser.add_argument("--results", type=Path, required=True)
     parser.add_argument("--receipts", type=Path, required=True)
     parser.add_argument("--dataset", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--treated-arm", type=str, default="P2",
+                        help="Treated arm for McNemar's test (default: P2)")
+    parser.add_argument("--control-arm", type=str, default="P0",
+                        help="Control arm for McNemar's test (default: P0)")
     args = parser.parse_args()
 
     results = load_jsonl(args.results)
@@ -346,6 +452,12 @@ def main():
     s6 = step6_phase_transitions(receipts, args.output)
     print()
     s7 = step7_ablation_summary(s2["contrasts"], s3, args.output)
+    print()
+    s8 = step8_paired_success_analysis(
+        results, args.output,
+        treated_arm=args.treated_arm,
+        control_arm=args.control_arm,
+    )
 
     # Summary
     summary = {
@@ -354,6 +466,14 @@ def main():
         "utility_contrasts": s2["contrasts"],
         "success_rates": {arm: d["rate"] for arm, d in s3.items()},
         "P2_promotion": s7["P2_promotion"],
+        "paired_success": {
+            "rescue": s8["rescue"],
+            "break": s8["break"],
+            "net_rescue": s8["net_rescue"],
+            "mcnemar_p_two_sided": s8["mcnemar_exact_p_two_sided"],
+            "mcnemar_p_one_sided": s8["mcnemar_exact_p_one_sided_greater"],
+            "mcnemar_significant": s8["mcnemar_significant_005"],
+        },
     }
     save_json(args.output / "summary.json", summary)
 
@@ -361,8 +481,9 @@ def main():
     print(f"  Integrity OK: {summary['integrity_ok']}")
     print(f"  Trajectories: {summary['n_trajectories']}")
     for name, ci in summary["utility_contrasts"].items():
-        excl = "EXCLUDES 0" if ci.get("excludes_zero") else "includes 0"
-        print(f"  {name}: mean={ci.get('mean', 0):+.4f} CI=[{ci.get('ci_lower', 0):+.4f}, {ci.get('ci_upper', 0):+.4f}] {excl}")
+        if ci.get("mean") is not None:
+            excl = "EXCLUDES 0" if ci.get("excludes_zero") else "includes 0"
+            print(f"  {name}: mean={ci['mean']:+.4f} CI=[{ci['ci_lower']:+.4f}, {ci['ci_upper']:+.4f}] {excl}")
     print(f"  P2 promotion: {summary['P2_promotion']}")
 
 

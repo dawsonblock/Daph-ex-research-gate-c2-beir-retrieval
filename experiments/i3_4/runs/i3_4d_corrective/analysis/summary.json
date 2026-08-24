@@ -1,0 +1,33 @@
+{
+  "P2_promotion": false,
+  "integrity_ok": true,
+  "n_trajectories": 160,
+  "paired_success": {
+    "break": 8,
+    "mcnemar_p_one_sided": 1.0,
+    "mcnemar_p_two_sided": 0.007812,
+    "mcnemar_significant": "True",
+    "net_rescue": -8,
+    "rescue": 0
+  },
+  "success_rates": {
+    "P2": 0.875,
+    "PSF": 0.975
+  },
+  "utility_contrasts": {
+    "delta_P2_minus_PSF": {
+      "ci_lower": -33.5724,
+      "ci_upper": -8.336,
+      "excludes_zero": true,
+      "mean": -19.915,
+      "n": 80
+    },
+    "delta_PSF": {
+      "ci_lower": null,
+      "ci_upper": null,
+      "excludes_zero": null,
+      "mean": null,
+      "n": 0
+    }
+  }
+}

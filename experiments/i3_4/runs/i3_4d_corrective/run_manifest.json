@@ -1,0 +1,27 @@
+{
+  "arms": [
+    "P2",
+    "PSF"
+  ],
+  "b1_model_sha256": "c72b8641c5452d79e92fd9cb14ca289948b54385f2481a893ecb8c6bf22f1f68",
+  "b1_table_path": "/content/r2_repo/experiments/i3_4/value/frozen_b1_table.json",
+  "backend_identity_sha256": "08dd528f6fc9e67c574ec766ea15ab7be80bdaa7a615625244122db533c2772d",
+  "completed": 56,
+  "correction_reason": "Original PS used Python hash() which is process-randomized; frozen mapping uses SHA-256",
+  "corrective": true,
+  "dataset_sha256": "e1813d7ebfd10255e974c606e41c514b4b4db33df48be21effdf59d049ca22ab",
+  "experiment": "i3_4d_corrective_p2_vs_psf",
+  "failed": 0,
+  "generator_seed": 9137,
+  "leakage_verified": true,
+  "ps_control": "FROZEN_SHA256_MAPPING",
+  "ps_mapping_path": "/content/r2_repo/experiments/i3_4/value/ps_frozen_mapping.json",
+  "ps_mapping_sha256": "9c33d5e5354b7f53144566b62917699ce9d9f611d7e891635c38d95a148d4726",
+  "run_end": "2026-08-24T03:29:31Z",
+  "run_start": "2026-08-24T03:26:10Z",
+  "shuffle_seed": 42,
+  "skipped": 104,
+  "total_time_seconds": 201.27927827835083,
+  "total_trajectories": 160,
+  "value_model": "B1_phase_action_table_FROZEN"
+}

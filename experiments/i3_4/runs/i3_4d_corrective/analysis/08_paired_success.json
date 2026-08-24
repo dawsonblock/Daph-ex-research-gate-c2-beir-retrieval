@@ -1,0 +1,17 @@
+{
+  "both_fail": 2,
+  "both_success": 70,
+  "break": 8,
+  "break_rate": 0.1,
+  "control_arm": "PSF",
+  "mcnemar_exact_p_one_sided_greater": 1.0,
+  "mcnemar_exact_p_two_sided": 0.007812,
+  "mcnemar_significant_005": "True",
+  "n_discordant": 8,
+  "n_paired": 80,
+  "n_unpaired": 0,
+  "net_rescue": -8,
+  "rescue": 0,
+  "rescue_rate": 0.0,
+  "treated_arm": "P2"
+}

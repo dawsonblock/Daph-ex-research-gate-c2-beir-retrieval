@@ -2,6 +2,14 @@
   "P2_promotion": true,
   "integrity_ok": true,
   "n_trajectories": 320,
+  "paired_success": {
+    "break": 0,
+    "mcnemar_p_one_sided": 0.000977,
+    "mcnemar_p_two_sided": 0.001953,
+    "mcnemar_significant": "True",
+    "net_rescue": 10,
+    "rescue": 10
+  },
   "success_rates": {
     "P0": 0.75,
     "P1": 0.75,

@@ -1,0 +1,26 @@
+{
+  "contrasts": {
+    "delta_P2_minus_PSF": {
+      "ci_lower": -33.5724,
+      "ci_upper": -8.336,
+      "excludes_zero": true,
+      "mean": -19.915,
+      "n": 80
+    },
+    "delta_PSF": {
+      "ci_lower": null,
+      "ci_upper": null,
+      "excludes_zero": null,
+      "mean": null,
+      "n": 0
+    }
+  },
+  "mean_utility": {
+    "P2": 42.188,
+    "PSF": 62.103
+  },
+  "n_per_arm": {
+    "P2": 80,
+    "PSF": 80
+  }
+}
