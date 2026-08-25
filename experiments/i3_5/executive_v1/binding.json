@@ -1,0 +1,13 @@
+{
+  "backend_sha256": "a9f1c8888b702c458300096006760dc43c26a17e81a8067fa0509e1c6e6ed988",
+  "causal_dataset_sha256": "4383b7727ae38811d57db2de8294666405775745678db9b6ca70803a8afaae13",
+  "epsilon": 3.0,
+  "executive_name": "DAPH_EXECUTIVE_V1",
+  "feature_schema_sha256": "9722343e8d87b2642eddb667dcd0a3b70407202e2f59606ae4eef81b8da29350",
+  "interface_sha256": "8013563ae4eb725c145dcfd3751fca9b89a3579b7dadf988d41e8113770b1c04",
+  "interface_variant": "I2",
+  "manifest_sha256": "85f635e409cccc1275feb3cff918667fbbfc90cf8ec0eb6b9ea0a6bc577bd4b2",
+  "model_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+  "qcausal_model_sha256": "d90d72dab250ba7ce032afcc9d430fabfd4e84dace3c4dbe4deb77de0f8c9729",
+  "utility_sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07"
+}

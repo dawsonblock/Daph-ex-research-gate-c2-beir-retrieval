@@ -1,0 +1,37 @@
+{
+  "part_a": {
+    "gap_class_summary": {
+      "clear": {
+        "contains_optimum_rate": 1.0,
+        "mean_gap": 96.47142857142858,
+        "mean_set_size": 1.0,
+        "n": 21
+      },
+      "moderate": {
+        "contains_optimum_rate": 1.0,
+        "mean_gap": 5.5414285714285745,
+        "mean_set_size": 1.0,
+        "n": 42
+      },
+      "near_tie": {
+        "contains_optimum_rate": 1.0,
+        "mean_gap": 1.5166878980891723,
+        "mean_set_size": 3.0191082802547773,
+        "n": 157
+      }
+    }
+  },
+  "part_b": {
+    "depth_results": [
+      {
+        "depth": 0,
+        "diff": -0.0629,
+        "mean_q_actual": 42.9345,
+        "mean_q_pred": 42.8717,
+        "n": 44
+      }
+    ],
+    "q_actual_decrease_0_to_2": null,
+    "q_pred_decrease_0_to_2": null
+  }
+}

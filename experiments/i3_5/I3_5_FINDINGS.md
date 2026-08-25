@@ -1084,3 +1084,158 @@ The interface-ablation confirms the diagnosis:
    with the I2 interface.
 3. **Phase 23: Confirmation benchmark** — Run the frozen
    QCAUSAL_V2 + I2 interface on an unseen benchmark.
+
+### Phase 21b: DAPH_EXECUTIVE_V1 Audit
+
+DAPH_EXECUTIVE_V1 was frozen with complete identity:
+- Q model SHA: `d90d72dab250ba7c...`
+- Dataset SHA: `4383b7727ae38811...`
+- Feature schema SHA: `9722343e8d87b264...`
+- Interface (I2) SHA: `8013563ae4eb725c...`
+- Model SHA: `65b8fcd92af6b4fe...`
+- epsilon: 3.0
+- Control law: A_epsilon(s) = {a : Q(s,a) >= Q_max(s) - epsilon}
+- No numeric values, no ranking
+
+#### Part A: Gap/Set-Size Audit
+
+| Gap class | n | MeanSetSize | ContainsOptimum | MeanGap |
+|---|---|---|---|---|
+| clear (>10) | 21 | **1.00** | 100% | 96.47 |
+| moderate (3-10) | 42 | **1.00** | 100% | 5.54 |
+| near_tie (≤3) | 157 | **3.02** | 100% | 1.52 |
+
+This is exactly the target discrimination pattern:
+- Clear choices narrow to 1 action
+- Moderate choices narrow to 1 action
+- Near-ties expose the set (mean 3.02 actions)
+- The true optimum is always in the set (100% coverage)
+
+The controller is not "always emit all legal actions" — it narrows
+substantially on clear and moderate choices while respecting
+uncertainty on near-ties.
+
+#### P(a_LLM in A_epsilon) — does Qwen follow the set?
+
+| Arm | P(in A_eps) | P(in A_eps \| gap>3) | P(in A_eps \| gap≤3) |
+|---|---|---|---|
+| C0 | 63.6% | 1.6% | 89.1% |
+| I0 | 63.6% | 26.6% | 78.8% |
+| I2 | 69.1% | 31.3% | 84.6% |
+| I3 | 77.3% | 31.3% | 96.2% |
+| I4 | 80.0% | 31.3% | 100.0% |
+
+On gap>3 states (where DAPH has real information):
+- C0: Qwen picks the Q-optimal action only 1.6% of the time
+- I2/I3/I4: 31.3% — a 20x improvement
+
+On gap≤3 states (near-ties):
+- I4: 100% (shows nothing, Qwen's own choices are in A_eps)
+- I3: 96.2% (shows confidence=LOW with the set)
+- I2: 84.6% (shows the set, sometimes misleads slightly)
+
+The 31.3% on gap>3 is still low — Qwen doesn't always follow even
+clear recommendations. But the overall success is 100%, meaning Qwen
+recovers even when it doesn't follow the recommendation.
+
+#### Part B: Repeated-Action Stress Test
+
+**Question**: Does QCAUSAL_V1 represent diminishing returns for RETRIEVE?
+
+**Method**: Simulated states at retrieval depths 0, 1, 2 by modifying
+state features (retrieval_count, retrieval_remaining, n_visible_evidence,
+n_supporting, same_action_run_length, steps_remaining).
+
+**Results**:
+
+| Depth | Q_pred(RETRIEVE) | Q_pred(VERIFY) | P(RETR in A_eps) | MeanSetSize |
+|---|---|---|---|---|
+| 0 | 42.87 | 89.59 | 0.5455 | 1.55 |
+| 1 | 43.36 | 89.86 | 0.5455 | 1.55 |
+| 2 | 42.61 | 84.27 | 0.5455 | 1.55 |
+
+**Q_pred(RETRIEVE) is essentially flat across depths 0, 1, 2.**
+- Decrease 0→1: -0.48 (actually increased)
+- Decrease 1→2: +0.74
+- Decrease 0→2: +0.26 (negligible)
+
+P(RETRIEVE in A_eps) remains at 0.55 even at depth 2. The I2 interface
+would still include RETRIEVE in the near-optimal set after 2 retrieves.
+
+**VERDICT: QCAUSAL_V1 does NOT represent diminishing returns.**
+The estimator treats RETRIEVE at step 2 and RETRIEVE after already
+retrieving twice as nearly equivalent. History-aware Q_V2 IS necessary.
+
+#### Empirical Evidence from Six-Arm Trajectories
+
+| n_RETRIEVE | n_traj (QCAUSAL/I0) | mean_U | success | n_traj (I2) | mean_U | success |
+|---|---|---|---|---|---|---|
+| 0 | 60 | 98.19 | 100% | 88 | 97.58 | 100% |
+| 1 | 17 | 88.95 | 100% | 44 | 89.93 | 100% |
+| 2 | 4 | 86.05 | 100% | 0 | — | — |
+| 3 | 139 | 49.92 | 80% | 88 | 68.98 | 100% |
+
+I2 still has 88/220 trajectories with 3 RETRIEVEs. But those have
+100% success (vs 80% for QCAUSAL/I0). The I2 interface prevents
+3-RETRIEVE trajectories from causing failure, but doesn't eliminate
+them entirely. The remaining 3-RETRIEVE trajectories lose ~21 utility
+points (89.93 → 68.98) due to wasted retrieval costs.
+
+A history-aware Q_V2 that predicts decreasing Q for RETRIEVE at depth 2
+could eliminate those 88 3-RETRIEVE trajectories and recover those
+utility points. This justifies Phase 22.
+
+#### Why V1 Can't Represent Diminishing Returns
+
+The causal data collection only sampled initial states (depth 0).
+The 35 features include retrieval_count and same_action_run_length,
+but the model was never trained on states where retrieval_count > 0
+with RETRIEVE as the forced action. So it has no data to learn the
+diminishing returns pattern.
+
+V2 would need:
+1. Intervention data collected from states after 1 and 2 retrieves
+2. The same 35 features (already include history fields)
+3. The same I2 interface
+4. Comparison against V1 on the same benchmark
+
+The feature schema already contains the right fields
+(retrieval_count, same_action_run_length, retrieval_remaining).
+The problem is that V1 was trained on depth-0 data only.
+
+### Phase 21b Conclusions
+
+1. **DAPH_EXECUTIVE_V1 is well-calibrated.** The gap/set-size audit
+   shows perfect discrimination: 1 action on clear choices, 3 actions
+   on near-ties, 100% optimum coverage.
+
+2. **The I2 interface works.** P(a_LLM in A_epsilon) improves 20x on
+   gap>3 states vs no guidance. Overall success is 100%.
+
+3. **QCAUSAL_V1 cannot represent diminishing returns.** Q_pred(RETRIEVE)
+   is flat at ~43 across depths 0, 1, 2. This is because the causal
+   data only sampled initial states.
+
+4. **History-aware Q_V2 is justified.** The stress test proves V1
+   cannot represent the temporal component. 88/220 I2 trajectories
+   still have 3 RETRIEVEs, losing ~21 utility points. V2 could
+   eliminate these by predicting lower Q for RETRIEVE at depth 2.
+
+### Next Steps
+
+1. **Phase 22: History-aware Q_CAUSAL_V2**
+   - Collect intervention data from states at retrieval depths 0, 1, 2
+   - Train V2 with the same 35 features (already include history fields)
+   - Compare V2+I2 vs V1+I2 on the same development benchmark
+   - Target: E[#RETRIEVE] on ol_retrieve falls from 1.0 to ~1.0
+     (already met by I2) AND the 88 3-RETRIEVE trajectories are
+     eliminated
+
+2. **Phase 23: Confirmation benchmark**
+   - Generate a new unseen benchmark with harder states:
+     clear-action-gap cases, near-tie cases, constrained resources,
+     repeated-action traps, premature-DEFER traps, premature-ANSWER
+     traps, retrieval-vs-verify choices, search-vs-retrieve choices
+   - Run the frozen executive on the unseen benchmark
+   - The benchmark must be generated from a frozen protocol without
+     tuning against individual tasks

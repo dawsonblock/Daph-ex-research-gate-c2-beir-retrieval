@@ -1,0 +1,184 @@
+{
+  "components": {
+    "action_schema": {
+      "allowed_actions": "scripts/r2_allowed_actions.py",
+      "allowed_actions_sha256": "482e9f6a9ab6d8c00c2f9d9e50ce5ab1e440e679f39da08dea554b3b3f50cd16",
+      "schema_builder": "scripts/r2_schema.py",
+      "schema_sha256": "c20cd3a5adf976ddce2296ded11e21d1b2d9c972cd94c205404e5d6b410a3b0e"
+    },
+    "backend": {
+      "class": "R2DirectLlamaBackend",
+      "decoder_path": "hrm_adaptive_memory/executive/model_decoder.py",
+      "decoder_sha256": "b7d76db76ae841e4fe4eb7abc7976dc146e25b42037fe2b1927299ec7e382ec1",
+      "path": "hrm_adaptive_memory/executive/model_backend.py",
+      "sha256": "a9f1c8888b702c458300096006760dc43c26a17e81a8067fa0509e1c6e6ed988",
+      "temperature": 0.0
+    },
+    "base_packet_builder": {
+      "implementation": "scripts/run_i3_7e_compact_governor.py",
+      "name": "i3_7e MDSG state with affordances",
+      "sha256": "32d043988132c4626d688d327638affe47bd238e89c8afce2275f65bceb27dd4"
+    },
+    "benchmark": {
+      "generator": "i3_5_state_discrimination_generator.py",
+      "generator_sha256": "e8378282659df405349e7ad903dcfcdab274335427de654a2f07706831fdd4fc",
+      "n_per_subtype": 24,
+      "n_per_two_live_subtype": 20,
+      "seed": 9137
+    },
+    "cognitive_control": {
+      "path": "hrm_adaptive_memory/cognitive_control/core.py",
+      "sha256": "902a0c4d202159b464627e320eae5e11ff109d8102159c07fd5ab2a3ec9dd52c"
+    },
+    "evidence_runtime": {
+      "evidence_benchmark_sha256": "105e5ce3151e6c1106f15c3a5149da406e2ee25ca9f33a491fa961031974e043",
+      "executor_sha256": "48714eb576b25fb2b6543d7cf5ec3b54f8b900363dc86b6a772b0ae9c54d03e6"
+    },
+    "feature_schema": {
+      "feature_keys": [
+        "a_ANSWER",
+        "a_DEFER",
+        "a_REASON_MORE",
+        "a_RETRIEVE",
+        "a_SEARCH_MORE",
+        "a_VERIFY",
+        "can_retrieve",
+        "can_search",
+        "can_verify",
+        "n_contradicting",
+        "n_eliminated",
+        "n_eliminated_x_defer",
+        "n_live",
+        "n_live_x_retrieve",
+        "n_live_x_search",
+        "n_live_x_verify",
+        "n_stale",
+        "n_supporting",
+        "n_supporting_x_answer",
+        "n_total_hypotheses",
+        "n_untested",
+        "n_untested_x_retrieve",
+        "n_untested_x_verify",
+        "n_verified",
+        "n_visible_evidence",
+        "reasoning_complete",
+        "retrieval_count",
+        "retrieval_remaining",
+        "same_action_run_length",
+        "search_count",
+        "search_remaining",
+        "searched",
+        "steps_remaining",
+        "verify_count",
+        "verify_remaining"
+      ],
+      "path": "experiments/i3_5/pinned_policy/frozen_estimators/feature_schema.json",
+      "sha256": "9722343e8d87b2642eddb667dcd0a3b70407202e2f59606ae4eef81b8da29350"
+    },
+    "interface": {
+      "description": "Exposes near_optimal_actions (actions with Q >= Q_max - epsilon) and lower_value_actions (all others). No numerical values. No ranking. The LLM chooses freely from the near-optimal set.",
+      "epsilon": 3.0,
+      "implementation": {
+        "class": "InterfaceVariant",
+        "method": "build_packet_fields",
+        "packet_builder_path": "scripts/run_i3_5_interface_ablation.py",
+        "packet_builder_sha256": "8013563ae4eb725c145dcfd3751fca9b89a3579b7dadf988d41e8113770b1c04",
+        "variant": "I2"
+      },
+      "name": "I2",
+      "type": "epsilon_near_optimal_set"
+    },
+    "model": {
+      "format": "GGUF",
+      "name": "Qwen2.5-7B-Instruct-Q4_K_M",
+      "path": "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423"
+    },
+    "phase_classifier": {
+      "implementation": "scripts/run_i3_5_interface_ablation.py",
+      "name": "classify_phase_simple",
+      "phases": [
+        "T2",
+        "READY",
+        "EXPLORE",
+        "DISCRIMINATE"
+      ],
+      "sha256": "8013563ae4eb725c145dcfd3751fca9b89a3579b7dadf988d41e8113770b1c04"
+    },
+    "q_estimator": {
+      "artifact_path": "experiments/i3_5/pinned_policy/frozen_estimators/QCAUSAL_gbt.pkl",
+      "n_features": 35,
+      "name": "QCAUSAL_V1",
+      "sha256": "d90d72dab250ba7ce032afcc9d430fabfd4e84dace3c4dbe4deb77de0f8c9729",
+      "training_data": {
+        "collection_method": "pinned_policy_forced_action",
+        "dataset_path": "experiments/i3_5/pinned_policy/pinned_causal_actions_v1.jsonl",
+        "dataset_sha256": "4383b7727ae38811d57db2de8294666405775745678db9b6ca70803a8afaae13",
+        "n_records": 1056,
+        "policy": "Qwen2.5-7B-Instruct-Q4_K_M at temperature=0"
+      },
+      "type": "GradientBoostedTreesRegressor"
+    },
+    "resources": {
+      "budget": {
+        "max_executive_steps": 10,
+        "max_retrieval_calls": 3,
+        "max_search_calls": 2,
+        "max_verification_calls": 5
+      },
+      "path": "hrm_adaptive_memory/executive/resources.py",
+      "sha256": "d520b54bdcf91d88420ae9d4ec782d6d7c5aaea546ee49287f6c8f984e0f6e17"
+    },
+    "state_features": {
+      "checkpoint_path": "daph/intervention/checkpoint.py",
+      "checkpoint_sha256": "caaa71ad98ab58f3bfae3e2c2d5b8c42257088f332c0aa01680cd12aa327ac5a"
+    },
+    "utility": {
+      "path": "configs/v2b_i3_1_utility_v1.json",
+      "sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07"
+    }
+  },
+  "control_law": {
+    "epsilon": 3.0,
+    "formula": "A_epsilon(s) = {a : Q(s,a) >= Q_max(s) - epsilon}",
+    "no_numeric_values": true,
+    "no_ranking": true,
+    "packet_fields": {
+      "epistemic_phase": "phase classification string",
+      "lower_value_actions": "list of actions not in A_epsilon(s)",
+      "near_optimal_actions": "list of actions in A_epsilon(s)"
+    }
+  },
+  "description": "DAPH cognitive-control executive V1. Frozen QCAUSAL_V1 estimator + I2 epsilon near-optimal set interface. The estimator predicts Q^pi_Qwen(s,a) from 35 state features. The interface exposes the near-optimal action set A_epsilon(s) = {a: Q(s,a) >= Q_max(s) - epsilon} without numerical values, letting the base model decide among near-equivalent actions.",
+  "executive_name": "DAPH_EXECUTIVE_V1",
+  "invariants": [
+    "QCAUSAL_V1 is frozen \u2014 no retraining allowed",
+    "I2 interface is frozen \u2014 no packet representation changes",
+    "epsilon=3.0 is frozen",
+    "Feature schema is frozen (35 features)",
+    "Model identity is frozen (Qwen2.5-7B-Instruct-Q4_K_M)",
+    "Backend is frozen (temperature=0, deterministic)",
+    "Utility function is frozen",
+    "Action schema is frozen",
+    "Phase classifier is frozen",
+    "No .fit() calls in the live execution path",
+    "Only serialized estimators may be loaded"
+  ],
+  "timestamp": "2026-08-25T20:53:22.039311+00:00",
+  "validation": {
+    "phase_19_six_arm": {
+      "QCAUSAL_vs_B0": "PASS (+7.02, CI=[0.12, 13.96])",
+      "QCAUSAL_vs_QOBS": "FAIL (-11.91, CI=[-16.88, -7.47])",
+      "promotion_gate": "PASS (4/4 required gates)"
+    },
+    "phase_21_interface_ablation": {
+      "I2_vs_C0": "PASS (+0.23, CI=[0.12, 0.37])",
+      "I2_vs_I0": "PASS (+17.86, CI=[12.23, 23.84])",
+      "ol_retrieve_E_retrieve": "1.00 (target: ~1, was 3.00 with I0)",
+      "ol_retrieve_success": "100% (was 75% with I0)",
+      "overall_success": "100%"
+    }
+  },
+  "version": "1.0"
+}

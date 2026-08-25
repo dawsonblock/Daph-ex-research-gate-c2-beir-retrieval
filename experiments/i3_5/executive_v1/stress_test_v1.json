@@ -1,0 +1,35 @@
+{
+  "depth_summary": [
+    {
+      "depth": 0,
+      "mean_q_retrieve": 42.8717,
+      "mean_q_verify": 89.588,
+      "mean_set_size": 1.5455,
+      "n": 44,
+      "p_retrieve_in_set": 0.5455
+    },
+    {
+      "depth": 1,
+      "mean_q_retrieve": 43.3551,
+      "mean_q_verify": 89.8593,
+      "mean_set_size": 1.5455,
+      "n": 44,
+      "p_retrieve_in_set": 0.5455
+    },
+    {
+      "depth": 2,
+      "mean_q_retrieve": 42.6117,
+      "mean_q_verify": 84.2709,
+      "mean_set_size": 1.5455,
+      "n": 44,
+      "p_retrieve_in_set": 0.5455
+    }
+  ],
+  "p_retrieve_in_set_by_depth": [
+    0.5455,
+    0.5455,
+    0.5455
+  ],
+  "q_pred_decrease_0_to_2": 0.259999999999998,
+  "verdict": "history_necessary"
+}
