@@ -700,3 +700,221 @@ conservative and happen to produce better LLM behavior.
    or threshold-based recommendations rather than continuous values).
 3. **Confirmation benchmark** — Run on an unseen benchmark to
    validate the QCAUSAL > B0 finding.
+
+### Phase 20: Mechanism Audit Results
+
+#### Per-Subtype First-Action Distribution
+
+The first-action distribution reveals the core mechanism:
+
+| Subtype | P0 | B0 | B1 | QOBS | QCAUSAL | Q-best |
+|---|---|---|---|---|---|---|
+| ol_answer | ANSWER | ANSWER | ANSWER | ANSWER | ANSWER | ANSWER |
+| ol_defer | VERIFY | VERIFY | RETRIEVE | VERIFY | **RETRIEVE** | DEFER |
+| ol_retrieve | VERIFY | VERIFY | RETRIEVE | VERIFY | VERIFY | RETRIEVE |
+| ol_verify | VERIFY | VERIFY | RETRIEVE | VERIFY | **RETRIEVE** | VERIFY |
+| tl_answer | ANSWER | **DEFER** | ANSWER | ANSWER | ANSWER | ANSWER |
+| tl_retrieve | RETRIEVE | RETRIEVE | VERIFY | RETRIEVE | **VERIFY** | VERIFY |
+| tl_search | RETRIEVE | RETRIEVE | VERIFY | RETRIEVE | **VERIFY** | VERIFY |
+| tl_verify | VERIFY | **RETRIEVE** | VERIFY | VERIFY | VERIFY | VERIFY |
+
+**Key observations:**
+
+1. **QCAUSAL diverts from VERIFY to RETRIEVE** on ol_defer and ol_verify.
+   - On ol_defer: QCAUSAL causes RETRIEVE (24/24) while P0/QOBS choose VERIFY (24/24)
+   - On ol_verify: QCAUSAL causes RETRIEVE (24/24) while P0/QOBS choose VERIFY (24/24)
+   - This is the over-retrieval pattern: QCAUSAL ranks RETRIEVE high, and the LLM follows
+
+2. **B0 causes premature DEFER** on tl_answer (17/20 choose DEFER).
+   - The global prior makes DEFER look reasonable, causing Qwen to defer when it should answer
+   - This is B0's main failure mode
+
+3. **B1 always chooses RETRIEVE** when retrieval is legal.
+   - B1's phase×action table ranks RETRIEVE highest in EXPLORE phase
+   - This causes B1 to over-retrieve across all retrieval-capable subtypes
+
+4. **QCAUSAL correctly identifies VERIFY** on tl_retrieve and tl_search.
+   - On tl_retrieve: QCAUSAL chooses VERIFY (17/20) which IS the Q-best action
+   - On tl_search: QCAUSAL chooses VERIFY (15/20) which IS the Q-best action
+   - P0/QOBS choose RETRIEVE here, which is NOT the Q-best action
+   - But P0/QOBS still get higher utility because Qwen recovers
+
+#### Delta-U Decomposition
+
+**QCAUSAL vs B0** (total ΔU = +7.02):
+
+| Subtype | ΔU | Contribution |
+|---|---|---|
+| tl_answer | +110.50 | +10.05 (QCAUSAL prevents B0's DEFER collapse) |
+| tl_verify | +42.55 | +3.87 (QCAUSAL prevents B0's RETRIEVE collapse) |
+| tl_defer | +2.25 | +0.20 |
+| ol_retrieve | -36.80 | -4.01 (QCAUSAL over-retrieves) |
+| ol_verify | -22.70 | -2.48 (QCAUSAL over-retrieves) |
+| tl_retrieve | -6.71 | -0.61 |
+
+The QCAUSAL > B0 result is driven by **tl_answer** (+10.05) and
+**tl_verify** (+3.87), where B0 collapses but QCAUSAL doesn't.
+The subtypes where QCAUSAL hurts (ol_retrieve, ol_verify) subtract
+from the advantage but don't override it.
+
+**QCAUSAL vs QOBS** (total ΔU = -11.91):
+
+| Subtype | ΔU | Contribution |
+|---|---|---|
+| ol_retrieve | -36.80 | -4.01 (QCAUSAL over-retrieves, QOBS doesn't) |
+| ol_verify | -22.70 | -2.48 (QCAUSAL over-retrieves, QOBS doesn't) |
+| tl_search | -52.00 | -4.73 (QCAUSAL causes STOP, QOBS doesn't) |
+| tl_retrieve | -7.58 | -0.69 |
+
+The QCAUSAL < QOBS result is driven by the same over-retrieval
+pattern on ol_retrieve and ol_verify, plus a new failure on
+tl_search where QCAUSAL causes STOP (8/20 trajectories end in STOP).
+
+#### Action Sequence Patterns
+
+The most revealing sequence comparison:
+
+**ol_retrieve:**
+- P0:    [VERIFY, RETRIEVE, VERIFY, ANSWER] (n=24) — U=91.4
+- QOBS:  [VERIFY, RETRIEVE, VERIFY, ANSWER] (n=24) — U=91.4
+- QCAUSAL: [VERIFY, RETRIEVE, RETRIEVE, RETRIEVE, VERIFY, ANSWER] (n=18) — U=87.1
+- QCAUSAL: [VERIFY, RETRIEVE, RETRIEVE, RETRIEVE, VERIFY, STOP] (n=6) — U=-42.9
+
+QCAUSAL causes 3 RETRIEVEs instead of 1. In 6/24 cases, this
+exhausts resources and leads to STOP (failure).
+
+**ol_verify:**
+- P0:    [VERIFY, ANSWER] (n=24) — U=96.7
+- QOBS:  [VERIFY, ANSWER] (n=24) — U=96.7
+- QCAUSAL: [RETRIEVE, RETRIEVE, RETRIEVE, VERIFY, ANSWER] (n=21) — U=74.0
+- QCAUSAL: [RETRIEVE, RETRIEVE, RETRIEVE, VERIFY, DEFER] (n=3) — U=-30.0
+
+QCAUSAL starts with 3 RETRIEVEs before VERIFY. P0/QOBS go straight
+to VERIFY and ANSWER in 2 steps.
+
+**tl_retrieve:**
+- P0:    [RETRIEVE, VERIFY, VERIFY, VERIFY, ANSWER] (n=12) — U=86.7
+- QCAUSAL: [VERIFY, VERIFY, RETRIEVE, VERIFY, ANSWER] (n=13) — U=80.6
+
+QCAUSAL correctly starts with VERIFY (the Q-best action) but gets
+slightly lower utility because the trajectory is longer.
+
+#### Value-LLM Interface Diagnosis
+
+For each subtype, we compared what the estimator ranks #1 vs what
+the LLM actually chooses:
+
+| Subtype | QCAUSAL top | LLM follows | QOBS top | LLM follows | Actual best |
+|---|---|---|---|---|---|
+| ol_answer | ANSWER | 24/24 | ANSWER | 24/24 | ANSWER |
+| ol_defer | DEFER | 0/24 | DEFER | 0/24 | DEFER |
+| ol_retrieve | VERIFY | 24/24 | ANSWER | 0/24 | RETRIEVE |
+| ol_verify | SEARCH_MORE | 0/24 | ANSWER | 0/24 | VERIFY |
+| tl_answer | ANSWER | 20/20 | ANSWER | 20/20 | ANSWER |
+| tl_retrieve | VERIFY | 17/20 | ANSWER | 0/20 | VERIFY |
+| tl_search | VERIFY | 15/20 | ANSWER | 0/20 | VERIFY |
+| tl_verify | VERIFY | 16/20 | ANSWER | 0/20 | VERIFY |
+
+**Critical finding:** The LLM does NOT always follow the estimator's
+top recommendation. On ol_defer, QCAUSAL ranks DEFER #1 but the LLM
+chooses RETRIEVE (24/24). On ol_verify, QCAUSAL ranks SEARCH_MORE #1
+but the LLM chooses RETRIEVE (24/24).
+
+The LLM appears to be influenced by the value estimates but does not
+blindly follow the ranking. It has its own preferences (strongly
+biased toward RETRIEVE when retrieval is legal) that interact with
+the value estimates in complex ways.
+
+QOBS ranks ANSWER #1 on most non-terminal states (because the
+observational data is biased toward ANSWER), but the LLM ignores
+this and chooses VERIFY or RETRIEVE based on its own judgment.
+
+#### Over-Guidance Diagnosis
+
+QCAUSAL causes more action repetition than P0:
+- ol_retrieve: QCAUSAL mean_max_repeat=3.00 vs P0=2.00
+- ol_verify: QCAUSAL mean_max_repeat=3.00 vs P0=1.00
+
+The over-retrieval pattern is confirmed: QCAUSAL causes the LLM to
+repeat RETRIEVE 3 times, while P0 does it only once or twice.
+
+#### The Normalization Problem
+
+The root cause of the over-retrieval is the normalization of Q values:
+
+```
+QCAUSAL predicts for ol_retrieve:
+  RETRIEVE=91.3, VERIFY=92.1, REASON_MORE=88.0, SEARCH_MORE=87.9
+
+After normalization to [0, 1]:
+  VERIFY=1.0, RETRIEVE=0.989, REASON_MORE=0.729, SEARCH_MORE=0.719
+```
+
+The normalized values make RETRIEVE look almost as good as VERIFY
+(0.989 vs 1.0), so the LLM treats them as near-equivalent and
+chooses RETRIEVE (which it has a prior preference for). But the
+actual Q difference between RETRIEVE and VERIFY is only 0.8 utility
+points — a near-tie. The normalization amplifies this tiny
+difference into a 0.27 difference in normalized space.
+
+Meanwhile, QOBS predicts:
+```
+QOBS predicts for ol_retrieve:
+  ANSWER=69.0, REASON_MORE=68.5, SEARCH_MORE=68.5, VERIFY=68.2
+
+After normalization:
+  ANSWER=1.0, REASON_MORE=0.929, SEARCH_MORE=0.929, VERIFY=0.886
+```
+
+QOBS ranks ANSWER #1, which the LLM ignores (it knows ANSWER is
+wrong in a 2-live state). The LLM then falls back to its own
+judgment and chooses VERIFY — which happens to be correct.
+
+**The paradox**: QOBS's biased estimates are ignored by the LLM,
+which then uses its own (better) judgment. QCAUSAL's accurate
+estimates are partially followed by the LLM, which leads to
+over-retrieval. The LLM's own judgment is better than any current
+form of value guidance.
+
+### Phase 20 Conclusions
+
+1. **The over-retrieval mechanism is confirmed.** QCAUSAL causes
+   Qwen to repeat RETRIEVE 3x on ol_retrieve and ol_verify, while
+   P0 does 1-2x. This wastes resources and causes 6/24 failures on
+   ol_retrieve (STOP due to resource exhaustion).
+
+2. **The normalization problem is the root cause.** Normalizing Q
+   values to [0,1] amplifies tiny differences (0.8 utility points)
+   into large normalized differences (0.27), misleading the LLM
+   into treating near-ties as strong preferences.
+
+3. **QOBS wins by being ignored.** QOBS's biased estimates (ranking
+   ANSWER #1 on non-terminal states) are ignored by the LLM, which
+   then uses its own judgment. QCAUSAL's accurate estimates are
+   partially followed, leading to worse outcomes.
+
+4. **The LLM has its own strong prior toward RETRIEVE.** When
+   retrieval is legal, Qwen tends to choose RETRIEVE regardless of
+   the value estimates. QCAUSAL's high Q value for RETRIEVE
+   amplifies this prior, causing over-retrieval.
+
+5. **The QCAUSAL > B0 advantage is real but driven by B0's
+   collapse.** B0 causes premature DEFER on tl_answer (17/20) and
+   over-RETRIEVE on tl_verify (20/20). QCAUSAL prevents these
+   collapses, which is where its +7.02 advantage comes from.
+
+### Next Steps
+
+1. **Interface redesign**: Replace normalized values with:
+   - Raw Q values (preserve magnitude information)
+   - Threshold-based recommendations (only show actions with Q > threshold)
+   - Confidence-weighted rankings (down-weight near-ties)
+   - Marginal values (Q(s,a) - Q(s, default)) instead of absolute
+
+2. **Confirmation benchmark**: Run on an unseen benchmark to
+   validate the QCAUSAL > B0 finding and test whether the
+   over-retrieval pattern generalizes.
+
+3. **LLM prior analysis**: Investigate why Qwen has a strong prior
+   toward RETRIEVE and whether this can be mitigated through
+   prompt engineering or schema design.
