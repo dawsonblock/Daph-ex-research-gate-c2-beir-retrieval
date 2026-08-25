@@ -1,0 +1,20 @@
+{
+  "arm_descriptions": {
+    "C0": "no guidance (baseline)",
+    "I0": "current normalized values",
+    "I1": "raw centered advantages",
+    "I2": "epsilon near-optimal set",
+    "I3": "confidence-aware recommendation",
+    "I4": "clear-choice only (gap > tau)"
+  },
+  "arms": [
+    "C0",
+    "I0",
+    "I1",
+    "I2",
+    "I3",
+    "I4"
+  ],
+  "best_arm": "I2",
+  "n_trajectories": 1320
+}

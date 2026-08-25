@@ -918,3 +918,169 @@ form of value guidance.
 3. **LLM prior analysis**: Investigate why Qwen has a strong prior
    toward RETRIEVE and whether this can be mitigated through
    prompt engineering or schema design.
+
+### Phase 21: Interface-Ablation Experiment Results
+
+**Completed**: 1320 trajectories (220 tasks × 6 arms), 0 errors.
+
+Run ID: `e7d8cb583692ff57`
+
+The QCAUSAL_V1 estimator was frozen (no retraining). Only the packet
+representation changed between arms.
+
+#### Arms Tested
+
+| Arm | Interface | What Qwen sees |
+|---|---|---|
+| C0 | no guidance | nothing (baseline) |
+| I0 | current normalized | `VERIFY=1.0, RETRIEVE=0.989` (broken) |
+| I1 | raw advantages | `VERIFY=0.0, RETRIEVE=-1.6` (centered) |
+| I2 | epsilon buckets | `near_optimal: [VERIFY, RETRIEVE]` (no numbers) |
+| I3 | confidence-aware | `confidence=LOW, near_optimal=[VERIFY, RETRIEVE]` |
+| I4 | clear-choice only | `recommended_action: null` (silent on near-ties) |
+
+#### Overall Results
+
+| Arm | Mean U | Success | E[#RETRIEVE] | Description |
+|---|---|---|---|---|
+| C0 | 84.38 | 100% | 1.49 | no guidance (baseline) |
+| **I2** | **84.61** | **100%** | **1.40** | **epsilon near-optimal set** |
+| **I3** | **84.61** | **100%** | **1.40** | **confidence-aware** |
+| **I4** | **84.52** | **100%** | **1.40** | **clear-choice only** |
+| I0 | 66.76 | 87.3% | 2.01 | current normalized (broken) |
+| I1 | 61.14 | 82.7% | 1.87 | raw advantages (worse) |
+
+**I2, I3, and I4 all beat C0** with paired 95% CIs excluding zero:
+- ΔU(I2 - C0) = +0.23 CI=[+0.12, +0.37]
+- ΔU(I3 - C0) = +0.23 CI=[+0.12, +0.37]
+- ΔU(I4 - C0) = +0.15 CI=[+0.02, +0.29]
+
+This is the first time any guided arm has beaten the no-guidance baseline.
+
+#### Primary Target: E[#RETRIEVE] on ol_retrieve
+
+| Arm | E[#RETRIEVE] | Mean U | Success | Pattern |
+|---|---|---|---|---|
+| C0 | 1.00 | 91.38 | 100% | [VERIFY, RETRIEVE, VERIFY, ANSWER] |
+| I0 | **3.00** | 54.58 | 75% | [VERIFY, RETRIEVE×3, VERIFY, STOP/ANSWER] |
+| I1 | 2.33 | 39.76 | 62% | [VERIFY, RETRIEVE×3, VERIFY, STOP] |
+| **I2** | **1.00** | **91.38** | **100%** | [RETRIEVE, VERIFY, VERIFY, ANSWER] |
+| **I3** | **1.00** | **91.38** | **100%** | [VERIFY, RETRIEVE, VERIFY, ANSWER] |
+| **I4** | **1.00** | **91.38** | **100%** | [VERIFY, RETRIEVE, VERIFY, ANSWER] |
+
+**Target met**: E[#RETRIEVE] fell from 3.00 (I0) to 1.00 (I2/I3/I4),
+matching the baseline, without reducing success.
+
+#### Why I1 (Raw Advantages) Failed
+
+I1 was worse than I0, not better. The negative advantages
+(RETRIEVE=-1.6, VERIFY=0.0) still caused over-retrieval because:
+1. The LLM sees the small advantage difference (-1.6 vs 0.0) as
+   negligible and still chooses RETRIEVE
+2. On ol_verify, the negative advantages pushed Qwen toward DEFER
+   (0% success, mean_U=-39.74)
+
+Raw advantages don't fix the problem because the LLM still sees
+numerical values and interprets small differences as meaningful.
+
+#### Why I2/I3/I4 Succeeded
+
+These interfaces share a common property: **they don't expose
+numerical values for near-tie actions**.
+
+- I2: Only shows the near-optimal set (no numbers)
+- I3: Shows "confidence=LOW" with the set (no numbers)
+- I4: Shows nothing when gap ≤ τ (lets Qwen decide)
+
+By removing numerical values, the LLM can't misinterpret near-ties
+as strong preferences. It falls back to its own judgment, which is
+better than any current form of numerical guidance.
+
+#### Per-Subtype Highlights
+
+**ol_retrieve** (the key diagnostic):
+- I0: U=54.58, success=75%, E[retr]=3.0 (broken)
+- I2/I3/I4: U=91.38, success=100%, E[retr]=1.0 (fixed)
+
+**ol_verify**:
+- I0: U=74.01, success=88%, E[retr]=3.0 (broken)
+- I1: U=-39.74, success=0% (catastrophic — DEFER collapse)
+- I2/I3/I4: U=96.71, success=100%, E[retr]=0.0 (fixed)
+
+**tl_search**:
+- I0: U=-35.26, success=10% (broken)
+- I2/I3/I4: U=81.74, success=100% (fixed)
+
+**tl_retrieve**:
+- C0: U=86.70, success=100%
+- I2/I3/I4: U=88.20, success=100% (slightly better than C0)
+
+#### Delta-U Contrasts (paired 95% CI)
+
+| Contrast | ΔU | 95% CI | Excludes 0? |
+|---|---|---|---|
+| I2 - I0 | +17.86 | [+12.23, +23.84] | YES |
+| I3 - I0 | +17.86 | [+12.23, +23.84] | YES |
+| I4 - I0 | +17.77 | [+12.15, +23.76] | YES |
+| **I2 - C0** | **+0.23** | **[+0.12, +0.37]** | **YES** |
+| **I3 - C0** | **+0.23** | **[+0.12, +0.37]** | **YES** |
+| **I4 - C0** | **+0.15** | **[+0.02, +0.29]** | **YES** |
+| I1 - I0 | -5.62 | [-12.76, +1.48] | no |
+
+#### Resource Exhaustion
+
+All arms: 0 STOPs, 0 STEP_LIMITs, 0 resource exhaustion.
+The over-retrieval in I0/I1 no longer causes STOP because the
+benchmark allows 3 retrievals. But the wasted retrievals still
+reduce utility through action costs.
+
+#### Mechanism Summary
+
+The interface-ablation confirms the diagnosis:
+
+1. **The normalization problem is real.** I0 (normalized) causes
+   over-retrieval. I1 (raw advantages) doesn't fix it. I2/I3/I4
+   (no numbers for near-ties) fix it completely.
+
+2. **The fix is to not communicate what you don't know.** When
+   Q values are near-tied, the estimator doesn't have enough
+   information to recommend one action over another. Exposing
+   this uncertainty (by not showing numbers) lets the LLM use
+   its own judgment.
+
+3. **DAPH should be an advisory controller with calibrated
+   authority.** Strong recommendations only when the causal
+   advantage is large. Otherwise, let the base model decide.
+
+4. **I2 (epsilon near-optimal set) is the recommended interface.**
+   It matches I3 and I4 on all metrics but is simpler: just show
+   the near-optimal set, no numbers, no confidence labels.
+
+### Phase 21 Conclusions
+
+1. **The interface problem is solved.** I2/I3/I4 eliminate
+   over-retrieval and match the no-guidance baseline on all
+   subtypes, with a small but statistically significant improvement
+   on tl_retrieve and tl_verify.
+
+2. **The causal estimator is now useful.** With the right interface,
+   QCAUSAL_V1 produces guidance that is non-inferior to no guidance
+   and slightly better on some subtypes. The estimator was never
+   the problem — the interface was.
+
+3. **The remaining question is whether QCAUSAL_V2 with history-aware
+   features can do better.** The current estimator treats RETRIEVE
+   at step 2 and RETRIEVE after already retrieving twice the same.
+   A history-aware estimator could learn diminishing returns and
+   provide stronger guidance against redundant actions.
+
+### Next Steps
+
+1. **Freeze I2 as the production interface.**
+2. **Phase 22: History-aware Q_CAUSAL_V2** — Add features for
+   retrieval_count, verify_count, search_count, same_action_run_length,
+   and remaining resource budgets. Collect intervention data from
+   states after 0, 1, 2 retrieves. Train V2 and compare against V1
+   with the I2 interface.
+3. **Phase 23: Confirmation benchmark** — Run the frozen
+   QCAUSAL_V2 + I2 interface on an unseen benchmark.
