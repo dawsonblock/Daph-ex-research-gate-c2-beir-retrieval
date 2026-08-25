@@ -1,0 +1,43 @@
+{
+  "binding": {
+    "gguf_path": "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "model_name": "qwen2.5-7b-instruct",
+    "model_sha256_prefix": "05093205c86ce204ba209b2584fd6c1a868d21face482f2440bc02936e82e6b2",
+    "temperature": 0.0
+  },
+  "experiment": "I3.5-PQ Phase 22 Targeted Temporal-Effect Collection",
+  "parameters": {
+    "max_depth": 2,
+    "max_rollout_steps": 8,
+    "target_actions": [
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "VERIFY"
+    ],
+    "target_categories": [
+      "ol_defer",
+      "ol_search",
+      "ol_verify",
+      "tl_defer",
+      "tl_retrieve",
+      "tl_search",
+      "tl_verify"
+    ]
+  },
+  "run_id": "b24ac845c2f4a049",
+  "source_shas": {
+    "r2_allowed_actions.py": "482e9f6a9ab6d8c00c2f9d9e50ce5ab1e440e679f39da08dea554b3b3f50cd16",
+    "r2_schema.py": "c20cd3a5adf976ddce2296ded11e21d1b2d9c972cd94c205404e5d6b410a3b0e",
+    "run_i3_7e_compact_governor.py": "32d043988132c4626d688d327638affe47bd238e89c8afce2275f65bceb27dd4"
+  },
+  "timestamp": "2026-08-25T22:55:37.850672+00:00",
+  "v2_decision_rule": {
+    "build_v2_only_if": [
+      ">=30% of tested category/action pairs show |Delta_Q| > 5",
+      "the effect is reproducible across matched states",
+      "V1 fails to reflect those effects",
+      "that V1 error causes live-policy harm that I2 does not already prevent"
+    ],
+    "note": "Condition 4 matters most. A richer Q model is only justified if it solves a remaining failure."
+  }
+}

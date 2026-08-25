@@ -1,0 +1,14 @@
+{
+  "description": "Partial depth-varying causal collection. Falsified the hypothesis that Q(s, RETRIEVE) decreases with retrieval depth on ol_retrieve. The pinned Qwen policy recovers from wasteful RETRIEVEs, so Q(d=0, RETRIEVE) = Q(d=1, RETRIEVE) = Q(d=2, RETRIEVE) = 93.53. This is not a V1 prediction error \u2014 it is the measured causal outcome. The I2 interface already prevents the over-retrieval behavior without needing V2 to learn diminishing returns.",
+  "horizon_note": "Collection used max_rollout_steps=8. Deployment uses 10. This inconsistency must be resolved before using depth data for training.",
+  "key_finding": "Q(s, RETRIEVE) is flat at 93.53 across depths 0/1/2 on ol_retrieve. The diminishing-returns hypothesis is falsified for the primary target. ol_defer shows temporal effects (VERIFY: 58.9->45.4->31.8) but this does not justify V2 unless it causes live-policy harm that V1+I2 cannot handle.",
+  "max_depth": 2,
+  "max_rollout_steps": 8,
+  "n_actions": 1239,
+  "n_checkpoints": 264,
+  "n_errors": 0,
+  "name": "PHASE22_DEPTH_PILOT",
+  "run_id": "f1ffa94b4d31d187",
+  "state_verification": "Verified: state_sha differs at all depths for 10/10 ol_retrieve tasks. retrieval_count, retrieval_remaining, evidence, prior_actions all change correctly. The flat utility is real, not a collector bug.",
+  "timestamp": "2026-08-25T21:14:14.757434+00:00"
+}

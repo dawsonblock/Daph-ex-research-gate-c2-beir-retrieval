@@ -1,0 +1,224 @@
+{
+  "condition_1_pass": false,
+  "condition_2_pass": true,
+  "n_meaningful_effects": 3,
+  "n_total_pairs": 11,
+  "pattern_distribution": {
+    "FLAT": 8,
+    "MONOTONIC_DECREASE": 1,
+    "NON_MONOTONIC": 2
+  },
+  "pct_meaningful": 27.27,
+  "temporal_matrix": [
+    {
+      "action": "RETRIEVE",
+      "category": "ol_answer",
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "delta_01": 0.0,
+      "delta_02": 0.0,
+      "delta_12": 0.0,
+      "n_d0": 24,
+      "n_d1": 24,
+      "n_d2": 24,
+      "n_matched": 24,
+      "pattern": "FLAT",
+      "q_d0": 99.89,
+      "q_d1": 99.89,
+      "q_d2": 99.89
+    },
+    {
+      "action": "SEARCH_MORE",
+      "category": "ol_answer",
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "delta_01": 0.0,
+      "delta_02": 0.0,
+      "delta_12": 0.0,
+      "n_d0": 24,
+      "n_d1": 24,
+      "n_d2": 24,
+      "n_matched": 24,
+      "pattern": "FLAT",
+      "q_d0": 99.89,
+      "q_d1": 99.89,
+      "q_d2": 99.89
+    },
+    {
+      "action": "RETRIEVE",
+      "category": "ol_defer",
+      "ci_95": [
+        -35.7292,
+        4.0325
+      ],
+      "delta_01": -34.3885,
+      "delta_02": -10.7269,
+      "delta_12": 23.6615,
+      "n_d0": 26,
+      "n_d1": 26,
+      "n_d2": 26,
+      "n_matched": 24,
+      "pattern": "NON_MONOTONIC",
+      "q_d0": 58.09,
+      "q_d1": 23.7015,
+      "q_d2": 47.3631
+    },
+    {
+      "action": "SEARCH_MORE",
+      "category": "ol_defer",
+      "ci_95": [
+        -58.855,
+        -3.5275
+      ],
+      "delta_01": 9.54,
+      "delta_02": -24.8485,
+      "delta_12": -34.3885,
+      "n_d0": 26,
+      "n_d1": 26,
+      "n_d2": 26,
+      "n_matched": 24,
+      "pattern": "NON_MONOTONIC",
+      "q_d0": 50.71,
+      "q_d1": 60.25,
+      "q_d2": 25.8615
+    },
+    {
+      "action": "VERIFY",
+      "category": "ol_defer",
+      "ci_95": [
+        -58.6767,
+        -3.5275
+      ],
+      "delta_01": -12.3008,
+      "delta_02": -24.7662,
+      "delta_12": -12.4654,
+      "n_d0": 26,
+      "n_d1": 26,
+      "n_d2": 26,
+      "n_matched": 24,
+      "pattern": "MONOTONIC_DECREASE",
+      "q_d0": 58.9554,
+      "q_d1": 46.6546,
+      "q_d2": 34.1892
+    },
+    {
+      "action": "RETRIEVE",
+      "category": "ol_retrieve",
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "delta_01": 0.0,
+      "delta_02": 0.0,
+      "delta_12": 0.0,
+      "n_d0": 24,
+      "n_d1": 24,
+      "n_d2": 24,
+      "n_matched": 24,
+      "pattern": "FLAT",
+      "q_d0": 93.53,
+      "q_d1": 93.53,
+      "q_d2": 93.53
+    },
+    {
+      "action": "SEARCH_MORE",
+      "category": "ol_retrieve",
+      "ci_95": [
+        2.15,
+        2.15
+      ],
+      "delta_01": 2.15,
+      "delta_02": 2.15,
+      "delta_12": 0.0,
+      "n_d0": 24,
+      "n_d1": 24,
+      "n_d2": 24,
+      "n_matched": 24,
+      "pattern": "FLAT",
+      "q_d0": 91.38,
+      "q_d1": 93.53,
+      "q_d2": 93.53
+    },
+    {
+      "action": "VERIFY",
+      "category": "ol_retrieve",
+      "ci_95": [
+        2.15,
+        2.15
+      ],
+      "delta_01": 2.15,
+      "delta_02": 2.15,
+      "delta_12": 0.0,
+      "n_d0": 24,
+      "n_d1": 24,
+      "n_d2": 24,
+      "n_matched": 24,
+      "pattern": "FLAT",
+      "q_d0": 94.56,
+      "q_d1": 96.71,
+      "q_d2": 96.71
+    },
+    {
+      "action": "RETRIEVE",
+      "category": "ol_verify",
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "delta_01": 0.0,
+      "delta_02": 0.0,
+      "delta_12": 0.0,
+      "n_d0": 16,
+      "n_d1": 16,
+      "n_d2": 15,
+      "n_matched": 15,
+      "pattern": "FLAT",
+      "q_d0": 96.71,
+      "q_d1": 96.71,
+      "q_d2": 96.71
+    },
+    {
+      "action": "SEARCH_MORE",
+      "category": "ol_verify",
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "delta_01": 0.0,
+      "delta_02": 0.0,
+      "delta_12": 0.0,
+      "n_d0": 16,
+      "n_d1": 15,
+      "n_d2": 15,
+      "n_matched": 15,
+      "pattern": "FLAT",
+      "q_d0": 96.71,
+      "q_d1": 96.71,
+      "q_d2": 96.71
+    },
+    {
+      "action": "VERIFY",
+      "category": "ol_verify",
+      "ci_95": [
+        0.0,
+        0.0
+      ],
+      "delta_01": 0.0,
+      "delta_02": 0.0,
+      "delta_12": 0.0,
+      "n_d0": 16,
+      "n_d1": 15,
+      "n_d2": 15,
+      "n_matched": 15,
+      "pattern": "FLAT",
+      "q_d0": 99.89,
+      "q_d1": 99.89,
+      "q_d2": 99.89
+    }
+  ],
+  "verdict": "V2_NOT_JUSTIFIED"
+}
