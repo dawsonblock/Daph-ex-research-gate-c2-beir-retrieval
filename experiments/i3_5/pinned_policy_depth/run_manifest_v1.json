@@ -1,0 +1,38 @@
+{
+  "binding": {
+    "gguf_path": "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "model_name": "qwen2.5-7b-instruct",
+    "model_sha256_prefix": "05093205c86ce204ba209b2584fd6c1a868d21face482f2440bc02936e82e6b2",
+    "temperature": 0.0
+  },
+  "experiment": "I3.5-PQ Phase 22 Depth-Varying Causal Collection",
+  "hypothesis": "Adding causal intervention coverage at repeated-action depths will teach the existing state-conditioned estimator diminishing marginal returns, reducing redundant RETRIEVE behavior without degrading action selection on original states.",
+  "parameters": {
+    "max_depth": 2,
+    "max_rollout_steps": 8,
+    "n_per_subtype": 24,
+    "n_per_two_live": 20
+  },
+  "run_id": "f1ffa94b4d31d187",
+  "source_shas": {
+    "r2_allowed_actions.py": "482e9f6a9ab6d8c00c2f9d9e50ce5ab1e440e679f39da08dea554b3b3f50cd16",
+    "r2_schema.py": "c20cd3a5adf976ddce2296ded11e21d1b2d9c972cd94c205404e5d6b410a3b0e",
+    "run_i3_7e_compact_governor.py": "32d043988132c4626d688d327638affe47bd238e89c8afce2275f65bceb27dd4"
+  },
+  "target_panels": {
+    "actions_per_depth": [
+      "RETRIEVE",
+      "VERIFY",
+      "SEARCH_MORE",
+      "DEFER",
+      "ANSWER"
+    ],
+    "note": "Only legal actions are forced at each depth",
+    "retrieval_depths": [
+      0,
+      1,
+      2
+    ]
+  },
+  "timestamp": "2026-08-25T21:14:14.757434+00:00"
+}
