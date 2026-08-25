@@ -483,3 +483,220 @@ discrimination in those states would be the wrong objective.
    needed, redesign the benchmark with stronger action-specific
    consequences (scarcer resources, non-substitutable information
    sources, tighter recovery budgets) — not by weakening Qwen.
+
+### Phase 19: Six-Arm Executive Experiment Results
+
+**Completed**: 1320 trajectories (220 tasks × 6 arms), 0 errors.
+
+Run ID: `05b55ea731dbd237`
+
+#### Success Rate Per Arm
+
+| Arm | Successes | Rate |
+|---|---|---|
+| P0 (no guidance) | 220/220 | **1.000** |
+| QOBS (observational) | 210/220 | 0.955 |
+| B1 (phase×action) | 202/220 | 0.918 |
+| PS05 (shuffled) | 200/220 | 0.909 |
+| QCAUSAL (causal) | 192/220 | 0.873 |
+| B0 (global prior) | 179/220 | 0.814 |
+
+**P0 (no guidance) has the highest success rate.** Qwen does not need
+guidance on these tasks. B0 (global prior) is the worst guided arm.
+
+#### Mean Realized Utility
+
+| Arm | Mean U | Std |
+|---|---|---|
+| P0 | 84.38 | 16.12 |
+| QOBS | 78.66 | 32.01 |
+| B1 | 72.90 | 38.59 |
+| PS05 | 72.50 | 41.32 |
+| QCAUSAL | 66.76 | 45.80 |
+| B0 | 59.74 | 50.24 |
+
+#### Primary Contrasts (paired 95% CI)
+
+| Contrast | ΔU | 95% CI | Excludes 0? |
+|---|---|---|---|
+| QCAUSAL - P0 | -17.62 | [-23.64, -11.99] | YES (worse) |
+| **QCAUSAL - B0** | **+7.02** | **[+0.12, +13.96]** | **YES (better)** |
+| QCAUSAL - B1 | -6.14 | [-11.48, -0.91] | YES (worse) |
+| QCAUSAL - PS05 | -5.74 | [-11.31, -0.21] | YES (worse) |
+| **QCAUSAL - QOBS** | **-11.91** | **[-16.88, -7.47]** | **YES (worse)** |
+| QOBS - B0 | +18.92 | [+13.06, +25.23] | YES (better) |
+
+**Key findings:**
+
+1. **QCAUSAL > B0**: PASS (ΔU=+7.02, CI excludes zero)
+   - The causal estimator justifies its complexity over a global prior.
+
+2. **QCAUSAL > QOBS**: FAIL (ΔU=-11.91, CI excludes zero in wrong direction)
+   - The observational estimator beats the causal one in live performance.
+   - This is the most scientifically important finding.
+
+3. **P0 (no guidance) is the best arm overall**
+   - Qwen does not benefit from any form of action value guidance on
+     these tasks. All guided arms perform worse than no guidance.
+
+#### The Causal vs Observational Paradox
+
+| Metric | QCAUSAL | QOBS |
+|---|---|---|
+| Offline regret | 0.24 | 21.80 |
+| Live mean U | 66.76 | 78.66 |
+| Live success | 87.3% | 95.5% |
+| Causal regret of chosen action | 1.97 | 9.78 |
+
+**The causal estimator is better at predicting Q values but worse at
+guiding the LLM.** QCAUSAL has 91x lower offline regret than QOBS
+(0.24 vs 21.80), but QOBS has 18% higher live utility (78.66 vs 66.76).
+
+This is because:
+- QCAUSAL's more accurate Q values cause Qwen to over-retrieve
+  (on ol_retrieve: 3 RETRIEVEs vs 1 for P0, U=54.58 vs 91.38)
+- QOBS's biased Q values happen to align better with what Qwen
+  should do in practice
+- The interface between value estimates and LLM policy is the
+  bottleneck, not the estimator quality
+
+#### Paired Rescues/Breaks (McNemar exact)
+
+| Comparison | Rescues | Breaks | p-value |
+|---|---|---|---|
+| QCAUSAL vs P0 | 0 | 28 | <0.0001 |
+| QCAUSAL vs B0 | 25 | 12 | 0.047 |
+| QCAUSAL vs B1 | 5 | 15 | 0.041 |
+| QCAUSAL vs QOBS | 0 | 18 | <0.0001 |
+| QOBS vs B0 | 31 | 0 | <0.0001 |
+
+QOBS rescues 31 tasks from B0 failures with zero breaks — the
+observational estimator is strictly better than the global prior.
+
+QCAUSAL rescues 25 tasks from B0 but breaks 12 — the causal estimator
+helps on some tasks but hurts on others.
+
+#### Premature DEFER/ANSWER
+
+| Arm | Premature DEFER | Premature ANSWER |
+|---|---|---|
+| P0 | 0 | 0 |
+| B0 | 31 | 0 |
+| B1 | 6 | 0 |
+| PS05 | 20 | 0 |
+| QOBS | 2 | 0 |
+| QCAUSAL | 3 | 0 |
+
+B0 causes 31 premature DEFERs (14.1%). QCAUSAL causes only 3 (1.4%).
+QOBS causes only 2 (0.9%). No arm causes premature ANSWERs.
+
+#### Stratified by Gap Bucket
+
+| Bucket | n | P0 U | B0 U | QCAUSAL U | QOBS U | ΔU(QC-B0) |
+|---|---|---|---|---|---|---|
+| Clear (>10) | 44 | 69.73 | 70.21 | 67.16 | 70.60 | -3.05 |
+| Moderate (3-10) | 20 | 52.76 | 50.51 | 52.76 | 52.76 | +2.25 |
+| Near-tie (<=3) | 156 | 92.56 | 57.97 | 68.44 | 84.26 | +10.47 |
+
+The QCAUSAL > B0 result is driven by near-tie states (ΔU=+10.47).
+On clear-choice states, QCAUSAL is slightly worse than B0 (-3.05).
+
+#### Near-Optimal Action Rate (epsilon=3)
+
+| Arm | Rate |
+|---|---|
+| P0 | 63.6% |
+| QCAUSAL | 63.6% |
+| QOBS | 62.3% |
+| PS05 | 55.9% |
+| B1 | 54.5% |
+| B0 | 45.0% |
+
+P0 and QCAUSAL are tied for the highest near-optimal action rate.
+
+#### Mean Causal Regret of Chosen Action
+
+| Arm | Mean Regret |
+|---|---|
+| B1 | 0.57 |
+| QCAUSAL | 1.97 |
+| PS05 | 8.34 |
+| P0 | 10.79 |
+| QOBS | 9.78 |
+| B0 | 21.12 |
+
+QCAUSAL has the second-lowest causal regret (1.97), but its live
+utility is worse than QOBS (which has much higher regret of 9.78).
+This confirms: the estimator-prediction quality does not determine
+the live-guidance quality.
+
+#### Promotion Gate Results
+
+| Gate | Result | Detail |
+|---|---|---|
+| QCAUSAL > B0 (CI excludes 0) | **PASS** | +7.02, CI=[0.12, 13.96] |
+| Success rate >= B0 | **PASS** | 87.3% vs 81.4% |
+| No increase in premature DEFER | **PASS** | 3 vs 31 |
+| No increase in premature ANSWER | **PASS** | 0 vs 0 |
+| QCAUSAL > QOBS (CI excludes 0) | **FAIL** | -11.91, CI=[-16.88, -7.47] |
+
+**Overall: PASS** (Gate 5 is secondary, not required for promotion)
+
+### Phase 19 Scientific Conclusions
+
+1. **The causal estimator beats the global prior** (QCAUSAL > B0).
+   The causal data thesis is partially validated: causal Q values
+   are more useful than a naive global prior for guiding LLM action
+   selection.
+
+2. **The observational estimator beats the causal estimator** (QOBS > QCAUSAL).
+   This is the most important finding. Despite having 91x higher
+   offline regret, QOBS produces 18% higher live utility. The
+   observational estimator's biased Q values happen to align better
+   with what Qwen should do in practice.
+
+3. **No guidance is the best guidance** (P0 > all guided arms).
+   Qwen does not benefit from any form of action value guidance on
+   these tasks. The MDSG packet alone is sufficient for Qwen to make
+   good decisions.
+
+4. **The bottleneck is the value-to-LLM interface, not the estimator.**
+   QCAUSAL has the second-lowest causal regret (1.97) but the
+   second-worst live utility (66.76). QOBS has high causal regret
+   (9.78) but the best live utility among guided arms (78.66).
+   The quality of Q-value estimates does not determine the quality
+   of LLM guidance.
+
+5. **The causal estimator causes over-retrieval.**
+   On ol_retrieve tasks, QCAUSAL causes Qwen to do 3 RETRIEVEs
+   instead of 1, wasting resources and lowering utility from 91.38
+   to 54.58. The estimator correctly identifies RETRIEVE as valuable
+   but doesn't account for diminishing returns.
+
+### Diagnosis: Why QCAUSAL Hurts Despite Good Q Values
+
+The causal estimator correctly estimates that RETRIEVE has high Q
+value in retrieval-required states. But when this high Q value is
+exposed to Qwen as a normalized action value estimate, Qwen
+interprets it as a strong recommendation and over-retrieves.
+
+The problem is that the Q values represent the value of forcing
+action a ONCE from state s, not the value of repeatedly choosing a.
+QCAUSAL predicts Q(s, RETRIEVE) = 91.38 for ol_retrieve states, which
+is correct for a single retrieval. But Qwen interprets the high
+normalized value as "always retrieve," leading to 3 retrievals.
+
+QOBS doesn't have this problem because its Q values are biased by
+the observational policy — it only saw RETRIEVE in states where
+retrieval was naturally selected, so its Q estimates are more
+conservative and happen to produce better LLM behavior.
+
+### Next Steps
+
+1. **Phase 20: Mechanism audit** — Analyze per-subtype action
+   selection patterns to understand why QOBS > QCAUSAL.
+2. **Interface redesign** — Explore alternative ways to expose Q
+   values to the LLM (e.g., marginal rather than normalized values,
+   or threshold-based recommendations rather than continuous values).
+3. **Confirmation benchmark** — Run on an unseen benchmark to
+   validate the QCAUSAL > B0 finding.

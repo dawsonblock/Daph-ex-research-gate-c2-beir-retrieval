@@ -1,0 +1,71 @@
+{
+  "estimators": {
+    "B0": {
+      "path": "experiments/i3_5/pinned_policy/frozen_estimators/B0_global_mean.json",
+      "sha256": "b8e85a930262a1390de4678f103be588cf5228f9efcdb47ecf2999e4c756cef4",
+      "type": "global_mean",
+      "value": 25.367377
+    },
+    "B1": {
+      "path": "experiments/i3_5/pinned_policy/frozen_estimators/B1_phase_action_table.json",
+      "sha256": "36a910396ed4240e1c9a59a38093d062816ec48b3e37d14ab3ab1c3186bc9247",
+      "type": "phase_action_mean"
+    },
+    "P0": {
+      "description": "Base MDSG packet, no action value estimates",
+      "sha256": "none",
+      "type": "no_guidance"
+    },
+    "PS05": {
+      "path": "experiments/i3_5/pinned_policy/frozen_estimators/PS05_shuffled_mapping.json",
+      "sha256": "39450286ec6ce1a8a124e283ca3cd860b9762896770f59eaf06a1599373c8f9f",
+      "shuffle_seed": 5,
+      "type": "shuffled_phase_action"
+    },
+    "QCAUSAL": {
+      "hyperparameters": {
+        "max_depth": 4,
+        "n_estimators": 200,
+        "random_state": 42
+      },
+      "n_training_records": 1056,
+      "path": "experiments/i3_5/pinned_policy/frozen_estimators/QCAUSAL_gbt.pkl",
+      "sha256": "d90d72dab250ba7ce032afcc9d430fabfd4e84dace3c4dbe4deb77de0f8c9729",
+      "type": "gbt_causal_pinned_policy"
+    },
+    "QOBS": {
+      "hyperparameters": {
+        "max_depth": 4,
+        "n_estimators": 200,
+        "random_state": 42
+      },
+      "n_training_records": 220,
+      "path": "experiments/i3_5/pinned_policy/frozen_estimators/QOBS_gbt.pkl",
+      "sha256": "eb736afcb9d87f800a8566e6782aa4d443cc4da0b9d81a56b647b476417b92c7",
+      "type": "gbt_observational"
+    }
+  },
+  "experiment": "I3.5-PQ Phase 19 Six-Arm Executive Experiment",
+  "feature_schema": {
+    "n_features": 35,
+    "path": "experiments/i3_5/pinned_policy/frozen_estimators/feature_schema.json",
+    "sha256": "9722343e8d87b2642eddb667dcd0a3b70407202e2f59606ae4eef81b8da29350"
+  },
+  "invariants": [
+    "No .fit() in the live experiment path.",
+    "All estimators are loaded from frozen artifacts.",
+    "The QCAUSAL model is the same one that passed offline qualification.",
+    "P0 sends the base MDSG packet with no action value estimates.",
+    "All arms use the same Qwen backend, system prompt, schema, and utility."
+  ],
+  "training_data": {
+    "observational": {
+      "n_records": 220,
+      "path": "experiments/i3_5/observational/observational_actions_v1.jsonl"
+    },
+    "pinned_causal": {
+      "n_records": 1056,
+      "path": "experiments/i3_5/pinned_policy/pinned_causal_actions_v1.jsonl"
+    }
+  }
+}

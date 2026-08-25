@@ -1,0 +1,31 @@
+{
+  "base_table_sha": "36a910396ed4240e1c9a59a38093d062816ec48b3e37d14ab3ab1c3186bc9247",
+  "estimator_type": "shuffled_phase_action",
+  "mapping": {
+    "EXPLORE": {
+      "ANSWER": -15.2,
+      "DEFER": -120.0,
+      "REASON_MORE": 82.79975,
+      "RETRIEVE": 25.349333,
+      "SEARCH_MORE": -5.0,
+      "VERIFY": 57.4545
+    },
+    "READY": {
+      "ANSWER": 97.73,
+      "DEFER": 100.0,
+      "REASON_MORE": -30.0,
+      "SEARCH_MORE": 97.75
+    },
+    "T2": {
+      "ANSWER": 91.713333,
+      "DEFER": 83.342083,
+      "REASON_MORE": -120.0,
+      "RETRIEVE": 91.38,
+      "SEARCH_MORE": -5.0,
+      "VERIFY": 82.002188
+    }
+  },
+  "n_records": 1056,
+  "shuffle_seed": 5,
+  "target": "pinned_policy_utility"
+}

@@ -1,0 +1,37 @@
+{
+  "estimator_type": "phase_action_mean",
+  "global_action_mean": {
+    "ANSWER": -76.0,
+    "DEFER": -10.0,
+    "REASON_MORE": 76.225318,
+    "RETRIEVE": 42.934545,
+    "SEARCH_MORE": 70.593409,
+    "VERIFY": 83.095568
+  },
+  "n_records": 1056,
+  "phase_action_table": {
+    "EXPLORE": {
+      "ANSWER": -120.0,
+      "DEFER": -5.0,
+      "REASON_MORE": 57.4545,
+      "RETRIEVE": -15.2,
+      "SEARCH_MORE": 25.349333,
+      "VERIFY": 82.79975
+    },
+    "READY": {
+      "ANSWER": 100.0,
+      "DEFER": -30.0,
+      "REASON_MORE": 97.75,
+      "SEARCH_MORE": 97.73
+    },
+    "T2": {
+      "ANSWER": -120.0,
+      "DEFER": -5.0,
+      "REASON_MORE": 82.002188,
+      "RETRIEVE": 91.38,
+      "SEARCH_MORE": 91.713333,
+      "VERIFY": 83.342083
+    }
+  },
+  "target": "pinned_policy_utility"
+}

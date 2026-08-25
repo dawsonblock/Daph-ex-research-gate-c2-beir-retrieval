@@ -1,0 +1,98 @@
+{
+  "contrast_results": {
+    "QCAUSAL-B0": {
+      "ci": [
+        0.116,
+        13.956
+      ],
+      "excludes_zero": true,
+      "mean_delta": 7.0163,
+      "n": 220
+    },
+    "QCAUSAL-B1": {
+      "ci": [
+        -11.4814,
+        -0.9132
+      ],
+      "excludes_zero": true,
+      "mean_delta": -6.1436,
+      "n": 220
+    },
+    "QCAUSAL-P0": {
+      "ci": [
+        -23.6373,
+        -11.9853
+      ],
+      "excludes_zero": true,
+      "mean_delta": -17.6206,
+      "n": 220
+    },
+    "QCAUSAL-PS05": {
+      "ci": [
+        -11.3057,
+        -0.2103
+      ],
+      "excludes_zero": true,
+      "mean_delta": -5.7433,
+      "n": 220
+    },
+    "QCAUSAL-QOBS": {
+      "ci": [
+        -16.8784,
+        -7.4675
+      ],
+      "excludes_zero": true,
+      "mean_delta": -11.9068,
+      "n": 220
+    },
+    "QOBS-B0": {
+      "ci": [
+        13.0627,
+        25.2286
+      ],
+      "excludes_zero": true,
+      "mean_delta": 18.9231,
+      "n": 220
+    }
+  },
+  "gates": {
+    "gate1_qcausal_gt_b0_ci": true,
+    "gate2_success_noninferior": true,
+    "gate3_no_increase_premature_defer": true,
+    "gate4_no_increase_premature_answer": true,
+    "gate5_qcausal_gt_qobs_ci": false,
+    "overall": true
+  },
+  "success_by_arm": {
+    "B0": {
+      "n": 220,
+      "rate": 0.8136363636363636,
+      "successes": 179
+    },
+    "B1": {
+      "n": 220,
+      "rate": 0.9181818181818182,
+      "successes": 202
+    },
+    "P0": {
+      "n": 220,
+      "rate": 1.0,
+      "successes": 220
+    },
+    "PS05": {
+      "n": 220,
+      "rate": 0.9090909090909091,
+      "successes": 200
+    },
+    "QCAUSAL": {
+      "n": 220,
+      "rate": 0.8727272727272727,
+      "successes": 192
+    },
+    "QOBS": {
+      "n": 220,
+      "rate": 0.9545454545454546,
+      "successes": 210
+    }
+  }
+}

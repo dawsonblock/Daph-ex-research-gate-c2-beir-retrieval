@@ -1,0 +1,142 @@
+{
+  "arms": [
+    "P0",
+    "B0",
+    "B1",
+    "PS05",
+    "QOBS",
+    "QCAUSAL"
+  ],
+  "binding": {
+    "backend_sha256": "0a2d54e7195e8b96b3cfef91fa26fab2eb432cdb1da3d00ced3f877900a8369b",
+    "benchmark_sha256": "cf684726db5ef6ee847df24a5aa8620c3f639e384c08a1dbac2864957305fb14",
+    "causal_dataset_sha256": "4383b7727ae38811d57db2de8294666405775745678db9b6ca70803a8afaae13",
+    "estimator_manifest_sha256": "d6f274459140d6a83de481302f4f5885b08cdc8266dca56efacc84a63b1ec1d9",
+    "feature_schema_sha256": "9722343e8d87b2642eddb667dcd0a3b70407202e2f59606ae4eef81b8da29350",
+    "gguf_path": "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "model_name": "qwen2.5-7b-instruct",
+    "packet_builder_sha256": "32d043988132c4626d688d327638affe47bd238e89c8afce2275f65bceb27dd4",
+    "utility_sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07"
+  },
+  "estimator_manifest": {
+    "estimators": {
+      "B0": {
+        "path": "experiments/i3_5/pinned_policy/frozen_estimators/B0_global_mean.json",
+        "sha256": "b8e85a930262a1390de4678f103be588cf5228f9efcdb47ecf2999e4c756cef4",
+        "type": "global_mean",
+        "value": 25.367377
+      },
+      "B1": {
+        "path": "experiments/i3_5/pinned_policy/frozen_estimators/B1_phase_action_table.json",
+        "sha256": "36a910396ed4240e1c9a59a38093d062816ec48b3e37d14ab3ab1c3186bc9247",
+        "type": "phase_action_mean"
+      },
+      "P0": {
+        "description": "Base MDSG packet, no action value estimates",
+        "sha256": "none",
+        "type": "no_guidance"
+      },
+      "PS05": {
+        "path": "experiments/i3_5/pinned_policy/frozen_estimators/PS05_shuffled_mapping.json",
+        "sha256": "39450286ec6ce1a8a124e283ca3cd860b9762896770f59eaf06a1599373c8f9f",
+        "shuffle_seed": 5,
+        "type": "shuffled_phase_action"
+      },
+      "QCAUSAL": {
+        "hyperparameters": {
+          "max_depth": 4,
+          "n_estimators": 200,
+          "random_state": 42
+        },
+        "n_training_records": 1056,
+        "path": "experiments/i3_5/pinned_policy/frozen_estimators/QCAUSAL_gbt.pkl",
+        "sha256": "d90d72dab250ba7ce032afcc9d430fabfd4e84dace3c4dbe4deb77de0f8c9729",
+        "type": "gbt_causal_pinned_policy"
+      },
+      "QOBS": {
+        "hyperparameters": {
+          "max_depth": 4,
+          "n_estimators": 200,
+          "random_state": 42
+        },
+        "n_training_records": 220,
+        "path": "experiments/i3_5/pinned_policy/frozen_estimators/QOBS_gbt.pkl",
+        "sha256": "eb736afcb9d87f800a8566e6782aa4d443cc4da0b9d81a56b647b476417b92c7",
+        "type": "gbt_observational"
+      }
+    },
+    "experiment": "I3.5-PQ Phase 19 Six-Arm Executive Experiment",
+    "feature_schema": {
+      "n_features": 35,
+      "path": "experiments/i3_5/pinned_policy/frozen_estimators/feature_schema.json",
+      "sha256": "9722343e8d87b2642eddb667dcd0a3b70407202e2f59606ae4eef81b8da29350"
+    },
+    "invariants": [
+      "No .fit() in the live experiment path.",
+      "All estimators are loaded from frozen artifacts.",
+      "The QCAUSAL model is the same one that passed offline qualification.",
+      "P0 sends the base MDSG packet with no action value estimates.",
+      "All arms use the same Qwen backend, system prompt, schema, and utility."
+    ],
+    "training_data": {
+      "observational": {
+        "n_records": 220,
+        "path": "experiments/i3_5/observational/observational_actions_v1.jsonl"
+      },
+      "pinned_causal": {
+        "n_records": 1056,
+        "path": "experiments/i3_5/pinned_policy/pinned_causal_actions_v1.jsonl"
+      }
+    }
+  },
+  "experiment": "I3.5-PQ Phase 19 Six-Arm Executive Experiment",
+  "invariants": [
+    "No .fit() in the live path",
+    "All estimators loaded from frozen artifacts",
+    "Same Qwen backend for all arms",
+    "Same system prompt for all arms",
+    "Same schema enforcement for all arms",
+    "Same utility for all arms",
+    "temperature=0 for deterministic generation"
+  ],
+  "n_tasks": 220,
+  "n_trajectories": 1320,
+  "preregistered_endpoints": [
+    "success_rate (per arm)",
+    "paired_rescues_breaks (McNemar exact test)",
+    "premature_defer_rate",
+    "premature_answer_rate",
+    "loop_rate",
+    "resource_exhaustion_rate",
+    "mean_steps",
+    "mean_tokens",
+    "mean_causal_regret_of_chosen_action",
+    "near_optimal_action_rate_epsilon3",
+    "stratified_by_gap_bucket (clear >10, moderate 3-10, near_tie <=3)",
+    "delta_U_QCAUSAL_vs_P0",
+    "delta_U_QCAUSAL_vs_B0",
+    "delta_U_QCAUSAL_vs_B1",
+    "delta_U_QCAUSAL_vs_PS05",
+    "delta_U_QCAUSAL_vs_QOBS"
+  ],
+  "primary_contrasts": [
+    "QCAUSAL > B0 (paired 95% CI excluding zero)",
+    "QCAUSAL > QOBS (paired 95% CI excluding zero)"
+  ],
+  "promotion_rule": [
+    "delta_U_QCAUSAL-B0 > 0 with paired 95% CI excluding zero",
+    "improved or non-inferior success rate",
+    "no increase in premature DEFER or ANSWER",
+    "materially better near-optimal action selection on gap>3 states"
+  ],
+  "run_id": "05b55ea731dbd237",
+  "source_shas": {
+    "metareasoning_utility.py": "4ff057c790589662ac2c0656f41ad7c90537c8a7fa8e30aa3a6f8949d1f04790",
+    "model_backend.py": "a9f1c8888b702c458300096006760dc43c26a17e81a8067fa0509e1c6e6ed988",
+    "model_decoder.py": "b7d76db76ae841e4fe4eb7abc7976dc146e25b42037fe2b1927299ec7e382ec1",
+    "r2_allowed_actions.py": "482e9f6a9ab6d8c00c2f9d9e50ce5ab1e440e679f39da08dea554b3b3f50cd16",
+    "r2_schema.py": "c20cd3a5adf976ddce2296ded11e21d1b2d9c972cd94c205404e5d6b410a3b0e",
+    "run_i3_7e_compact_governor.py": "32d043988132c4626d688d327638affe47bd238e89c8afce2275f65bceb27dd4"
+  },
+  "timestamp": "2026-08-24T23:31:38.925711+00:00"
+}
