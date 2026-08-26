@@ -1,0 +1,31 @@
+{
+  "arms": [
+    "VP",
+    "VP_A2A"
+  ],
+  "authority_threshold": 5.0,
+  "benchmark_hash": "8d82d0a8c2ab06db2104ba7b8dfc4c60a14c4549c13ecd0e934346992f561cbc",
+  "categories": [
+    "tl_retrieve",
+    "prem_answer",
+    "verify",
+    "contradiction",
+    "defer",
+    "prem_defer",
+    "retrieve",
+    "answer",
+    "retr_waste",
+    "chain"
+  ],
+  "identities": {
+    "gguf_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+    "packet_builder_sha256": "93e1b5767589143a7d7fde4c4cfb8260151dfa9b1fa30ffb41c4328c587cc8ef",
+    "progress_rule_v1_sha256": "9f0bfc5eea1d24f97cb65020d0ba2569888c07110c1be189c2383ae9d62349b9",
+    "qcausal_v1_sha256": "d90d72dab250ba7ce032afcc9d430fabfd4e84dace3c4dbe4deb77de0f8c9729",
+    "runtime_version": "Python 3.12.0 (arm64)",
+    "source_commit": "bc4edc5d4ee493bd39535d69a474f68f7cbe53cc"
+  },
+  "n_tasks": 156,
+  "run_id": "8cd9dd3015e01bce",
+  "timestamp": "2026-08-26T09:51:06.256973+00:00"
+}

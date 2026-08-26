@@ -1,0 +1,60 @@
+{
+  "experiment": "I3.27 Track 2: Authority Calibration — VP_A2A (ANSWER-only hard selection)",
+  "date": "2026-08-26",
+  "threshold": 5.0,
+  "trajectories": 312,
+  "errors": 0,
+  "identities_verified": true,
+
+  "headline_result": {
+    "VP_success": "108/156 (69.23%)",
+    "VP_A2A_success": "123/156 (78.85%)",
+    "VP_mean_utility": 46.79,
+    "VP_A2A_mean_utility": 57.56,
+    "delta_U": 10.77,
+    "delta_U_CI95": [5.78, 15.76],
+    "rescues": 15,
+    "breaks": 0,
+    "net_rescues": 15,
+    "A2_triggered_rate": "34/156 (21.8%)",
+    "verdict": "CLEAN WIN — 15 rescues, 0 breaks, CI excludes zero"
+  },
+
+  "mechanism": {
+    "name": "A2A (A2 Answer-only)",
+    "control_law": "When Q recommends ANSWER with clear confidence AND Q gap > 5.0, narrow schema to {ANSWER} only. Otherwise, advisory (A0).",
+    "condition": "confidence == 'clear' AND len(refined_set) == 1 AND refined_set[0] == 'ANSWER' AND q_gap > 5.0",
+    "does_NOT_apply_to": ["DEFER", "STOP", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE"],
+    "rationale": "ANSWER is the terminal resolution action. When Q clearly recommends ANSWER with a large gap, Qwen should not be allowed to defer, reason more, or retrieve instead. For DEFER, Q cannot distinguish defer-correct from contradiction-incorrect states, so hard-selecting DEFER causes breaks."
+  },
+
+  "per_category": {
+    "chain": {"VP": "9/24", "A2A": "24/24", "rescues": 15, "breaks": 0, "mechanism": "A2 forces ANSWER at steps 4/6/7 instead of RETRIEVE/REASON_MORE"},
+    "defer": {"VP": "15/24", "A2A": "15/24", "rescues": 0, "breaks": 0, "mechanism": "A2A does not apply to DEFER. Defer remains unsolved."},
+    "contradiction": {"VP": "12/12", "A2A": "12/12", "rescues": 0, "breaks": 0, "mechanism": "A2A does not force DEFER, so contradiction is protected"},
+    "tl_retrieve": {"VP": "0/24", "A2A": "0/24", "rescues": 0, "breaks": 0, "mechanism": "Correctly unsolvable. No fabrication."},
+    "all_controls": {"VP": "84/84", "A2A": "84/84", "breaks": 0, "mechanism": "Zero reliability regression on any control category"}
+  },
+
+  "comparison_to_other_arms": {
+    "VP_A1_schema_narrowed": "9 rescues (defer), 9 breaks (chain). Net=0. Breaks chain because Q recommends STOP at step 1.",
+    "VP_A2_hard_select_all": "Same as A1. 9 rescues, 9 breaks.",
+    "VP_A2R_threshold10": "15 rescues (chain), 0 breaks. Does not rescue defer (Q gap=7.16 < 10.0).",
+    "VP_A2R_threshold5": "24 rescues (chain+defer), 10 breaks (contradiction). Q can't distinguish defer from contradiction.",
+    "VP_A2A_threshold5": "15 rescues (chain), 0 breaks. Clean win. Does not rescue defer."
+  },
+
+  "remaining_problem": {
+    "defer": "Q(DEFER)=69.34 is correct for defer states but identical for contradiction states. Q can't distinguish them because verify_result (MISSING vs SUFFICIENT) is not in the feature set. Solving defer requires either: (1) adding verify_result features to Q, or (2) a state-specific condition that identifies when verification won't help.",
+    "chain_OOD": "Chain states are OOD (n_hidden_evidence=3 unseen in training). Q still gives correct guidance for these states, but the predictions are extrapolations. Adding chain coverage to training data would improve robustness."
+  },
+
+  "architecture_implication": {
+    "confirmed": "Epistemic state -> Q_causal -> uncertainty/gap -> adaptive authority -> LLM",
+    "authority_law": "Q gap large + confidence clear + action is ANSWER -> hard select. Otherwise -> advisory.",
+    "simple": true,
+    "no_search_needed": true,
+    "no_PAV_needed": true,
+    "no_Q_V2_needed": true
+  }
+}
