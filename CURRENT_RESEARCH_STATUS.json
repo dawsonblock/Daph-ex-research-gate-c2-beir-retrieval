@@ -1,0 +1,157 @@
+{
+  "project": "DAPH — Decoupled Action-Value Progress Executive",
+  "repository": "Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a",
+  "branch": "i3.12-semantic-relation-ablation",
+  "last_updated": "2025-01-Phase25-confirmation",
+
+  "current_executive": {
+    "name": "DAPH_PROGRESS_EXECUTIVE_V1",
+    "status": "CONFIRMED_V1",
+    "confirmation_record": "experiments/i3_5/confirmation/DAPH_PROGRESS_EXECUTIVE_V1_CONFIRMED.json",
+    "freeze_record": "experiments/i3_5/progress_experiment/DAPH_PROGRESS_EXECUTIVE_V1_FREEZE.json",
+    "architecture": "Legal(s) -> Q_causal(s,a) -> A_epsilon(s) -> Progress(s,a) -> LLM policy",
+    "components": {
+      "q_model": "QCAUSAL_V1 (frozen gradient-boosted estimator)",
+      "interface": "I2 (epsilon near-optimal set, epsilon_q=3.0)",
+      "progress": "PROGRESS_RULE_V1 (deterministic, epsilon_p=0.05)",
+      "policy_model": "Qwen2.5-7B-Instruct-Q4_K_M (pinned, temperature=0)"
+    }
+  },
+
+  "current_model": {
+    "name": "qwen2.5-7b-instruct",
+    "gguf_filename": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "temperature": 0.0,
+    "pinned": true
+  },
+
+  "current_dataset": {
+    "development": "i3_5_state_discrimination (seed=9137, 220 tasks, 10 subtypes)",
+    "confirmation": "i3_5_confirmation (seed=4287, 180 tasks, 15 subtypes, hash=4a4844c9...)",
+    "confirmation_frozen": true
+  },
+
+  "current_experiment": "Phase 25 confirmation complete. Next: generalization program.",
+
+  "confirmed_findings": [
+    {
+      "finding": "Causal Q + I2 strongly improves pinned Qwen policy on hostile unseen benchmark",
+      "evidence": "V1 vs C0: Delta_U=+23.54, CI=[+14.98,+32.82], 25 rescues/0 breaks, p<0.0001",
+      "status": "strongly_confirmed"
+    },
+    {
+      "finding": "Causal Q + I2 strongly outperforms global-prior baseline",
+      "evidence": "V1 vs B0: Delta_U=+26.21, CI=[+17.31,+35.72], 27 rescues/0 breaks, p<0.0001",
+      "status": "strongly_confirmed"
+    },
+    {
+      "finding": "Full VP executive (Q+I2+Progress) beats both C0 and B0 with all 7 pre-registered gates",
+      "evidence": "VP vs C0: +24.68 utility, 27 rescues/0 breaks. VP vs B0: +27.35 utility, 29 rescues/0 breaks. All 7 gates pass.",
+      "status": "confirmed"
+    },
+    {
+      "finding": "Progress tie-breaking rescues V1 failures on hard chain tasks without breaking any successes",
+      "evidence": "2 rescues/0 breaks on chain tasks. Mechanism: removes redundant RETRIEVE to preserve budget. Delta_U(VP-V1)=+1.14, CI includes 0. McNemar p=0.50.",
+      "status": "mechanistically_supported_not_statistically_established"
+    },
+    {
+      "finding": "I2 categorical interface prevents numerical pseudo-precision from corrupting LLM policy",
+      "evidence": "Frozen before confirmation, never modified. Passes near-optimal set rather than scalar values.",
+      "status": "strongly_supported_by_ablation"
+    }
+  ],
+
+  "rejected_hypotheses": [
+    {
+      "hypothesis": "Q(s,RETRIEVE) should fall as retrieval depth increases",
+      "evidence": "Q remains flat at 93.53 across depths 0,1,2 for ol_retrieve. Pinned Qwen recovers after repeated retrieval.",
+      "status": "falsified",
+      "note": "QCAUSAL_V2 not justified by current evidence, not permanently impossible."
+    },
+    {
+      "hypothesis": "Exhaustive depth-varying causal data would train a better estimator",
+      "evidence": "Only 3/11 category/action pairs showed meaningful temporal effects (27.3%, below 30% threshold). I2 already prevents live-policy failure from repeated retrieval.",
+      "status": "not_justified"
+    }
+  ],
+
+  "open_hypotheses": [
+    {
+      "hypothesis": "DAPH architecture generalizes across seeds of the same task family",
+      "test": "Cross-seed replication with new untouched benchmark",
+      "status": "not_yet_tested",
+      "priority": 1
+    },
+    {
+      "hypothesis": "DAPH architecture generalizes across policy models (Gemma, Llama)",
+      "test": "Cross-model replication with frozen controller, swapped policy",
+      "status": "not_yet_tested",
+      "priority": 2
+    },
+    {
+      "hypothesis": "DAPH architecture generalizes across task domains (coding, research)",
+      "test": "Cross-domain with translated action vocabulary",
+      "status": "not_yet_tested",
+      "priority": 3
+    },
+    {
+      "hypothesis": "QCAUSAL_V2 could help if Progress cannot solve remaining failures",
+      "test": "Only revisit if confirmation exposes failure Progress cannot solve",
+      "status": "deferred",
+      "priority": 99
+    }
+  ],
+
+  "next_gate": "Cross-seed benchmark replication. Generate new untouched benchmark with new seed. Run C0, B0, V1, VP only. Same frozen executive. No modification to any component.",
+
+  "key_artifacts": {
+    "q_model": {
+      "filename": "QCAUSAL_gbt.pkl",
+      "path": "experiments/i3_5/pinned_policy/frozen_estimators/QCAUSAL_gbt.pkl",
+      "sha256_prefix": "d90d72dab250ba7c"
+    },
+    "feature_schema": {
+      "filename": "feature_schema.json",
+      "path": "experiments/i3_5/pinned_policy/frozen_estimators/feature_schema.json"
+    },
+    "progress_rule": {
+      "filename": "progress_rule_v1.py",
+      "path": "daph/progress/progress_rule_v1.py",
+      "sha256_prefix": "9f0bfc5eea1d24f9"
+    },
+    "utility": {
+      "filename": "v2b_i3_1_utility_v1.json",
+      "path": "configs/v2b_i3_1_utility_v1.json",
+      "sha256_prefix": "e5c6d34acc9cc73a"
+    },
+    "confirmation_benchmark": {
+      "filename": "CONFIRMATION_BENCHMARK_FROZEN.json",
+      "path": "experiments/i3_5/confirmation/CONFIRMATION_BENCHMARK_FROZEN.json",
+      "sha256": "4a4844c930c27a2abe75794dd92acd8c1c44a0f836bf31d78c9d65a2964404c7"
+    },
+    "confirmation_analysis": {
+      "filename": "analysis_v1.json",
+      "path": "experiments/i3_5/confirmation/analysis_v1.json"
+    },
+    "preregistration": {
+      "filename": "PREREGISTRATION.json",
+      "path": "experiments/i3_5/confirmation/PREREGISTRATION.json"
+    },
+    "confirmed_status": {
+      "filename": "DAPH_PROGRESS_EXECUTIVE_V1_CONFIRMED.json",
+      "path": "experiments/i3_5/confirmation/DAPH_PROGRESS_EXECUTIVE_V1_CONFIRMED.json"
+    }
+  },
+
+  "commits": {
+    "phase_22_pilot_falsification": "6af6ba9",
+    "phase_22_closure_progress_v1": "7f03dc5",
+    "phase_24_vp_promoted": "7dea822",
+    "phase_25_freeze_and_benchmark": "1e90c56",
+    "phase_25_confirmed": "564ce9f"
+  },
+
+  "defensible_claim": "On a preregistered hostile unseen benchmark, a frozen causal metacognitive executive improved a pinned Qwen policy from 73.3% to 88.3% success, producing 27 rescues and zero breaks relative to the unguided baseline while also outperforming a strong global-prior control.",
+
+  "research_question": "How broadly does the confirmed architecture generalize?"
+}

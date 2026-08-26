@@ -1,0 +1,88 @@
+{
+  "name": "DAPH_PROGRESS_EXECUTIVE_V1",
+  "status": "CONFIRMED_V1",
+  "confirmed_at": "2025-01-Phase25-confirmation",
+  "confirmation_commit": "564ce9f",
+  "freeze_record": "experiments/i3_5/progress_experiment/DAPH_PROGRESS_EXECUTIVE_V1_FREEZE.json",
+  "preregistration": "experiments/i3_5/confirmation/PREREGISTRATION.json",
+  "confirmation_benchmark_hash": "4a4844c930c27a2abe75794dd92acd8c1c44a0f836bf31d78c9d65a2964404c7",
+  "confirmation_analysis": "experiments/i3_5/confirmation/analysis_v1.json",
+
+  "architecture": {
+    "description": "External causal metacognitive layer that estimates which actions are worth considering, avoids false precision, and selectively biases a strong base policy.",
+    "pipeline": "Legal(s) -> Q_causal(s,a) -> A_epsilon(s) -> Progress(s,a) -> LLM policy",
+    "components": [
+      "Q_CAUSAL_V1: frozen gradient-boosted causal action-value estimator",
+      "I2: epsilon near-optimal set interface (epsilon_q=3.0), categorical output",
+      "PROGRESS_RULE_V1: deterministic structural progress tie-breaker (epsilon_p=0.05)",
+      "Pinned Qwen2.5-7B-Instruct policy at temperature=0"
+    ],
+    "design_principle": "An external causal metacognitive layer estimates which actions are worth considering, avoids false precision, and selectively biases a strong base policy. It is NOT a symbolic controller that decides what the model must do."
+  },
+
+  "evidence_hierarchy": {
+    "causal_Q_vs_no_guidance": {
+      "evidence": "Strongly confirmed",
+      "detail": "V1 moves success from 73.3% to 87.2% and utility from 47.21 to 70.75 on hostile unseen benchmark. Delta_U(V1-C0)=+23.54, CI=[+14.98, +32.82], excludes 0. 25 rescues, 0 breaks, McNemar p<0.0001."
+    },
+    "causal_Q_vs_B0": {
+      "evidence": "Strongly confirmed",
+      "detail": "V1 beats global-prior baseline. Delta_U(V1-B0)=+26.21, CI=[+17.31, +35.72], excludes 0. 27 rescues, 0 breaks, McNemar p<0.0001. The simple heuristic cannot explain the gain."
+    },
+    "I2_uncertainty_respecting_interface": {
+      "evidence": "Strongly supported by ablation",
+      "detail": "I2 passes a categorical near-optimal set rather than scalar Q values. This prevents numerical pseudo-precision from corrupting Qwen's native policy. The interface was frozen before confirmation and never modified."
+    },
+    "progress_as_local_tie_break": {
+      "evidence": "Mechanistically supported; incremental global advantage over V1 not yet statistically established",
+      "detail": "VP rescues 2 V1 failures on chain tasks with 0 breaks. Both rescues occur by removing a redundant RETRIEVE, preserving budget to reach ANSWER. However, Delta_U(VP-V1)=+1.14 with CI=[+0.00, +2.85] which includes 0, and McNemar p=0.50 for 2 rescues/0 breaks. Progress did not degrade the confirmed executive and has specific mechanistically consistent rescue cases, but statistical superiority over V1 is not established."
+    },
+    "Q_V2_history_model": {
+      "evidence": "Not currently justified",
+      "detail": "Phase 22 temporal audit found Q(s,RETRIEVE) remains flat at 93.53 across retrieval depths 0,1,2 for ol_retrieve states. Only 3/11 category/action pairs showed meaningful effects (27.3%, below 30% threshold). V2 is rejected for current evidence, not permanently. Only revisit if confirmation exposes a failure Progress cannot solve."
+    }
+  },
+
+  "confirmation_results": {
+    "benchmark": "180 hostile tasks, 15 subtypes, tight budgets (3-8 steps, 0-2 retrievals, 1-3 verifications, 0-1 searches)",
+    "overall": {
+      "C0": {"mean_u": 47.21, "success": 0.7333, "resource_exhaustion": 60},
+      "B0": {"mean_u": 44.54, "success": 0.7222, "resource_exhaustion": 60},
+      "V1": {"mean_u": 70.75, "success": 0.8722, "resource_exhaustion": 79},
+      "VP": {"mean_u": 71.89, "success": 0.8833, "resource_exhaustion": 79}
+    },
+    "primary_contrasts": {
+      "VP_minus_C0": {"delta_u": 24.68, "ci": [16.10, 34.03], "excludes_zero": true, "rescues": 27, "breaks": 0, "mcnemar_p": 0.0000},
+      "VP_minus_B0": {"delta_u": 27.35, "ci": [18.31, 37.10], "excludes_zero": true, "rescues": 29, "breaks": 0, "mcnemar_p": 0.0000}
+    },
+    "mechanism_contrast": {
+      "VP_minus_V1": {"delta_u": 1.14, "ci": [0.00, 2.85], "excludes_zero": false, "rescues": 2, "breaks": 0, "mcnemar_p": 0.50}
+    },
+    "gates_passed": 7,
+    "gates_total": 7
+  },
+
+  "frozen_components": {
+    "q_model": "QCAUSAL_V1 — no retraining permitted",
+    "epsilon_q": 3.0,
+    "i2_interface": "categorical near-optimal set — no modification permitted",
+    "progress_rule": "PROGRESS_RULE_V1 — no weight/rule changes permitted",
+    "epsilon_p": 0.05,
+    "model": "Qwen2.5-7B-Instruct-Q4_K_M at temperature=0 — pinned",
+    "utility": "v2b_i3_1_utility_v1.json — no modification permitted",
+    "executor": "EvidenceExecutor — no modification permitted",
+    "phase_state_computation": "no modification permitted",
+    "prompt_representation": "no modification permitted"
+  },
+
+  "prohibition": "No changes to Q model, epsilon, progress rule, prompt representation, utility, executor, or phase/state computation. The system is frozen. The next question is generalization, not optimization.",
+
+  "defensible_claim": "On a preregistered hostile unseen benchmark, a frozen causal metacognitive executive improved a pinned Qwen policy from 73.3% to 88.3% success, producing 27 rescues and zero breaks relative to the unguided baseline while also outperforming a strong global-prior control.",
+
+  "next_research_program": {
+    "question": "How broadly does the confirmed architecture generalize?",
+    "priority_1": "Cross-seed benchmark replication — new untouched benchmark from same task family with completely new seed. Run C0, B0, V1, VP only.",
+    "priority_2": "Cross-model replication — freeze DAPH completely, swap policy model to Gemma (and possibly Llama). Same controller, no refitting. Tests metacognitive structure vs Qwen-specific quirks.",
+    "priority_3": "Cross-domain tasks — translate action vocabulary to coding/research/tool-use (READ, SEARCH_CODE, RUN_TEST, PATCH, VERIFY, ANSWER/STOP or SEARCH_WEB, RETRIEVE_SOURCE, CROSS_CHECK, CALCULATE, ANSWER, DEFER). Tests whether state, causal value, epsilon-set, and progress generalize beyond evidence verification."
+  }
+}

@@ -18,11 +18,18 @@ treated as scientifically established because it exists or passes unit tests.
 Every research result has an explicit source identity, frozen protocol,
 environment boundary, and evidence package.
 
-> **Current state:** V2A external verification is qualified at its frozen
-> historical commit. V2B-I3.3.2 is a frozen scientific-benchmark milestone.
-> V2B-I3.4 pinned/matched model executive is engineering-implemented; scientific
-> evaluation is not yet qualified. V2B-I3.4.1 scientific protocol repair is in
-> progress—no held-out model result has been produced.
+> **Current state:** DAPH_PROGRESS_EXECUTIVE_V1 is **CONFIRMED**.
+> On a preregistered hostile unseen benchmark (180 tasks, 15 subtypes, tight
+> resource budgets), the frozen causal metacognitive executive improved a pinned
+> Qwen2.5-7B policy from 73.3% to 88.3% success, producing 27 rescues and 0
+> breaks vs the unguided baseline, and 29 rescues and 0 breaks vs the global-prior
+> control. All 7 pre-registered promotion gates passed. The next research
+> question is generalization: cross-seed, cross-model, and cross-domain.
+>
+> Full status: see [CURRENT_RESEARCH_STATUS.json](CURRENT_RESEARCH_STATUS.json)
+>
+> V2A external verification is qualified at its frozen historical commit.
+> V2B-I3.3.2 is a frozen scientific-benchmark milestone.
 
 ## Why DAPH
 
