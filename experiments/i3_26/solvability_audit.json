@@ -1,0 +1,809 @@
+{
+  "by_category": {
+    "chain": {
+      "solvable": 5,
+      "unsolvable": 0
+    },
+    "defer": {
+      "solvable": 5,
+      "unsolvable": 0
+    },
+    "tl_retrieve": {
+      "solvable": 0,
+      "unsolvable": 11
+    }
+  },
+  "classification_counts": {
+    "SEARCH_SOLVABLE": 10,
+    "SEARCH_UNSOLVABLE_WITHIN_BUDGET": 11
+  },
+  "d_star_distribution": {
+    "1": 10
+  },
+  "d_star_values": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "results": [
+    {
+      "all_successful_first_actions": [
+        "RETRIEVE",
+        "SEARCH_MORE"
+      ],
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "classification": "SEARCH_SOLVABLE",
+      "d_star": 1,
+      "max_steps": 8,
+      "min_successful_depth": 4,
+      "min_successful_sequence": [
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "n_sequences_explored": 142,
+      "resource_usage": {
+        "elapsed_ms": 22,
+        "elapsed_ms_remaining": 9978,
+        "executive_steps_remaining": 4,
+        "executive_steps_used": 4,
+        "monetary_cost_microusd": 0,
+        "monetary_cost_microusd_remaining": 0,
+        "policy_rejections_used": 0,
+        "reasoning_tokens_remaining": 256,
+        "reasoning_tokens_used": 0,
+        "retrieval_calls_remaining": 1,
+        "retrieval_calls_used": 1,
+        "search_calls_remaining": 1,
+        "search_calls_used": 0,
+        "verification_calls_remaining": 1,
+        "verification_calls_used": 2
+      },
+      "solvable": true,
+      "successful_first_action": "RETRIEVE",
+      "task_id": "i3_5c_chain_0000",
+      "terminal_utility": null,
+      "timing_ms": 3.865957260131836,
+      "vp_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [
+        "RETRIEVE",
+        "SEARCH_MORE"
+      ],
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "classification": "SEARCH_SOLVABLE",
+      "d_star": 1,
+      "max_steps": 8,
+      "min_successful_depth": 4,
+      "min_successful_sequence": [
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "n_sequences_explored": 142,
+      "resource_usage": {
+        "elapsed_ms": 22,
+        "elapsed_ms_remaining": 9978,
+        "executive_steps_remaining": 4,
+        "executive_steps_used": 4,
+        "monetary_cost_microusd": 0,
+        "monetary_cost_microusd_remaining": 0,
+        "policy_rejections_used": 0,
+        "reasoning_tokens_remaining": 256,
+        "reasoning_tokens_used": 0,
+        "retrieval_calls_remaining": 1,
+        "retrieval_calls_used": 1,
+        "search_calls_remaining": 1,
+        "search_calls_used": 0,
+        "verification_calls_remaining": 1,
+        "verification_calls_used": 2
+      },
+      "solvable": true,
+      "successful_first_action": "RETRIEVE",
+      "task_id": "i3_5c_chain_0003",
+      "terminal_utility": null,
+      "timing_ms": 4.575967788696289,
+      "vp_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [
+        "RETRIEVE",
+        "SEARCH_MORE"
+      ],
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "classification": "SEARCH_SOLVABLE",
+      "d_star": 1,
+      "max_steps": 8,
+      "min_successful_depth": 4,
+      "min_successful_sequence": [
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "n_sequences_explored": 142,
+      "resource_usage": {
+        "elapsed_ms": 22,
+        "elapsed_ms_remaining": 9978,
+        "executive_steps_remaining": 4,
+        "executive_steps_used": 4,
+        "monetary_cost_microusd": 0,
+        "monetary_cost_microusd_remaining": 0,
+        "policy_rejections_used": 0,
+        "reasoning_tokens_remaining": 256,
+        "reasoning_tokens_used": 0,
+        "retrieval_calls_remaining": 1,
+        "retrieval_calls_used": 1,
+        "search_calls_remaining": 1,
+        "search_calls_used": 0,
+        "verification_calls_remaining": 1,
+        "verification_calls_used": 2
+      },
+      "solvable": true,
+      "successful_first_action": "RETRIEVE",
+      "task_id": "i3_5c_chain_0005",
+      "terminal_utility": null,
+      "timing_ms": 3.3059120178222656,
+      "vp_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [
+        "RETRIEVE",
+        "SEARCH_MORE"
+      ],
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "classification": "SEARCH_SOLVABLE",
+      "d_star": 1,
+      "max_steps": 8,
+      "min_successful_depth": 4,
+      "min_successful_sequence": [
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "n_sequences_explored": 142,
+      "resource_usage": {
+        "elapsed_ms": 22,
+        "elapsed_ms_remaining": 9978,
+        "executive_steps_remaining": 4,
+        "executive_steps_used": 4,
+        "monetary_cost_microusd": 0,
+        "monetary_cost_microusd_remaining": 0,
+        "policy_rejections_used": 0,
+        "reasoning_tokens_remaining": 256,
+        "reasoning_tokens_used": 0,
+        "retrieval_calls_remaining": 1,
+        "retrieval_calls_used": 1,
+        "search_calls_remaining": 1,
+        "search_calls_used": 0,
+        "verification_calls_remaining": 1,
+        "verification_calls_used": 2
+      },
+      "solvable": true,
+      "successful_first_action": "RETRIEVE",
+      "task_id": "i3_5c_chain_0008",
+      "terminal_utility": null,
+      "timing_ms": 3.368854522705078,
+      "vp_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [
+        "RETRIEVE",
+        "SEARCH_MORE"
+      ],
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "classification": "SEARCH_SOLVABLE",
+      "d_star": 1,
+      "max_steps": 8,
+      "min_successful_depth": 4,
+      "min_successful_sequence": [
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "n_sequences_explored": 142,
+      "resource_usage": {
+        "elapsed_ms": 22,
+        "elapsed_ms_remaining": 9978,
+        "executive_steps_remaining": 4,
+        "executive_steps_used": 4,
+        "monetary_cost_microusd": 0,
+        "monetary_cost_microusd_remaining": 0,
+        "policy_rejections_used": 0,
+        "reasoning_tokens_remaining": 256,
+        "reasoning_tokens_used": 0,
+        "retrieval_calls_remaining": 1,
+        "retrieval_calls_used": 1,
+        "search_calls_remaining": 1,
+        "search_calls_used": 0,
+        "verification_calls_remaining": 1,
+        "verification_calls_used": 2
+      },
+      "solvable": true,
+      "successful_first_action": "RETRIEVE",
+      "task_id": "i3_5c_chain_0011",
+      "terminal_utility": null,
+      "timing_ms": 3.3006668090820312,
+      "vp_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [
+        "DEFER",
+        "REASON_MORE",
+        "VERIFY"
+      ],
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "classification": "SEARCH_SOLVABLE",
+      "d_star": 1,
+      "max_steps": 3,
+      "min_successful_depth": 1,
+      "min_successful_sequence": [
+        "DEFER"
+      ],
+      "n_sequences_explored": 5,
+      "resource_usage": {
+        "elapsed_ms": 1,
+        "elapsed_ms_remaining": 9999,
+        "executive_steps_remaining": 2,
+        "executive_steps_used": 1,
+        "monetary_cost_microusd": 0,
+        "monetary_cost_microusd_remaining": 0,
+        "policy_rejections_used": 0,
+        "reasoning_tokens_remaining": 128,
+        "reasoning_tokens_used": 0,
+        "retrieval_calls_remaining": 0,
+        "retrieval_calls_used": 0,
+        "search_calls_remaining": 0,
+        "search_calls_used": 0,
+        "verification_calls_remaining": 1,
+        "verification_calls_used": 0
+      },
+      "solvable": true,
+      "successful_first_action": "DEFER",
+      "task_id": "i3_5c_defer_0001",
+      "terminal_utility": null,
+      "timing_ms": 0.2238750457763672,
+      "vp_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTED"
+    },
+    {
+      "all_successful_first_actions": [
+        "DEFER",
+        "REASON_MORE",
+        "VERIFY"
+      ],
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "classification": "SEARCH_SOLVABLE",
+      "d_star": 1,
+      "max_steps": 3,
+      "min_successful_depth": 1,
+      "min_successful_sequence": [
+        "DEFER"
+      ],
+      "n_sequences_explored": 5,
+      "resource_usage": {
+        "elapsed_ms": 1,
+        "elapsed_ms_remaining": 9999,
+        "executive_steps_remaining": 2,
+        "executive_steps_used": 1,
+        "monetary_cost_microusd": 0,
+        "monetary_cost_microusd_remaining": 0,
+        "policy_rejections_used": 0,
+        "reasoning_tokens_remaining": 128,
+        "reasoning_tokens_used": 0,
+        "retrieval_calls_remaining": 0,
+        "retrieval_calls_used": 0,
+        "search_calls_remaining": 0,
+        "search_calls_used": 0,
+        "verification_calls_remaining": 1,
+        "verification_calls_used": 0
+      },
+      "solvable": true,
+      "successful_first_action": "DEFER",
+      "task_id": "i3_5c_defer_0003",
+      "terminal_utility": null,
+      "timing_ms": 0.22077560424804688,
+      "vp_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTED"
+    },
+    {
+      "all_successful_first_actions": [
+        "DEFER",
+        "REASON_MORE",
+        "VERIFY"
+      ],
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "classification": "SEARCH_SOLVABLE",
+      "d_star": 1,
+      "max_steps": 3,
+      "min_successful_depth": 1,
+      "min_successful_sequence": [
+        "DEFER"
+      ],
+      "n_sequences_explored": 5,
+      "resource_usage": {
+        "elapsed_ms": 1,
+        "elapsed_ms_remaining": 9999,
+        "executive_steps_remaining": 2,
+        "executive_steps_used": 1,
+        "monetary_cost_microusd": 0,
+        "monetary_cost_microusd_remaining": 0,
+        "policy_rejections_used": 0,
+        "reasoning_tokens_remaining": 128,
+        "reasoning_tokens_used": 0,
+        "retrieval_calls_remaining": 0,
+        "retrieval_calls_used": 0,
+        "search_calls_remaining": 0,
+        "search_calls_used": 0,
+        "verification_calls_remaining": 1,
+        "verification_calls_used": 0
+      },
+      "solvable": true,
+      "successful_first_action": "DEFER",
+      "task_id": "i3_5c_defer_0004",
+      "terminal_utility": null,
+      "timing_ms": 0.21696090698242188,
+      "vp_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTED"
+    },
+    {
+      "all_successful_first_actions": [
+        "DEFER",
+        "REASON_MORE",
+        "VERIFY"
+      ],
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "classification": "SEARCH_SOLVABLE",
+      "d_star": 1,
+      "max_steps": 3,
+      "min_successful_depth": 1,
+      "min_successful_sequence": [
+        "DEFER"
+      ],
+      "n_sequences_explored": 5,
+      "resource_usage": {
+        "elapsed_ms": 1,
+        "elapsed_ms_remaining": 9999,
+        "executive_steps_remaining": 2,
+        "executive_steps_used": 1,
+        "monetary_cost_microusd": 0,
+        "monetary_cost_microusd_remaining": 0,
+        "policy_rejections_used": 0,
+        "reasoning_tokens_remaining": 128,
+        "reasoning_tokens_used": 0,
+        "retrieval_calls_remaining": 0,
+        "retrieval_calls_used": 0,
+        "search_calls_remaining": 0,
+        "search_calls_used": 0,
+        "verification_calls_remaining": 1,
+        "verification_calls_used": 0
+      },
+      "solvable": true,
+      "successful_first_action": "DEFER",
+      "task_id": "i3_5c_defer_0009",
+      "terminal_utility": null,
+      "timing_ms": 0.21600723266601562,
+      "vp_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTED"
+    },
+    {
+      "all_successful_first_actions": [
+        "DEFER",
+        "REASON_MORE",
+        "VERIFY"
+      ],
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "classification": "SEARCH_SOLVABLE",
+      "d_star": 1,
+      "max_steps": 3,
+      "min_successful_depth": 1,
+      "min_successful_sequence": [
+        "DEFER"
+      ],
+      "n_sequences_explored": 5,
+      "resource_usage": {
+        "elapsed_ms": 1,
+        "elapsed_ms_remaining": 9999,
+        "executive_steps_remaining": 2,
+        "executive_steps_used": 1,
+        "monetary_cost_microusd": 0,
+        "monetary_cost_microusd_remaining": 0,
+        "policy_rejections_used": 0,
+        "reasoning_tokens_remaining": 128,
+        "reasoning_tokens_used": 0,
+        "retrieval_calls_remaining": 0,
+        "retrieval_calls_used": 0,
+        "search_calls_remaining": 0,
+        "search_calls_used": 0,
+        "verification_calls_remaining": 1,
+        "verification_calls_used": 0
+      },
+      "solvable": true,
+      "successful_first_action": "DEFER",
+      "task_id": "i3_5c_defer_0011",
+      "terminal_utility": null,
+      "timing_ms": 0.2219676971435547,
+      "vp_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTED"
+    },
+    {
+      "all_successful_first_actions": [],
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "classification": "SEARCH_UNSOLVABLE_WITHIN_BUDGET",
+      "d_star": null,
+      "max_steps": 6,
+      "min_successful_depth": null,
+      "min_successful_sequence": null,
+      "n_sequences_explored": 81,
+      "resource_usage": null,
+      "solvable": false,
+      "successful_first_action": null,
+      "task_id": "i3_5c_tl_retrieve_0000",
+      "terminal_utility": null,
+      "timing_ms": 1.7480850219726562,
+      "vp_actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [],
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "classification": "SEARCH_UNSOLVABLE_WITHIN_BUDGET",
+      "d_star": null,
+      "max_steps": 6,
+      "min_successful_depth": null,
+      "min_successful_sequence": null,
+      "n_sequences_explored": 81,
+      "resource_usage": null,
+      "solvable": false,
+      "successful_first_action": null,
+      "task_id": "i3_5c_tl_retrieve_0001",
+      "terminal_utility": null,
+      "timing_ms": 1.979827880859375,
+      "vp_actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [],
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "classification": "SEARCH_UNSOLVABLE_WITHIN_BUDGET",
+      "d_star": null,
+      "max_steps": 6,
+      "min_successful_depth": null,
+      "min_successful_sequence": null,
+      "n_sequences_explored": 81,
+      "resource_usage": null,
+      "solvable": false,
+      "successful_first_action": null,
+      "task_id": "i3_5c_tl_retrieve_0002",
+      "terminal_utility": null,
+      "timing_ms": 1.79290771484375,
+      "vp_actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [],
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "classification": "SEARCH_UNSOLVABLE_WITHIN_BUDGET",
+      "d_star": null,
+      "max_steps": 6,
+      "min_successful_depth": null,
+      "min_successful_sequence": null,
+      "n_sequences_explored": 81,
+      "resource_usage": null,
+      "solvable": false,
+      "successful_first_action": null,
+      "task_id": "i3_5c_tl_retrieve_0003",
+      "terminal_utility": null,
+      "timing_ms": 1.7580986022949219,
+      "vp_actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [],
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "classification": "SEARCH_UNSOLVABLE_WITHIN_BUDGET",
+      "d_star": null,
+      "max_steps": 6,
+      "min_successful_depth": null,
+      "min_successful_sequence": null,
+      "n_sequences_explored": 81,
+      "resource_usage": null,
+      "solvable": false,
+      "successful_first_action": null,
+      "task_id": "i3_5c_tl_retrieve_0004",
+      "terminal_utility": null,
+      "timing_ms": 1.706838607788086,
+      "vp_actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [],
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "classification": "SEARCH_UNSOLVABLE_WITHIN_BUDGET",
+      "d_star": null,
+      "max_steps": 6,
+      "min_successful_depth": null,
+      "min_successful_sequence": null,
+      "n_sequences_explored": 81,
+      "resource_usage": null,
+      "solvable": false,
+      "successful_first_action": null,
+      "task_id": "i3_5c_tl_retrieve_0005",
+      "terminal_utility": null,
+      "timing_ms": 1.7108917236328125,
+      "vp_actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [],
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "classification": "SEARCH_UNSOLVABLE_WITHIN_BUDGET",
+      "d_star": null,
+      "max_steps": 6,
+      "min_successful_depth": null,
+      "min_successful_sequence": null,
+      "n_sequences_explored": 81,
+      "resource_usage": null,
+      "solvable": false,
+      "successful_first_action": null,
+      "task_id": "i3_5c_tl_retrieve_0006",
+      "terminal_utility": null,
+      "timing_ms": 1.7008781433105469,
+      "vp_actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [],
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "classification": "SEARCH_UNSOLVABLE_WITHIN_BUDGET",
+      "d_star": null,
+      "max_steps": 6,
+      "min_successful_depth": null,
+      "min_successful_sequence": null,
+      "n_sequences_explored": 81,
+      "resource_usage": null,
+      "solvable": false,
+      "successful_first_action": null,
+      "task_id": "i3_5c_tl_retrieve_0008",
+      "terminal_utility": null,
+      "timing_ms": 1.950979232788086,
+      "vp_actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [],
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "classification": "SEARCH_UNSOLVABLE_WITHIN_BUDGET",
+      "d_star": null,
+      "max_steps": 6,
+      "min_successful_depth": null,
+      "min_successful_sequence": null,
+      "n_sequences_explored": 81,
+      "resource_usage": null,
+      "solvable": false,
+      "successful_first_action": null,
+      "task_id": "i3_5c_tl_retrieve_0009",
+      "terminal_utility": null,
+      "timing_ms": 2.032041549682617,
+      "vp_actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [],
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "classification": "SEARCH_UNSOLVABLE_WITHIN_BUDGET",
+      "d_star": null,
+      "max_steps": 6,
+      "min_successful_depth": null,
+      "min_successful_sequence": null,
+      "n_sequences_explored": 81,
+      "resource_usage": null,
+      "solvable": false,
+      "successful_first_action": null,
+      "task_id": "i3_5c_tl_retrieve_0010",
+      "terminal_utility": null,
+      "timing_ms": 1.8203258514404297,
+      "vp_actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    },
+    {
+      "all_successful_first_actions": [],
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "classification": "SEARCH_UNSOLVABLE_WITHIN_BUDGET",
+      "d_star": null,
+      "max_steps": 6,
+      "min_successful_depth": null,
+      "min_successful_sequence": null,
+      "n_sequences_explored": 81,
+      "resource_usage": null,
+      "solvable": false,
+      "successful_first_action": null,
+      "task_id": "i3_5c_tl_retrieve_0011",
+      "terminal_utility": null,
+      "timing_ms": 2.1028518676757812,
+      "vp_actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE"
+      ],
+      "vp_terminal_result": "RESOURCE_EXHAUSTION"
+    }
+  ],
+  "total_failures": 21
+}

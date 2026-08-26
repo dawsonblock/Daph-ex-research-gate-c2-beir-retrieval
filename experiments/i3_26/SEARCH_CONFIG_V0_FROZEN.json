@@ -1,0 +1,71 @@
+{
+  "version": "DAPH_SEARCH_CONFIG_V0",
+  "frozen_at": "2025-01-30",
+  "branch": "i3.26-pav-selective-search",
+  "justification": "Frozen based on solvability audit of 21 VP failures from Phase 25 confirmation. d*=1 for all 10 solvable failures. Depth-2 is more than sufficient. 11/21 failures (tl_retrieve) are unsolvable within budget — search cannot help and must not be blamed.",
+  "config": {
+    "max_depth": 2,
+    "branching_factor": 2,
+    "max_nodes": 6,
+    "max_model_calls": 4,
+    "max_wall_ms": 5000,
+    "min_steps_remaining": 3,
+    "q_epsilon": 3.0,
+    "early_stop_margin": 5.0,
+    "trigger_min_near_optimal": 2,
+    "trigger_resource_pressure_steps": 4,
+    "trigger_repeated_action_run": 2
+  },
+  "solvability_evidence": {
+    "total_vp_failures": 21,
+    "search_solvable": 10,
+    "search_unsolvable_within_budget": 11,
+    "solvable_categories": {
+      "chain": {
+        "count": 5,
+        "min_successful_sequence": ["RETRIEVE", "VERIFY", "VERIFY", "ANSWER"],
+        "min_successful_depth": 4,
+        "vp_failure_first_action": "VERIFY",
+        "winning_first_action": "RETRIEVE",
+        "d_star": 1
+      },
+      "defer": {
+        "count": 5,
+        "min_successful_sequence": ["DEFER"],
+        "min_successful_depth": 1,
+        "vp_failure_first_action": "VERIFY",
+        "winning_first_action": "DEFER",
+        "d_star": 1
+      }
+    },
+    "unsolvable_categories": {
+      "tl_retrieve": {
+        "count": 11,
+        "reason": "No successful legal action sequence exists within budget. BFS exhausted 81 sequences per task.",
+        "implication": "Search cannot help. These failures are budget-limited, not planning-limited."
+      }
+    },
+    "d_star_distribution": {
+      "d=1": 10,
+      "d=2": 0,
+      "d>=3": 0
+    },
+    "depth_justification": "d*=1 for all solvable failures. Depth-2 search provides one extra level of lookahead beyond what is strictly needed, at minimal cost. No evidence supports increasing to depth 3."
+  },
+  "theoretical_bounds": {
+    "current_vp_success_rate": 0.8833,
+    "max_achievable_with_perfect_search": 0.9389,
+    "max_improvement": 0.0556,
+    "note": "Upper bound assumes perfect trigger precision and Qwen executes recommended action. Realistic gain will be lower."
+  },
+  "gates_for_stage_b": {
+    "delta_U_VS_VP_positive_ci_excludes_zero": true,
+    "success_VS_ge_success_VP": true,
+    "rescues_greater_than_breaks": true,
+    "search_rate_le_35pct": true,
+    "mean_nodes_le_6": true,
+    "mean_model_calls_bounded": true,
+    "no_reliability_regression": true,
+    "net_search_gain_positive": "NetSearchGain = delta_U - lambda_compute * C_search > 0"
+  }
+}
