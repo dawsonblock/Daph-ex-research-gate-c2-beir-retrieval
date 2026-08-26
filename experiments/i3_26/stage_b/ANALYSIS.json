@@ -1,0 +1,94 @@
+{
+  "experiment": "I3.26 Stage B: VP vs VS (VP + SelectiveSearch)",
+  "date": "2026-08-26",
+  "run_id": "8f342893fb31b5e1",
+  "trajectories": 312,
+  "errors": 0,
+  "identities_verified": true,
+  "gguf_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+
+  "headline_result": {
+    "VP_success": "108/156 (69.23%)",
+    "VS_success": "108/156 (69.23%)",
+    "VP_mean_utility": 46.79,
+    "VS_mean_utility": 46.79,
+    "delta_U_VS_VP": 0.0,
+    "delta_U_CI": [0.0, 0.0],
+    "rescues": 0,
+    "breaks": 0,
+    "search_triggered_rate": "48/156 (30.8%)",
+    "verdict": "VS is byte-identical to VP. Search changed zero outcomes."
+  },
+
+  "per_category": {
+    "answer": {"VP": "12/12", "VS": "12/12", "rescues": 0, "breaks": 0},
+    "chain": {"VP": "9/24", "VS": "9/24", "rescues": 0, "breaks": 0},
+    "contradiction": {"VP": "12/12", "VS": "12/12", "rescues": 0, "breaks": 0},
+    "defer": {"VP": "15/24", "VS": "15/24", "rescues": 0, "breaks": 0},
+    "prem_answer": {"VP": "12/12", "VS": "12/12", "rescues": 0, "breaks": 0},
+    "prem_defer": {"VP": "12/12", "VS": "12/12", "rescues": 0, "breaks": 0},
+    "retr_waste": {"VP": "12/12", "VS": "12/12", "rescues": 0, "breaks": 0},
+    "retrieve": {"VP": "12/12", "VS": "12/12", "rescues": 0, "breaks": 0},
+    "tl_retrieve": {"VP": "0/24", "VS": "0/24", "rescues": 0, "breaks": 0},
+    "verify": {"VP": "12/12", "VS": "12/12", "rescues": 0, "breaks": 0}
+  },
+
+  "search_trigger_analysis": {
+    "triggered_count": 48,
+    "triggered_pct": 30.8,
+    "trigger_by_step": {"step_1": 12, "step_3": 12, "step_5": 24},
+    "trigger_by_category": {"chain": 24, "retrieve": 12, "verify": 12},
+    "qwen_followed_winner": "24/48 (50%)",
+    "qwen_ignored_winner": "24/48 (50%)",
+    "precision": "0/48 (0%)",
+    "coverage": "0/48 (0%)"
+  },
+
+  "root_cause_analysis": {
+    "chain_failures": {
+      "issue": "Search triggers at step 5, not step 0",
+      "q_values_at_step_0": {
+        "VERIFY": 86.92,
+        "SEARCH_MORE": 17.61,
+        "REASON_MORE": 16.5,
+        "DEFER": 12.43,
+        "STOP": 30.79,
+        "RETRIEVE": -2.47,
+        "ANSWER": -119.91
+      },
+      "near_optimal_at_step_0": ["VERIFY"],
+      "trigger_reason_at_step_0": "single_near_optimal",
+      "explanation": "Q_CAUSAL_V1 gives VERIFY a Q value of 86.92 at step 0, while RETRIEVE gets -2.47. The Q gap is 89.39, far exceeding epsilon=3.0. RETRIEVE is not in the near-optimal set. Search cannot trigger because there is only one near-optimal action. The Q model itself is wrong about RETRIVE being low-value — the solvability audit proved RETRIEVE is the correct first action. But search can only branch over actions in the Q epsilon set, and RETRIEVE is not in it.",
+      "implication": "The bottleneck is Q_CAUSAL_V1's misestimation of RETRIEVE value, not search depth or trigger design. Search cannot fix a Q model that assigns -2.47 to the correct action."
+    },
+    "defer_failures": {
+      "issue": "Search does not trigger because Q correctly identifies DEFER",
+      "q_values_at_step_0": {
+        "DEFER": 69.34,
+        "REASON_MORE": 62.18,
+        "VERIFY": 61.91,
+        "STOP": 48.69,
+        "ANSWER": -119.88
+      },
+      "near_optimal_at_step_0": ["DEFER"],
+      "trigger_reason_at_step_0": "single_near_optimal",
+      "explanation": "Q_CAUSAL_V1 correctly assigns DEFER the highest Q value (69.34). The near-optimal set is {DEFER}. Search does not trigger because there is only one near-optimal action. Qwen then ignores the guidance and chooses VERIFY instead. The bottleneck is Qwen's execution, not the executive guidance.",
+      "implication": "The bottleneck has moved into the base policy. Qwen does not follow the executive guidance even when it is clear and correct."
+    },
+    "tl_retrieve_failures": {
+      "issue": "Correctly unsolvable",
+      "explanation": "All 24 tl_retrieve tasks fail for both VP and VS. Search does not trigger (Q gives VERIFY as single near-optimal). This matches the solvability audit: no successful legal path exists within budget.",
+      "implication": "Search correctly does not fabricate a solution. This is the expected behavior for unsolvable controls."
+    }
+  },
+
+  "scientific_conclusion": {
+    "verdict": "SELECTIVE SEARCH REJECTED",
+    "reason": "Search changed zero outcomes across 156 paired trajectories. The bottleneck is not planning depth or trigger precision — it is (1) Q_CAUSAL_V1 misestimating RETRIEVE value for chain tasks, and (2) Qwen ignoring correct guidance for defer tasks.",
+    "q_model_limitation": "For chain tasks, Q assigns RETRIEVE=-2.47 when the solvability audit proves RETRIEVE is the correct first action. Search can only branch over the Q epsilon set, so it never considers RETRIEVE. This is a Q_CAUSAL_V1 limitation, not a search limitation.",
+    "base_policy_limitation": "For defer tasks, Q correctly recommends DEFER (Q=69.34, clear single near-optimal). Qwen ignores this and chooses VERIFY. No amount of search can fix a base policy that ignores correct guidance.",
+    "what_would_not_help": "Increasing search depth, widening the trigger, or adding PAV would not address either bottleneck. The Q model excludes the correct action from the candidate set, and the base policy ignores correct recommendations.",
+    "what_might_help": "A Q_V2 model that correctly values RETRIEVE in chain states. But Q_V2 was already rejected in Phase 22. Alternatively, an interface that more strongly constrains Qwen to follow executive guidance — but that risks replacing the policy rather than biasing it.",
+    "falsification_outcome": "This is a successful scientific outcome. The search hypothesis was falsified by evidence. The confirmed VP remains the best executive. No added complexity is justified."
+  }
+}

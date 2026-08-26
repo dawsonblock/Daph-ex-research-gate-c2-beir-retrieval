@@ -508,6 +508,147 @@ class StageBWriter:
         return completed
 
 
+def _sha256_file(path: Path) -> str:
+    """Compute SHA256 of a file."""
+    import hashlib as _hl
+    h = _hl.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _sha256_text(path: Path) -> str:
+    """Compute SHA256 of a text file's content."""
+    import hashlib as _hl
+    h = _hl.sha256()
+    with open(path, "rb") as f:
+        h.update(f.read())
+    return h.hexdigest()
+
+
+# ============================================================
+# Frozen identity hashes — fail closed if any mismatch
+# ============================================================
+EXPECTED_IDENTITIES = {
+    "gguf_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+    "search_config_sha256": "efc09b124786293156910d11938ddbb0fac5f154eccd4c299412a9116ff53d8b",
+    "benchmark_frozen_sha256": "cbdb8922d19cac7d66b10c755eb8f99925c54e529eaf35aee99ae4b2d2dc58fa",
+    "qcausal_v1_sha256": "d90d72dab250ba7ce032afcc9d430fabfd4e84dace3c4dbe4deb77de0f8c9729",
+    "progress_rule_v1_sha256": "9f0bfc5eea1d24f97cb65020d0ba2569888c07110c1be189c2383ae9d62349b9",
+    "packet_builder_sha256": "93e1b5767589143a7d7fde4c4cfb8260151dfa9b1fa30ffb41c4328c587cc8ef",
+    "search_trigger_sha256": "4c12f84e3ecba43450620ac6a09a55a780ba309bb47bffd8f7baa65210afa3e4",
+    "search_planner_sha256": "9061d5327bc94f54757ff5947790a788447406aa425c44d3ea11007ac3b013dd",
+}
+
+
+def verify_frozen_identities(gguf_path: Path) -> dict:
+    """Verify all frozen component hashes. Fail closed on any mismatch.
+
+    Returns a dict of all computed hashes for the manifest.
+    Raises SystemExit on any mismatch.
+    """
+    print("=" * 70)
+    print("FROZEN IDENTITY VERIFICATION (fail-closed)")
+    print("=" * 70)
+
+    identities = {}
+
+    # 1. GGUF SHA256
+    print("  Computing GGUF SHA256 (large file, may take a moment)...", flush=True)
+    computed = _sha256_file(gguf_path)
+    identities["gguf_sha256"] = computed
+    expected = EXPECTED_IDENTITIES["gguf_sha256"]
+    match = "OK" if computed == expected else "MISMATCH"
+    print(f"    GGUF:       {computed[:16]}... {match}")
+    if computed != expected:
+        print(f"    EXPECTED:   {expected[:16]}...")
+        print(f"    FATAL: GGUF SHA256 mismatch. Aborting before trajectory 1.")
+        raise SystemExit(1)
+
+    # 2. SearchConfig V0
+    computed = _sha256_text(REPO_ROOT / "experiments/i3_26/SEARCH_CONFIG_V0_FROZEN.json")
+    identities["search_config_sha256"] = computed
+    expected = EXPECTED_IDENTITIES["search_config_sha256"]
+    match = "OK" if computed == expected else "MISMATCH"
+    print(f"    SearchCfg:  {computed[:16]}... {match}")
+    if computed != expected:
+        raise SystemExit(f"SearchConfig V0 SHA mismatch: {computed} != {expected}")
+
+    # 3. Development benchmark frozen
+    computed = _sha256_text(REPO_ROOT / "experiments/i3_26/DEVELOPMENT_BENCHMARK_FROZEN.json")
+    identities["benchmark_frozen_sha256"] = computed
+    expected = EXPECTED_IDENTITIES["benchmark_frozen_sha256"]
+    match = "OK" if computed == expected else "MISMATCH"
+    print(f"    Benchmark:  {computed[:16]}... {match}")
+    if computed != expected:
+        raise SystemExit(f"Benchmark SHA mismatch: {computed} != {expected}")
+
+    # 4. Q_CAUSAL_V1
+    computed = _sha256_file(REPO_ROOT / "experiments/i3_5/pinned_policy/frozen_estimators/QCAUSAL_gbt.pkl")
+    identities["qcausal_v1_sha256"] = computed
+    expected = EXPECTED_IDENTITIES["qcausal_v1_sha256"]
+    match = "OK" if computed == expected else "MISMATCH"
+    print(f"    QCAUSAL_V1: {computed[:16]}... {match}")
+    if computed != expected:
+        raise SystemExit(f"QCAUSAL_V1 SHA mismatch: {computed} != {expected}")
+
+    # 5. PROGRESS_RULE_V1
+    computed = _sha256_text(REPO_ROOT / "daph/progress/progress_rule_v1.py")
+    identities["progress_rule_v1_sha256"] = computed
+    expected = EXPECTED_IDENTITIES["progress_rule_v1_sha256"]
+    match = "OK" if computed == expected else "MISMATCH"
+    print(f"    Progress:   {computed[:16]}... {match}")
+    if computed != expected:
+        raise SystemExit(f"PROGRESS_RULE_V1 SHA mismatch: {computed} != {expected}")
+
+    # 6. packet_builder
+    computed = _sha256_text(REPO_ROOT / "daph/executive/packet_builder.py")
+    identities["packet_builder_sha256"] = computed
+    expected = EXPECTED_IDENTITIES["packet_builder_sha256"]
+    match = "OK" if computed == expected else "MISMATCH"
+    print(f"    PktBuilder:  {computed[:16]}... {match}")
+    if computed != expected:
+        raise SystemExit(f"packet_builder SHA mismatch: {computed} != {expected}")
+
+    # 7. search trigger
+    computed = _sha256_text(REPO_ROOT / "daph/search/trigger.py")
+    identities["search_trigger_sha256"] = computed
+    expected = EXPECTED_IDENTITIES["search_trigger_sha256"]
+    match = "OK" if computed == expected else "MISMATCH"
+    print(f"    Trigger:    {computed[:16]}... {match}")
+    if computed != expected:
+        raise SystemExit(f"search trigger SHA mismatch: {computed} != {expected}")
+
+    # 8. search planner
+    computed = _sha256_text(REPO_ROOT / "daph/search/planner.py")
+    identities["search_planner_sha256"] = computed
+    expected = EXPECTED_IDENTITIES["search_planner_sha256"]
+    match = "OK" if computed == expected else "MISMATCH"
+    print(f"    Planner:    {computed[:16]}... {match}")
+    if computed != expected:
+        raise SystemExit(f"search planner SHA mismatch: {computed} != {expected}")
+
+    # 9. Source commit
+    import subprocess
+    source_commit = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT,
+    ).decode().strip()
+    identities["source_commit"] = source_commit
+    print(f"    Commit:     {source_commit[:16]}...")
+
+    # 10. Runtime version
+    import platform
+    runtime_version = f"Python {platform.python_version()} ({platform.machine()})"
+    identities["runtime_version"] = runtime_version
+    print(f"    Runtime:    {runtime_version}")
+
+    print("  ALL IDENTITIES VERIFIED.")
+    print("=" * 70)
+    print()
+    return identities
+
+
 def main():
     parser = argparse.ArgumentParser(description="I3.26 Stage B: VP vs VS")
     parser.add_argument("--gguf-path", required=True)
@@ -521,6 +662,13 @@ def main():
 
     output_dir = REPO_ROOT / args.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    # === FAIL-CLOSED IDENTITY VERIFICATION ===
+    gguf_path = Path(args.gguf_path)
+    if not gguf_path.exists():
+        print(f"FATAL: GGUF file not found: {gguf_path}")
+        raise SystemExit(1)
+    identities = verify_frozen_identities(gguf_path)
 
     # Load i3_7e
     print("Loading i3_7e module...")
@@ -560,7 +708,7 @@ def main():
     )
     print("  Backend initialized.")
 
-    # Build run manifest
+    # Build run manifest with all identity hashes
     timestamp = datetime.now(timezone.utc).isoformat()
     run_id = hashlib.sha256(f"i3_26_stage_b:{timestamp}".encode()).hexdigest()[:16]
 
@@ -578,6 +726,8 @@ def main():
             "QCAUSAL_V1", "PROGRESS_RULE_V1", "VP prompts",
             "VP thresholds", "utility", "executor", "phase/state computation",
         ],
+        # Full identity hashes
+        "identities": identities,
     }
     with open(output_dir / "run_manifest.json", "w") as f:
         json.dump(manifest, f, indent=2, sort_keys=True)
