@@ -1,0 +1,46 @@
+{
+  "version": "DAPH_SEARCH_EXECUTIVE_V1_REJECTION",
+  "frozen_at": "2026-08-26",
+  "branch": "i3.26-pav-selective-search",
+  "commit": "4a21484",
+  "verdict": "REJECTED",
+  "reason": "Search is downstream of the wrong bottlenecks.",
+
+  "experiment": {
+    "name": "Stage B: VP vs VS",
+    "trajectories": 312,
+    "errors": 0,
+    "identities_verified": true,
+    "delta_U_VS_VP": 0.0,
+    "delta_U_CI": [0.0, 0.0],
+    "rescues": 0,
+    "breaks": 0,
+    "search_triggered_rate": 0.308
+  },
+
+  "root_cause": {
+    "chain": {
+      "bottleneck": "Q_CAUSAL_V1 value misestimation",
+      "evidence": "Q(VERIFY)=86.92, Q(RETRIEVE)=-2.47 at step 0. RETRIEVE is the correct first action (proven by solvability audit) but is excluded from the Q epsilon set. Search can only branch over near-optimal actions, so it never considers RETRIEVE.",
+      "fix_direction": "Correct Q_CAUSAL_V1 for chain states. Do not redesign the model — collect targeted forced-action data and retrain the same estimator class."
+    },
+    "defer": {
+      "bottleneck": "Policy compliance / interface authority",
+      "evidence": "Q(DEFER)=69.34 is correctly highest. Single near-optimal action. Qwen ignores guidance and chooses VERIFY instead.",
+      "fix_direction": "Adaptive authority: when Q gap is large and uncertainty is low, narrow the admissible set or hard-select the action. When Q gap is small, return choice to LLM."
+    },
+    "tl_retrieve": {
+      "bottleneck": "Genuinely unsolvable within budget",
+      "evidence": "BFS exhausted all legal sequences. No successful path exists.",
+      "fix_direction": "None. These are correctly unsolvable controls."
+    }
+  },
+
+  "next_program": {
+    "architecture": "Epistemic state -> Q_causal -> uncertainty/gap -> adaptive authority -> LLM",
+    "track_1": "Q_CAUSAL_V1 error audit + targeted retraining for chain states",
+    "track_2": "Authority calibration (A0 advisory, A1 schema-narrowed, A2 hard selection) for clear-choice states",
+    "not_pursued": ["PAV", "deeper search", "MCTS", "Q_V2 history model"],
+    "principle": "Better Q on chain states + stronger compliance on clear-choice states"
+  }
+}
