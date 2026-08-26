@@ -1,0 +1,3467 @@
+{
+  "benchmark_sha256": "4a4844c930c27a2abe75794dd92acd8c1c44a0f836bf31d78c9d65a2964404c7",
+  "n_per_subtype": 12,
+  "n_subtypes": 15,
+  "n_tasks": 180,
+  "name": "PHASE25_CONFIRMATION_BENCHMARK",
+  "prohibition": "This benchmark is frozen. No modification to tasks, budgets, VP, Q, I2, Progress weights/rules, prompts, thresholds, or utility definitions is permitted after this point.",
+  "seed": 4287,
+  "tasks": [
+    {
+      "budget_profile": "TIGHT",
+      "category": "answer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_answer_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "answer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_answer_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "answer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_answer_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "answer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_answer_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "answer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_answer_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "answer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_answer_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "answer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_answer_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "answer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_answer_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "answer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_answer_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "answer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_answer_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "answer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_answer_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "answer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_answer_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_defer_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_defer_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_defer_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_defer_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_defer_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_defer_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_defer_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_defer_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_defer_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_defer_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_defer_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_defer_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retrieve_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retrieve_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retrieve_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retrieve_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retrieve_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retrieve_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retrieve_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retrieve_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retrieve_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retrieve_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retrieve_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retrieve_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_verify_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_verify_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_verify_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_verify_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_verify_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_verify_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_verify_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_verify_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_verify_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_verify_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_verify_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_verify_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_search_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_search_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_search_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_search_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_search_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_search_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_search_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_search_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_search_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_search_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_search_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_search_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "contradiction",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_contradiction_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Evidence appears contradictory."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "contradiction",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_contradiction_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Evidence appears contradictory."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "contradiction",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_contradiction_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Evidence appears contradictory."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "contradiction",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_contradiction_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Evidence appears contradictory."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "contradiction",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_contradiction_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect. Evidence appears contradictory."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "contradiction",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_contradiction_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event. Evidence appears contradictory."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "contradiction",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_contradiction_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect. Evidence appears contradictory."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "contradiction",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_contradiction_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population. Evidence appears contradictory."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "contradiction",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_contradiction_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Evidence appears contradictory."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "contradiction",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_contradiction_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Evidence appears contradictory."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "contradiction",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_contradiction_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Evidence appears contradictory."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "contradiction",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_contradiction_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Evidence appears contradictory."
+    },
+    {
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 5,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "SEARCH_MORE:E5",
+        "VERIFY:E5",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3",
+        "E4"
+      ],
+      "search_exposes": [
+        "E5"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_chain_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Requires multi-step investigation."
+    },
+    {
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 5,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "SEARCH_MORE:E5",
+        "VERIFY:E5",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3",
+        "E4"
+      ],
+      "search_exposes": [
+        "E5"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_chain_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Requires multi-step investigation."
+    },
+    {
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 5,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "SEARCH_MORE:E5",
+        "VERIFY:E5",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3",
+        "E4"
+      ],
+      "search_exposes": [
+        "E5"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_chain_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Requires multi-step investigation."
+    },
+    {
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 5,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "SEARCH_MORE:E5",
+        "VERIFY:E5",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3",
+        "E4"
+      ],
+      "search_exposes": [
+        "E5"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_chain_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Requires multi-step investigation."
+    },
+    {
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 5,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "SEARCH_MORE:E5",
+        "VERIFY:E5",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3",
+        "E4"
+      ],
+      "search_exposes": [
+        "E5"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_chain_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect. Requires multi-step investigation."
+    },
+    {
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 5,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "SEARCH_MORE:E5",
+        "VERIFY:E5",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3",
+        "E4"
+      ],
+      "search_exposes": [
+        "E5"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_chain_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event. Requires multi-step investigation."
+    },
+    {
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 5,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "SEARCH_MORE:E5",
+        "VERIFY:E5",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3",
+        "E4"
+      ],
+      "search_exposes": [
+        "E5"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_chain_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect. Requires multi-step investigation."
+    },
+    {
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 5,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "SEARCH_MORE:E5",
+        "VERIFY:E5",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3",
+        "E4"
+      ],
+      "search_exposes": [
+        "E5"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_chain_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population. Requires multi-step investigation."
+    },
+    {
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 5,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "SEARCH_MORE:E5",
+        "VERIFY:E5",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3",
+        "E4"
+      ],
+      "search_exposes": [
+        "E5"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_chain_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Requires multi-step investigation."
+    },
+    {
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 5,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "SEARCH_MORE:E5",
+        "VERIFY:E5",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3",
+        "E4"
+      ],
+      "search_exposes": [
+        "E5"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_chain_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Requires multi-step investigation."
+    },
+    {
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 5,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "SEARCH_MORE:E5",
+        "VERIFY:E5",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3",
+        "E4"
+      ],
+      "search_exposes": [
+        "E5"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_chain_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Requires multi-step investigation."
+    },
+    {
+      "budget_profile": "TIGHT_CHAIN",
+      "category": "chain",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 5,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "SEARCH_MORE:E5",
+        "VERIFY:E5",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3",
+        "E4"
+      ],
+      "search_exposes": [
+        "E5"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_chain_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Requires multi-step investigation."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_retrieve_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_retrieve_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_retrieve_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_retrieve_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_retrieve_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_retrieve_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_retrieve_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_retrieve_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_retrieve_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_retrieve_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_retrieve_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "tl_retrieve",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "RETRIEVE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [
+        "E3"
+      ],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_retrieve_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_verify_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_verify_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_verify_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_verify_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_verify_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_verify_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_verify_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_verify_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_verify_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_verify_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_verify_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_verify",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "VERIFY:E2",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_verify_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Both hypotheses have supporting evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_search_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Both hypotheses have stale evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_search_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Both hypotheses have stale evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_search_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Both hypotheses have stale evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_search_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Both hypotheses have stale evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_search_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect. Both hypotheses have stale evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_search_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event. Both hypotheses have stale evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_search_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect. Both hypotheses have stale evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_search_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population. Both hypotheses have stale evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_search_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Both hypotheses have stale evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_search_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Both hypotheses have stale evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_search_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Both hypotheses have stale evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE",
+      "category": "tl_search",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 3,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "SEARCH_MORE:E3",
+        "VERIFY:E3",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [
+        "E3"
+      ],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_search_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Both hypotheses have stale evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "tl_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_defer_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Both hypotheses have unverified evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "tl_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_defer_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Both hypotheses have unverified evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "tl_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_defer_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Both hypotheses have unverified evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "tl_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_defer_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Both hypotheses have unverified evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "tl_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_defer_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect. Both hypotheses have unverified evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "tl_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_defer_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event. Both hypotheses have unverified evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "tl_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_defer_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect. Both hypotheses have unverified evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "tl_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_defer_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population. Both hypotheses have unverified evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "tl_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_defer_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Both hypotheses have unverified evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "tl_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_defer_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Both hypotheses have unverified evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "tl_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_defer_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Both hypotheses have unverified evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "tl_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_tl_defer_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Both hypotheses have unverified evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "prem_answer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_answer_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Evidence appears to support one hypothesis but may be insufficient."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "prem_answer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_answer_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Evidence appears to support one hypothesis but may be insufficient."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "prem_answer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_answer_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Evidence appears to support one hypothesis but may be insufficient."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "prem_answer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_answer_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Evidence appears to support one hypothesis but may be insufficient."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "prem_answer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_answer_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect. Evidence appears to support one hypothesis but may be insufficient."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "prem_answer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_answer_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event. Evidence appears to support one hypothesis but may be insufficient."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "prem_answer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_answer_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect. Evidence appears to support one hypothesis but may be insufficient."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "prem_answer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_answer_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population. Evidence appears to support one hypothesis but may be insufficient."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "prem_answer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_answer_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Evidence appears to support one hypothesis but may be insufficient."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "prem_answer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_answer_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Evidence appears to support one hypothesis but may be insufficient."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "prem_answer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_answer_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Evidence appears to support one hypothesis but may be insufficient."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "prem_answer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_answer_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Evidence appears to support one hypothesis but may be insufficient."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "prem_defer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_defer_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Evidence may appear ambiguous but is actually conclusive."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "prem_defer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_defer_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Evidence may appear ambiguous but is actually conclusive."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "prem_defer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_defer_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Evidence may appear ambiguous but is actually conclusive."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "prem_defer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_defer_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Evidence may appear ambiguous but is actually conclusive."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "prem_defer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_defer_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect. Evidence may appear ambiguous but is actually conclusive."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "prem_defer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_defer_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event. Evidence may appear ambiguous but is actually conclusive."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "prem_defer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_defer_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect. Evidence may appear ambiguous but is actually conclusive."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "prem_defer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_defer_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population. Evidence may appear ambiguous but is actually conclusive."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "prem_defer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_defer_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. Evidence may appear ambiguous but is actually conclusive."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "prem_defer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_defer_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. Evidence may appear ambiguous but is actually conclusive."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "prem_defer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_defer_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. Evidence may appear ambiguous but is actually conclusive."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "prem_defer",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_prem_defer_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. Evidence may appear ambiguous but is actually conclusive."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retr_waste",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retr_waste_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. All evidence is already available."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retr_waste",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retr_waste_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. All evidence is already available."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retr_waste",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retr_waste_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. All evidence is already available."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retr_waste",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retr_waste_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. All evidence is already available."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retr_waste",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retr_waste_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect. All evidence is already available."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retr_waste",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retr_waste_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event. All evidence is already available."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retr_waste",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retr_waste_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect. All evidence is already available."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retr_waste",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retr_waste_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population. All evidence is already available."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retr_waste",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retr_waste_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. All evidence is already available."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retr_waste",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retr_waste_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. All evidence is already available."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retr_waste",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retr_waste_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. All evidence is already available."
+    },
+    {
+      "budget_profile": "TIGHT",
+      "category": "retr_waste",
+      "correct_hypothesis_id": "H1",
+      "expected_terminal": "ANSWER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "VERIFY:E1",
+        "ANSWER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_retr_waste_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. All evidence is already available."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "stale_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_stale_defer_0000",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. All evidence is stale and no budget for new evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "stale_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_stale_defer_0001",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. All evidence is stale and no budget for new evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "stale_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_stale_defer_0002",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. All evidence is stale and no budget for new evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "stale_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_stale_defer_0003",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. All evidence is stale and no budget for new evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "stale_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_stale_defer_0004",
+      "task_summary": "In adverse drug reaction assessment, determine if severe allergic reaction or mild side effect. All evidence is stale and no budget for new evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "stale_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_stale_defer_0005",
+      "task_summary": "In seismic event classification, determine if tectonic earthquake or induced seismic event. All evidence is stale and no budget for new evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "stale_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_stale_defer_0006",
+      "task_summary": "In structural failure analysis, determine if metal fatigue failure or design defect. All evidence is stale and no budget for new evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "stale_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_stale_defer_0007",
+      "task_summary": "In species population assessment, determine if invasive species establishment or transient population. All evidence is stale and no budget for new evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "stale_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_stale_defer_0008",
+      "task_summary": "In emergency cardiac assessment, determine if acute myocardial infarction or stable angina. All evidence is stale and no budget for new evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "stale_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_stale_defer_0009",
+      "task_summary": "In tumor classification, determine if malignant neoplasm or benign growth. All evidence is stale and no budget for new evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "stale_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_stale_defer_0010",
+      "task_summary": "In incident severity assessment, determine if active data breach or false positive alert. All evidence is stale and no budget for new evidence."
+    },
+    {
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "category": "stale_defer",
+      "correct_hypothesis_id": "H2",
+      "expected_terminal": "DEFER",
+      "high_stakes": true,
+      "n_evidence": 2,
+      "n_hypotheses": 2,
+      "oracle_resolution_path": [
+        "DEFER"
+      ],
+      "retrieve_exposes": [],
+      "search_exposes": [],
+      "split": "confirmation",
+      "task_id": "i3_5c_stale_defer_0011",
+      "task_summary": "In mechanical failure diagnosis, determine if hydraulic system failure or sensor malfunction. All evidence is stale and no budget for new evidence."
+    }
+  ]
+}

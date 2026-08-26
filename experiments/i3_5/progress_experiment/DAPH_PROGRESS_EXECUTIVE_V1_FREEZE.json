@@ -1,0 +1,60 @@
+{
+  "components": {
+    "i2_interface": {
+      "description": "A_epsilon(s) = {a : Q(s,a) >= Q_max - epsilon_q}",
+      "epsilon_q": 3.0,
+      "type": "epsilon_near_optimal_set"
+    },
+    "model": {
+      "gguf_filename": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "model_sha256_prefix": "05093205c86ce204ba209b2584fd6c1a868d21face482f2440bc02936e82e6b2",
+      "name": "qwen2.5-7b-instruct",
+      "temperature": 0.0
+    },
+    "progress_rule_v1": {
+      "cost_normalization": 100.0,
+      "description": "Progress(s,a,s') = Phi(s') - Phi(s) - C(a)/100. Phi = weighted sum of verification_coverage, evidence_novelty, hypothesis_resolution, terminal_readiness, contradiction_resolution. Tie-break within A_epsilon only. Cannot override Q.",
+      "epsilon_p": 0.05,
+      "source_path": "daph/progress/progress_rule_v1.py",
+      "source_sha256": "9f0bfc5eea1d24f97cb65020d0ba2569888c07110c1be189c2383ae9d62349b9",
+      "weights": {
+        "contradiction_resolution": 0.5,
+        "evidence_novelty": 1.0,
+        "hypothesis_resolution": 1.5,
+        "terminal_readiness": 2.0,
+        "verification_coverage": 1.0
+      }
+    },
+    "qcausal_v1": {
+      "model_path": "experiments/i3_5/pinned_policy/frozen_estimators/QCAUSAL_gbt.pkl",
+      "model_sha256": "d90d72dab250ba7ce032afcc9d430fabfd4e84dace3c4dbe4deb77de0f8c9729",
+      "schema_path": "experiments/i3_5/pinned_policy/frozen_estimators/feature_schema.json",
+      "schema_sha256": "9722343e8d87b2642eddb667dcd0a3b70407202e2f59606ae4eef81b8da29350"
+    },
+    "utility": {
+      "source_path": "configs/v2b_i3_1_utility_v1.json",
+      "source_sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07"
+    },
+    "vp_executive": {
+      "source_path": "scripts/run_i3_5_progress_experiment.py",
+      "source_sha256": "d7e0b0e373ca9b3cab9af8248dbfb3911fd7c426c089639214f73eee7c2511ad"
+    }
+  },
+  "description": "Q_CAUSAL_V1 + I2 epsilon near-optimal interface + PROGRESS_RULE_V1 deterministic structural progress tie-breaking. Phase 24: all 6 promotion gates passed on 220-task development set. Frozen before confirmation benchmark. No further modification permitted.",
+  "frozen_at": "2025-01-Phase24-confirmation",
+  "name": "DAPH_PROGRESS_EXECUTIVE_V1",
+  "phase_24_results": {
+    "delta_u_ci": [
+      0.1368,
+      0.303
+    ],
+    "delta_u_vp_v1": 0.215,
+    "gates_passed": 6,
+    "gates_total": 6,
+    "results_sha256": "ae361fd9f1ceea3ca37c9ed5a2359ec89337c1db7cfab4841d2ef08ee196b103",
+    "success_v1": 1.0,
+    "success_vp": 1.0,
+    "verdict": "PROMOTE"
+  },
+  "prohibition": "After this freeze, no modification to VP, Q, I2, Progress weights/rules, prompts, thresholds, or utility definitions is permitted before or during the confirmation benchmark. The confirmation set must be generated and hashed before running any arm. This is attempted falsification, not another optimization cycle."
+}

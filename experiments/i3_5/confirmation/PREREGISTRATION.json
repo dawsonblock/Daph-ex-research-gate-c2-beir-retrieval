@@ -1,0 +1,54 @@
+{
+  "name": "PHASE25_CONFIRMATION_PREREGISTRATION",
+  "timestamp": "2025-01-Phase25",
+  "benchmark": {
+    "name": "PHASE25_CONFIRMATION_BENCHMARK",
+    "sha256": "4a4844c930c27a2abe75794dd92acd8c1c44a0f836bf31d78c9d65a2964404c7",
+    "n_tasks": 180,
+    "seed": 4287,
+    "n_subtypes": 15,
+    "split": "confirmation",
+    "prohibition": "No modification after hash"
+  },
+  "frozen_arms": {
+    "C0": "no guidance (baseline control)",
+    "B0": "global prior (crude action prior baseline)",
+    "V1": "Q_CAUSAL_V1 + I2 epsilon interface (frozen DAPH_EXECUTIVE_V1)",
+    "VP": "Q_CAUSAL_V1 + I2 + PROGRESS_RULE_V1 (frozen DAPH_PROGRESS_EXECUTIVE_V1)"
+  },
+  "primary_comparisons": [
+    "VP - C0: Does the progress executive beat the unguided model?",
+    "VP - B0: Does the progress executive beat the strongest simple heuristic?"
+  ],
+  "mechanism_comparison": "VP - V1: Does Progress add value beyond Q+I2?",
+  "promotion_bar": {
+    "gate_1_utility_vs_c0": "Delta_U(VP - C0) > 0, paired 95% CI excludes 0",
+    "gate_2_utility_vs_b0": "Delta_U(VP - B0) > 0, paired 95% CI excludes 0",
+    "gate_3_success_noninferiority": "VP success >= C0 success and VP success >= B0 success",
+    "gate_4_rescue_advantage": "VP rescues more than it breaks vs B0 (McNemar p < 0.05 preferred)",
+    "gate_5_no_pathological_defer": "VP premature DEFER count <= C0 and <= B0",
+    "gate_6_no_premature_answer": "VP premature ANSWER count <= C0 and <= B0",
+    "gate_7_resource_efficiency": "VP mean steps <= C0 and VP mean steps <= B0",
+    "note": "If VP merely saves 0.2 utility while everyone remains perfect, that is an efficiency optimizer, not a substantially better executive. The target is rescuing tasks when budgets are tight because it avoids wasted actions."
+  },
+  "secondary_metrics": [
+    "per-stratum performance (15 subtypes)",
+    "repeated RETRIEVE/VERIFY/SEARCH counts",
+    "resource exhaustion rate",
+    "loop rate",
+    "action sequence patterns",
+    "McNemar exact test (VP vs C0, VP vs B0, VP vs V1)"
+  ],
+  "prohibitions": [
+    "No modification to VP, Q, I2, Progress weights/rules after seeing results",
+    "No modification to prompts, thresholds, or utility definitions",
+    "No modification to confirmation tasks after hash",
+    "This is attempted falsification, not another optimization cycle"
+  ],
+  "decision_tree": {
+    "if_VP_passes_all_gates": "Freeze DAPH_PROGRESS_EXECUTIVE_V1 as confirmed. Proceed to cross-model replication.",
+    "if_VP_fails_vs_B0": "VP has not demonstrated consequential improvement. Keep V1+I2 as the executive. Investigate whether the failure is in Q, Progress, or the interface.",
+    "if_VP_passes_but_marginal": "If Delta_U(VP-B0) > 0 but CI barely excludes 0, treat as weak evidence. Do not promote without replication.",
+    "if_VP_fails_due_to_pathological_defer": "Reject Progress. The mechanism is harmful, not helpful. Keep V1+I2."
+  }
+}
