@@ -1,0 +1,409 @@
+{
+  "failure_type_counts": {
+    "LONG_HORIZON_PLANNING_FAILURE": 5,
+    "RESOURCE_FAILURE": 11,
+    "UNAVOIDABLE": 5
+  },
+  "failures": [
+    {
+      "actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT_CHAIN",
+      "c0_succeeded": false,
+      "category": "chain",
+      "failure_type": "LONG_HORIZON_PLANNING_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 8,
+      "task_id": "i3_5c_chain_0000",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT_CHAIN",
+      "c0_succeeded": false,
+      "category": "chain",
+      "failure_type": "LONG_HORIZON_PLANNING_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 8,
+      "task_id": "i3_5c_chain_0003",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT_CHAIN",
+      "c0_succeeded": false,
+      "category": "chain",
+      "failure_type": "LONG_HORIZON_PLANNING_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 8,
+      "task_id": "i3_5c_chain_0005",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT_CHAIN",
+      "c0_succeeded": false,
+      "category": "chain",
+      "failure_type": "LONG_HORIZON_PLANNING_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 8,
+      "task_id": "i3_5c_chain_0008",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT_CHAIN",
+      "c0_succeeded": false,
+      "category": "chain",
+      "failure_type": "LONG_HORIZON_PLANNING_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 8,
+      "task_id": "i3_5c_chain_0011",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "c0_succeeded": false,
+      "category": "defer",
+      "failure_type": "UNAVOIDABLE",
+      "resource_exhaustion": true,
+      "steps": 3,
+      "task_id": "i3_5c_defer_0001",
+      "terminal_result": "RESOURCE_EXHAUSTED",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "c0_succeeded": false,
+      "category": "defer",
+      "failure_type": "UNAVOIDABLE",
+      "resource_exhaustion": true,
+      "steps": 3,
+      "task_id": "i3_5c_defer_0003",
+      "terminal_result": "RESOURCE_EXHAUSTED",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "c0_succeeded": false,
+      "category": "defer",
+      "failure_type": "UNAVOIDABLE",
+      "resource_exhaustion": true,
+      "steps": 3,
+      "task_id": "i3_5c_defer_0004",
+      "terminal_result": "RESOURCE_EXHAUSTED",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "c0_succeeded": false,
+      "category": "defer",
+      "failure_type": "UNAVOIDABLE",
+      "resource_exhaustion": true,
+      "steps": 3,
+      "task_id": "i3_5c_defer_0009",
+      "terminal_result": "RESOURCE_EXHAUSTED",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT_NO_RETRIEVE_NO_SEARCH",
+      "c0_succeeded": false,
+      "category": "defer",
+      "failure_type": "UNAVOIDABLE",
+      "resource_exhaustion": true,
+      "steps": 3,
+      "task_id": "i3_5c_defer_0011",
+      "terminal_result": "RESOURCE_EXHAUSTED",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT",
+      "c0_succeeded": false,
+      "category": "tl_retrieve",
+      "failure_type": "RESOURCE_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 6,
+      "task_id": "i3_5c_tl_retrieve_0000",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT",
+      "c0_succeeded": false,
+      "category": "tl_retrieve",
+      "failure_type": "RESOURCE_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 6,
+      "task_id": "i3_5c_tl_retrieve_0001",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT",
+      "c0_succeeded": false,
+      "category": "tl_retrieve",
+      "failure_type": "RESOURCE_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 6,
+      "task_id": "i3_5c_tl_retrieve_0002",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT",
+      "c0_succeeded": false,
+      "category": "tl_retrieve",
+      "failure_type": "RESOURCE_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 6,
+      "task_id": "i3_5c_tl_retrieve_0003",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT",
+      "c0_succeeded": false,
+      "category": "tl_retrieve",
+      "failure_type": "RESOURCE_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 6,
+      "task_id": "i3_5c_tl_retrieve_0004",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT",
+      "c0_succeeded": false,
+      "category": "tl_retrieve",
+      "failure_type": "RESOURCE_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 6,
+      "task_id": "i3_5c_tl_retrieve_0005",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT",
+      "c0_succeeded": false,
+      "category": "tl_retrieve",
+      "failure_type": "RESOURCE_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 6,
+      "task_id": "i3_5c_tl_retrieve_0006",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT",
+      "c0_succeeded": false,
+      "category": "tl_retrieve",
+      "failure_type": "RESOURCE_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 6,
+      "task_id": "i3_5c_tl_retrieve_0008",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT",
+      "c0_succeeded": false,
+      "category": "tl_retrieve",
+      "failure_type": "RESOURCE_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 6,
+      "task_id": "i3_5c_tl_retrieve_0009",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "RETRIEVE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT",
+      "c0_succeeded": false,
+      "category": "tl_retrieve",
+      "failure_type": "RESOURCE_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 6,
+      "task_id": "i3_5c_tl_retrieve_0010",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    },
+    {
+      "actions": [
+        "VERIFY",
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "SEARCH_MORE",
+        "REASON_MORE"
+      ],
+      "budget_profile": "TIGHT",
+      "c0_succeeded": false,
+      "category": "tl_retrieve",
+      "failure_type": "RESOURCE_FAILURE",
+      "resource_exhaustion": true,
+      "steps": 6,
+      "task_id": "i3_5c_tl_retrieve_0011",
+      "terminal_result": "RESOURCE_EXHAUSTION",
+      "v1_succeeded": false
+    }
+  ],
+  "gate_20pct_planning": true,
+  "planning_failure_count": 16,
+  "planning_failure_pct": 76.19047619047619,
+  "total_tasks": 180,
+  "total_vp_failures": 21,
+  "vp_success_rate": 0.8833333333333333
+}
