@@ -1,0 +1,1589 @@
+{
+  "error_records": [
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0000",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0000",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0000",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0000",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0000",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0000",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0001",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0001",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0001",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0001",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0001",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0001",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0002",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0002",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0002",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0002",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0002",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0002",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0003",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0003",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0003",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0003",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0003",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0003",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0004",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0004",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0004",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0004",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0004",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0004",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0005",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0005",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0005",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0005",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0005",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0005",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0006",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0006",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0006",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0006",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0006",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0006",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0007",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0007",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0007",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0007",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0007",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0007",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0008",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0008",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0008",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0008",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0008",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0008",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0009",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0009",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0009",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0009",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0009",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0009",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0010",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0010",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0010",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0010",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0010",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0010",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0011",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0011",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0011",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0011",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0011",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0011",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0012",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0012",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0012",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0012",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0012",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0012",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0013",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0013",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0013",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0013",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0013",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0013",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0014",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0014",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0014",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0014",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0014",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0014",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0015",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0015",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0015",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0015",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0015",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0015",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0016",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0016",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0016",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0016",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0016",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0016",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0017",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0017",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0017",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0017",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0017",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0017",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0018",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0018",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0018",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0018",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0018",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0018",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0019",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0019",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0019",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0019",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0019",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0019",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0020",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0020",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0020",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0020",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0020",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0020",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0021",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0021",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0021",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0021",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0021",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0021",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0022",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0022",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0022",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0022",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0022",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0022",
+      "terminal": true
+    },
+    {
+      "action": "RETRIEVE",
+      "actual_causal_return": -124.42,
+      "error": 121.95,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -2.47,
+      "success": false,
+      "task_id": "i3_26d_chain_0023",
+      "terminal": true
+    },
+    {
+      "action": "SEARCH_MORE",
+      "actual_causal_return": -124.42,
+      "error": 142.03,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 17.61,
+      "success": false,
+      "task_id": "i3_26d_chain_0023",
+      "terminal": true
+    },
+    {
+      "action": "VERIFY",
+      "actual_causal_return": 86.04,
+      "error": 0.88,
+      "outcome": "TASK_SUCCESS",
+      "predicted_q": 86.92,
+      "success": true,
+      "task_id": "i3_26d_chain_0023",
+      "terminal": true
+    },
+    {
+      "action": "REASON_MORE",
+      "actual_causal_return": -126.56,
+      "error": 143.06,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 16.5,
+      "success": false,
+      "task_id": "i3_26d_chain_0023",
+      "terminal": true
+    },
+    {
+      "action": "ANSWER",
+      "actual_causal_return": -120.11,
+      "error": 0.2,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": -119.91,
+      "success": false,
+      "task_id": "i3_26d_chain_0023",
+      "terminal": true
+    },
+    {
+      "action": "DEFER",
+      "actual_causal_return": -30.11,
+      "error": 42.54,
+      "outcome": "TASK_FAILURE",
+      "predicted_q": 12.43,
+      "success": false,
+      "task_id": "i3_26d_chain_0023",
+      "terminal": true
+    }
+  ],
+  "n_chain_tasks": 24,
+  "ood_analysis": {
+    "chain_like_retrieve_records": 44,
+    "matching_chain_profile": 0,
+    "training_categories": {
+      "ol_answer": 96,
+      "ol_defer": 96,
+      "ol_retrieve": 144,
+      "ol_search": 120,
+      "ol_verify": 120,
+      "tl_answer": 80,
+      "tl_defer": 80,
+      "tl_retrieve": 120,
+      "tl_search": 100,
+      "tl_verify": 100
+    },
+    "training_records_total": 1056,
+    "training_retrieve_records": 44
+  },
+  "per_action_summary": {
+    "ANSWER": {
+      "mae": 0.2,
+      "mean_actual_return": -120.11,
+      "mean_error": 0.2,
+      "mean_predicted_q": -119.91,
+      "n": 24
+    },
+    "DEFER": {
+      "mae": 42.54,
+      "mean_actual_return": -30.11,
+      "mean_error": 42.54,
+      "mean_predicted_q": 12.43,
+      "n": 24
+    },
+    "REASON_MORE": {
+      "mae": 143.06,
+      "mean_actual_return": -126.56,
+      "mean_error": 143.06,
+      "mean_predicted_q": 16.5,
+      "n": 24
+    },
+    "RETRIEVE": {
+      "mae": 121.95,
+      "mean_actual_return": -124.42,
+      "mean_error": 121.95,
+      "mean_predicted_q": -2.47,
+      "n": 24
+    },
+    "SEARCH_MORE": {
+      "mae": 142.03,
+      "mean_actual_return": -124.42,
+      "mean_error": 142.03,
+      "mean_predicted_q": 17.61,
+      "n": 24
+    },
+    "VERIFY": {
+      "mae": 0.88,
+      "mean_actual_return": 86.04,
+      "mean_error": 0.88,
+      "mean_predicted_q": 86.92,
+      "n": 24
+    }
+  },
+  "retrieve_deep_dive": {
+    "actuals": [
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42,
+      -124.42
+    ],
+    "errors": [
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395,
+      121.9486322690395
+    ],
+    "predictions": [
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956,
+      -2.4713677309604956
+    ],
+    "successes": 0,
+    "total": 24
+  }
+}

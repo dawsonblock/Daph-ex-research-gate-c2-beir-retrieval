@@ -1,0 +1,61 @@
+{
+  "experiment": "I3.27 Track 1: Q_CAUSAL_V1 error audit on chain tasks",
+  "date": "2026-08-26",
+
+  "headline_finding": "Q is NOT the bottleneck. The bottleneck is policy compliance.",
+
+  "q_error_table": {
+    "summary": "Q is accurate for the actions it recommends (VERIFY, ANSWER). Q overestimates RETRIEVE/SEARCH/REASON relative to greedy continuation, but the optimal continuation return for RETRIEVE-first is 91.4 (success).",
+    "VERIFY": {"predicted": 86.92, "actual_greedy": 86.04, "actual_optimal": 88.20, "error_greedy": 0.88},
+    "RETRIEVE": {"predicted": -2.47, "actual_greedy": -124.42, "actual_optimal": 91.38, "note": "Q underestimates relative to optimal, but overestimates relative to greedy. Q was trained on Qwen continuations, not greedy or optimal."},
+    "ANSWER": {"predicted": -119.91, "actual": -120.11, "error": 0.20},
+    "key_insight": "VERIFY first is a valid path (88.2 utility). RETRIEVE first is slightly better (91.4). The 3-point difference is within epsilon. Q's recommendation of VERIFY is NOT wrong."
+  },
+
+  "ood_analysis": {
+    "finding": "Chain states are completely OOD",
+    "n_hidden_evidence": "chain=3, training_max=1",
+    "verify_remaining": "chain=3, training=5",
+    "steps_remaining": "chain=8, training=10",
+    "matching_training_records": "0/1056",
+    "interpretation": "Chain states are OOD, but Q still extrapolates well enough to give correct guidance. The OOD problem is real but secondary."
+  },
+
+  "compliance_audit": {
+    "finding": "Qwen ignores clear executive guidance 90 times across 24 chain tasks",
+    "clear_guidance_violations": 90,
+    "violations_in_succeeding_tasks": 27,
+    "violations_in_failing_tasks": 63,
+    "critical_pattern": "Failing and succeeding tasks have IDENTICAL Q values and guidance at every step. The ONLY difference is the final action at step 7 (REASON_MORE vs ANSWER).",
+    "key_violation_steps": {
+      "step_1": "Q says STOP (30.87), Qwen chose RETRIEVE (-2.41). Gap=33.28. 24/24 violations.",
+      "step_4": "Q says ANSWER (79.52, clear), Qwen chose RETRIEVE (67.32). Gap=12.20. 21/24 violations.",
+      "step_6": "Q says ANSWER (82.76, clear), Qwen chose REASON_MORE (62.39). Gap=20.37. 24/24 violations.",
+      "step_7": "Q says ANSWER (82.76, clear). Failing: REASON_MORE. Succeeding: ANSWER. 15/24 violations."
+    }
+  },
+
+  "revised_diagnosis": {
+    "chain_bottleneck": "Policy compliance, NOT Q misestimation. Q gives correct clear guidance at every step. Qwen ignores it. The failing and succeeding tasks have identical Q values — the only difference is whether Qwen eventually complies at step 7.",
+    "defer_bottleneck": "Policy compliance. Q correctly recommends DEFER (69.34, clear). Qwen chooses VERIFY instead.",
+    "both_bottlenecks": "Same root cause: Qwen ignores clear executive guidance. One mechanism (authority calibration) can fix both.",
+    "track_1_priority": "DEPRIORITIZED. Q is approximately right for chain states. Correcting Q would not fix compliance failures.",
+    "track_2_priority": "ELEVATED. Authority calibration is the primary fix for both chain and defer."
+  },
+
+  "authority_calibration_design": {
+    "control_law": "Q gap large + confidence clear -> strong authority. Q gap small + confidence ambiguous -> return choice to LLM.",
+    "modes": {
+      "A0_advisory": "Current VP behavior. All legal actions in schema. Guidance is advisory.",
+      "A1_schema_narrowed": "Schema restricted to near-optimal set. Qwen must choose from recommended set.",
+      "A2_hard_select": "Schema restricted to single recommended action. Qwen has no choice."
+    },
+    "trigger_condition": "confidence == 'clear' AND len(refined_set) == 1 AND Q_gap > threshold",
+    "expected_impact": {
+      "chain_step_4": "A2 would force ANSWER instead of RETRIEVE. This would save the budget and likely succeed.",
+      "chain_step_6_7": "A2 would force ANSWER instead of REASON_MORE. This would convert failures to successes.",
+      "defer_step_0": "A2 would force DEFER instead of VERIFY. This would convert failures to successes."
+    },
+    "risk": "A2 on wrong guidance would cause new failures. Need to verify Q accuracy before applying strong authority."
+  }
+}
