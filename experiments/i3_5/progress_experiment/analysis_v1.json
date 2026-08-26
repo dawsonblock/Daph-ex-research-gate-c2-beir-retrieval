@@ -1,0 +1,29 @@
+{
+  "delta_u_ci": [
+    0.1368,
+    0.303
+  ],
+  "delta_u_vp_v1": 0.215,
+  "gates": {
+    "no_premature_answer": true,
+    "no_premature_defer": true,
+    "reduced_retrieves": true,
+    "success": true,
+    "utility_ci": true,
+    "utility_positive": true
+  },
+  "n_divergences": 45,
+  "n_trajectories": 660,
+  "overall": {
+    "C0": {
+      "mean_u": 84.59236363636363
+    },
+    "V1": {
+      "mean_u": 84.59236363636363
+    },
+    "VP": {
+      "mean_u": 84.80736363636363
+    }
+  },
+  "verdict": "PROMOTE"
+}

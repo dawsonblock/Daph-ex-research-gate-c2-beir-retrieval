@@ -1,0 +1,35 @@
+{
+  "arm_descriptions": {
+    "C0": "no guidance (baseline)",
+    "V1": "Q_CAUSAL_V1 + I2 epsilon interface",
+    "VP": "Q_CAUSAL_V1 + I2 + PROGRESS_RULE_V1 tie-breaking"
+  },
+  "arms": [
+    "C0",
+    "V1",
+    "VP"
+  ],
+  "experiment": "I3.5-PQ Phase 24 Progress Experiment",
+  "frozen_components": {
+    "interface": "I2 epsilon near-optimal set",
+    "model": "Qwen2.5-7B-Instruct-Q4_K_M at temperature=0",
+    "progress": "PROGRESS_RULE_V1 (deterministic structural)",
+    "q_model": "QCAUSAL_V1 (frozen, no retraining)"
+  },
+  "hypothesis": "Adding PROGRESS_RULE_V1 as a tie-breaker within A_epsilon will preserve V1's success while reducing redundant actions and increasing utility on repeated-action traps.",
+  "parameters": {
+    "epsilon_p": 0.05,
+    "epsilon_q": 3.0,
+    "max_steps": 10,
+    "n_per_subtype": 24,
+    "n_per_two_live": 20
+  },
+  "promotion_criteria": {
+    "no_regression": "no increase in premature DEFER/ANSWER or resource exhaustion",
+    "repeated_actions": "VP repeated-action count < V1",
+    "success": "VP success >= V1 success",
+    "utility": "paired Delta_U(VP - V1) > 0, CI excludes 0"
+  },
+  "run_id": "b606f0b0aac8ee05",
+  "timestamp": "2026-08-25T23:19:23.188338+00:00"
+}
