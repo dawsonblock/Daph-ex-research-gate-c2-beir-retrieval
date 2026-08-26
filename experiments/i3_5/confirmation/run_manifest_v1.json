@@ -1,0 +1,23 @@
+{
+  "arms": [
+    "C0",
+    "B0",
+    "V1",
+    "VP"
+  ],
+  "benchmark_hash": "d7ab8f614f7950eb7a6ba704c5872b0c2066e291935e456d141ab26c73e0dfe7",
+  "experiment": "I3.5-PQ Phase 25 Confirmation Benchmark",
+  "frozen_components": {
+    "benchmark": "PHASE25_CONFIRMATION_BENCHMARK (frozen, hash recorded)",
+    "interface": "I2 epsilon near-optimal set (epsilon_q=3.0)",
+    "model": "Qwen2.5-7B-Instruct-Q4_K_M at temperature=0",
+    "progress": "PROGRESS_RULE_V1 (frozen, epsilon_p=0.05)",
+    "q_model": "QCAUSAL_V1 (frozen)",
+    "utility": "v2b_i3_1_utility_v1.json (frozen)"
+  },
+  "n_tasks": 180,
+  "n_trajectories": 720,
+  "prohibition": "No modification to VP, Q, I2, Progress, prompts, thresholds, utility, or benchmark tasks permitted. This is attempted falsification.",
+  "run_id": "ac5a62eea9b5bc4b",
+  "timestamp": "2026-08-26T02:26:53.515883+00:00"
+}

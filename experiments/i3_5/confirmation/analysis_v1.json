@@ -1,0 +1,104 @@
+{
+  "contrasts": {
+    "B0-C0": {
+      "ci": [
+        -5.983777777777777,
+        -0.31983333333333264
+      ],
+      "excludes_zero": true,
+      "mean_delta_retr": 0.044444444444444446,
+      "mean_delta_steps": 0.044444444444444446,
+      "mean_delta_u": -2.6644999999999994
+    },
+    "V1-B0": {
+      "ci": [
+        17.31489027777778,
+        35.72288333333333
+      ],
+      "excludes_zero": true,
+      "mean_delta_retr": -0.11666666666666667,
+      "mean_delta_steps": -0.08333333333333333,
+      "mean_delta_u": 26.20794444444444
+    },
+    "V1-C0": {
+      "ci": [
+        14.9845,
+        32.81618749999999
+      ],
+      "excludes_zero": true,
+      "mean_delta_retr": -0.07222222222222222,
+      "mean_delta_steps": -0.03888888888888889,
+      "mean_delta_u": 23.543444444444443
+    },
+    "VP-B0": {
+      "ci": [
+        18.312819444444443,
+        37.10404861111111
+      ],
+      "excludes_zero": true,
+      "mean_delta_retr": -0.11666666666666667,
+      "mean_delta_steps": -0.08333333333333333,
+      "mean_delta_u": 27.347166666666666
+    },
+    "VP-C0": {
+      "ci": [
+        16.098613888888888,
+        34.027673611111105
+      ],
+      "excludes_zero": true,
+      "mean_delta_retr": -0.07222222222222222,
+      "mean_delta_steps": -0.03888888888888889,
+      "mean_delta_u": 24.682666666666663
+    },
+    "VP-V1": {
+      "ci": [
+        0.0,
+        2.8480555555555562
+      ],
+      "excludes_zero": false,
+      "mean_delta_retr": 0.0,
+      "mean_delta_steps": 0.0,
+      "mean_delta_u": 1.1392222222222221
+    }
+  },
+  "gates": {
+    "gate_1_utility_vs_c0": true,
+    "gate_2_utility_vs_b0": true,
+    "gate_3_success_noninferiority": true,
+    "gate_4_rescue_advantage": true,
+    "gate_5_no_pathological_defer": true,
+    "gate_6_no_premature_answer": true,
+    "gate_7_resource_efficiency": true
+  },
+  "n_gates_passed": 7,
+  "n_gates_total": 7,
+  "n_trajectories": 720,
+  "overall": {
+    "B0": {
+      "mean_u": 44.544222222222224,
+      "success": 0.7222222222222222
+    },
+    "C0": {
+      "mean_u": 47.20872222222222,
+      "success": 0.7333333333333333
+    },
+    "V1": {
+      "mean_u": 70.75216666666667,
+      "success": 0.8722222222222222
+    },
+    "VP": {
+      "mean_u": 71.89138888888888,
+      "success": 0.8833333333333333
+    }
+  },
+  "rescues": {
+    "mcnemar_vp_vs_b0_p": 3.725290298461914e-09,
+    "vp_breaks_b0": 0,
+    "vp_breaks_c0": 0,
+    "vp_breaks_v1": 0,
+    "vp_rescues_b0": 29,
+    "vp_rescues_c0": 27,
+    "vp_rescues_v1": 2
+  },
+  "verdict": "CONFIRMED"
+}
