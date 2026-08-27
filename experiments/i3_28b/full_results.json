@@ -1,0 +1,31 @@
+{
+  "experiment": "I3.28B: DEFER Boundary Causal Repair",
+  "n_boundary_pairs": 40,
+  "n_boundary_records": 400,
+  "n_combined_records": 1456,
+  "q_v1_sha256": "2f3f6d4596dee45151f1fbeef1e214a42b70b6026b17d170b1708442b753ff4f",
+  "q_v2r_sha256": "658209af5fadb21e6c9252549e5a1d17b5216fc552c45d3c48c6b225fe2827aa",
+  "separation_margin_boundary": 96.81520380611134,
+  "separation_margin_dev": 96.81520380611134,
+  "required_margin": 5.0,
+  "false_defer_authority_rate": 0.0,
+  "answer_authority": "44/44",
+  "preservation": {
+    "v1_mean_regret": 19.78659355957799,
+    "v2r_mean_regret": 18.43244589827443,
+    "v1_near_optimal": 112,
+    "v2r_near_optimal": 180,
+    "v1_correct_best": 88,
+    "v2r_correct_best": 112
+  },
+  "gates": {
+    "separation_boundary": true,
+    "separation_dev": true,
+    "false_defer_authority_zero": true,
+    "answer_authority_preserved": true,
+    "regret_no_worse": true,
+    "near_optimal_no_worse": true,
+    "correct_best_no_regression": true
+  },
+  "all_pass": true
+}
