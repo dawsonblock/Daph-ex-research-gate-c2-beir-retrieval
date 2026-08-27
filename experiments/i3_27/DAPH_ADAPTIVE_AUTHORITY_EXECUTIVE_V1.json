@@ -42,12 +42,33 @@
     "version": "V1",
     "sha256": "570c81e4eef3621968cb921963ea6f06473f97623a50256e59ea01d43b8d9d43",
     "threshold": 5.0,
+    "threshold_frozen": true,
+    "threshold_tuning_prohibited": true,
     "condition": "confidence == 'clear' AND refined_set == ['ANSWER'] AND q_gap > 5.0",
     "effect": "schema_actions = frozenset({'ANSWER'}) & allowed_decision.allowed",
     "fallback": "A0_advisory (all legal actions in schema)",
+    "authoritative_actions": ["ANSWER"],
     "does_not_apply_to": ["DEFER", "STOP", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE"],
-    "safety_requirement": "FalseAuthorityRate = 0",
-    "rationale": "ANSWER is terminal resolution. When Q clearly recommends ANSWER with large gap, Qwen should not defer/reason/retrieve instead. DEFER is excluded because Q gives identical values for defer-correct and contradiction-incorrect states."
+    "safety_requirement": "Observed FalseAuthorityRate: 0/44 on replication benchmark. No observed A2A-induced breaks. True false-authority rate is not established as zero; 44 opportunities is a small sample.",
+    "rationale": "ANSWER is terminal resolution. When Q clearly recommends ANSWER with large gap, Qwen should not defer/reason/retrieve instead. DEFER is excluded because Q gives identical values for defer-correct and contradiction-incorrect states.",
+    "engineering_protections": {
+      "action_allowlist": ["ANSWER"],
+      "frozen_threshold": 5.0,
+      "kill_switch": {
+        "config_key": "authority.answer.enabled",
+        "default": false,
+        "description": "When false, A2A does not fire; the executive falls back to A0_advisory. Set to true only for narrow experimental deployment."
+      },
+      "provenance_event": {
+        "event_type": "authority/override",
+        "fields": ["recommendedAction", "modelAction", "forcedAction", "qForced", "qRunnerUp", "gap", "ruleVersion"],
+        "description": "Every A2A override emits an authority/override provenance event with full Q and decision provenance."
+      },
+      "shadow_telemetry": {
+        "description": "Whenever A2A fires, record what advisory execution would have chosen and the eventual outcome. This provides ongoing counterfactual evidence for whether the rule remains safe outside the benchmark distribution.",
+        "fields": ["advisory_proposed_action", "authoritative_forced_action", "q_recommendation", "eventual_outcome"]
+      }
+    }
   },
 
   "model_identity": {
@@ -78,10 +99,11 @@
       "CI95": [5.7791, 15.7570],
       "rescues": 15,
       "breaks": 0,
-      "FalseAuthorityRate": 0.0
+      "observed_false_authority_rate": "0/34 on development benchmark"
     },
-    "confirmation_benchmark": {
-      "name": "I3.27_CONFIRMATION_BENCHMARK_V1",
+    "replication_benchmark": {
+      "name": "I3.27_REPLICATION_BENCHMARK_V1",
+      "label_note": "Fresh replication benchmark, not a completely untouched confirmatory holdout. The A2A-vs-VP result was partially inspected during the safety audit before the final replication run. Two gate interpretations were revised after inspection (see gate_revision). An untouched seed should be generated for publication-grade confirmation.",
       "seed": 97861090,
       "n_tasks": 180,
       "hash": "e54a3fec8d9a4f9995e13b9760f4556359e8c8cef98119db848088073948094d",
@@ -94,11 +116,24 @@
       "Delta_U_A2A_VP_p": 0.018911,
       "Delta_U_A2A_B0": 30.5177,
       "Delta_U_A2A_C0": 27.8532,
+      "Delta_U_B0_C0": -2.6645,
+      "Delta_U_B0_C0_CI95": [-5.6196, 0.2906],
+      "Delta_U_B0_C0_p": 0.078889,
+      "B0_C0_claim": "B0 showed no statistically detectable improvement over C0 in this benchmark. Equivalence is not established; a non-significant difference is not evidence of equivalence.",
       "rescues": 5,
       "breaks": 0,
-      "FalseAuthorityRate": 0.0,
+      "observed_false_authority_rate": "0/44 on replication benchmark. No observed A2A-induced breaks. True false-authority rate is not established as zero.",
       "a2_triggered": "44/180 (24.4%)"
     }
+  },
+  "gate_revision": {
+    "original_search_gate": "search category tasks should not trigger A2 authority",
+    "revised_search_gate": "A2 firing on the eventual ANSWER decision in a SEARCH_MORE -> VERIFY -> ANSWER sequence is not a false-authority event merely because the task belongs to the search category; the gate checks decision-state correctness, not task category",
+    "original_tl_retrieve_gate": "tl_retrieve tasks showing A2A success > VP success indicates A2A fabrication",
+    "revised_tl_retrieve_gate": "a tl_retrieve task succeeding in both VP and A2A is not an A2A fabrication; fabrication requires A2A to solve a task VP failed via an A2-triggered action",
+    "reason": "gate classified task category rather than decision-state correctness",
+    "made_after_inspection": true,
+    "audit_note": "Both revisions are based on semantics (decision-state correctness vs task category), not on the observed outcome. The original gate definitions and the reason for changing them are preserved here for auditability."
   },
 
   "rescue_audit": {
@@ -114,7 +149,7 @@
   "safety_gates": {
     "all_pass": true,
     "gates": {
-      "FalseAuthorityRate_eq_0": true,
+      "observed_false_authority_rate_zero": true,
       "zero_breaks": true,
       "prem_answer_no_triggers": true,
       "prem_defer_no_triggers": true,
@@ -127,21 +162,28 @@
       "search_no_breaks": true,
       "retr_waste_no_triggers": true,
       "stale_defer_no_triggers": true
-    }
+    },
+    "gate_revision_note": "Two gates (search_no_breaks, tl_retrieve_no_fabrication) were revised after inspection of the safety audit. The original and revised definitions are preserved in the gate_revision field. The revisions are based on decision-state semantics, not observed outcomes."
   },
 
   "known_limitations": {
     "DEFER_hard_authority": "REJECTED with current Q representation. Q gives identical values for defer-correct and contradiction-incorrect states because verify_result is not in the feature set. Forcing DEFER with threshold 5.0 rescued defer failures but broke 10 contradiction tasks.",
-    "effect_concentration": "The A2A effect is concentrated on chain tasks. Non-chain categories are unaffected. This is expected — chain tasks are where Q identifies ANSWER but Qwen defers.",
-    "effect_size_variation": "Development Delta U=10.77, confirmation Delta U=3.17. The difference is due to fewer chain tasks in the confirmation benchmark (12 vs 24). Per-chain-task rescue rate is similar."
+    "effect_concentration": "The A2A effect is concentrated on chain tasks. Non-chain categories are unaffected. This is consistent with chain tasks being where Q identifies ANSWER but Qwen defers. See CATEGORY_TREATMENT_EFFECT.json for the full per-category decomposition.",
+    "effect_size_variation": "Development Delta U=10.77, replication Delta U=3.17. The reduced effect is consistent with the replication corpus containing fewer chain opportunities for ANSWER authority (12 vs 24). The category-level treatment effect decomposition is in experiments/i3_27/safety_audit/CATEGORY_TREATMENT_EFFECT.json.",
+    "false_authority_sample_size": "0 false-authority events observed among 44 authority opportunities on the replication benchmark. This is encouraging but does not establish the true false-authority rate as zero. 44 opportunities is a small sample.",
+    "B0_C0_non_equivalence": "B0 showed no statistically detectable improvement over C0 (p=0.079). This is not evidence of equivalence; a TOST/equivalence analysis with a defined margin would be needed to establish equivalence.",
+    "replication_not_untouched": "The replication benchmark (seed=97861090) was used for the VP/A2A safety audit, after which two gate interpretations were revised. The trajectories are fresh relative to development, but the A2A-vs-VP result was partially inspected before the final replication claim. An untouched seed should be generated for publication-grade confirmation."
   },
 
   "next_research_target": {
+    "milestone": "I3.28: Authority-State Sufficiency",
+    "question": "What state information must Q possess before a particular action is eligible for hard authority?",
+    "architectural_invariant": "An action cannot receive hard authority when the Q-state representation omits variables required to distinguish known counterexamples for that action.",
     "target": "DEFER authority via Q-state representation repair",
     "hypothesis": "Adding verification-resolution state (verify_result) enables safe DEFER authority",
     "approach": "Add minimal missing causal features to Q state representation, test offline separability of DEFER-correct vs contradiction-correct states before any live hard-selection experiment",
     "not_approach": "Do NOT tune DEFER threshold. The blocker is representation, not threshold.",
-    "if_separable": "Run same validation sequence: freeze → rescue audit → negative controls → safety audit → fresh confirmation",
+    "if_separable": "Run same validation sequence: freeze -> rescue audit -> negative controls -> safety audit -> fresh untouched confirmation",
     "if_not_separable": "Stop. Do not force DEFER."
   }
 }

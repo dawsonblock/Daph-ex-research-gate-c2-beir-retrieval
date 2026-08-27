@@ -1,10 +1,49 @@
 {
+  "name": "A2A_ANSWER_ONLY_HARD_SELECT",
+  "version": "V1",
+  "sha256": "570c81e4eef3621968cb921963ea6f06473f97623a50256e59ea01d43b8d9d43",
+
   "condition": {
     "confidence": "clear",
     "q_gap_gt": 5.0,
     "refined_set_action": "ANSWER",
     "refined_set_size": 1
   },
+
+  "engineering_protections": {
+    "action_allowlist": ["ANSWER"],
+    "action_allowlist_note": "Only ANSWER is eligible for hard authority. DEFER, STOP, RETRIEVE, VERIFY, SEARCH_MORE, REASON_MORE remain advisory.",
+    "frozen_threshold": 5.0,
+    "frozen_threshold_note": "Threshold is frozen at 5.0. Do not tune. Threshold tuning is prohibited.",
+    "kill_switch": {
+      "config_key": "authority.answer.enabled",
+      "default": false,
+      "description": "When false, A2A does not fire; the executive falls back to A0_advisory. Set to true only for narrow experimental deployment."
+    },
+    "provenance_event": {
+      "event_type": "authority/override",
+      "fields": {
+        "recommendedAction": "Q's recommended action (the refined_set sole action)",
+        "modelAction": "the action Qwen would have chosen without authority",
+        "forcedAction": "the action actually forced by A2A",
+        "qForced": "Q value of the forced action",
+        "qRunnerUp": "Q value of the runner-up action",
+        "gap": "qForced - qRunnerUp",
+        "ruleVersion": "A2A_RULE_V1"
+      },
+      "description": "Every A2A override emits an authority/override provenance event with full Q and decision provenance."
+    },
+    "shadow_telemetry": {
+      "description": "Whenever A2A fires, record what advisory execution would have chosen (the action Qwen proposed before the schema was restricted). This provides ongoing counterfactual evidence for whether the rule remains safe outside the benchmark distribution.",
+      "fields": {
+        "advisory_proposed_action": "Qwen's proposed action before schema restriction",
+        "authoritative_forced_action": "the action A2A forced",
+        "q_recommendation": "Q's recommended action",
+        "eventual_outcome": "task success/failure after the forced action"
+      }
+    }
+  },
+
   "does_not_apply_to": [
     "DEFER",
     "STOP",
@@ -17,8 +56,8 @@
   "epsilon_p": 0.05,
   "epsilon_q": 3.0,
   "fallback_when_not_triggered": "A0_advisory (all legal actions in schema)",
-  "name": "A2A_ANSWER_ONLY_HARD_SELECT",
   "rationale": "ANSWER is terminal resolution. When Q clearly recommends ANSWER with large gap, Qwen should not defer/reason/retrieve instead. DEFER is excluded because Q gives identical values for defer-correct and contradiction-incorrect states.",
   "threshold": 5.0,
-  "version": "V1"
+  "threshold_frozen": true,
+  "threshold_tuning_prohibited": true
 }

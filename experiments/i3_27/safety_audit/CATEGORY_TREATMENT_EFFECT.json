@@ -1,0 +1,172 @@
+{
+  "description": "Per-category A2A vs VP treatment effect decomposition on the replication benchmark (seed=97861090, 180 tasks, 15 categories). This table answers whether A2A is a broadly useful authority mechanism or essentially a chain-state repair rule.",
+  "benchmark": "I3.27_REPLICATION_BENCHMARK_V1 (seed=97861090)",
+  "n_tasks": 180,
+  "categories": [
+    {
+      "category": "chain",
+      "n": 12,
+      "a2_triggers": 12,
+      "rescues": 5,
+      "breaks": 0,
+      "delta_u": 47.5583,
+      "vp_success": "7/12",
+      "a2a_success": "12/12",
+      "interpretation": "All 5 rescues and the entire positive treatment effect come from chain tasks. A2A fires on all 12 chain tasks and rescues 5 that VP failed."
+    },
+    {
+      "category": "contradiction",
+      "n": 12,
+      "a2_triggers": 9,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "12/12",
+      "a2a_success": "12/12",
+      "interpretation": "A2A triggers on 9 contradiction tasks (Q recommends ANSWER with large gap) but changes no outcomes. This is consistent with the revised gate: A2 firing on ANSWER in a contradiction task is correct when Q identifies ANSWER as causally best."
+    },
+    {
+      "category": "search",
+      "n": 12,
+      "a2_triggers": 12,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "12/12",
+      "a2a_success": "12/12",
+      "interpretation": "A2A triggers on all 12 search tasks (SEARCH_MORE -> VERIFY -> ANSWER sequences where the eventual decision is ANSWER) but changes no outcomes. The revised gate correctly classifies these as decision-state-correct, not false-authority."
+    },
+    {
+      "category": "tl_verify",
+      "n": 12,
+      "a2_triggers": 10,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "12/12",
+      "a2a_success": "12/12",
+      "interpretation": "A2A triggers on 10 tl_verify tasks but changes no outcomes."
+    },
+    {
+      "category": "tl_retrieve",
+      "n": 12,
+      "a2_triggers": 1,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "1/12",
+      "a2a_success": "1/12",
+      "interpretation": "A2A triggers on 1 tl_retrieve task but does not solve more than VP. No fabrication. Both VP and A2A fail 11/12 — these tasks require retrieval that neither arm achieves."
+    },
+    {
+      "category": "answer",
+      "n": 12,
+      "a2_triggers": 0,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "12/12",
+      "a2a_success": "12/12"
+    },
+    {
+      "category": "defer",
+      "n": 12,
+      "a2_triggers": 0,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "7/12",
+      "a2a_success": "7/12",
+      "interpretation": "A2A does not trigger on defer tasks (DEFER is not in the authoritative allowlist). Both VP and A2A fail 5/12 — DEFER authority remains unsolved."
+    },
+    {
+      "category": "prem_answer",
+      "n": 12,
+      "a2_triggers": 0,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "12/12",
+      "a2a_success": "12/12"
+    },
+    {
+      "category": "prem_defer",
+      "n": 12,
+      "a2_triggers": 0,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "12/12",
+      "a2a_success": "12/12"
+    },
+    {
+      "category": "retr_waste",
+      "n": 12,
+      "a2_triggers": 0,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "12/12",
+      "a2a_success": "12/12"
+    },
+    {
+      "category": "retrieve",
+      "n": 12,
+      "a2_triggers": 0,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "12/12",
+      "a2a_success": "12/12"
+    },
+    {
+      "category": "stale_defer",
+      "n": 12,
+      "a2_triggers": 0,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "12/12",
+      "a2a_success": "12/12"
+    },
+    {
+      "category": "tl_defer",
+      "n": 12,
+      "a2_triggers": 0,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "12/12",
+      "a2a_success": "12/12"
+    },
+    {
+      "category": "tl_search",
+      "n": 12,
+      "a2_triggers": 0,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "12/12",
+      "a2a_success": "12/12"
+    },
+    {
+      "category": "verify",
+      "n": 12,
+      "a2_triggers": 0,
+      "rescues": 0,
+      "breaks": 0,
+      "delta_u": 0.0,
+      "vp_success": "12/12",
+      "a2a_success": "12/12"
+    }
+  ],
+  "summary": {
+    "total_rescues": 5,
+    "total_breaks": 0,
+    "rescue_concentration": "All 5 rescues are in the chain category. A2A is essentially a chain-state repair rule, not a broadly useful authority mechanism across all categories.",
+    "trigger_concentration": "A2A triggers on 44/180 tasks (chain 12, contradiction 9, search 12, tl_verify 10, tl_retrieve 1). Only chain triggers produce rescues. Non-chain triggers are decision-state-correct but outcome-neutral.",
+    "broadly_useful": false,
+    "chain_state_repair_rule": true,
+    "interpretation": "A2A is essentially a chain-state repair rule. It fires on other categories (contradiction, search, tl_verify) but changes no outcomes there. The value is concentrated entirely on chain tasks where Q identifies ANSWER but Qwen defers. This supports keeping the scope narrow (ANSWER-only) and not generalizing to other actions."
+  }
+}

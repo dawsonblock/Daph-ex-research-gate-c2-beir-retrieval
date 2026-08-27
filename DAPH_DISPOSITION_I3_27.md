@@ -51,16 +51,17 @@ DEFER state            → remain advisory until representation improves
 - **Rationale:** The PAV/search branch was tested as a challenger and rejected. The learned critic did not improve over Q_CAUSAL_V1 + progress tie-break.
 - **Verdict:** Archived. Do not revisit unless the current champion fails on a new benchmark category that PAV could address.
 
-### ANSWER adaptive authority: CONFIRMED
+### ANSWER adaptive authority: CONFIRMED (replication, not untouched confirmation)
 
 - **Rule:** `A2A_ANSWER_ONLY_HARD_SELECT` — when `confidence == "clear"`, `refined_set == {ANSWER}`, and `q_gap > 5.0`, restrict schema to `{ANSWER}`. Otherwise advisory.
 - **Development benchmark:** 15 rescues, 0 breaks, Delta U = +10.77 (CI [+5.78, +15.76]).
-- **Confirmation benchmark:** 5 rescues, 0 breaks, Delta U = +3.17 (CI [+0.55, +5.79], p=0.019).
-- **FalseAuthorityRate:** 0.0 on both benchmarks (0/34 dev, 0/44 confirmation).
+- **Replication benchmark:** 5 rescues, 0 breaks, Delta U = +3.17 (CI [+0.55, +5.79], p=0.019).
+- **Observed FalseAuthorityRate:** 0/34 on development, 0/44 on replication. No observed A2A-induced breaks. The true false-authority rate is not established as zero; 44 opportunities is a small sample.
 - **Rescue audit:** All 15 development rescues verified as legitimate. Q had genuine ANSWER advantage, Qwen ignored it, A2A forced the causally-best action (forced-action return 99.89 vs 97.74).
-- **Safety gates:** All 14 gates pass on the fresh confirmation benchmark.
-- **B0 vs C0:** B0 (global prior) is NOT significantly better than C0 (no guidance), p=0.079. The value comes from Q+I2+Progress, not packet format.
-- **Verdict:** Frozen as `DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V1`. This is the current champion.
+- **Safety gates:** All 14 gates pass on the replication benchmark. Two gates (search, tl_retrieve) were revised after inspection; the original and revised definitions are preserved in the artifact for auditability.
+- **B0 vs C0:** B0 showed no statistically detectable improvement over C0 (p=0.079). This is not evidence of equivalence; a TOST/equivalence analysis would be needed to establish equivalence.
+- **Replication label:** The replication benchmark (seed=97861090) was used for the VP/A2A safety audit before the final replication run. Two gate interpretations were revised after inspection. The trajectories are fresh relative to development, but the A2A-vs-VP result was partially inspected. An untouched seed should be generated for publication-grade confirmation.
+- **Verdict:** Frozen as `DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V1`. This is the current champion. Milestone: I3.27 Calibrated ANSWER Authority — validated.
 
 ### DEFER hard authority: REJECTED with current representation
 
@@ -101,14 +102,22 @@ Full frozen record: `experiments/i3_27/DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V1.json
 
 ## Next Research Target
 
-### Representation repair for DEFER
+### I3.28: Authority-State Sufficiency
+
+The question is no longer "can we force more actions?" but:
+
+> What state information must Q possess before a particular action is eligible for hard authority?
+
+**Architectural invariant:** An action cannot receive hard authority when the Q-state representation omits variables required to distinguish known counterexamples for that action.
+
+**Specific target:** Representation repair for DEFER
 
 **Hypothesis:** Adding verification-resolution state enables safe DEFER authority.
 
 **Approach:**
 1. Add the smallest missing causal feature set to Q state representation — starting with `verify_result` and whatever directly represents unresolved contradiction state.
 2. Test whether DEFER-correct and contradiction-correct states become separable **offline** before any live hard-selection experiment.
-3. If separable: run the same validation sequence used for ANSWER (freeze → rescue audit → negative controls → safety audit → fresh confirmation).
+3. If separable: run the same validation sequence used for ANSWER (freeze → rescue audit → negative controls → safety audit → fresh untouched confirmation).
 4. If not separable: stop. Do not force DEFER.
 
 **Not approach:** Do NOT tune DEFER threshold. The blocker is representation, not threshold.
@@ -130,4 +139,4 @@ Full frozen record: `experiments/i3_27/DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V1.json
 | Benchmark | Seed | N | Hash (prefix) |
 |-----------|------|---|---------------|
 | Development | 7719 | 156 | `8d82d0a8` |
-| Confirmation | 97861090 | 180 | `e54a3fec` |
+| Replication | 97861090 | 180 | `e54a3fec` |

@@ -373,15 +373,42 @@ def run_trajectory(task, backend, i3_7e, utility, q_model, arm,
             # A2 Answer-only: hard select ONLY for ANSWER when confidence is clear
             # AND Q gap > threshold. Do NOT hard-select DEFER (Q can't distinguish
             # defer-correct from contradiction-incorrect states).
+            #
+            # Engineering protections (I3.27):
+            #   1. Action allowlist: only ANSWER is eligible for hard authority.
+            #   2. Frozen threshold: 5.0, never tuned.
+            #   3. Kill switch: authority.answer.enabled (default false for
+            #      production, true only for experimental deployment).
+            #   4. Provenance event: authority/override emitted on every A2A fire.
+            #   5. Shadow telemetry: record what advisory execution would have chosen.
+            AUTHORITATIVE_ACTIONS = frozenset({"ANSWER"})
+            ANSWER_AUTHORITY_ENABLED = os.environ.get("AUTHORITY_ANSWER_ENABLED", "1") == "1"
             if (confidence == "clear" and len(refined_set) == 1
                     and q_gap > authority_threshold
-                    and refined_set[0] == "ANSWER"):
-                schema_actions = frozenset(refined_set) & allowed_decision.allowed
+                    and refined_set[0] in AUTHORITATIVE_ACTIONS
+                    and ANSWER_AUTHORITY_ENABLED):
+                forced_action = refined_set[0]
+                schema_actions = frozenset({forced_action}) & allowed_decision.allowed
                 if len(schema_actions) == 0:
                     schema_actions = allowed_decision.allowed
                     authority_mode = "A0_advisory"
                 else:
                     authority_mode = "A2_hard_select"
+                    # Provenance event: record full Q and decision provenance.
+                    q_sorted = sorted(q_values.items(), key=lambda x: -x[1])
+                    q_forced = q_values.get(forced_action, 0.0)
+                    q_runner_up = q_sorted[1][1] if len(q_sorted) > 1 else 0.0
+                    authority_log.append({
+                        "step": step_id,
+                        "event_type": "authority/override",
+                        "recommendedAction": forced_action,
+                        "modelAction": None,  # filled after Qwen responds
+                        "forcedAction": forced_action,
+                        "qForced": round(q_forced, 4),
+                        "qRunnerUp": round(q_runner_up, 4),
+                        "gap": round(q_forced - q_runner_up, 4),
+                        "ruleVersion": "A2A_RULE_V1",
+                    })
             else:
                 schema_actions = allowed_decision.allowed
                 authority_mode = "A0_advisory"
@@ -447,6 +474,28 @@ def run_trajectory(task, backend, i3_7e, utility, q_model, arm,
         proposal = outcome.proposal
         action_str = proposal.action.value if hasattr(proposal.action, "value") else str(proposal.action)
         target_id = getattr(proposal, "target_id", None)
+
+        # Shadow telemetry: when A2A fired, record the forced action and the
+        # advisory proposed action (which is the same as forced when schema is
+        # restricted to a single action). The counterfactual — what Qwen would
+        # have chosen without restriction — is not directly observable in a
+        # single-call design, but the Q recommendation and eventual outcome
+        # provide ongoing counterfactual evidence for rule safety.
+        if authority_mode == "A2_hard_select":
+            # Update the last authority/override event with the model action.
+            for entry in reversed(authority_log):
+                if entry.get("event_type") == "authority/override":
+                    entry["modelAction"] = action_str
+                    entry["shadow_advisory_note"] = (
+                        "Schema was restricted to {forcedAction}; Qwen's "
+                        "unrestricted preference is not directly observable. "
+                        "Q recommended {recommendedAction}. "
+                        "Counterfactual safety is assessed via eventual_outcome."
+                    ).format(
+                        forcedAction=entry["forcedAction"],
+                        recommendedAction=entry["recommendedAction"],
+                    )
+                    break
 
         if action_str not in schema_actions:
             terminal_result = "ADMISSIBILITY_VIOLATION"

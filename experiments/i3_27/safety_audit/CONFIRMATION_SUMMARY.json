@@ -1,8 +1,9 @@
 {
-  "confirmation": "I3.27 VP_A2A Fresh Untouched Confirmation — Step 4 of 4",
+  "confirmation": "I3.27 VP_A2A Fresh Replication — Step 4 of 4",
   "date": "2026-08-26",
-  "benchmark": "I3.27_CONFIRMATION_BENCHMARK_V1 (seed=97861090, 180 tasks, 15 categories)",
+  "benchmark": "I3.27_REPLICATION_BENCHMARK_V1 (seed=97861090, 180 tasks, 15 categories)",
   "benchmark_hash": "e54a3fec8d9a4f9995e13b9760f4556359e8c8cef98119db848088073948094d",
+  "benchmark_label_note": "Fresh replication benchmark, not a completely untouched confirmatory holdout. The A2A-vs-VP result was partially inspected during the safety audit before the final replication run. Two gate interpretations were revised after inspection (see gate_revision in DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V1.json).",
   "n_tasks": 180,
   "n_trajectories": 720,
   "errors": 0,
@@ -56,16 +57,17 @@
       "value": -2.6645,
       "CI95": [-5.6196, 0.2906],
       "p": 0.078889,
-      "interpretation": "B0 is NOT significantly better than C0. Global prior guidance provides no meaningful value. This confirms that the value comes from Q+I2+Progress, not from the packet format."
+      "interpretation": "B0 showed no statistically detectable improvement over C0 in this benchmark. This is not evidence of equivalence; a TOST/equivalence analysis with a defined margin would be needed to establish equivalence."
     }
   },
 
   "safety": {
-    "FalseAuthorityRate": 0.0,
+    "observed_false_authority_rate": "0/44 on replication benchmark. No observed A2A-induced breaks. True false-authority rate is not established as zero; 44 opportunities is a small sample.",
     "a2_triggered": "44/180 (24.4%)",
     "false_authority_cases": 0,
     "breaks": 0,
-    "all_gates_pass": true
+    "all_gates_pass": true,
+    "gate_revision_note": "Two gates (search_no_breaks, tl_retrieve_no_fabrication) were revised after inspection. See gate_revision in DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V1.json for original and revised definitions."
   },
 
   "per_category_A2A_vs_VP": {
@@ -73,7 +75,7 @@
     "all_other_categories": "No change. A2A does not alter any non-chain category."
   },
 
-  "development_vs_confirmation": {
+  "development_vs_replication": {
     "development": {
       "benchmark": "I3.26_DEVELOPMENT_BENCHMARK_V1 (seed=7719, 156 tasks)",
       "Delta_U_A2A_VP": 10.7681,
@@ -82,28 +84,30 @@
       "breaks": 0,
       "chain": "9/24 -> 24/24"
     },
-    "confirmation": {
-      "benchmark": "I3.27_CONFIRMATION_BENCHMARK_V1 (seed=97861090, 180 tasks)",
+    "replication": {
+      "benchmark": "I3.27_REPLICATION_BENCHMARK_V1 (seed=97861090, 180 tasks)",
       "Delta_U_A2A_VP": 3.1706,
       "CI95": [0.5472, 5.7939],
       "rescues": 5,
       "breaks": 0,
       "chain": "7/12 -> 12/12"
     },
-    "comparison": "The effect size is smaller on confirmation (3.17 vs 10.77) because the confirmation benchmark has fewer chain tasks (12 vs 24) and the rescue rate is similar (5/12 vs 15/24). The CI still excludes zero. The principle holds: A2A rescues chain-task failures without breaking anything else."
+    "comparison": "The reduced effect is consistent with the replication corpus containing fewer chain opportunities for ANSWER authority (12 vs 24). The CI still excludes zero. The principle holds: A2A rescues chain-task failures without breaking anything else."
   },
 
   "architectural_conclusion": {
     "principle": "DAPH should have adaptive authority, not permanently advisory authority.",
-    "evidence": "On two independent benchmarks (development and confirmation), VP_A2A produced rescues with zero breaks. The FalseAuthorityRate is 0 in both runs. The utility gain is statistically significant in both runs. The rescue pattern is consistent: Q identifies ANSWER as the sole near-optimal action with a large gap, Qwen ignores it, and hard authority corrects the error.",
-    "scope": "The principle is confirmed for ANSWER-only authority. DEFER authority remains unsolved because Q cannot distinguish defer-correct from contradiction-incorrect states without a verify_result feature.",
+    "evidence": "On two benchmarks (development and replication), VP_A2A produced rescues with zero breaks. The observed false-authority rate is 0/34 (development) and 0/44 (replication). The utility gain is statistically significant in both runs. The rescue pattern is consistent: Q identifies ANSWER as the sole near-optimal action with a large gap, Qwen ignores it, and hard authority corrects the error.",
+    "scope": "The principle is supported for ANSWER-only authority. DEFER authority remains unsolved because Q cannot distinguish defer-correct from contradiction-incorrect states without a verify_result feature.",
     "caveats": [
-      "The effect is concentrated on chain tasks. The confirmation benchmark has only 12 chain tasks, so the rescue count is small (5).",
-      "The effect size is smaller on confirmation (3.17 vs 10.77) due to fewer chain tasks.",
+      "The effect is concentrated on chain tasks. The replication benchmark has only 12 chain tasks, so the rescue count is small (5).",
+      "The reduced effect is consistent with the replication corpus containing fewer chain opportunities for ANSWER authority.",
       "DEFER authority is not solved and must not be forced with the current Q representation.",
-      "The confirmation benchmark is fresh (seed=97861090) and was not used during development."
+      "The replication benchmark (seed=97861090) was used for the VP/A2A safety audit before the final replication run. Two gate interpretations were revised after inspection. An untouched seed should be generated for publication-grade confirmation.",
+      "0 false-authority events observed among 44 authority opportunities. This is encouraging but does not establish the true false-authority rate as zero.",
+      "B0 showed no statistically detectable improvement over C0. This is not evidence of equivalence."
     ]
   },
 
-  "verdict": "CONFIRMED. VP_A2A is safe and effective on a fresh untouched benchmark. The principle of adaptive authority is supported. Recommend freezing as DAPH_AUTHORITY_EXECUTIVE_V1."
+  "verdict": "CONFIRMED (replication). VP_A2A is safe and effective on a fresh replication benchmark. The principle of adaptive authority is supported for ANSWER-only authority. Recommend freezing as DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V1. Milestone: I3.27 Calibrated ANSWER Authority — validated."
 }

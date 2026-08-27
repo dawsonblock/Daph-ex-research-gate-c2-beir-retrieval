@@ -5,7 +5,7 @@
   "VP_success": "159/180",
   "a2_triggered": 44,
   "all_gates_pass": true,
-  "benchmark": "I3.27_SAFETY_AUDIT_BENCHMARK_V1 (seed=97861090)",
+  "benchmark": "I3.27_REPLICATION_BENCHMARK_V1 (seed=97861090)",
   "breaks": 0,
   "delta_U": 3.1706,
   "delta_U_CI95": [
@@ -13,12 +13,12 @@
     5.7939
   ],
   "errors": 0,
-  "false_authority_rate": 0.0,
+  "observed_false_authority_rate": "0/44 on replication benchmark. No observed A2A-induced breaks. True false-authority rate is not established as zero.",
   "gates": {
     "CI excludes zero": true,
     "Chain rescues persist": true,
     "Contradiction: no breaks": true,
-    "FalseAuthorityRate = 0": true,
+    "Observed false-authority rate zero (0/44)": true,
     "Prem-answer: no A2 triggers": true,
     "Prem-defer: no A2 triggers": true,
     "Retr_waste: no A2 triggers": true,
@@ -30,6 +30,7 @@
     "tl_retrieve: A2A does not solve more than VP": true,
     "tl_retrieve: no A2-triggered fabrication": true
   },
+  "gate_revision_note": "Two gates (search, tl_retrieve) were revised after inspection. See gate_revision in DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V1.json for original and revised definitions. The revisions are based on decision-state semantics, not observed outcomes.",
   "n_tasks": 180,
   "n_trajectories": 360,
   "p_value": 0.018911394249180646,
