@@ -1,0 +1,33 @@
+{
+  "experiment": "I3.28C: Targeted DEFER Coverage Audit",
+  "n_strata_records": 475,
+  "n_combined_records": 1931,
+  "q_v1_sha256": "f2109e540f6e57990e78b8558ac6215e5b22ccbb06c14a484c2594f5933ffe34",
+  "q_v2r_sha256": "b14095f8b3cb5561357517e814348e1d219359ddd5be90a69e477c89b0a70b78",
+  "coverage_defer": 0.8125,
+  "coverage_defer_count": "26/32",
+  "false_authority_defer": 0.0,
+  "false_authority_defer_count": "0/18",
+  "separation_margin_boundary": 98.32834675238591,
+  "separation_margin_dev": 101.33571390448066,
+  "answer_authority": "44/44",
+  "preservation": {
+    "v1_mean_regret": 22.307737929191404,
+    "v2r_mean_regret": 19.03089345566496,
+    "v1_near_optimal": 136,
+    "v2r_near_optimal": 156,
+    "v1_correct_best": 64,
+    "v2r_correct_best": 84
+  },
+  "gates": {
+    "coverage_defer_safe": true,
+    "false_authority_defer_zero": true,
+    "separation_boundary": true,
+    "separation_dev": true,
+    "answer_authority_preserved": true,
+    "regret_no_worse": true,
+    "near_optimal_no_worse": true,
+    "correct_best_no_regression": true
+  },
+  "all_pass": true
+}
