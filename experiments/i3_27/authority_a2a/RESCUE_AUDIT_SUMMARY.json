@@ -1,0 +1,43 @@
+{
+  "audit": "VP_A2A Rescue Audit — Step 2 of 4",
+  "date": "2026-08-26",
+  "question": "Do the 15 rescues demonstrate legitimate calibrated-authority correction, or a benchmark-specific ANSWER shortcut?",
+
+  "rescue_pattern": {
+    "all_15_are_chain": true,
+    "trigger_steps": [4, 6],
+    "trigger_step_4": "12 rescues — Q(ANSWER)=79.52, Q(RETRIEVE)=67.32, gap=12.20. VP chose RETRIEVE.",
+    "trigger_step_6": "3 rescues — Q(ANSWER)=82.76, Q(DEFER)=69.22, gap=13.54. VP chose REASON_MORE.",
+    "all_15_confidence": "clear",
+    "all_15_near_optimal": "ANSWER was sole near-optimal action after progress tie-break",
+    "all_15_vp_chose_non_answer": true
+  },
+
+  "causal_return_verification": {
+    "method": "Replay trajectory to trigger step, force each action, continue with simple ANSWER-if-legal policy",
+    "ANSWER_forced": {"mean_return": 99.89, "success": "15/15"},
+    "VP_action_forced": {"mean_return": 97.74, "success": "15/15"},
+    "RETRIEVE_forced": {"mean_return": 54.19, "success": "12/15"},
+    "ANSWER_return_gt_VP_action": "15/15",
+    "ANSWER_return_gt_RETRIEVE": "15/15",
+    "ANSWER_succeeds": "15/15",
+    "interpretation": "ANSWER was the gold/causal best action in all 15 cases. Q correctly identified it. Qwen ignored the guidance. A2A corrected the error."
+  },
+
+  "legitimacy_check": {
+    "Q_had_genuine_ANSWER_advantage": true,
+    "Qwen_ignored_it": true,
+    "hard_authority_corrected_the_error": true,
+    "ANSWER_was_causally_best": true,
+    "not_a_superficial_pattern": true,
+    "evidence": "Q(ANSWER) was 79.52-82.76 across rescues, well above the 5.0 threshold gap. The near-optimal set was {ANSWER} alone after progress tie-break. VP chose RETRIEVE or REASON_MORE instead. Forced-action returns confirm ANSWER was causally best (99.89 vs 97.74 vs 54.19)."
+  },
+
+  "caveat": {
+    "all_rescues_are_chain": "All 15 rescues are chain tasks. The chain task structure is homogeneous (24 tasks, 2 trajectory patterns). The rescue pattern is narrow: Q says ANSWER at step 4 or 6, Qwen doesn't answer. This is a real compliance failure, but the diversity of rescue scenarios is limited.",
+    "development_set_only": "These are development benchmark results. Confirmation on a fresh untouched benchmark is required.",
+    "continuation_policy_note": "The forced-action continuation uses a simple ANSWER-if-legal policy, not the pinned Qwen policy. The returns are upper bounds on what Qwen would actually achieve. However, since A2A forces ANSWER immediately (no continuation needed), the A2A return IS the forced-action return for ANSWER."
+  },
+
+  "verdict": "The 15 rescues are legitimate calibrated-authority corrections. Q had a genuine ANSWER advantage (gap 12.20-13.54), Qwen ignored it, and A2A forced the causally-best action. This is NOT a superficial ANSWER shortcut. However, the rescue pattern is narrow (chain only) and needs confirmation on a fresh benchmark."
+}

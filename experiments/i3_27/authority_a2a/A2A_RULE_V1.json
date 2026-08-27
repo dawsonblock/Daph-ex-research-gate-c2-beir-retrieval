@@ -1,0 +1,24 @@
+{
+  "condition": {
+    "confidence": "clear",
+    "q_gap_gt": 5.0,
+    "refined_set_action": "ANSWER",
+    "refined_set_size": 1
+  },
+  "does_not_apply_to": [
+    "DEFER",
+    "STOP",
+    "RETRIEVE",
+    "VERIFY",
+    "SEARCH_MORE",
+    "REASON_MORE"
+  ],
+  "effect": "schema_actions = frozenset({'ANSWER'}) & allowed_decision.allowed",
+  "epsilon_p": 0.05,
+  "epsilon_q": 3.0,
+  "fallback_when_not_triggered": "A0_advisory (all legal actions in schema)",
+  "name": "A2A_ANSWER_ONLY_HARD_SELECT",
+  "rationale": "ANSWER is terminal resolution. When Q clearly recommends ANSWER with large gap, Qwen should not defer/reason/retrieve instead. DEFER is excluded because Q gives identical values for defer-correct and contradiction-incorrect states.",
+  "threshold": 5.0,
+  "version": "V1"
+}

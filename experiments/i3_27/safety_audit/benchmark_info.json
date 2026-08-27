@@ -1,0 +1,23 @@
+{
+  "categories": {
+    "answer": 12,
+    "chain": 12,
+    "contradiction": 12,
+    "defer": 12,
+    "prem_answer": 12,
+    "prem_defer": 12,
+    "retr_waste": 12,
+    "retrieve": 12,
+    "search": 12,
+    "stale_defer": 12,
+    "tl_defer": 12,
+    "tl_retrieve": 12,
+    "tl_search": 12,
+    "tl_verify": 12,
+    "verify": 12
+  },
+  "hash": "e54a3fec8d9a4f9995e13b9760f4556359e8c8cef98119db848088073948094d",
+  "n_tasks": 180,
+  "name": "I3.27_SAFETY_AUDIT_BENCHMARK_V1",
+  "seed": 97861090
+}

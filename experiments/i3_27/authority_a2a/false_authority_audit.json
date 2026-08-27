@@ -1,0 +1,902 @@
+{
+  "clear_false_authority": 0,
+  "contradiction_triggers": 10,
+  "false_authority_rate_construction": 0.0,
+  "false_authority_rate_outcome": 0.0,
+  "prem_answer_triggers": 0,
+  "total_a2_triggers": 34,
+  "triggers": [
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0000"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0001"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0002"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0003"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "SEARCH_MORE",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 13.54,
+      "q_values": {
+        "ANSWER": 82.76,
+        "DEFER": 69.22,
+        "REASON_MORE": 62.39,
+        "STOP": 56.76
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 6,
+      "task_id": "i3_26d_chain_0004"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0005"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0006"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0007"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0008"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0009"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0010"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0011"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "SEARCH_MORE",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 13.54,
+      "q_values": {
+        "ANSWER": 82.76,
+        "DEFER": 69.22,
+        "REASON_MORE": 62.39,
+        "STOP": 56.76
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 6,
+      "task_id": "i3_26d_chain_0012"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0013"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0014"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0015"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0016"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0017"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0018"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0019"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "SEARCH_MORE",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 13.54,
+      "q_values": {
+        "ANSWER": 82.76,
+        "DEFER": 69.22,
+        "REASON_MORE": 62.39,
+        "STOP": 56.76
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 6,
+      "task_id": "i3_26d_chain_0020"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0021"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0022"
+    },
+    {
+      "a2a_actions": [
+        "VERIFY",
+        "RETRIEVE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "chain",
+      "confidence": "clear",
+      "q_gap": 12.2,
+      "q_values": {
+        "ANSWER": 79.52,
+        "DEFER": 14.53,
+        "REASON_MORE": 62.3,
+        "RETRIEVE": 67.32,
+        "SEARCH_MORE": 64.73,
+        "STOP": 63.94
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 4,
+      "task_id": "i3_26d_chain_0023"
+    },
+    {
+      "a2a_actions": [
+        "SEARCH_MORE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "contradiction",
+      "confidence": "clear",
+      "q_gap": 13.54,
+      "q_values": {
+        "ANSWER": 82.76,
+        "DEFER": 69.22,
+        "REASON_MORE": 62.39,
+        "STOP": 56.76
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 3,
+      "task_id": "i3_26d_contradiction_0000"
+    },
+    {
+      "a2a_actions": [
+        "SEARCH_MORE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "contradiction",
+      "confidence": "clear",
+      "q_gap": 13.54,
+      "q_values": {
+        "ANSWER": 82.76,
+        "DEFER": 69.22,
+        "REASON_MORE": 62.39,
+        "STOP": 56.76
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 3,
+      "task_id": "i3_26d_contradiction_0001"
+    },
+    {
+      "a2a_actions": [
+        "SEARCH_MORE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "contradiction",
+      "confidence": "clear",
+      "q_gap": 13.54,
+      "q_values": {
+        "ANSWER": 82.76,
+        "DEFER": 69.22,
+        "REASON_MORE": 62.39,
+        "STOP": 56.76
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 3,
+      "task_id": "i3_26d_contradiction_0002"
+    },
+    {
+      "a2a_actions": [
+        "SEARCH_MORE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "contradiction",
+      "confidence": "clear",
+      "q_gap": 13.54,
+      "q_values": {
+        "ANSWER": 82.76,
+        "DEFER": 69.22,
+        "REASON_MORE": 62.39,
+        "STOP": 56.76
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 3,
+      "task_id": "i3_26d_contradiction_0003"
+    },
+    {
+      "a2a_actions": [
+        "SEARCH_MORE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "contradiction",
+      "confidence": "clear",
+      "q_gap": 13.54,
+      "q_values": {
+        "ANSWER": 82.76,
+        "DEFER": 69.22,
+        "REASON_MORE": 62.39,
+        "STOP": 56.76
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 3,
+      "task_id": "i3_26d_contradiction_0004"
+    },
+    {
+      "a2a_actions": [
+        "SEARCH_MORE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "contradiction",
+      "confidence": "clear",
+      "q_gap": 13.54,
+      "q_values": {
+        "ANSWER": 82.76,
+        "DEFER": 69.22,
+        "REASON_MORE": 62.39,
+        "STOP": 56.76
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 3,
+      "task_id": "i3_26d_contradiction_0005"
+    },
+    {
+      "a2a_actions": [
+        "SEARCH_MORE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "contradiction",
+      "confidence": "clear",
+      "q_gap": 13.54,
+      "q_values": {
+        "ANSWER": 82.76,
+        "DEFER": 69.22,
+        "REASON_MORE": 62.39,
+        "STOP": 56.76
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 3,
+      "task_id": "i3_26d_contradiction_0008"
+    },
+    {
+      "a2a_actions": [
+        "SEARCH_MORE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "contradiction",
+      "confidence": "clear",
+      "q_gap": 13.54,
+      "q_values": {
+        "ANSWER": 82.76,
+        "DEFER": 69.22,
+        "REASON_MORE": 62.39,
+        "STOP": 56.76
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 3,
+      "task_id": "i3_26d_contradiction_0009"
+    },
+    {
+      "a2a_actions": [
+        "SEARCH_MORE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "contradiction",
+      "confidence": "clear",
+      "q_gap": 13.54,
+      "q_values": {
+        "ANSWER": 82.76,
+        "DEFER": 69.22,
+        "REASON_MORE": 62.39,
+        "STOP": 56.76
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 3,
+      "task_id": "i3_26d_contradiction_0010"
+    },
+    {
+      "a2a_actions": [
+        "SEARCH_MORE",
+        "VERIFY",
+        "VERIFY",
+        "ANSWER"
+      ],
+      "a2a_success": true,
+      "a2a_terminal_result": "TASK_SUCCESS",
+      "category": "contradiction",
+      "confidence": "clear",
+      "q_gap": 13.54,
+      "q_values": {
+        "ANSWER": 82.76,
+        "DEFER": 69.22,
+        "REASON_MORE": 62.39,
+        "STOP": 56.76
+      },
+      "refined_set": [
+        "ANSWER"
+      ],
+      "step": 3,
+      "task_id": "i3_26d_contradiction_0011"
+    }
+  ],
+  "triggers_by_category": {
+    "chain": 24,
+    "contradiction": 10
+  }
+}

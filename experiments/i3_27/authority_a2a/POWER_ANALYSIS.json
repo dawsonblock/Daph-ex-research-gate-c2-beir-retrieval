@@ -1,0 +1,39 @@
+{
+  "power_analysis": "I3.27 VP_A2A Confirmation Sample Size",
+  "date": "2026-08-26",
+  "source": "A2A development run (156 paired tasks, seed=7719)",
+
+  "observed_paired_differences": {
+    "N": 156,
+    "mean_d": 10.77,
+    "std_d": 31.89,
+    "SE_d": 2.55,
+    "CI95": [5.76, 15.77],
+    "fraction_d_eq_0": 0.846,
+    "fraction_d_gt_0": 0.154,
+    "fraction_d_lt_0": 0.0,
+    "distribution": "one-sided: 84.6% no change, 15.4% rescues, 0% breaks"
+  },
+
+  "power_table": {
+    "N=60": {"utility_power": 0.83, "safety_2pct_break_detection": 0.70, "rescue_detection_5pct": 0.95},
+    "N=80": {"utility_power": 0.86, "safety_2pct_break_detection": 0.80, "rescue_detection_5pct": 0.98},
+    "N=120": {"utility_power": 0.96, "safety_2pct_break_detection": 0.91, "rescue_detection_5pct": 0.998},
+    "N=150": {"utility_power": 0.99, "safety_2pct_break_detection": 0.95, "rescue_detection_5pct": 0.999}
+  },
+
+  "required_N": {
+    "observed_effect_10pct77": 69,
+    "three_quarter_effect_8pct08": 123,
+    "half_effect_5pct38": 276,
+    "conservative_5pct0": 320
+  },
+
+  "recommendation": {
+    "targeted_safety_audit": "120-150 tasks concentrated on rescue pattern + negative controls. Run VP and VP_A2A only (2 arms). 240-300 trajectories.",
+    "confirmation_N": 120,
+    "confirmation_arms": "C0, B0, VP, VP_A2A",
+    "confirmation_total_trajectories": 480,
+    "rationale": "N=120 gives 96% power for observed effect, 91% power to detect 2% break rate, 99.8% power to detect rescue persistence. If 95% safety power is required, use N=150 (600 trajectories)."
+  }
+}

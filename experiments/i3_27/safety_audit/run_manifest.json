@@ -1,0 +1,39 @@
+{
+  "arms": [
+    "C0",
+    "B0",
+    "VP",
+    "VP_A2A"
+  ],
+  "authority_threshold": 5.0,
+  "benchmark_hash": "e54a3fec8d9a4f9995e13b9760f4556359e8c8cef98119db848088073948094d",
+  "benchmark_version": "I3.27_CONFIRMATION_BENCHMARK_V1",
+  "categories": [
+    "retrieve",
+    "search",
+    "verify",
+    "chain",
+    "tl_retrieve",
+    "tl_defer",
+    "tl_verify",
+    "retr_waste",
+    "tl_search",
+    "contradiction",
+    "prem_defer",
+    "prem_answer",
+    "defer",
+    "stale_defer",
+    "answer"
+  ],
+  "identities": {
+    "gguf_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+    "packet_builder_sha256": "93e1b5767589143a7d7fde4c4cfb8260151dfa9b1fa30ffb41c4328c587cc8ef",
+    "progress_rule_v1_sha256": "9f0bfc5eea1d24f97cb65020d0ba2569888c07110c1be189c2383ae9d62349b9",
+    "qcausal_v1_sha256": "d90d72dab250ba7ce032afcc9d430fabfd4e84dace3c4dbe4deb77de0f8c9729",
+    "runtime_version": "Python 3.12.0 (arm64)",
+    "source_commit": "7726c46692424af151452013fc0906993b37709a"
+  },
+  "n_tasks": 180,
+  "run_id": "785e137caf4d404d",
+  "timestamp": "2026-08-27T00:31:45.590380+00:00"
+}

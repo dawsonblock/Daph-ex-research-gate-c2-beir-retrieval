@@ -1,0 +1,65 @@
+{
+  "audit": "VP_A2A Negative Controls and FalseAuthorityRate — Step 3 of 4",
+  "date": "2026-08-26",
+
+  "false_authority_rate_definition": {
+    "formula": "FalseAuthorityRate = P(A2A forces ANSWER | ANSWER is not near-optimal)",
+    "operational_definition": "P(A2A forces ANSWER AND task fails with TASK_FAILURE at that step)",
+    "requirement": "essentially zero in qualification"
+  },
+
+  "results": {
+    "total_a2_triggers": 34,
+    "triggers_on_chain": 24,
+    "triggers_on_contradiction": 10,
+    "triggers_on_prem_answer": 0,
+    "triggers_on_verify": 0,
+    "triggers_on_retrieve": 0,
+    "triggers_on_tl_retrieve": 0,
+    "triggers_on_prem_defer": 0,
+    "triggers_on_retr_waste": 0,
+    "triggers_on_answer": 0,
+    "triggers_on_defer": 0,
+    "false_authority_rate_construction": 0.0,
+    "false_authority_rate_outcome": 0.0,
+    "clear_false_authority_cases": 0,
+    "all_34_triggers_succeeded": true
+  },
+
+  "negative_control_analysis": {
+    "prem_answer_traps": {
+      "triggers": 0,
+      "expected": 0,
+      "verdict": "PASS — A2A never fires on premature-answer traps. Q correctly does not recommend ANSWER when ANSWER would be premature."
+    },
+    "contradiction_unresolved": {
+      "triggers": 10,
+      "all_succeeded": true,
+      "analysis": "Contradiction tasks have expected_terminal=ANSWER. After SEARCH_MORE+VERIFY+VERIFY (3 steps), the contradiction has been resolved through verification. A2A forces ANSWER at step 3, which is the correct action. The oracle resolution path is VERIFY:E1, VERIFY:E2, ANSWER — A2A's forced ANSWER at step 3 matches this exactly.",
+      "verdict": "PASS — A2A triggers on contradiction are correct. ANSWER is the expected terminal, and verification has been completed before the trigger."
+    },
+    "verify_required": {
+      "triggers": 0,
+      "verdict": "PASS — A2A never fires on verify-required tasks. Q correctly recommends VERIFY, not ANSWER."
+    },
+    "retrieve_required": {
+      "triggers": 0,
+      "verdict": "PASS — A2A never fires on retrieve-required tasks."
+    },
+    "search_required": {
+      "triggers": 0,
+      "verdict": "PASS — A2A never fires on search-required tasks."
+    },
+    "tl_retrieve_unsolvable": {
+      "triggers": 0,
+      "verdict": "PASS — A2A never fires on unsolvable tasks. No fabrication."
+    }
+  },
+
+  "construction_level_guarantee": {
+    "explanation": "A2A only fires when ALL of: confidence=='clear', refined_set==['ANSWER'], q_gap>5.0. Since refined_set is derived from Q near-optimal set + progress tie-break, A2A can only fire when ANSWER is the sole near-optimal action. By construction, FalseAuthorityRate=0.",
+    "caveat": "This assumes Q is correct. If Q says ANSWER is near-optimal when it's causally wrong, A2A would fire incorrectly. The outcome-level FAR (0/34) confirms Q was correct in all trigger cases."
+  },
+
+  "overall_verdict": "PASS — FalseAuthorityRate=0.0 (0/34 triggers). All negative controls pass. A2A does not fire on premature-answer, verify-required, retrieve-required, search-required, or unsolvable tasks. The 10 contradiction triggers are correct (ANSWER is expected terminal after verification)."
+}

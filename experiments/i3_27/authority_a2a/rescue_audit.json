@@ -1,0 +1,767 @@
+[
+  {
+    "a2_trigger_steps": [
+      4
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 88.2,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 12.2,
+    "q_values_at_trigger": {
+      "ANSWER": 79.52,
+      "DEFER": 14.53,
+      "REASON_MORE": 62.3,
+      "RETRIEVE": 67.32,
+      "SEARCH_MORE": 64.73,
+      "STOP": 63.94
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0000",
+    "trigger_step": 4,
+    "vp_action_at_trigger": "RETRIEVE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      4
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 88.2,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 12.2,
+    "q_values_at_trigger": {
+      "ANSWER": 79.52,
+      "DEFER": 14.53,
+      "REASON_MORE": 62.3,
+      "RETRIEVE": 67.32,
+      "SEARCH_MORE": 64.73,
+      "STOP": 63.94
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0003",
+    "trigger_step": 4,
+    "vp_action_at_trigger": "RETRIEVE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      6
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "SEARCH_MORE",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 83.89,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 13.54,
+    "q_values_at_trigger": {
+      "ANSWER": 82.76,
+      "DEFER": 69.22,
+      "REASON_MORE": 62.39,
+      "STOP": 56.76
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0004",
+    "trigger_step": 6,
+    "vp_action_at_trigger": "REASON_MORE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      4
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 88.2,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 12.2,
+    "q_values_at_trigger": {
+      "ANSWER": 79.52,
+      "DEFER": 14.53,
+      "REASON_MORE": 62.3,
+      "RETRIEVE": 67.32,
+      "SEARCH_MORE": 64.73,
+      "STOP": 63.94
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0006",
+    "trigger_step": 4,
+    "vp_action_at_trigger": "RETRIEVE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      4
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 88.2,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 12.2,
+    "q_values_at_trigger": {
+      "ANSWER": 79.52,
+      "DEFER": 14.53,
+      "REASON_MORE": 62.3,
+      "RETRIEVE": 67.32,
+      "SEARCH_MORE": 64.73,
+      "STOP": 63.94
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0007",
+    "trigger_step": 4,
+    "vp_action_at_trigger": "RETRIEVE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      4
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 88.2,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 12.2,
+    "q_values_at_trigger": {
+      "ANSWER": 79.52,
+      "DEFER": 14.53,
+      "REASON_MORE": 62.3,
+      "RETRIEVE": 67.32,
+      "SEARCH_MORE": 64.73,
+      "STOP": 63.94
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0008",
+    "trigger_step": 4,
+    "vp_action_at_trigger": "RETRIEVE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      4
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 88.2,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 12.2,
+    "q_values_at_trigger": {
+      "ANSWER": 79.52,
+      "DEFER": 14.53,
+      "REASON_MORE": 62.3,
+      "RETRIEVE": 67.32,
+      "SEARCH_MORE": 64.73,
+      "STOP": 63.94
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0011",
+    "trigger_step": 4,
+    "vp_action_at_trigger": "RETRIEVE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      6
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "SEARCH_MORE",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 83.89,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 13.54,
+    "q_values_at_trigger": {
+      "ANSWER": 82.76,
+      "DEFER": 69.22,
+      "REASON_MORE": 62.39,
+      "STOP": 56.76
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0012",
+    "trigger_step": 6,
+    "vp_action_at_trigger": "REASON_MORE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      4
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 88.2,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 12.2,
+    "q_values_at_trigger": {
+      "ANSWER": 79.52,
+      "DEFER": 14.53,
+      "REASON_MORE": 62.3,
+      "RETRIEVE": 67.32,
+      "SEARCH_MORE": 64.73,
+      "STOP": 63.94
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0014",
+    "trigger_step": 4,
+    "vp_action_at_trigger": "RETRIEVE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      4
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 88.2,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 12.2,
+    "q_values_at_trigger": {
+      "ANSWER": 79.52,
+      "DEFER": 14.53,
+      "REASON_MORE": 62.3,
+      "RETRIEVE": 67.32,
+      "SEARCH_MORE": 64.73,
+      "STOP": 63.94
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0015",
+    "trigger_step": 4,
+    "vp_action_at_trigger": "RETRIEVE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      4
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 88.2,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 12.2,
+    "q_values_at_trigger": {
+      "ANSWER": 79.52,
+      "DEFER": 14.53,
+      "REASON_MORE": 62.3,
+      "RETRIEVE": 67.32,
+      "SEARCH_MORE": 64.73,
+      "STOP": 63.94
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0016",
+    "trigger_step": 4,
+    "vp_action_at_trigger": "RETRIEVE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      4
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 88.2,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 12.2,
+    "q_values_at_trigger": {
+      "ANSWER": 79.52,
+      "DEFER": 14.53,
+      "REASON_MORE": 62.3,
+      "RETRIEVE": 67.32,
+      "SEARCH_MORE": 64.73,
+      "STOP": 63.94
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0019",
+    "trigger_step": 4,
+    "vp_action_at_trigger": "RETRIEVE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      6
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "SEARCH_MORE",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 83.89,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 13.54,
+    "q_values_at_trigger": {
+      "ANSWER": 82.76,
+      "DEFER": 69.22,
+      "REASON_MORE": 62.39,
+      "STOP": 56.76
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0020",
+    "trigger_step": 6,
+    "vp_action_at_trigger": "REASON_MORE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      4
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 88.2,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 12.2,
+    "q_values_at_trigger": {
+      "ANSWER": 79.52,
+      "DEFER": 14.53,
+      "REASON_MORE": 62.3,
+      "RETRIEVE": 67.32,
+      "SEARCH_MORE": 64.73,
+      "STOP": 63.94
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0022",
+    "trigger_step": 4,
+    "vp_action_at_trigger": "RETRIEVE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  },
+  {
+    "a2_trigger_steps": [
+      4
+    ],
+    "a2a_action_at_trigger": "ANSWER",
+    "a2a_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "ANSWER"
+    ],
+    "a2a_terminal_result": "TASK_SUCCESS",
+    "a2a_utility": 88.2,
+    "budget_profile": "TIGHT_CHAIN",
+    "category": "chain",
+    "confidence": "clear",
+    "forced_action": "ANSWER",
+    "n_a2_triggers": 1,
+    "near_optimal_after_progress": [
+      "ANSWER"
+    ],
+    "near_optimal_before_progress": [
+      "ANSWER"
+    ],
+    "q_gap_at_trigger": 12.2,
+    "q_values_at_trigger": {
+      "ANSWER": 79.52,
+      "DEFER": 14.53,
+      "REASON_MORE": 62.3,
+      "RETRIEVE": 67.32,
+      "SEARCH_MORE": 64.73,
+      "STOP": 63.94
+    },
+    "state_at_trigger": {},
+    "task_id": "i3_26d_chain_0023",
+    "trigger_step": 4,
+    "vp_action_at_trigger": "RETRIEVE",
+    "vp_actions_full": [
+      "VERIFY",
+      "RETRIEVE",
+      "VERIFY",
+      "VERIFY",
+      "RETRIEVE",
+      "SEARCH_MORE",
+      "REASON_MORE",
+      "REASON_MORE"
+    ],
+    "vp_terminal_result": "RESOURCE_EXHAUSTION",
+    "vp_utility": -20.78
+  }
+]

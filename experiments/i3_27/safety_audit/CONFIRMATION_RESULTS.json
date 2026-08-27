@@ -1,0 +1,124 @@
+{
+  "a2_triggered": 44,
+  "arm_stats": {
+    "B0": {
+      "mean_utility": 44.54,
+      "success": "130/180",
+      "success_rate": 0.7222
+    },
+    "C0": {
+      "mean_utility": 47.21,
+      "success": "132/180",
+      "success_rate": 0.7333
+    },
+    "VP": {
+      "mean_utility": 71.89,
+      "success": "159/180",
+      "success_rate": 0.8833
+    },
+    "VP_A2A": {
+      "mean_utility": 75.06,
+      "success": "164/180",
+      "success_rate": 0.9111
+    }
+  },
+  "benchmark": "I3.27_CONFIRMATION_BENCHMARK_V1 (seed=97861090, 180 tasks, 4 arms, 720 trajectories)",
+  "errors": 0,
+  "false_authority_rate": 0.0,
+  "key_results": {
+    "Delta_U_A2A_B0": 30.5177,
+    "Delta_U_A2A_B0_CI95": [
+      21.0475,
+      39.988
+    ],
+    "Delta_U_A2A_C0": 27.8532,
+    "Delta_U_A2A_C0_CI95": [
+      18.6803,
+      37.0262
+    ],
+    "Delta_U_A2A_VP": 3.1706,
+    "Delta_U_A2A_VP_CI95": [
+      0.5472,
+      5.7939
+    ],
+    "Delta_U_A2A_VP_p": 0.018911394249180646,
+    "breaks_A2A_VP": 0,
+    "rescues_A2A_VP": 5
+  },
+  "n_tasks": 180,
+  "n_trajectories": 720,
+  "paired_comparisons": {
+    "B0-C0": {
+      "CI95": [
+        -5.6196,
+        0.2906
+      ],
+      "breaks": 2,
+      "delta_U": -2.6645,
+      "n": 180,
+      "p_value": 0.0788887757286847,
+      "rescues": 0,
+      "t_stat": -1.7673
+    },
+    "VP-B0": {
+      "CI95": [
+        18.0794,
+        36.6149
+      ],
+      "breaks": 0,
+      "delta_U": 27.3472,
+      "n": 180,
+      "p_value": 3.20147460939703e-08,
+      "rescues": 29,
+      "t_stat": 5.7835
+    },
+    "VP-C0": {
+      "CI95": [
+        15.7391,
+        33.6262
+      ],
+      "breaks": 0,
+      "delta_U": 24.6827,
+      "n": 180,
+      "p_value": 2.006827122299743e-07,
+      "rescues": 27,
+      "t_stat": 5.4093
+    },
+    "VP_A2A-B0": {
+      "CI95": [
+        21.0475,
+        39.988
+      ],
+      "breaks": 0,
+      "delta_U": 30.5177,
+      "n": 180,
+      "p_value": 2.0607251190691715e-09,
+      "rescues": 34,
+      "t_stat": 6.3161
+    },
+    "VP_A2A-C0": {
+      "CI95": [
+        18.6803,
+        37.0262
+      ],
+      "breaks": 0,
+      "delta_U": 27.8532,
+      "n": 180,
+      "p_value": 1.3698043861984786e-08,
+      "rescues": 32,
+      "t_stat": 5.9515
+    },
+    "VP_A2A-VP": {
+      "CI95": [
+        0.5472,
+        5.7939
+      ],
+      "breaks": 0,
+      "delta_U": 3.1706,
+      "n": 180,
+      "p_value": 0.018911394249180646,
+      "rescues": 5,
+      "t_stat": 2.3688
+    }
+  }
+}

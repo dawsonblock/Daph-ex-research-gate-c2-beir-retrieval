@@ -269,11 +269,21 @@ def run_trajectory(task, backend, i3_7e, utility, q_model, arm,
                 resource_exhaustion = True
 
         # === VP guidance (frozen, identical across arms) ===
-        q_values = q_model.predict_q(sf, legal_actions)
-        near_optimal, lower_value = compute_near_optimal_set(q_values, 3.0)
-        progress_scores = compute_progress_scores(runtime, legal_actions, utility, executor)
-        refined_set, confidence = apply_progress_tiebreak(near_optimal, progress_scores, 0.05)
-        q_gap = compute_q_gap(q_values, refined_set)
+        # C0 and B0 do not use Q/progress — skip computation for those arms
+        if arm in ("C0", "B0"):
+            q_values = {}
+            near_optimal = []
+            lower_value = []
+            refined_set = []
+            confidence = "ambiguous"
+            q_gap = 0.0
+            progress_scores = {}
+        else:
+            q_values = q_model.predict_q(sf, legal_actions)
+            near_optimal, lower_value = compute_near_optimal_set(q_values, 3.0)
+            progress_scores = compute_progress_scores(runtime, legal_actions, utility, executor)
+            refined_set, confidence = apply_progress_tiebreak(near_optimal, progress_scores, 0.05)
+            q_gap = compute_q_gap(q_values, refined_set)
 
         progress_log.append({
             "step": step_id,
@@ -291,7 +301,17 @@ def run_trajectory(task, backend, i3_7e, utility, q_model, arm,
         authority_mode = "A0_advisory"
         schema_actions = allowed_decision.allowed  # default: all legal
 
-        if arm == "VP":
+        if arm == "C0":
+            # C0: no guidance, all legal actions, no extra fields
+            schema_actions = allowed_decision.allowed
+            authority_mode = "C0_no_guidance"
+
+        elif arm == "B0":
+            # B0: global prior — all actions near-optimal, confidence ambiguous
+            schema_actions = allowed_decision.allowed
+            authority_mode = "B0_global_prior"
+
+        elif arm == "VP":
             # A0: advisory, all legal actions
             schema_actions = allowed_decision.allowed
             authority_mode = "A0_advisory"
@@ -377,12 +397,22 @@ def run_trajectory(task, backend, i3_7e, utility, q_model, arm,
         })
 
         # Build packet with guidance
-        extra_fields = {
-            "near_optimal_actions": refined_set,
-            "lower_value_actions": lower_value,
-            "guidance_confidence": confidence,
-            "epistemic_phase": phase,
-        }
+        if arm == "C0":
+            extra_fields = {}
+        elif arm == "B0":
+            extra_fields = {
+                "near_optimal_actions": legal_actions,
+                "lower_value_actions": [],
+                "guidance_confidence": "ambiguous",
+                "epistemic_phase": phase,
+            }
+        else:
+            extra_fields = {
+                "near_optimal_actions": refined_set,
+                "lower_value_actions": lower_value,
+                "guidance_confidence": confidence,
+                "epistemic_phase": phase,
+            }
 
         packet = i3_7e.build_mdsg_state_with_affordances_packet(evidence_snapshot)
         schema = build_action_schema(schema_actions)
@@ -612,6 +642,9 @@ def main():
                        help="Comma-separated categories to run on")
     parser.add_argument("--arms", default="VP,VP_A1,VP_A2,VP_A2R",
                        help="Comma-separated arms to run")
+    parser.add_argument("--benchmark", default="development",
+                       choices=["development", "confirmation"],
+                       help="Which benchmark to use (development=seed7719, confirmation=fresh seed)")
     args = parser.parse_args()
 
     output_dir = REPO_ROOT / args.output_dir
@@ -632,13 +665,30 @@ def main():
     sys.modules["i3_7e"] = i3_7e
     spec.loader.exec_module(i3_7e)
 
-    # Load benchmark and filter to requested categories
-    print("Loading development benchmark...")
-    all_tasks = generate_development_benchmark(seed=7719)
+    # Load benchmark
+    if args.benchmark == "development":
+        print("Loading development benchmark (seed=7719)...")
+        all_tasks = generate_development_benchmark(seed=7719)
+        bench_hash = compute_benchmark_hash(all_tasks)
+        bench_version = "I3.26_DEVELOPMENT_BENCHMARK_V1"
+    else:
+        # Fresh confirmation benchmark with derived seed
+        import hashlib as _hl
+        fresh_seed = int(_hl.sha256(b"i3_27_authority_confirmation_v1").hexdigest()[:8], 16) % (2**31)
+        print(f"Loading fresh confirmation benchmark (seed={fresh_seed})...")
+        from hrm_adaptive_memory.executive.evidence_benchmark.i3_5_confirmation_generator import (
+            generate_confirmation_benchmark,
+        )
+        all_tasks = generate_confirmation_benchmark(seed=fresh_seed)
+        # Compute hash
+        task_json = json.dumps([t.as_dict() for t in all_tasks], sort_keys=True)
+        bench_hash = _hl.sha256(task_json.encode()).hexdigest()
+        bench_version = "I3.27_CONFIRMATION_BENCHMARK_V1"
     requested_cats = set(args.categories.split(","))
     tasks = [t for t in all_tasks if t.category in requested_cats]
-    bench_hash = compute_benchmark_hash(all_tasks)
     print(f"  {len(tasks)} tasks (categories: {requested_cats})")
+    print(f"  Benchmark hash: {bench_hash}")
+    print(f"  Benchmark version: {bench_version}")
 
     # Load utility
     from hrm_adaptive_memory.executive.metareasoning_utility import MetareasoningUtility
@@ -668,6 +718,7 @@ def main():
         "run_id": run_id,
         "timestamp": timestamp,
         "benchmark_hash": bench_hash,
+        "benchmark_version": bench_version,
         "n_tasks": len(tasks),
         "arms": arms,
         "categories": list(requested_cats),
