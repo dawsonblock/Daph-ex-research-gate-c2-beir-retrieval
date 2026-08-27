@@ -1,0 +1,190 @@
+{
+  "name": "DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V2",
+  "version": "V2",
+  "frozen_date": "2026-08-26",
+  "source_commit": "e6c8b8d6c0e6ce8823e514c01ed41ecb1f678696",
+  "branch": "i3.27-q-error-and-authority",
+  "status": "FROZEN_CANDIDATE",
+  "predecessor": {
+    "name": "DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V1",
+    "sha256": "7e493d036c1f50ef2c8744304a50e91bcb9cedc684d2b5fd37c269ea83399795",
+    "status": "FROZEN_CHAMPION"
+  },
+  "architecture": {
+    "principle": "DAPH should exercise hard authority only when causal value separation and observable structural safety agree.",
+    "controller_pipeline": [
+      "observable epistemic state",
+      "Q_CAUSAL_V2R_C",
+      "I2 epsilon near-optimal set",
+      "PROGRESS_RULE_V1",
+      "authority calibration",
+      "ANSWER: force if gap>=5 and ANSWER safety passes",
+      "DEFER: force if gap>=5 and has_competing_unverified_support==false and DEFER safety passes",
+      "otherwise: advisory Q + I2 + Progress"
+    ],
+    "regimes": {
+      "ambiguous_state": "advisory authority — all legal actions in schema, Q guidance is informational",
+      "clear_high_gap_ANSWER_state": "hard ANSWER authority — schema restricted to {ANSWER}",
+      "clear_safe_DEFER_state": "hard DEFER authority — schema restricted to {DEFER} when structural safety predicate passes",
+      "otherwise": "advisory — Qwen chooses from I2 near-optimal set"
+    }
+  },
+  "base_components": {
+    "Q_model": {
+      "name": "Q_CAUSAL_V2R_C",
+      "sha256": "b14095f8b3cb5561357517e814348e1d219359ddd5be90a69e477c89b0a70b78",
+      "path": "experiments/i3_28c/Q_V2R_coverage_repaired.pkl",
+      "training_data": {
+        "original_causal": {
+          "path": "experiments/i3_5/pinned_policy/pinned_causal_actions_v1.jsonl",
+          "sha256": "4383b7727ae38811d57db2de8294666405775745678db9b6ca70803a8afaae13",
+          "n_records": 1056
+        },
+        "i3_28b_boundary": {
+          "path": "experiments/i3_28b/boundary_causal_actions_v1.jsonl",
+          "sha256": "287067e6b4fb4f53eaad706766a810c296c77724455270e93839cb4585741c24",
+          "n_records": 400
+        },
+        "i3_28c_strata": {
+          "path": "experiments/i3_28c/strata_causal_actions_v1.jsonl",
+          "sha256": "903905b0d6f201a55c43bed349913c8dbe85bfdbc2cb769a8ffeae714ddd0ba5",
+          "n_records": 475
+        },
+        "combined_total": 1931
+      },
+      "learner": {
+        "class": "sklearn.ensemble.GradientBoostingRegressor",
+        "n_estimators": 200,
+        "max_depth": 4,
+        "random_state": 42,
+        "params_sha256": "cfc02b2dfee9998e311365b55ca7907a3dfd1dad539c781267da95b53990f3f1"
+      }
+    },
+    "Q_state_schema": {
+      "name": "Q_STATE_SCHEMA_V2",
+      "version": "V2R",
+      "sha256": "39958d0b58cc530f8ebc838a6d03a07630df361fe9c84efb86494b5f45bfa5e1",
+      "path": "experiments/i3_28/Q_STATE_SCHEMA_V2.json",
+      "v1_frozen_permanently": true,
+      "new_features": [
+        "n_hyp_unverified_support",
+        "n_hyp_unverified_contradiction",
+        "has_competing_unverified_support"
+      ],
+      "n_v1_features": 35,
+      "n_v2r_features": 41
+    },
+    "I2_near_optimal_interface": {
+      "epsilon_q": 3.0,
+      "description": "Near-optimal set = actions within epsilon_q of Q_max"
+    },
+    "progress_rule": {
+      "name": "PROGRESS_RULE_V1",
+      "sha256": "9f0bfc5eea1d24f97cb65020d0ba2569888c07110c1be189c2383ae9d62349b9",
+      "epsilon_p": 0.05,
+      "path": "daph/progress/progress_rule_v1.py"
+    },
+    "packet_builder": {
+      "sha256": "93e1b5767589143a7d7fde4c4cfb8260151dfa9b1fa30ffb41c4328c587cc8ef",
+      "path": "daph/executive/packet_builder.py"
+    }
+  },
+  "authority_rule": {
+    "name": "A2AD_ASYMMETRIC_HARD_SELECT",
+    "version": "V2",
+    "threshold": 5.0,
+    "threshold_frozen": true,
+    "threshold_tuning_prohibited": true,
+    "ANSWER_authority": {
+      "condition": "Q(ANSWER) == argmax(Q) AND Q(ANSWER) - Q(second_best) >= 5.0 AND ANSWER is legal AND ANSWER is sole near-optimal AND AnswerSafety(state) passes",
+      "effect": "schema_actions = frozenset({'ANSWER'})",
+      "safety_predicate": "inherited from V1 A2A_ANSWER_ONLY_HARD_SELECT"
+    },
+    "DEFER_authority": {
+      "condition": "Q(DEFER) == argmax(Q) AND Q(DEFER) - Q(second_best) >= 5.0 AND DEFER is legal AND DEFER is sole near-optimal AND has_competing_unverified_support == false AND DeferSafety(state) passes",
+      "effect": "schema_actions = frozenset({'DEFER'})",
+      "structural_safety_predicate": {
+        "required": [
+          "has_competing_unverified_support == false",
+          "DEFER is legal",
+          "DEFER is Q argmax",
+          "q_gap >= 5.0"
+        ],
+        "at_least_one_of": [
+          "VERIFY unavailable (max_verification_calls == 0)",
+          "verification budget exhausted (verification_calls_used >= max_verification_calls)",
+          "verification already complete (all visible evidence verified)",
+          "no unresolved evidence action can materially improve the state"
+        ],
+        "not_sufficient_by_itself": [
+          "remaining_steps == 1"
+        ]
+      }
+    },
+    "advisory_fallback": {
+      "condition": "otherwise",
+      "effect": "all legal actions in I2 near-optimal set, Q guidance is informational"
+    },
+    "engineering_protections": {
+      "action_allowlist": ["ANSWER", "DEFER"],
+      "frozen_threshold": 5.0,
+      "kill_switches": {
+        "authority.answer.enabled": "When false, ANSWER authority does not fire",
+        "authority.defer.enabled": "When false, DEFER authority does not fire"
+      },
+      "fail_closed": "Any authority-layer error fails to ADVISORY, not to a forced action"
+    }
+  },
+  "model_identity": {
+    "qwen_gguf_path": "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "qwen_gguf_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423"
+  },
+  "utility_definition": {
+    "config_sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07",
+    "path": "configs/v2b_i3_1_utility_v1.json"
+  },
+  "action_vocabulary": {
+    "canonical_order": ["ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"],
+    "version": "R13",
+    "count": 7
+  },
+  "benchmark_generator": {
+    "path": "hrm_adaptive_memory/executive/evidence_benchmark/i3_26_development_generator.py",
+    "sha256": "9466a6fc236c1fd3e94b509531e17e52644b925e9e7f5f01f44be1590ce04e8a"
+  },
+  "checkpoints": {
+    "path": "experiments/i3_5/datasets/checkpoints_v1.jsonl",
+    "sha256": "732abe0f65839d1f17d0e137615dfd3147bdf8fc2de06d24d07843466c8f9ca1",
+    "n_checkpoints": 220
+  },
+  "offline_validation": {
+    "experiment": "I3.28C",
+    "all_gates_pass": true,
+    "coverage_defer": 0.8125,
+    "false_authority_defer": 0.0,
+    "separation_margin_boundary": 98.33,
+    "separation_margin_dev": 101.34,
+    "answer_authority_preserved": "44/44 + 6/6",
+    "regret_v2r": 19.03,
+    "near_optimal_v2r": "156/220",
+    "correct_best_v2r": "84/220"
+  },
+  "provenance": {
+    "development_corrected_model": true,
+    "correction_history": "I3.28C round 1 failed ANSWER preservation gate (0/44) due to VERIFY overestimation from D3 records. D4 stratum (ANSWER-correct, n_verified=2) was added to provide contrast. I3.28C round 2 passed all 8 gates.",
+    "implication": "The upcoming live set must be fresh and untouched. The current 8-gate result is development validation, not confirmation.",
+    "lineage": [
+      "I3.27: ANSWER authority validated (V1 champion)",
+      "I3.28: Representation repair — separation gate failed (training data coverage gap)",
+      "I3.28B: Boundary causal repair — separation gate passed (margin 96.82), DEFER coverage 0%",
+      "I3.28C: Coverage audit — all 8 gates passed (coverage 81.25%, false authority 0%)"
+    ]
+  },
+  "non_goals": [
+    "Do not lower the threshold from 5.0 to improve D2 coverage",
+    "Do not tune any authority parameter after viewing live results",
+    "Do not force DEFER solely because DEFER is top-ranked by five points",
+    "Do not use verify_result as a model input",
+    "Do not inspect hidden evidence in authority logic"
+  ]
+}

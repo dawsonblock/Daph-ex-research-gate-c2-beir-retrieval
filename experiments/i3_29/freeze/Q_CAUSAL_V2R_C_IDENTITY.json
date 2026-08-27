@@ -1,0 +1,82 @@
+{
+  "name": "Q_CAUSAL_V2R_C_IDENTITY",
+  "frozen_date": "2026-08-26",
+  "source_commit": "e6c8b8d6c0e6ce8823e514c01ed41ecb1f678696",
+  "model": {
+    "name": "Q_CAUSAL_V2R_C",
+    "sha256": "b14095f8b3cb5561357517e814348e1d219359ddd5be90a69e477c89b0a70b78",
+    "path": "experiments/i3_28c/Q_V2R_coverage_repaired.pkl",
+    "class": "sklearn.ensemble.GradientBoostingRegressor",
+    "n_estimators": 200,
+    "max_depth": 4,
+    "random_state": 42
+  },
+  "feature_schema": {
+    "name": "Q_STATE_SCHEMA_V2",
+    "version": "V2R",
+    "sha256": "39958d0b58cc530f8ebc838a6d03a07630df361fe9c84efb86494b5f45bfa5e1",
+    "n_features": 41,
+    "v1_features": 35,
+    "new_features": 6,
+    "new_feature_names": [
+      "n_hyp_unverified_support",
+      "n_hyp_unverified_contradiction",
+      "has_competing_unverified_support",
+      "has_competing_x_defer",
+      "n_hyp_unverified_support_x_defer",
+      "n_hyp_unverified_contradiction_x_defer"
+    ]
+  },
+  "training_data": {
+    "total_records": 1931,
+    "sources": [
+      {
+        "name": "original_causal",
+        "path": "experiments/i3_5/pinned_policy/pinned_causal_actions_v1.jsonl",
+        "sha256": "4383b7727ae38811d57db2de8294666405775745678db9b6ca70803a8afaae13",
+        "n_records": 1056
+      },
+      {
+        "name": "i3_28b_boundary",
+        "path": "experiments/i3_28b/boundary_causal_actions_v1.jsonl",
+        "sha256": "287067e6b4fb4f53eaad706766a810c296c77724455270e93839cb4585741c24",
+        "n_records": 400
+      },
+      {
+        "name": "i3_28c_strata",
+        "path": "experiments/i3_28c/strata_causal_actions_v1.jsonl",
+        "sha256": "903905b0d6f201a55c43bed349913c8dbe85bfdbc2cb769a8ffeae714ddd0ba5",
+        "n_records": 475
+      }
+    ],
+    "target": "pinned_policy_utility",
+    "target_range": [-125.32, 100.0]
+  },
+  "leakage_tests": {
+    "all_pass": true,
+    "tests": [
+      "observable_from_visible_snapshot",
+      "no_verify_result_access",
+      "no_hidden_evidence_inspection",
+      "unchanged_by_future_outcomes"
+    ]
+  },
+  "offline_gates": {
+    "experiment": "I3.28C",
+    "all_pass": true,
+    "gates": {
+      "coverage_defer_safe": true,
+      "false_authority_defer_zero": true,
+      "separation_boundary": true,
+      "separation_dev": true,
+      "answer_authority_preserved": true,
+      "regret_no_worse": true,
+      "near_optimal_no_worse": true,
+      "correct_best_no_regression": true
+    }
+  },
+  "provenance": {
+    "development_corrected": true,
+    "correction": "D4 stratum added after I3.28C round 1 failed ANSWER preservation. This is a development-corrected model, not a confirmation model."
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "name": "AUTHORITY_RULE_V2",
+  "version": "V2",
+  "frozen_date": "2026-08-26",
+  "source_commit": "e6c8b8d6c0e6ce8823e514c01ed41ecb1f678696",
+  "threshold": 5.0,
+  "threshold_frozen": true,
+  "threshold_tuning_prohibited": true,
+  "rules": {
+    "ANSWER_hard_authority": {
+      "fires_iff": [
+        "Q(ANSWER) == argmax(Q) over legal actions",
+        "Q(ANSWER) - Q(second_best) >= 5.0",
+        "ANSWER is legal",
+        "ANSWER is sole member of near-optimal set (within epsilon_q=3.0 of Q_max)",
+        "AnswerSafety(state) passes"
+      ],
+      "effect": "schema_actions = frozenset({'ANSWER'})",
+      "fallback": "ADVISORY"
+    },
+    "DEFER_hard_authority": {
+      "fires_iff": [
+        "Q(DEFER) == argmax(Q) over legal actions",
+        "Q(DEFER) - Q(second_best) >= 5.0",
+        "DEFER is legal",
+        "DEFER is sole member of near-optimal set",
+        "has_competing_unverified_support == false",
+        "DeferSafety(state) passes"
+      ],
+      "effect": "schema_actions = frozenset({'DEFER'})",
+      "fallback": "ADVISORY"
+    },
+    "advisory": {
+      "fires_iff": "otherwise",
+      "effect": "all legal actions in I2 near-optimal set"
+    }
+  },
+  "DEFER_safety_predicate": {
+    "required_all": [
+      "has_competing_unverified_support == false",
+      "DEFER is legal",
+      "DEFER is Q argmax",
+      "q_gap >= 5.0"
+    ],
+    "required_at_least_one": [
+      "VERIFY unavailable (max_verification_calls == 0)",
+      "verification budget exhausted (verification_calls_used >= max_verification_calls)",
+      "verification already complete (all visible evidence has verification_state != UNVERIFIED)",
+      "no unresolved evidence action can materially improve the state"
+    ],
+    "not_sufficient_by_itself": [
+      "remaining_steps == 1"
+    ],
+    "rationale": "DEFER authority requires both value separation AND structural safety. The structural predicate ensures DEFER is only forced when continuation actions cannot materially improve the epistemic state."
+  },
+  "ANSWER_safety_predicate": {
+    "inherited_from": "A2A_ANSWER_ONLY_HARD_SELECT V1",
+    "sha256": "d51e404b0e108977440d27edf0ff4d3fe56357ed6207d8e2e69dc912fb35d762"
+  },
+  "fail_closed": "Any authority-layer error fails to ADVISORY, not to a forced action",
+  "boundary_tests": {
+    "gap_4_999": "ADVISORY (below threshold)",
+    "gap_5_000": "eligible (at threshold, >= is inclusive)",
+    "gap_5_001": "eligible (above threshold)"
+  }
+}

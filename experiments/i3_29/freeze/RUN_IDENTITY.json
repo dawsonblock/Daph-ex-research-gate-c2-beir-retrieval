@@ -1,0 +1,61 @@
+{
+  "name": "RUN_IDENTITY",
+  "frozen_date": "2026-08-26",
+  "source_commit": "e6c8b8d6c0e6ce8823e514c01ed41ecb1f678696",
+  "branch": "i3.27-q-error-and-authority",
+  "experiment": "I3.29",
+  "description": "Targeted live D1/D2/D3/D4 safety run for DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V2",
+  "arms": {
+    "V1": {
+      "name": "DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V1",
+      "sha256": "7e493d036c1f50ef2c8744304a50e91bcb9cedc684d2b5fd37c269ea83399795",
+      "Q_model_sha256": "d90d72dab250ba7ce032afcc9d430fabfd4e84dace3c4dbe4deb77de0f8c9729",
+      "authority": "A2A_ANSWER_ONLY_HARD_SELECT",
+      "status": "FROZEN_CHAMPION"
+    },
+    "V2": {
+      "name": "DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V2",
+      "sha256": "pending_after_freeze",
+      "Q_model_sha256": "b14095f8b3cb5561357517e814348e1d219359ddd5be90a69e477c89b0a70b78",
+      "authority": "A2AD_ASYMMETRIC_HARD_SELECT",
+      "status": "FROZEN_CANDIDATE"
+    }
+  },
+  "model_identity": {
+    "qwen_gguf_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+    "qwen_model_id": "Qwen/Qwen2.5-7B-Instruct-Q4_K_M"
+  },
+  "utility": {
+    "config_sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07",
+    "path": "configs/v2b_i3_1_utility_v1.json"
+  },
+  "frozen_components": {
+    "progress_rule_sha256": "9f0bfc5eea1d24f97cb65020d0ba2569888c07110c1be189c2383ae9d62349b9",
+    "packet_builder_sha256": "93e1b5767589143a7d7fde4c4cfb8260151dfa9b1fa30ffb41c4328c587cc8ef",
+    "benchmark_generator_sha256": "9466a6fc236c1fd3e94b509531e17e52644b925e9e7f5f01f44be1590ce04e8a",
+    "checkpoints_sha256": "732abe0f65839d1f17d0e137615dfd3147bdf8fc2de06d24d07843466c8f9ca1",
+    "feature_schema_v1_sha256": "9722343e8d87b2642eddb667dcd0a3b70407202e2f59606ae4eef81b8da29350",
+    "feature_schema_v2_sha256": "39958d0b58cc530f8ebc838a6d03a07630df361fe9c84efb86494b5f45bfa5e1"
+  },
+  "action_vocabulary": {
+    "canonical_order": ["ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"],
+    "version": "R13",
+    "count": 7
+  },
+  "hyperparameters": {
+    "authority_threshold": 5.0,
+    "I2_epsilon_q": 3.0,
+    "progress_epsilon_p": 0.05,
+    "GBT_n_estimators": 200,
+    "GBT_max_depth": 4,
+    "GBT_random_state": 42
+  },
+  "provenance_caution": "D4 stratum was added after I3.28C round 1 failed ANSWER preservation. The final I3.28C model is development-corrected. The live safety set must be fresh and untouched. The 8-gate offline result is development validation, not confirmation.",
+  "non_goals": [
+    "Do not lower threshold from 5.0",
+    "Do not tune authority parameters after viewing live results",
+    "Do not force DEFER solely because DEFER is top-ranked",
+    "Do not use verify_result as model input",
+    "Do not inspect hidden evidence"
+  ]
+}
