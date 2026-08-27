@@ -1,0 +1,147 @@
+{
+  "name": "DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V1",
+  "version": "V1",
+  "frozen_date": "2026-08-26",
+  "source_commit": "90dd77d",
+  "branch": "i3.27-q-error-and-authority",
+  "status": "FROZEN_CHAMPION",
+
+  "architecture": {
+    "principle": "DAPH should have adaptive authority, not permanently advisory authority. The executive has three distinct control regimes:",
+    "regimes": {
+      "ambiguous_state": "advisory authority — all legal actions in schema, Q guidance is informational",
+      "clear_high_gap_ANSWER_state": "hard authority — schema restricted to {ANSWER} when confidence=clear, refined_set={ANSWER}, q_gap>5.0",
+      "DEFER_state": "remain advisory until Q representation improves — Q cannot distinguish defer-correct from contradiction-incorrect states"
+    }
+  },
+
+  "base_components": {
+    "Q_model": {
+      "name": "QCAUSAL_V1",
+      "sha256": "d90d72dab250ba7ce032afcc9d430fabfd4e84dace3c4dbe4deb77de0f8c9729",
+      "path": "experiments/i3_5/pinned_policy/frozen_estimators/QCAUSAL_gbt.pkl"
+    },
+    "I2_near_optimal_interface": {
+      "epsilon_q": 3.0,
+      "description": "Near-optimal set = actions within epsilon_q of Q_max"
+    },
+    "progress_rule": {
+      "name": "PROGRESS_RULE_V1",
+      "sha256": "9f0bfc5eea1d24f97cb65020d0ba2569888c07110c1be189c2383ae9d62349b9",
+      "epsilon_p": 0.05,
+      "path": "daph/progress/progress_rule_v1.py"
+    },
+    "packet_builder": {
+      "sha256": "93e1b5767589143a7d7fde4c4cfb8260151dfa9b1fa30ffb41c4328c587cc8ef",
+      "path": "daph/executive/packet_builder.py"
+    }
+  },
+
+  "authority_rule": {
+    "name": "A2A_ANSWER_ONLY_HARD_SELECT",
+    "version": "V1",
+    "sha256": "570c81e4eef3621968cb921963ea6f06473f97623a50256e59ea01d43b8d9d43",
+    "threshold": 5.0,
+    "condition": "confidence == 'clear' AND refined_set == ['ANSWER'] AND q_gap > 5.0",
+    "effect": "schema_actions = frozenset({'ANSWER'}) & allowed_decision.allowed",
+    "fallback": "A0_advisory (all legal actions in schema)",
+    "does_not_apply_to": ["DEFER", "STOP", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE"],
+    "safety_requirement": "FalseAuthorityRate = 0",
+    "rationale": "ANSWER is terminal resolution. When Q clearly recommends ANSWER with large gap, Qwen should not defer/reason/retrieve instead. DEFER is excluded because Q gives identical values for defer-correct and contradiction-incorrect states."
+  },
+
+  "model_identity": {
+    "qwen_gguf_path": "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "qwen_gguf_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423"
+  },
+
+  "utility_definition": {
+    "config_sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07",
+    "path": "configs/v2b_i3_1_utility_v1.json"
+  },
+
+  "action_vocabulary": {
+    "canonical_order": ["ANSWER", "RETRIEVE", "VERIFY", "SEARCH_MORE", "REASON_MORE", "DEFER", "STOP"],
+    "version": "R13",
+    "count": 7
+  },
+
+  "validation_evidence": {
+    "development_benchmark": {
+      "name": "I3.26_DEVELOPMENT_BENCHMARK_V1",
+      "seed": 7719,
+      "n_tasks": 156,
+      "hash": "8d82d0a8c2ab06db2104ba7b8dfc4c60a14c4549c13ecd0e934346992f561cbc",
+      "VP_success": "108/156 (69.23%)",
+      "VP_A2A_success": "123/156 (78.85%)",
+      "Delta_U": 10.7681,
+      "CI95": [5.7791, 15.7570],
+      "rescues": 15,
+      "breaks": 0,
+      "FalseAuthorityRate": 0.0
+    },
+    "confirmation_benchmark": {
+      "name": "I3.27_CONFIRMATION_BENCHMARK_V1",
+      "seed": 97861090,
+      "n_tasks": 180,
+      "hash": "e54a3fec8d9a4f9995e13b9760f4556359e8c8cef98119db848088073948094d",
+      "C0_success": "132/180 (73.33%)",
+      "B0_success": "130/180 (72.22%)",
+      "VP_success": "159/180 (88.33%)",
+      "VP_A2A_success": "164/180 (91.11%)",
+      "Delta_U_A2A_VP": 3.1706,
+      "Delta_U_A2A_VP_CI95": [0.5472, 5.7939],
+      "Delta_U_A2A_VP_p": 0.018911,
+      "Delta_U_A2A_B0": 30.5177,
+      "Delta_U_A2A_C0": 27.8532,
+      "rescues": 5,
+      "breaks": 0,
+      "FalseAuthorityRate": 0.0,
+      "a2_triggered": "44/180 (24.4%)"
+    }
+  },
+
+  "rescue_audit": {
+    "n_rescues_audited": 15,
+    "all_legitimate": true,
+    "Q_had_genuine_ANSWER_advantage": true,
+    "Qwen_ignored_it": true,
+    "hard_authority_corrected_the_error": true,
+    "ANSWER_was_causally_best": "15/15 (forced-action return 99.89 vs 97.74 for VP action vs 54.19 for RETRIEVE)",
+    "not_a_superficial_pattern": true
+  },
+
+  "safety_gates": {
+    "all_pass": true,
+    "gates": {
+      "FalseAuthorityRate_eq_0": true,
+      "zero_breaks": true,
+      "prem_answer_no_triggers": true,
+      "prem_defer_no_triggers": true,
+      "contradiction_no_breaks": true,
+      "verify_no_triggers": true,
+      "retrieve_no_triggers": true,
+      "tl_retrieve_no_fabrication": true,
+      "chain_rescues_persist": true,
+      "CI_excludes_zero": true,
+      "search_no_breaks": true,
+      "retr_waste_no_triggers": true,
+      "stale_defer_no_triggers": true
+    }
+  },
+
+  "known_limitations": {
+    "DEFER_hard_authority": "REJECTED with current Q representation. Q gives identical values for defer-correct and contradiction-incorrect states because verify_result is not in the feature set. Forcing DEFER with threshold 5.0 rescued defer failures but broke 10 contradiction tasks.",
+    "effect_concentration": "The A2A effect is concentrated on chain tasks. Non-chain categories are unaffected. This is expected — chain tasks are where Q identifies ANSWER but Qwen defers.",
+    "effect_size_variation": "Development Delta U=10.77, confirmation Delta U=3.17. The difference is due to fewer chain tasks in the confirmation benchmark (12 vs 24). Per-chain-task rescue rate is similar."
+  },
+
+  "next_research_target": {
+    "target": "DEFER authority via Q-state representation repair",
+    "hypothesis": "Adding verification-resolution state (verify_result) enables safe DEFER authority",
+    "approach": "Add minimal missing causal features to Q state representation, test offline separability of DEFER-correct vs contradiction-correct states before any live hard-selection experiment",
+    "not_approach": "Do NOT tune DEFER threshold. The blocker is representation, not threshold.",
+    "if_separable": "Run same validation sequence: freeze → rescue audit → negative controls → safety audit → fresh confirmation",
+    "if_not_separable": "Stop. Do not force DEFER."
+  }
+}
