@@ -1,0 +1,32 @@
+{
+  "experiment": "I3.28: Authority-State Sufficiency",
+  "date": "2026-08-26",
+  "leakage_pass": true,
+  "separation_pass": false,
+  "separation_margin": -2.4203741782530983,
+  "required_margin": 5.0,
+  "preservation_pass": true,
+  "preservation_gates": {
+    "regret_no_worse": true,
+    "near_optimal_no_worse": true,
+    "answer_cases_preserved": true,
+    "no_new_false_high_conf_defer": true,
+    "correct_best_no_regression": true
+  },
+  "authority_pass": true,
+  "authority_false_rates": {
+    "a2a_false_authority_rate": 0.0,
+    "a2ad_answer_false_authority_rate": 0.0,
+    "a2ad_defer_false_authority_rate": 0.0
+  },
+  "all_pass": false,
+  "q_v1_sha256": "d90d72dab250ba7ce032afcc9d430fabfd4e84dace3c4dbe4deb77de0f8c9729",
+  "q_v2r_sha256": "6a1015dc9e84ffdf8a718cf7d4c882199a11e75867ec356dc793cb250f19f04f",
+  "gbt_params": {
+    "n_estimators": 200,
+    "max_depth": 4,
+    "random_state": 42
+  },
+  "n_training_records": 1056,
+  "n_checkpoints": 220
+}

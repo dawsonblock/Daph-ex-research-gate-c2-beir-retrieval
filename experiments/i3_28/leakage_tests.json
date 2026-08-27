@@ -1,0 +1,24 @@
+{
+  "tests": {
+    "n_hyp_unverified_support": {
+      "test1_observable_from_visible_snapshot": true,
+      "test2_no_verify_result": true,
+      "test3_no_hidden_evidence": true,
+      "test4_unchanged_by_future_outcomes": true
+    },
+    "n_hyp_unverified_contradiction": {
+      "test1_observable_from_visible_snapshot": true,
+      "test2_no_verify_result": true,
+      "test3_no_hidden_evidence": true,
+      "test4_unchanged_by_future_outcomes": true
+    },
+    "has_competing_unverified_support": {
+      "test1_observable_from_visible_snapshot": true,
+      "test2_no_verify_result": true,
+      "test3_no_hidden_evidence": true,
+      "test4_unchanged_by_future_outcomes": true
+    }
+  },
+  "all_pass": true,
+  "description": "4 leakage tests per feature: observable, no verify_result, no hidden, unchanged by future"
+}
