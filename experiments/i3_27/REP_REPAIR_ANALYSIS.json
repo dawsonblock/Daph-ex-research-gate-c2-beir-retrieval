@@ -1,0 +1,59 @@
+{
+  "analysis": "I3.27 Representation Repair Analysis for DEFER Authority",
+  "date": "2026-08-26",
+  "hypothesis": "Adding verification-resolution state enables safe DEFER authority",
+
+  "root_cause": {
+    "problem": "After SEARCH_MORE on contradiction tasks (step 1), Q(DEFER) = 69.34 — identical to defer-correct states at step 0. A2R with threshold 5.0 forced DEFER on 10 contradiction tasks, breaking them.",
+    "root_cause": "The current Q feature representation does not distinguish defer-correct from contradiction-correct states at the point where DEFER authority would trigger. Both states have n_verified=0, n_supporting=0, n_contradicting=0, n_untested=2.",
+    "not_the_root_cause": "The verify_result field on evidence items is ORACLE information (what verification WILL find). It is not observable and cannot be used as a feature. The problem is not missing verification outcomes — it's missing evidence STRUCTURE features."
+  },
+
+  "missing_features": {
+    "description": "The current features count verified evidence (n_supporting, n_contradicting) but do not count UNVERIFIED evidence structure. The key missing distinction is: does unverified evidence support COMPETING hypotheses (contradiction) or does it support one and contradict another (defer-correct)?",
+    "proposed_features": {
+      "n_hyp_unverified_support": "Number of hypotheses with at least one unverified evidence piece supporting them",
+      "n_hyp_unverified_contradiction": "Number of hypotheses with at least one unverified evidence piece contradicting them",
+      "has_competing_unverified_support": "Binary: n_hyp_unverified_support > 1 (contradiction signal)",
+      "n_unverified_supporting": "Count of unverified evidence pieces that support some hypothesis",
+      "n_unverified_contradicting": "Count of unverified evidence pieces that contradict some hypothesis"
+    }
+  },
+
+  "separability_test": {
+    "method": "Compare proposed features at defer-correct step 0 vs contradiction-correct step 1 (after SEARCH_MORE) — the exact states where A2R broke",
+    "results": {
+      "n_hyp_unverified_support": {"defer": 1, "contra": 2, "separable": true},
+      "n_hyp_unverified_contradiction": {"defer": 1, "contra": 0, "separable": true},
+      "has_competing_unverified_support": {"defer": 0, "contra": 1, "separable": true},
+      "n_unverified_supporting": {"defer": 1, "contra": 2, "separable": true},
+      "n_unverified_contradicting": {"defer": 1, "contra": 0, "separable": true}
+    },
+    "all_separable": true,
+    "also_separable_at_step_0": true,
+    "interpretation": "All 5 proposed features perfectly separate defer-correct from contradiction-correct states. The simplest single feature is has_competing_unverified_support: 0 for defer, 1 for contradiction."
+  },
+
+  "evidence_structure": {
+    "defer_correct": {
+      "E1": "supports H1, contradicts nothing",
+      "E2": "supports nothing, contradicts H2",
+      "interpretation": "Evidence is consistent — one hypothesis supported, one contradicted. No competing support. DEFER is correct because verification cannot resolve which hypothesis is right."
+    },
+    "contradiction_correct": {
+      "E1": "supports H1, contradicts nothing",
+      "E2": "supports H2, contradicts nothing",
+      "interpretation": "Evidence is contradictory — both hypotheses supported. Competing support. VERIFY is correct because verification can resolve which hypothesis is right."
+    }
+  },
+
+  "next_steps": {
+    "1": "Add the 5 proposed features to compute_state_features",
+    "2": "Retrain Q_CAUSAL on the expanded feature set (or test if existing Q can use them with retraining)",
+    "3": "Test offline separability of Q(DEFER) between defer-correct and contradiction-correct states with the new features",
+    "4": "If Q(DEFER) separates: run the same validation sequence as ANSWER (freeze → rescue audit → negative controls → safety audit → fresh confirmation)",
+    "5": "If Q(DEFER) does not separate: stop. Do not force DEFER."
+  },
+
+  "important_note": "The proposed features are OBSERVABLE — they do not require knowing verification outcomes. They only use the supports/contradicts fields of visible evidence, which are observable properties of the evidence structure."
+}
