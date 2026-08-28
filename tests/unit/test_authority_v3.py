@@ -59,11 +59,31 @@ class TestAnswerStructuralCertificate:
         )
         assert answer_structural_certificate(s) is False
 
-    def test_all_evidence_verified_no_contradiction_passes(self):
-        """Legacy D4: all evidence verified, no contradiction."""
+    def test_all_evidence_verified_no_contradiction_but_no_unique_support_fails(self):
+        """D5 bug fix: all evidence verified, no contradiction, but no unique support → FAILS.
+
+        The legacy clause (all_evidence_verified + no contradiction) was REMOVED
+        because it accepted competing verified support (the D5 pattern).
+        Now ANSWER requires unique verified support + ANSWER action mapping.
+        """
         s = make_structural(
             all_evidence_verified=True,
             n_hyp_with_verified_contradiction=0,
+            n_hyp_with_verified_support=2,  # competing support
+            has_unique_verified_supported_hypothesis=False,
+            has_verified_unresolved_competition=True,
+        )
+        assert answer_structural_certificate(s) is False
+
+    def test_all_evidence_verified_unique_support_answer_passes(self):
+        """All evidence verified, unique support, ANSWER action → passes."""
+        s = make_structural(
+            all_evidence_verified=True,
+            n_hyp_with_verified_contradiction=0,
+            n_hyp_with_verified_support=1,
+            has_unique_verified_supported_hypothesis=True,
+            verified_hyp_action_is_answer=True,
+            has_verified_unresolved_competition=False,
         )
         assert answer_structural_certificate(s) is True
 
@@ -72,6 +92,22 @@ class TestAnswerStructuralCertificate:
         s = make_structural(
             has_verified_unresolved_competition=True,
             n_hyp_with_verified_support=2,
+        )
+        assert answer_structural_certificate(s) is False
+
+    def test_d5_pattern_explicitly_blocked(self):
+        """D5 pattern: 2 supported hypotheses, 0 contradictions, all verified → BLOCKED.
+
+        This is the specific case that caused the I3.30 blocking defect.
+        The legacy clause accepted this; the fixed certificate must reject it.
+        """
+        s = make_structural(
+            all_evidence_verified=True,
+            n_hyp_with_verified_support=2,
+            n_hyp_with_verified_contradiction=0,
+            has_unique_verified_supported_hypothesis=False,
+            has_verified_unresolved_competition=True,
+            verified_hyp_action_is_answer=True,  # even if one maps to ANSWER
         )
         assert answer_structural_certificate(s) is False
 
@@ -84,6 +120,7 @@ class TestDeferStructuralCertificate:
         s = make_structural(
             has_unique_verified_supported_hypothesis=True,
             verified_hyp_action_is_defer=True,
+            has_verified_unresolved_competition=False,
         )
         assert defer_structural_certificate(s) is True
 
@@ -92,8 +129,20 @@ class TestDeferStructuralCertificate:
         s = make_structural(
             n_eliminated_hypotheses=1,
             n_viable_hypotheses=1,
+            has_verified_unresolved_competition=False,
         )
         assert defer_structural_certificate(s) is True
+
+    def test_defer_blocked_with_competing_support(self):
+        """DEFER certificate fails when there's unresolved competing support."""
+        s = make_structural(
+            has_verified_unresolved_competition=True,
+            n_hyp_with_verified_support=2,
+            has_unique_verified_supported_hypothesis=False,
+            n_eliminated_hypotheses=0,
+            verify_budget_exhausted=True,
+        )
+        assert defer_structural_certificate(s) is False
 
     def test_resource_exhaustion_no_verified_passes(self):
         """Legacy D1: resource exhaustion, no verified evidence."""

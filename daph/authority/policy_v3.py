@@ -106,15 +106,19 @@ def answer_structural_certificate(s: StructuralStateV3) -> bool:
     """Positive structural certificate for ANSWER authority.
 
     ANSWER is structurally supported when:
-    1. There is a uniquely verified-supported hypothesis whose action is ANSWER, OR
-    2. All evidence is verified with no contradictions (legacy D4 pattern)
-    """
-    # Primary certificate: unique verified support with ANSWER action
-    if s.has_unique_verified_supported_hypothesis and s.verified_hyp_action_is_answer:
-        return True
+    1. There is a uniquely verified-supported hypothesis whose action is ANSWER, AND
+    2. No unresolved competing verified support exists.
 
-    # Legacy certificate: all evidence verified, no verified contradiction
-    if s.all_evidence_verified and s.n_hyp_with_verified_contradiction == 0:
+    Per EPISTEMIC_SEMANTICS_V1.md §6.1, ANSWER_READY requires exactly one
+    SUPPORTED hypothesis with no competing verified support.
+
+    The legacy "all evidence verified + no contradiction" clause has been
+    REMOVED because it accepted competing verified support (the D5 bug).
+    """
+    # Certificate: unique verified support with ANSWER action AND no competition
+    if (s.has_unique_verified_supported_hypothesis
+            and s.verified_hyp_action_is_answer
+            and not s.has_verified_unresolved_competition):
         return True
 
     return False
@@ -124,10 +128,22 @@ def defer_structural_certificate(s: StructuralStateV3) -> bool:
     """Positive structural certificate for DEFER authority.
 
     DEFER is structurally supported when:
-    1. There is a uniquely verified-supported hypothesis whose action is DEFER, OR
-    2. Verification eliminated all but <=1 viable hypothesis (exhaustion), OR
-    3. Resource exhaustion with no verified evidence (legacy D1 pattern)
+    1. There is a uniquely verified-supported hypothesis whose action is DEFER, AND
+       no unresolved competing verified support exists, OR
+    2. Verification eliminated all but <=1 viable hypothesis (exhaustion), AND
+       no unresolved competing verified support exists, OR
+    3. Resource exhaustion with no verified evidence (legacy D1 pattern).
+
+    Per EPISTEMIC_SEMANTICS_V1.md §6.2, DEFER_READY requires that ANSWER_READY
+    is false AND no admissible continuation can resolve the state.
+    The certificate checks the epistemic part; resource state is checked
+    separately by the authority decision logic.
     """
+    # Defense-in-depth: never certify DEFER when there's unresolved competition
+    # that could be resolved by continuation (this is CONTINUE_REQUIRED, not DEFER)
+    if s.has_verified_unresolved_competition:
+        return False
+
     # Primary certificate: unique verified support with DEFER action
     if s.has_unique_verified_supported_hypothesis and s.verified_hyp_action_is_defer:
         return True

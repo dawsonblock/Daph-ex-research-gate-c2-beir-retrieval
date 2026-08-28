@@ -210,11 +210,17 @@ class EvidenceExecutor:
     def _check_answer_success(self, runtime: EvidenceRuntime) -> bool:
         """Check if ANSWER is correct.
 
-        ANSWER succeeds if:
+        ANSWER succeeds if and only if:
           1. The task's expected terminal is ANSWER, AND
-          2. The correct hypothesis has at least one SUFFICIENT, CURRENT
-             evidence item supporting it, AND
-          3. No contradicting evidence is SUFFICIENT for the correct hypothesis
+          2. The state is ANSWER_READY per EPISTEMIC_SEMANTICS_V1.md §6.1:
+             exactly one hypothesis has verified support (SUFFICIENT, CURRENT)
+             and no verified contradiction, AND
+          3. That uniquely supported hypothesis is the correct hypothesis.
+
+        This fixes the I3.30 defect where ANSWER succeeded even with
+        competing verified support (multiple hypotheses with SUFFICIENT
+        support). Under the canonical semantics, ANSWER requires unique
+        resolution — the evidence must single out one hypothesis.
         """
         task = runtime.task
         if task.expected_terminal is not DecisionAction.ANSWER:
@@ -222,23 +228,35 @@ class EvidenceExecutor:
 
         correct_h = task.correct_hypothesis_id
 
-        # Check for sufficient supporting evidence for the correct hypothesis
-        has_support = False
-        has_contradiction = False
+        # Count hypotheses with SUFFICIENT, CURRENT support and no SUFFICIENT contradiction
+        # This implements the canonical topology's unique_supported_hypothesis check
+        supported_hypotheses = []
+        for h in task.hypotheses:
+            h_id = h.hypothesis_id
+            has_support = False
+            has_contradiction = False
 
-        for ev in runtime.evidence:
-            if not ev.retrieved:
-                continue
-            if ev.verification_state != VerificationState.SUFFICIENT:
-                continue
-            if ev.temporal_status == TemporalStatus.STALE:
-                continue
-            if correct_h in ev.supports:
-                has_support = True
-            if correct_h in ev.contradicts:
-                has_contradiction = True
+            for ev in runtime.evidence:
+                if not ev.retrieved:
+                    continue
+                if ev.verification_state != VerificationState.SUFFICIENT:
+                    continue
+                if ev.temporal_status == TemporalStatus.STALE:
+                    continue
+                if h_id in ev.supports:
+                    has_support = True
+                if h_id in ev.contradicts:
+                    has_contradiction = True
 
-        return has_support and not has_contradiction
+            if has_support and not has_contradiction:
+                supported_hypotheses.append(h_id)
+
+        # ANSWER_READY requires exactly one supported hypothesis
+        if len(supported_hypotheses) != 1:
+            return False
+
+        # That uniquely supported hypothesis must be the correct one
+        return supported_hypotheses[0] == correct_h
 
 
 def build_evidence_snapshot(
