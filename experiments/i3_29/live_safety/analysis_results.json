@@ -1,0 +1,26 @@
+{
+  "experiment": "I3.29 Live Safety Run",
+  "n_trajectories": 300,
+  "gates": {
+    "1_success_no_regression": true,
+    "2_rescues_gt_breaks": true,
+    "3_zero_d3_false_defer": false,
+    "4_zero_false_answer": false,
+    "5_defer_coverage": true,
+    "6_positive_utility": true,
+    "7_no_premature_regression": true,
+    "8_no_reliability_regression": true
+  },
+  "all_pass": false,
+  "v1_success_rate": 0.4666666666666667,
+  "v2_success_rate": 0.7,
+  "rescues": 35,
+  "breaks": 0,
+  "mean_paired_delta_u": 39.11893333333333,
+  "d1_defer_coverage": "33/35",
+  "d2_defer_coverage": "27/35",
+  "d3_false_defer_forces": 3,
+  "v2_false_answer_forces": 8,
+  "v2_premature_defer": 9,
+  "v2_premature_answer": 8
+}
