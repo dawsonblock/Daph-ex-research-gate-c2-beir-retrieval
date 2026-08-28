@@ -473,6 +473,19 @@ def main():
         (3, 1, 128, 1, 1, "post_verify_3s_1v_tight"),
         (4, 1, 128, 1, 1, "post_verify_4s_1v_tight"),
     ]
+    
+    # Resource-exhausted budgets: continuation actions unavailable or dominated
+    # This creates the Q gap needed for authority to fire
+    EXHAUSTED_BUDGETS = [
+        (1, 0, 0, 0, 0, "exhausted_1s_nor_nov_noret_nosrch"),
+        (1, 0, 128, 0, 0, "exhausted_1s_r_nov_noret_nosrch"),
+        (2, 0, 0, 0, 0, "exhausted_2s_nor_nov_noret_nosrch"),
+        (2, 0, 128, 0, 0, "exhausted_2s_r_nov_noret_nosrch"),
+        (1, 1, 0, 0, 0, "exhausted_1s_nor_1v_noret_nosrch"),
+        (2, 1, 0, 0, 0, "exhausted_2s_nor_1v_noret_nosrch"),
+        (3, 0, 0, 0, 0, "exhausted_3s_nor_nov_noret_nosrch"),
+        (1, 0, 0, 1, 0, "exhausted_1s_nor_nov_1ret_nosrch"),
+    ]
 
     n_per_regime = 40  # 40 tasks per regime × 16 domains ≈ 640 boundary states
 
@@ -491,7 +504,13 @@ def main():
             task_id = f"i3_30b_{regime.lower()}_{i:04d}"
             
             task = make_func(task_id, domain, n_hyps, seed + i)
-            budget_cfg = BUDGETS[i % len(BUDGETS)]
+            
+            # Use exhausted budgets for P1 and P2 (to create Q gap for authority)
+            # Use normal budgets for P3 and P2_elim
+            if regime in ("P1", "P2") and i % 2 == 0:
+                budget_cfg = EXHAUSTED_BUDGETS[(i // 2) % len(EXHAUSTED_BUDGETS)]
+            else:
+                budget_cfg = BUDGETS[i % len(BUDGETS)]
             budget = make_budget(*budget_cfg[:5])
             
             records = collect_boundary_data(task, budget)

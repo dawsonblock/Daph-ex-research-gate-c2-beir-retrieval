@@ -1,0 +1,20 @@
+{
+  "model_sha256": "64044c3c0f32d46a39dff024f3601668d9f8bc0f08c973998c32ffee3fadd9f1",
+  "feature_count": 56,
+  "total_records": 2915,
+  "gates": {
+    "1_far_answer_zero": true,
+    "2_far_defer_zero": true,
+    "3_terminal_authority_precision_1": true,
+    "4_answer_coverage_positive": true,
+    "5_defer_coverage_positive": true,
+    "6_answer_preservation": true
+  },
+  "all_pass": true,
+  "far_answer": 0.0,
+  "far_defer": 0.0,
+  "terminal_authority_precision": 1.0,
+  "answer_coverage": "19/20",
+  "defer_coverage": "10/20",
+  "answer_preservation": 1.0
+}
