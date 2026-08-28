@@ -1,0 +1,95 @@
+{
+  "total_records": 1931,
+  "coverage_matrix": {
+    "('none', 'no_verified_evidence', 'other')": 1931
+  },
+  "zero_support_cells": [
+    {
+      "verification_state": "none",
+      "topology": "no_verified_evidence",
+      "terminal_regime": "DEFER_correct",
+      "count": 0,
+      "description": "D1: safe DEFER, no verification possible"
+    },
+    {
+      "verification_state": "none",
+      "topology": "no_verified_evidence",
+      "terminal_regime": "ANSWER_correct",
+      "count": 0,
+      "description": "D3 pre-verify: ANSWER correct but premature"
+    },
+    {
+      "verification_state": "complete",
+      "topology": "unique_supported",
+      "terminal_regime": "ANSWER_correct",
+      "count": 0,
+      "description": "D4: post-verify, unique supported hypothesis, ANSWER correct"
+    },
+    {
+      "verification_state": "complete",
+      "topology": "unique_supported",
+      "terminal_regime": "DEFER_correct",
+      "count": 0,
+      "description": "D2: post-verify, unique supported hypothesis, DEFER correct"
+    },
+    {
+      "verification_state": "complete",
+      "topology": "unique_supported_with_eliminated",
+      "terminal_regime": "DEFER_correct",
+      "count": 0,
+      "description": "D2 with eliminated: post-verify, supported + eliminated, DEFER correct"
+    },
+    {
+      "verification_state": "complete",
+      "topology": "unique_supported_with_eliminated",
+      "terminal_regime": "ANSWER_correct",
+      "count": 0,
+      "description": "D3 post-verify: supported + eliminated, ANSWER correct"
+    },
+    {
+      "verification_state": "complete",
+      "topology": "competing_support",
+      "terminal_regime": "CONTINUE_correct",
+      "count": 0,
+      "description": "Post-verify with competing support, continue"
+    },
+    {
+      "verification_state": "complete",
+      "topology": "only_eliminated",
+      "terminal_regime": "DEFER_correct",
+      "count": 0,
+      "description": "Post-verify, only eliminated, DEFER correct"
+    },
+    {
+      "verification_state": "partial",
+      "topology": "unique_supported",
+      "terminal_regime": "ANSWER_correct",
+      "count": 0,
+      "description": "Partial verify, unique supported, ANSWER correct"
+    },
+    {
+      "verification_state": "partial",
+      "topology": "unique_supported",
+      "terminal_regime": "DEFER_correct",
+      "count": 0,
+      "description": "Partial verify, unique supported, DEFER correct"
+    },
+    {
+      "verification_state": "partial",
+      "topology": "unique_supported",
+      "terminal_regime": "CONTINUE_correct",
+      "count": 0,
+      "description": "Partial verify, unique supported, continue"
+    },
+    {
+      "verification_state": "partial",
+      "topology": "competing_support",
+      "terminal_regime": "CONTINUE_correct",
+      "count": 0,
+      "description": "Partial verify, competing support, continue"
+    }
+  ],
+  "verified_hyp_action_distribution": {
+    "none": 1931
+  }
+}

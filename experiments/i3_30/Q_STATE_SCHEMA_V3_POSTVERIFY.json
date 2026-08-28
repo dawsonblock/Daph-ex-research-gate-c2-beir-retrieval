@@ -1,0 +1,141 @@
+{
+  "schema_name": "Q_STATE_SCHEMA_V3_POSTVERIFY",
+  "version": 1,
+  "created": "2026-08-26",
+  "experiment": "I3.30",
+  "hypothesis": "Visible verified-evidence topology is sufficient to distinguish safe ANSWER from safe DEFER after verification.",
+  "predecessor": "Q_STATE_SCHEMA_V2 (V2R, 3 structural features)",
+  "relationship_to_v2": "V3 extends V2. V2 is NOT overwritten. V2 remains frozen for I3.29 lineage.",
+
+  "new_features": [
+    {
+      "name": "n_hyp_with_verified_support",
+      "type": "int",
+      "description": "Number of hypotheses with >=1 verified supporting evidence item (verification_state=SUFFICIENT).",
+      "observable": true,
+      "uses_oracle": false,
+      "uses_hidden_evidence": false,
+      "uses_future_outcome": false
+    },
+    {
+      "name": "n_hyp_with_verified_contradiction",
+      "type": "int",
+      "description": "Number of hypotheses with >=1 verified contradicting evidence item (verification_state=FALSIFIED).",
+      "observable": true,
+      "uses_oracle": false,
+      "uses_hidden_evidence": false,
+      "uses_future_outcome": false
+    },
+    {
+      "name": "n_hyp_with_mixed_verified",
+      "type": "int",
+      "description": "Number of hypotheses with both verified support and verified contradiction.",
+      "observable": true,
+      "uses_oracle": false,
+      "uses_hidden_evidence": false,
+      "uses_future_outcome": false
+    },
+    {
+      "name": "n_viable_hypotheses",
+      "type": "int",
+      "description": "Number of hypotheses not eliminated (i.e., not having verified contradiction without verified support).",
+      "observable": true,
+      "uses_oracle": false,
+      "uses_hidden_evidence": false,
+      "uses_future_outcome": false
+    },
+    {
+      "name": "n_eliminated_hypotheses",
+      "type": "int",
+      "description": "Number of hypotheses with verified contradiction and no verified support.",
+      "observable": true,
+      "uses_oracle": false,
+      "uses_hidden_evidence": false,
+      "uses_future_outcome": false
+    },
+    {
+      "name": "has_unique_verified_supported_hypothesis",
+      "type": "int (0/1)",
+      "description": "1 if exactly one hypothesis has verified support.",
+      "observable": true,
+      "uses_oracle": false,
+      "uses_hidden_evidence": false,
+      "uses_future_outcome": false
+    },
+    {
+      "name": "has_verified_unresolved_competition",
+      "type": "int (0/1)",
+      "description": "1 if more than one hypothesis has verified support (competing verified support).",
+      "observable": true,
+      "uses_oracle": false,
+      "uses_hidden_evidence": false,
+      "uses_future_outcome": false
+    },
+    {
+      "name": "verified_hyp_action_is_answer",
+      "type": "int (0/1)",
+      "description": "1 if there is a uniquely verified-supported hypothesis AND its answer_action is ANSWER. 0 otherwise.",
+      "observable": true,
+      "uses_oracle": false,
+      "uses_hidden_evidence": false,
+      "uses_future_outcome": false,
+      "note": "The hypothesis answer_action is visible in the evidence snapshot. This feature captures the task-semantic mapping: 'if the verified hypothesis is correct, the right terminal action is ANSWER.'"
+    },
+    {
+      "name": "verified_hyp_action_is_defer",
+      "type": "int (0/1)",
+      "description": "1 if there is a uniquely verified-supported hypothesis AND its answer_action is DEFER. 0 otherwise.",
+      "observable": true,
+      "uses_oracle": false,
+      "uses_hidden_evidence": false,
+      "uses_future_outcome": false,
+      "note": "The hypothesis answer_action is visible in the evidence snapshot. This feature captures the task-semantic mapping: 'if the verified hypothesis is correct, the right terminal action is DEFER.'"
+    }
+  ],
+
+  "retained_v2_features": [
+    "n_hyp_unverified_support",
+    "n_hyp_unverified_contradiction",
+    "has_competing_unverified_support"
+  ],
+
+  "interactions_with_action_features": [
+    "verified_hyp_action_is_answer_x_answer",
+    "verified_hyp_action_is_defer_x_defer",
+    "n_hyp_with_verified_contradiction_x_defer",
+    "n_eliminated_hypotheses_x_defer",
+    "has_unique_verified_supported_hypothesis_x_answer",
+    "has_verified_unresolved_competition_x_continue"
+  ],
+
+  "separability_audit_result": {
+    "total_terminal_states": 209,
+    "v2r_collisions": 2,
+    "v3_alone_collisions": 4,
+    "v3_plus_verified_hyp_action_collisions": 1,
+    "remaining_collision": {
+      "description": "Pre-verification states: 23 D1 (DEFER-correct, no verify budget) vs 4 D3 (ANSWER-correct, premature terminal). Both have verified_hyp_action=None and all structural features = 0.",
+      "classification": "Premature terminal action issue, not Q calibration issue. Q model should predict low Q(ANSWER) when no verified evidence exists."
+    }
+  },
+
+  "observability_rules": [
+    "Features use only visible evidence (retrieved=True).",
+    "Features use only verification_state (SUFFICIENT/FALSIFIED/UNVERIFIED), not verify_result oracle.",
+    "Features do NOT inspect hidden evidence.",
+    "Features are NOT changed by future outcomes.",
+    "verified_hyp_action uses the hypothesis answer_action field, which is visible in the evidence snapshot.",
+    "No terminal correctness, future action, or downstream utility enters the representation."
+  ],
+
+  "frozen_learner": {
+    "model": "GradientBoostingRegressor",
+    "n_estimators": 200,
+    "max_depth": 4,
+    "random_state": 42,
+    "note": "Same hyperparameters as V1 and V2R. No tuning."
+  },
+
+  "authority_threshold": 5.0,
+  "threshold_note": "Frozen at 5.0. Not lowered during I3.30."
+}

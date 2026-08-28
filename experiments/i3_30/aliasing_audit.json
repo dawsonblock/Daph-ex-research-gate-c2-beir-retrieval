@@ -1,0 +1,1153 @@
+[
+  {
+    "label": "FALSE_AUTHORITY",
+    "task_id": "i3_29_d2_0004",
+    "stratum": "D2",
+    "step": 1,
+    "forced_action": "ANSWER",
+    "expected_terminal": "DEFER",
+    "success": false,
+    "state_features": {
+      "n_live": 1,
+      "n_eliminated": 0,
+      "n_untested": 1,
+      "n_total_hypotheses": 2,
+      "n_visible_evidence": 5,
+      "n_hidden_evidence": 0,
+      "n_verified": 2,
+      "n_supporting": 1,
+      "n_contradicting": 0,
+      "n_stale": 0,
+      "retrieval_remaining": 0,
+      "search_remaining": 0,
+      "verify_remaining": 0,
+      "steps_remaining": 1,
+      "can_retrieve": false,
+      "can_search": false,
+      "can_verify": false,
+      "searched": false,
+      "reasoning_complete": false,
+      "last_action": "VERIFY",
+      "same_action_run_length": 1,
+      "retrieval_count": 0,
+      "search_count": 0,
+      "verify_count": 1
+    },
+    "structural_v2r": {
+      "n_hyp_unverified_support": 1,
+      "n_hyp_unverified_contradiction": 1,
+      "has_competing_unverified_support": 0
+    },
+    "evidence_topology": [
+      {
+        "evidence_id": "E1",
+        "supports": [
+          "H1"
+        ],
+        "contradicts": [],
+        "verification_state": "SUFFICIENT",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E2",
+        "supports": [],
+        "contradicts": [
+          "H2"
+        ],
+        "verification_state": "FALSIFIED",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E3",
+        "supports": [
+          "H1"
+        ],
+        "contradicts": [],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E4",
+        "supports": [],
+        "contradicts": [
+          "H2"
+        ],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E5",
+        "supports": [
+          "H1"
+        ],
+        "contradicts": [],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      }
+    ],
+    "hypothesis_resolution": {
+      "per_hypothesis": {
+        "H1": {
+          "n_verified_support": 1,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 2,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": true,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": true
+        },
+        "H2": {
+          "n_verified_support": 0,
+          "n_verified_contradiction": 1,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 1,
+          "has_verified_support": false,
+          "has_verified_contradiction": true,
+          "is_eliminated": true,
+          "is_confirmed": false
+        }
+      },
+      "aggregate": {
+        "n_hyp_with_verified_support": 1,
+        "n_hyp_with_verified_contradiction": 1,
+        "n_hyp_with_mixed_verified": 0,
+        "n_viable_hypotheses": 1,
+        "n_eliminated_hypotheses": 1,
+        "has_unique_verified_supported_hypothesis": true,
+        "has_verified_unresolved_competition": false
+      }
+    }
+  },
+  {
+    "label": "FALSE_AUTHORITY",
+    "task_id": "i3_29_d2_0005",
+    "stratum": "D2",
+    "step": 1,
+    "forced_action": "ANSWER",
+    "expected_terminal": "DEFER",
+    "success": false,
+    "state_features": {
+      "n_live": 1,
+      "n_eliminated": 0,
+      "n_untested": 1,
+      "n_total_hypotheses": 2,
+      "n_visible_evidence": 2,
+      "n_hidden_evidence": 0,
+      "n_verified": 2,
+      "n_supporting": 1,
+      "n_contradicting": 0,
+      "n_stale": 0,
+      "retrieval_remaining": 0,
+      "search_remaining": 0,
+      "verify_remaining": 0,
+      "steps_remaining": 2,
+      "can_retrieve": false,
+      "can_search": false,
+      "can_verify": false,
+      "searched": false,
+      "reasoning_complete": false,
+      "last_action": "VERIFY",
+      "same_action_run_length": 1,
+      "retrieval_count": 0,
+      "search_count": 0,
+      "verify_count": 1
+    },
+    "structural_v2r": {
+      "n_hyp_unverified_support": 0,
+      "n_hyp_unverified_contradiction": 0,
+      "has_competing_unverified_support": 0
+    },
+    "evidence_topology": [
+      {
+        "evidence_id": "E1",
+        "supports": [
+          "H1"
+        ],
+        "contradicts": [],
+        "verification_state": "SUFFICIENT",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E2",
+        "supports": [],
+        "contradicts": [
+          "H2"
+        ],
+        "verification_state": "FALSIFIED",
+        "retrieved": true
+      }
+    ],
+    "hypothesis_resolution": {
+      "per_hypothesis": {
+        "H1": {
+          "n_verified_support": 1,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": true,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": true
+        },
+        "H2": {
+          "n_verified_support": 0,
+          "n_verified_contradiction": 1,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": false,
+          "has_verified_contradiction": true,
+          "is_eliminated": true,
+          "is_confirmed": false
+        }
+      },
+      "aggregate": {
+        "n_hyp_with_verified_support": 1,
+        "n_hyp_with_verified_contradiction": 1,
+        "n_hyp_with_mixed_verified": 0,
+        "n_viable_hypotheses": 1,
+        "n_eliminated_hypotheses": 1,
+        "has_unique_verified_supported_hypothesis": true,
+        "has_verified_unresolved_competition": false
+      }
+    }
+  },
+  {
+    "label": "FALSE_AUTHORITY",
+    "task_id": "i3_29_d2_0012",
+    "stratum": "D2",
+    "step": 1,
+    "forced_action": "ANSWER",
+    "expected_terminal": "DEFER",
+    "success": false,
+    "state_features": {
+      "n_live": 1,
+      "n_eliminated": 0,
+      "n_untested": 1,
+      "n_total_hypotheses": 2,
+      "n_visible_evidence": 5,
+      "n_hidden_evidence": 0,
+      "n_verified": 2,
+      "n_supporting": 1,
+      "n_contradicting": 0,
+      "n_stale": 0,
+      "retrieval_remaining": 0,
+      "search_remaining": 0,
+      "verify_remaining": 0,
+      "steps_remaining": 1,
+      "can_retrieve": false,
+      "can_search": false,
+      "can_verify": false,
+      "searched": false,
+      "reasoning_complete": false,
+      "last_action": "VERIFY",
+      "same_action_run_length": 1,
+      "retrieval_count": 0,
+      "search_count": 0,
+      "verify_count": 1
+    },
+    "structural_v2r": {
+      "n_hyp_unverified_support": 1,
+      "n_hyp_unverified_contradiction": 1,
+      "has_competing_unverified_support": 0
+    },
+    "evidence_topology": [
+      {
+        "evidence_id": "E1",
+        "supports": [
+          "H2"
+        ],
+        "contradicts": [],
+        "verification_state": "SUFFICIENT",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E2",
+        "supports": [],
+        "contradicts": [
+          "H1"
+        ],
+        "verification_state": "FALSIFIED",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E3",
+        "supports": [
+          "H2"
+        ],
+        "contradicts": [],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E4",
+        "supports": [],
+        "contradicts": [
+          "H1"
+        ],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E5",
+        "supports": [
+          "H2"
+        ],
+        "contradicts": [],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      }
+    ],
+    "hypothesis_resolution": {
+      "per_hypothesis": {
+        "H1": {
+          "n_verified_support": 0,
+          "n_verified_contradiction": 1,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 1,
+          "has_verified_support": false,
+          "has_verified_contradiction": true,
+          "is_eliminated": true,
+          "is_confirmed": false
+        },
+        "H2": {
+          "n_verified_support": 1,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 2,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": true,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": true
+        }
+      },
+      "aggregate": {
+        "n_hyp_with_verified_support": 1,
+        "n_hyp_with_verified_contradiction": 1,
+        "n_hyp_with_mixed_verified": 0,
+        "n_viable_hypotheses": 1,
+        "n_eliminated_hypotheses": 1,
+        "has_unique_verified_supported_hypothesis": true,
+        "has_verified_unresolved_competition": false
+      }
+    }
+  },
+  {
+    "label": "FALSE_AUTHORITY",
+    "task_id": "i3_29_d2_0013",
+    "stratum": "D2",
+    "step": 1,
+    "forced_action": "ANSWER",
+    "expected_terminal": "DEFER",
+    "success": false,
+    "state_features": {
+      "n_live": 1,
+      "n_eliminated": 0,
+      "n_untested": 2,
+      "n_total_hypotheses": 3,
+      "n_visible_evidence": 4,
+      "n_hidden_evidence": 0,
+      "n_verified": 2,
+      "n_supporting": 1,
+      "n_contradicting": 0,
+      "n_stale": 0,
+      "retrieval_remaining": 0,
+      "search_remaining": 0,
+      "verify_remaining": 0,
+      "steps_remaining": 2,
+      "can_retrieve": false,
+      "can_search": false,
+      "can_verify": false,
+      "searched": false,
+      "reasoning_complete": false,
+      "last_action": "VERIFY",
+      "same_action_run_length": 1,
+      "retrieval_count": 0,
+      "search_count": 0,
+      "verify_count": 1
+    },
+    "structural_v2r": {
+      "n_hyp_unverified_support": 1,
+      "n_hyp_unverified_contradiction": 1,
+      "has_competing_unverified_support": 0
+    },
+    "evidence_topology": [
+      {
+        "evidence_id": "E1",
+        "supports": [
+          "H1"
+        ],
+        "contradicts": [],
+        "verification_state": "SUFFICIENT",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E2",
+        "supports": [],
+        "contradicts": [
+          "H2"
+        ],
+        "verification_state": "FALSIFIED",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E3",
+        "supports": [
+          "H1"
+        ],
+        "contradicts": [],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E4",
+        "supports": [],
+        "contradicts": [
+          "H2"
+        ],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      }
+    ],
+    "hypothesis_resolution": {
+      "per_hypothesis": {
+        "H1": {
+          "n_verified_support": 1,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 1,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": true,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": true
+        },
+        "H2": {
+          "n_verified_support": 0,
+          "n_verified_contradiction": 1,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 1,
+          "has_verified_support": false,
+          "has_verified_contradiction": true,
+          "is_eliminated": true,
+          "is_confirmed": false
+        },
+        "H3": {
+          "n_verified_support": 0,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": false,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": false
+        }
+      },
+      "aggregate": {
+        "n_hyp_with_verified_support": 1,
+        "n_hyp_with_verified_contradiction": 1,
+        "n_hyp_with_mixed_verified": 0,
+        "n_viable_hypotheses": 2,
+        "n_eliminated_hypotheses": 1,
+        "has_unique_verified_supported_hypothesis": true,
+        "has_verified_unresolved_competition": false
+      }
+    }
+  },
+  {
+    "label": "FALSE_AUTHORITY",
+    "task_id": "i3_29_d2_0020",
+    "stratum": "D2",
+    "step": 1,
+    "forced_action": "ANSWER",
+    "expected_terminal": "DEFER",
+    "success": false,
+    "state_features": {
+      "n_live": 1,
+      "n_eliminated": 0,
+      "n_untested": 1,
+      "n_total_hypotheses": 2,
+      "n_visible_evidence": 2,
+      "n_hidden_evidence": 0,
+      "n_verified": 2,
+      "n_supporting": 1,
+      "n_contradicting": 0,
+      "n_stale": 0,
+      "retrieval_remaining": 0,
+      "search_remaining": 0,
+      "verify_remaining": 0,
+      "steps_remaining": 1,
+      "can_retrieve": false,
+      "can_search": false,
+      "can_verify": false,
+      "searched": false,
+      "reasoning_complete": false,
+      "last_action": "VERIFY",
+      "same_action_run_length": 1,
+      "retrieval_count": 0,
+      "search_count": 0,
+      "verify_count": 1
+    },
+    "structural_v2r": {
+      "n_hyp_unverified_support": 0,
+      "n_hyp_unverified_contradiction": 0,
+      "has_competing_unverified_support": 0
+    },
+    "evidence_topology": [
+      {
+        "evidence_id": "E1",
+        "supports": [
+          "H1"
+        ],
+        "contradicts": [],
+        "verification_state": "SUFFICIENT",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E2",
+        "supports": [],
+        "contradicts": [
+          "H2"
+        ],
+        "verification_state": "FALSIFIED",
+        "retrieved": true
+      }
+    ],
+    "hypothesis_resolution": {
+      "per_hypothesis": {
+        "H1": {
+          "n_verified_support": 1,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": true,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": true
+        },
+        "H2": {
+          "n_verified_support": 0,
+          "n_verified_contradiction": 1,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": false,
+          "has_verified_contradiction": true,
+          "is_eliminated": true,
+          "is_confirmed": false
+        }
+      },
+      "aggregate": {
+        "n_hyp_with_verified_support": 1,
+        "n_hyp_with_verified_contradiction": 1,
+        "n_hyp_with_mixed_verified": 0,
+        "n_viable_hypotheses": 1,
+        "n_eliminated_hypotheses": 1,
+        "has_unique_verified_supported_hypothesis": true,
+        "has_verified_unresolved_competition": false
+      }
+    }
+  },
+  {
+    "label": "FALSE_AUTHORITY",
+    "task_id": "i3_29_d2_0021",
+    "stratum": "D2",
+    "step": 1,
+    "forced_action": "ANSWER",
+    "expected_terminal": "DEFER",
+    "success": false,
+    "state_features": {
+      "n_live": 1,
+      "n_eliminated": 0,
+      "n_untested": 1,
+      "n_total_hypotheses": 2,
+      "n_visible_evidence": 5,
+      "n_hidden_evidence": 0,
+      "n_verified": 2,
+      "n_supporting": 1,
+      "n_contradicting": 0,
+      "n_stale": 0,
+      "retrieval_remaining": 0,
+      "search_remaining": 0,
+      "verify_remaining": 0,
+      "steps_remaining": 2,
+      "can_retrieve": false,
+      "can_search": false,
+      "can_verify": false,
+      "searched": false,
+      "reasoning_complete": false,
+      "last_action": "VERIFY",
+      "same_action_run_length": 1,
+      "retrieval_count": 0,
+      "search_count": 0,
+      "verify_count": 1
+    },
+    "structural_v2r": {
+      "n_hyp_unverified_support": 1,
+      "n_hyp_unverified_contradiction": 1,
+      "has_competing_unverified_support": 0
+    },
+    "evidence_topology": [
+      {
+        "evidence_id": "E1",
+        "supports": [
+          "H2"
+        ],
+        "contradicts": [],
+        "verification_state": "SUFFICIENT",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E2",
+        "supports": [],
+        "contradicts": [
+          "H1"
+        ],
+        "verification_state": "FALSIFIED",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E3",
+        "supports": [
+          "H2"
+        ],
+        "contradicts": [],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E4",
+        "supports": [],
+        "contradicts": [
+          "H1"
+        ],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E5",
+        "supports": [
+          "H2"
+        ],
+        "contradicts": [],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      }
+    ],
+    "hypothesis_resolution": {
+      "per_hypothesis": {
+        "H1": {
+          "n_verified_support": 0,
+          "n_verified_contradiction": 1,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 1,
+          "has_verified_support": false,
+          "has_verified_contradiction": true,
+          "is_eliminated": true,
+          "is_confirmed": false
+        },
+        "H2": {
+          "n_verified_support": 1,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 2,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": true,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": true
+        }
+      },
+      "aggregate": {
+        "n_hyp_with_verified_support": 1,
+        "n_hyp_with_verified_contradiction": 1,
+        "n_hyp_with_mixed_verified": 0,
+        "n_viable_hypotheses": 1,
+        "n_eliminated_hypotheses": 1,
+        "has_unique_verified_supported_hypothesis": true,
+        "has_verified_unresolved_competition": false
+      }
+    }
+  },
+  {
+    "label": "FALSE_AUTHORITY",
+    "task_id": "i3_29_d2_0028",
+    "stratum": "D2",
+    "step": 1,
+    "forced_action": "ANSWER",
+    "expected_terminal": "DEFER",
+    "success": false,
+    "state_features": {
+      "n_live": 1,
+      "n_eliminated": 0,
+      "n_untested": 1,
+      "n_total_hypotheses": 2,
+      "n_visible_evidence": 3,
+      "n_hidden_evidence": 0,
+      "n_verified": 2,
+      "n_supporting": 1,
+      "n_contradicting": 0,
+      "n_stale": 0,
+      "retrieval_remaining": 0,
+      "search_remaining": 0,
+      "verify_remaining": 0,
+      "steps_remaining": 1,
+      "can_retrieve": false,
+      "can_search": false,
+      "can_verify": false,
+      "searched": false,
+      "reasoning_complete": false,
+      "last_action": "VERIFY",
+      "same_action_run_length": 1,
+      "retrieval_count": 0,
+      "search_count": 0,
+      "verify_count": 1
+    },
+    "structural_v2r": {
+      "n_hyp_unverified_support": 1,
+      "n_hyp_unverified_contradiction": 0,
+      "has_competing_unverified_support": 0
+    },
+    "evidence_topology": [
+      {
+        "evidence_id": "E1",
+        "supports": [
+          "H1"
+        ],
+        "contradicts": [],
+        "verification_state": "SUFFICIENT",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E2",
+        "supports": [],
+        "contradicts": [
+          "H2"
+        ],
+        "verification_state": "FALSIFIED",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E3",
+        "supports": [
+          "H1"
+        ],
+        "contradicts": [],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      }
+    ],
+    "hypothesis_resolution": {
+      "per_hypothesis": {
+        "H1": {
+          "n_verified_support": 1,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 1,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": true,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": true
+        },
+        "H2": {
+          "n_verified_support": 0,
+          "n_verified_contradiction": 1,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": false,
+          "has_verified_contradiction": true,
+          "is_eliminated": true,
+          "is_confirmed": false
+        }
+      },
+      "aggregate": {
+        "n_hyp_with_verified_support": 1,
+        "n_hyp_with_verified_contradiction": 1,
+        "n_hyp_with_mixed_verified": 0,
+        "n_viable_hypotheses": 1,
+        "n_eliminated_hypotheses": 1,
+        "has_unique_verified_supported_hypothesis": true,
+        "has_verified_unresolved_competition": false
+      }
+    }
+  },
+  {
+    "label": "FALSE_AUTHORITY",
+    "task_id": "i3_29_d2_0029",
+    "stratum": "D2",
+    "step": 1,
+    "forced_action": "ANSWER",
+    "expected_terminal": "DEFER",
+    "success": false,
+    "state_features": {
+      "n_live": 1,
+      "n_eliminated": 0,
+      "n_untested": 1,
+      "n_total_hypotheses": 2,
+      "n_visible_evidence": 2,
+      "n_hidden_evidence": 0,
+      "n_verified": 2,
+      "n_supporting": 1,
+      "n_contradicting": 0,
+      "n_stale": 0,
+      "retrieval_remaining": 0,
+      "search_remaining": 0,
+      "verify_remaining": 0,
+      "steps_remaining": 2,
+      "can_retrieve": false,
+      "can_search": false,
+      "can_verify": false,
+      "searched": false,
+      "reasoning_complete": false,
+      "last_action": "VERIFY",
+      "same_action_run_length": 1,
+      "retrieval_count": 0,
+      "search_count": 0,
+      "verify_count": 1
+    },
+    "structural_v2r": {
+      "n_hyp_unverified_support": 0,
+      "n_hyp_unverified_contradiction": 0,
+      "has_competing_unverified_support": 0
+    },
+    "evidence_topology": [
+      {
+        "evidence_id": "E1",
+        "supports": [
+          "H1"
+        ],
+        "contradicts": [],
+        "verification_state": "SUFFICIENT",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E2",
+        "supports": [],
+        "contradicts": [
+          "H2"
+        ],
+        "verification_state": "FALSIFIED",
+        "retrieved": true
+      }
+    ],
+    "hypothesis_resolution": {
+      "per_hypothesis": {
+        "H1": {
+          "n_verified_support": 1,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": true,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": true
+        },
+        "H2": {
+          "n_verified_support": 0,
+          "n_verified_contradiction": 1,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": false,
+          "has_verified_contradiction": true,
+          "is_eliminated": true,
+          "is_confirmed": false
+        }
+      },
+      "aggregate": {
+        "n_hyp_with_verified_support": 1,
+        "n_hyp_with_verified_contradiction": 1,
+        "n_hyp_with_mixed_verified": 0,
+        "n_viable_hypotheses": 1,
+        "n_eliminated_hypotheses": 1,
+        "has_unique_verified_supported_hypothesis": true,
+        "has_verified_unresolved_competition": false
+      }
+    }
+  },
+  {
+    "label": "FALSE_AUTHORITY",
+    "task_id": "i3_29_d3_0010",
+    "stratum": "D3",
+    "step": 1,
+    "forced_action": "DEFER",
+    "expected_terminal": "ANSWER",
+    "success": false,
+    "state_features": {
+      "n_live": 1,
+      "n_eliminated": 0,
+      "n_untested": 2,
+      "n_total_hypotheses": 3,
+      "n_visible_evidence": 2,
+      "n_hidden_evidence": 0,
+      "n_verified": 1,
+      "n_supporting": 1,
+      "n_contradicting": 0,
+      "n_stale": 0,
+      "retrieval_remaining": 0,
+      "search_remaining": 0,
+      "verify_remaining": 0,
+      "steps_remaining": 1,
+      "can_retrieve": false,
+      "can_search": false,
+      "can_verify": false,
+      "searched": false,
+      "reasoning_complete": false,
+      "last_action": "VERIFY",
+      "same_action_run_length": 1,
+      "retrieval_count": 0,
+      "search_count": 0,
+      "verify_count": 1
+    },
+    "structural_v2r": {
+      "n_hyp_unverified_support": 1,
+      "n_hyp_unverified_contradiction": 0,
+      "has_competing_unverified_support": 0
+    },
+    "evidence_topology": [
+      {
+        "evidence_id": "E1",
+        "supports": [
+          "H1"
+        ],
+        "contradicts": [],
+        "verification_state": "SUFFICIENT",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E2",
+        "supports": [
+          "H2"
+        ],
+        "contradicts": [],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      }
+    ],
+    "hypothesis_resolution": {
+      "per_hypothesis": {
+        "H1": {
+          "n_verified_support": 1,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": true,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": true
+        },
+        "H2": {
+          "n_verified_support": 0,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 1,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": false,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": false
+        },
+        "H3": {
+          "n_verified_support": 0,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": false,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": false
+        }
+      },
+      "aggregate": {
+        "n_hyp_with_verified_support": 1,
+        "n_hyp_with_verified_contradiction": 0,
+        "n_hyp_with_mixed_verified": 0,
+        "n_viable_hypotheses": 3,
+        "n_eliminated_hypotheses": 0,
+        "has_unique_verified_supported_hypothesis": true,
+        "has_verified_unresolved_competition": false
+      }
+    }
+  },
+  {
+    "label": "FALSE_AUTHORITY",
+    "task_id": "i3_29_d3_0019",
+    "stratum": "D3",
+    "step": 2,
+    "forced_action": "DEFER",
+    "expected_terminal": "ANSWER",
+    "success": false,
+    "state_features": {
+      "n_live": 1,
+      "n_eliminated": 0,
+      "n_untested": 1,
+      "n_total_hypotheses": 2,
+      "n_visible_evidence": 2,
+      "n_hidden_evidence": 0,
+      "n_verified": 1,
+      "n_supporting": 1,
+      "n_contradicting": 0,
+      "n_stale": 0,
+      "retrieval_remaining": 0,
+      "search_remaining": 0,
+      "verify_remaining": 0,
+      "steps_remaining": 1,
+      "can_retrieve": false,
+      "can_search": false,
+      "can_verify": false,
+      "searched": false,
+      "reasoning_complete": true,
+      "last_action": "REASON_MORE",
+      "same_action_run_length": 1,
+      "retrieval_count": 0,
+      "search_count": 0,
+      "verify_count": 1
+    },
+    "structural_v2r": {
+      "n_hyp_unverified_support": 1,
+      "n_hyp_unverified_contradiction": 0,
+      "has_competing_unverified_support": 0
+    },
+    "evidence_topology": [
+      {
+        "evidence_id": "E1",
+        "supports": [
+          "H1"
+        ],
+        "contradicts": [],
+        "verification_state": "SUFFICIENT",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E2",
+        "supports": [
+          "H2"
+        ],
+        "contradicts": [],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      }
+    ],
+    "hypothesis_resolution": {
+      "per_hypothesis": {
+        "H1": {
+          "n_verified_support": 1,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": true,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": true
+        },
+        "H2": {
+          "n_verified_support": 0,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 1,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": false,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": false
+        }
+      },
+      "aggregate": {
+        "n_hyp_with_verified_support": 1,
+        "n_hyp_with_verified_contradiction": 0,
+        "n_hyp_with_mixed_verified": 0,
+        "n_viable_hypotheses": 2,
+        "n_eliminated_hypotheses": 0,
+        "has_unique_verified_supported_hypothesis": true,
+        "has_verified_unresolved_competition": false
+      }
+    }
+  },
+  {
+    "label": "FALSE_AUTHORITY",
+    "task_id": "i3_29_d3_0043",
+    "stratum": "D3",
+    "step": 2,
+    "forced_action": "DEFER",
+    "expected_terminal": "ANSWER",
+    "success": false,
+    "state_features": {
+      "n_live": 1,
+      "n_eliminated": 0,
+      "n_untested": 1,
+      "n_total_hypotheses": 2,
+      "n_visible_evidence": 2,
+      "n_hidden_evidence": 0,
+      "n_verified": 1,
+      "n_supporting": 1,
+      "n_contradicting": 0,
+      "n_stale": 0,
+      "retrieval_remaining": 0,
+      "search_remaining": 0,
+      "verify_remaining": 0,
+      "steps_remaining": 1,
+      "can_retrieve": false,
+      "can_search": false,
+      "can_verify": false,
+      "searched": false,
+      "reasoning_complete": true,
+      "last_action": "REASON_MORE",
+      "same_action_run_length": 1,
+      "retrieval_count": 0,
+      "search_count": 0,
+      "verify_count": 1
+    },
+    "structural_v2r": {
+      "n_hyp_unverified_support": 1,
+      "n_hyp_unverified_contradiction": 0,
+      "has_competing_unverified_support": 0
+    },
+    "evidence_topology": [
+      {
+        "evidence_id": "E1",
+        "supports": [
+          "H1"
+        ],
+        "contradicts": [],
+        "verification_state": "SUFFICIENT",
+        "retrieved": true
+      },
+      {
+        "evidence_id": "E2",
+        "supports": [
+          "H2"
+        ],
+        "contradicts": [],
+        "verification_state": "UNVERIFIED",
+        "retrieved": true
+      }
+    ],
+    "hypothesis_resolution": {
+      "per_hypothesis": {
+        "H1": {
+          "n_verified_support": 1,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 0,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": true,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": true
+        },
+        "H2": {
+          "n_verified_support": 0,
+          "n_verified_contradiction": 0,
+          "n_unverified_support": 1,
+          "n_unverified_contradiction": 0,
+          "has_verified_support": false,
+          "has_verified_contradiction": false,
+          "is_eliminated": false,
+          "is_confirmed": false
+        }
+      },
+      "aggregate": {
+        "n_hyp_with_verified_support": 1,
+        "n_hyp_with_verified_contradiction": 0,
+        "n_hyp_with_mixed_verified": 0,
+        "n_viable_hypotheses": 2,
+        "n_eliminated_hypotheses": 0,
+        "has_unique_verified_supported_hypothesis": true,
+        "has_verified_unresolved_competition": false
+      }
+    }
+  }
+]

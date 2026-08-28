@@ -1,0 +1,84 @@
+{
+  "total_records": 1056,
+  "missing_checkpoints": 875,
+  "coverage": {
+    "('complete_mixed', 'unique_supported_with_elim', 'ANSWER', 'ANSWER', 'SEARCH_MORE')": 24,
+    "('complete_mixed', 'unique_supported_with_elim', 'ANSWER', 'ANSWER', 'REASON_MORE')": 24,
+    "('complete_mixed', 'unique_supported_with_elim', 'ANSWER', 'ANSWER', 'ANSWER')": 24,
+    "('complete_mixed', 'unique_supported_with_elim', 'ANSWER', 'ANSWER', 'DEFER')": 24,
+    "('complete_eliminated', 'only_eliminated', None, 'DEFER', 'VERIFY')": 24,
+    "('complete_eliminated', 'only_eliminated', None, 'DEFER', 'REASON_MORE')": 24,
+    "('complete_eliminated', 'only_eliminated', None, 'DEFER', 'ANSWER')": 24,
+    "('complete_eliminated', 'only_eliminated', None, 'DEFER', 'DEFER')": 24,
+    "('complete_eliminated', 'only_eliminated', None, 'ANSWER', 'RETRIEVE')": 24,
+    "('complete_eliminated', 'only_eliminated', None, 'ANSWER', 'SEARCH_MORE')": 72,
+    "('complete_eliminated', 'only_eliminated', None, 'ANSWER', 'VERIFY')": 72,
+    "('complete_eliminated', 'only_eliminated', None, 'ANSWER', 'REASON_MORE')": 72,
+    "('complete_eliminated', 'only_eliminated', None, 'ANSWER', 'ANSWER')": 72,
+    "('complete_eliminated', 'only_eliminated', None, 'ANSWER', 'DEFER')": 72,
+    "('complete_mixed', 'competing_support', None, 'ANSWER', 'SEARCH_MORE')": 20,
+    "('complete_mixed', 'competing_support', None, 'ANSWER', 'REASON_MORE')": 20,
+    "('complete_mixed', 'competing_support', None, 'ANSWER', 'ANSWER')": 20,
+    "('complete_mixed', 'competing_support', None, 'ANSWER', 'DEFER')": 20,
+    "('none', 'no_verified', None, 'DEFER', 'VERIFY')": 20,
+    "('none', 'no_verified', None, 'DEFER', 'REASON_MORE')": 20,
+    "('none', 'no_verified', None, 'DEFER', 'ANSWER')": 20,
+    "('none', 'no_verified', None, 'DEFER', 'DEFER')": 20,
+    "('none', 'no_verified', None, 'ANSWER', 'RETRIEVE')": 20,
+    "('none', 'no_verified', None, 'ANSWER', 'SEARCH_MORE')": 60,
+    "('none', 'no_verified', None, 'ANSWER', 'VERIFY')": 60,
+    "('none', 'no_verified', None, 'ANSWER', 'REASON_MORE')": 60,
+    "('none', 'no_verified', None, 'ANSWER', 'ANSWER')": 60,
+    "('none', 'no_verified', None, 'ANSWER', 'DEFER')": 60
+  },
+  "zero_support_cells": [
+    {
+      "vstate": "complete_supported",
+      "topology": "unique_supported",
+      "vha": "ANSWER",
+      "expected": "ANSWER",
+      "count": 0,
+      "description": "D4: ANSWER authority should fire"
+    },
+    {
+      "vstate": "complete_supported",
+      "topology": "unique_supported",
+      "vha": "DEFER",
+      "expected": "DEFER",
+      "count": 0,
+      "description": "D2: DEFER authority should fire"
+    },
+    {
+      "vstate": "complete_supported",
+      "topology": "unique_supported",
+      "vha": "ANSWER",
+      "expected": "DEFER",
+      "count": 0,
+      "description": "D2 false: should NOT fire ANSWER"
+    },
+    {
+      "vstate": "complete_supported",
+      "topology": "unique_supported",
+      "vha": "DEFER",
+      "expected": "ANSWER",
+      "count": 0,
+      "description": "D3 false: should NOT fire DEFER"
+    },
+    {
+      "vstate": "complete_mixed",
+      "topology": "unique_supported_with_elim",
+      "vha": "DEFER",
+      "expected": "DEFER",
+      "count": 0,
+      "description": "D2 post-verify with elim: DEFER authority"
+    },
+    {
+      "vstate": "complete_supported",
+      "topology": "competing_support",
+      "vha": null,
+      "expected": "ANSWER",
+      "count": 0,
+      "description": "D3 competing: should NOT fire terminal"
+    }
+  ]
+}
