@@ -201,7 +201,9 @@ def get_structural_state(runtime) -> StructuralState:
 
     # Check verify availability
     can_verify = bool(valid_verify_targets(runtime))
-    verify_budget_exhausted = runtime.resources.verify_remaining() == 0
+    verify_budget_exhausted = (
+        runtime.resources.verification_calls_used >= runtime.resources.budget.max_verification_calls
+    )
     all_evidence_verified = all(
         ev.verification_state != VerificationState.UNVERIFIED
         for ev in runtime.visible_evidence
