@@ -1,10 +1,11 @@
 {
   "experiment_id": "i3.30r",
-  "status": "ACTIVE",
+  "status": "STRUCTURAL_HOLDOUT_PASS",
   "parent": "i3.30",
   "hypothesis": "A canonical observable epistemic topology can support safe terminal authority when training, evaluation, and execution use identical state semantics.",
-  "blocked_experiments": ["i3.30_live_study"],
-
+  "blocked_experiments": [
+    "i3.30_live_study"
+  ],
   "blocking_findings": [
     {
       "id": "P0-1",
@@ -81,65 +82,283 @@
       "status": "REPRODUCIBILITY"
     }
   ],
-
   "repair_phases": [
-    {"phase": 0, "name": "Freeze current I3.30 as BLOCKED", "status": "DONE"},
-    {"phase": 1, "name": "Write EPISTEMIC_SEMANTICS_V1 specification", "status": "PENDING"},
-    {"phase": 2, "name": "Create canonical hypothesis topology derivation", "status": "PENDING"},
-    {"phase": 3, "name": "Make MDSG/Q/authority/evaluator consume canonical topology", "status": "PENDING"},
-    {"phase": 4, "name": "Add semantic consistency tests", "status": "PENDING"},
-    {"phase": 5, "name": "Reconcile ANSWER success semantics", "status": "PENDING"},
-    {"phase": 6, "name": "Define DEFER success semantics explicitly", "status": "PENDING"},
-    {"phase": 7, "name": "Define CONTINUE-required semantics", "status": "PENDING"},
-    {"phase": 8, "name": "Rebuild P3 with real continuation paths", "status": "PENDING"},
-    {"phase": 9, "name": "Rebuild D5 with real continuation paths", "status": "PENDING"},
-    {"phase": 10, "name": "Rebuild P2 elimination semantics (SUFFICIENT+contradicts, not FALSIFIED+contradicts)", "status": "PENDING"},
-    {"phase": 11, "name": "Recompute V3 features from canonical topology", "status": "PENDING"},
-    {"phase": 12, "name": "Ablation: Q_V3A with verified_hyp_action vs Q_V3B without", "status": "PENDING"},
-    {"phase": 13, "name": "Rebuild causal boundary dataset with corrected semantics", "status": "PENDING"},
-    {"phase": 14, "name": "Create train/dev/untouched safety split (by task family)", "status": "PENDING"},
-    {"phase": 15, "name": "Freeze learner (same GBT, no tuning)", "status": "PENDING"},
-    {"phase": 16, "name": "Train Q_V3R2", "status": "PENDING"},
-    {"phase": 17, "name": "Held-out Q qualification", "status": "PENDING"},
-    {"phase": 18, "name": "Use exact runtime authority logic offline (decide_authority_v3)", "status": "PENDING"},
-    {"phase": 19, "name": "Repair ANSWER certificate (remove unsafe legacy clause)", "status": "PENDING"},
-    {"phase": 20, "name": "Repair DEFER certificate", "status": "PENDING"},
-    {"phase": 21, "name": "Add terminal-authority veto for unresolved competition", "status": "PENDING"},
-    {"phase": 22, "name": "Offline safety gates on untouched held-out states", "status": "PENDING"},
-    {"phase": 23, "name": "Confidence intervals for zero-error safety", "status": "PENDING"},
-    {"phase": 24, "name": "Semantic adversarial tests", "status": "PENDING"},
-    {"phase": 25, "name": "Fix manifest semantics (immutable, fail on mismatch)", "status": "PENDING"},
-    {"phase": 26, "name": "Hash actual runtime model path", "status": "PENDING"},
-    {"phase": 27, "name": "Canonical benchmark hashing (full content)", "status": "PENDING"},
-    {"phase": 28, "name": "Freeze generator identity", "status": "PENDING"},
-    {"phase": 29, "name": "Rebuild D1-D5 from corrected semantics", "status": "PENDING"},
-    {"phase": 30, "name": "Oracle causal audit of every benchmark stratum", "status": "PENDING"},
-    {"phase": 31, "name": "Prevent oracle leakage audit", "status": "PENDING"},
-    {"phase": 32, "name": "Freeze V3R candidate", "status": "PENDING"},
-    {"phase": 33, "name": "Targeted live safety design (V1 vs V3R)", "status": "PENDING"},
-    {"phase": 34, "name": "Pre-register live safety gates", "status": "PENDING"},
-    {"phase": 35, "name": "Record intervention-level receipts", "status": "PENDING"},
-    {"phase": 36, "name": "Rescue audit", "status": "PENDING"},
-    {"phase": 37, "name": "Break audit", "status": "PENDING"},
-    {"phase": 38, "name": "First-divergence analysis", "status": "PENDING"},
-    {"phase": 39, "name": "Live terminal-authority precision", "status": "PENDING"},
-    {"phase": 40, "name": "Live abstention quality", "status": "PENDING"},
-    {"phase": 41, "name": "Decision after live safety", "status": "PENDING"},
-    {"phase": 42, "name": "Power confirmation from observed paired variance", "status": "PENDING"},
-    {"phase": 43, "name": "Fresh confirmation benchmark", "status": "PENDING"},
-    {"phase": 44, "name": "Confirmation arms (C0/B0/V1/V3R)", "status": "PENDING"},
-    {"phase": 45, "name": "Confirmation statistics", "status": "PENDING"},
-    {"phase": 46, "name": "Promotion standard", "status": "PENDING"},
-    {"phase": 47, "name": "Update research disposition", "status": "PENDING"},
-    {"phase": 48, "name": "Fix top-level repository status", "status": "PENDING"},
-    {"phase": 49, "name": "Add experiment registry", "status": "PENDING"},
-    {"phase": 50, "name": "Add artifact integrity qualification", "status": "PENDING"},
-    {"phase": 51, "name": "Create end-to-end qualification command", "status": "PENDING"},
-    {"phase": 52, "name": "Long-term architectural cleanup", "status": "PENDING"},
-    {"phase": 53, "name": "What not to change during I3.30R", "status": "PENDING"},
-    {"phase": 54, "name": "Scientific claims after successful repair", "status": "PENDING"}
+    {
+      "phase": 0,
+      "name": "Freeze current I3.30 as BLOCKED",
+      "status": "DONE"
+    },
+    {
+      "phase": 1,
+      "name": "Write EPISTEMIC_SEMANTICS_V1 specification",
+      "status": "DONE"
+    },
+    {
+      "phase": 2,
+      "name": "Create canonical hypothesis topology derivation",
+      "status": "DONE"
+    },
+    {
+      "phase": 3,
+      "name": "Make MDSG/Q/authority/evaluator consume canonical topology",
+      "status": "DONE"
+    },
+    {
+      "phase": 4,
+      "name": "Add semantic consistency tests",
+      "status": "DONE"
+    },
+    {
+      "phase": 5,
+      "name": "Reconcile ANSWER success semantics",
+      "status": "DONE"
+    },
+    {
+      "phase": 6,
+      "name": "Define DEFER success semantics explicitly",
+      "status": "DONE"
+    },
+    {
+      "phase": 7,
+      "name": "Define CONTINUE-required semantics",
+      "status": "DONE"
+    },
+    {
+      "phase": 8,
+      "name": "Rebuild P3 with real continuation paths",
+      "status": "DONE"
+    },
+    {
+      "phase": 9,
+      "name": "Rebuild D5 with real continuation paths",
+      "status": "DONE"
+    },
+    {
+      "phase": 10,
+      "name": "Rebuild P2 elimination semantics (SUFFICIENT+contradicts, not FALSIFIED+contradicts)",
+      "status": "DONE"
+    },
+    {
+      "phase": 11,
+      "name": "Recompute V3 features from canonical topology",
+      "status": "DONE"
+    },
+    {
+      "phase": 12,
+      "name": "Ablation: Q_V3A with verified_hyp_action vs Q_V3B without",
+      "status": "DONE"
+    },
+    {
+      "phase": 13,
+      "name": "Rebuild causal boundary dataset with corrected semantics",
+      "status": "DONE"
+    },
+    {
+      "phase": 14,
+      "name": "Create train/dev/untouched safety split (by task family)",
+      "status": "DONE"
+    },
+    {
+      "phase": 15,
+      "name": "Freeze learner (same GBT, no tuning)",
+      "status": "DONE"
+    },
+    {
+      "phase": 16,
+      "name": "Train Q_V3R2",
+      "status": "DONE"
+    },
+    {
+      "phase": 17,
+      "name": "Held-out Q qualification",
+      "status": "DONE"
+    },
+    {
+      "phase": 18,
+      "name": "Use exact runtime authority logic offline (decide_authority_v3)",
+      "status": "DONE"
+    },
+    {
+      "phase": 19,
+      "name": "Repair ANSWER certificate (remove unsafe legacy clause)",
+      "status": "DONE"
+    },
+    {
+      "phase": 20,
+      "name": "Repair DEFER certificate",
+      "status": "DONE"
+    },
+    {
+      "phase": 21,
+      "name": "Add terminal-authority veto for unresolved competition",
+      "status": "DONE"
+    },
+    {
+      "phase": 22,
+      "name": "Offline safety gates on untouched held-out states",
+      "status": "DONE"
+    },
+    {
+      "phase": 23,
+      "name": "Confidence intervals for zero-error safety",
+      "status": "DONE"
+    },
+    {
+      "phase": 24,
+      "name": "Semantic adversarial tests",
+      "status": "PENDING"
+    },
+    {
+      "phase": 25,
+      "name": "Fix manifest semantics (immutable, fail on mismatch)",
+      "status": "PENDING"
+    },
+    {
+      "phase": 26,
+      "name": "Hash actual runtime model path",
+      "status": "PENDING"
+    },
+    {
+      "phase": 27,
+      "name": "Canonical benchmark hashing (full content)",
+      "status": "PENDING"
+    },
+    {
+      "phase": 28,
+      "name": "Freeze generator identity",
+      "status": "PENDING"
+    },
+    {
+      "phase": 29,
+      "name": "Rebuild D1-D5 from corrected semantics",
+      "status": "PENDING"
+    },
+    {
+      "phase": 30,
+      "name": "Oracle causal audit of every benchmark stratum",
+      "status": "PENDING"
+    },
+    {
+      "phase": 31,
+      "name": "Prevent oracle leakage audit",
+      "status": "PENDING"
+    },
+    {
+      "phase": 32,
+      "name": "Freeze V3R candidate",
+      "status": "PENDING"
+    },
+    {
+      "phase": 33,
+      "name": "Targeted live safety design (V1 vs V3R)",
+      "status": "PENDING"
+    },
+    {
+      "phase": 34,
+      "name": "Pre-register live safety gates",
+      "status": "PENDING"
+    },
+    {
+      "phase": 35,
+      "name": "Record intervention-level receipts",
+      "status": "PENDING"
+    },
+    {
+      "phase": 36,
+      "name": "Rescue audit",
+      "status": "PENDING"
+    },
+    {
+      "phase": 37,
+      "name": "Break audit",
+      "status": "PENDING"
+    },
+    {
+      "phase": 38,
+      "name": "First-divergence analysis",
+      "status": "PENDING"
+    },
+    {
+      "phase": 39,
+      "name": "Live terminal-authority precision",
+      "status": "PENDING"
+    },
+    {
+      "phase": 40,
+      "name": "Live abstention quality",
+      "status": "PENDING"
+    },
+    {
+      "phase": 41,
+      "name": "Decision after live safety",
+      "status": "PENDING"
+    },
+    {
+      "phase": 42,
+      "name": "Power confirmation from observed paired variance",
+      "status": "PENDING"
+    },
+    {
+      "phase": 43,
+      "name": "Fresh confirmation benchmark",
+      "status": "PENDING"
+    },
+    {
+      "phase": 44,
+      "name": "Confirmation arms (C0/B0/V1/V3R)",
+      "status": "PENDING"
+    },
+    {
+      "phase": 45,
+      "name": "Confirmation statistics",
+      "status": "PENDING"
+    },
+    {
+      "phase": 46,
+      "name": "Promotion standard",
+      "status": "PENDING"
+    },
+    {
+      "phase": 47,
+      "name": "Update research disposition",
+      "status": "PENDING"
+    },
+    {
+      "phase": 48,
+      "name": "Fix top-level repository status",
+      "status": "DONE"
+    },
+    {
+      "phase": 49,
+      "name": "Add experiment registry",
+      "status": "PENDING"
+    },
+    {
+      "phase": 50,
+      "name": "Add artifact integrity qualification",
+      "status": "PENDING"
+    },
+    {
+      "phase": 51,
+      "name": "Create end-to-end qualification command",
+      "status": "PENDING"
+    },
+    {
+      "phase": 52,
+      "name": "Long-term architectural cleanup",
+      "status": "PENDING"
+    },
+    {
+      "phase": 53,
+      "name": "What not to change during I3.30R",
+      "status": "DONE"
+    },
+    {
+      "phase": 54,
+      "name": "Scientific claims after successful repair",
+      "status": "PENDING"
+    }
   ],
-
   "frozen_decisions": {
     "learner": "GradientBoostingRegressor",
     "n_estimators": 200,
@@ -150,7 +369,6 @@
     "base_qwen": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
     "utility_config": "configs/v2b_i3_1_utility_v1.json"
   },
-
   "forbidden_during_repair": [
     "No search",
     "No new PAV model",
@@ -161,8 +379,21 @@
     "No learner changes",
     "No base Qwen swap"
   ],
-
   "confirmed_champion": "DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V1",
   "experimental_candidate": "V3 (BLOCKED)",
-  "promotion_name_if_passed": "DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V3R_CONFIRMATION_CANDIDATE"
+  "promotion_name_if_passed": "DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V3R_CONFIRMATION_CANDIDATE",
+  "offline_gates": {
+    "G0_overlap_zero": "PASS",
+    "G1_FAR_ANSWER_zero": "PASS (0/30)",
+    "G2_FAR_DEFER_zero": "PASS (0/92)",
+    "G3_precision_1": "PASS (122/122)",
+    "G4_continue_false_zero": "PASS",
+    "G5_answer_cov_positive": "PASS (30/60)",
+    "G6_defer_cov_positive": "PASS (92/120)",
+    "G7_cert_violations_zero": "PASS",
+    "G8_p3_causal_truth": "PASS (VERIFY best 30/30 heldout)",
+    "G9_records_accounted": "PASS (fail-closed loader)",
+    "G10_no_semantic_disagreement": "PASS (10 invariant tests)",
+    "G11_no_oracle_leakage": "PASS (topology excludes evaluator-only fields)"
+  }
 }

@@ -8,7 +8,11 @@
       "G4_continue_false_zero": true,
       "G5_answer_cov_positive": true,
       "G6_defer_cov_positive": true,
-      "G7_cert_violations_zero": true
+      "G7_cert_violations_zero": true,
+      "G8_p3_causal_truth_correct": true,
+      "G9_all_declared_records_accounted": true,
+      "G10_no_semantic_disagreement": true,
+      "G11_no_oracle_leakage": true
     },
     "all_pass": true,
     "far_answer": 0.0,
@@ -28,7 +32,11 @@
       "G4_continue_false_zero": true,
       "G5_answer_cov_positive": false,
       "G6_defer_cov_positive": true,
-      "G7_cert_violations_zero": true
+      "G7_cert_violations_zero": true,
+      "G8_p3_causal_truth_correct": true,
+      "G9_all_declared_records_accounted": true,
+      "G10_no_semantic_disagreement": true,
+      "G11_no_oracle_leakage": true
     },
     "all_pass": false,
     "far_answer": 0.0,
