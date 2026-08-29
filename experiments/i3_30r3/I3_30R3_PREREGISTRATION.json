@@ -1,0 +1,171 @@
+{
+  "experiment": "I3.30R3",
+  "title": "Adaptive Authority Causal Isolation",
+  "date": "2026-08-29",
+  "parent_commit": "a714319",
+  "branch": "i3.30r3-authority-isolation",
+  "status": "PREREGISTERED",
+
+  "scientific_objective": {
+    "primary_hypothesis": "E[U | V3-AUTH] > E[U | V3-SHADOW]",
+    "null_hypothesis": "E[U | V3-AUTH] <= E[U | V3-SHADOW]",
+    "key_equation": "ATE_authority = E[U | Q_V3R2, A_hard] - E[U | Q_V3R2, A_shadow]",
+    "question": "Given the exact same V3 executive, is executing a valid hard certificate better than merely observing it?"
+  },
+
+  "arms": {
+    "V1": {
+      "q_model": "Q_V1",
+      "guidance": "V1 epsilon",
+      "certificate": "V1 ANSWER rule",
+      "hard_override": true
+    },
+    "V3_SHADOW": {
+      "q_model": "Q_V3R2",
+      "guidance": "V3R2 epsilon",
+      "certificate": "V3 certificates (evaluated, logged)",
+      "hard_override": false
+    },
+    "V3_AUTH": {
+      "q_model": "Q_V3R2",
+      "guidance": "V3R2 epsilon",
+      "certificate": "V3 certificates (evaluated, logged)",
+      "hard_override": true
+    }
+  },
+
+  "decomposition": {
+    "V3_SHADOW - V1": "effect of new state representation / Q / advisory interface",
+    "V3_AUTH - V3_SHADOW": "incremental adaptive-authority value (isolated ATE)"
+  },
+
+  "frozen_artifacts": {
+    "Q_V3R2_A_sha256": "face8cbd3e2df9cf29e0c3ea808ae5a37d8e513cd1ec727af5277a28fa9fdf02",
+    "V3R2_feature_schema_sha256": "fcb99458da01268f41ab9e7cecd27253f1d99b61ef71fce67b3aa706ea42dfaf",
+    "Q_V1_sha256": "d90d72dab250ba7ce032afcc9d430fabfd4e84dace3c4dbe4deb77de0f8c9729",
+    "V1_feature_schema_sha256": "9722343e8d87b2642eddb667dcd0a3b70407202e2f59606ae4eef81b8da29350",
+    "topology_sha256": "f0299cd6ef27ce8fab29721145c8c0a113e19ca7af9e69a47def4cecb93bc00c",
+    "v3_features_sha256": "409f0777ff3d27dba969123f0190b9e557545a0986bf250c061721aec37f172f",
+    "authority_policy_v2_sha256": "340dd37323bd15bbb49800c07a0c479d0e4a6b4ccadc3d297e94fe224040d007",
+    "authority_policy_v3_sha256": "85af10990cf7350833af6faac06fbd694aa8a2783c7fdaed5c36303246866af7",
+    "utility_config_sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07",
+    "i3_29_generator_sha256": "eb4c44b0d6cd2160d1a3781cef7a1db1fc6a107227370966bb2de96d3438d8e9",
+    "i3_30_d5_generator_sha256": "28133cbcab5ca0c753c4d432b841924758ebffaa71772b7d23bd1e478091c69f"
+  },
+
+  "frozen_constants": {
+    "authority_threshold": 5.0,
+    "near_optimal_epsilon": 3.0,
+    "v3_frozen_rule": "A2AD_V3_POSITIVE_CERTIFICATE",
+    "v2_frozen_rule": "A2AD_V2",
+    "benchmark_seed": 9817,
+    "task_count": 185,
+    "trajectory_count_per_arm": 185,
+    "total_trajectories": 555
+  },
+
+  "gates": {
+    "G1": {
+      "name": "treatment_purity",
+      "description": "V3-AUTH and V3-SHADOW are identical before force application",
+      "criterion": "treatment_purity_tests_pass"
+    },
+    "G2": {
+      "name": "authority_breaks",
+      "description": "0 observed V3-AUTH-caused breaks on development diagnostic",
+      "criterion": "authority_breaks == 0"
+    },
+    "G3": {
+      "name": "false_answer_authority",
+      "description": "0 forced ANSWER on causally DEFER_READY or CONTINUE_REQUIRED states",
+      "criterion": "false_answer_authority == 0"
+    },
+    "G4": {
+      "name": "false_defer_authority",
+      "description": "0 forced DEFER on causally ANSWER_READY or CONTINUE_REQUIRED states",
+      "criterion": "false_defer_authority == 0"
+    },
+    "G5": {
+      "name": "authority_effect",
+      "description": "mean ΔU(HARD-SHADOW) >= 0",
+      "criterion": "ate_authority >= 0"
+    },
+    "G6": {
+      "name": "rescues_gt_breaks",
+      "description": "rescues > breaks",
+      "criterion": "rescues > breaks"
+    },
+    "G7": {
+      "name": "answer_coverage",
+      "description": "> 0 effective ANSWER interventions",
+      "criterion": "effective_answer_interventions > 0"
+    },
+    "G8": {
+      "name": "defer_coverage",
+      "description": "> 0 effective DEFER interventions",
+      "criterion": "effective_defer_interventions > 0"
+    },
+    "G9": {
+      "name": "semantic_consistency",
+      "description": "0 topology/executor/certificate disagreements",
+      "criterion": "semantic_disagreements == 0"
+    },
+    "G10": {
+      "name": "reliability",
+      "description": "0 decoder or runtime errors affecting paired comparison",
+      "criterion": "reliability_errors == 0"
+    },
+    "G11": {
+      "name": "artifact_identity",
+      "description": "all frozen SHAs match at runtime",
+      "criterion": "manifest_mismatches == 0"
+    },
+    "G12": {
+      "name": "event_receipts",
+      "description": "100% of hard events have complete receipts",
+      "criterion": "complete_receipt_rate == 1.0"
+    }
+  },
+
+  "authority_effect_classifications": {
+    "RESCUE": "forced succeeds, shadow fails",
+    "BREAK": "forced fails, shadow succeeds",
+    "BENEFICIAL_NONRESCUE": "both succeed, forced has higher utility",
+    "HARMFUL_NONBREAK": "both succeed, forced has lower utility",
+    "NEUTRAL": "same outcome and effectively same utility"
+  },
+
+  "coverage_metrics": {
+    "certificate_coverage": "certificate_positive_states / eligible_states",
+    "force_rate": "force_applied / eligible_states",
+    "effective_intervention_rate": "forced_action != llm_action / eligible_states"
+  },
+
+  "phases": [
+    "Phase 0: Freeze current V3R2-A stack",
+    "Phase 1: Implement AuthorityMode enum (V1, V3_SHADOW, V3_HARD)",
+    "Phase 2: Create normalized AuthorityDecision dataclass",
+    "Phase 3: Normalize per-step receipts",
+    "Phase 4: Add treatment-purity tests",
+    "Phase 5: Add deterministic state serialization",
+    "Phase 6: Implement authority-event counterfactual replay",
+    "Phase 7: Create authority effect classifications",
+    "Phase 8: Re-audit D5 state-level causal truth",
+    "Phase 9: Build three-arm runner",
+    "Phase 10: Implement AUTH-vs-SHADOW evaluator",
+    "Phase 11: Run 555-trajectory development study",
+    "Phase 12: Analyze AUTH vs SHADOW primary comparison",
+    "Phase 13: Separately audit D1 Q errors",
+    "Phase 14: Separately audit V1 D2 false ANSWERs",
+    "Phase 15: Decide whether any model/policy change is warranted"
+  ],
+
+  "constraints": [
+    "No Q retraining before primary AUTH-vs-SHADOW result",
+    "No certificate threshold or condition changes",
+    "No benchmark changes",
+    "V1 remains confirmed champion",
+    "V3R2-A is not promoted by this experiment",
+    "The only code-path difference between V3-AUTH and V3-SHADOW is application of the hard override"
+  ]
+}
