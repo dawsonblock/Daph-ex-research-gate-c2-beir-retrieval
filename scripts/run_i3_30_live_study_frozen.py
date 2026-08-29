@@ -83,8 +83,8 @@ from run_i3_29_live_safety import (
 from run_i3_28_rep_repair import (
     extract_v1_features, compute_structural_features,
 )
-from run_i3_30_train_v3r import extract_v3_features, get_v3_feature_keys
-from run_i3_30_v3_coverage import compute_v3_features
+from run_i3_30r_train_v3r2 import extract_v3r2_features, get_v3r2_feature_keys
+from daph.epistemic.v3_features import compute_v3_features_canonical
 
 
 # ============================================================
@@ -92,7 +92,7 @@ from run_i3_30_v3_coverage import compute_v3_features
 # ============================================================
 
 class QModelV3R:
-    """Q_CAUSAL_V3R — V3 model with post-verification features (56 features)."""
+    """Q_CAUSAL_V3R2 — V3R2 model with canonical topology features (53 features)."""
     def __init__(self, model, feature_keys):
         self.model = model
         self.feature_keys = feature_keys
@@ -106,7 +106,7 @@ class QModelV3R:
 
     def predict_q(self, sf: dict, legal_actions: list[str],
                   v3_struct: dict) -> dict[str, float]:
-        X = np.array([[extract_v3_features(sf, a, v3_struct)[k]
+        X = np.array([[extract_v3r2_features(sf, a, v3_struct)[k]
                       for k in self.feature_keys]
                       for a in legal_actions])
         preds = self.model.predict(X)
@@ -132,7 +132,7 @@ def get_structural_state_v3(runtime) -> StructuralStateV3:
 
     hyps_list = [{"hypothesis_id": h.hypothesis_id, "answer_action": h.answer_action.value}
                  for h in runtime.task.hypotheses]
-    v3 = compute_v3_features(visible_ev, hyps_list)
+    v3 = compute_v3_features_canonical(visible_ev, hyps_list)
 
     can_verify = bool(valid_verify_targets(runtime))
     verify_budget_exhausted = (
@@ -535,11 +535,11 @@ def compute_manifest() -> dict:
         # Q models
         "Q_V1_model_sha256": sha256_file("experiments/i3_5/pinned_policy/frozen_estimators/QCAUSAL_gbt.pkl"),
         "Q_V1_schema_sha256": sha256_file("experiments/i3_5/pinned_policy/frozen_estimators/feature_schema.json"),
-        "Q_V3R_model_sha256": sha256_file("experiments/i3_30/Q_V3R_postverify.pkl"),
-        "Q_V3R_schema_sha256": sha256_file("experiments/i3_30/v3_feature_schema.json"),
+        "Q_V3R_model_sha256": sha256_file("experiments/i3_30r/Q_V3R2_A.pkl"),
+        "Q_V3R_schema_sha256": sha256_file("experiments/i3_30r/v3r2_feature_schema.json"),
 
         # Schema
-        "Q_STATE_SCHEMA_V3_sha256": sha256_file("experiments/i3_30/Q_STATE_SCHEMA_V3_POSTVERIFY.json"),
+        "Q_STATE_SCHEMA_V3_sha256": sha256_file("experiments/i3_30r/v3r2_feature_schema.json"),
 
         # Authority policies
         "authority_policy_v2_sha256": sha256_file("daph/authority/policy.py"),
@@ -560,7 +560,7 @@ def compute_manifest() -> dict:
         "i3_30b_boundary_data_sha256": sha256_file("experiments/i3_30b/post_verify_causal_actions_v1.jsonl"),
 
         # Offline gates
-        "offline_gates_sha256": sha256_file("experiments/i3_30/offline_gates.json"),
+        "offline_gates_sha256": sha256_file("experiments/i3_30r/structural_holdout_gates.json"),
 
         # Frozen constants
         "authority_threshold": 5.0,
@@ -667,8 +667,8 @@ def main():
         REPO_ROOT / "experiments/i3_5/pinned_policy/frozen_estimators/feature_schema.json",
     )
     q_v3r = QModelV3R.load(
-        REPO_ROOT / "experiments/i3_30/Q_V3R_postverify.pkl",
-        REPO_ROOT / "experiments/i3_30/v3_feature_schema.json",
+        REPO_ROOT / "experiments/i3_30r/Q_V3R2_A.pkl",
+        REPO_ROOT / "experiments/i3_30r/v3r2_feature_schema.json",
     )
 
     # Generate benchmark
@@ -689,7 +689,7 @@ def main():
     backend = R2DirectLlamaBackend(
         model_path=args.gguf_path,
         n_ctx=4096,
-        n_gpu_layers=-1,  # Metal offload for Apple Silicon
+        n_gpu_layers=-1,  # Full GPU offload (Metal/CUDA)
     )
 
     # Load I3.7e for snapshot building
