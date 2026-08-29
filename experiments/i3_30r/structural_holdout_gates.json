@@ -1,0 +1,47 @@
+{
+  "v3r2_a_with_vha": {
+    "gates": {
+      "G0_overlap_zero": true,
+      "G1_FAR_ANSWER_zero": true,
+      "G2_FAR_DEFER_zero": true,
+      "G3_precision_1": true,
+      "G4_continue_false_zero": true,
+      "G5_answer_cov_positive": true,
+      "G6_defer_cov_positive": true,
+      "G7_cert_violations_zero": true
+    },
+    "all_pass": true,
+    "far_answer": 0.0,
+    "far_defer": 0.0,
+    "precision": 1.0,
+    "answer_events": 30,
+    "defer_events": 92,
+    "answer_coverage": "30/60",
+    "defer_coverage": "92/120"
+  },
+  "v3r2_b_without_vha": {
+    "gates": {
+      "G0_overlap_zero": true,
+      "G1_FAR_ANSWER_zero": true,
+      "G2_FAR_DEFER_zero": true,
+      "G3_precision_1": true,
+      "G4_continue_false_zero": true,
+      "G5_answer_cov_positive": false,
+      "G6_defer_cov_positive": true,
+      "G7_cert_violations_zero": true
+    },
+    "all_pass": false,
+    "far_answer": 0.0,
+    "far_defer": 0.0,
+    "precision": 1.0,
+    "answer_events": 0,
+    "defer_events": 48,
+    "answer_coverage": "0/60",
+    "defer_coverage": "48/120"
+  },
+  "train_records": 2839,
+  "heldout_records": 1175,
+  "i3_5_included": 1056,
+  "i3_28bc_explicitly_excluded": true,
+  "i3_28bc_exclusion_reason": "checkpoints don't support V3 feature reconstruction"
+}

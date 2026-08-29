@@ -33,17 +33,23 @@
       ]
     },
     "V3R": {
-      "status": "HELD_OUT_QUALIFIED",
-      "experiment": "I3.30R",
-      "result": "All 7 held-out gates pass with exact authority logic. Awaiting live safety study.",
-      "heldout_gates": {
-        "FAR_ANSWER": 0.0,
-        "FAR_DEFER": 0.0,
-        "TerminalAuthorityPrecision": 1.0,
-        "false_terminal_on_CONTINUE": 0,
-        "certificate_violations": 0,
-        "ANSWER_coverage": "14/20",
-        "DEFER_coverage": "44/60"
+      "status": "STRUCTURAL_HOLDOUT_PASS",
+      "experiment": "I3.30R2",
+      "result": "All 8 structural holdout gates pass with 0% feature overlap. VHA ablation shows VHA is needed for ANSWER coverage.",
+      "structural_holdout_gates": {
+        "G0_feature_overlap_zero": "PASS (0/1175 = 0.0%)",
+        "G1_FAR_ANSWER_zero": "PASS (0/30)",
+        "G2_FAR_DEFER_zero": "PASS (0/92)",
+        "G3_TerminalAuthorityPrecision_1": "PASS (122/122)",
+        "G4_false_terminal_on_CONTINUE_zero": "PASS",
+        "G5_ANSWER_coverage_positive": "PASS (30/60)",
+        "G6_DEFER_coverage_positive": "PASS (92/120)",
+        "G7_certificate_violations_zero": "PASS"
+      },
+      "vha_ablation": {
+        "V3R2_A_with_vha": "PASS (all 8 gates, ANSWER cov=30/60, DEFER cov=92/120)",
+        "V3R2_B_without_vha": "FAIL (G5 only: ANSWER coverage=0/60 — VHA needed for ANSWER authority)",
+        "interpretation": "verified_hyp_action is needed for ANSWER authority coverage. Without it, the model cannot distinguish ANSWER-correct from DEFER-correct post-verification states. This is a benchmark shortcut limitation, not an oracle leak."
       },
       "semantic_fixes": [
         "Canonical epistemic topology (daph/epistemic/)",
@@ -53,9 +59,18 @@
         "Executor ANSWER success requires unique supported hypothesis",
         "P3/D5 have real continuation paths (unverified discriminator)",
         "P2_elim uses SUFFICIENT+contradicts (correct elimination)",
-        "Held-out split by domain family"
+        "Structural holdout: different n_hyps/budgets/topology patterns (0% feature overlap)",
+        "Fail-closed data loader (I3.28B/C explicitly excluded, documented)",
+        "VHA ablation performed (V3R2-A vs V3R2-B)"
       ],
-      "promotion_name_if_live_passes": "DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V3R_CONFIRMATION_CANDIDATE"
+      "promotion_name_if_live_passes": "DAPH_ADAPTIVE_AUTHORITY_EXECUTIVE_V3R_CONFIRMATION_CANDIDATE",
+      "limitations": [
+        "verified_hyp_action creates a benchmark shortcut (observable but limits scientific claim)",
+        "95% CI: FAR_ANSWER < 0.10, FAR_DEFER < 0.033 (rule of three, n=30/92)",
+        "I3.28B/C data excluded from training (checkpoints don't support V3 reconstruction)",
+        "Executor DEFER success not yet unified with canonical topology",
+        "Snapshot legacy contradicting_count semantics not yet fixed"
+      ]
     }
   },
 
