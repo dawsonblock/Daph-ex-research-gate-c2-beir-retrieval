@@ -1,0 +1,14 @@
+{
+  "task_count": 35,
+  "initial_readiness_counts": {
+    "CONTINUE_REQUIRED": 35
+  },
+  "d5_0026_diagnosis": {
+    "s0_readiness": "CONTINUE_REQUIRED",
+    "s1_readiness": "ANSWER_READY",
+    "s1_is_answer_ready": true,
+    "s1_v3_certificate_passed": true,
+    "s1_v3_would_force": true,
+    "s1_q_gap_v3r": 21.1991
+  }
+}
