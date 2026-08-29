@@ -13,7 +13,7 @@ This is a **development live run**, not a preregistered confirmation run.
 - **Model**: Qwen2.5-7B-Instruct Q4_K_M from DhruvalLabs mirror
   - Colab SHA: `35f9f55b0c7cdd52...`
   - Local SHA: `65b8fcd92af6b4fe...`
-  - **NOT byte-identical**. 5-packet behavioral smoke test passed. This is insufficient for model equivalence.
+  - **NOT byte-identical**. 5-packet behavioral smoke test passed. This is a backend compatibility smoke test, not model equivalence. Insufficient for a confirmation experiment, especially near action boundaries.
 - **Three bugs were fixed during this run** (not part of the original freeze):
   1. Runner used buggy `compute_v3_features` instead of `compute_v3_features_canonical`
   2. Executor's `_check_defer_success` didn't check `answer_action` of supported hypothesis
@@ -21,7 +21,7 @@ This is a **development live run**, not a preregistered confirmation run.
 
 ## Gate Results: 12/12 PASS
 
-All 12 pre-registered gates pass numerically. **This does not validate the intended mechanism.**
+All 12 pre-registered gates pass numerically. **This does not validate the intended mechanism.** The gates measure aggregate outcomes, not isolated causal contributions of the authority mechanism.
 
 ## Authority Event Accounting
 
@@ -30,25 +30,47 @@ All 12 pre-registered gates pass numerically. **This does not validate the inten
 - **All 84 force ANSWER** — V1 is ANSWER-only hard authority
 - V1 forces ANSWER on:
   - D4: 33 (correct — D4 expected terminal is ANSWER)
-  - D5: 35 (correct — D5 expected terminal is ANSWER, not CONTINUE)
-  - D2: 8 (**WRONG** — D2 expected terminal is DEFER, V1 forces ANSWER → all 8 fail)
-  - D3: 8 (mixed — some correct, some wrong)
+  - D5: 35 (V1 succeeds on all 35 — see D5 discussion below)
+  - D2: 8 (**V1 forces ANSWER where expected terminal is DEFER → all 8 fail**)
+  - D3: 8 (mixed)
 
 ### V3 authority (V3R2-A candidate)
 - Modes: `A2AD_hard_ANSWER` (78), `A2AD_hard_DEFER` (3)
 - V3 forces ANSWER on:
   - D4: 31 (correct)
-  - D5: 31 (correct)
-  - D3: 16 (rescues — V3 forces ANSWER where V1 didn't)
+  - D5: 31
+  - D3: 16
 - V3 forces DEFER on:
-  - D2: 3 (rescues — V3 forces DEFER where V1 forced ANSWER)
+  - D2: 3
 
-### Critical accounting finding
+### Event semantics
 
-**D5's expected_terminal is ANSWER, not CONTINUE.** The study documentation says "D5: CONTINUE — ambiguous post-verification state" but the actual tasks have `expected_terminal=ANSWER`. This means:
-- D5 is NOT a "CONTINUE-correct" stratum
-- V1 forcing ANSWER on D5 is correct behavior (35/35 success)
-- V3 not forcing ANSWER on 4 D5 tasks is a regression
+The 81 V3 hard authority events are genuine terminal overrides (certificate passed, Q gap exceeded threshold, action forced). The `authority_mode` field was not recorded in the event log (shows `?`), but cross-referencing with trajectory `hard_force_count` confirms all 81 events correspond to `A2AD_hard_*` modes in the authority log.
+
+**However, `hard_auth_breaks = 0` only means no forced action resulted in `TERMINAL_WRONG`.** It does not establish that every intervention was beneficial. A forced action that matches what the model would have done anyway provides no causal value. A forced terminal action that succeeds might still yield lower utility than a continuation that would have resolved more evidence. The current logging does not record the model's proposed action at authority events, so forced-vs-shadow counterfactuals cannot be computed from this run.
+
+## D5: Task Terminal vs Decision-State Truth
+
+D5 tasks have `expected_terminal=ANSWER`. The study documentation describes D5 as "CONTINUE — ambiguous post-verification state." These are not necessarily contradictory.
+
+A task can legitimately be:
+
+```
+initial state:
+    CONTINUE / VERIFY required (competing verified support)
+after discriminator verification:
+    ANSWER_READY (unique supported hypothesis)
+eventual expected_terminal:
+    ANSWER
+```
+
+**`expected_terminal=ANSWER` does not by itself imply that the D5 decision state is ANSWER_READY.** Whether the targeted D5 state is CONTINUE-required must be established from the causal action values and topology at that state, not inferred from the task-level terminal outcome.
+
+The diagnostic from the previous version of this report incorrectly concluded "D5 is NOT a CONTINUE-correct stratum." That inference was too strong. The correct statement is:
+
+> D5's task-level terminal outcome is ANSWER. Whether the targeted D5 decision state is CONTINUE-required must be established from the causal action values and topology at that state rather than inferred from `expected_terminal`.
+
+This distinction matters because it determines whether V1's forced ANSWER on D5 is semantically correct or merely exploiting the evaluator.
 
 ## First-Divergence Analysis: 6 Breaks
 
@@ -63,12 +85,42 @@ All 12 pre-registered gates pass numerically. **This does not validate the inten
 | d3_0038 | D3 | BOTH_ADVISORY | VERIFY,VERIFY,ANSWER→SUCCESS | VERIFY,RETRIEVE,VERIFY→STEP_LIMIT |
 | d5_0026 | D5 | V1_HARD_V3_ADVISORY | VERIFY,ANSWER(forced)→SUCCESS | VERIFY,REASON_MORE→FAIL |
 
-### Break mechanism summary
+### Defect decomposition
 
-- **5 of 6 breaks are BOTH_ADVISORY**: V3R2-A's Q model produces different Q values → different epsilon/refined set → LLM makes different (worse) choice. No hard authority involved.
-- **1 of 6 breaks is V1_HARD_V3_ADVISORY**: V1 forces ANSWER (correct), V3 doesn't force (Q gap too small or certificate fails), LLM chooses REASON_MORE → fails.
+**Problem A — Q/advisory regression (5 breaks)**
 
-**The certificate authority mechanism is NOT causing breaks.** The breaks are caused by Q-value differences altering advisory guidance.
+Tasks: d1_0004, d1_0010, d2_0003, d3_0022, d3_0038
+
+All five are BOTH_ADVISORY: V3R2-A's Q model produces different Q values → different epsilon/refined set → LLM makes a different (worse) choice. No hard authority involved at the divergence point.
+
+- D1 breaks: V3 refined set is REASON_MORE (21/35) vs V1's DEFER (31/35). V3R2-A overvalues REASON_MORE in resource-exhausted states.
+- D2 break: V3's refined set includes both DEFER and REASON_MORE; LLM chooses REASON_MORE.
+- D3 breaks: V3 chooses RETRIEVE at step 1 where V1 chooses VERIFY, leading to step exhaustion.
+
+**Fix target: Q_V3R2 training/support/calibration. NOT certificate relaxation.** D1 has no certificate firing at all, so relaxing certificates cannot fix d1_0004 or d1_0010.
+
+**Problem B — possible authority undercoverage (1 break)**
+
+Task: d5_0026
+
+V1 forces ANSWER at step 1 (Q gap = 12.79, A2A_hard_select). V3 stays advisory (certificate or Q gap failed), LLM chooses REASON_MORE → fails.
+
+**Fix target: determine whether the certificate SHOULD have fired using causal state truth before changing anything.** The following must be answered for the divergence state s in d5_0026:
+
+1. What is the canonical topology at s?
+2. Is `ANSWER_READY(s)` actually true?
+3. What is `Q*(s, ANSWER)` vs `Q*(s, REASON_MORE)` vs `Q*(s, VERIFY)`?
+4. Would forced ANSWER succeed at s?
+5. Would advisory REASON_MORE fail at s?
+6. Did the certificate fail structurally, or did the Q gap fail threshold?
+
+The repair depends on the answer:
+
+- If `certificate = true` but `Q gap < threshold` → confidence/threshold issue
+- If `certificate = false` but canonical state really is `ANSWER_READY` → certificate recall bug
+- If `certificate = false` and state is still unresolved → V1's forced ANSWER may exploit the evaluator, and V3 may be semantically more correct despite losing the task
+
+**Do not relax the certificate until this diagnosis is complete.**
 
 ## Rescue Mechanism: 15 Rescues
 
@@ -80,12 +132,40 @@ All 12 pre-registered gates pass numerically. **This does not validate the inten
 | BOTH_HARD_DIFFERENT_ACTION | 3 | V1 forced ANSWER (wrong), V3 forced DEFER (correct) — D2 |
 | V1_HARD_V3_ADVISORY | 2 | V1 forced ANSWER (wrong), V3 advisory → model chose DEFER (correct) — D2 |
 
-### Rescue mechanism summary
+### Causal attribution limitation
 
-- **10 of 15 rescues are V3_HARD_RESCUE**: V3's ANSWER certificate fires on D3 tasks where V1's ANSWER-only authority didn't fire. This IS the intended mechanism working.
-- **5 of 15 rescues are D2 DEFER rescues**: V3 either forces DEFER (3) or advisory guidance leads model to DEFER (2), where V1 forced ANSWER (wrong).
+The 10 V3_HARD_RESCUE events are **associated with** successful rescue trajectories, but the incremental causal contribution of the authority intervention has **not been isolated**.
 
-**The certificate authority mechanism IS responsible for 10 of 15 rescues.** This is genuine evidence that the ANSWER certificate works on D3.
+The comparison changes multiple things simultaneously:
+
+```
+V1:  Q_V1     + V1 epsilon guidance     + V1 authority
+V3:  Q_V3R2   + V3 epsilon guidance     + V3 certificate authority
+```
+
+One rescue example demonstrates the confounding:
+
+```
+D3_0006:
+  V1:  RETRIEVE → VERIFY → VERIFY → fail
+  V3:  VERIFY → VERIFY → ANSWER(hard) → success
+```
+
+The trajectory diverged at **step 0** (RETRIEVE vs VERIFY), before the V3 ANSWER certificate fired at step 2. The actual causal path could be:
+
+```
+different Q model
+    → better initial VERIFY
+    → better epistemic state
+    → certificate fires
+    → ANSWER
+```
+
+The certificate participates in the successful mechanism, but it is not isolated from the Q-model and advisory differences that also changed.
+
+**Current evidence supports:**
+
+> V3 certificate authority is associated with successful rescue trajectories, but its incremental causal contribution has not yet been isolated from Q-model and advisory guidance differences.
 
 ## D1 Regression: V1 8/35 → V3 6/35
 
@@ -96,7 +176,7 @@ D1 has no verify budget → no verified evidence → no certificates can fire. D
 
 V3R2-A's Q model ranks REASON_MORE higher than DEFER on many D1 tasks. This changes the epsilon set, and the LLM chooses REASON_MORE instead of DEFER. Since D1 has no useful continuations, REASON_MORE wastes steps and fails.
 
-**Root cause**: V3R2-A was trained on data where DEFER was correct only after verification. On D1 (no verification possible), the model doesn't confidently recommend DEFER.
+**Root cause**: V3R2-A was trained on data where DEFER was correct primarily after verification. On D1 (no verification possible), the model doesn't confidently recommend DEFER. This is a Q-model training gap, separate from the certificate mechanism.
 
 ## Causal Picture
 
@@ -105,7 +185,7 @@ The intended mechanism:
 canonical topology → positive terminal certificate → correct hard ANSWER/DEFER → rescues
 ```
 
-The actual picture:
+The actual picture (confounded):
 ```
 V3R2-A Q model
       ↓
@@ -122,45 +202,87 @@ LLM makes different choices      hard ANSWER/DEFER force
   │     │                         │     │
   ▼     ▼                         ▼     ▼
 D1:    D3/D5:                  D3: 10 rescues    D2: 3 rescues
-worse  mixed                   (ANSWER cert)     (DEFER cert)
-       results
+worse  mixed                   (associated,     (associated,
+       results                  not isolated)    not isolated)
 ```
 
-## Three Questions Answered
+## What Has Been Demonstrated
 
-### Q1: Why did D1 improve (first run) / regress (final run) if DEFER authority never fired?
+**Demonstrated:**
+- Canonical V3 authority can execute live
+- ANSWER and DEFER certificates fire in real trajectories
+- 81 certificate-qualified interventions with zero observed terminal-wrong outcomes
+- Overall V3 behavioral improvement over V1 (+9 success, +6.86 mean paired ΔU)
+- Lower premature termination (V3: 5, V1: 6)
+- Clear D2/D3 behavior improvements
 
-D1 has no verify budget → no certificates fire. D1 changes are entirely from Q-value differences altering advisory guidance. In the first run (buggy features), V3's Q values happened to guide the LLM toward better D1 choices. In the final run (canonical features), V3's Q values guide the LLM toward REASON_MORE on D1, which is worse. **The D1 effect is purely a Q-model side effect, not authority mechanism.**
+**NOT yet demonstrated:**
+- Isolated causal benefit of adaptive authority (confounded with Q-model differences)
+- Structural generalization of authority
+- Exact-model confirmation (different GGUF SHA)
+- That D5's decision state is ANSWER_READY rather than CONTINUE-required
+- That relaxing certificates is safe
+- That V3 should replace V1
 
-### Q2: Why did D5 degrade if false terminal authority was zero?
+## I3.30R3: Authority-Isolation Experiment
 
-D5's expected terminal is ANSWER (not CONTINUE as documented). V1 forces ANSWER on all 35 D5 tasks (hard authority) → 35/35 success. V3 only forces ANSWER on 31 D5 tasks. On the 1 failing task (d5_0026), V3's Q gap was too small for hard authority, so V3 stayed advisory, and the LLM chose REASON_MORE → failed. **The D5 regression is caused by V3's certificate being more restrictive than V1's ANSWER-only authority.**
+The next phase should isolate the causal effect of adaptive authority, not attempt another repair cycle.
 
-### Q3: What exactly are the 81 hard-authority events and 0 hard-authority breaks?
+### Three-arm design
 
-- 78 ANSWER forces: 31 on D4 (correct), 31 on D5 (correct), 16 on D3 (10 rescues, 6 neutral)
-- 3 DEFER forces: all on D2 (all rescues)
-- 0 breaks: no hard authority event caused a TERMINAL_WRONG outcome
+| Arm | Q model | Guidance | Hard terminal authority |
+|-----|---------|----------|------------------------|
+| V1 | Q_V1 | V1 epsilon | ANSWER-only V1 |
+| V3-SHADOW | Q_V3R2 | V3R2 epsilon | OFF (certificates evaluated/logged, never override) |
+| V3-A | Q_V3R2 | V3R2 epsilon | V3 certificates (hard override) |
 
-**The 81 events are genuine hard authority interventions.** The certificate mechanism works when it fires. The issue is that it fires less often than V1's simpler ANSWER-only authority, causing breaks where V1 would have forced correctly.
+### Decomposition
 
-## Scientific Conclusion
+```
+V3-SHADOW vs V1     → effect of new state representation / Q / advisory interface
+V3-A vs V3-SHADOW   → incremental adaptive-authority value (the isolated ATE)
+```
 
-1. **The ANSWER certificate mechanism works** — 10 D3 rescues are directly caused by V3's ANSWER certificate firing where V1's didn't.
-2. **The DEFER certificate mechanism works** — 3 D2 rescues are directly caused by V3's DEFER certificate firing where V1 forced wrong ANSWER.
-3. **The mechanism is too restrictive** — V3's certificate requires more epistemic evidence than V1's simple Q-gap threshold, causing it to miss 1 D5 case and 2 D1 cases where V1's blunt force was correct.
-4. **The Q model has a D1 weakness** — V3R2-A doesn't confidently recommend DEFER on resource-exhausted states, causing advisory regressions.
-5. **D5 is mislabeled** — The documentation says CONTINUE but the tasks expect ANSWER. This is a benchmark design issue.
+The key equation:
 
-## Recommendations
+```
+ATE_authority = E[U | Q_V3R2, A_hard] - E[U | Q_V3R2, A_shadow]
+```
 
-1. **Do NOT retrain yet.** The current results provide diagnostic value that retraining would destroy.
-2. **Fix D5 benchmark labeling** — Either change D5 tasks to have expected_terminal=CONTINUE, or update documentation to reflect ANSWER.
-3. **Investigate V1's D2 false ANSWER force** — V1 forces ANSWER on 8 D2 tasks and fails all 8. This is a V1 weakness that V3's DEFER certificate correctly fixes.
-4. **Consider relaxing V3's certificate threshold** — The 1 D5 break and 2 D1 breaks suggest V3's certificate is too conservative compared to V1's blunt Q-gap authority.
-5. **Run a stronger model equivalence test** — 5 packets is insufficient. Use hundreds of packets near action boundaries.
-6. **Preserve these 370 paired trajectories as the diagnostic dataset for I3.30R3.**
+### Counterfactual event logging
+
+At every potential authority state, record:
+
+- `state_sha`
+- LLM proposed action
+- V3 epsilon set
+- Q values for all legal actions
+- certificate evaluation result
+- forced action (if any)
+- counterfactual shadow action (what would have happened without force)
+- counterfactual immediate utility
+- counterfactual rollout utility
+
+Each authority intervention can then be classified as:
+
+| Classification | Definition |
+|---------------|------------|
+| RESCUE | Force succeeds, shadow would have failed |
+| BENEFICIAL_NONRESCUE | Force succeeds, shadow would have succeeded with lower utility |
+| NEUTRAL | Force and shadow produce same outcome |
+| HARMFUL_NONBREAK | Force produces lower utility than shadow would have |
+| BREAK | Force fails, shadow would have succeeded |
+
+### Phase plan
+
+1. **Re-audit D5 state-level causal truth** — For d5_0026 and representative D5 tasks, compute Q* and topology at the decision state. Determine whether the state is ANSWER_READY or CONTINUE-required.
+2. **Freeze V3R2 exactly as it is.** Do not retrain.
+3. **Add V3-SHADOW arm** — same Q, same I2, same prompts, same certificates evaluated, no hard override.
+4. **Run V3-SHADOW vs V3-A** on the existing diagnostic tasks first.
+5. **At every potential authority state, perform paired counterfactual rollout** — force / don't force.
+6. **Compute**: authority rescue rate, authority break rate, authority ΔU, authority precision, authority coverage, certificate recall, certificate false-positive rate.
+7. **Only then decide** whether the next change belongs in Q, certificate, threshold, or benchmark.
 
 ## V1 Remains the Confirmed Champion
 
-V3R2-A shows genuine mechanism improvements (10 ANSWER-certificate rescues, 3 DEFER-certificate rescues) but also introduces regressions from Q-model differences and overly restrictive certificates. The net effect is positive (+9 success, +6.86 ΔU) but the mechanism is not yet reliable enough for promotion.
+V3R2-A has passed an important development milestone. The certificate mechanism fires in live trajectories and is associated with successful outcomes. But the causal benefit of adaptive authority has not been isolated from Q-model and advisory differences, and the D5 decision-state truth has not been established. V1 remains confirmed. V3R2-A is not promoted.
