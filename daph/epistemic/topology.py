@@ -191,8 +191,12 @@ def derive_hypothesis_topology(
     supported_hyps = [h_id for h_id, s in hypothesis_states.items()
                       if s == HypothesisState.SUPPORTED]
     unique_supported = supported_hyps[0] if len(supported_hyps) == 1 else None
-    has_unresolved_competition = n_hyp_with_verified_support > 1
-    has_unique_verified_supported = n_hyp_with_verified_support == 1
+    # Unresolved competition counts only SUPPORTED hypotheses (verified support
+    # without verified contradiction). A hypothesis that has both verified support
+    # AND verified contradiction is CONTRADICTED (eliminated) and does not count
+    # as unresolved competition — its verified support is moot once eliminated.
+    has_unresolved_competition = len(supported_hyps) > 1
+    has_unique_verified_supported = len(supported_hyps) == 1
 
     # Evidence completeness
     verification_complete = all(

@@ -685,17 +685,15 @@ def main():
     print(f"\nTasks: {len(all_tasks)} (D1-D4: {len(tasks)}, D5: {len(d5_tasks)})")
 
     # Load backend
-    from r2_direct_llama_backend import R2DirectLlamaBackend
+    from hrm_adaptive_memory.executive.model_backend import R2DirectLlamaBackend
     backend = R2DirectLlamaBackend(
         model_path=args.gguf_path,
         n_ctx=4096,
-        n_gpu_layers=0,
-        temperature=0.0,
-        verbose=False,
+        n_gpu_layers=-1,  # Metal offload for Apple Silicon
     )
 
     # Load I3.7e for snapshot building
-    import i3_7e_state as i3_7e
+    import run_i3_7e_compact_governor as i3_7e
 
     # Load utility
     utility = MetareasoningUtility.from_file(
