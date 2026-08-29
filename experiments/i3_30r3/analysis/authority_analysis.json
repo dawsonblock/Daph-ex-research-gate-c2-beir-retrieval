@@ -1,0 +1,181 @@
+{
+  "experiment": "I3.30R3",
+  "primary_comparison": {
+    "name": "V3-AUTH vs V3-SHADOW",
+    "ate_authority": {
+      "mean": 0.0,
+      "lower": 0.0,
+      "upper": 0.0,
+      "n": 185
+    },
+    "success_delta": {
+      "rescues": 0,
+      "breaks": 0,
+      "both_success": 127,
+      "both_fail": 58
+    }
+  },
+  "secondary_comparison": {
+    "name": "V3-SHADOW vs V1",
+    "delta_utility": {
+      "mean": 18.026108108108108,
+      "lower": 9.968278378378377,
+      "upper": 26.73140675675675,
+      "n": 185
+    },
+    "success_delta": {
+      "rescues": 24,
+      "breaks": 2,
+      "both_success": 103,
+      "both_fail": 56
+    }
+  },
+  "aggregate": {
+    "v1_success": 105,
+    "v1_total": 185,
+    "shadow_success": 127,
+    "shadow_total": 185,
+    "hard_success": 127,
+    "hard_total": 185
+  },
+  "authority_rates": {
+    "certificate_coverage": 0.29508196721311475,
+    "force_rate": 0.29508196721311475,
+    "effective_intervention_rate": 0.0,
+    "certificate_positive_count": 90,
+    "force_applied_count": 90,
+    "effective_intervention_count": 0,
+    "total_steps": 305
+  },
+  "effect_classification": {
+    "neutral": 90
+  },
+  "strata": {
+    "v1": {
+      "D1": {
+        "arm": "v1",
+        "n": 35,
+        "successes": 10,
+        "success_rate": 0.2857142857142857,
+        "mean_utility": -56.790285714285716,
+        "median_utility": -120.0
+      },
+      "D2": {
+        "arm": "v1",
+        "n": 35,
+        "successes": 19,
+        "success_rate": 0.5428571428571428,
+        "mean_utility": -13.385428571428573,
+        "median_utility": 67.73
+      },
+      "D3": {
+        "arm": "v1",
+        "n": 45,
+        "successes": 6,
+        "success_rate": 0.13333333333333333,
+        "mean_utility": -43.04688888888889,
+        "median_utility": -33.29
+      },
+      "D4": {
+        "arm": "v1",
+        "n": 35,
+        "successes": 35,
+        "success_rate": 1.0,
+        "mean_utility": 99.89,
+        "median_utility": 99.89
+      },
+      "D5": {
+        "arm": "v1",
+        "n": 35,
+        "successes": 35,
+        "success_rate": 1.0,
+        "mean_utility": 94.89285714285714,
+        "median_utility": 93.53
+      }
+    },
+    "v3_shadow": {
+      "D1": {
+        "arm": "v3_shadow",
+        "n": 35,
+        "successes": 8,
+        "success_rate": 0.22857142857142856,
+        "mean_utility": -67.76342857142858,
+        "median_utility": -120.0
+      },
+      "D2": {
+        "arm": "v3_shadow",
+        "n": 35,
+        "successes": 27,
+        "success_rate": 0.7714285714285715,
+        "mean_utility": 30.043142857142854,
+        "median_utility": 67.73
+      },
+      "D3": {
+        "arm": "v3_shadow",
+        "n": 45,
+        "successes": 22,
+        "success_rate": 0.4888888888888889,
+        "mean_utility": 4.80711111111111,
+        "median_utility": -2.64
+      },
+      "D4": {
+        "arm": "v3_shadow",
+        "n": 35,
+        "successes": 35,
+        "success_rate": 1.0,
+        "mean_utility": 99.89,
+        "median_utility": 99.89
+      },
+      "D5": {
+        "arm": "v3_shadow",
+        "n": 35,
+        "successes": 35,
+        "success_rate": 1.0,
+        "mean_utility": 96.19171428571428,
+        "median_utility": 96.71
+      }
+    },
+    "v3_hard": {
+      "D1": {
+        "arm": "v3_hard",
+        "n": 35,
+        "successes": 8,
+        "success_rate": 0.22857142857142856,
+        "mean_utility": -67.76342857142858,
+        "median_utility": -120.0
+      },
+      "D2": {
+        "arm": "v3_hard",
+        "n": 35,
+        "successes": 27,
+        "success_rate": 0.7714285714285715,
+        "mean_utility": 30.043142857142854,
+        "median_utility": 67.73
+      },
+      "D3": {
+        "arm": "v3_hard",
+        "n": 45,
+        "successes": 22,
+        "success_rate": 0.4888888888888889,
+        "mean_utility": 4.80711111111111,
+        "median_utility": -2.64
+      },
+      "D4": {
+        "arm": "v3_hard",
+        "n": 35,
+        "successes": 35,
+        "success_rate": 1.0,
+        "mean_utility": 99.89,
+        "median_utility": 99.89
+      },
+      "D5": {
+        "arm": "v3_hard",
+        "n": 35,
+        "successes": 35,
+        "success_rate": 1.0,
+        "mean_utility": 96.19171428571428,
+        "median_utility": 96.71
+      }
+    }
+  }
+}

@@ -692,19 +692,28 @@ def main():
     with open(baseline_path) as f:
         prereg = json.load(f)
 
+    # Map manifest keys to preregistration keys
+    sha_key_map = {
+        "Q_V3R_model_sha256": "Q_V3R2_A_sha256",
+        "Q_V3R_schema_sha256": "V3R2_feature_schema_sha256",
+        "Q_V1_model_sha256": "Q_V1_sha256",
+        "Q_V1_schema_sha256": "V1_feature_schema_sha256",
+        "topology_sha256": "topology_sha256",
+        "v3_features_sha256": "v3_features_sha256",
+        "authority_policy_v2_sha256": "authority_policy_v2_sha256",
+        "authority_policy_v3_sha256": "authority_policy_v3_sha256",
+        "utility_config_sha256": "utility_config_sha256",
+        "i3_29_generator_sha256": "i3_29_generator_sha256",
+        "i3_30_d5_generator_sha256": "i3_30_d5_generator_sha256",
+    }
+
     mismatches = []
-    for key in ["Q_V3R_model_sha256", "Q_V3R_schema_sha256",
-                "Q_V1_sha256", "V1_feature_schema_sha256",
-                "topology_sha256", "v3_features_sha256",
-                "authority_policy_v2_sha256", "authority_policy_v3_sha256",
-                "utility_config_sha256",
-                "i3_29_generator_sha256", "i3_30_d5_generator_sha256"]:
-        prereg_key = key
+    for manifest_key, prereg_key in sha_key_map.items():
         if prereg_key in prereg.get("frozen_artifacts", {}):
             expected = prereg["frozen_artifacts"][prereg_key]
-            actual = manifest.get(key, "")
+            actual = manifest.get(manifest_key, "")
             if actual != expected:
-                mismatches.append(f"  {key}: expected {expected[:16]}..., got {actual[:16]}...")
+                mismatches.append(f"  {manifest_key}: expected {expected[:16]}..., got {actual[:16]}...")
 
     if mismatches:
         print("\n*** MANIFEST MISMATCHES DETECTED ***")

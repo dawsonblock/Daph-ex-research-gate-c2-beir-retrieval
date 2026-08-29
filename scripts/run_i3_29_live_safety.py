@@ -481,6 +481,7 @@ def _make_result(task, arm, realized, success, terminal_result,
     elif "_d2_" in task.task_id: stratum = "D2"
     elif "_d3_" in task.task_id: stratum = "D3"
     elif "_d4_" in task.task_id: stratum = "D4"
+    elif "_d5_" in task.task_id: stratum = "D5"
 
     # Count authority events
     hard_forces = [e for e in authority_log if e["authority_mode"].startswith("A2")]

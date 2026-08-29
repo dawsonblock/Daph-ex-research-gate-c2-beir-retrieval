@@ -240,7 +240,20 @@ def compute_stratum_breakdown(traj, arm_name):
     """Compute per-stratum success and utility."""
     by_stratum = defaultdict(list)
     for t in traj:
-        stratum = t.get("stratum", "unknown")
+        # Re-derive stratum from task_id to handle D5 correctly
+        tid = t.get("task_id", "")
+        if "_d5_" in tid:
+            stratum = "D5"
+        elif "_d4_" in tid:
+            stratum = "D4"
+        elif "_d3_" in tid:
+            stratum = "D3"
+        elif "_d2_" in tid:
+            stratum = "D2"
+        elif "_d1_" in tid:
+            stratum = "D1"
+        else:
+            stratum = t.get("stratum", "unknown")
         by_stratum[stratum].append(t)
 
     results = {}
