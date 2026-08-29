@@ -145,13 +145,29 @@ class TestDeferStructuralCertificate:
         assert defer_structural_certificate(s) is False
 
     def test_resource_exhaustion_no_verified_passes(self):
-        """Legacy D1: resource exhaustion, no verified evidence."""
+        """Legacy D1: resource exhaustion, no verified evidence, all evidence verified."""
         s = make_structural(
             verify_budget_exhausted=True,
             n_hyp_with_verified_support=0,
             n_hyp_with_verified_contradiction=0,
+            all_evidence_verified=True,
         )
         assert defer_structural_certificate(s) is True
+
+    def test_resource_exhaustion_with_unverified_evidence_fails(self):
+        """Legacy D1 certificate must NOT fire when unverified evidence remains.
+
+        Without the all_evidence_verified check, this certificate would fire
+        on D3 tasks (competing unverified support, no verify budget) and
+        force DEFER when CONTINUE is correct.
+        """
+        s = make_structural(
+            verify_budget_exhausted=True,
+            n_hyp_with_verified_support=0,
+            n_hyp_with_verified_contradiction=0,
+            all_evidence_verified=False,
+        )
+        assert defer_structural_certificate(s) is False
 
     def test_no_certificate_fails(self):
         """DEFER certificate fails when no positive certificate exists."""

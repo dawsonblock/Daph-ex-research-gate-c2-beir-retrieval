@@ -152,10 +152,15 @@ def defer_structural_certificate(s: StructuralStateV3) -> bool:
     if s.n_eliminated_hypotheses > 0 and s.n_viable_hypotheses <= 1:
         return True
 
-    # Legacy D1 certificate: resource exhaustion, no verified evidence
+    # Legacy D1 certificate: resource exhaustion, no verified evidence,
+    # AND no unverified evidence remains that could discriminate.
+    # Without the unverified-evidence check, this certificate fires on D3
+    # tasks (competing unverified support, no verify budget) and forces
+    # DEFER when CONTINUE is correct.
     if (s.verify_budget_exhausted
         and s.n_hyp_with_verified_support == 0
-        and s.n_hyp_with_verified_contradiction == 0):
+        and s.n_hyp_with_verified_contradiction == 0
+        and s.all_evidence_verified):
         return True
 
     return False

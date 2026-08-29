@@ -117,7 +117,34 @@ class TestExecutorDeferUsesCanonicalTopology:
         assert executor._check_defer_success(runtime) is True
 
     def test_defer_fails_when_answer_ready(self):
-        """DEFER fails when state is ANSWER_READY (unique supported exists)."""
+        """DEFER fails when state is ANSWER_READY (unique supported with ANSWER action)."""
+        # Per EPISTEMIC_SEMANTICS_V1.md §6.1, ANSWER_READY requires the
+        # uniquely supported hypothesis to have answer_action == ANSWER.
+        # When the supported hypothesis has answer_action == DEFER, the
+        # state is DEFER_READY, not ANSWER_READY.
+        hyps = (make_hyp("H1", DecisionAction.ANSWER), make_hyp("H2"))
+        ev = (
+            make_ev("E1", supports=("H1",), vstate=VerificationState.SUFFICIENT),
+        )
+        budget = ResourceBudget(
+            max_executive_steps=1, max_retrieval_calls=0,
+            max_verification_calls=0, max_search_calls=0,
+            max_reasoning_tokens=0, max_elapsed_ms=10000)
+        task = make_task(hyps, ev, expected=DecisionAction.DEFER, correct="H1")
+        runtime = EvidenceRuntime(
+            task=task, resources=ResourceState(budget=budget),
+            evidence=ev, retrieved_evidence_ids=("E1",), verified_evidence_ids=("E1",))
+        executor = EvidenceExecutor()
+        # H1 (ANSWER) is uniquely supported → ANSWER_READY → DEFER should fail
+        assert executor._check_defer_success(runtime) is False
+
+    def test_defer_succeeds_when_unique_supported_is_defer(self):
+        """DEFER succeeds when uniquely supported hypothesis has answer_action=DEFER.
+
+        Per EPISTEMIC_SEMANTICS_V1.md §6.1, ANSWER_READY requires the supported
+        hypothesis to have answer_action == ANSWER. A uniquely supported DEFER
+        hypothesis means the state is DEFER_READY, not ANSWER_READY.
+        """
         hyps = (make_hyp("H1", DecisionAction.DEFER), make_hyp("H2"))
         ev = (
             make_ev("E1", supports=("H1",), vstate=VerificationState.SUFFICIENT),
@@ -131,8 +158,8 @@ class TestExecutorDeferUsesCanonicalTopology:
             task=task, resources=ResourceState(budget=budget),
             evidence=ev, retrieved_evidence_ids=("E1",), verified_evidence_ids=("E1",))
         executor = EvidenceExecutor()
-        # H1 is uniquely supported → ANSWER_READY → DEFER should fail
-        assert executor._check_defer_success(runtime) is False
+        # H1 (DEFER) is uniquely supported → DEFER_READY → DEFER should succeed
+        assert executor._check_defer_success(runtime) is True
 
     def test_defer_fails_when_continuation_available(self):
         """DEFER fails when a continuation could resolve the state."""

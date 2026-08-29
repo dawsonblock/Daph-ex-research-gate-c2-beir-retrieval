@@ -288,9 +288,27 @@ class EvidenceExecutor:
         hyp_ids = [h.hypothesis_id for h in task.hypotheses]
         topology = derive_hypothesis_topology(visible_ev, hyp_ids)
 
-        # DEFER is epistemically justified when ANSWER_READY is false
+        # DEFER is epistemically justified when ANSWER_READY is false.
+        # Per EPISTEMIC_SEMANTICS_V1.md §6.1, ANSWER_READY requires the
+        # uniquely supported hypothesis to have answer_action == ANSWER.
+        # If the uniquely supported hypothesis has answer_action == DEFER,
+        # the state is DEFER_READY, not ANSWER_READY.
         if is_answer_ready(topology):
-            return False  # State is answer-ready, DEFER is wrong
+            # Check if the supported hypothesis is actually an ANSWER hypothesis
+            if topology.unique_supported_hypothesis is not None:
+                supported_hyp = next(
+                    (h for h in task.hypotheses
+                     if h.hypothesis_id == topology.unique_supported_hypothesis),
+                    None,
+                )
+                if supported_hyp is not None and supported_hyp.answer_action is DecisionAction.DEFER:
+                    # Unique supported hypothesis maps to DEFER, not ANSWER.
+                    # State is DEFER_READY (assuming no continuation can resolve).
+                    pass  # Fall through to continuation check below
+                else:
+                    return False  # State is genuinely ANSWER_READY, DEFER is wrong
+            else:
+                return False  # Should not happen if is_answer_ready is True
 
         # Check if any continuation could resolve the state
         # A continuation is admissible if it could change the topology

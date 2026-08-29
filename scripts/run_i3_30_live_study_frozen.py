@@ -253,7 +253,8 @@ def run_trajectory(task, backend, i3_7e, utility,
             runtime = res.runtime
             if res.terminal:
                 return _make_result(task, arm, 0.0, False, "PRE_VERIFY_TERMINAL",
-                                    [], [], [], False, False)
+                                    [], [], [], False, False,
+                                    "VERIFY", False)
 
     # D5: evidence is already pre-verified in the task definition
     # (competing verified support is baked into the evidence items)
@@ -504,6 +505,7 @@ def run_trajectory(task, backend, i3_7e, utility,
         task, arm, realized, success, terminal_result,
         actions_taken, authority_log, receipts,
         premature_defer, premature_answer,
+        terminal_action, resource_exhaustion,
     )
     result["hard_authority_events"] = hard_authority_events
     return result
