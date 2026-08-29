@@ -26,6 +26,8 @@ from hrm_adaptive_memory.cognitive_control.state import (
 )
 from hrm_adaptive_memory.executive.resources import ResourceState, ResourceExhausted
 
+from daph.epistemic import derive_hypothesis_topology, is_answer_ready, HypothesisState
+
 from .schema import (
     EvidenceTask, EvidenceRuntime, EvidenceActionExecution,
     EvidenceItem, EvidenceSnapshot, EvidenceHypothesis,
@@ -199,6 +201,8 @@ class EvidenceExecutor:
         # Terminal actions
         if action is DecisionAction.ANSWER:
             success = self._check_answer_success(next_runtime)
+        elif action is DecisionAction.DEFER:
+            success = self._check_defer_success(next_runtime)
         else:
             success = task.expected_terminal is action
 
@@ -217,46 +221,97 @@ class EvidenceExecutor:
              and no verified contradiction, AND
           3. That uniquely supported hypothesis is the correct hypothesis.
 
-        This fixes the I3.30 defect where ANSWER succeeded even with
-        competing verified support (multiple hypotheses with SUFFICIENT
-        support). Under the canonical semantics, ANSWER requires unique
-        resolution — the evidence must single out one hypothesis.
+        Uses the canonical derive_hypothesis_topology() as the single source
+        of truth for epistemic state — no duplicated topology logic.
         """
         task = runtime.task
         if task.expected_terminal is not DecisionAction.ANSWER:
             return False
 
-        correct_h = task.correct_hypothesis_id
+        # Build observable evidence dicts for canonical topology
+        visible_ev = []
+        for ev in runtime.evidence:
+            if not ev.retrieved:
+                continue
+            visible_ev.append({
+                "evidence_id": ev.evidence_id,
+                "supports": list(ev.supports),
+                "contradicts": list(ev.contradicts),
+                "verification_state": ev.verification_state,
+                "temporal_status": ev.temporal_status,
+                "retrieved": ev.retrieved,
+            })
 
-        # Count hypotheses with SUFFICIENT, CURRENT support and no SUFFICIENT contradiction
-        # This implements the canonical topology's unique_supported_hypothesis check
-        supported_hypotheses = []
-        for h in task.hypotheses:
-            h_id = h.hypothesis_id
-            has_support = False
-            has_contradiction = False
+        hyp_ids = [h.hypothesis_id for h in task.hypotheses]
 
-            for ev in runtime.evidence:
-                if not ev.retrieved:
-                    continue
-                if ev.verification_state != VerificationState.SUFFICIENT:
-                    continue
-                if ev.temporal_status == TemporalStatus.STALE:
-                    continue
-                if h_id in ev.supports:
-                    has_support = True
-                if h_id in ev.contradicts:
-                    has_contradiction = True
+        # Derive canonical topology — single source of truth
+        topology = derive_hypothesis_topology(visible_ev, hyp_ids)
 
-            if has_support and not has_contradiction:
-                supported_hypotheses.append(h_id)
-
-        # ANSWER_READY requires exactly one supported hypothesis
-        if len(supported_hypotheses) != 1:
+        # ANSWER_READY requires exactly one SUPPORTED hypothesis
+        if not is_answer_ready(topology):
             return False
 
-        # That uniquely supported hypothesis must be the correct one
-        return supported_hypotheses[0] == correct_h
+        # That uniquely supported hypothesis must be the correct one (evaluator-side check)
+        return topology.unique_supported_hypothesis == task.correct_hypothesis_id
+
+    def _check_defer_success(self, runtime: EvidenceRuntime) -> bool:
+        """Check if DEFER is correct.
+
+        DEFER succeeds if and only if:
+          1. The task's expected terminal is DEFER, AND
+          2. The state is NOT ANSWER_READY per canonical topology (no unique
+             supported hypothesis), AND
+          3. No admissible continuation can resolve the state.
+
+        This unifies DEFER success with canonical topology per
+        EPISTEMIC_SEMANTICS_V1.md §6.2. Previously DEFER only checked
+        expected_terminal, which could disagree with the epistemic state.
+        """
+        task = runtime.task
+        if task.expected_terminal is not DecisionAction.DEFER:
+            return False
+
+        # Build observable evidence dicts for canonical topology
+        visible_ev = []
+        for ev in runtime.evidence:
+            if not ev.retrieved:
+                continue
+            visible_ev.append({
+                "evidence_id": ev.evidence_id,
+                "supports": list(ev.supports),
+                "contradicts": list(ev.contradicts),
+                "verification_state": ev.verification_state,
+                "temporal_status": ev.temporal_status,
+                "retrieved": ev.retrieved,
+            })
+
+        hyp_ids = [h.hypothesis_id for h in task.hypotheses]
+        topology = derive_hypothesis_topology(visible_ev, hyp_ids)
+
+        # DEFER is epistemically justified when ANSWER_READY is false
+        if is_answer_ready(topology):
+            return False  # State is answer-ready, DEFER is wrong
+
+        # Check if any continuation could resolve the state
+        # A continuation is admissible if it could change the topology
+        has_unverified_discriminating = topology.unverified_evidence_exists
+        has_hidden = topology.hidden_evidence_count > 0
+
+        rs = runtime.resources.as_dict()
+        can_verify = rs.get("verification_calls_remaining", 0) > 0 and len(valid_verify_targets(runtime)) > 0
+        can_retrieve = rs.get("retrieval_calls_remaining", 0) > 0 and has_hidden
+        can_search = rs.get("search_calls_remaining", 0) > 0 and not runtime.searched
+
+        # If any continuation exists that could resolve, DEFER is premature
+        if can_verify and has_unverified_discriminating:
+            return False
+        if can_retrieve and has_hidden:
+            return False
+        if can_search:
+            return False
+
+        # No resolving continuation available — DEFER is justified
+        return True
 
 
 def build_evidence_snapshot(
@@ -271,10 +326,14 @@ def build_evidence_snapshot(
     hidden_count = len(runtime.hidden_evidence)
     verified = [e for e in visible
                 if e.verification_state in (VerificationState.SUFFICIENT, VerificationState.FALSIFIED)]
+    # Canonical semantics per EPISTEMIC_SEMANTICS_V1.md §3.2:
+    # SUFFICIENT + supports(H) → verified support
+    # SUFFICIENT + contradicts(H) → verified contradiction
+    # FALSIFIED + any → no positive evidential force (claim failed)
     supporting = [e for e in verified
                   if e.verification_state == VerificationState.SUFFICIENT and e.supports]
     contradicting = [e for e in verified
-                     if e.verification_state == VerificationState.FALSIFIED and e.supports]
+                     if e.verification_state == VerificationState.SUFFICIENT and e.contradicts]
 
     # Clean affordances: whether operations are legally callable.
     # Derived exclusively from resource budgets and visible evidence state.

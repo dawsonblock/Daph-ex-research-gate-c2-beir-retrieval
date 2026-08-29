@@ -201,9 +201,14 @@ class EvidenceRuntime:
 
     @property
     def contradicting_evidence(self) -> tuple[EvidenceItem, ...]:
-        """Verified evidence that contradicts some hypothesis."""
+        """Verified evidence that contradicts some hypothesis.
+
+        Per EPISTEMIC_SEMANTICS_V1.md §3.2:
+        SUFFICIENT + contradicts(H) → verified contradiction against H.
+        FALSIFIED + supports(H) → no effect (support claim failed, NOT contradiction).
+        """
         return tuple(e for e in self.verified_evidence
-                     if e.verification_state is VerificationState.FALSIFIED and e.supports)
+                     if e.verification_state is VerificationState.SUFFICIENT and e.contradicts)
 
 
 @dataclass(frozen=True)
