@@ -144,8 +144,16 @@ def defer_structural_certificate(s: StructuralStateV3) -> bool:
     if s.has_verified_unresolved_competition:
         return False
 
-    # Primary certificate: unique verified support with DEFER action
+    # Primary certificate: unique verified support with DEFER action.
+    # Per §6.2, DEFER_READY requires no admissible continuation can resolve.
+    # If verify budget remains AND unverified evidence exists, the state
+    # is CONTINUE_REQUIRED, not DEFER_READY — further verification could
+    # overturn the support or create competition.
     if s.has_unique_verified_supported_hypothesis and s.verified_hyp_action_is_defer:
+        # Check continuation admissibility: if verification could still
+        # change the topology, DEFER is premature.
+        if s.can_verify and not s.all_evidence_verified:
+            return False
         return True
 
     # Elimination certificate: verification eliminated hypotheses, few viable remain

@@ -124,6 +124,34 @@ class TestDeferStructuralCertificate:
         )
         assert defer_structural_certificate(s) is True
 
+    def test_defer_blocked_when_continuation_could_overturn(self):
+        """DEFER certificate fails when verify budget remains and unverified evidence exists.
+
+        Per EPISTEMIC_SEMANTICS_V1.md 6.2, DEFER_READY requires no admissible
+        continuation can resolve the state. If verify budget remains AND
+        unverified evidence exists, further verification could overturn the
+        support or create competition, so the state is CONTINUE_REQUIRED.
+        """
+        s = make_structural(
+            has_unique_verified_supported_hypothesis=True,
+            verified_hyp_action_is_defer=True,
+            has_verified_unresolved_competition=False,
+            can_verify=True,
+            all_evidence_verified=False,
+        )
+        assert defer_structural_certificate(s) is False
+
+    def test_defer_passes_when_verify_budget_exhausted(self):
+        """DEFER certificate passes when verify budget exhausted, even with unverified evidence."""
+        s = make_structural(
+            has_unique_verified_supported_hypothesis=True,
+            verified_hyp_action_is_defer=True,
+            has_verified_unresolved_competition=False,
+            can_verify=False,
+            all_evidence_verified=False,
+        )
+        assert defer_structural_certificate(s) is True
+
     def test_elimination_passes(self):
         """DEFER certificate passes when verification eliminated hypotheses."""
         s = make_structural(
