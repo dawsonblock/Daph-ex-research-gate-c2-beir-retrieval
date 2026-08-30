@@ -1,0 +1,126 @@
+{
+  "experiment": "I3.30R3",
+  "passed": 11,
+  "failed": 1,
+  "pending": 0,
+  "gates": {
+    "G1": {
+      "name": "treatment_purity",
+      "description": "V3-AUTH and V3-SHADOW identical before force application",
+      "criterion": "purity_receipt_mismatches == 0 and integration_tests_pass",
+      "result": "PASS",
+      "value": {
+        "purity_mismatches": 0,
+        "prompt_mismatches": 0,
+        "schema_mismatches": 0,
+        "state_mismatches": 0,
+        "paired_events": 178,
+        "unpaired_events": 69,
+        "integration_tests": "6/6 pass (test_i3_30r3_runner_boundary.py)"
+      }
+    },
+    "G2": {
+      "name": "authority_breaks",
+      "description": "0 observed V3-AUTH-caused breaks",
+      "criterion": "authority_breaks == 0",
+      "result": "PASS",
+      "value": 0
+    },
+    "G3": {
+      "name": "false_answer_authority",
+      "description": "0 forced ANSWER on causally non-ANSWER-ready states",
+      "criterion": "forced ANSWER with immediate_success == False == 0",
+      "result": "PASS",
+      "value": 0
+    },
+    "G4": {
+      "name": "false_defer_authority",
+      "description": "0 forced DEFER on causally non-DEFER-ready states",
+      "criterion": "forced DEFER with immediate_success == False == 0",
+      "result": "PASS",
+      "value": 0
+    },
+    "G5": {
+      "name": "authority_effect",
+      "description": "mean \u0394U(HARD-SHADOW) >= 0",
+      "criterion": "ate_authority >= 0",
+      "result": "PASS",
+      "value": 18.235774999999997,
+      "ci_lower": 13.112114375,
+      "ci_upper": 23.841348749999995,
+      "n": 400
+    },
+    "G6": {
+      "name": "rescues_gt_breaks",
+      "description": "rescues > breaks",
+      "criterion": "rescues > breaks",
+      "result": "PASS",
+      "value": {
+        "rescues": 44,
+        "breaks": 0
+      }
+    },
+    "G7": {
+      "name": "answer_coverage",
+      "description": "> 0 effective ANSWER interventions",
+      "criterion": "effective_answer_interventions > 0",
+      "result": "PASS",
+      "value": 62
+    },
+    "G8": {
+      "name": "defer_coverage",
+      "description": "> 0 effective DEFER interventions",
+      "criterion": "effective_defer_interventions > 0",
+      "result": "PASS",
+      "value": 7
+    },
+    "G9": {
+      "name": "semantic_consistency",
+      "description": "0 topology/executor/certificate disagreements across all strata",
+      "criterion": "semantic_disagreements == 0",
+      "result": "PASS",
+      "value": 0,
+      "d5_audit_found": true,
+      "d5_0026": {
+        "s0_readiness": "CONTINUE_REQUIRED",
+        "s1_readiness": "ANSWER_READY",
+        "s1_is_answer_ready": true,
+        "s1_v3_certificate_passed": true,
+        "s1_v3_would_force": true,
+        "s1_q_gap_v3r": 21.1991
+      },
+      "cross_stratum_issues": [],
+      "note": "G9 now checks D5 initial-state semantics AND cross-stratum certificate/executor agreement."
+    },
+    "G10": {
+      "name": "reliability",
+      "description": "0 decoder or runtime errors",
+      "criterion": "reliability_errors == 0",
+      "result": "PASS",
+      "value": 0
+    },
+    "G11": {
+      "name": "artifact_identity",
+      "description": "all frozen SHAs match preregistration",
+      "criterion": "manifest_mismatches == 0",
+      "result": "FAIL",
+      "value": 3,
+      "mismatch_details": [
+        "runner_sha256: manifest=f1e91d52c3f2... prereg=92134a224aeb...",
+        "i3_29_generator_sha256: manifest=... prereg=eb4c44b0d6cd...",
+        "i3_30_d5_generator_sha256: manifest=... prereg=28133cbcab5c..."
+      ],
+      "evaluator_sha_note": ""
+    },
+    "G12": {
+      "name": "event_receipts",
+      "description": "100% of hard events have complete receipts (all fields)",
+      "criterion": "complete_receipt_rate == 1.0",
+      "result": "PASS",
+      "value": 1.0,
+      "complete": 178,
+      "total": 178,
+      "required_fields": 18
+    }
+  }
+}
