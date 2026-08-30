@@ -379,7 +379,7 @@ def generate_ood_candidate(task_template: dict, idx: int) -> EvidenceTask:
         retrieve_exposes=(),
         search_exposes=(),
         oracle_resolution_path=task_template["oracle_path"],
-        expected_terminal=task_template["expected_terminal"],
+        expected_terminal=DecisionAction(task_template["expected_terminal"]),
         correct_hypothesis_id=task_template["correct_hypothesis"],
     )
 
