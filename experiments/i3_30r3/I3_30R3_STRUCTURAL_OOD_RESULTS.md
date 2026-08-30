@@ -1,49 +1,187 @@
-# I3.30R3 STRUCTURAL-OOD: First Genuine Structural Generalization Test — Results
+# I3.30R3 STRUCTURAL-OOD: Clean Provenance Rerun and Mechanism Audit
 
-**Date: 2026-08-30**
+**Date: 2026-08-30 (original), updated 2026-09-02**
 **Branch: `i3.30r3-authority-isolation`**
 **Confirmed executive: git tag `v3r2-confirmed` (commit `e924908`)**
+**Clean rerun worktree: `/tmp/daph-v3r2-clean` (commit `fb4271c`, `dirty_worktree=false`)**
 **Run: Local (Metal), Qwen2.5-7B-Instruct Q4_K_M GGUF**
 **Trajectories: 240/240 completed, 0 errors**
 
-## Status: STRUCTURAL-OOD PASS
+## Status: STRUCTURAL_OOD_BEHAVIORAL_PASS — MECHANISM = CERTIFICATE_DRIVEN
 
-The structural-OOD hypothesis is confirmed:
+The structural-OOD behavioral result reproduces exactly from a clean worktree.
+The mechanism audit reveals that the OOD effect is **certificate-driven**,
+not learned-Q generalization. Promotion remains blocked pending ablations.
 
-> **H1: E[U_HARD - U_SHADOW] > 0 on structurally novel tasks with 0% development overlap**
+## Primary Result (Clean Rerun)
 
-## Primary Result
-
-| Metric | In-Family Confirmation | Structural-OOD |
+| Metric | In-Family Confirmation | Structural-OOD (Clean) |
 |--------|----------------------|----------------|
 | Tasks | 400 | **120** |
 | SHADOW success | 64.75% | **33.33%** |
 | HARD success | 75.75% | **83.33%** |
 | Absolute improvement | 11.00 pp | **50.00 pp** |
 | ATE (ΔU) | +18.24 | **+63.26** |
-| 95% CI | [13.11, 23.84] | **[51.75, 74.45]** |
+| 95% CI | [13.11, 23.84] | **[52.29, 74.61]** |
 | Rescues | 44 | **60** |
 | Breaks | 0 | **0** |
 | Sign test p | ~1e-13 | **8.67e-19** |
+| dirty_worktree | N/A | **false** |
+| source_tag | N/A | **v3r2-confirmed** |
 
-**Promotion criterion: CI_95%,lower(ΔU) > 0 → 51.75 > 0 → PASS**
+The clean rerun reproduces the prior dirty-worktree run exactly:
+- SHADOW: 40/120 = 33.33%
+- HARD: 100/120 = 83.33%
+- 60 rescues, 0 breaks
+- Mean ΔU: 63.2550
+- Sign test p: 8.67e-19
 
-## What Makes This Different
+## Provenance
 
-This is NOT a fresh in-family replication. The 120-task OOD pool was built with:
+The original OOD run had `dirty_worktree=true` (commit `efff0d0`), which blocked
+promotion. A clean detached worktree was created from `v3r2-confirmed` (commit
+`e924908`). The clean runner hashes actual source files in the worktree instead
+of relying on `confirmed_release` copies. The manifest was frozen with
+`dirty_worktree=false` before execution.
 
-1. **Explicit feature-signature exclusion**: 129 development structural signatures were computed. Every candidate was rejected if its 14-field V3 structural signature matched any development signature.
+The clean rerun's manifest identity:
+- `source_commit: fb4271cf120d7456d7936c52ec485e23480fbb4b`
+- `source_tag: v3r2-confirmed`
+- `dirty_worktree: false`
 
-2. **Novel structural configurations**:
-   - 4-6 hypotheses (development used 2-3)
-   - 5-way elimination (development had max 2)
-   - 4-way competing verified support
-   - 6-hypothesis all-unverified topology
-   - Mixed verified/unverified with search available
+The OOD bundle verifier (`scripts/verify_ood_bundle.py`) confirms all 23 hashed
+components match the manifest, including:
+- `daph/authority/policy_v3.py`
+- `daph/authority/isolation.py`
+- `daph/intervention/restore.py`
+- `daph/intervention/checkpoint.py`
+- `daph/epistemic/topology.py`
+- `daph/epistemic/v3_features.py`
+- Q_V3R2_A.pkl, Q_V1 model, utility config, GGUF, OOD pool
 
-3. **Nearest-neighbor distance verification**: All 120 accepted tasks have nearest-neighbor distance >= 4.68 in standardized feature space (threshold 3.0).
+**Known provenance gap**: 6 Python modules imported during execution are not
+yet hashed in the manifest:
+- `hrm_adaptive_memory/executive/evidence_benchmark/schema.py`
+- `hrm_adaptive_memory/executive/resources.py`
+- `hrm_adaptive_memory/cognitive_control/core.py`
+- `hrm_adaptive_memory/cognitive_control/state.py`
+- `scripts/run_i3_30r3_authority_isolation.py`
+- `hrm_adaptive_memory/executive/evidence_executor.py` (path differs in dev tree)
 
-4. **0% structural overlap** with development.
+These are flagged as a potential provenance gap. Full closure requires adding
+their hashes to the manifest.
+
+## Mechanism Audit: Certificate-Driven on OOD
+
+Forensic audit of all 60 OOD rescues found that **every rescue is mechanically
+identical in the decisive causal respect**:
+
+| Property | All 60 Rescues |
+|----------|----------------|
+| Certificate type | `unique_verified_support_answer` |
+| Q argmax | ANSWER |
+| Hard terminal action | ANSWER |
+| Q gap range | 22.95 – 27.65 |
+| Q gap > 5.0 threshold | Yes (all 60) |
+| Forced action terminal | Yes (all 60) |
+| Forced action correct | Yes (all 60) |
+
+**Q agrees with the certificate but is not binding.** In all 60 rescues, the
+Q gap exceeds the 5.0 authority threshold by 4-5x, and the certificate
+independently passes. Removing Q from the decision would not change the
+outcome because the certificate alone forces the correct ANSWER.
+
+SHADOW failed through:
+- `VERIFY → REASON_MORE → DEFER` (20 cases)
+- `VERIFY → VERIFY → VERIFY → REASON_MORE` (20 cases)
+- `VERIFY → DEFER` (20 cases)
+
+The LLM prematurely defers or fails to terminate when verification produces
+a unique supported hypothesis. Hard authority forces the certified ANSWER.
+
+### Strongest Defensible Claim
+
+> A deterministic structural certificate can remain effective on novel
+> synthetic epistemic topologies where the pinned LLM policy loses
+> structural control.
+
+A stronger claim that the full learned `Q_CAUSAL` executive generalizes OOD
+is **not yet justified**. Q is non-binding in the 60 OOD rescues.
+
+### In-Family Mechanism (Partial Q Contribution)
+
+The 400-task in-family forensic audit found more variation:
+
+| Property | 44 Rescues |
+|----------|----------------|
+| ANSWER certificate rescues | 37 |
+| DEFER certificate rescues | 7 |
+| Q gap range | 5.67 – 93.41 |
+| Q gap mean | 43.53 |
+| Q gap median | 20.04 |
+| Q gaps > 10 | 39/44 (88.6%) |
+| Q gaps in 3–10 range | 5/44 (11.4%) |
+
+Q may contribute causally in-family, where 5/44 rescue gaps were marginal
+(3–10 range). But most in-family rescues are still high-confidence
+certificate-aligned interventions.
+
+## Novelty Verification
+
+Three levels of novelty were checked:
+
+| Level | Metric | Result |
+|-------|--------|--------|
+| N_exact | 14-field structural signature overlap with development | **0% (0/6 unique OOD signatures)** |
+| N_model | Full Q-input (structural state) overlap with training/confirmation | **0% (0/100 OOD states)** |
+| D_NN | Standardized NN distance in Q-input space | min=1.19, median=6.69, mean=5.43 |
+
+Distance distribution of OOD states vs training/confirmation:
+- ≥ 1.0: 100/100 (100%)
+- ≥ 2.0: 80/100 (80%)
+- ≥ 3.0: 60/100 (60%)
+- ≥ 5.0: 60/100 (60%)
+
+**Caveat**: Exact 14-field novelty is not equivalent to full causal-state
+novelty. The Q model's full input vector includes state features beyond the
+15 structural fields checked here. The 0% overlap is on the structural
+projection only.
+
+## Distance Stratification
+
+| Bin | N | SHADOW | HARD | ΔU | Rescues | Breaks |
+|-----|---|--------|------|-----|---------|--------|
+| 4-5 | 40 | 0 | 20 | +55.52 | 20 | 0 |
+| 5-6 | 60 | 20 | 60 | +89.50 | 40 | 0 |
+| 6+ | 20 | 20 | 20 | 0.00 | 0 | 0 |
+
+**SHADOW degrades with decreasing distance** (100% at 6+ → 0% at 4-5),
+while HARD remains at 50-100%. The authority effect is NOT monotonically
+increasing with distance — the 6+ bin has both arms succeeding because
+those tasks (4-hyp all-verified unique) are closer to development structures.
+
+## Both-Fail Diagnostic (20 `ood_4hyp_mixed` tasks)
+
+All 20 both-fail tasks have **zero authority events** — the certificate
+never fires. Both SHADOW and HARD execute identical actions:
+
+```
+VERIFY → REASON_MORE → REASON_MORE → DEFER (wrong)
+```
+
+The certificate correctly abstains (no unique verified support), but the
+model then prematurely defers. Neither arm can resolve the mixed-verification
+state.
+
+**Failure source classification**:
+- `no_authority_events`: 20/20
+- `certificate_fired_but_failed`: 0/20
+- `no_certificate`: 0/20
+
+**Implication**: The next DAPH architectural focus should be **safe
+continuation authority** — forcing VERIFY/SEARCH/RETRIEVE when the state
+is CONTINUE_REQUIRED and the model proposes premature DEFER — rather
+than more terminal authority.
 
 ## By Category
 
@@ -56,51 +194,61 @@ This is NOT a fresh in-family replication. The 120-task OOD pool was built with:
 | ood_4hyp_competing_verified_defer | 20 | 20 | 20 | 0 | 0 |
 | ood_5hyp_3elim_unique | 20 | 0 | 20 | 20 | 0 |
 
-### Key observations:
+## In-Family Replication (400 tasks)
 
-1. **3 categories (60 tasks) are pure rescues**: The model fails completely without authority (0% SHADOW) but authority recovers to 100% (HARD). These are 5-hypothesis and 6-hypothesis tasks with partial verification — structures the model has never seen.
+The 400-task result is a **fresh in-family replication**, not an untouched
+structural confirmation. It uses the same task generator but different
+random seeds than development.
 
-2. **2 categories (40 tasks) are both-succeed**: Both SHADOW and HARD handle 4-hypothesis tasks with all-verified unique support and 4-hypothesis competing-verified DEFER. These are closer to development structures.
-
-3. **1 category (20 tasks) is both-fail**: 4-hypothesis mixed verified/unverified with search — neither arm succeeds. The model can't handle the mixed state and authority can't certify ANSWER or DEFER.
-
-4. **Zero breaks across all 120 tasks and 60 effective interventions.**
-
-## Scientific Significance
-
-This is the first experiment in the DAPH project that tests structural generalization rather than in-family replication. The result is stronger than the in-family confirmation:
-
-- **Larger effect size**: +63.26 ΔU vs +18.24
-- **Larger improvement**: 50 pp vs 11 pp
-- **More rescues per task**: 60/120 = 50% vs 44/400 = 11%
-- **Zero breaks**: maintained in both experiments
-
-The authority mechanism generalizes to genuinely novel epistemic topologies that the model has never encountered. The model fails catastrophically on novel structures (33% SHADOW success), but hard authority recovers most of them (83% HARD success).
-
-## Recommended Claim Wording
-
-> On a 120-task structural-OOD benchmark with 0% structural overlap with
-> development (verified by 14-field V3 structural signature exclusion and
-> nearest-neighbor distance >= 4.68 in standardized feature space), holding
-> the confirmed V3R2-A executive constant, certificate-gated hard authority
-> increased success from 33.33% to 83.33% and mean paired utility by 63.26
-> [bootstrap 95% CI 51.75, 74.45], with 60 paired rescues and zero observed
-> paired breaks (sign test p = 8.67e-19). The authority mechanism generalizes
-> to novel epistemic topologies with 4-6 hypotheses and 5-way elimination
-> patterns not present in development.
+- V3-SHADOW: 259/400 = 64.75%
+- V3-HARD: 303/400 = 75.75%
+- ATE: +18.24, 95% CI [13.11, 23.84]
+- 44 rescues, 0 breaks
 
 ## Limitations
 
 1. **Single model backend**: Only Qwen2.5-7B-Instruct tested.
-2. **One task family**: Evidence-based medical reasoning. Generalization to other domains (coding, retrieval QA) is untested.
-3. **One category both-fails**: The 4-hyp mixed verified/unverified with search category (20 tasks) fails in both arms. This is a known limitation of the current certificate set.
-4. **OOD pool is novel but not exhaustive**: There are many possible structural configurations not tested.
+2. **One task family**: Synthetic evidence-based reasoning. Generalization
+   to other domains is untested.
+3. **One category both-fails**: 20 `ood_4hyp_mixed` tasks fail in both arms.
+   The certificate correctly abstains but no continuation authority exists.
+4. **Certificate-driven on OOD**: Q is non-binding in all 60 OOD rescues.
+   The OOD result is about deterministic certificate robustness, not
+   learned Q generalization.
+5. **Structural novelty only**: 0% overlap on 14-field structural signature
+   does not prove 0% overlap on the full causal state representation.
+6. **Ablations pending**: CERT-only and Q-only ablations are in progress.
+   Until they complete, mechanism attribution is not fully separated.
+7. **Provenance gap**: 6 Python modules are not yet hashed in the manifest.
+8. **Q_V3R3 not promoted**: The repaired Q_V3R3 candidate has not passed
+   full held-out evaluation and is not used in any live run.
+
+## Promotion Status
+
+**NOT PROMOTED.** The following remain pending:
+
+1. **P-ABLATION**: CERT-only and Q-only ablations on OOD pool (in progress)
+2. **P-NOVELTY**: Full Q-input-vector novelty (structural projection done;
+   full state_features not yet checked)
+3. **P1.3**: G9 must call the real conformance checker across all strata
+4. **P1.9**: Q_V3R3 held-out evaluation before live use
+5. **P-VERIFY**: Hash all executable dependencies in the manifest
+6. Cross-model and real-agent-domain validation before claims beyond
+   the synthetic Qwen benchmark family
 
 ## Files
 
 - `experiments/i3_30r3/structural_ood/ood_pool.json` — 120-task OOD pool
 - `experiments/i3_30r3/structural_ood/development_signatures.json` — 129 dev signatures
+- `experiments/i3_30r3/structural_ood/novelty_report.json` — 3-level novelty report
 - `experiments/i3_30r3/structural_ood_run/trajectories_v3_shadow.jsonl` — 120 SHADOW trajectories
 - `experiments/i3_30r3/structural_ood_run/trajectories_v3_hard.jsonl` — 120 HARD trajectories
-- `experiments/i3_30r3/structural_ood_run/frozen_manifest.json` — frozen manifest
+- `experiments/i3_30r3/structural_ood_run/frozen_manifest.json` — frozen manifest (dirty=false)
 - `experiments/i3_30r3/structural_ood_run/results.json` — computed results
+- `experiments/i3_30r3/structural_ood_run/forensic_audit.json` — 60-rescue forensic audit
+- `experiments/i3_30r3/structural_ood_run/distance_stratification.json` — distance bins
+- `experiments/i3_30r3/structural_ood_run/both_fail_diagnostic.json` — 20 both-fail analysis
+- `experiments/i3_30r3/confirmation/forensic_audit.json` — 44-rescue in-family audit
+- `experiments/i3_30r3/v3r3_heldout_evaluation.json` — Q_V3R3 held-out evaluation
+- `scripts/verify_ood_bundle.py` — OOD bundle self-verifier
+- `scripts/run_ablations.py` — CERT-only / Q-only ablation runner
