@@ -1,7 +1,8 @@
-# I3.30R3 Phase 17: V1 D2 False-ANSWER Audit
+# I3.30R3 Phase 17: V1 D2 False-ANSWER Audit (ATTEMPT 2)
 
 **Date: 2026-08-29**
 **Branch: `i3.30r3-authority-isolation`**
+**Valid for: ATTEMPT 2 (corrected treatment boundary)**
 
 ## Executive Summary
 
@@ -14,6 +15,14 @@ where DEFER is correct, causing catastrophic failures (-123.29 utility).
 V3's canonical topology features fix this: V3 correctly assigns high Q
 to DEFER when the supported hypothesis has action=DEFER, and the V3
 certificate correctly rejects ANSWER (or forces DEFER) on these states.
+
+**ATTEMPT 2 confirmation:** The D2 rescue is a **pure representation
+effect**. In ATTEMPT 2 (corrected boundary), V3-SHADOW rescues all 8
+D2 tasks with no certificate force needed on 5/8 (cert=NONE, Q-guided
+only) and certificate agreement on 3/8 (cert=DEFER, LLM already chose
+DEFER). The ATTEMPT 1 claim that V3-SHADOW rescues "through Q guidance
+alone" is now fully confirmed for 5/8 tasks and qualified for 3/8
+(certificate fires but doesn't need to override).
 
 ## D2 Task Structure
 

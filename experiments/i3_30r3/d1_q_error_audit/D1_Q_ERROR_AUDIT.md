@@ -1,7 +1,8 @@
-# I3.30R3 Phase 16: D1 Q-Error Audit
+# I3.30R3 Phase 16: D1 Q-Error Audit (ATTEMPT 2)
 
 **Date: 2026-08-29**
 **Branch: `i3.30r3-authority-isolation`**
+**Valid for: ATTEMPT 2 (corrected treatment boundary)**
 
 ## Executive Summary
 
@@ -9,6 +10,9 @@ The 2 D1 breaks (d1_0004, d1_0012) are caused by a **V3 Q-model calibration
 defect**: V3's Q model systematically undervalues DEFER and overvalues
 REASON_MORE on D1 tasks. This is a Q training/calibration issue, not a
 certificate or authority issue.
+
+These breaks are identical in ATTEMPT 1 and ATTEMPT 2 — the treatment
+boundary fix does not affect D1 because no certificate fires on D1 tasks.
 
 ## D1 Task Structure
 
