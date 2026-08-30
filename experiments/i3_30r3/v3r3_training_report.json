@@ -1,0 +1,41 @@
+{
+  "model": "Q_V3R3",
+  "status": "TRAINED",
+  "improvements": [
+    "Bootstrap ensemble (20 GBTs) for epistemic uncertainty",
+    "LCB-based authority: force only when LCB gap >= threshold",
+    "OOD support-density gating via KMeans centroids",
+    "D1 DEFER-ready training stratum (80 new tasks)",
+    "Resource-aware interaction features"
+  ],
+  "training_data": {
+    "original_records": 4180,
+    "d1_defer_ready_tasks": 80,
+    "total": 4260
+  },
+  "ensemble": {
+    "n_estimators": 20,
+    "gbt_params": {
+      "n_estimators": 200,
+      "max_depth": 4
+    },
+    "lambda_lcb": 1.0,
+    "ood_threshold": 5.0
+  },
+  "performance": {
+    "train_r2": 0.9995057749376424,
+    "mean_uncertainty": 0.6289244402479974,
+    "in_support_rate": 0.9951089373054691
+  },
+  "feature_count": 59,
+  "v3r2_comparison": {
+    "v3r2_features": "V1 + V3 canonical + interactions",
+    "v3r3_features": "V3R2 + resource-aware interactions (steps_remaining, verify_remaining, verify_exhausted)",
+    "v3r2_model": "single GBT",
+    "v3r3_model": "bootstrap ensemble of 20 GBTs",
+    "v3r2_uncertainty": "none",
+    "v3r3_uncertainty": "ensemble std + LCB",
+    "v3r2_ood_gating": "none",
+    "v3r3_ood_gating": "KMeans support density"
+  }
+}
