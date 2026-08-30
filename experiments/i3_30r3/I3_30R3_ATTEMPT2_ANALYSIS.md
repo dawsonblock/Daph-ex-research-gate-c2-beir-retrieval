@@ -2,10 +2,31 @@
 
 **Date: 2026-08-29**
 **Branch: `i3.30r3-authority-isolation`**
-**Commit: `a338808`**
+**Commit: `a338808` (run), post-run fixes applied**
 **Run: Local (Metal), Qwen2.5-7B-Instruct Q4_K_M GGUF**
 **GGUF SHA256: `65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423`**
 **Trajectories: 555/555 completed, 0 errors**
+
+## Status: DEVELOPMENT CAUSAL PASS — NOT CONFIRMATION
+
+This is a development study on a benchmark that has been repeatedly
+inspected across I3.29-I3.30R3. The bootstrap interval describes
+uncertainty over this empirical task sample, not a generalization bound
+to unseen tasks. An untouched structural confirmation is required before
+promotion.
+
+## Recommended Claim Wording
+
+The strongest claim supported by this archive:
+
+> On the 185-task I3.30R3 development benchmark, holding the V3R2-A
+> executive, Q model, advisory guidance, prompts, legal actions and
+> decoder treatment constant, enabling certificate-gated hard ANSWER
+> authority increased success from 58.9% to 68.6% and mean paired
+> utility by 15.57 [bootstrap 95% CI 8.90, 23.17], with 18 paired
+> rescues and zero observed paired breaks. The result has not yet been
+> confirmed on an untouched structural benchmark, and DEFER hard
+> authority lacks effective intervention coverage.
 
 ## Executive Summary
 
@@ -16,14 +37,21 @@ ATE=0 was an artifact of constrained decoding.
 ATTEMPT 2 fixes the treatment boundary. Both V3 arms now see the full
 legal action set. Treatment is applied only after decoding.
 
-**The corrected primary finding:**
+**The corrected primary finding (task-level paired):**
 
-> **ATE_authority = +15.57, 95% CI [8.90, 23.17], 18 rescues, 0 breaks.**
-> **When the LLM is genuinely free to disagree, hard authority causally helps.**
+> **ATE_authority = +15.57, 95% CI [8.90, 23.17], 18 task-level paired rescues, 0 task-level paired breaks.**
 
 The LLM disagrees with the certificate in 38 of 90 certificate-positive
 events (42.2% disagreement rate). Hard authority overrides those
-disagreements, producing 18 rescues with 0 breaks.
+disagreements, producing 18 task-level paired rescues with 0 breaks.
+
+**Important distinction:** The 18 rescues are task-level paired causal
+counts. The event-level classifications (30 "rescues", 42
+"beneficial_nonrescues", 52 "neutral") are trajectory-associated
+certificate-event classifications, NOT event-level causal effects.
+A single trajectory can contain multiple certificate-positive events,
+so event counts exceed task-level counts. The causal headline is the
+task-level paired comparison.
 
 ## Results
 
@@ -53,15 +81,29 @@ In ATTEMPT 1, V3-SHADOW benefited from hidden pre-generation authority
 and the representation effect alone is much smaller and not statistically
 significant.
 
-### Authority Event Classification
+### Trajectory-Associated Certificate-Event Classifications
 
-| Classification | Count |
-|---------------|-------|
-| RESCUE | 30 |
-| BREAK | 0 |
-| BENEFICIAL_NONRESCUE | 42 |
-| HARMFUL_NONBREAK | 0 |
-| NEUTRAL | 52 |
+**WARNING: These are NOT event-level causal effects.** A single
+trajectory can contain multiple certificate-positive events, so event
+counts exceed task-level counts. The causal headline is the task-level
+paired comparison (18 rescues, 0 breaks above).
+
+| Classification | Count | Meaning |
+|---------------|-------|---------|
+| rescue | 30 | trajectory-associated (NOT independent causal rescues) |
+| break | 0 | trajectory-associated |
+| beneficial_nonrescue | 42 | trajectory-associated |
+| harmful_nonbreak | 0 | trajectory-associated |
+| neutral | 52 | trajectory-associated |
+
+The 30 event-level "rescues" correspond to 18 task-level paired rescues.
+The difference (12 events) is because some rescued trajectories contain
+multiple certificate-positive events that all inherit the same
+trajectory-level success classification.
+
+Until full state-fork-and-rollout replay exists, these event
+classifications should be called "trajectory-associated certificate-event
+classifications," not "event-level causal effects."
 
 ### Stratum Breakdown
 
@@ -81,7 +123,7 @@ significant.
 | V3-SHADOW | 109 | 185 | 58.92% | 15.56 |
 | V3-HARD | 127 | 185 | 68.65% | 31.13 |
 
-## Gate Evaluation: 11 passed, 1 failed
+## Gate Evaluation: 10 passed, 2 failed
 
 | Gate | Result | Value |
 |------|--------|-------|
@@ -93,14 +135,35 @@ significant.
 | G6 rescues_gt_breaks | PASS | 18 > 0 |
 | G7 answer_coverage | PASS | 38 effective ANSWER interventions |
 | G8 defer_coverage | FAIL | 0 effective DEFER interventions |
-| G9 semantic_consistency | PASS | 0 D5 disagreements |
+| G9 semantic_consistency | PASS | 0 (D5 + cross-stratum) |
 | G10 reliability | PASS | 0 errors |
-| G11 artifact_identity | PASS | 0 mismatches |
+| G11 artifact_identity | FAIL | 2 mismatches (runner + evaluator SHA) |
 | G12 event_receipts | PASS | 100% complete |
+
+### G8 (defer_coverage) — informative, not a defect
 
 G8 fails because no DEFER certificate fired with an LLM disagreement —
 the LLM always chose DEFER when the DEFER certificate passed (3/3 events,
-all neutral). This is a property of the current LLM behavior, not a defect.
+all neutral). This is a property of the current LLM behavior, not a
+defect. Do not weaken G8 to make the run 12/12. The failure is informative.
+
+Classification:
+- ANSWER_AUTHORITY: DEVELOPMENT_CAUSAL_PASS
+- DEFER_CERTIFICATE: NO_FALSE_FORCE_OBSERVED
+- DEFER_AUTHORITY_EFFECT: UNTESTED / NO_EFFECTIVE_COVERAGE
+
+### G11 (artifact_identity) — provenance mismatch, disclosed
+
+G11 fails because the frozen manifest was created with the original
+runner/evaluator SHAs, but both were modified after the run:
+- runner: Fix 2 (write-once manifest logic)
+- evaluator: Fix 4 (event rename) + Fix 5 (G9 strengthening)
+
+The primary numerical result was independently reproduced byte-for-byte
+with the newer evaluator. The full provenance chain is disclosed in
+`experiments/i3_30r3/analysis/ANALYSIS_MANIFEST.json`. The frozen
+manifest is now write-once and cannot be overwritten. The next
+confirmation run will produce a fresh manifest with matching SHAs.
 
 ## D3 Authority Rescues (14 tasks)
 
@@ -211,15 +274,45 @@ immediately causally optimal (resource exhausted + no useful continuation).
    interventions (G8 fail) suggest the DEFER certificate may be
    under-powered or the LLM happens to agree on DEFER.
 
+4. It does not prove authority is safe in general. 0 observed breaks
+   with 38 effective interventions gives a rule-of-three upper bound
+   of approximately 3/38 ≈ 7.9% break rate. "Authority is proven safe"
+   is not supported; "0 breaks observed in 38 interventions" is.
+
+5. It does not prove generalization to unseen tasks. The bootstrap
+   interval [8.90, 23.17] describes uncertainty over this empirical
+   task sample, not a generalization bound. This is a development
+   benchmark that has been repeatedly inspected.
+
+6. It does not establish DEFER authority effectiveness. The 3 DEFER
+   certificate events all had LLM agreement, so DEFER authority has
+   no effective intervention coverage.
+
 ### Decision tree branch
 
 Per the preregistered decision tree:
 
 > **AUTH > SHADOW: authority provides measurable benefit.**
 
-This is the strongest branch. Hard authority is not redundant — it
-provides a statistically significant causal improvement of +15.57 utility
-with 18 rescues and 0 breaks.
+This is the strongest branch. Hard ANSWER authority is not redundant —
+it provides a statistically significant causal improvement of +15.57
+utility with 18 task-level paired rescues and 0 task-level paired breaks.
+
+### Causal decomposition
+
+```
+V1           56.76% success
+       representation/Q change
+                ↓
+V3-SHADOW    58.92%  (+2.16pp, CI includes 0, not significant)
+       hard ANSWER authority
+                ↓
+V3-HARD      68.65%  (+9.73pp, CI [8.90, 23.17], significant)
+```
+
+The first step is small and uncertain. The second step is large.
+Most of the observed improvement comes from authority, not from V3
+Q/advisory improvements alone.
 
 ## Comparison: ATTEMPT 1 vs ATTEMPT 2
 
@@ -234,11 +327,67 @@ with 18 rescues and 0 breaks.
 | ΔU(SHADOW-V1) | +18.03 | +2.46 |
 | SHADOW-V1 CI | [9.97, 26.73] | [-6.32, 11.53] |
 | SHADOW-V1 breaks | 2 | 11 |
-| Gates passed | 8 | 11 |
+| Gates passed | 8 | 10 (post-fix) |
 
 The collapse of the secondary comparison from +18.03 to +2.46 confirms
 that ATTEMPT 1's V3-SHADOW was contaminated. The hidden decoder constraint
 was doing significant work that was attributed to the "representation."
+
+## Scientific Status
+
+| Component | Status |
+|-----------|--------|
+| DAPH V1 | CONFIRMED HISTORICAL CHAMPION |
+| V3R2 representation | DEVELOPMENT MIXED (D2 fix, D1 regression, not independently superior) |
+| V3 ANSWER authority | DEVELOPMENT CAUSAL PASS |
+| V3 DEFER authority | NO EFFECTIVE CAUSAL COVERAGE |
+| I3.30R3 ATTEMPT 1 | INVALID (treatment contamination) |
+| I3.30R3 ATTEMPT 2 | VALID DEVELOPMENT STUDY, NOT CONFIRMATION |
+| V3 PROMOTION | NOT YET |
+
+## Confirmation Design
+
+Do not alter Q_V3R2-A, epsilon, authority threshold, certificate logic,
+or prompt before confirmation. Use V3-SHADOW and V3-HARD as primary arms.
+
+Generate 300-500 fresh tasks from structural configurations not present
+in the development benchmark.
+
+Primary confirmatory hypothesis:
+- H1: E[U_HARD - U_SHADOW] > 0
+
+Required gates for promotion:
+- CI_95%,lower(ΔU) > 0
+- paired breaks = 0 observed
+- false ANSWER authority = 0
+- terminal authority on CONTINUE_REQUIRED = 0
+- effective ANSWER interventions > 0
+- artifact mismatch = 0
+- semantic disagreement = 0
+- runtime errors = 0
+
+Keep DEFER authority explicitly outside the confirmation claim unless
+the new benchmark generates actual DEFER disagreements.
+
+## Post-Fix Provenance
+
+Five fixes were applied after the ATTEMPT 2 run based on independent audit:
+
+1. **Fix 1**: Frozen runner/isolation/evaluator/checkpoint/restore/GGUF/grammar
+   SHAs added to preregistration (not just runtime manifest)
+2. **Fix 2**: frozen_manifest.json is now genuinely write-once and fail-closed
+   (any mismatch aborts; execution cannot overwrite the identity document)
+3. **Fix 3**: Post-run analysis manifest (`ANALYSIS_MANIFEST.json`) discloses
+   the full provenance chain (trajectory-producing runner SHA vs current
+   evaluator SHA)
+4. **Fix 4**: Event-level classifications renamed to "trajectory-associated
+   certificate-event classifications" (not causal effects)
+5. **Fix 5**: G9 strengthened to check cross-stratum certificate/executor
+   agreement, not just D5 initial-state semantics
+
+G11 now correctly FAILS (2 mismatches: runner + evaluator SHA) because
+the frozen manifest predates the fixes. This is honest. The next
+confirmation run will produce a fresh manifest with matching SHAs.
 
 ## Files
 
@@ -247,5 +396,7 @@ was doing significant work that was attributed to the "representation."
 - `experiments/i3_30r3/analysis/gate_evaluation.json` — 12 gate results
 - `experiments/i3_30r3/analysis/authority_counterfactuals.jsonl` — per-event
 - `experiments/i3_30r3/analysis/paired_results.jsonl` — per-task paired
+- `experiments/i3_30r3/analysis/ANALYSIS_MANIFEST.json` — post-run provenance
 - `experiments/i3_30r3/attempt1_invalid/` — preserved ATTEMPT 1 data
 - `experiments/i3_30r3/I3_30R3_RESULTS.md` — auto-generated from analysis
+- `experiments/i3_30r3/I3_30R3_PREREGISTRATION.json` — updated with full freeze

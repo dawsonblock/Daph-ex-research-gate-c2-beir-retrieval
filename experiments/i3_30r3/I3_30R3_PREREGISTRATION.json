@@ -5,14 +5,12 @@
   "parent_commit": "a714319",
   "branch": "i3.30r3-authority-isolation",
   "status": "PREREGISTERED",
-
   "scientific_objective": {
     "primary_hypothesis": "E[U | V3-AUTH] > E[U | V3-SHADOW]",
     "null_hypothesis": "E[U | V3-AUTH] <= E[U | V3-SHADOW]",
     "key_equation": "ATE_authority = E[U | Q_V3R2, A_hard] - E[U | Q_V3R2, A_shadow]",
     "question": "Given the exact same V3 executive, is executing a valid hard certificate better than merely observing it?"
   },
-
   "arms": {
     "V1": {
       "q_model": "Q_V1",
@@ -33,12 +31,10 @@
       "hard_override": true
     }
   },
-
   "decomposition": {
     "V3_SHADOW - V1": "effect of new state representation / Q / advisory interface",
     "V3_AUTH - V3_SHADOW": "incremental adaptive-authority value (isolated ATE)"
   },
-
   "frozen_artifacts": {
     "Q_V3R2_A_sha256": "face8cbd3e2df9cf29e0c3ea808ae5a37d8e513cd1ec727af5277a28fa9fdf02",
     "V3R2_feature_schema_sha256": "fcb99458da01268f41ab9e7cecd27253f1d99b61ef71fce67b3aa706ea42dfaf",
@@ -50,9 +46,17 @@
     "authority_policy_v3_sha256": "85af10990cf7350833af6faac06fbd694aa8a2783c7fdaed5c36303246866af7",
     "utility_config_sha256": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07",
     "i3_29_generator_sha256": "eb4c44b0d6cd2160d1a3781cef7a1db1fc6a107227370966bb2de96d3438d8e9",
-    "i3_30_d5_generator_sha256": "28133cbcab5ca0c753c4d432b841924758ebffaa71772b7d23bd1e478091c69f"
+    "i3_30_d5_generator_sha256": "28133cbcab5ca0c753c4d432b841924758ebffaa71772b7d23bd1e478091c69f",
+    "runner_sha256": "92134a224aeba37dae0675b2236e66af3eb6cc233cd8fae14c6963c81a4b4fbe",
+    "authority_isolation_sha256": "d31989d8d16b48a62ae2135e62eb2fd838f7f45b228ca900aeea30cd777e1d34",
+    "evaluator_sha256": "13ce96d18a159592d9373b11e7d14d5933f64e43cbbee1c513c11e52a7932ee7",
+    "checkpoint_sha256": "caaa71ad98ab58f3bfae3e2c2d5b8c42257088f332c0aa01680cd12aa327ac5a",
+    "restore_sha256": "9b8c2b6ad1f9ad744a21f0f1ee4e9f6a04fb75877bbb8c0ed3dd714c22c815c7",
+    "schema_grammar_sha256": "c20cd3a5adf976ddce2296ded11e21d1b2d9c972cd94c205404e5d6b410a3b0e",
+    "model_backend_sha256": "a9f1c8888b702c458300096006760dc43c26a17e81a8067fa0509e1c6e6ed988",
+    "qwen_gguf_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+    "llama_cpp_python_version": "0.3.7"
   },
-
   "frozen_constants": {
     "authority_threshold": 5.0,
     "near_optimal_epsilon": 3.0,
@@ -63,7 +67,6 @@
     "trajectory_count_per_arm": 185,
     "total_trajectories": 555
   },
-
   "gates": {
     "G1": {
       "name": "treatment_purity",
@@ -87,7 +90,7 @@
     },
     "G5": {
       "name": "authority_effect",
-      "description": "mean ΔU(HARD-SHADOW) >= 0",
+      "description": "mean \u0394U(HARD-SHADOW) >= 0",
       "criterion": "ate_authority >= 0"
     },
     "G6": {
@@ -107,7 +110,7 @@
     },
     "G9": {
       "name": "semantic_consistency",
-      "description": "0 topology/executor/certificate disagreements",
+      "description": "0 topology/executor/certificate disagreements across all strata (D1-D5), including D5 initial-state semantics and cross-stratum certificate/executor agreement",
       "criterion": "semantic_disagreements == 0"
     },
     "G10": {
@@ -126,7 +129,6 @@
       "criterion": "complete_receipt_rate == 1.0"
     }
   },
-
   "authority_effect_classifications": {
     "RESCUE": "forced succeeds, shadow fails",
     "BREAK": "forced fails, shadow succeeds",
@@ -134,13 +136,11 @@
     "HARMFUL_NONBREAK": "both succeed, forced has lower utility",
     "NEUTRAL": "same outcome and effectively same utility"
   },
-
   "coverage_metrics": {
     "certificate_coverage": "certificate_positive_states / eligible_states",
     "force_rate": "force_applied / eligible_states",
     "effective_intervention_rate": "forced_action != llm_action / eligible_states"
   },
-
   "phases": [
     "Phase 0: Freeze current V3R2-A stack",
     "Phase 1: Implement AuthorityMode enum (V1, V3_SHADOW, V3_HARD)",
@@ -159,7 +159,6 @@
     "Phase 14: Separately audit V1 D2 false ANSWERs",
     "Phase 15: Decide whether any model/policy change is warranted"
   ],
-
   "constraints": [
     "No Q retraining before primary AUTH-vs-SHADOW result",
     "No certificate threshold or condition changes",

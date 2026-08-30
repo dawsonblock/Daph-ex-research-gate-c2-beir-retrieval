@@ -65,7 +65,7 @@
 |------|------|--------|-------|
 | G1 | treatment_purity | PASS | {'purity_mismatches': 0, 'prompt_mismatches': 0, 'schema_mismatches': 0, 'state_mismatches': 0, 'paired_events': 90, 'unpaired_events': 34, 'integration_tests': '6/6 pass (test_i3_30r3_runner_boundary.py)'} |
 | G10 | reliability | PASS | 0 |
-| G11 | artifact_identity | PASS | 0 |
+| G11 | artifact_identity | FAIL | 2 |
 | G12 | event_receipts | PASS | 1.0000 |
 | G2 | authority_breaks | PASS | 0 |
 | G3 | false_answer_authority | PASS | 0 |
@@ -76,4 +76,4 @@
 | G8 | defer_coverage | FAIL | 0 |
 | G9 | semantic_consistency | PASS | 0 |
 
-**11 passed, 1 failed, 0 pending.**
+**10 passed, 2 failed, 0 pending.**

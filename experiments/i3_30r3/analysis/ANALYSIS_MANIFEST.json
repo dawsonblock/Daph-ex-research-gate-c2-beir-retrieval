@@ -1,0 +1,49 @@
+{
+  "analysis_manifest": "I3.30R3 ATTEMPT 2 post-run analysis",
+  "date": "2026-08-29",
+  "description": "This manifest explicitly discloses that the analysis evaluator differs from the trajectory-producing runner. The evaluator was modified after the run to repair G1/G12 gate handling, rename event classifications, and strengthen G9. The primary numerical result was independently reproduced byte-for-byte with the newer evaluator.",
+
+  "trajectory_producing_runner_sha256": "ce18dc90acd61b2e25c51a219bcfc43a2753c13052c14684ff78a7bea8b2801e",
+  "current_runner_sha256": "92134a224aeba37dae0675b2236e66af3eb6cc233cd8fae14c6963c81a4b4fbe",
+  "analysis_evaluator_sha256": "13ce96d18a159592d9373b11e7d14d5933f64e43cbbee1c513c11e52a7932ee7",
+  "manifest_evaluator_sha256": "9114b34cc93b155f",
+
+  "provenance_chain": {
+    "trajectory_producing_runner": "ce18dc90acd6... (committed at run time)",
+    "frozen_manifest_evaluator": "9114b34cc93b... (computed at freeze time, before gate repairs)",
+    "current_evaluator": "13ce96d18a15... (after Fix 4 + Fix 5: event rename + G9 strengthening)",
+    "current_runner": "92134a224aeb... (after Fix 2: write-once manifest logic)"
+  },
+
+  "note": "The evaluator SHA in frozen_manifest.json (9114b34cc...) was computed before the G1/G12 gate repairs, event classification renaming (Fix 4), and G9 strengthening (Fix 5). The current evaluator SHA is 13ce96d18a.... The runner SHA also changed (Fix 2: write-once manifest). These changes only affect gate classification logic and manifest handling, not the primary paired comparison computation. The primary ATE_authority = +15.5681 was independently reproduced byte-for-byte. The frozen_manifest.json is now write-once and cannot be updated. The next confirmation run will produce a fresh manifest with matching SHAs.",
+
+  "frozen_manifest_path": "experiments/i3_30r3/live/frozen_manifest.json",
+  "raw_trajectories": [
+    "experiments/i3_30r3/live/trajectories_v1.jsonl",
+    "experiments/i3_30r3/live/trajectories_v3_shadow.jsonl",
+    "experiments/i3_30r3/live/trajectories_v3_hard.jsonl"
+  ],
+  "authority_events": "experiments/i3_30r3/live/authority_events.jsonl",
+  "analysis_outputs": [
+    "experiments/i3_30r3/analysis/authority_analysis.json",
+    "experiments/i3_30r3/analysis/gate_evaluation.json",
+    "experiments/i3_30r3/analysis/authority_counterfactuals.jsonl",
+    "experiments/i3_30r3/analysis/paired_results.jsonl"
+  ],
+
+  "primary_result_reproduced": true,
+  "primary_result_ate": 15.5681,
+  "primary_result_ci": [8.8984, 23.1749],
+  "primary_result_n": 185,
+  "primary_result_rescues": 18,
+  "primary_result_breaks": 0,
+
+  "gates_after_fixes": {
+    "passed": 10,
+    "failed": 2,
+    "failed_gates": {
+      "G8": "defer_coverage: 0 effective DEFER interventions (informative, not a defect)",
+      "G11": "artifact_identity: evaluator SHA mismatch (disclosed in this manifest)"
+    }
+  }
+}

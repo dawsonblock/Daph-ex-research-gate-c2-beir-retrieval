@@ -437,9 +437,13 @@ def evaluate_gates(pairs, events_shadow, events_hard, counterfactuals,
 
     # G9: Semantic consistency — consume D5 audit results
     # Step 7 fix: Actually check the D5 state truth audit
+    # G9: Semantic consistency — check all target states, not just D5
+    # Fix 5: Strengthen G9 to verify canonical-topology/executor/certificate
+    # agreement across all strata (D1-D5), not just D5 initial-state semantics.
     d5_audit_path = Path(input_dir).parent / "d5_state_truth" / "d5_readiness_summary.json"
     semantic_disagreements = 0
     d5_info = {}
+    semantic_table = []
     if d5_audit_path.exists():
         with open(d5_audit_path) as f:
             d5_audit = json.load(f)
@@ -451,14 +455,66 @@ def evaluate_gates(pairs, events_shadow, events_hard, counterfactuals,
         d5_info = d5_audit.get("d5_0026_diagnosis", {})
     else:
         d5_info = {"note": "D5 audit not found"}
+
+    # Cross-stratum semantic check: for each authority event, verify that
+    # certificate readiness, executor outcome, and forced action are
+    # semantically consistent.
+    # A disagreement is when:
+    #   - certificate forces ANSWER but forced_immediate_success is False
+    #     AND the state is not answer-ready (false ANSWER force)
+    #   - certificate forces DEFER but forced_immediate_success is False
+    #     AND the state is not defer-ready (false DEFER force)
+    #   - certificate abstains but the LLM's action succeeds immediately
+    #     in a ready state (missed certificate)
+    stratum_semantic_issues = []
+    for e in events_hard:
+        cert_type = e.get("certificate_type", "NONE")
+        forced = e.get("forced_action")
+        forced_success = e.get("forced_immediate_success")
+        forced_terminal = e.get("forced_immediate_terminal")
+        would_force = e.get("would_force", False)
+        tid = e.get("task_id", "")
+
+        # Determine stratum
+        stratum = "unknown"
+        for s in ["d1", "d2", "d3", "d4", "d5"]:
+            if f"_{s}_" in tid:
+                stratum = s.upper()
+                break
+
+        # Check: certificate forces ANSWER but immediate execution fails
+        # This is a potential false-force (certificate says ANSWER, executor disagrees)
+        if would_force and forced == "ANSWER" and forced_terminal and not forced_success:
+            stratum_semantic_issues.append({
+                "task_id": tid,
+                "stratum": stratum,
+                "step": e.get("step"),
+                "issue": "certificate_forces_ANSWER_but_executor_fails",
+                "cert_type": cert_type,
+            })
+
+        # Check: certificate forces DEFER but immediate execution fails
+        if would_force and forced == "DEFER" and forced_terminal and not forced_success:
+            stratum_semantic_issues.append({
+                "task_id": tid,
+                "stratum": stratum,
+                "step": e.get("step"),
+                "issue": "certificate_forces_DEFER_but_executor_fails",
+                "cert_type": cert_type,
+            })
+
+    semantic_disagreements += len(stratum_semantic_issues)
+
     gates["G9"] = {
         "name": "semantic_consistency",
-        "description": "0 topology/executor/certificate disagreements",
+        "description": "0 topology/executor/certificate disagreements across all strata",
         "criterion": "semantic_disagreements == 0",
         "result": "PASS" if semantic_disagreements == 0 else "FAIL",
         "value": semantic_disagreements,
         "d5_audit_found": d5_audit_path.exists(),
         "d5_0026": d5_info,
+        "cross_stratum_issues": stratum_semantic_issues,
+        "note": "G9 now checks D5 initial-state semantics AND cross-stratum certificate/executor agreement.",
     }
 
     # G10: Reliability — use input_dir, not hard-coded path
@@ -476,9 +532,11 @@ def evaluate_gates(pairs, events_shadow, events_hard, counterfactuals,
         "value": error_count,
     }
 
-    # G11: Artifact identity — actually verify manifest SHAs
-    # Step 7 fix: Check manifest against preregistration
+    # G11: Artifact identity — verify all frozen SHAs including executables
+    # Fix 3: Check ALL preregistered artifacts, not just a subset.
+    # Also check the evaluator SHA against the manifest and flag mismatches.
     manifest_mismatches = 0
+    mismatch_details = []
     manifest_path = Path(input_dir) / "frozen_manifest.json"
     prereg_path = Path(input_dir).parent / "I3_30R3_PREREGISTRATION.json"
     if manifest_path.exists() and prereg_path.exists():
@@ -486,6 +544,7 @@ def evaluate_gates(pairs, events_shadow, events_hard, counterfactuals,
             actual_manifest = json.load(f)
         with open(prereg_path) as f:
             prereg = json.load(f)
+        # Full key map: manifest key -> preregistration key
         sha_key_map = {
             "Q_V3R_model_sha256": "Q_V3R2_A_sha256",
             "Q_V3R_schema_sha256": "V3R2_feature_schema_sha256",
@@ -495,6 +554,14 @@ def evaluate_gates(pairs, events_shadow, events_hard, counterfactuals,
             "v3_features_sha256": "v3_features_sha256",
             "authority_policy_v2_sha256": "authority_policy_v2_sha256",
             "authority_policy_v3_sha256": "authority_policy_v3_sha256",
+            "runner_sha256": "runner_sha256",
+            "authority_isolation_sha256": "authority_isolation_sha256",
+            "evaluator_sha256": "evaluator_sha256",
+            "checkpoint_sha256": "checkpoint_sha256",
+            "restore_sha256": "restore_sha256",
+            "i3_29_generator_sha256": "i3_29_generator_sha256",
+            "i3_30_d5_generator_sha256": "i3_30_d5_generator_sha256",
+            "qwen_gguf_sha256": "qwen_gguf_sha256",
         }
         for mkey, pkey in sha_key_map.items():
             if pkey in prereg.get("frozen_artifacts", {}):
@@ -502,14 +569,31 @@ def evaluate_gates(pairs, events_shadow, events_hard, counterfactuals,
                 actual = actual_manifest.get(mkey, "")
                 if actual != expected:
                     manifest_mismatches += 1
+                    mismatch_details.append(f"{mkey}: manifest={actual[:12]}... prereg={expected[:12]}...")
+
+        # Also check if the current evaluator SHA matches the manifest
+        import hashlib as _hashlib
+        eval_path = Path(__file__).resolve()
+        eval_sha = _hashlib.sha256(eval_path.read_bytes()).hexdigest()
+        manifest_eval_sha = actual_manifest.get("evaluator_sha256", "")
+        evaluator_mismatch = ""
+        if manifest_eval_sha and eval_sha != manifest_eval_sha:
+            evaluator_mismatch = f"current={eval_sha[:12]}... manifest={manifest_eval_sha[:12]}..."
+            # Don't count as a mismatch — the evaluator may have been updated
+            # for gate repairs after the run. This is disclosed in ANALYSIS_MANIFEST.json.
     else:
         manifest_mismatches = -1  # Can't verify
+        mismatch_details = ["manifest or preregistration not found"]
+        evaluator_mismatch = "unknown"
+
     gates["G11"] = {
         "name": "artifact_identity",
-        "description": "all frozen SHAs match",
+        "description": "all frozen SHAs match preregistration",
         "criterion": "manifest_mismatches == 0",
         "result": "PASS" if manifest_mismatches == 0 else "FAIL",
         "value": manifest_mismatches,
+        "mismatch_details": mismatch_details,
+        "evaluator_sha_note": evaluator_mismatch if 'evaluator_mismatch' in locals() else "",
     }
 
     # G12: Event receipts complete — validate full normalized receipt
@@ -633,10 +717,15 @@ def main():
         effect_counts[cf["classification"]] += 1
 
     print("\n" + "=" * 60)
-    print("AUTHORITY EVENT CLASSIFICATION")
+    print("TRAJECTORY-ASSOCIATED CERTIFICATE-EVENT CLASSIFICATIONS")
+    print("(Note: these are NOT event-level causal effects.)")
+    print("(The causal headline is the task-level paired comparison above.)")
     print("=" * 60)
     for effect in ["rescue", "break", "beneficial_nonrescue", "harmful_nonbreak", "neutral"]:
         print(f"  {effect}: {effect_counts.get(effect, 0)}")
+    print(f"\n  WARNING: event counts may exceed task-level counts because")
+    print(f"  a single trajectory can contain multiple certificate-positive events.")
+    print(f"  Use the task-level paired rescues/breaks as the causal headline.")
 
     print(f"\nAuthority rates:")
     print(f"  Certificate coverage: {authority_rates['certificate_coverage']:.4f}")
@@ -757,6 +846,7 @@ def main():
             "authority_rates": authority_rates,
             "event_classification": dict(effect_counts),
             "effect_classification": dict(effect_counts),
+            "event_classification_note": "Trajectory-associated certificate-event classifications, NOT event-level causal effects. Use task-level paired rescues/breaks as the causal headline.",
             "stratum_breakdown": {
                 s: {
                     "v1": {"successes": strata_v1.get(s, {}).get("successes", 0),

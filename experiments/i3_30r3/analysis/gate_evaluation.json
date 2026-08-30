@@ -1,7 +1,7 @@
 {
   "experiment": "I3.30R3",
-  "passed": 11,
-  "failed": 1,
+  "passed": 10,
+  "failed": 2,
   "pending": 0,
   "gates": {
     "G1": {
@@ -76,7 +76,7 @@
     },
     "G9": {
       "name": "semantic_consistency",
-      "description": "0 topology/executor/certificate disagreements",
+      "description": "0 topology/executor/certificate disagreements across all strata",
       "criterion": "semantic_disagreements == 0",
       "result": "PASS",
       "value": 0,
@@ -88,7 +88,9 @@
         "s1_v3_certificate_passed": true,
         "s1_v3_would_force": true,
         "s1_q_gap_v3r": 21.1991
-      }
+      },
+      "cross_stratum_issues": [],
+      "note": "G9 now checks D5 initial-state semantics AND cross-stratum certificate/executor agreement."
     },
     "G10": {
       "name": "reliability",
@@ -99,10 +101,15 @@
     },
     "G11": {
       "name": "artifact_identity",
-      "description": "all frozen SHAs match",
+      "description": "all frozen SHAs match preregistration",
       "criterion": "manifest_mismatches == 0",
-      "result": "PASS",
-      "value": 0
+      "result": "FAIL",
+      "value": 2,
+      "mismatch_details": [
+        "runner_sha256: manifest=ce18dc90acd6... prereg=92134a224aeb...",
+        "evaluator_sha256: manifest=9114b34cc93b... prereg=13ce96d18a15..."
+      ],
+      "evaluator_sha_note": "current=13ce96d18a15... manifest=9114b34cc93b..."
     },
     "G12": {
       "name": "event_receipts",

@@ -817,26 +817,42 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Compute and freeze manifest
-    # Step 8 fix: Don't overwrite an existing frozen manifest
+    # Fix 2: Genuinely write-once and fail-closed.
+    # Execution should never have write permission over the identity document.
     manifest = compute_manifest(args.gguf_path)
     manifest_path = output_dir / "frozen_manifest.json"
-    if manifest_path.exists() and not args.resume:
-        # Compare new manifest against existing
+    if manifest_path.exists():
+        # Manifest already exists — load and verify it matches
         with open(manifest_path) as f:
             existing = json.load(f)
-        if existing.get("source_commit") == manifest.get("source_commit"):
-            print(f"Manifest already frozen at {manifest_path} (same commit)")
-            manifest = existing  # Use existing frozen manifest
-        else:
-            print(f"WARNING: Existing manifest is from different commit.")
-            print(f"  Existing: {existing.get('source_commit', '?')[:12]}")
-            print(f"  New:      {manifest.get('source_commit', '?')[:12]}")
-            print(f"  Overwriting with new manifest.")
-            with open(manifest_path, "w") as f:
-                json.dump(manifest, f, indent=2)
+        # Compare key fields (source_commit + all frozen artifact SHAs)
+        mismatch = False
+        for key in sorted(set(list(existing.keys()) + list(manifest.keys()))):
+            if key in ("frozen_at", "timestamp"):
+                continue  # Non-deterministic fields
+            if existing.get(key) != manifest.get(key):
+                print(f"  MISMATCH: {key}")
+                print(f"    existing: {str(existing.get(key))[:40]}")
+                print(f"    computed: {str(manifest.get(key))[:40]}")
+                mismatch = True
+        if mismatch:
+            print(f"\n*** FROZEN MANIFEST MISMATCH — ABORTING ***")
+            print(f"The computed manifest does not match the existing frozen manifest.")
+            print(f"This indicates the source code or artifacts have changed since the freeze.")
+            print(f"To create a new freeze, delete {manifest_path} and run with --freeze-manifest-only.")
+            sys.exit(1)
+        print(f"Manifest verified (write-once): {manifest_path}")
+        manifest = existing  # Use existing frozen manifest
     else:
+        # No manifest exists — only allow creation in freeze-only mode
+        if not args.freeze_manifest_only:
+            print(f"\n*** NO FROZEN MANIFEST FOUND — ABORTING ***")
+            print(f"To create a new freeze, run with --freeze-manifest-only first:")
+            print(f"  python3 {sys.argv[0]} --gguf-path {args.gguf_path} --output-dir {args.output_dir} --freeze-manifest-only")
+            sys.exit(1)
         with open(manifest_path, "w") as f:
             json.dump(manifest, f, indent=2)
+        print(f"Manifest created (freeze-only): {manifest_path}")
     print(f"Manifest frozen at {manifest_path}")
     print(f"  source_commit: {manifest['source_commit_short']}")
     print(f"  Q_V3R model SHA: {manifest['Q_V3R_model_sha256'][:16]}...")

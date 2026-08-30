@@ -89,6 +89,7 @@
     "rescue": 30,
     "beneficial_nonrescue": 42
   },
+  "event_classification_note": "Trajectory-associated certificate-event classifications, NOT event-level causal effects. Use task-level paired rescues/breaks as the causal headline.",
   "stratum_breakdown": {
     "D1": {
       "v1": {
