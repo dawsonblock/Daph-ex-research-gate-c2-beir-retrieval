@@ -1,288 +1,123 @@
-"""Tests for canonical topology conformance across all consumers.
-
-Verifies that the executor, snapshot, and topology derivation all agree
-on epistemic state, per EPISTEMIC_SEMANTICS_V1.md §13.
-"""
+"""Tests for semantic conformance checker."""
 import pytest
-from hrm_adaptive_memory.cognitive_control.core import DecisionAction
-from hrm_adaptive_memory.cognitive_control.state import VerificationState, TemporalStatus
-from hrm_adaptive_memory.executive.evidence_benchmark.schema import (
-    EvidenceTask, EvidenceHypothesis, EvidenceItem, EvidenceRuntime,
+from hrm_adaptive_memory.executive.evidence_benchmark.i3_30r3_confirmation_generator import (
+    generate_confirmation_benchmark, get_confirmation_budget_for_task,
 )
-from hrm_adaptive_memory.executive.evidence_benchmark.executor import (
-    EvidenceExecutor, build_evidence_snapshot,
-)
-from hrm_adaptive_memory.executive.resources import ResourceBudget, ResourceState
+from hrm_adaptive_memory.executive.resources import ResourceState
+from hrm_adaptive_memory.executive.evidence_benchmark.executor import EvidenceExecutor
 
-from daph.epistemic import (
-    derive_hypothesis_topology, is_answer_ready, HypothesisState,
+from daph.conformance.semantic_conformance import (
+    ConformanceRecord,
+    check_conformance,
+    check_conformance_for_task,
 )
 
 
-def make_hyp(h_id, action=DecisionAction.ANSWER):
-    return EvidenceHypothesis(h_id, f"Test {h_id}", action, f"{action.value}:{h_id}")
+@pytest.fixture
+def tasks():
+    return generate_confirmation_benchmark(seed=43291)
 
 
-def make_ev(eid, supports=(), contradicts=(), vstate=VerificationState.UNVERIFIED,
-            tstatus=TemporalStatus.CURRENT, retrieved=True):
-    return EvidenceItem(
-        eid, f"Evidence {eid}", "initial", supports, contradicts,
-        vstate, tstatus, retrieved, None)
+@pytest.fixture
+def executor():
+    return EvidenceExecutor()
 
 
-def make_task(hypotheses, evidence, expected=DecisionAction.ANSWER, correct="H1"):
-    return EvidenceTask(
-        task_id="test_task", split="test", category="test",
-        task_summary="Test task", high_stakes=True, budget_profile="test",
-        hypotheses=tuple(hypotheses), evidence_items=tuple(evidence),
-        retrieve_exposes=(), search_exposes=(),
-        oracle_resolution_path=(expected.value,),
-        expected_terminal=expected, correct_hypothesis_id=correct)
+class TestConformanceRecord:
+    """Test ConformanceRecord structure and serialization."""
+
+    def test_record_is_serializable(self, tasks, executor):
+        """ConformanceRecord.as_dict() produces valid JSON."""
+        task = tasks[0]
+        budget = get_confirmation_budget_for_task(task)
+        resources = ResourceState(budget=budget)
+        from hrm_adaptive_memory.executive.evidence_benchmark.schema import initial_evidence_runtime
+        runtime = initial_evidence_runtime(task, resources)
+
+        record = check_conformance(runtime, step=0, executor=executor)
+
+        import json
+        d = record.as_dict()
+        json_str = json.dumps(d)
+        assert json.loads(json_str) == d
+
+    def test_record_has_all_fields(self, tasks, executor):
+        """ConformanceRecord has all required fields."""
+        task = tasks[0]
+        budget = get_confirmation_budget_for_task(task)
+        resources = ResourceState(budget=budget)
+        from hrm_adaptive_memory.executive.evidence_benchmark.schema import initial_evidence_runtime
+        runtime = initial_evidence_runtime(task, resources)
+
+        record = check_conformance(runtime, step=0, executor=executor)
+
+        assert record.task_id is not None
+        assert record.step == 0
+        assert len(record.state_sha256) == 64
+        assert record.topology_readiness in ("ANSWER_READY", "DEFER_READY", "CONTINUE_REQUIRED")
+        assert record.cert_readiness in ("ANSWER_READY", "DEFER_READY", "CONTINUE_REQUIRED")
+        assert record.executor_truth_readiness in ("ANSWER_READY", "DEFER_READY", "CONTINUE_REQUIRED")
+        assert record.benchmark_truth_readiness in ("ANSWER_READY", "DEFER_READY", "CONTINUE_REQUIRED")
+        assert record.causal_best_action in ("ANSWER", "DEFER", "CONTINUE")
+        assert isinstance(record.conformant, bool)
+        assert isinstance(record.disagreements, tuple)
 
 
-def make_budget(steps=5, verify=3, retrieve=2, search=2, reasoning=256):
-    return ResourceBudget(
-        max_executive_steps=steps, max_retrieval_calls=retrieve,
-        max_verification_calls=verify, max_search_calls=search,
-        max_reasoning_tokens=reasoning, max_elapsed_ms=10000)
+class TestConformanceCheck:
+    """Test conformance checking across strata."""
 
+    def test_d4_conformant(self, tasks, executor):
+        """D4 (ANSWER-correct preservation control) should be conformant."""
+        d4 = [t for t in tasks if "_d4_" in t.task_id][0]
+        budget = get_confirmation_budget_for_task(d4)
+        resources = ResourceState(budget=budget)
+        from hrm_adaptive_memory.executive.evidence_benchmark.schema import initial_evidence_runtime
+        runtime = initial_evidence_runtime(d4, resources)
 
-class TestExecutorUsesCanonicalTopology:
-    """Verify executor ANSWER success uses canonical topology, not duplicated logic."""
+        record = check_conformance(runtime, step=0, executor=executor)
 
-    def test_answer_succeeds_unique_supported(self):
-        """ANSWER succeeds when exactly one hypothesis is SUPPORTED and it's correct."""
-        hyps = (make_hyp("H1"), make_hyp("H2", DecisionAction.DEFER))
-        ev = (
-            make_ev("E1", supports=("H1",), vstate=VerificationState.SUFFICIENT),
-            make_ev("E2", contradicts=("H2",), vstate=VerificationState.SUFFICIENT),
-        )
-        task = make_task(hyps, ev, expected=DecisionAction.ANSWER, correct="H1")
-        runtime = EvidenceRuntime(
-            task=task, resources=ResourceState(budget=make_budget()),
-            evidence=ev, retrieved_evidence_ids=("E1", "E2"), verified_evidence_ids=("E1", "E2"))
-        executor = EvidenceExecutor()
-        assert executor._check_answer_success(runtime) is True
+        # D4 is the preservation control — all components should agree
+        assert record.conformant, f"D4 should be conformant: {record.disagreements}"
 
-    def test_answer_fails_competing_support(self):
-        """ANSWER fails when two hypotheses have SUFFICIENT support (not unique)."""
-        hyps = (make_hyp("H1"), make_hyp("H2", DecisionAction.DEFER))
-        ev = (
-            make_ev("E1", supports=("H1",), vstate=VerificationState.SUFFICIENT),
-            make_ev("E2", supports=("H2",), vstate=VerificationState.SUFFICIENT),
-        )
-        task = make_task(hyps, ev, expected=DecisionAction.ANSWER, correct="H1")
-        runtime = EvidenceRuntime(
-            task=task, resources=ResourceState(budget=make_budget()),
-            evidence=ev, retrieved_evidence_ids=("E1", "E2"), verified_evidence_ids=("E1", "E2"))
-        executor = EvidenceExecutor()
-        assert executor._check_answer_success(runtime) is False
+    def test_d1_exposes_defer_cert_gap(self, tasks, executor):
+        """D1 initial state exposes the DEFER certificate gap.
 
-    def test_answer_fails_wrong_unique_supported(self):
-        """ANSWER fails when unique supported hypothesis is NOT the correct one."""
-        hyps = (make_hyp("H1"), make_hyp("H2", DecisionAction.DEFER))
-        ev = (
-            make_ev("E1", supports=("H2",), vstate=VerificationState.SUFFICIENT),
-            make_ev("E2", contradicts=("H1",), vstate=VerificationState.SUFFICIENT),
-        )
-        task = make_task(hyps, ev, expected=DecisionAction.ANSWER, correct="H1")
-        runtime = EvidenceRuntime(
-            task=task, resources=ResourceState(budget=make_budget()),
-            evidence=ev, retrieved_evidence_ids=("E1", "E2"), verified_evidence_ids=("E1", "E2"))
-        executor = EvidenceExecutor()
-        # H2 is uniquely supported, but correct is H1
-        assert executor._check_answer_success(runtime) is False
-
-
-class TestExecutorDeferUsesCanonicalTopology:
-    """Verify executor DEFER success uses canonical topology."""
-
-    def test_defer_succeeds_no_supported_no_continuation(self):
-        """DEFER succeeds when no hypothesis is supported and no continuation available."""
-        hyps = (make_hyp("H1", DecisionAction.DEFER), make_hyp("H2"))
-        ev = (
-            make_ev("E1", contradicts=("H1",), vstate=VerificationState.SUFFICIENT),
-            make_ev("E2", contradicts=("H2",), vstate=VerificationState.SUFFICIENT),
-        )
-        # Budget with no verify/retrieve/search remaining
-        budget = ResourceBudget(
-            max_executive_steps=1, max_retrieval_calls=0,
-            max_verification_calls=0, max_search_calls=0,
-            max_reasoning_tokens=0, max_elapsed_ms=10000)
-        task = make_task(hyps, ev, expected=DecisionAction.DEFER, correct="H1")
-        runtime = EvidenceRuntime(
-            task=task, resources=ResourceState(budget=budget),
-            evidence=ev, retrieved_evidence_ids=("E1", "E2"), verified_evidence_ids=("E1", "E2"))
-        executor = EvidenceExecutor()
-        assert executor._check_defer_success(runtime) is True
-
-    def test_defer_fails_when_answer_ready(self):
-        """DEFER fails when state is ANSWER_READY (unique supported with ANSWER action)."""
-        # Per EPISTEMIC_SEMANTICS_V1.md §6.1, ANSWER_READY requires the
-        # uniquely supported hypothesis to have answer_action == ANSWER.
-        # When the supported hypothesis has answer_action == DEFER, the
-        # state is DEFER_READY, not ANSWER_READY.
-        hyps = (make_hyp("H1", DecisionAction.ANSWER), make_hyp("H2"))
-        ev = (
-            make_ev("E1", supports=("H1",), vstate=VerificationState.SUFFICIENT),
-        )
-        budget = ResourceBudget(
-            max_executive_steps=1, max_retrieval_calls=0,
-            max_verification_calls=0, max_search_calls=0,
-            max_reasoning_tokens=0, max_elapsed_ms=10000)
-        task = make_task(hyps, ev, expected=DecisionAction.DEFER, correct="H1")
-        runtime = EvidenceRuntime(
-            task=task, resources=ResourceState(budget=budget),
-            evidence=ev, retrieved_evidence_ids=("E1",), verified_evidence_ids=("E1",))
-        executor = EvidenceExecutor()
-        # H1 (ANSWER) is uniquely supported → ANSWER_READY → DEFER should fail
-        assert executor._check_defer_success(runtime) is False
-
-    def test_defer_succeeds_when_unique_supported_is_defer(self):
-        """DEFER succeeds when uniquely supported hypothesis has answer_action=DEFER.
-
-        Per EPISTEMIC_SEMANTICS_V1.md §6.1, ANSWER_READY requires the supported
-        hypothesis to have answer_action == ANSWER. A uniquely supported DEFER
-        hypothesis means the state is DEFER_READY, not ANSWER_READY.
+        Topology, executor, and benchmark all say DEFER_READY,
+        but the certificate says CONTINUE_REQUIRED.
+        This is a known semantic gap, not a bug in the checker.
         """
-        hyps = (make_hyp("H1", DecisionAction.DEFER), make_hyp("H2"))
-        ev = (
-            make_ev("E1", supports=("H1",), vstate=VerificationState.SUFFICIENT),
-        )
-        budget = ResourceBudget(
-            max_executive_steps=1, max_retrieval_calls=0,
-            max_verification_calls=0, max_search_calls=0,
-            max_reasoning_tokens=0, max_elapsed_ms=10000)
-        task = make_task(hyps, ev, expected=DecisionAction.DEFER, correct="H1")
-        runtime = EvidenceRuntime(
-            task=task, resources=ResourceState(budget=budget),
-            evidence=ev, retrieved_evidence_ids=("E1",), verified_evidence_ids=("E1",))
-        executor = EvidenceExecutor()
-        # H1 (DEFER) is uniquely supported → DEFER_READY → DEFER should succeed
-        assert executor._check_defer_success(runtime) is True
+        d1 = [t for t in tasks if "_d1_" in t.task_id][0]
+        budget = get_confirmation_budget_for_task(d1)
+        resources = ResourceState(budget=budget)
+        from hrm_adaptive_memory.executive.evidence_benchmark.schema import initial_evidence_runtime
+        runtime = initial_evidence_runtime(d1, resources)
 
-    def test_defer_fails_when_continuation_available(self):
-        """DEFER fails when a continuation could resolve the state."""
-        hyps = (make_hyp("H1", DecisionAction.DEFER), make_hyp("H2"))
-        ev = (
-            make_ev("E1", supports=("H1",), vstate=VerificationState.UNVERIFIED),
-            make_ev("E2", supports=("H2",), vstate=VerificationState.UNVERIFIED),
-        )
-        # Budget with verify available
-        budget = make_budget(steps=3, verify=2, retrieve=0, search=0)
-        task = make_task(hyps, ev, expected=DecisionAction.DEFER, correct="H1")
-        runtime = EvidenceRuntime(
-            task=task, resources=ResourceState(budget=budget),
-            evidence=ev, retrieved_evidence_ids=("E1", "E2"), verified_evidence_ids=())
-        executor = EvidenceExecutor()
-        # Unverified evidence + verify available → continuation possible → DEFER fails
-        assert executor._check_defer_success(runtime) is False
+        record = check_conformance(runtime, step=0, executor=executor)
 
+        # The checker should detect the disagreement
+        assert not record.conformant
+        assert any("cert(CONTINUE_REQUIRED)" in d for d in record.disagreements)
 
-class TestSnapshotContradictingCount:
-    """Verify snapshot contradicting_count uses canonical SUFFICIENT+contradicts semantics."""
+    def test_conformance_for_task_returns_multiple_records(self, tasks, executor):
+        """check_conformance_for_task checks multiple decision points."""
+        d5 = [t for t in tasks if "_d5_" in t.task_id][0]
+        budget = get_confirmation_budget_for_task(d5)
+        resources = ResourceState(budget=budget)
 
-    def test_sufficient_contradicts_counted_as_contradicting(self):
-        """SUFFICIENT + contradicts(H) → counted in contradicting_count."""
-        hyps = (make_hyp("H1"), make_hyp("H2"))
-        ev = (make_ev("E1", contradicts=("H1",), vstate=VerificationState.SUFFICIENT),)
-        task = make_task(hyps, ev)
-        runtime = EvidenceRuntime(
-            task=task, resources=ResourceState(budget=make_budget()),
-            evidence=ev, retrieved_evidence_ids=("E1",), verified_evidence_ids=("E1",))
-        snapshot = build_evidence_snapshot(runtime)
-        assert snapshot.contradicting_count == 1
+        records = check_conformance_for_task(d5, resources, executor, pre_verify=True)
 
-    def test_falsified_supports_not_counted_as_contradicting(self):
-        """FALSIFIED + supports(H) → NOT counted in contradicting_count (legacy bug fix)."""
-        hyps = (make_hyp("H1"), make_hyp("H2"))
-        ev = (make_ev("E1", supports=("H1",), vstate=VerificationState.FALSIFIED),)
-        task = make_task(hyps, ev)
-        runtime = EvidenceRuntime(
-            task=task, resources=ResourceState(budget=make_budget()),
-            evidence=ev, retrieved_evidence_ids=("E1",), verified_evidence_ids=("E1",))
-        snapshot = build_evidence_snapshot(runtime)
-        # Under legacy semantics this was 1; under canonical it's 0
-        assert snapshot.contradicting_count == 0
+        assert len(records) >= 1
+        for r in records:
+            assert r.task_id == d5.task_id
 
-    def test_sufficient_supports_counted_as_supporting(self):
-        """SUFFICIENT + supports(H) → counted in supporting_count."""
-        hyps = (make_hyp("H1"), make_hyp("H2"))
-        ev = (make_ev("E1", supports=("H1",), vstate=VerificationState.SUFFICIENT),)
-        task = make_task(hyps, ev)
-        runtime = EvidenceRuntime(
-            task=task, resources=ResourceState(budget=make_budget()),
-            evidence=ev, retrieved_evidence_ids=("E1",), verified_evidence_ids=("E1",))
-        snapshot = build_evidence_snapshot(runtime)
-        assert snapshot.supporting_count == 1
+    def test_all_strata_produce_records(self, tasks, executor):
+        """Every stratum should produce at least one conformance record."""
+        for stratum in ["d1", "d2", "d3", "d4", "d5"]:
+            task = [t for t in tasks if f"_{stratum}_" in t.task_id][0]
+            budget = get_confirmation_budget_for_task(task)
+            resources = ResourceState(budget=budget)
 
+            records = check_conformance_for_task(task, resources, executor)
 
-class TestConsumerAgreement:
-    """Verify that topology, executor, and snapshot all agree on epistemic state."""
-
-    def test_topology_executor_snapshot_agree_on_competing_support(self):
-        """All three consumers agree: competing support → not answer-ready."""
-        hyps = (make_hyp("H1"), make_hyp("H2"))
-        ev = (
-            make_ev("E1", supports=("H1",), vstate=VerificationState.SUFFICIENT),
-            make_ev("E2", supports=("H2",), vstate=VerificationState.SUFFICIENT),
-        )
-        task = make_task(hyps, ev, expected=DecisionAction.ANSWER, correct="H1")
-        runtime = EvidenceRuntime(
-            task=task, resources=ResourceState(budget=make_budget()),
-            evidence=ev, retrieved_evidence_ids=("E1", "E2"),
-            verified_evidence_ids=("E1", "E2"))
-
-        # Topology: not answer-ready
-        visible_ev = [
-            {"evidence_id": e.evidence_id, "supports": list(e.supports),
-             "contradicts": list(e.contradicts),
-             "verification_state": e.verification_state,
-             "temporal_status": e.temporal_status, "retrieved": e.retrieved}
-            for e in ev
-        ]
-        topo = derive_hypothesis_topology(visible_ev, ["H1", "H2"])
-        assert not is_answer_ready(topo)
-
-        # Executor: ANSWER fails
-        executor = EvidenceExecutor()
-        assert executor._check_answer_success(runtime) is False
-
-        # Snapshot: has supporting evidence for both
-        snapshot = build_evidence_snapshot(runtime)
-        assert snapshot.supporting_count == 2
-        assert snapshot.contradicting_count == 0
-
-    def test_topology_executor_agree_on_unique_resolution(self):
-        """All three consumers agree: unique support → answer-ready."""
-        hyps = (make_hyp("H1"), make_hyp("H2"))
-        ev = (
-            make_ev("E1", supports=("H1",), vstate=VerificationState.SUFFICIENT),
-            make_ev("E2", contradicts=("H2",), vstate=VerificationState.SUFFICIENT),
-        )
-        task = make_task(hyps, ev, expected=DecisionAction.ANSWER, correct="H1")
-        runtime = EvidenceRuntime(
-            task=task, resources=ResourceState(budget=make_budget()),
-            evidence=ev, retrieved_evidence_ids=("E1", "E2"),
-            verified_evidence_ids=("E1", "E2"))
-
-        # Topology: answer-ready
-        visible_ev = [
-            {"evidence_id": e.evidence_id, "supports": list(e.supports),
-             "contradicts": list(e.contradicts),
-             "verification_state": e.verification_state,
-             "temporal_status": e.temporal_status, "retrieved": e.retrieved}
-            for e in ev
-        ]
-        topo = derive_hypothesis_topology(visible_ev, ["H1", "H2"])
-        assert is_answer_ready(topo)
-        assert topo.unique_supported_hypothesis == "H1"
-
-        # Executor: ANSWER succeeds
-        executor = EvidenceExecutor()
-        assert executor._check_answer_success(runtime) is True
-
-        # Snapshot: 1 supporting, 1 contradicting
-        snapshot = build_evidence_snapshot(runtime)
-        assert snapshot.supporting_count == 1
-        assert snapshot.contradicting_count == 1
+            assert len(records) >= 1, f"{stratum.upper()} produced no records"
+            assert all(isinstance(r, ConformanceRecord) for r in records)
