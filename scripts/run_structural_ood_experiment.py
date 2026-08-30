@@ -215,6 +215,29 @@ def main():
 
     print(f"   Rebuilt {len(tasks)} OOD tasks (matching pool)")
 
+    # 4b. Register OOD budgets in the override dict
+    print("\n4b. Registering OOD budgets...")
+    from hrm_adaptive_memory.executive.evidence_benchmark.i3_29_safety_generator import (
+        _BUDGET_OVERRIDES,
+    )
+    from hrm_adaptive_memory.executive.resources import ResourceBudget
+
+    for task in tasks:
+        parts = task.budget_profile.split("_")
+        # Format: OOD_steps_verify_search
+        b_steps = int(parts[1])
+        b_verify = int(parts[2])
+        b_search = int(parts[3])
+        _BUDGET_OVERRIDES[task.task_id] = ResourceBudget(
+            max_executive_steps=b_steps,
+            max_reasoning_tokens=256,
+            max_retrieval_calls=0,
+            max_verification_calls=b_verify,
+            max_search_calls=b_search,
+            max_elapsed_ms=10000,
+        )
+    print(f"   Registered {len(tasks)} OOD task budgets")
+
     # 5. Load models — using confirmed V3R2
     print("\n5. Loading confirmed V3R2 models...")
 
