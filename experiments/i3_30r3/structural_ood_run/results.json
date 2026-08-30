@@ -1,0 +1,66 @@
+{
+  "experiment": "I3.30R3-STRUCTURAL-OOD",
+  "description": "Structural-OOD confirmation using confirmed V3R2 executive on novel-structure tasks",
+  "n_tasks": 120,
+  "n_trajectories": 240,
+  "shadow_success": 40,
+  "hard_success": 100,
+  "shadow_rate": 0.3333333333333333,
+  "hard_rate": 0.8333333333333334,
+  "absolute_improvement_pp": 50.0,
+  "rescues": 60,
+  "breaks": 0,
+  "both_succeed": 40,
+  "both_fail": 20,
+  "mean_du": 63.25499999999999,
+  "bootstrap_ci": [
+    51.74905416666666,
+    74.45108333333333
+  ],
+  "promotion_pass": true,
+  "sign_test_p": 8.673617379884035e-19,
+  "by_category": {
+    "ood_4hyp_mixed": {
+      "n": 20,
+      "shadow": 0,
+      "hard": 0,
+      "rescues": 0,
+      "breaks": 0
+    },
+    "ood_5hyp_all_unverified": {
+      "n": 20,
+      "shadow": 0,
+      "hard": 20,
+      "rescues": 20,
+      "breaks": 0
+    },
+    "ood_6hyp_partial_verify": {
+      "n": 20,
+      "shadow": 0,
+      "hard": 20,
+      "rescues": 20,
+      "breaks": 0
+    },
+    "ood_4hyp_all_verified_unique": {
+      "n": 20,
+      "shadow": 20,
+      "hard": 20,
+      "rescues": 0,
+      "breaks": 0
+    },
+    "ood_4hyp_competing_verified_defer": {
+      "n": 20,
+      "shadow": 20,
+      "hard": 20,
+      "rescues": 0,
+      "breaks": 0
+    },
+    "ood_5hyp_3elim_unique": {
+      "n": 20,
+      "shadow": 0,
+      "hard": 20,
+      "rescues": 20,
+      "breaks": 0
+    }
+  }
+}
