@@ -279,6 +279,16 @@ def run_trajectory(task, backend, i3_7e, utility,
         # ============================================================
         # Authority decision — arm-dependent
         # ============================================================
+        # CRITICAL FIX (I3.30R3 ATTEMPT 2):
+        # For V3 arms, schema_actions MUST always equal allowed_decision.allowed.
+        # Certificate evaluation may happen before decoding, but its result
+        # must NOT affect the grammar, prompt, legal-action set, or any
+        # model input. The treatment (hard override) is applied ONLY after
+        # decoding, via apply_authority().
+        #
+        # V1 retains its existing ANSWER-only hard-select behavior (narrowing
+        # the schema before generation), because that is V1's actual
+        # champion behavior — not a treatment variable in this experiment.
         schema_actions = allowed_decision.allowed
         authority_mode_str = "A0_advisory"
         forced_action = None
@@ -286,6 +296,8 @@ def run_trajectory(task, backend, i3_7e, utility,
 
         if arm == ArmMode.V1:
             # V1 authority: ANSWER-only hard select (unchanged from I3.30R2)
+            # V1 narrows the schema before generation — this is V1's
+            # actual behavior, not a treatment variable.
             AUTHORITATIVE = frozenset({"ANSWER"})
             if (confidence == "clear" and len(refined_set) == 1
                     and q_gap >= AUTHORITY_THRESHOLD
@@ -300,7 +312,9 @@ def run_trajectory(task, backend, i3_7e, utility,
         else:
             # V3_SHADOW and V3_HARD: identical evaluation path
             # ============================================================
-            # Everything above this line must be identical for V3 arms.
+            # Certificate is evaluated but MUST NOT affect schema_actions.
+            # The LLM sees the full legal action set in both arms.
+            # Treatment divergence happens ONLY after decoding.
             # ============================================================
             structural_v3 = get_structural_state_v3(runtime)
             v3_decision = evaluate_v3_authority(
@@ -309,17 +323,10 @@ def run_trajectory(task, backend, i3_7e, utility,
                 structural=structural_v3,
             )
 
-            # Determine schema_actions based on would_force
-            # (both arms compute this identically)
-            if v3_decision.would_force and v3_decision.forced_action:
-                candidate = frozenset({v3_decision.forced_action}) & allowed_decision.allowed
-                if candidate:
-                    schema_actions = candidate
-                    authority_mode_str = v3_decision.authority_mode
-                else:
-                    schema_actions = allowed_decision.allowed
-            else:
-                schema_actions = allowed_decision.allowed
+            # Record authority mode for logging, but DO NOT narrow schema
+            if v3_decision.would_force:
+                authority_mode_str = v3_decision.authority_mode
+            # schema_actions remains allowed_decision.allowed for both V3 arms
 
         # Log authority decision
         authority_log.append({
@@ -334,6 +341,12 @@ def run_trajectory(task, backend, i3_7e, utility,
             "forced_action": forced_action if arm == ArmMode.V1 else (
                 v3_decision.forced_action if v3_decision else None),
             "would_force": v3_decision.would_force if v3_decision else False,
+            # Purity receipts
+            "pre_generation_prompt_sha": prompt_sha,
+            "pre_generation_schema_actions_sha": schema_actions_sha,
+            "pre_generation_legal_actions_sha": legal_actions_sha,
+            "pre_generation_q_values_sha": q_values_sha,
+            "pre_generation_state_sha": state_sha_val,
         })
 
         # ============================================================
@@ -353,6 +366,32 @@ def run_trajectory(task, backend, i3_7e, utility,
         packet_dict = json.loads(i3_7e.evidence_packet_json(packet))
         packet_dict["executive_guidance"] = extra_fields
         user_prompt = json.dumps(packet_dict, indent=2)
+
+        # ============================================================
+        # Purity receipts (Step 5 fix)
+        # Pre-generation hashes that MUST match between V3_SHADOW and
+        # V3_HARD for the same task/step. Any mismatch indicates
+        # treatment contamination before the divergence point.
+        # ============================================================
+        prompt_sha = hashlib.sha256(user_prompt.encode()).hexdigest()
+        legal_actions_sha = hashlib.sha256(
+            json.dumps(sorted(legal_actions), sort_keys=True).encode()
+        ).hexdigest()
+        schema_actions_sha = hashlib.sha256(
+            json.dumps(sorted(schema_actions), sort_keys=True).encode()
+        ).hexdigest()
+        q_values_sha = hashlib.sha256(
+            json.dumps({k: round(v, 6) for k, v in sorted(q_values.items())}).encode()
+        ).hexdigest()
+        state_sha_val = state_sha(sf)
+
+        # For V3 arms, verify schema_actions == legal_actions (no narrowing)
+        if arm in (ArmMode.V3_SHADOW, ArmMode.V3_HARD):
+            assert schema_actions == allowed_decision.allowed, (
+                f"TREATMENT CONTAMINATION: schema_actions != allowed for {arm.value} "
+                f"at {task.task_id} step {step_id}: "
+                f"{sorted(schema_actions)} != {sorted(allowed_decision.allowed)}"
+            )
 
         try:
             call_result = backend.generate(
@@ -453,6 +492,58 @@ def run_trajectory(task, backend, i3_7e, utility,
             # Record authority event when would_force is True
             # (for both SHADOW and HARD, so we can compare)
             if updated_decision.would_force:
+                # Capture checkpoint for counterfactual replay (Step 6)
+                from daph.intervention.checkpoint import create_checkpoint
+                checkpoint = create_checkpoint(
+                    runtime=runtime,
+                    task=task,
+                    step=step_id,
+                    phase=phase,
+                    legal_actions=tuple(legal_actions),
+                    prior_actions=tuple(prior_actions),
+                    prior_outcomes=tuple(prior_outcomes),
+                )
+
+                # Deterministic counterfactual: simulate forced action
+                # and LLM action from the same state (no LLM needed for
+                # immediate outcome)
+                from hrm_adaptive_memory.executive.evidence_benchmark.executor import EvidenceExecutor as _Exec
+                _cf_executor = _Exec()
+
+                # Simulate forced action
+                forced_action_enum = DecisionAction(updated_decision.forced_action)
+                forced_target = None
+                if forced_action_enum is DecisionAction.VERIFY:
+                    _valid = valid_verify_targets(runtime)
+                    if _valid:
+                        forced_target = _valid[0]
+                try:
+                    _forced_res = _cf_executor.execute(runtime, forced_action_enum, target_evidence_id=forced_target)
+                    forced_immediate_terminal = _forced_res.terminal
+                    forced_immediate_success = _forced_res.task_success
+                except Exception:
+                    forced_immediate_terminal = False
+                    forced_immediate_success = None
+
+                # Simulate LLM action (only if different from forced)
+                if updated_decision.llm_proposed_action != updated_decision.forced_action:
+                    llm_action_enum = DecisionAction(updated_decision.llm_proposed_action)
+                    llm_target = target_id
+                    if llm_action_enum is DecisionAction.VERIFY and not llm_target:
+                        _valid = valid_verify_targets(runtime)
+                        if _valid:
+                            llm_target = _valid[0]
+                    try:
+                        _llm_res = _cf_executor.execute(runtime, llm_action_enum, target_evidence_id=llm_target)
+                        llm_immediate_terminal = _llm_res.terminal
+                        llm_immediate_success = _llm_res.task_success
+                    except Exception:
+                        llm_immediate_terminal = False
+                        llm_immediate_success = None
+                else:
+                    llm_immediate_terminal = forced_immediate_terminal
+                    llm_immediate_success = forced_immediate_success
+
                 authority_events.append({
                     "task_id": task.task_id,
                     "stratum": task.category,
@@ -475,6 +566,23 @@ def run_trajectory(task, backend, i3_7e, utility,
                     "force_applied": updated_decision.force_applied,
                     "action_changed": updated_decision.action_changed,
                     "structural_state": updated_decision.structural_state,
+                    # Purity receipts (Step 5)
+                    "pre_generation_prompt_sha": prompt_sha,
+                    "pre_generation_schema_sha": schema_sha,
+                    "pre_generation_schema_actions_sha": schema_actions_sha,
+                    "pre_generation_legal_actions_sha": legal_actions_sha,
+                    "pre_generation_q_values_sha": q_values_sha,
+                    "pre_generation_state_sha": state_sha_val,
+                    "schema_actions": sorted(schema_actions),
+                    "legal_actions": legal_actions,
+                    # Counterfactual replay (Step 6)
+                    "checkpoint_id": checkpoint.checkpoint_id,
+                    "checkpoint_state_sha": checkpoint.state_sha256,
+                    "forced_immediate_terminal": forced_immediate_terminal,
+                    "forced_immediate_success": forced_immediate_success,
+                    "llm_immediate_terminal": llm_immediate_terminal,
+                    "llm_immediate_success": llm_immediate_success,
+                    "actions_diverge": updated_decision.llm_proposed_action != updated_decision.forced_action,
                     "terminal_outcome": None,  # filled after trajectory
                     "trajectory_success": None,  # filled after trajectory
                     "realized_utility": None,  # filled after trajectory
@@ -585,6 +693,12 @@ def compute_manifest(gguf_path: str) -> dict:
         # Runner
         "runner_sha256": sha256_file("scripts/run_i3_30r3_authority_isolation.py"),
         "i3_29_runner_sha256": sha256_file("scripts/run_i3_29_live_safety.py"),
+        # Step 8: Freeze authority isolation and evaluator SHAs
+        "authority_isolation_sha256": sha256_file("daph/authority/isolation.py"),
+        "authority_policy_v3_sha256": sha256_file("daph/authority/policy_v3.py"),
+        "evaluator_sha256": sha256_file("scripts/evaluate_i3_30r3_authority_isolation.py"),
+        "checkpoint_sha256": sha256_file("daph/intervention/checkpoint.py"),
+        "restore_sha256": sha256_file("daph/intervention/restore.py"),
 
         # Benchmark generators
         "i3_29_generator_sha256": sha256_file("hrm_adaptive_memory/executive/evidence_benchmark/i3_29_safety_generator.py"),
@@ -627,7 +741,9 @@ def compute_manifest(gguf_path: str) -> dict:
         "secondary_comparison": "V3_SHADOW - V1",
     }
 
-    # Compute benchmark hash
+    # Compute benchmark hash — hash FULL task content, not just IDs
+    # Step 8 fix: Hash hypotheses, evidence relationships, verification
+    # states, resource budgets, and oracle paths.
     from hrm_adaptive_memory.executive.evidence_benchmark.i3_29_safety_generator import (
         generate_i3_29_benchmark, compute_benchmark_hash,
     )
@@ -640,8 +756,41 @@ def compute_manifest(gguf_path: str) -> dict:
 
     bench_hash = compute_benchmark_hash(tasks)
     manifest["benchmark_sha256"] = bench_hash
+
+    # D5 hash: full content, not just task IDs
+    def _task_to_hashable(t):
+        """Serialize a task's full content for hashing."""
+        return {
+            "task_id": t.task_id,
+            "category": t.category,
+            "expected_terminal": t.expected_terminal.value,
+            "correct_hypothesis_id": t.correct_hypothesis_id,
+            "hypotheses": [
+                {
+                    "hypothesis_id": h.hypothesis_id,
+                    "answer_action": h.answer_action.value,
+                }
+                for h in t.hypotheses
+            ],
+            "evidence_items": [
+                {
+                    "evidence_id": ev.evidence_id,
+                    "supports": list(ev.supports),
+                    "contradicts": list(ev.contradicts),
+                    "verification_state": ev.verification_state.value,
+                    "retrieved": ev.retrieved,
+                    "verify_result": ev.verify_result,
+                }
+                for ev in t.evidence_items
+            ],
+            "oracle_resolution_path": list(t.oracle_resolution_path) if t.oracle_resolution_path else [],
+        }
+
     manifest["d5_benchmark_sha256"] = hashlib.sha256(
-        json.dumps([t.task_id for t in d5_tasks], sort_keys=True).encode()
+        json.dumps([_task_to_hashable(t) for t in d5_tasks], sort_keys=True).encode()
+    ).hexdigest()
+    manifest["full_benchmark_sha256"] = hashlib.sha256(
+        json.dumps([_task_to_hashable(t) for t in all_tasks], sort_keys=True).encode()
     ).hexdigest()
 
     from collections import Counter
@@ -670,10 +819,26 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Compute and freeze manifest
+    # Step 8 fix: Don't overwrite an existing frozen manifest
     manifest = compute_manifest(args.gguf_path)
     manifest_path = output_dir / "frozen_manifest.json"
-    with open(manifest_path, "w") as f:
-        json.dump(manifest, f, indent=2)
+    if manifest_path.exists() and not args.resume:
+        # Compare new manifest against existing
+        with open(manifest_path) as f:
+            existing = json.load(f)
+        if existing.get("source_commit") == manifest.get("source_commit"):
+            print(f"Manifest already frozen at {manifest_path} (same commit)")
+            manifest = existing  # Use existing frozen manifest
+        else:
+            print(f"WARNING: Existing manifest is from different commit.")
+            print(f"  Existing: {existing.get('source_commit', '?')[:12]}")
+            print(f"  New:      {manifest.get('source_commit', '?')[:12]}")
+            print(f"  Overwriting with new manifest.")
+            with open(manifest_path, "w") as f:
+                json.dump(manifest, f, indent=2)
+    else:
+        with open(manifest_path, "w") as f:
+            json.dump(manifest, f, indent=2)
     print(f"Manifest frozen at {manifest_path}")
     print(f"  source_commit: {manifest['source_commit_short']}")
     print(f"  Q_V3R model SHA: {manifest['Q_V3R_model_sha256'][:16]}...")

@@ -1,0 +1,100 @@
+{
+  "experiment": "I3.30R3",
+  "passed": 8,
+  "failed": 3,
+  "pending": 1,
+  "gates": {
+    "G1": {
+      "name": "treatment_purity",
+      "description": "V3-AUTH and V3-SHADOW identical before force application",
+      "criterion": "treatment_purity_tests_pass",
+      "result": "PASS",
+      "value": "25/25 tests pass"
+    },
+    "G2": {
+      "name": "authority_breaks",
+      "description": "0 observed V3-AUTH-caused breaks",
+      "criterion": "authority_breaks == 0",
+      "result": "PASS",
+      "value": 0
+    },
+    "G3": {
+      "name": "false_answer_authority",
+      "description": "0 forced ANSWER on wrong terminal states",
+      "criterion": "false_answer_authority == 0",
+      "result": "PASS",
+      "value": 0
+    },
+    "G4": {
+      "name": "false_defer_authority",
+      "description": "0 forced DEFER on wrong terminal states",
+      "criterion": "false_defer_authority == 0",
+      "result": "PASS",
+      "value": 0
+    },
+    "G5": {
+      "name": "authority_effect",
+      "description": "mean \u0394U(HARD-SHADOW) >= 0",
+      "criterion": "ate_authority >= 0",
+      "result": "PASS",
+      "value": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "n": 185
+    },
+    "G6": {
+      "name": "rescues_gt_breaks",
+      "description": "rescues > breaks",
+      "criterion": "rescues > breaks",
+      "result": "FAIL",
+      "value": {
+        "rescues": 0,
+        "breaks": 0
+      }
+    },
+    "G7": {
+      "name": "answer_coverage",
+      "description": "> 0 effective ANSWER interventions",
+      "criterion": "effective_answer_interventions > 0",
+      "result": "FAIL",
+      "value": 0
+    },
+    "G8": {
+      "name": "defer_coverage",
+      "description": "> 0 effective DEFER interventions",
+      "criterion": "effective_defer_interventions > 0",
+      "result": "FAIL",
+      "value": 0
+    },
+    "G9": {
+      "name": "semantic_consistency",
+      "description": "0 topology/executor/certificate disagreements",
+      "criterion": "semantic_disagreements == 0",
+      "result": "PENDING",
+      "value": null
+    },
+    "G10": {
+      "name": "reliability",
+      "description": "0 decoder or runtime errors",
+      "criterion": "reliability_errors == 0",
+      "result": "PASS",
+      "value": 0
+    },
+    "G11": {
+      "name": "artifact_identity",
+      "description": "all frozen SHAs match",
+      "criterion": "manifest_mismatches == 0",
+      "result": "PASS",
+      "value": 0
+    },
+    "G12": {
+      "name": "event_receipts",
+      "description": "100% of hard events have complete receipts",
+      "criterion": "complete_receipt_rate == 1.0",
+      "result": "PASS",
+      "value": 1.0,
+      "complete": 90,
+      "total": 90
+    }
+  }
+}
