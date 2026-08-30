@@ -1,15 +1,23 @@
 {
   "experiment": "I3.30R3",
-  "passed": 8,
-  "failed": 3,
-  "pending": 1,
+  "passed": 11,
+  "failed": 1,
+  "pending": 0,
   "gates": {
     "G1": {
       "name": "treatment_purity",
       "description": "V3-AUTH and V3-SHADOW identical before force application",
-      "criterion": "treatment_purity_tests_pass",
+      "criterion": "purity_receipt_mismatches == 0 and integration_tests_pass",
       "result": "PASS",
-      "value": "25/25 tests pass"
+      "value": {
+        "purity_mismatches": 0,
+        "prompt_mismatches": 0,
+        "schema_mismatches": 0,
+        "state_mismatches": 0,
+        "paired_events": 90,
+        "unpaired_events": 34,
+        "integration_tests": "6/6 pass (test_i3_30r3_runner_boundary.py)"
+      }
     },
     "G2": {
       "name": "authority_breaks",
@@ -20,15 +28,15 @@
     },
     "G3": {
       "name": "false_answer_authority",
-      "description": "0 forced ANSWER on wrong terminal states",
-      "criterion": "false_answer_authority == 0",
+      "description": "0 forced ANSWER on causally non-ANSWER-ready states",
+      "criterion": "forced ANSWER with immediate_success == False == 0",
       "result": "PASS",
       "value": 0
     },
     "G4": {
       "name": "false_defer_authority",
-      "description": "0 forced DEFER on wrong terminal states",
-      "criterion": "false_defer_authority == 0",
+      "description": "0 forced DEFER on causally non-DEFER-ready states",
+      "criterion": "forced DEFER with immediate_success == False == 0",
       "result": "PASS",
       "value": 0
     },
@@ -37,18 +45,18 @@
       "description": "mean \u0394U(HARD-SHADOW) >= 0",
       "criterion": "ate_authority >= 0",
       "result": "PASS",
-      "value": 0.0,
-      "ci_lower": 0.0,
-      "ci_upper": 0.0,
+      "value": 15.568108108108108,
+      "ci_lower": 8.89835,
+      "ci_upper": 23.174904054054046,
       "n": 185
     },
     "G6": {
       "name": "rescues_gt_breaks",
       "description": "rescues > breaks",
       "criterion": "rescues > breaks",
-      "result": "FAIL",
+      "result": "PASS",
       "value": {
-        "rescues": 0,
+        "rescues": 18,
         "breaks": 0
       }
     },
@@ -56,8 +64,8 @@
       "name": "answer_coverage",
       "description": "> 0 effective ANSWER interventions",
       "criterion": "effective_answer_interventions > 0",
-      "result": "FAIL",
-      "value": 0
+      "result": "PASS",
+      "value": 38
     },
     "G8": {
       "name": "defer_coverage",
@@ -70,8 +78,17 @@
       "name": "semantic_consistency",
       "description": "0 topology/executor/certificate disagreements",
       "criterion": "semantic_disagreements == 0",
-      "result": "PENDING",
-      "value": null
+      "result": "PASS",
+      "value": 0,
+      "d5_audit_found": true,
+      "d5_0026": {
+        "s0_readiness": "CONTINUE_REQUIRED",
+        "s1_readiness": "ANSWER_READY",
+        "s1_is_answer_ready": true,
+        "s1_v3_certificate_passed": true,
+        "s1_v3_would_force": true,
+        "s1_q_gap_v3r": 21.1991
+      }
     },
     "G10": {
       "name": "reliability",
@@ -89,12 +106,13 @@
     },
     "G12": {
       "name": "event_receipts",
-      "description": "100% of hard events have complete receipts",
+      "description": "100% of hard events have complete receipts (all fields)",
       "criterion": "complete_receipt_rate == 1.0",
       "result": "PASS",
       "value": 1.0,
       "complete": 90,
-      "total": 90
+      "total": 90,
+      "required_fields": 18
     }
   }
 }

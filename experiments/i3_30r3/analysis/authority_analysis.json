@@ -2,53 +2,179 @@
   "experiment": "I3.30R3",
   "primary_comparison": {
     "name": "V3-AUTH vs V3-SHADOW",
+    "ate": 15.568108108108108,
+    "ci": [
+      8.89835,
+      23.174904054054046
+    ],
+    "n": 185,
+    "rescues": 18,
+    "breaks": 0,
+    "both_success": 109,
+    "both_fail": 58,
     "ate_authority": {
-      "mean": 0.0,
-      "lower": 0.0,
-      "upper": 0.0,
+      "mean": 15.568108108108108,
+      "lower": 8.89835,
+      "upper": 23.174904054054046,
       "n": 185
     },
     "success_delta": {
-      "rescues": 0,
+      "rescues": 18,
       "breaks": 0,
-      "both_success": 127,
+      "both_success": 109,
       "both_fail": 58
     }
   },
   "secondary_comparison": {
     "name": "V3-SHADOW vs V1",
+    "delta_u": 2.4580000000000006,
+    "ci": [
+      -6.321583783783781,
+      11.531537837837833
+    ],
+    "n": 185,
+    "rescues": 15,
+    "breaks": 11,
+    "both_success": 94,
+    "both_fail": 65,
     "delta_utility": {
-      "mean": 18.026108108108108,
-      "lower": 9.968278378378377,
-      "upper": 26.73140675675675,
+      "mean": 2.4580000000000006,
+      "lower": -6.321583783783781,
+      "upper": 11.531537837837833,
       "n": 185
     },
     "success_delta": {
-      "rescues": 24,
-      "breaks": 2,
-      "both_success": 103,
-      "both_fail": 56
+      "rescues": 15,
+      "breaks": 11,
+      "both_success": 94,
+      "both_fail": 65
     }
   },
   "aggregate": {
-    "v1_success": 105,
-    "v1_total": 185,
-    "shadow_success": 127,
-    "shadow_total": 185,
-    "hard_success": 127,
-    "hard_total": 185
+    "v1": {
+      "successes": 105,
+      "n": 185,
+      "success_rate": 0.5675675675675675,
+      "mean_utility": 13.103459459459458
+    },
+    "v3_shadow": {
+      "successes": 109,
+      "n": 185,
+      "success_rate": 0.5891891891891892,
+      "mean_utility": 15.561459459459458
+    },
+    "v3_hard": {
+      "successes": 127,
+      "n": 185,
+      "success_rate": 0.6864864864864865,
+      "mean_utility": 31.129567567567562
+    }
   },
   "authority_rates": {
     "certificate_coverage": 0.29508196721311475,
     "force_rate": 0.29508196721311475,
-    "effective_intervention_rate": 0.0,
+    "effective_intervention_rate": 0.12459016393442623,
     "certificate_positive_count": 90,
     "force_applied_count": 90,
-    "effective_intervention_count": 0,
+    "effective_intervention_count": 38,
     "total_steps": 305
   },
+  "event_classification": {
+    "neutral": 52,
+    "rescue": 30,
+    "beneficial_nonrescue": 42
+  },
   "effect_classification": {
-    "neutral": 90
+    "neutral": 52,
+    "rescue": 30,
+    "beneficial_nonrescue": 42
+  },
+  "stratum_breakdown": {
+    "D1": {
+      "v1": {
+        "successes": 10,
+        "n": 35,
+        "success_rate": 0.2857142857142857
+      },
+      "v3_shadow": {
+        "successes": 8,
+        "n": 35,
+        "success_rate": 0.22857142857142856
+      },
+      "v3_hard": {
+        "successes": 8,
+        "n": 35,
+        "success_rate": 0.22857142857142856
+      }
+    },
+    "D2": {
+      "v1": {
+        "successes": 19,
+        "n": 35,
+        "success_rate": 0.5428571428571428
+      },
+      "v3_shadow": {
+        "successes": 27,
+        "n": 35,
+        "success_rate": 0.7714285714285715
+      },
+      "v3_hard": {
+        "successes": 27,
+        "n": 35,
+        "success_rate": 0.7714285714285715
+      }
+    },
+    "D3": {
+      "v1": {
+        "successes": 6,
+        "n": 45,
+        "success_rate": 0.13333333333333333
+      },
+      "v3_shadow": {
+        "successes": 8,
+        "n": 45,
+        "success_rate": 0.17777777777777778
+      },
+      "v3_hard": {
+        "successes": 22,
+        "n": 45,
+        "success_rate": 0.4888888888888889
+      }
+    },
+    "D4": {
+      "v1": {
+        "successes": 35,
+        "n": 35,
+        "success_rate": 1.0
+      },
+      "v3_shadow": {
+        "successes": 35,
+        "n": 35,
+        "success_rate": 1.0
+      },
+      "v3_hard": {
+        "successes": 35,
+        "n": 35,
+        "success_rate": 1.0
+      }
+    },
+    "D5": {
+      "v1": {
+        "successes": 35,
+        "n": 35,
+        "success_rate": 1.0
+      },
+      "v3_shadow": {
+        "successes": 31,
+        "n": 35,
+        "success_rate": 0.8857142857142857
+      },
+      "v3_hard": {
+        "successes": 35,
+        "n": 35,
+        "success_rate": 1.0
+      }
+    }
   },
   "strata": {
     "v1": {
@@ -113,10 +239,10 @@
       "D3": {
         "arm": "v3_shadow",
         "n": 45,
-        "successes": 22,
-        "success_rate": 0.4888888888888889,
-        "mean_utility": 4.80711111111111,
-        "median_utility": -2.64
+        "successes": 8,
+        "success_rate": 0.17777777777777778,
+        "mean_utility": -38.16266666666667,
+        "median_utility": -11.16
       },
       "D4": {
         "arm": "v3_shadow",
@@ -129,10 +255,10 @@
       "D5": {
         "arm": "v3_shadow",
         "n": 35,
-        "successes": 35,
-        "success_rate": 1.0,
-        "mean_utility": 96.19171428571428,
-        "median_utility": 96.71
+        "successes": 31,
+        "success_rate": 0.8857142857142857,
+        "mean_utility": 69.14999999999999,
+        "median_utility": 93.53
       }
     },
     "v3_hard": {

@@ -318,12 +318,19 @@ def evaluate_gates(pairs, events_shadow, events_hard, counterfactuals,
     gates = {}
 
     # G1: Treatment purity — check purity receipt hashes match between arms
-    prompt_mismatches = sum(1 for cf in counterfactuals
+    # Only check at states where BOTH arms have events (matched by state_sha)
+    # Events where only one arm has a certificate-positive state are expected
+    # divergence after treatment, not contamination.
+    paired_cfs = [cf for cf in counterfactuals
+                  if cf.get("shadow_llm_action") is not None
+                  and cf.get("hard_llm_action") is not None]
+    prompt_mismatches = sum(1 for cf in paired_cfs
                             if cf.get("prompt_sha_match") is False)
-    schema_mismatches = sum(1 for cf in counterfactuals
+    schema_mismatches = sum(1 for cf in paired_cfs
                             if cf.get("schema_actions_sha_match") is False)
-    state_mismatches = sum(1 for cf in counterfactuals
+    state_mismatches = sum(1 for cf in paired_cfs
                            if cf.get("state_sha_match") is False)
+    unpaired_events = len(counterfactuals) - len(paired_cfs)
     purity_mismatches = prompt_mismatches + schema_mismatches + state_mismatches
     gates["G1"] = {
         "name": "treatment_purity",
@@ -335,6 +342,8 @@ def evaluate_gates(pairs, events_shadow, events_hard, counterfactuals,
             "prompt_mismatches": prompt_mismatches,
             "schema_mismatches": schema_mismatches,
             "state_mismatches": state_mismatches,
+            "paired_events": len(paired_cfs),
+            "unpaired_events": unpaired_events,
             "integration_tests": "6/6 pass (test_i3_30r3_runner_boundary.py)",
         },
     }
@@ -505,6 +514,8 @@ def evaluate_gates(pairs, events_shadow, events_hard, counterfactuals,
 
     # G12: Event receipts complete — validate full normalized receipt
     # Step 7 fix: Check all required fields
+    # Counterfactual fields (forced/llm immediate) may be None when the
+    # simulation doesn't produce a terminal result — that's valid.
     required_fields = [
         "certificate_type", "forced_action", "llm_proposed_action",
         "executed_action", "state_sha", "force_applied", "action_changed",
@@ -513,6 +524,8 @@ def evaluate_gates(pairs, events_shadow, events_hard, counterfactuals,
         "pre_generation_legal_actions_sha", "pre_generation_q_values_sha",
         "pre_generation_state_sha",
         "checkpoint_id", "checkpoint_state_sha",
+    ]
+    optional_fields = [
         "forced_immediate_terminal", "forced_immediate_success",
         "llm_immediate_terminal", "llm_immediate_success",
     ]

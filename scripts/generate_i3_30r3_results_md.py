@@ -17,7 +17,8 @@ def generate_results_md(analysis_path: Path, gate_path: Path, output_path: Path)
     with open(analysis_path) as f:
         analysis = json.load(f)
     with open(gate_path) as f:
-        gates = json.load(f)
+        gate_data = json.load(f)
+    gates = gate_data.get("gates", gate_data)
 
     # Extract data
     primary = analysis.get("primary_comparison", {})

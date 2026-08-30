@@ -328,27 +328,6 @@ def run_trajectory(task, backend, i3_7e, utility,
                 authority_mode_str = v3_decision.authority_mode
             # schema_actions remains allowed_decision.allowed for both V3 arms
 
-        # Log authority decision
-        authority_log.append({
-            "step": step_id,
-            "arm": arm.value,
-            "authority_mode": authority_mode_str,
-            "legal_actions": legal_actions,
-            "schema_actions": sorted(schema_actions),
-            "refined_set": refined_set,
-            "confidence": confidence,
-            "q_gap": round(q_gap, 2),
-            "forced_action": forced_action if arm == ArmMode.V1 else (
-                v3_decision.forced_action if v3_decision else None),
-            "would_force": v3_decision.would_force if v3_decision else False,
-            # Purity receipts
-            "pre_generation_prompt_sha": prompt_sha,
-            "pre_generation_schema_actions_sha": schema_actions_sha,
-            "pre_generation_legal_actions_sha": legal_actions_sha,
-            "pre_generation_q_values_sha": q_values_sha,
-            "pre_generation_state_sha": state_sha_val,
-        })
-
         # ============================================================
         # Build packet and call LLM
         # ============================================================
@@ -392,6 +371,27 @@ def run_trajectory(task, backend, i3_7e, utility,
                 f"at {task.task_id} step {step_id}: "
                 f"{sorted(schema_actions)} != {sorted(allowed_decision.allowed)}"
             )
+
+        # Log authority decision (after purity receipts are computed)
+        authority_log.append({
+            "step": step_id,
+            "arm": arm.value,
+            "authority_mode": authority_mode_str,
+            "legal_actions": legal_actions,
+            "schema_actions": sorted(schema_actions),
+            "refined_set": refined_set,
+            "confidence": confidence,
+            "q_gap": round(q_gap, 2),
+            "forced_action": forced_action if arm == ArmMode.V1 else (
+                v3_decision.forced_action if v3_decision else None),
+            "would_force": v3_decision.would_force if v3_decision else False,
+            # Purity receipts
+            "pre_generation_prompt_sha": prompt_sha,
+            "pre_generation_schema_actions_sha": schema_actions_sha,
+            "pre_generation_legal_actions_sha": legal_actions_sha,
+            "pre_generation_q_values_sha": q_values_sha,
+            "pre_generation_state_sha": state_sha_val,
+        })
 
         try:
             call_result = backend.generate(
@@ -496,10 +496,8 @@ def run_trajectory(task, backend, i3_7e, utility,
                 from daph.intervention.checkpoint import create_checkpoint
                 checkpoint = create_checkpoint(
                     runtime=runtime,
-                    task=task,
                     step=step_id,
                     phase=phase,
-                    legal_actions=tuple(legal_actions),
                     prior_actions=tuple(prior_actions),
                     prior_outcomes=tuple(prior_outcomes),
                 )
