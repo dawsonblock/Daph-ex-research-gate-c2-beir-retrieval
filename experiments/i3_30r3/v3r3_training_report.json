@@ -1,17 +1,49 @@
 {
   "model": "Q_V3R3",
   "status": "TRAINED",
+  "lineage": "DAPH_ADAPTIVE_AUTHORITY_V3R3_DEVELOPMENT",
+  "warning": "Q_V3R3 is a DEVELOPMENT candidate. Q_V3R2-A (tag v3r2-confirmed) is the confirmed historical control.",
   "improvements": [
     "Bootstrap ensemble (20 GBTs) for epistemic uncertainty",
     "LCB-based authority: force only when LCB gap >= threshold",
-    "OOD support-density gating via KMeans centroids",
-    "D1 DEFER-ready training stratum (80 new tasks)",
+    "OOD support-density gating via KMeans centroids with StandardScaler",
+    "D1 DEFER-ready training stratum \u2014 ACTUALLY ROLLED OUT to causal records",
     "Resource-aware interaction features"
   ],
   "training_data": {
-    "original_records": 4180,
+    "historical_loaded": 4180,
+    "historical_with_v3_features": 2249,
+    "historical_skipped_no_v3": 1931,
     "d1_defer_ready_tasks": 80,
-    "total": 4260
+    "d1_defer_ready_records": 300,
+    "actual_training_rows": 2549,
+    "per_source_accounting": {
+      "i3_5": {
+        "loaded": 1056,
+        "has_v3_features": 0,
+        "skipped_no_v3": 1056
+      },
+      "i3_28b": {
+        "loaded": 400,
+        "has_v3_features": 0,
+        "skipped_no_v3": 400
+      },
+      "i3_28c": {
+        "loaded": 475,
+        "has_v3_features": 0,
+        "skipped_no_v3": 475
+      },
+      "i3_30r": {
+        "loaded": 2249,
+        "has_v3_features": 2249,
+        "skipped_no_v3": 0
+      }
+    },
+    "d1_rollout_accounting": {
+      "tasks": 80,
+      "records_generated": 300,
+      "tasks_failed": 0
+    }
   },
   "ensemble": {
     "n_estimators": 20,
@@ -20,22 +52,24 @@
       "max_depth": 4
     },
     "lambda_lcb": 1.0,
-    "ood_threshold": 5.0
+    "ood_threshold": 5.0,
+    "ood_standardization": true
   },
   "performance": {
-    "train_r2": 0.9995057749376424,
-    "mean_uncertainty": 0.6289244402479974,
-    "in_support_rate": 0.9951089373054691
+    "train_r2": 0.997118938618524,
+    "mean_uncertainty": 1.00618370836873,
+    "in_support_rate": 0.3432718713220871
   },
   "feature_count": 59,
+  "heldout_evaluation": "NOT YET RUN \u2014 required before live use",
   "v3r2_comparison": {
     "v3r2_features": "V1 + V3 canonical + interactions",
-    "v3r3_features": "V3R2 + resource-aware interactions (steps_remaining, verify_remaining, verify_exhausted)",
+    "v3r3_features": "V3R2 + resource-aware interactions",
     "v3r2_model": "single GBT",
     "v3r3_model": "bootstrap ensemble of 20 GBTs",
     "v3r2_uncertainty": "none",
     "v3r3_uncertainty": "ensemble std + LCB",
     "v3r2_ood_gating": "none",
-    "v3r3_ood_gating": "KMeans support density"
+    "v3r3_ood_gating": "KMeans support density with StandardScaler"
   }
 }

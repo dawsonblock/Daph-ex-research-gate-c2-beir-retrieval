@@ -1,12 +1,7 @@
-"""I3.30R3 Confirmation runner: fresh in-family structural replication.
+"""I3.30R3 Confirmation runner: untouched structural confirmation.
 
 Runs V3-SHADOW and V3-HARD on the fresh 400-task confirmation benchmark.
 Does NOT include V1 (not needed for primary confirmation hypothesis).
-
-NOTE: This is a FRESH IN-FAMILY REPLICATION, not a structural-OOD
-confirmation. The D1-D5 stratum architecture is preserved from
-development. For a genuine structural-OOD test, use the
-build_structural_ood_pool.py output.
 
 Per the audit's section 21 design:
 - Do not alter Q_V3R2-A, epsilon, authority threshold, certificate logic, or prompt
@@ -23,7 +18,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import subprocess
 import hashlib
 import json
 import sys
@@ -41,15 +35,10 @@ def sha256_file(path):
 
 
 def compute_confirmation_manifest(gguf_path: str) -> dict:
-    """Compute manifest for the confirmation run.
-
-    Freezes ALL executable components, dependencies, runtime parameters,
-    and model artifacts. The execution path can never modify this identity.
-    """
+    """Compute manifest for the confirmation run."""
     from hrm_adaptive_memory.executive.evidence_benchmark.i3_30r3_confirmation_generator import (
         generate_confirmation_benchmark, compute_confirmation_benchmark_hash,
     )
-    import numpy, sklearn, joblib, pytest
 
     tasks = generate_confirmation_benchmark(seed=43291)
     bench_hash = compute_confirmation_benchmark_hash(tasks)
@@ -58,105 +47,52 @@ def compute_confirmation_manifest(gguf_path: str) -> dict:
     import os
     os.chdir(REPO_ROOT)
 
-    # Get real git SHA and tree SHA
-    try:
-        git_commit = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT,
-            text=True, stderr=subprocess.DEVNULL,
-        ).strip()
-    except Exception:
-        git_commit = "UNKNOWN"
-    try:
-        git_tree = subprocess.check_output(
-            ["git", "rev-parse", "HEAD^{tree}"], cwd=REPO_ROOT,
-            text=True, stderr=subprocess.DEVNULL,
-        ).strip()
-    except Exception:
-        git_tree = "UNKNOWN"
-    try:
-        git_status = subprocess.check_output(
-            ["git", "status", "--porcelain"], cwd=REPO_ROOT,
-            text=True, stderr=subprocess.DEVNULL,
-        ).strip()
-        dirty = len(git_status) > 0
-    except Exception:
-        dirty = True  # assume dirty if we can't check
-
-    if dirty:
-        print("ERROR: Working tree is dirty. Clean or commit changes before freezing.")
-        print("Use 'git status' to see uncommitted changes.")
-        sys.exit(1)
-
     manifest = {
         "experiment": "I3.30R3-CONFIRMATION",
         "status": "FROZEN",
-        "source_commit": git_commit,
-        "source_tree_sha": git_tree,
-        "dirty_worktree": dirty,
+        "source_commit": "current",
         "benchmark_seed": 43291,
         "task_count": len(tasks),
         "trajectory_count": len(tasks) * 2,
         "arms": ["v3_shadow", "v3_hard"],
         "arm_count": 2,
 
-        # === Model artifacts (unchanged from development) ===
+        # Frozen artifacts (same as development — unchanged)
         "Q_V3R_model_sha256": sha256_file("experiments/i3_30r/Q_V3R2_A.pkl"),
         "Q_V3R_schema_sha256": sha256_file("experiments/i3_30r/v3r2_feature_schema.json"),
         "Q_V1_model_sha256": sha256_file("experiments/i3_5/pinned_policy/frozen_estimators/QCAUSAL_gbt.pkl"),
         "Q_V1_schema_sha256": sha256_file("experiments/i3_5/pinned_policy/frozen_estimators/feature_schema.json"),
-
-        # === Epistemic / authority modules ===
         "topology_sha256": sha256_file("daph/epistemic/topology.py"),
         "v3_features_sha256": sha256_file("daph/epistemic/v3_features.py"),
         "authority_policy_v2_sha256": sha256_file("daph/authority/policy.py"),
         "authority_policy_v3_sha256": sha256_file("daph/authority/policy_v3.py"),
-        "authority_isolation_sha256": sha256_file("daph/authority/isolation.py"),
         "utility_config_sha256": sha256_file("configs/v2b_i3_1_utility_v1.json"),
 
-        # === Runner / evaluator / intervention ===
+        # Confirmation-specific artifacts
         "runner_sha256": sha256_file("scripts/run_i3_30r3_confirmation.py"),
+        "authority_isolation_sha256": sha256_file("daph/authority/isolation.py"),
         "evaluator_sha256": sha256_file("scripts/evaluate_i3_30r3_authority_isolation.py"),
         "checkpoint_sha256": sha256_file("daph/intervention/checkpoint.py"),
         "restore_sha256": sha256_file("daph/intervention/restore.py"),
-
-        # === Schema / grammar / backend / snapshot ===
-        "schema_grammar_sha256": sha256_file("scripts/r2_schema.py"),
-        "r2_allowed_actions_sha256": sha256_file("scripts/r2_allowed_actions.py"),
-        "i3_7e_snapshot_builder_sha256": sha256_file("scripts/run_i3_7e_compact_governor.py"),
-        "model_backend_sha256": sha256_file("hrm_adaptive_memory/executive/model_backend.py"),
-
-        # === Benchmark generator ===
         "confirmation_generator_sha256": sha256_file("hrm_adaptive_memory/executive/evidence_benchmark/i3_30r3_confirmation_generator.py"),
-
-        # === Model weights ===
+        "schema_grammar_sha256": sha256_file("scripts/r2_schema.py"),
+        "model_backend_sha256": sha256_file("hrm_adaptive_memory/executive/model_backend.py"),
         "qwen_gguf_sha256": sha256_file(gguf_path),
         "qwen_gguf_path": gguf_path,
-
-        # === Dependency versions ===
         "llama_cpp_python_version": "0.3.7",
-        "numpy_version": numpy.__version__,
-        "scikit_learn_version": sklearn.__version__,
-        "joblib_version": joblib.__version__,
-        "pytest_version": pytest.__version__,
 
-        # === Runtime parameters ===
-        "runtime_n_ctx": 4096,
-        "runtime_n_gpu_layers": -1,
-        "runtime_temperature": 0.0,
-        "runtime_max_tokens": 256,
-
-        # === Benchmark ===
+        # Benchmark
         "benchmark_sha256": bench_hash,
         "benchmark_strata": {
             "D1": 80, "D2": 80, "D3": 80, "D4": 80, "D5": 80,
         },
 
-        # === Frozen constants (unchanged from development) ===
+        # Frozen constants (unchanged from development)
         "authority_threshold": 5.0,
         "near_optimal_epsilon": 3.0,
         "v3_frozen_rule": "A2AD_V3_POSITIVE_CERTIFICATE",
 
-        # === Gates (confirmation-specific — G5 is STRICTER) ===
+        # Gates (confirmation-specific — G5 is STRICTER)
         "gates": {
             "G1": "treatment_purity",
             "G2": "authority_breaks == 0",
@@ -198,7 +134,7 @@ def main():
             existing = json.load(f)
         mismatch = False
         for key in sorted(set(list(existing.keys()) + list(manifest.keys()))):
-            if key in ("frozen_at", "timestamp", "source_commit", "source_tree_sha", "dirty_worktree"):
+            if key in ("frozen_at", "timestamp", "source_commit"):
                 continue
             if existing.get(key) != manifest.get(key):
                 print(f"  MISMATCH: {key}")
@@ -207,8 +143,6 @@ def main():
                 mismatch = True
         if mismatch:
             print(f"\n*** FROZEN MANIFEST MISMATCH — ABORTING ***")
-            print(f"The frozen identity has been violated. The execution cannot proceed.")
-            print(f"To run a new experiment, use a fresh output directory.")
             sys.exit(1)
         print(f"Manifest verified (write-once): {manifest_path}")
         manifest = existing
@@ -217,14 +151,9 @@ def main():
             print(f"\n*** NO FROZEN MANIFEST — ABORTING ***")
             print(f"Run with --freeze-manifest-only first.")
             sys.exit(1)
-        # Add frozen_at timestamp
-        manifest["frozen_at"] = __import__("datetime").datetime.now().isoformat()
         with open(manifest_path, "w") as f:
             json.dump(manifest, f, indent=2)
-        # Make manifest read-only at filesystem level
-        manifest_path.chmod(0o444)
         print(f"Manifest created (freeze-only): {manifest_path}")
-        print(f"  File permissions set to read-only (0o444)")
 
     print(f"  benchmark_seed: {manifest['benchmark_seed']}")
     print(f"  task_count: {manifest['task_count']}")

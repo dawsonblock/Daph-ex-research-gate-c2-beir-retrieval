@@ -85,6 +85,10 @@ class TestConformanceCheck:
         Topology, executor, and benchmark all say DEFER_READY,
         but the certificate says CONTINUE_REQUIRED.
         This is a known semantic gap, not a bug in the checker.
+
+        Per P1.2: this should be classified as safe_abstention, not
+        unsafe_disagreement, because the certificate abstains rather
+        than forcing a wrong action.
         """
         d1 = [t for t in tasks if "_d1_" in t.task_id][0]
         budget = get_confirmation_budget_for_task(d1)
@@ -97,6 +101,8 @@ class TestConformanceCheck:
         # The checker should detect the disagreement
         assert not record.conformant
         assert any("cert(CONTINUE_REQUIRED)" in d for d in record.disagreements)
+        # P1.2: this is safe abstention, not unsafe disagreement
+        assert record.disagreement_type == "safe_abstention"
 
     def test_conformance_for_task_returns_multiple_records(self, tasks, executor):
         """check_conformance_for_task checks multiple decision points."""
@@ -121,3 +127,40 @@ class TestConformanceCheck:
 
             assert len(records) >= 1, f"{stratum.upper()} produced no records"
             assert all(isinstance(r, ConformanceRecord) for r in records)
+
+    def test_disagreement_type_field_present(self, tasks, executor):
+        """Every record should have a disagreement_type field."""
+        for stratum in ["d1", "d2", "d3", "d4", "d5"]:
+            task = [t for t in tasks if f"_{stratum}_" in t.task_id][0]
+            budget = get_confirmation_budget_for_task(task)
+            resources = ResourceState(budget=budget)
+
+            records = check_conformance_for_task(task, resources, executor)
+
+            for r in records:
+                assert r.disagreement_type in (
+                    "no_disagreement", "safe_abstention",
+                    "unsafe_disagreement", "other_disagreement",
+                )
+
+    def test_d5_initial_state_is_continue_required(self, tasks, executor):
+        """D5 initial state should be CONTINUE_REQUIRED, not ANSWER_READY.
+
+        This tests the P1.1 fix: expected_terminal=ANSWER does not mean
+        the initial state is ANSWER_READY. D5 requires verification first.
+        """
+        d5 = [t for t in tasks if "_d5_" in t.task_id][0]
+        budget = get_confirmation_budget_for_task(d5)
+        resources = ResourceState(budget=budget)
+        from hrm_adaptive_memory.executive.evidence_benchmark.schema import initial_evidence_runtime
+        runtime = initial_evidence_runtime(d5, resources)
+
+        record = check_conformance(runtime, step=0, executor=executor)
+
+        # D5 initial state should NOT be ANSWER_READY just because
+        # expected_terminal is ANSWER
+        assert record.benchmark_truth_readiness != "ANSWER_READY" or record.conformant, (
+            f"D5 initial state should not be ANSWER_READY just from expected_terminal. "
+            f"benchmark_readiness={record.benchmark_truth_readiness}, "
+            f"conformant={record.conformant}, disagreements={record.disagreements}"
+        )

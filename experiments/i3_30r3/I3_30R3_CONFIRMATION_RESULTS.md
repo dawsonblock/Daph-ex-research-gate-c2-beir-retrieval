@@ -1,16 +1,29 @@
-# I3.30R3 CONFIRMATION: Untouched Structural Confirmation — Results
+# I3.30R3 CONFIRMATION: Fresh In-Family Structural Replication — Results
 
 **Date: 2026-08-30**
 **Branch: `i3.30r3-authority-isolation`**
+**Confirmed source: git tag `v3r2-confirmed` (commit `e924908`)**
 **Run: Local (Metal), Qwen2.5-7B-Instruct Q4_K_M GGUF**
 **GGUF SHA256: `65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423`**
 **Trajectories: 800/800 completed, 0 errors**
 
-## Status: CONFIRMATION PASS
+## Status: FRESH IN-FAMILY REPLICATION PASS
 
 The primary confirmatory hypothesis is confirmed:
 
-> **H1: E[U_HARD - U_SHADOW] > 0 on untouched structural benchmark**
+> **H1: E[U_HARD - U_SHADOW] > 0 on fresh in-family replication benchmark**
+
+### Important qualification
+
+This is a **fresh in-family structural replication**, not a structural-OOD
+confirmation. The D1-D5 stratum architecture is preserved from development.
+The benchmark uses a fresh seed, fresh task IDs, fresh natural-language
+domain templates, and different resource-budget configurations, but the
+underlying epistemic topology family is the same.
+
+A genuine structural-OOD test requires states with novel feature signatures
+not present in development. Such a pool has been built separately at
+`experiments/i3_30r3/structural_ood/` but has not yet been run.
 
 ## Primary Result
 
@@ -123,7 +136,7 @@ verified.
 
 ## Scientific Conclusion
 
-The development result is **confirmed** on an untouched structural benchmark:
+The development result is **replicated** on a fresh in-family benchmark:
 
 1. **Hard ANSWER authority is causally beneficial.** ATE=+18.24, CI [13.11, 23.84],
    44 rescues, 0 breaks. The CI lower bound (13.11) exceeds 0.
@@ -137,21 +150,45 @@ The development result is **confirmed** on an untouched structural benchmark:
 4. **0 breaks observed across 69 effective interventions.** Rule-of-three bound:
    3/69 ≈ 4.3% upper bound on break rate.
 
-5. **The effect generalizes.** The confirmation benchmark uses entirely new domain
-   templates, new budget configurations, and a fresh seed. The effect is not an
-   artifact of the development benchmark.
+5. **The effect replicates within the same epistemic topology family.** The
+   confirmation benchmark uses fresh domain templates, new budget configurations,
+   and a fresh seed, but preserves the D1-D5 stratum architecture. This is a
+   fresh in-family replication, not a structural-OOD test. Structural-OOD
+   generalization has not yet been tested.
 
 ## Recommended Claim Wording (Updated)
 
-> On the 400-task I3.30R3 confirmation benchmark (untouched structural
-> configurations, fresh seed 43291, 12 new domain templates), holding the
-> V3R2-A executive, Q model, advisory guidance, prompts, legal actions
-> and decoder treatment constant, enabling certificate-gated hard ANSWER
-> authority increased success from 64.75% to 75.75% and mean paired utility
-> by 18.24 [bootstrap 95% CI 13.11, 23.84], with 44 paired rescues and
-> zero observed paired breaks. Hard DEFER authority showed initial
-> positive evidence (7 effective interventions, all rescues, 0 breaks).
-> The result confirms the development finding on an unseen benchmark.
+> On a 400-task fresh in-family replication benchmark generated from the same
+> D1-D5 epistemic task family but with a different seed (43291), new clinical
+> surface domains, new task instances, and different resource-budget
+> configurations, holding the V3R2-A executive, Q model, advisory guidance,
+> prompts, legal actions and decoder treatment constant, enabling
+> certificate-gated hard ANSWER authority increased success from 64.75% to
+> 75.75% and mean paired utility by 18.24 [bootstrap 95% CI 13.11, 23.84],
+> with 44 paired rescues and zero observed paired breaks. Hard DEFER authority
+> showed initial positive evidence (7 effective interventions, all rescues,
+> 0 breaks). The result replicates the development finding in-family.
+> Structural-OOD and cross-model generalization remain untested.
+
+## Scientific Status
+
+```
+I3.30R3 ATTEMPT 2          VALID DEVELOPMENT CAUSAL RESULT
+I3.30R3 CONFIRMATION       VALID FRESH IN-FAMILY REPLICATION
+                           NOT TRUE STRUCTURAL-OOD CONFIRMATION
+ANSWER AUTHORITY           REPLICATED POSITIVE EFFECT
+DEFER AUTHORITY            INITIAL POSITIVE EVIDENCE, n=7 effective interventions
+STRUCTURAL GENERALIZATION  NOT YET ESTABLISHED
+CROSS-MODEL GENERALIZATION NOT ESTABLISHED
+```
+
+## Provenance Note
+
+The confirmed V3R2 source tree is preserved at git tag `v3r2-confirmed`
+(commit `e924908`). The current working source tree contains V3R3
+development modifications to `policy_v3.py` and `restore.py` that are
+NOT part of the confirmed executive. To verify bundle self-consistency,
+run `python scripts/verify_confirmation_bundle.py`.
 
 ## Files
 

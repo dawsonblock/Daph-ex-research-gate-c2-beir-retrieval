@@ -1,0 +1,70 @@
+{
+  "status": "BUILT",
+  "description": "Structural-OOD confirmation pool with explicit feature-signature exclusion from development",
+  "development_signatures": 129,
+  "candidates_generated": 160,
+  "accepted_structurally_novel": 120,
+  "rejected_overlap": 40,
+  "rejected_no_sig": 0,
+  "far_ood_threshold": 3.0,
+  "far_ood_count": 120,
+  "by_category": {
+    "OOD_4HYP_MIXED": {
+      "total": 20,
+      "accepted": 20,
+      "far_ood": 20
+    },
+    "OOD_5HYP_ALL_UNVERIFIED": {
+      "total": 20,
+      "accepted": 20,
+      "far_ood": 20
+    },
+    "OOD_6HYP_PARTIAL_VERIFY": {
+      "total": 20,
+      "accepted": 20,
+      "far_ood": 20
+    },
+    "OOD_4HYP_ALL_VERIFIED_UNIQUE": {
+      "total": 20,
+      "accepted": 0,
+      "far_ood": 0
+    },
+    "OOD_4HYP_COMPETING_VERIFIED_DEFER": {
+      "total": 20,
+      "accepted": 20,
+      "far_ood": 20
+    },
+    "OOD_5HYP_3ELIM_UNIQUE": {
+      "total": 20,
+      "accepted": 20,
+      "far_ood": 20
+    },
+    "OOD_4HYP_MIXED_SEARCH": {
+      "total": 20,
+      "accepted": 0,
+      "far_ood": 0
+    },
+    "OOD_6HYP_5ELIM_UNIQUE": {
+      "total": 20,
+      "accepted": 20,
+      "far_ood": 20
+    }
+  },
+  "distance_stats": {
+    "min": 4.682087163401557,
+    "max": 6.410161717441879,
+    "median": 5.468861995007687,
+    "mean": 5.401589617130791
+  },
+  "novelty_criteria": [
+    "Structural signature not in development signatures",
+    "Nearest-neighbor distance >= 3.0 in standardized feature space (for far-OOD subset)"
+  ],
+  "novel_structural_features": [
+    "4-6 hypotheses (development used 2-3)",
+    "5 eliminated hypotheses (development had max 2)",
+    "4-way competing verified support (development had max 3-way)",
+    "6-hypothesis all-unverified topology",
+    "Mixed verified/unverified with search available"
+  ]
+}

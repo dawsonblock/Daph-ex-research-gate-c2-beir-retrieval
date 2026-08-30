@@ -103,6 +103,14 @@ class ConformanceRecord:
     conformant: bool
     disagreements: tuple[str, ...]
 
+    # Disagreement classification (P1.2: separate safe abstention from unsafe)
+    # safe_abstention: certificate abstains (CONTINUE_REQUIRED) when topology
+    #   says terminal — conservative, not unsafe
+    # unsafe_disagreement: certificate forces a terminal action that disagrees
+    #   with topology/executor/benchmark — potentially unsafe
+    # no_disagreement: all components agree
+    disagreement_type: str  # "no_disagreement" / "safe_abstention" / "unsafe_disagreement"
+
     def as_dict(self) -> dict:
         return {
             "task_id": self.task_id,
@@ -131,6 +139,7 @@ class ConformanceRecord:
             "has_hidden_evidence": self.has_hidden_evidence,
             "conformant": self.conformant,
             "disagreements": list(self.disagreements),
+            "disagreement_type": self.disagreement_type,
         }
 
 
@@ -267,9 +276,67 @@ def _executor_truth(
     return answer_success, answer_terminal, defer_success, defer_terminal, readiness
 
 
-def _benchmark_truth(task: EvidenceTask) -> str:
-    """Derive readiness from benchmark ground truth."""
+def _benchmark_truth(task: EvidenceTask, runtime: EvidenceRuntime) -> str:
+    """Derive state-conditioned readiness from benchmark ground truth.
+
+    CRITICAL: task.expected_terminal is the EVENTUAL correct terminal
+    action for the whole task. It is NOT the same as the current state's
+    readiness. For example, a D5 task may have expected_terminal=ANSWER
+    but the initial state is CONTINUE_REQUIRED because the discriminator
+    hasn't been verified yet.
+
+    This function checks the oracle_resolution_path to determine whether
+    the current state is ready for the expected terminal action, or
+    whether continuation is still needed.
+
+    Args:
+        task: The evidence task
+        runtime: The current runtime state
+
+    Returns:
+        State-conditioned readiness: ANSWER_READY / DEFER_READY / CONTINUE_REQUIRED
+    """
     expected = task.expected_terminal
+    oracle_path = getattr(task, 'oracle_resolution_path', ())
+
+    # If the oracle path starts with the expected terminal action,
+    # the state is ready for that action NOW.
+    if oracle_path:
+        first_step = oracle_path[0]
+        if isinstance(first_step, str):
+            if first_step.startswith("ANSWER") or first_step == "ANSWER":
+                return "ANSWER_READY"
+            if first_step.startswith("DEFER") or first_step == "DEFER":
+                return "DEFER_READY"
+            # VERIFY, RETRIEVE, SEARCH_MORE, REASON_MORE → continuation needed
+            return "CONTINUE_REQUIRED"
+
+    # Fallback: check if all evidence is verified and the expected
+    # terminal action would succeed from this state
+    visible = runtime.visible_evidence
+    all_verified = all(
+        ev.verification_state in (VerificationState.SUFFICIENT, VerificationState.FALSIFIED)
+        for ev in visible
+    ) and len(visible) > 0
+
+    if all_verified:
+        if expected == DecisionAction.ANSWER:
+            return "ANSWER_READY"
+        if expected == DecisionAction.DEFER:
+            return "DEFER_READY"
+
+    # If not all verified and there's unverified evidence, continuation may help
+    has_unverified = any(
+        ev.verification_state == VerificationState.UNVERIFIED
+        for ev in visible
+    )
+    rs = runtime.resources.as_dict()
+    can_verify = rs.get("verification_calls_remaining", 0) > 0 and has_unverified
+
+    if can_verify:
+        return "CONTINUE_REQUIRED"
+
+    # No continuation possible — state is terminal-ready
     if expected == DecisionAction.ANSWER:
         return "ANSWER_READY"
     if expected == DecisionAction.DEFER:
@@ -361,7 +428,7 @@ def check_conformance(
         _executor_truth(runtime, executor)
 
     # 4. Benchmark truth
-    benchmark_readiness = _benchmark_truth(task)
+    benchmark_readiness = _benchmark_truth(task, runtime)
     correct_hyp = task.correct_hypothesis_id if hasattr(task, 'correct_hypothesis_id') else None
 
     # 5. Causal best action
@@ -414,6 +481,28 @@ def check_conformance(
 
     conformant = len(disagreements) == 0
 
+    # Classify disagreement type (P1.2)
+    # safe_abstention: certificate says CONTINUE_REQUIRED when others say terminal
+    #   — conservative, not unsafe
+    # unsafe_disagreement: certificate forces a terminal action that disagrees
+    #   with topology/executor/benchmark — potentially unsafe
+    if conformant:
+        disagreement_type = "no_disagreement"
+    elif cert_readiness == "CONTINUE_REQUIRED" and (
+        topology_readiness != "CONTINUE_REQUIRED"
+        or executor_readiness != "CONTINUE_REQUIRED"
+        or benchmark_readiness != "CONTINUE_REQUIRED"
+    ):
+        disagreement_type = "safe_abstention"
+    elif cert_readiness != "CONTINUE_REQUIRED" and (
+        cert_readiness != topology_readiness
+        or cert_readiness != executor_readiness
+        or cert_readiness != benchmark_readiness
+    ):
+        disagreement_type = "unsafe_disagreement"
+    else:
+        disagreement_type = "other_disagreement"
+
     return ConformanceRecord(
         task_id=task.task_id,
         step=step,
@@ -441,6 +530,7 @@ def check_conformance(
         has_hidden_evidence=has_hidden,
         conformant=conformant,
         disagreements=tuple(disagreements),
+        disagreement_type=disagreement_type,
     )
 
 

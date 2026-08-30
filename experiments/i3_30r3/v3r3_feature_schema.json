@@ -69,8 +69,47 @@
     "n_estimators": 200,
     "max_depth": 4
   },
-  "training_records": 4180,
-  "d1_defer_ready_tasks": 80,
-  "train_r2": 0.9995057749376424,
-  "mean_uncertainty": 0.6289244402479974
+  "training_rows_actual": 2549,
+  "training_rows_declared": 2549,
+  "accounting": {
+    "historical_sources": {
+      "i3_5": {
+        "loaded": 1056,
+        "has_v3_features": 0,
+        "skipped_no_v3": 1056
+      },
+      "i3_28b": {
+        "loaded": 400,
+        "has_v3_features": 0,
+        "skipped_no_v3": 400
+      },
+      "i3_28c": {
+        "loaded": 475,
+        "has_v3_features": 0,
+        "skipped_no_v3": 475
+      },
+      "i3_30r": {
+        "loaded": 2249,
+        "has_v3_features": 2249,
+        "skipped_no_v3": 0
+      }
+    },
+    "historical_with_v3": 2249,
+    "historical_skipped": 1931,
+    "d1_defer_ready": {
+      "tasks": 80,
+      "records_generated": 300,
+      "tasks_failed": 0
+    },
+    "included_by_source": {
+      "historical": 2249,
+      "d1_defer_ready": 300
+    },
+    "skipped_by_source": {
+      "historical_no_v3": 1931
+    }
+  },
+  "ood_standardization": true,
+  "train_r2": 0.997118938618524,
+  "mean_uncertainty": 1.00618370836873
 }

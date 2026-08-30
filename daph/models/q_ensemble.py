@@ -22,6 +22,7 @@ from typing import Any, Sequence
 
 import numpy as np
 from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.preprocessing import StandardScaler
 
 
 @dataclass
@@ -36,6 +37,7 @@ class QEnsemble:
         ood_threshold: Maximum distance for in-support classification
         support_centroids: Training cluster centroids for OOD detection
         support_labels: Cluster labels for each training sample
+        scaler: StandardScaler used to normalize features before OOD distance
     """
     models: list[GradientBoostingRegressor]
     feature_keys: list[str]
@@ -44,6 +46,7 @@ class QEnsemble:
     ood_threshold: float
     support_centroids: np.ndarray | None
     support_labels: np.ndarray | None
+    scaler: Any = None  # StandardScaler for OOD distance normalization
 
     def predict_mean(self, X: np.ndarray) -> np.ndarray:
         """Mean prediction across ensemble."""
@@ -64,15 +67,24 @@ class QEnsemble:
         """Compute support-density score for each sample.
 
         Returns the negative mean distance to the k nearest training
-        centroids. Higher (closer to 0) = more in-support.
+        centroids in STANDARDIZED feature space. Higher (closer to 0)
+        = more in-support.
+
+        Features are standardized using the training-time StandardScaler
+        before computing Euclidean distance, so all features contribute
+        on a comparable scale.
         """
         if self.support_centroids is None:
             return np.zeros(len(X))
 
+        # Standardize features before distance computation
+        X_std = self.scaler.transform(X) if self.scaler is not None else X
+        centroids_std = self.scaler.transform(self.support_centroids) if self.scaler is not None else self.support_centroids
+
         from sklearn.metrics.pairwise import euclidean_distances
-        dists = euclidean_distances(X, self.support_centroids)
+        dists = euclidean_distances(X_std, centroids_std)
         # Mean distance to 5 nearest centroids
-        k = min(5, len(self.support_centroids))
+        k = min(5, len(centroids_std))
         nearest = np.sort(dists, axis=1)[:, :k]
         return -nearest.mean(axis=1)
 
@@ -139,6 +151,7 @@ def train_q_ensemble(
     ood_threshold: float = 5.0,
     n_support_clusters: int = 50,
     random_state: int = 42,
+    use_standardization: bool = True,
 ) -> QEnsemble:
     """Train a bootstrap ensemble of GBT regressors.
 
@@ -149,9 +162,10 @@ def train_q_ensemble(
         n_estimators: Number of bootstrap models
         gbt_params: GBT hyperparameters
         lambda_lcb: LCB penalty coefficient
-        ood_threshold: OOD distance threshold
+        ood_threshold: OOD distance threshold (in standardized space)
         n_support_clusters: Number of clusters for support estimation
         random_state: Random seed
+        use_standardization: If True, standardize features before OOD distance
 
     Returns:
         Fitted QEnsemble
@@ -161,6 +175,11 @@ def train_q_ensemble(
 
     rng = np.random.RandomState(random_state)
     n_samples = len(X_train)
+
+    # Fit StandardScaler for OOD distance normalization
+    scaler = StandardScaler() if use_standardization else None
+    if scaler is not None:
+        scaler.fit(X_train)
 
     models = []
     for i in range(n_estimators):
@@ -174,12 +193,14 @@ def train_q_ensemble(
         model.fit(X_boot, y_boot)
         models.append(model)
 
-    # Compute support centroids using KMeans
+    # Compute support centroids using KMeans on standardized features
     from sklearn.cluster import KMeans
+    X_for_clustering = scaler.transform(X_train) if scaler is not None else X_train
     n_clusters = min(n_support_clusters, len(X_train))
     kmeans = KMeans(n_clusters=n_clusters, random_state=random_state, n_init=10)
-    kmeans.fit(X_train)
-    support_centroids = kmeans.cluster_centers_
+    kmeans.fit(X_for_clustering)
+    # Store centroids in ORIGINAL space (support_density will standardize)
+    support_centroids = scaler.inverse_transform(kmeans.cluster_centers_) if scaler is not None else kmeans.cluster_centers_
     support_labels = kmeans.labels_
 
     return QEnsemble(
@@ -190,6 +211,7 @@ def train_q_ensemble(
         ood_threshold=ood_threshold,
         support_centroids=support_centroids,
         support_labels=support_labels,
+        scaler=scaler,
     )
 
 
