@@ -15,3 +15,6 @@ experiments/v2b_i3_5/oracle_tables/*.gz
 experiments/v2b_i3_3/oracle_tables/*.gz
 
 .cache/colab/
+experiments/i3_30r3/structural_ood_run/trajectories_*.jsonl
+experiments/i3_30r3/structural_ood_run/errors.jsonl
+experiments/i3_30r3/structural_ood_run/authority_events.jsonl
