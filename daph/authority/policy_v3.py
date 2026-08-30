@@ -132,18 +132,16 @@ def defer_structural_certificate(s: StructuralStateV3) -> bool:
        no unresolved competing verified support exists, OR
     2. Verification eliminated all but <=1 viable hypothesis (exhaustion), AND
        no unresolved competing verified support exists, OR
-    3. Resource exhaustion with no verified evidence (legacy D1 pattern).
+    3. Resource exhaustion with no verified evidence (legacy D1 pattern), OR
+    4. Exhausted ambiguity: all evidence verified, multiple hypotheses have
+       verified support (unresolvable competition), AND no continuation
+       can resolve (no verify budget, no retrieve, no search available).
 
     Per EPISTEMIC_SEMANTICS_V1.md §6.2, DEFER_READY requires that ANSWER_READY
     is false AND no admissible continuation can resolve the state.
     The certificate checks the epistemic part; resource state is checked
     separately by the authority decision logic.
     """
-    # Defense-in-depth: never certify DEFER when there's unresolved competition
-    # that could be resolved by continuation (this is CONTINUE_REQUIRED, not DEFER)
-    if s.has_verified_unresolved_competition:
-        return False
-
     # Primary certificate: unique verified support with DEFER action.
     # Per §6.2, DEFER_READY requires no admissible continuation can resolve.
     # If verify budget remains AND unverified evidence exists, the state
@@ -158,6 +156,17 @@ def defer_structural_certificate(s: StructuralStateV3) -> bool:
 
     # Elimination certificate: verification eliminated hypotheses, few viable remain
     if s.n_eliminated_hypotheses > 0 and s.n_viable_hypotheses <= 1:
+        return True
+
+    # Exhausted ambiguity certificate (P5): all evidence is verified,
+    # multiple hypotheses have verified support (genuine unresolvable
+    # competition), AND no continuation can resolve. This is DEFER_READY
+    # because the competition is real but cannot be resolved by any
+    # admissible action.
+    if (s.has_verified_unresolved_competition
+        and s.all_evidence_verified
+        and s.verify_budget_exhausted
+        and not s.can_verify):
         return True
 
     # Legacy D1 certificate: resource exhaustion, no verified evidence,
