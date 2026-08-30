@@ -159,9 +159,11 @@ def main():
     if manifest_path.exists():
         with open(manifest_path) as f:
             existing = json.load(f)
-        # Verify consistency (skip timestamp fields)
+        # Verify consistency (skip timestamp and commit fields — commit
+        # changes when we commit the manifest itself)
+        skip_keys = ("frozen_at", "timestamp", "source_commit", "dirty_worktree")
         for key, val in manifest.items():
-            if key in ("frozen_at", "timestamp"):
+            if key in skip_keys:
                 continue
             if key in existing and existing[key] != val:
                 print(f"ERROR: Manifest mismatch on {key}")
