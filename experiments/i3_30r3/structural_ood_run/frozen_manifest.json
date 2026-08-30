@@ -1,7 +1,7 @@
 {
   "experiment": "I3.30R3-STRUCTURAL-OOD",
   "status": "FROZEN",
-  "source_commit": "f2e297ad53c092568f711b0d4cf6b728c95d4db0",
+  "source_commit": "efff0d0d7eca8b33c88cfecaac6f44baabc42722",
   "dirty_worktree": true,
   "description": "Structural-OOD confirmation using confirmed V3R2 executive on novel-structure tasks",
   "ood_pool_count": 120,
@@ -46,5 +46,5 @@
   "joblib_version": "1.5.3",
   "pytest_version": "8.4.2",
   "llama_cpp_python_version": "0.3.32",
-  "frozen_at": "2026-08-30T14:44:10.457944"
+  "frozen_at": "2026-08-30T14:44:38.659492"
 }
