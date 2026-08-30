@@ -35,10 +35,15 @@ def sha256_file(path):
 
 
 def compute_confirmation_manifest(gguf_path: str) -> dict:
-    """Compute manifest for the confirmation run."""
+    """Compute manifest for the confirmation run.
+
+    Freezes ALL executable components, dependencies, runtime parameters,
+    and model artifacts. The execution path can never modify this identity.
+    """
     from hrm_adaptive_memory.executive.evidence_benchmark.i3_30r3_confirmation_generator import (
         generate_confirmation_benchmark, compute_confirmation_benchmark_hash,
     )
+    import numpy, sklearn, joblib, pytest
 
     tasks = generate_confirmation_benchmark(seed=43291)
     bench_hash = compute_confirmation_benchmark_hash(tasks)
@@ -57,42 +62,64 @@ def compute_confirmation_manifest(gguf_path: str) -> dict:
         "arms": ["v3_shadow", "v3_hard"],
         "arm_count": 2,
 
-        # Frozen artifacts (same as development — unchanged)
+        # === Model artifacts (unchanged from development) ===
         "Q_V3R_model_sha256": sha256_file("experiments/i3_30r/Q_V3R2_A.pkl"),
         "Q_V3R_schema_sha256": sha256_file("experiments/i3_30r/v3r2_feature_schema.json"),
         "Q_V1_model_sha256": sha256_file("experiments/i3_5/pinned_policy/frozen_estimators/QCAUSAL_gbt.pkl"),
         "Q_V1_schema_sha256": sha256_file("experiments/i3_5/pinned_policy/frozen_estimators/feature_schema.json"),
+
+        # === Epistemic / authority modules ===
         "topology_sha256": sha256_file("daph/epistemic/topology.py"),
         "v3_features_sha256": sha256_file("daph/epistemic/v3_features.py"),
         "authority_policy_v2_sha256": sha256_file("daph/authority/policy.py"),
         "authority_policy_v3_sha256": sha256_file("daph/authority/policy_v3.py"),
+        "authority_isolation_sha256": sha256_file("daph/authority/isolation.py"),
         "utility_config_sha256": sha256_file("configs/v2b_i3_1_utility_v1.json"),
 
-        # Confirmation-specific artifacts
+        # === Runner / evaluator / intervention ===
         "runner_sha256": sha256_file("scripts/run_i3_30r3_confirmation.py"),
-        "authority_isolation_sha256": sha256_file("daph/authority/isolation.py"),
         "evaluator_sha256": sha256_file("scripts/evaluate_i3_30r3_authority_isolation.py"),
         "checkpoint_sha256": sha256_file("daph/intervention/checkpoint.py"),
         "restore_sha256": sha256_file("daph/intervention/restore.py"),
-        "confirmation_generator_sha256": sha256_file("hrm_adaptive_memory/executive/evidence_benchmark/i3_30r3_confirmation_generator.py"),
+
+        # === Schema / grammar / backend / snapshot ===
         "schema_grammar_sha256": sha256_file("scripts/r2_schema.py"),
+        "r2_allowed_actions_sha256": sha256_file("scripts/r2_allowed_actions.py"),
+        "i3_7e_snapshot_builder_sha256": sha256_file("scripts/run_i3_7e_compact_governor.py"),
         "model_backend_sha256": sha256_file("hrm_adaptive_memory/executive/model_backend.py"),
+
+        # === Benchmark generator ===
+        "confirmation_generator_sha256": sha256_file("hrm_adaptive_memory/executive/evidence_benchmark/i3_30r3_confirmation_generator.py"),
+
+        # === Model weights ===
         "qwen_gguf_sha256": sha256_file(gguf_path),
         "qwen_gguf_path": gguf_path,
-        "llama_cpp_python_version": "0.3.7",
 
-        # Benchmark
+        # === Dependency versions ===
+        "llama_cpp_python_version": "0.3.7",
+        "numpy_version": numpy.__version__,
+        "scikit_learn_version": sklearn.__version__,
+        "joblib_version": joblib.__version__,
+        "pytest_version": pytest.__version__,
+
+        # === Runtime parameters ===
+        "runtime_n_ctx": 4096,
+        "runtime_n_gpu_layers": -1,
+        "runtime_temperature": 0.0,
+        "runtime_max_tokens": 256,
+
+        # === Benchmark ===
         "benchmark_sha256": bench_hash,
         "benchmark_strata": {
             "D1": 80, "D2": 80, "D3": 80, "D4": 80, "D5": 80,
         },
 
-        # Frozen constants (unchanged from development)
+        # === Frozen constants (unchanged from development) ===
         "authority_threshold": 5.0,
         "near_optimal_epsilon": 3.0,
         "v3_frozen_rule": "A2AD_V3_POSITIVE_CERTIFICATE",
 
-        # Gates (confirmation-specific — G5 is STRICTER)
+        # === Gates (confirmation-specific — G5 is STRICTER) ===
         "gates": {
             "G1": "treatment_purity",
             "G2": "authority_breaks == 0",
@@ -143,6 +170,8 @@ def main():
                 mismatch = True
         if mismatch:
             print(f"\n*** FROZEN MANIFEST MISMATCH — ABORTING ***")
+            print(f"The frozen identity has been violated. The execution cannot proceed.")
+            print(f"To run a new experiment, use a fresh output directory.")
             sys.exit(1)
         print(f"Manifest verified (write-once): {manifest_path}")
         manifest = existing
@@ -151,9 +180,14 @@ def main():
             print(f"\n*** NO FROZEN MANIFEST — ABORTING ***")
             print(f"Run with --freeze-manifest-only first.")
             sys.exit(1)
+        # Add frozen_at timestamp
+        manifest["frozen_at"] = __import__("datetime").datetime.now().isoformat()
         with open(manifest_path, "w") as f:
             json.dump(manifest, f, indent=2)
+        # Make manifest read-only at filesystem level
+        manifest_path.chmod(0o444)
         print(f"Manifest created (freeze-only): {manifest_path}")
+        print(f"  File permissions set to read-only (0o444)")
 
     print(f"  benchmark_seed: {manifest['benchmark_seed']}")
     print(f"  task_count: {manifest['task_count']}")

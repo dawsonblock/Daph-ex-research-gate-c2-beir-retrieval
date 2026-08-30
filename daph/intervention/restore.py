@@ -130,7 +130,7 @@ def _reconstruct_budget(resources_dict: dict) -> ResourceBudget:
         max_retrieval_calls=max(max_retrieval, 0),
         max_search_calls=max(max_search, 0),
         max_verification_calls=max(max_verify, 0),
-        max_reasoning_tokens=max(max_reasoning, 1),
+        max_reasoning_tokens=max(max_reasoning, 0),
         max_elapsed_ms=max(max_elapsed, 1),
     )
 
