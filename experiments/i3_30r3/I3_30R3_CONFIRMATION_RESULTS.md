@@ -131,8 +131,8 @@ The development result is **confirmed** on an untouched structural benchmark:
 2. **Hard DEFER authority shows initial evidence of benefit.** 7 effective DEFER
    interventions, all rescues, 0 breaks. Sample is small but positive.
 
-3. **The LLM systematically under-answers on unseen tasks.** 62/178 certificate-positive
-   events (34.8%) produced LLM disagreement, all corrected by hard authority.
+3. **The LLM systematically under-answers on unseen tasks.** 69/178 certificate-positive
+   events (38.8%) produced LLM disagreement, all corrected by hard authority.
 
 4. **0 breaks observed across 69 effective interventions.** Rule-of-three bound:
    3/69 ≈ 4.3% upper bound on break rate.
@@ -147,7 +147,7 @@ The development result is **confirmed** on an untouched structural benchmark:
 > configurations, fresh seed 43291, 12 new domain templates), holding the
 > V3R2-A executive, Q model, advisory guidance, prompts, legal actions
 > and decoder treatment constant, enabling certificate-gated hard ANSWER
-> authority increased success from 62.2% to 77.2% and mean paired utility
+> authority increased success from 64.75% to 75.75% and mean paired utility
 > by 18.24 [bootstrap 95% CI 13.11, 23.84], with 44 paired rescues and
 > zero observed paired breaks. Hard DEFER authority showed initial
 > positive evidence (7 effective interventions, all rescues, 0 breaks).
