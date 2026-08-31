@@ -79,17 +79,19 @@ def build_intervention_dataset(records):
         is_harmful = 1 if delta_u < 0 else 0
 
         # Features for the intervention risk model
+        # ONLY pre-decision features — no post-hoc utility or outcome
         features = extract_features(best_record, {})
-        # Add intervention-specific features
-        features["delta_u"] = delta_u
+        # Add intervention-specific features (pre-decision only)
         features["executive_action"] = best_record["action_type"]
         features["base_action"] = base_record["action_type"]
-        features["executive_utility"] = best_utility
-        features["base_utility"] = base_record["utility"]
         features["topology_n_supported"] = best_record.get("topo_n_supported", 0)
         features["topology_n_contradicted"] = best_record.get("topo_n_contradicted", 0)
         features["topology_has_competition"] = 1.0 if best_record.get("topo_has_competition") else 0.0
         features["topology_unverified_exists"] = 1.0 if best_record.get("topo_unverified_exists") else 0.0
+        # Predicted delta Q (from model, not actual utility)
+        features["pred_delta_q"] = compute_q_mb(best_record) - compute_q_mb(base_record)
+        # Model uncertainty proxy (ensemble spread would go here)
+        features["sigma_q"] = 0.1  # Placeholder
 
         intervention_records.append({
             "group_id": gid,
