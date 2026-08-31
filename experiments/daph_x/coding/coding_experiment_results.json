@@ -1,0 +1,947 @@
+{
+  "experiment": "daph_x_coding_agent",
+  "model": "Qwen2.5-7B-Instruct-Q4_K_M",
+  "model_hash": "2cd42281a9307345",
+  "n_tasks": 20,
+  "n_candidates": 4,
+  "n_disagreements": 12,
+  "n_rescues": 0,
+  "n_breaks": 1,
+  "n_ties": 11,
+  "force_precision": 0.0,
+  "break_rate": 0.08333333333333333,
+  "results": [
+    {
+      "task_id": "code_007_max_subarray",
+      "description": "Find the maximum sum of a contiguous subarray (Kadane's algorithm)",
+      "difficulty": "hard",
+      "disagreement": false,
+      "base_candidate_id": "code_007_max_subarray_c0",
+      "daphx_candidate_id": "code_007_max_subarray_c0",
+      "base_utility": 99.7397901249933,
+      "daphx_utility": 99.7397901249933,
+      "delta_u": 0.0,
+      "base_tests": 6,
+      "daphx_tests": 6,
+      "total_tests": 6,
+      "base_error": null,
+      "daphx_error": null,
+      "rankings": [
+        {
+          "candidate_id": "code_007_max_subarray_c0",
+          "q_mb": 73.0,
+          "q_res": -14.57550180602612,
+          "q_x": 58.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_007_max_subarray_c1",
+          "q_mb": 73.0,
+          "q_res": -14.57550180602612,
+          "q_x": 58.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_007_max_subarray_c3",
+          "q_mb": 73.0,
+          "q_res": -14.57550180602612,
+          "q_x": 58.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_007_max_subarray_c2",
+          "q_mb": 71.0,
+          "q_res": -14.57550180602612,
+          "q_x": 56.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_015_valid_number",
+      "description": "Check if a string is a valid number (integer or decimal)",
+      "difficulty": "hard",
+      "disagreement": true,
+      "base_candidate_id": "code_015_valid_number_c0",
+      "daphx_candidate_id": "code_015_valid_number_c2",
+      "base_utility": 99.7345346660004,
+      "daphx_utility": 99.87906070900499,
+      "delta_u": 0.14452604300458916,
+      "base_tests": 9,
+      "daphx_tests": 9,
+      "total_tests": 9,
+      "base_error": null,
+      "daphx_error": null,
+      "outcome": "TIE",
+      "rankings": [
+        {
+          "candidate_id": "code_015_valid_number_c2",
+          "q_mb": 96.0,
+          "q_res": -14.57550180602612,
+          "q_x": 81.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_015_valid_number_c0",
+          "q_mb": 91.0,
+          "q_res": -14.57550180602612,
+          "q_x": 76.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_015_valid_number_c1",
+          "q_mb": 91.0,
+          "q_res": -14.57550180602612,
+          "q_x": 76.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_015_valid_number_c3",
+          "q_mb": 76.0,
+          "q_res": -14.57550180602612,
+          "q_x": 61.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_021_trap_rain_water",
+      "description": "Compute how much rain water can be trapped between bars of given heights",
+      "difficulty": "hard",
+      "disagreement": false,
+      "base_candidate_id": "code_021_trap_rain_water_c0",
+      "daphx_candidate_id": "code_021_trap_rain_water_c0",
+      "base_utility": 99.73884295800235,
+      "daphx_utility": 99.73884295800235,
+      "delta_u": 0.0,
+      "base_tests": 8,
+      "daphx_tests": 8,
+      "total_tests": 8,
+      "base_error": null,
+      "daphx_error": null,
+      "rankings": [
+        {
+          "candidate_id": "code_021_trap_rain_water_c0",
+          "q_mb": 91.0,
+          "q_res": -14.57550180602612,
+          "q_x": 76.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_021_trap_rain_water_c1",
+          "q_mb": 91.0,
+          "q_res": -14.57550180602612,
+          "q_x": 76.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_021_trap_rain_water_c2",
+          "q_mb": 91.0,
+          "q_res": -14.57550180602612,
+          "q_x": 76.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_021_trap_rain_water_c3",
+          "q_mb": 91.0,
+          "q_res": -14.57550180602612,
+          "q_x": 76.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_022_longest_palindrome_substring",
+      "description": "Find the longest palindromic substring in a given string",
+      "difficulty": "hard",
+      "disagreement": false,
+      "base_candidate_id": "code_022_longest_palindrome_substring_c0",
+      "daphx_candidate_id": "code_022_longest_palindrome_substring_c0",
+      "base_utility": 66.22466616665284,
+      "daphx_utility": 66.22466616665284,
+      "delta_u": 0.0,
+      "base_tests": 4,
+      "daphx_tests": 4,
+      "total_tests": 6,
+      "base_error": null,
+      "daphx_error": null,
+      "rankings": [
+        {
+          "candidate_id": "code_022_longest_palindrome_substring_c0",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_022_longest_palindrome_substring_c1",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_022_longest_palindrome_substring_c2",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_022_longest_palindrome_substring_c3",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_023_rotate_matrix",
+      "description": "Rotate an n x n 2D matrix 90 degrees clockwise in-place",
+      "difficulty": "hard",
+      "disagreement": true,
+      "base_candidate_id": "code_023_rotate_matrix_c0",
+      "daphx_candidate_id": "code_023_rotate_matrix_c1",
+      "base_utility": 99.6369997090078,
+      "daphx_utility": 99.75765733301523,
+      "delta_u": 0.12065762400743552,
+      "base_tests": 3,
+      "daphx_tests": 3,
+      "total_tests": 3,
+      "base_error": null,
+      "daphx_error": null,
+      "outcome": "TIE",
+      "rankings": [
+        {
+          "candidate_id": "code_023_rotate_matrix_c1",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_023_rotate_matrix_c3",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_023_rotate_matrix_c0",
+          "q_mb": 73.0,
+          "q_res": -14.57550180602612,
+          "q_x": 58.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_023_rotate_matrix_c2",
+          "q_mb": 73.0,
+          "q_res": -14.57550180602612,
+          "q_x": 58.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_024_spiral_order",
+      "description": "Return all elements of a matrix in spiral order",
+      "difficulty": "hard",
+      "disagreement": true,
+      "base_candidate_id": "code_024_spiral_order_c0",
+      "daphx_candidate_id": "code_024_spiral_order_c1",
+      "base_utility": 99.61969516598037,
+      "daphx_utility": 99.8088788750174,
+      "delta_u": 0.18918370903702453,
+      "base_tests": 6,
+      "daphx_tests": 6,
+      "total_tests": 6,
+      "base_error": null,
+      "daphx_error": null,
+      "outcome": "TIE",
+      "rankings": [
+        {
+          "candidate_id": "code_024_spiral_order_c1",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_024_spiral_order_c3",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_024_spiral_order_c0",
+          "q_mb": 71.0,
+          "q_res": -14.57550180602612,
+          "q_x": 56.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_024_spiral_order_c2",
+          "q_mb": 71.0,
+          "q_res": -14.57550180602612,
+          "q_x": 56.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_025_decode_ways",
+      "description": "Count the number of ways to decode a string of digits",
+      "difficulty": "hard",
+      "disagreement": false,
+      "base_candidate_id": "code_025_decode_ways_c0",
+      "daphx_candidate_id": "code_025_decode_ways_c0",
+      "base_utility": 99.74193837499479,
+      "daphx_utility": 99.74193837499479,
+      "delta_u": 0.0,
+      "base_tests": 8,
+      "daphx_tests": 8,
+      "total_tests": 8,
+      "base_error": null,
+      "daphx_error": null,
+      "rankings": [
+        {
+          "candidate_id": "code_025_decode_ways_c0",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_025_decode_ways_c1",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_025_decode_ways_c2",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_025_decode_ways_c3",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_026_coin_change",
+      "description": "Find the minimum number of coins needed to make a target amount",
+      "difficulty": "hard",
+      "disagreement": true,
+      "base_candidate_id": "code_026_coin_change_c0",
+      "daphx_candidate_id": "code_026_coin_change_c1",
+      "base_utility": 99.68596033300855,
+      "daphx_utility": 99.84845804198994,
+      "delta_u": 0.16249770898139104,
+      "base_tests": 6,
+      "daphx_tests": 6,
+      "total_tests": 6,
+      "base_error": null,
+      "daphx_error": null,
+      "outcome": "TIE",
+      "rankings": [
+        {
+          "candidate_id": "code_026_coin_change_c1",
+          "q_mb": 71.0,
+          "q_res": -14.57550180602612,
+          "q_x": 56.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_026_coin_change_c3",
+          "q_mb": 66.0,
+          "q_res": -14.57550180602612,
+          "q_x": 51.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_026_coin_change_c0",
+          "q_mb": 61.0,
+          "q_res": -14.57550180602612,
+          "q_x": 46.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_026_coin_change_c2",
+          "q_mb": 56.0,
+          "q_res": -14.57550180602612,
+          "q_x": 41.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_027_word_break",
+      "description": "Check if a string can be segmented into words from a dictionary",
+      "difficulty": "hard",
+      "disagreement": true,
+      "base_candidate_id": "code_027_word_break_c0",
+      "daphx_candidate_id": "code_027_word_break_c1",
+      "base_utility": 99.5672884999949,
+      "daphx_utility": 99.66886037500808,
+      "delta_u": 0.10157187501317821,
+      "base_tests": 6,
+      "daphx_tests": 6,
+      "total_tests": 6,
+      "base_error": null,
+      "daphx_error": null,
+      "outcome": "TIE",
+      "rankings": [
+        {
+          "candidate_id": "code_027_word_break_c1",
+          "q_mb": 83.0,
+          "q_res": -14.57550180602612,
+          "q_x": 68.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_027_word_break_c3",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_027_word_break_c0",
+          "q_mb": 76.0,
+          "q_res": -14.57550180602612,
+          "q_x": 61.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_027_word_break_c2",
+          "q_mb": 76.0,
+          "q_res": -14.57550180602612,
+          "q_x": 61.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_028_combination_sum",
+      "description": "Find all unique combinations that sum to target (each number used once)",
+      "difficulty": "hard",
+      "disagreement": false,
+      "base_candidate_id": "code_028_combination_sum_c0",
+      "daphx_candidate_id": "code_028_combination_sum_c0",
+      "base_utility": 99.57028645800892,
+      "daphx_utility": 99.57028645800892,
+      "delta_u": 0.0,
+      "base_tests": 5,
+      "daphx_tests": 5,
+      "total_tests": 5,
+      "base_error": null,
+      "daphx_error": null,
+      "rankings": [
+        {
+          "candidate_id": "code_028_combination_sum_c0",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_028_combination_sum_c1",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_028_combination_sum_c3",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_028_combination_sum_c2",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_029_median_sorted",
+      "description": "Find the median of two sorted arrays in O(log(m+n)) time",
+      "difficulty": "hard",
+      "disagreement": false,
+      "base_candidate_id": "code_029_median_sorted_c0",
+      "daphx_candidate_id": "code_029_median_sorted_c0",
+      "base_utility": 41.511115815124604,
+      "daphx_utility": 41.511115815124604,
+      "delta_u": 0.0,
+      "base_tests": 3,
+      "daphx_tests": 3,
+      "total_tests": 7,
+      "base_error": null,
+      "daphx_error": null,
+      "rankings": [
+        {
+          "candidate_id": "code_029_median_sorted_c0",
+          "q_mb": 96.0,
+          "q_res": -14.57550180602612,
+          "q_x": 81.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_029_median_sorted_c1",
+          "q_mb": 96.0,
+          "q_res": -14.57550180602612,
+          "q_x": 81.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_029_median_sorted_c2",
+          "q_mb": 96.0,
+          "q_res": -14.57550180602612,
+          "q_x": 81.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_029_median_sorted_c3",
+          "q_mb": 96.0,
+          "q_res": -14.57550180602612,
+          "q_x": 81.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_030_regex_matching",
+      "description": "Implement regex matching with '.' and '*' support",
+      "difficulty": "hard",
+      "disagreement": true,
+      "base_candidate_id": "code_030_regex_matching_c0",
+      "daphx_candidate_id": "code_030_regex_matching_c2",
+      "base_utility": 99.6089689579967,
+      "daphx_utility": 99.77123924999614,
+      "delta_u": 0.1622702919994481,
+      "base_tests": 8,
+      "daphx_tests": 8,
+      "total_tests": 8,
+      "base_error": null,
+      "daphx_error": null,
+      "outcome": "TIE",
+      "rankings": [
+        {
+          "candidate_id": "code_030_regex_matching_c2",
+          "q_mb": 91.0,
+          "q_res": -14.57550180602612,
+          "q_x": 76.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_030_regex_matching_c0",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_030_regex_matching_c1",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_030_regex_matching_c3",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_031_min_window",
+      "description": "Find the minimum window substring that contains all characters of a target string",
+      "difficulty": "hard",
+      "disagreement": false,
+      "base_candidate_id": "code_031_min_window_c0",
+      "daphx_candidate_id": "code_031_min_window_c0",
+      "base_utility": 99.69442149999668,
+      "daphx_utility": 99.69442149999668,
+      "delta_u": 0.0,
+      "base_tests": 6,
+      "daphx_tests": 6,
+      "total_tests": 6,
+      "base_error": null,
+      "daphx_error": null,
+      "rankings": [
+        {
+          "candidate_id": "code_031_min_window_c0",
+          "q_mb": 96.0,
+          "q_res": -14.57550180602612,
+          "q_x": 81.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_031_min_window_c1",
+          "q_mb": 91.0,
+          "q_res": -14.57550180602612,
+          "q_x": 76.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_031_min_window_c3",
+          "q_mb": 91.0,
+          "q_res": -14.57550180602612,
+          "q_x": 76.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_031_min_window_c2",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_034_longest_valid_parens",
+      "description": "Find the length of the longest valid parentheses substring",
+      "difficulty": "hard",
+      "disagreement": true,
+      "base_candidate_id": "code_034_longest_valid_parens_c0",
+      "daphx_candidate_id": "code_034_longest_valid_parens_c1",
+      "base_utility": 99.7314970830048,
+      "daphx_utility": 99.86505191700417,
+      "delta_u": 0.1335548339993693,
+      "base_tests": 7,
+      "daphx_tests": 7,
+      "total_tests": 7,
+      "base_error": null,
+      "daphx_error": null,
+      "outcome": "TIE",
+      "rankings": [
+        {
+          "candidate_id": "code_034_longest_valid_parens_c1",
+          "q_mb": 91.0,
+          "q_res": -14.57550180602612,
+          "q_x": 76.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_034_longest_valid_parens_c3",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_034_longest_valid_parens_c0",
+          "q_mb": 76.0,
+          "q_res": -14.57550180602612,
+          "q_x": 61.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_034_longest_valid_parens_c2",
+          "q_mb": 76.0,
+          "q_res": -14.57550180602612,
+          "q_x": 61.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_035_edit_distance",
+      "description": "Compute the minimum edit distance between two strings",
+      "difficulty": "hard",
+      "disagreement": true,
+      "base_candidate_id": "code_035_edit_distance_c0",
+      "daphx_candidate_id": "code_035_edit_distance_c1",
+      "base_utility": 99.61930066702189,
+      "daphx_utility": 99.85062133299652,
+      "delta_u": 0.23132066597463563,
+      "base_tests": 7,
+      "daphx_tests": 7,
+      "total_tests": 7,
+      "base_error": null,
+      "daphx_error": null,
+      "outcome": "TIE",
+      "rankings": [
+        {
+          "candidate_id": "code_035_edit_distance_c1",
+          "q_mb": 98.0,
+          "q_res": -14.57550180602612,
+          "q_x": 83.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_035_edit_distance_c0",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_035_edit_distance_c2",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_035_edit_distance_c3",
+          "q_mb": 86.0,
+          "q_res": -14.57550180602612,
+          "q_x": 71.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_036_interleaving_string",
+      "description": "Check if s3 is formed by interleaving s1 and s2",
+      "difficulty": "hard",
+      "disagreement": false,
+      "base_candidate_id": "code_036_interleaving_string_c0",
+      "daphx_candidate_id": "code_036_interleaving_string_c0",
+      "base_utility": 99.57839270800469,
+      "daphx_utility": 99.57839270800469,
+      "delta_u": 0.0,
+      "base_tests": 8,
+      "daphx_tests": 8,
+      "total_tests": 8,
+      "base_error": null,
+      "daphx_error": null,
+      "rankings": [
+        {
+          "candidate_id": "code_036_interleaving_string_c0",
+          "q_mb": 76.0,
+          "q_res": -14.57550180602612,
+          "q_x": 61.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_036_interleaving_string_c1",
+          "q_mb": 76.0,
+          "q_res": -14.57550180602612,
+          "q_x": 61.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_036_interleaving_string_c2",
+          "q_mb": 76.0,
+          "q_res": -14.57550180602612,
+          "q_x": 61.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_036_interleaving_string_c3",
+          "q_mb": 76.0,
+          "q_res": -14.57550180602612,
+          "q_x": 61.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_037_distinct_subsequences",
+      "description": "Count the number of distinct subsequences of s that equal t",
+      "difficulty": "hard",
+      "disagreement": true,
+      "base_candidate_id": "code_037_distinct_subsequences_c0",
+      "daphx_candidate_id": "code_037_distinct_subsequences_c1",
+      "base_utility": 99.5410039589915,
+      "daphx_utility": 66.347150666678,
+      "delta_u": -33.19385329231349,
+      "base_tests": 6,
+      "daphx_tests": 4,
+      "total_tests": 6,
+      "base_error": null,
+      "daphx_error": null,
+      "outcome": "BREAK",
+      "rankings": [
+        {
+          "candidate_id": "code_037_distinct_subsequences_c1",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_037_distinct_subsequences_c3",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_037_distinct_subsequences_c0",
+          "q_mb": 76.0,
+          "q_res": -14.57550180602612,
+          "q_x": 61.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_037_distinct_subsequences_c2",
+          "q_mb": 76.0,
+          "q_res": -14.57550180602612,
+          "q_x": 61.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_038_n_queens",
+      "description": "Count the number of valid N-Queens arrangements",
+      "difficulty": "hard",
+      "disagreement": true,
+      "base_candidate_id": "code_038_n_queens_c0",
+      "daphx_candidate_id": "code_038_n_queens_c3",
+      "base_utility": 99.60926875000587,
+      "daphx_utility": 99.61966487500467,
+      "delta_u": 0.010396124998806044,
+      "base_tests": 5,
+      "daphx_tests": 5,
+      "total_tests": 5,
+      "base_error": null,
+      "daphx_error": null,
+      "outcome": "TIE",
+      "rankings": [
+        {
+          "candidate_id": "code_038_n_queens_c3",
+          "q_mb": 96.0,
+          "q_res": -14.57550180602612,
+          "q_x": 81.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_038_n_queens_c1",
+          "q_mb": 76.0,
+          "q_res": -14.57550180602612,
+          "q_x": 61.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_038_n_queens_c0",
+          "q_mb": 71.0,
+          "q_res": -14.57550180602612,
+          "q_x": 56.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_038_n_queens_c2",
+          "q_mb": 66.0,
+          "q_res": -14.57550180602612,
+          "q_x": 51.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_039_simplify_path",
+      "description": "Simplify a Unix-style file path",
+      "difficulty": "hard",
+      "disagreement": true,
+      "base_candidate_id": "code_039_simplify_path_c0",
+      "daphx_candidate_id": "code_039_simplify_path_c1",
+      "base_utility": 99.47590516600758,
+      "daphx_utility": 99.71963545799372,
+      "delta_u": 0.2437302919861395,
+      "base_tests": 7,
+      "daphx_tests": 7,
+      "total_tests": 7,
+      "base_error": null,
+      "daphx_error": null,
+      "outcome": "TIE",
+      "rankings": [
+        {
+          "candidate_id": "code_039_simplify_path_c1",
+          "q_mb": 73.0,
+          "q_res": -14.57550180602612,
+          "q_x": 58.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_039_simplify_path_c0",
+          "q_mb": 71.0,
+          "q_res": -14.57550180602612,
+          "q_x": 56.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_039_simplify_path_c2",
+          "q_mb": 71.0,
+          "q_res": -14.57550180602612,
+          "q_x": 56.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_039_simplify_path_c3",
+          "q_mb": 71.0,
+          "q_res": -14.57550180602612,
+          "q_x": 56.42449819397388,
+          "rank": 4
+        }
+      ]
+    },
+    {
+      "task_id": "code_040_evaluate_reverse_polish",
+      "description": "Evaluate reverse Polish notation expression",
+      "difficulty": "hard",
+      "disagreement": true,
+      "base_candidate_id": "code_040_evaluate_reverse_polish_c0",
+      "daphx_candidate_id": "code_040_evaluate_reverse_polish_c1",
+      "base_utility": 99.67180354200536,
+      "daphx_utility": 99.79623695800547,
+      "delta_u": 0.12443341600010172,
+      "base_tests": 5,
+      "daphx_tests": 5,
+      "total_tests": 5,
+      "base_error": null,
+      "daphx_error": null,
+      "outcome": "TIE",
+      "rankings": [
+        {
+          "candidate_id": "code_040_evaluate_reverse_polish_c1",
+          "q_mb": 91.0,
+          "q_res": -14.57550180602612,
+          "q_x": 76.42449819397388,
+          "rank": 1
+        },
+        {
+          "candidate_id": "code_040_evaluate_reverse_polish_c0",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 2
+        },
+        {
+          "candidate_id": "code_040_evaluate_reverse_polish_c2",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_040_evaluate_reverse_polish_c3",
+          "q_mb": 81.0,
+          "q_res": -14.57550180602612,
+          "q_x": 66.42449819397388,
+          "rank": 4
+        }
+      ]
+    }
+  ]
+}

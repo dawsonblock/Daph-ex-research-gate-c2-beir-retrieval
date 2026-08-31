@@ -1,0 +1,887 @@
+"""Coding task family for DAPH-X real-model experiment.
+
+Each task is a Python function implementation problem with:
+  - A function signature and docstring
+  - A set of unit tests (including edge cases)
+  - A difficulty level
+  - Common failure modes (to generate disagreements)
+
+Tasks are designed to produce model failures:
+  - Edge cases the model commonly misses
+  - Off-by-one errors
+  - Type confusion
+  - Missing imports
+  - Incorrect algorithm choice
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import Any
+
+
+@dataclass(frozen=True)
+class CodingTask:
+    """A coding task with tests."""
+    task_id: str
+    description: str
+    function_name: str
+    signature: str
+    docstring: str
+    difficulty: str  # "easy", "medium", "hard"
+    tests: tuple[tuple[str, str, Any], ...]  # (test_code, description, expected)
+    imports: str = ""
+    # Common failure modes for this task
+    common_errors: tuple[str, ...] = ()
+
+    def prompt(self) -> str:
+        """Generate the prompt for the model."""
+        return f"""Implement the following Python function. Return ONLY the function code, no explanation.
+
+```python
+{self.imports}
+
+def {self.signature}:
+    \"\"\"{self.docstring}\"\"\"
+    # Your implementation here
+```
+
+Function: {self.function_name}
+Description: {self.description}
+Difficulty: {self.difficulty}
+
+Return the complete function implementation. Include any necessary imports."""
+
+
+# ─── Task definitions ───
+
+TASKS: list[CodingTask] = [
+    CodingTask(
+        task_id="code_001_reverse_string",
+        description="Reverse a string",
+        function_name="reverse_string",
+        signature="reverse_string(s: str) -> str",
+        docstring="Return the reversed version of the input string.",
+        difficulty="easy",
+        tests=(
+            ('reverse_string("hello")', "basic", "olleh"),
+            ('reverse_string("")', "empty string", ""),
+            ('reverse_string("a")', "single char", "a"),
+            ('reverse_string("ab")', "two chars", "ba"),
+            ('reverse_string("12345")', "numbers", "54321"),
+        ),
+        common_errors=(
+            "Using s[::-1] correctly but forgetting to handle non-string input",
+            "Using reversed() which returns an iterator instead of a string",
+        ),
+    ),
+    CodingTask(
+        task_id="code_002_is_palindrome",
+        description="Check if a string is a palindrome (case-insensitive, ignore non-alphanumeric)",
+        function_name="is_palindrome",
+        signature="is_palindrome(s: str) -> bool",
+        docstring="Return True if the string is a palindrome, ignoring case and non-alphanumeric characters.",
+        difficulty="medium",
+        tests=(
+            ('is_palindrome("racecar")', "basic palindrome", True),
+            ('is_palindrome("A man a plan a canal Panama")', "with spaces", True),
+            ('is_palindrome("hello")', "not palindrome", False),
+            ('is_palindrome("")', "empty string", True),
+            ('is_palindrome("a")', "single char", True),
+            ('is_palindrome("Aba")', "case insensitive", True),
+            ('is_palindrome("race a car")', "not palindrome 2", False),
+        ),
+        common_errors=(
+            "Not ignoring non-alphanumeric characters",
+            "Not handling case insensitivity",
+            "Empty string edge case",
+        ),
+    ),
+    CodingTask(
+        task_id="code_003_fibonacci",
+        description="Compute the nth Fibonacci number (0-indexed)",
+        function_name="fibonacci",
+        signature="fibonacci(n: int) -> int",
+        docstring="Return the nth Fibonacci number. F(0)=0, F(1)=1, F(n)=F(n-1)+F(n-2).",
+        difficulty="medium",
+        tests=(
+            ('fibonacci(0)', "base case 0", 0),
+            ('fibonacci(1)', "base case 1", 1),
+            ('fibonacci(2)', "F(2)", 1),
+            ('fibonacci(10)', "F(10)", 55),
+            ('fibonacci(20)', "F(20)", 6765),
+        ),
+        common_errors=(
+            "Off-by-one in base cases",
+            "Using 1-indexed instead of 0-indexed",
+            "Recursive without memoization (slow but correct)",
+        ),
+    ),
+    CodingTask(
+        task_id="code_004_binary_search",
+        description="Binary search in a sorted list, return index or -1",
+        function_name="binary_search",
+        signature="binary_search(arr: list, target: int) -> int",
+        docstring="Return the index of target in sorted arr, or -1 if not found.",
+        difficulty="medium",
+        tests=(
+            ('binary_search([1,2,3,4,5], 3)', "found middle", 2),
+            ('binary_search([1,2,3,4,5], 1)', "found first", 0),
+            ('binary_search([1,2,3,4,5], 5)', "found last", 4),
+            ('binary_search([1,2,3,4,5], 6)', "not found", -1),
+            ('binary_search([], 1)', "empty list", -1),
+            ('binary_search([1], 1)', "single element found", 0),
+            ('binary_search([1], 2)', "single element not found", -1),
+        ),
+        common_errors=(
+            "Off-by-one in mid calculation",
+            "Infinite loop from incorrect left/right update",
+            "Not handling empty list",
+        ),
+    ),
+    CodingTask(
+        task_id="code_005_merge_sorted",
+        description="Merge two sorted lists into one sorted list",
+        function_name="merge_sorted",
+        signature="merge_sorted(a: list, b: list) -> list",
+        docstring="Merge two sorted lists into a single sorted list.",
+        difficulty="medium",
+        tests=(
+            ('merge_sorted([1,3,5], [2,4,6])', "interleaved", [1,2,3,4,5,6]),
+            ('merge_sorted([], [1,2])', "empty first", [1,2]),
+            ('merge_sorted([1,2], [])', "empty second", [1,2]),
+            ('merge_sorted([], [])', "both empty", []),
+            ('merge_sorted([1], [2])', "single elements", [1,2]),
+            ('merge_sorted([1,1,1], [1,1])', "duplicates", [1,1,1,1,1]),
+        ),
+        common_errors=(
+            "Not using two-pointer technique (using sort instead)",
+            "Incorrect index handling",
+            "Not handling empty lists",
+        ),
+    ),
+    CodingTask(
+        task_id="code_006_valid_parens",
+        description="Check if parentheses string is valid (balanced and ordered)",
+        function_name="is_valid_parens",
+        signature="is_valid_parens(s: str) -> bool",
+        docstring="Return True if the string has valid parentheses: (), {}, [].",
+        difficulty="medium",
+        tests=(
+            ('is_valid_parens("()")', "simple", True),
+            ('is_valid_parens("()[]{}")', "multiple types", True),
+            ('is_valid_parens("(]")', "mismatched", False),
+            ('is_valid_parens("([)]")', "wrong order", False),
+            ('is_valid_parens("{[]}")', "nested", True),
+            ('is_valid_parens("")', "empty", True),
+            ('is_valid_parens("(")', "single open", False),
+            ('is_valid_parens(")")', "single close", False),
+        ),
+        common_errors=(
+            "Not checking matching bracket types",
+            "Not using a stack",
+            "Not checking stack is empty at end",
+        ),
+    ),
+    CodingTask(
+        task_id="code_007_max_subarray",
+        description="Find the maximum sum of a contiguous subarray (Kadane's algorithm)",
+        function_name="max_subarray",
+        signature="max_subarray(arr: list) -> int",
+        docstring="Return the maximum sum of a contiguous subarray. Empty array returns 0.",
+        difficulty="hard",
+        tests=(
+            ('max_subarray([-2,1,-3,4,-1,2,1,-5,4])', "classic", 6),
+            ('max_subarray([1])', "single positive", 1),
+            ('max_subarray([-1])', "single negative", -1),
+            ('max_subarray([5,4,-1,7,8])', "mostly positive", 23),
+            ('max_subarray([])', "empty", 0),
+            ('max_subarray([-2,-1])', "all negative", -1),
+        ),
+        common_errors=(
+            "Not handling all-negative arrays",
+            "Initializing max to 0 instead of first element",
+            "Empty array edge case",
+        ),
+    ),
+    CodingTask(
+        task_id="code_008_count_words",
+        description="Count words in a string (split by whitespace, handle edge cases)",
+        function_name="count_words",
+        signature="count_words(s: str) -> int",
+        docstring="Return the number of words in the string. Words are separated by whitespace.",
+        difficulty="easy",
+        tests=(
+            ('count_words("hello world")', "two words", 2),
+            ('count_words("hello")', "one word", 1),
+            ('count_words("")', "empty", 0),
+            ('count_words("  ")', "whitespace only", 0),
+            ('count_words("  hello  world  ")', "extra spaces", 2),
+            ('count_words("a b c d e")', "single chars", 5),
+        ),
+        common_errors=(
+            "Not handling empty string",
+            "Not handling leading/trailing whitespace",
+            "Using len(s) instead of len(s.split())",
+        ),
+    ),
+    CodingTask(
+        task_id="code_009_remove_duplicates",
+        description="Remove duplicates from a sorted list in-place, return new length",
+        function_name="remove_duplicates",
+        signature="remove_duplicates(arr: list) -> int",
+        docstring="Remove duplicates from sorted array in-place. Return the new length. Elements beyond the new length don't matter.",
+        difficulty="medium",
+        tests=(
+            ('remove_duplicates([1,1,2])', "basic", 2),
+            ('remove_duplicates([0,0,1,1,1,2,2,3,3,4])', "many dups", 5),
+            ('remove_duplicates([1])', "single", 1),
+            ('remove_duplicates([])', "empty", 0),
+            ('remove_duplicates([1,2,3])', "no dups", 3),
+        ),
+        common_errors=(
+            "Not modifying in-place",
+            "Using set which doesn't preserve order",
+            "Not handling empty list",
+        ),
+    ),
+    CodingTask(
+        task_id="code_010_two_sum",
+        description="Find indices of two numbers that add up to target",
+        function_name="two_sum",
+        signature="two_sum(nums: list, target: int) -> list",
+        docstring="Return indices of two numbers that add up to target. Exactly one solution exists.",
+        difficulty="medium",
+        tests=(
+            ('two_sum([2,7,11,15], 9)', "basic", [0,1]),
+            ('two_sum([3,2,4], 6)', "not first", [1,2]),
+            ('two_sum([3,3], 6)', "duplicate values", [0,1]),
+        ),
+        common_errors=(
+            "Using same element twice",
+            "Returning values instead of indices",
+            "O(n^2) instead of O(n) with hash map",
+        ),
+    ),
+    CodingTask(
+        task_id="code_011_factorial",
+        description="Compute factorial of n",
+        function_name="factorial",
+        signature="factorial(n: int) -> int",
+        docstring="Return n! (n factorial). 0! = 1.",
+        difficulty="easy",
+        tests=(
+            ('factorial(0)', "base case", 1),
+            ('factorial(1)', "base case", 1),
+            ('factorial(5)', "5!", 120),
+            ('factorial(10)', "10!", 3628800),
+        ),
+        common_errors=(
+            "Not handling 0! = 1",
+            "Integer overflow (not an issue in Python but conceptually)",
+        ),
+    ),
+    CodingTask(
+        task_id="code_012_is_anagram",
+        description="Check if two strings are anagrams (case-insensitive)",
+        function_name="is_anagram",
+        signature="is_anagram(s: str, t: str) -> bool",
+        docstring="Return True if s and t are anagrams (case-insensitive, ignore spaces).",
+        difficulty="medium",
+        tests=(
+            ('is_anagram("listen", "silent")', "basic", True),
+            ('is_anagram("hello", "world")', "not anagram", False),
+            ('is_anagram("A gentleman", "Elegant man")', "with spaces and case", True),
+            ('is_anagram("", "")', "both empty", True),
+            ('is_anagram("a", "b")', "single different", False),
+            ('is_anagram("ab", "ba")', "two chars", True),
+        ),
+        common_errors=(
+            "Not handling case insensitivity",
+            "Not ignoring spaces",
+            "Using sorted() which works but is O(n log n)",
+        ),
+    ),
+    CodingTask(
+        task_id="code_013_climb_stairs",
+        description="Count ways to climb n stairs taking 1 or 2 steps at a time",
+        function_name="climb_stairs",
+        signature="climb_stairs(n: int) -> int",
+        docstring="Return the number of distinct ways to climb n stairs, taking 1 or 2 steps at a time.",
+        difficulty="medium",
+        tests=(
+            ('climb_stairs(1)', "1 stair", 1),
+            ('climb_stairs(2)', "2 stairs", 2),
+            ('climb_stairs(3)', "3 stairs", 3),
+            ('climb_stairs(5)', "5 stairs", 8),
+            ('climb_stairs(10)', "10 stairs", 89),
+        ),
+        common_errors=(
+            "Not recognizing Fibonacci pattern",
+            "Base case errors",
+            "Recursive without memoization",
+        ),
+    ),
+    CodingTask(
+        task_id="code_014_max_depth_tree",
+        description="Find maximum depth of a binary tree",
+        function_name="max_depth",
+        signature="max_depth(root) -> int",
+        docstring="Return the maximum depth of a binary tree. None root has depth 0.",
+        difficulty="medium",
+        imports="class TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right",
+        tests=(
+            ('max_depth(None)', "empty tree", 0),
+            ('max_depth(TreeNode(1))', "single node", 1),
+            ('max_depth(TreeNode(1, TreeNode(2), TreeNode(3)))', "two levels", 2),
+            ('max_depth(TreeNode(1, TreeNode(2, TreeNode(3))))', "left chain", 3),
+        ),
+        common_errors=(
+            "Not handling None root",
+            "Off-by-one in depth counting",
+            "Not recursively computing depth",
+        ),
+    ),
+    CodingTask(
+        task_id="code_015_valid_number",
+        description="Check if a string is a valid number (integer or decimal)",
+        function_name="is_valid_number",
+        signature="is_valid_number(s: str) -> bool",
+        docstring="Return True if s is a valid number (integer or decimal, optional negative sign).",
+        difficulty="hard",
+        tests=(
+            ('is_valid_number("123")', "integer", True),
+            ('is_valid_number("12.34")', "decimal", True),
+            ('is_valid_number("-123")', "negative", True),
+            ('is_valid_number("-12.34")', "negative decimal", True),
+            ('is_valid_number("abc")', "not a number", False),
+            ('is_valid_number("")', "empty", False),
+            ('is_valid_number("12.34.56")', "two decimals", False),
+            ('is_valid_number("--12")', "double negative", False),
+            ('is_valid_number("12a")', "trailing char", False),
+        ),
+        common_errors=(
+            "Not handling multiple decimal points",
+            "Not handling double negative signs",
+            "Not handling empty string",
+            "Using float() which accepts things like 'inf', 'nan'",
+        ),
+    ),
+    CodingTask(
+        task_id="code_016_longest_common_prefix",
+        description="Find the longest common prefix of a list of strings",
+        function_name="longest_common_prefix",
+        signature="longest_common_prefix(strs: list) -> str",
+        docstring="Return the longest common prefix string amongst all strings. Empty list returns empty string.",
+        difficulty="medium",
+        tests=(
+            ('longest_common_prefix(["flower","flow","flight"])', "basic", "fl"),
+            ('longest_common_prefix(["dog","racecar","car"])', "no common", ""),
+            ('longest_common_prefix([])', "empty list", ""),
+            ('longest_common_prefix(["a"])', "single string", "a"),
+            ('longest_common_prefix(["",""])', "empty strings", ""),
+            ('longest_common_prefix(["abc","abc","abc"])', "all same", "abc"),
+        ),
+        common_errors=(
+            "Not handling empty list",
+            "Not handling empty strings in the list",
+            "Index out of bounds when comparing characters",
+        ),
+    ),
+    CodingTask(
+        task_id="code_017_plus_one",
+        description="Add one to a number represented as a list of digits",
+        function_name="plus_one",
+        signature="plus_one(digits: list) -> list",
+        docstring="Given a non-empty list of decimal digits representing a non-negative integer, add one and return the result as a list of digits.",
+        difficulty="medium",
+        tests=(
+            ('plus_one([1,2,3])', "basic", [1,2,4]),
+            ('plus_one([9,9,9])', "carry over", [1,0,0,0]),
+            ('plus_one([0])', "zero", [1]),
+            ('plus_one([1,0,0])', "trailing zeros", [1,0,1]),
+            ('plus_one([9])', "single nine", [1,0]),
+        ),
+        common_errors=(
+            "Not handling carry propagation",
+            "Not adding new digit when all nines",
+            "Modifying input in-place incorrectly",
+        ),
+    ),
+    CodingTask(
+        task_id="code_018_move_zeros",
+        description="Move all zeros to the end of the list while maintaining order of non-zeros",
+        function_name="move_zeros",
+        signature="move_zeros(arr: list) -> list",
+        docstring="Move all zeros to the end of the list, maintaining the relative order of non-zero elements. Return the modified list.",
+        difficulty="medium",
+        tests=(
+            ('move_zeros([0,1,0,3,12])', "basic", [1,3,12,0,0]),
+            ('move_zeros([0,0,0])', "all zeros", [0,0,0]),
+            ('move_zeros([1,2,3])', "no zeros", [1,2,3]),
+            ('move_zeros([])', "empty", []),
+            ('move_zeros([0])', "single zero", [0]),
+            ('move_zeros([1])', "single non-zero", [1]),
+        ),
+        common_errors=(
+            "Not maintaining order of non-zeros",
+            "Modifying list while iterating",
+            "Not handling empty list",
+        ),
+    ),
+    CodingTask(
+        task_id="code_019_first_unique",
+        description="Find the first non-repeating character in a string",
+        function_name="first_unique_char",
+        signature="first_unique_char(s: str) -> str",
+        docstring="Return the first non-repeating character in the string. If none exists, return empty string.",
+        difficulty="medium",
+        tests=(
+            ('first_unique_char("leetcode")', "basic", "l"),
+            ('first_unique_char("loveleetcode")', "second char", "v"),
+            ('first_unique_char("aabb")', "no unique", ""),
+            ('first_unique_char("")', "empty", ""),
+            ('first_unique_char("a")', "single char", "a"),
+            ('first_unique_char("aab")', "last char", "b"),
+        ),
+        common_errors=(
+            "Not counting character frequencies first",
+            "Returning last unique instead of first",
+            "Not handling empty string",
+        ),
+    ),
+    CodingTask(
+        task_id="code_020_contains_duplicate",
+        description="Check if a list contains any duplicates",
+        function_name="contains_duplicate",
+        signature="contains_duplicate(nums: list) -> bool",
+        docstring="Return True if any value appears at least twice in the list, False if every element is distinct.",
+        difficulty="easy",
+        tests=(
+            ('contains_duplicate([1,2,3,1])', "has duplicate", True),
+            ('contains_duplicate([1,2,3,4])', "no duplicate", False),
+            ('contains_duplicate([])', "empty", False),
+            ('contains_duplicate([1])', "single element", False),
+            ('contains_duplicate([1,1])', "two same", True),
+        ),
+        common_errors=(
+            "Using O(n^2) nested loop instead of set",
+            "Not handling empty list",
+            "Modifying list while iterating",
+        ),
+    ),
+    CodingTask(
+        task_id="code_021_trap_rain_water",
+        description="Compute how much rain water can be trapped between bars of given heights",
+        function_name="trap",
+        signature="trap(height: list) -> int",
+        docstring="Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water can be trapped after raining.",
+        difficulty="hard",
+        tests=(
+            ('trap([0,1,0,2,1,0,1,3,2,1,2,1])', "classic", 6),
+            ('trap([4,2,0,3,2,5])', "example 2", 9),
+            ('trap([])', "empty", 0),
+            ('trap([1])', "single bar", 0),
+            ('trap([1,2])', "two bars", 0),
+            ('trap([3,0,3])', "simple valley", 3),
+            ('trap([5,4,3,2,1])', "decreasing", 0),
+            ('trap([1,2,3,4,5])', "increasing", 0),
+        ),
+        common_errors=(
+            "Not computing left/right max arrays correctly",
+            "Off-by-one in the two-pointer approach",
+            "Not handling empty or single-element arrays",
+            "Computing water above bars instead of between them",
+        ),
+    ),
+    CodingTask(
+        task_id="code_022_longest_palindrome_substring",
+        description="Find the longest palindromic substring in a given string",
+        function_name="longest_palindrome",
+        signature="longest_palindrome(s: str) -> str",
+        docstring="Return the longest palindromic substring in s. If multiple exist, return any. Empty string returns empty string.",
+        difficulty="hard",
+        tests=(
+            ('longest_palindrome("babad")', "example 1", "bab"),  # or "aba"
+            ('longest_palindrome("cbbd")', "even length", "bb"),
+            ('longest_palindrome("a")', "single char", "a"),
+            ('longest_palindrome("")', "empty", ""),
+            ('longest_palindrome("ac")', "no palindrome", "a"),  # or "c"
+            ('longest_palindrome("racecar")', "full palindrome", "racecar"),
+        ),
+        common_errors=(
+            "Not handling even-length palindromes",
+            "O(n^2) instead of O(n) Manacher's",
+            "Returning wrong substring for ties",
+            "Not handling empty string",
+        ),
+    ),
+    CodingTask(
+        task_id="code_023_rotate_matrix",
+        description="Rotate an n x n 2D matrix 90 degrees clockwise in-place",
+        function_name="rotate_matrix",
+        signature="rotate_matrix(matrix: list) -> None",
+        docstring="Rotate the n x n matrix 90 degrees clockwise in-place. Do not return anything.",
+        difficulty="hard",
+        tests=(
+            ('rotate_matrix([[1,2,3],[4,5,6],[7,8,9]])', "3x3", None),
+            ('rotate_matrix([[1]])', "1x1", None),
+            ('rotate_matrix([[1,2],[3,4]])', "2x2", None),
+        ),
+        common_errors=(
+            "Not doing it in-place",
+            "Incorrect layer-by-layer rotation",
+            "Off-by-one in the layer boundaries",
+            "Not handling 1x1 matrix",
+        ),
+    ),
+    CodingTask(
+        task_id="code_024_spiral_order",
+        description="Return all elements of a matrix in spiral order",
+        function_name="spiral_order",
+        signature="spiral_order(matrix: list) -> list",
+        docstring="Return all elements of the m x n matrix in spiral order (clockwise from top-left).",
+        difficulty="hard",
+        tests=(
+            ('spiral_order([[1,2,3],[4,5,6],[7,8,9]])', "3x3", [1,2,3,6,9,8,7,4,5]),
+            ('spiral_order([[1,2,3,4],[5,6,7,8],[9,10,11,12]])', "3x4", [1,2,3,4,8,12,11,10,9,5,6,7]),
+            ('spiral_order([[1]])', "1x1", [1]),
+            ('spiral_order([])', "empty", []),
+            ('spiral_order([[1,2]])', "single row", [1,2]),
+            ('spiral_order([[1],[2]])', "single col", [1,2]),
+        ),
+        common_errors=(
+            "Incorrect boundary handling",
+            "Not handling single row/column",
+            "Not handling empty matrix",
+            "Infinite loop on non-square matrices",
+        ),
+    ),
+    CodingTask(
+        task_id="code_025_decode_ways",
+        description="Count the number of ways to decode a string of digits",
+        function_name="num_decodings",
+        signature="num_decodings(s: str) -> int",
+        docstring="A message containing letters A-Z can be encoded into digits. '1' -> 'A', '2' -> 'B', ..., '26' -> 'Z'. Given a string of digits, return the number of ways to decode it.",
+        difficulty="hard",
+        tests=(
+            ('num_decodings("12")', "two ways", 2),
+            ('num_decodings("226")', "three ways", 3),
+            ('num_decodings("06")', "leading zero", 0),
+            ('num_decodings("0")', "single zero", 0),
+            ('num_decodings("1")', "single digit", 1),
+            ('num_decodings("10")', "ten", 1),
+            ('num_decodings("27")', "27 invalid pair", 1),
+            ('num_decodings("11106")', "complex", 2),
+        ),
+        common_errors=(
+            "Not handling leading zeros",
+            "Not recognizing 0 is invalid",
+            "DP state transition errors",
+            "Not handling '10' and '20' correctly",
+        ),
+    ),
+    CodingTask(
+        task_id="code_026_coin_change",
+        description="Find the minimum number of coins needed to make a target amount",
+        function_name="coin_change",
+        signature="coin_change(coins: list, amount: int) -> int",
+        docstring="Return the fewest number of coins needed to make up the amount. If impossible, return -1. You may use each coin unlimited times.",
+        difficulty="hard",
+        tests=(
+            ('coin_change([1,2,5], 11)', "basic", 3),
+            ('coin_change([2], 3)', "impossible", -1),
+            ('coin_change([1], 0)', "zero amount", 0),
+            ('coin_change([1], 1)', "single coin", 1),
+            ('coin_change([1,5,10,25], 63)', "greedy fails", 6),  # 25+25+10+1+1+1
+            ('coin_change([186,419,83,408], 6249)', "large", 20),
+        ),
+        common_errors=(
+            "Using greedy instead of DP",
+            "Not handling amount=0",
+            "Not handling impossible cases",
+            "DP array initialization errors",
+        ),
+    ),
+    CodingTask(
+        task_id="code_027_word_break",
+        description="Check if a string can be segmented into words from a dictionary",
+        function_name="word_break",
+        signature="word_break(s: str, word_dict: list) -> bool",
+        docstring="Return True if s can be segmented into a space-separated sequence of one or more dictionary words.",
+        difficulty="hard",
+        tests=(
+            ('word_break("leetcode", ["leet","code"])', "basic", True),
+            ('word_break("applepenapple", ["apple","pen"])', "repeated", True),
+            ('word_break("catsandog", ["cats","dog","sand","and","cat"])', "cannot", False),
+            ('word_break("", ["a"])', "empty string", True),
+            ('word_break("a", ["a"])', "single char", True),
+            ('word_break("a", ["b"])', "no match", False),
+        ),
+        common_errors=(
+            "Greedy instead of DP",
+            "Not handling empty string",
+            "Recursion without memoization",
+            "Incorrect DP state transition",
+        ),
+    ),
+    CodingTask(
+        task_id="code_028_combination_sum",
+        description="Find all unique combinations that sum to target (each number used once)",
+        function_name="combination_sum_unique",
+        signature="combination_sum_unique(candidates: list, target: int) -> list",
+        docstring="Find all unique combinations of candidates that sum to target. Each number in candidates may only be used once. Return list of lists.",
+        difficulty="hard",
+        tests=(
+            ('combination_sum_unique([10,1,2,7,6,1,5], 8)', "basic", [[1,1,6],[1,2,5],[1,7],[2,6]]),
+            ('combination_sum_unique([2,5,2,1,2], 5)', "with dups", [[1,2,2],[5]]),
+            ('combination_sum_unique([], 1)', "empty candidates", []),
+            ('combination_sum_unique([1], 1)', "single match", [[1]]),
+            ('combination_sum_unique([1], 2)', "no match", []),
+        ),
+        common_errors=(
+            "Not handling duplicate candidates",
+            "Not sorting before backtracking",
+            "Including duplicate combinations",
+            "Not pruning the search tree",
+        ),
+    ),
+    CodingTask(
+        task_id="code_029_median_sorted",
+        description="Find the median of two sorted arrays in O(log(m+n)) time",
+        function_name="find_median_sorted",
+        signature="find_median_sorted(nums1: list, nums2: list) -> float",
+        docstring="Return the median of the two sorted arrays combined. The overall run time complexity should be O(log (m+n)).",
+        difficulty="hard",
+        tests=(
+            ('find_median_sorted([1,3], [2])', "odd total", 2.0),
+            ('find_median_sorted([1,2], [3,4])', "even total", 2.5),
+            ('find_median_sorted([], [1])', "one empty", 1.0),
+            ('find_median_sorted([], [2,3])', "one empty even", 2.5),
+            ('find_median_sorted([1], [])', "other empty", 1.0),
+            ('find_median_sorted([1,2,3], [4,5,6])', "equal length", 3.5),
+            ('find_median_sorted([1,3,5], [2,4,6])', "interleaved", 3.5),
+        ),
+        common_errors=(
+            "O(m+n) merge instead of O(log(m+n)) binary search",
+            "Off-by-one in partition logic",
+            "Not handling empty arrays",
+            "Incorrect median calculation for even-length",
+        ),
+    ),
+    CodingTask(
+        task_id="code_030_regex_matching",
+        description="Implement regex matching with '.' and '*' support",
+        function_name="is_match",
+        signature="is_match(s: str, p: str) -> bool",
+        docstring="Return True if the pattern p matches the entire string s. '.' matches any single char. '*' matches zero or more of the preceding element.",
+        difficulty="hard",
+        tests=(
+            ('is_match("aa", "a")', "no match", False),
+            ('is_match("aa", "a*")', "star match", True),
+            ('is_match("ab", ".*")', "dot star", True),
+            ('is_match("aab", "c*a*b")', "complex", True),
+            ('is_match("mississippi", "mis*is*p*.")', "classic", False),
+            ('is_match("", ".*")', "empty string", True),
+            ('is_match("", "a*")', "empty star", True),
+            ('is_match("a", "ab*")', "optional", True),
+        ),
+        common_errors=(
+            "Not handling '*' as zero matches",
+            "DP state transition errors",
+            "Not handling empty string with pattern",
+            "Incorrect base cases",
+        ),
+    ),
+    CodingTask(
+        task_id="code_031_min_window",
+        description="Find the minimum window substring that contains all characters of a target string",
+        function_name="min_window",
+        signature="min_window(s: str, t: str) -> str",
+        docstring="Return the minimum window substring of s that contains all characters of t (including duplicates). If no such window exists, return empty string.",
+        difficulty="hard",
+        tests=(
+            ('min_window("ADOBECODEBANC", "ABC")', "classic", "BANC"),
+            ('min_window("a", "a")', "single char", "a"),
+            ('min_window("a", "aa")', "impossible", ""),
+            ('min_window("aa", "aa")', "exact match", "aa"),
+            ('min_window("ab", "b")', "simple", "b"),
+            ('min_window("abc", "ac")', "non-contiguous", "abc"),
+        ),
+        common_errors=(
+            "Sliding window boundary errors",
+            "Not handling duplicate characters in t",
+            "Not updating window correctly",
+            "Returning wrong substring on ties",
+        ),
+    ),
+    CodingTask(
+        task_id="code_034_longest_valid_parens",
+        description="Find the length of the longest valid parentheses substring",
+        function_name="longest_valid_parens",
+        signature="longest_valid_parens(s: str) -> int",
+        docstring="Given a string containing just '(' and ')', return the length of the longest valid (well-formed) parentheses substring.",
+        difficulty="hard",
+        tests=(
+            ('longest_valid_parens("(()")', "example 1", 2),
+            ('longest_valid_parens(")()())")', "example 2", 4),
+            ('longest_valid_parens("")', "empty", 0),
+            ('longest_valid_parens("()(()")', "split", 2),
+            ('longest_valid_parens("(((((()")', "nested", 2),
+            ('longest_valid_parens("()()()")', "sequential", 6),
+            ('longest_valid_parens("(()())")', "nested valid", 6),
+        ),
+        common_errors=(
+            "Stack-based approach errors",
+            "DP state transition errors",
+            "Not handling empty string",
+            "Incorrect count after invalid chars",
+        ),
+    ),
+    CodingTask(
+        task_id="code_035_edit_distance",
+        description="Compute the minimum edit distance between two strings",
+        function_name="min_edit_distance",
+        signature="min_edit_distance(word1: str, word2: str) -> int",
+        docstring="Return the minimum number of operations (insert, delete, replace) required to convert word1 to word2.",
+        difficulty="hard",
+        tests=(
+            ('min_edit_distance("horse", "ros")', "basic", 3),
+            ('min_edit_distance("intention", "execution")', "longer", 5),
+            ('min_edit_distance("", "")', "both empty", 0),
+            ('min_edit_distance("a", "")', "one empty", 1),
+            ('min_edit_distance("", "a")', "other empty", 1),
+            ('min_edit_distance("abc", "abc")', "identical", 0),
+            ('min_edit_distance("abc", "abd")', "one diff", 1),
+        ),
+        common_errors=(
+            "DP table initialization errors",
+            "Not handling empty strings",
+            "Incorrect state transition for replace vs insert vs delete",
+            "O(m*n) space instead of O(min(m,n))",
+        ),
+    ),
+    CodingTask(
+        task_id="code_036_interleaving_string",
+        description="Check if s3 is formed by interleaving s1 and s2",
+        function_name="is_interleave",
+        signature="is_interleave(s1: str, s2: str, s3: str) -> bool",
+        docstring="Return True if s3 is formed by interleaving s1 and s2, preserving the relative order of characters from each.",
+        difficulty="hard",
+        tests=(
+            ('is_interleave("aabcc", "dbbca", "aadbbcbcac")', "true case", True),
+            ('is_interleave("aabcc", "dbbca", "aadbbbaccc")', "false case", False),
+            ('is_interleave("", "", "")', "all empty", True),
+            ('is_interleave("a", "", "a")', "one empty", True),
+            ('is_interleave("", "b", "b")', "other empty", True),
+            ('is_interleave("a", "b", "ab")', "simple", True),
+            ('is_interleave("a", "b", "ba")', "reversed", True),
+            ('is_interleave("a", "b", "aa")', "wrong", False),
+        ),
+        common_errors=(
+            "Length check missing",
+            "DP state transition errors",
+            "Not handling empty strings",
+            "Greedy approach that doesn't work",
+        ),
+    ),
+    CodingTask(
+        task_id="code_037_distinct_subsequences",
+        description="Count the number of distinct subsequences of s that equal t",
+        function_name="num_distinct",
+        signature="num_distinct(s: str, t: str) -> int",
+        docstring="Return the number of distinct subsequences of s which equal t.",
+        difficulty="hard",
+        tests=(
+            ('num_distinct("rabbbit", "rabbit")', "basic", 3),
+            ('num_distinct("babgbag", "bag")', "example 2", 5),
+            ('num_distinct("", "a")', "empty s", 0),
+            ('num_distinct("a", "")', "empty t", 1),
+            ('num_distinct("", "")', "both empty", 1),
+            ('num_distinct("aaa", "aa")', "repeated", 3),
+        ),
+        common_errors=(
+            "DP state transition errors",
+            "Not handling empty strings",
+            "Integer overflow (not in Python but conceptually)",
+            "Incorrect base cases",
+        ),
+    ),
+    CodingTask(
+        task_id="code_038_n_queens",
+        description="Count the number of valid N-Queens arrangements",
+        function_name="total_n_queens",
+        signature="total_n_queens(n: int) -> int",
+        docstring="Return the total number of distinct N-Queens solutions for an n x n board.",
+        difficulty="hard",
+        tests=(
+            ('total_n_queens(1)', "1 queen", 1),
+            ('total_n_queens(2)', "2 queens (no solution)", 0),
+            ('total_n_queens(3)', "3 queens (no solution)", 0),
+            ('total_n_queens(4)', "4 queens", 2),
+            ('total_n_queens(8)', "8 queens", 92),
+        ),
+        common_errors=(
+            "Not checking diagonal conflicts",
+            "Not using backtracking correctly",
+            "Column conflict detection errors",
+            "Not handling n=1",
+        ),
+    ),
+    CodingTask(
+        task_id="code_039_simplify_path",
+        description="Simplify a Unix-style file path",
+        function_name="simplify_path",
+        signature="simplify_path(path: str) -> str",
+        docstring="Given an absolute Unix path, simplify it. Handle '.', '..', and multiple slashes. Return the simplified canonical path.",
+        difficulty="hard",
+        tests=(
+            ('simplify_path("/home/")', "trailing slash", "/home"),
+            ('simplify_path("/../")', "above root", "/"),
+            ('simplify_path("/home//foo/")', "double slash", "/home/foo"),
+            ('simplify_path("/a/./b/../../c/")', "complex", "/c"),
+            ('simplify_path("/a/../../b/../c//.//")', "many parent refs", "/c"),
+            ('simplify_path("/a//b////c/d//././/..")', "very complex", "/a/b/c"),
+            ('simplify_path("/")', "root", "/"),
+        ),
+        common_errors=(
+            "Not handling '..' correctly at root",
+            "Not handling multiple slashes",
+            "Not handling '.' (current directory)",
+            "Stack-based approach errors",
+        ),
+    ),
+    CodingTask(
+        task_id="code_040_evaluate_reverse_polish",
+        description="Evaluate reverse Polish notation expression",
+        function_name="eval_rpn",
+        signature="eval_rpn(tokens: list) -> int",
+        docstring="Evaluate the value of an arithmetic expression in Reverse Polish Notation. Valid operators are +, -, *, /. Division truncates toward zero.",
+        difficulty="hard",
+        tests=(
+            ('eval_rpn(["2","1","+","3","*"])', "basic", 9),
+            ('eval_rpn(["4","13","5","/","+"])', "division", 6),
+            ('eval_rpn(["10","6","9","3","+","-11","*","/","*","17","+","5","+"])', "complex", 22),
+            ('eval_rpn(["3","-4","/"])', "negative division", 0),  # 3 / -4 = -0.75 → truncate toward zero = 0
+            ('eval_rpn(["42"])', "single number", 42),
+        ),
+        common_errors=(
+            "Division truncation direction (toward zero vs floor)",
+            "Not handling negative numbers",
+            "Stack operations errors",
+            "Integer vs float division",
+        ),
+    ),
+]
+
+
+def get_all_tasks() -> list[CodingTask]:
+    """Return all coding tasks."""
+    return TASKS
+
+
+def get_task(task_id: str) -> CodingTask | None:
+    """Get a task by ID."""
+    for t in TASKS:
+        if t.task_id == task_id:
+            return t
+    return None
