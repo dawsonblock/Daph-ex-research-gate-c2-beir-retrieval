@@ -1,0 +1,63 @@
+{
+  "n_states_target": 100,
+  "seed": 42,
+  "splits": {
+    "train": 65,
+    "calibration": 15,
+    "structural_ood": 5,
+    "mechanism_ood": 15
+  },
+  "mechanism_split": {
+    "train_mechanisms": [
+      "misleading_support",
+      "weak_evidence_dependence",
+      "bad_verify_target",
+      "near_value_inversion",
+      "resource_depletion",
+      "correct_clear"
+    ],
+    "mechanism_ood_mechanisms": [
+      "world_model_error",
+      "belief_overconfidence",
+      "novel_topology"
+    ],
+    "mechanism_ood_families": [
+      "model_error",
+      "structural"
+    ],
+    "train_families": [
+      "evidence_quality",
+      "action_selection",
+      "resource",
+      "benign"
+    ]
+  },
+  "family_overlap": {
+    "train_cal": 9,
+    "train_struct_ood": 0,
+    "train_mech_ood": 5
+  },
+  "mechanism_overlap": {
+    "train_mech_ood": 0
+  },
+  "n_paired_worlds": 5,
+  "generator_config": {
+    "n_hyp_range": [
+      2,
+      7
+    ],
+    "n_ev_range": [
+      1,
+      8
+    ],
+    "steps_range": [
+      2,
+      8
+    ],
+    "verify_range": [
+      0,
+      4
+    ]
+  },
+  "downstream_policy": "downstream_v1_frozen"
+}
