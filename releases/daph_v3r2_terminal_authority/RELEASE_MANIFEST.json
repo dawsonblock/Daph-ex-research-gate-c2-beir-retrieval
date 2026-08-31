@@ -61,7 +61,13 @@
     "scripts/evaluate_q_v3r3.py": "7102b7435c3a44a82cc36f743434057877c2591334790a2fe36b07efd6971ff0",
     "scripts/run_ablations.py": "1de27e96b65a0b371036e7f6b6952aedd98371ac11f31f4d422ccff64998b1af",
     "scripts/run_ood.py": "b60f0815027c45f601bfc674a4f9c29171c88f26d1f12f80d09c714f744b8ce7",
-    "scripts/verify_release.py": "8d6b33fa6a20f4ba9514b693a76d228540407eae41224f2e272077bd061a2b7b"
+    "scripts/verify_release.py": "8d6b33fa6a20f4ba9514b693a76d228540407eae41224f2e272077bd061a2b7b",
+    "analysis/interaction_analysis.json": "e15913696c13066cb18a3f1288288537ac0a44cd06b4957758e7fda78c2eb7e5",
+    "analysis/rescue_failure_taxonomy.json": "8f43f6488ad26a87d9fad059b29a818f6cd7296a8eeda823cf0e71cc2f4f71b0",
+    "analysis/both_fail_causal_oracle.json": "46540663be38c830318069f5116839b56fe0572fd74ffd67a9ca2454c2179967",
+    "analysis/novelty_initial_state.json": "3ecafb94c4773533d100222094b086c7e8ae0824d47c3e532085bcd9daa71884",
+    "analysis/novelty_decision_states.json": "25930944e852bd3de65213d346bacfe386a0a13e5874a21ea593cfda4d9ad7ec",
+    "analysis/novelty_force_states.json": "3837bfa92c0d698432163d7af4f52e720ede87d9cdbc46112d6818ed0b781efa"
   },
   "gguf": {
     "path": "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
@@ -94,7 +100,14 @@
     "breaks": 0,
     "sign_test_p": 8.67e-19,
     "mechanism": "certificate_driven",
-    "ablation": "Q-only = CERT-only = Q+CERT"
+    "ablation": "Q-only = CERT-only = Q+CERT",
+    "ablation_interaction_I": -63.61,
+    "ablation_interpretation": "redundant",
+    "force_state_novelty_min_nn": 1.19,
+    "force_state_novelty_pct_geq_3": 33.3,
+    "rescue_failure_type": "100% unnecessary_VERIFY",
+    "both_fail_classification": "100% Type D (certificate recall gap)",
+    "claim_level": "Level 2 \u2014 structural task OOD (NOT Level 3 force-state OOD)"
   },
   "qualification_gates": {
     "G1_clean_source_identity": true,
@@ -114,5 +127,6 @@
     "G15_model_identity_fixed": true
   },
   "claim_level": "Level 2 \u2014 structural task OOD (behavioral pass, mechanism certificate-driven)",
-  "promotion_status": "NOT_PROMOTED \u2014 pending full Q-input novelty closure and force-state OOD proof"
+  "promotion_status": "NOT_PROMOTED \u2014 pending full Q-input novelty closure and force-state OOD proof",
+  "file_count": 59
 }

@@ -1,0 +1,16 @@
+{
+  "n": 100,
+  "exact_overlap": 0,
+  "exact_overlap_pct": 0.0,
+  "nn_min": 1.1900047600285588,
+  "nn_max": 9.464798117878185,
+  "nn_mean": 5.432869825011555,
+  "nn_median": 6.692622931713337,
+  "nn_p10": 1.1900047600285588,
+  "nn_p90": 9.464798117878185,
+  "fraction_geq_1": 1.0,
+  "fraction_geq_2": 0.8,
+  "fraction_geq_3": 0.6,
+  "fraction_geq_5": 0.6,
+  "threshold": 3.0
+}
