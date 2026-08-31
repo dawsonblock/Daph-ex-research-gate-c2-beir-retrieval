@@ -1,0 +1,5 @@
+{
+  "note": "RULE PROXY comparison, NOT frozen V3R2. The V3R2 baseline is approximated by handcrafted rules. This is a development diagnostic.",
+  "v3r2_implementation": "rule_proxy",
+  "daph_x_implementation": "learned_q_res"
+}

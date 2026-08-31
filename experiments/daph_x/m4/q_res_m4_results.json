@@ -1,0 +1,41 @@
+{
+  "train": {
+    "n_records": 5421,
+    "n_groups": 1248,
+    "mae_mb": 30.23,
+    "mae_hybrid": 27.66,
+    "mae_improvement": 2.58,
+    "mae_improvement_pct": 8.5,
+    "regret_mb": 21.82,
+    "regret_hybrid": 16.48,
+    "regret_improvement": 5.33,
+    "top1_mb": 0.359,
+    "top1_hybrid": 0.415
+  },
+  "structural_ood": {
+    "n_records": 1347,
+    "n_groups": 300,
+    "mae_mb": 30.87,
+    "mae_hybrid": 31.16,
+    "mae_improvement": -0.29,
+    "mae_improvement_pct": -0.9,
+    "regret_mb": 17.16,
+    "regret_hybrid": 20.02,
+    "regret_improvement": -2.86,
+    "top1_mb": 0.46,
+    "top1_hybrid": 0.437
+  },
+  "mechanism_ood": {
+    "n_records": 1133,
+    "n_groups": 300,
+    "mae_mb": 37.32,
+    "mae_hybrid": 34.52,
+    "mae_improvement": 2.8,
+    "mae_improvement_pct": 7.5,
+    "regret_mb": 31.79,
+    "regret_hybrid": 27.9,
+    "regret_improvement": 3.89,
+    "top1_mb": 0.113,
+    "top1_hybrid": 0.157
+  }
+}

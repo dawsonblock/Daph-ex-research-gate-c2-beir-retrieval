@@ -1,0 +1,62 @@
+{
+  "feature_keys": [
+    "action_ANSWER",
+    "action_COMPARE",
+    "action_DEFER",
+    "action_RETRIEVE",
+    "action_SEARCH",
+    "action_STOP",
+    "action_VERIFY",
+    "delta_q_mb",
+    "has_target",
+    "n_ev",
+    "n_hyp",
+    "q_mb_base",
+    "q_mb_exec",
+    "q_mb_score",
+    "search_remaining",
+    "steps_remaining",
+    "topo_hash_prefix",
+    "verify_remaining",
+    "wm_verify_falsified",
+    "wm_verify_sufficient"
+  ],
+  "train_size": 1248,
+  "train_harmful": 532,
+  "results": {
+    "train": {
+      "n": 1248,
+      "n_harmful": 532,
+      "n_safe": 716,
+      "auroc": 0.9494,
+      "auprc": 0.9287,
+      "brier": 0.0977,
+      "harm_fnr": 0.0883,
+      "precision_at_0.5": 0.7964,
+      "ece": 0.0684
+    },
+    "structural_ood": {
+      "n": 300,
+      "n_harmful": 99,
+      "n_safe": 201,
+      "auroc": 0.7977,
+      "auprc": 0.5873,
+      "brier": 0.1881,
+      "harm_fnr": 0.202,
+      "precision_at_0.5": 0.5302,
+      "ece": 0.1333
+    },
+    "mechanism_ood": {
+      "n": 300,
+      "n_harmful": 211,
+      "n_safe": 89,
+      "auroc": 0.8689,
+      "auprc": 0.8994,
+      "brier": 0.1762,
+      "harm_fnr": 0.3365,
+      "precision_at_0.5": 0.9091,
+      "ece": 0.2399
+    }
+  },
+  "anti_leakage_guard": "PASSED"
+}

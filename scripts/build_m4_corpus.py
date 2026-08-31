@@ -174,32 +174,48 @@ def build_corpus(
         "mechanism_ood": [],
     }
 
-    # Train + calibration: use train mechanisms
-    for i in range(n_train + n_cal):
+    # ── Step 1: Generate a large pool of train-mechanism states ──
+    # Then split by family: ~80% of families → train+cal, ~20% → structural_ood
+    pool_size = n_train + n_cal + n_struct_ood + 500  # extra for filtering
+    pool = []
+    for i in range(pool_size):
         s = seed + i
         state = generate_state(
             seed=s,
             config=config,
             allowed_mechanisms=mechanism_split["train_mechanisms"],
         )
-        split_name = "train" if i < n_train else "calibration"
-        split_states[split_name].append(state)
+        pool.append(state)
 
-    # Structural OOD: same mechanisms but we'll filter by family signature
-    for i in range(n_struct_ood * 3):  # Generate extra, filter for novelty
-        s = seed + n_train + n_cal + i
-        state = generate_state(
-            seed=s,
-            config=config,
-            allowed_mechanisms=mechanism_split["train_mechanisms"],
-        )
-        split_states["structural_ood"].append(state)
-        if len(split_states["structural_ood"]) >= n_struct_ood:
-            break
+    # Discover all families in the pool
+    all_families = set(s.signatures.family for s in pool)
+    print(f"  Pool: {len(pool)} states, {len(all_families)} unique families")
 
-    # Mechanism OOD: use held-out mechanisms
+    # Split families: hold out ~20% for structural_ood
+    import random as _rng
+    fam_rng = _rng.Random(seed)
+    family_list = sorted(all_families)
+    fam_rng.shuffle(family_list)
+    n_struct_families = max(1, len(family_list) // 5)  # 20% of families
+    struct_ood_families = set(family_list[:n_struct_families])
+    train_cal_families = set(family_list[n_struct_families:])
+    print(f"  Structural OOD families: {len(struct_ood_families)}")
+    print(f"  Train+cal families: {len(train_cal_families)}")
+
+    # Assign states to splits based on family membership
+    for state in pool:
+        if state.signatures.family in struct_ood_families:
+            if len(split_states["structural_ood"]) < n_struct_ood:
+                split_states["structural_ood"].append(state)
+        elif state.signatures.family in train_cal_families:
+            if len(split_states["train"]) < n_train:
+                split_states["train"].append(state)
+            elif len(split_states["calibration"]) < n_cal:
+                split_states["calibration"].append(state)
+
+    # ── Step 2: Generate mechanism_ood (held-out mechanisms) ──
     for i in range(n_mech_ood):
-        s = seed + n_train + n_cal + n_struct_ood + i
+        s = seed + 600000 + i
         state = generate_state(
             seed=s,
             config=config,
@@ -207,7 +223,7 @@ def build_corpus(
         )
         split_states["mechanism_ood"].append(state)
 
-    # Generate paired worlds (10% of train)
+    # ── Step 3: Generate paired worlds (10% of train) ──
     n_paired = n_train // 10
     paired_states = []
     for i in range(n_paired):
@@ -217,19 +233,12 @@ def build_corpus(
             config=config,
             allowed_mechanisms=mechanism_split["train_mechanisms"],
         )
-        paired_states.append((state_a, state_b))
-        split_states["train"].append(state_a)
-        split_states["train"].append(state_b)
+        # Only add if family is in train_cal families
+        if state_a.signatures.family in train_cal_families:
+            paired_states.append((state_a, state_b))
+            split_states["train"].append(state_a)
+            split_states["train"].append(state_b)
 
-    # Enforce family-level novelty: structural_ood families must not overlap with train
-    train_families = set(s.signatures.family for s in split_states["train"])
-    struct_ood_filtered = []
-    for state in split_states["structural_ood"]:
-        if state.signatures.family not in train_families:
-            struct_ood_filtered.append(state)
-    split_states["structural_ood"] = struct_ood_filtered[:n_struct_ood]
-
-    # If we don't have enough structural_ood after filtering, keep what we have
     print(f"After family-level filtering:")
     for split_name, states in split_states.items():
         print(f"  {split_name}: {len(states)} states")
