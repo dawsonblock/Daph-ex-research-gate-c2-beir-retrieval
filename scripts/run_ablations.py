@@ -106,14 +106,15 @@ def run_ablation_trajectory(task, backend, i3_7e, utility, q_v3r, arm: AblationA
     from r2_schema import build_action_schema, schema_sha256
     from r2_allowed_actions import compute_allowed_actions, ActionState, EmptyAllowedActionSet, C0
     from hrm_adaptive_memory.executive.evidence_benchmark.i3_29_safety_generator import get_budget_for_task
-    from daph.intervention.checkpoint import compute_state_features, classify_phase_simple
-    from daph.epistemic.v3_features import get_structural_state_v3
+    from daph.intervention.checkpoint import compute_state_features
+    from run_i3_29_live_safety import classify_phase_simple
     from hrm_adaptive_memory.executive.evidence_benchmark.schema import initial_evidence_runtime
-    from hrm_adaptive_memory.executive.evidence_executor import EvidenceExecutor
+    from hrm_adaptive_memory.executive.evidence_benchmark.executor import EvidenceExecutor
     from hrm_adaptive_memory.executive.resources import ResourceState
     from scripts.run_i3_30r3_authority_isolation import (
         compute_near_optimal_set, compute_progress_scores, apply_progress_tiebreak,
-        compute_q_gap, decode_output_strict, _make_result,
+        compute_q_gap, decode_output_strict, get_structural_state_v3,
+        build_evidence_snapshot, valid_verify_targets,
     )
 
     budget = get_budget_for_task(task)
@@ -134,7 +135,6 @@ def run_ablation_trajectory(task, backend, i3_7e, utility, q_v3r, arm: AblationA
     system_prompt = i3_7e.MDSG_STATE_WITH_AFFORDANCES_SYSTEM_PROMPT
 
     for step_id in range(max_steps):
-        from scripts.run_i3_30r3_authority_isolation import build_evidence_snapshot
         evidence_snapshot = build_evidence_snapshot(
             runtime, prior_actions=tuple(prior_actions), prior_outcomes=tuple(prior_outcomes))
 
@@ -276,17 +276,22 @@ def run_ablation_trajectory(task, backend, i3_7e, utility, q_v3r, arm: AblationA
             })
 
         # Execute
-        from daph.authority.policy import DecisionAction
-        from scripts.run_i3_30r3_authority_isolation import valid_verify_targets
+        from hrm_adaptive_memory.cognitive_control.core import DecisionAction
         action_enum = DecisionAction(executed_action)
 
+        resources_before = runtime.resources
         if executed_action in ("ANSWER", "DEFER"):
             res = executor.execute(runtime, action_enum)
             runtime = res.runtime
-            success = res.success
+            resources_after = runtime.resources
+            step_cost = utility.action_cost(resources_before, resources_after)
+            realized -= step_cost
+            success = bool(res.task_success)
             terminal = res.terminal
             terminal_action = executed_action
-            terminal_result = "SUCCESS" if res.success else "FAIL"
+            tr = utility.terminal_reward(action_enum, success)
+            realized += tr
+            terminal_result = "SUCCESS" if success else "TERMINAL_WRONG"
             actions_taken.append(executed_action)
             prior_actions.append(executed_action)
             prior_outcomes.append("terminal")
@@ -297,23 +302,31 @@ def run_ablation_trajectory(task, backend, i3_7e, utility, q_v3r, arm: AblationA
                 kwargs["target_evidence_id"] = target_id
             elif executed_action == "SEARCH" and target_id:
                 kwargs["target_hypothesis_id"] = target_id
+            elif executed_action == "VERIFY" and not target_id:
+                valid = valid_verify_targets(runtime)
+                if valid:
+                    kwargs["target_evidence_id"] = valid[0]
 
             res = executor.execute(runtime, action_enum, **kwargs)
             runtime = res.runtime
+            resources_after = runtime.resources
+            step_cost = utility.action_cost(resources_before, resources_after)
+            realized -= step_cost
             actions_taken.append(executed_action)
             prior_actions.append(executed_action)
             prior_outcomes.append("ok" if not res.terminal else "terminal")
 
             if res.terminal:
                 terminal = True
-                success = res.success
+                success = bool(res.task_success)
                 terminal_action = executed_action
-                terminal_result = "SUCCESS" if res.success else "FAIL"
+                tr = utility.terminal_reward(action_enum, success)
+                realized += tr
+                terminal_result = "SUCCESS" if success else "TERMINAL_WRONG"
                 break
 
-    # Compute utility
-    from scripts.run_i3_30r3_authority_isolation import _compute_utility
-    realized = _compute_utility(task, success, terminal_action, runtime, utility, len(actions_taken))
+    if not terminal:
+        realized -= 0.5
 
     result = {
         "task_id": task.task_id,

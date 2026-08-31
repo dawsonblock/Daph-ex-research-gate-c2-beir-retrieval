@@ -1,0 +1,48 @@
+{
+  "arms": {
+    "shadow": {
+      "success": 40,
+      "total": 120,
+      "rate": 0.3333333333333333,
+      "mean_utility": 7.83833333333333
+    },
+    "q_only": {
+      "success": 100,
+      "total": 120,
+      "rate": 0.8333333333333334,
+      "mean_utility": 71.09333333333332
+    },
+    "cert_only": {
+      "success": 100,
+      "total": 120,
+      "rate": 0.8333333333333334,
+      "mean_utility": 71.45
+    },
+    "q_cert": {
+      "success": 100,
+      "total": 120,
+      "rate": 0.8333333333333334,
+      "mean_utility": 71.09333333333332
+    }
+  },
+  "mechanism_attribution": {
+    "q_only": {
+      "mean_du_vs_shadow": 63.25500000000001,
+      "rescues": 60,
+      "breaks": 0,
+      "sign_test_p": 1.734723475976807e-18
+    },
+    "cert_only": {
+      "mean_du_vs_shadow": 63.61166666666667,
+      "rescues": 60,
+      "breaks": 0,
+      "sign_test_p": 1.6543612251060553e-24
+    },
+    "q_cert": {
+      "mean_du_vs_shadow": 63.25500000000001,
+      "rescues": 60,
+      "breaks": 0,
+      "sign_test_p": 1.734723475976807e-18
+    }
+  }
+}
