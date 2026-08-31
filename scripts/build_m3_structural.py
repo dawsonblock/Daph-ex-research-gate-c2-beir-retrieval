@@ -113,10 +113,56 @@ TRAIN_TEMPLATES = [
         "oracle_path": ("VERIFY", "ANSWER"),
         "budget": {"steps": 4, "verify": 2, "retrieve": 0, "search": 0},
     },
+    # Adversarial: misleading evidence (train set needs harmful examples too)
+    {
+        "category": "TRAIN_ADV_MISLEADING",
+        "summary": "Misleading evidence — model-based Q is wrong",
+        "hypotheses": [("H1", "type A (wrong)", "ANSWER"), ("H2", "type B (correct)", "ANSWER"), ("H3", "type C", "DEFER")],
+        "evidence": [
+            ("E1", "Misleading marker for A", "initial", ("H1",), (), "SUFFICIENT", "CURRENT"),
+            ("E2", "Contradiction of B", "initial", (), ("H2",), "SUFFICIENT", "CURRENT"),
+            ("E3", "Contradiction of C", "initial", (), ("H3",), "SUFFICIENT", "CURRENT"),
+        ],
+        "correct_hypothesis": "H2",
+        "expected_terminal": "ANSWER",
+        "oracle_path": ("DEFER",),
+        "budget": {"steps": 3, "verify": 1, "retrieve": 0, "search": 0},
+    },
 ]
 
 # Test templates: novel structures never seen in training
 TEST_TEMPLATES = [
+    # Adversarial: misleading evidence leads to wrong ANSWER
+    {
+        "category": "TEST_ADV_MISLEADING",
+        "summary": "Misleading evidence — unique supported hypothesis is WRONG",
+        "hypotheses": [("H1", "type A (wrong)", "ANSWER"), ("H2", "type B (correct)", "ANSWER"), ("H3", "type C", "DEFER")],
+        "evidence": [
+            ("E1", "Misleading marker for A", "initial", ("H1",), (), "SUFFICIENT", "CURRENT"),
+            ("E2", "Contradiction of B", "initial", (), ("H2",), "SUFFICIENT", "CURRENT"),
+            ("E3", "Contradiction of C", "initial", (), ("H3",), "SUFFICIENT", "CURRENT"),
+        ],
+        "correct_hypothesis": "H2",  # H2 is correct but has no verified support
+        "expected_terminal": "ANSWER",
+        "oracle_path": ("DEFER",),  # Should defer, not answer
+        "budget": {"steps": 3, "verify": 1, "retrieve": 0, "search": 0},
+    },
+    # Adversarial: competing support where executive might pick wrong
+    {
+        "category": "TEST_ADV_COMPETING_WRONG",
+        "summary": "Competing support — executive might pick wrong hypothesis",
+        "hypotheses": [("H1", "type A", "ANSWER"), ("H2", "type B (correct)", "ANSWER"), ("H3", "type C", "DEFER")],
+        "evidence": [
+            ("E1", "Marker for A", "initial", ("H1",), (), "SUFFICIENT", "CURRENT"),
+            ("E2", "Marker for B", "initial", ("H2",), (), "SUFFICIENT", "CURRENT"),
+            ("E3", "Contradiction of C", "initial", (), ("H3",), "SUFFICIENT", "CURRENT"),
+        ],
+        "correct_hypothesis": "H2",  # H2 is correct but H1 also has support
+        "expected_terminal": "DEFER",
+        "oracle_path": ("DEFER",),
+        "budget": {"steps": 2, "verify": 0, "retrieve": 0, "search": 0},
+    },
+    # 5 hypotheses, multiple unverified supports — VERIFY target matters
     # 5 hypotheses, multiple unverified supports — VERIFY target matters
     {
         "category": "TEST_5HYP_MULTI_VERIFY",
