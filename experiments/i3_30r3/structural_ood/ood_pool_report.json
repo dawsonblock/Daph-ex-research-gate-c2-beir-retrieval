@@ -3,11 +3,11 @@
   "description": "Structural-OOD confirmation pool with explicit feature-signature exclusion from development",
   "development_signatures": 129,
   "candidates_generated": 160,
-  "accepted_structurally_novel": 120,
-  "rejected_overlap": 40,
+  "accepted_structurally_novel": 140,
+  "rejected_overlap": 20,
   "rejected_no_sig": 0,
   "far_ood_threshold": 3.0,
-  "far_ood_count": 120,
+  "far_ood_count": 140,
   "by_category": {
     "OOD_4HYP_MIXED": {
       "total": 20,
@@ -41,8 +41,8 @@
     },
     "OOD_4HYP_MIXED_SEARCH": {
       "total": 20,
-      "accepted": 0,
-      "far_ood": 0
+      "accepted": 20,
+      "far_ood": 20
     },
     "OOD_6HYP_5ELIM_UNIQUE": {
       "total": 20,
@@ -51,10 +51,10 @@
     }
   },
   "distance_stats": {
-    "min": 4.682087163401557,
+    "min": 3.4766146047975264,
     "max": 6.410161717441879,
-    "median": 5.468861995007687,
-    "mean": 5.401589617130791
+    "median": 5.3651374878897204,
+    "mean": 4.97892061517156
   },
   "novelty_criteria": [
     "Structural signature not in development signatures",

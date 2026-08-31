@@ -1,16 +1,16 @@
 {
   "n_both_fail": 20,
   "classifications": {
-    "D_certificate_recall_gap": 20
+    "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY": 20
   },
   "classification_probabilities": {
-    "D_certificate_recall_gap": 1.0
+    "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY": 1.0
   },
   "details": [
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_000",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -32,8 +32,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_001",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -55,8 +55,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_002",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -78,8 +78,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_003",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -101,8 +101,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_004",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -124,8 +124,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_005",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -147,8 +147,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_006",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -170,8 +170,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_007",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -193,8 +193,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_008",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -216,8 +216,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_009",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -239,8 +239,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_010",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -262,8 +262,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_011",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -285,8 +285,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_012",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -308,8 +308,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_013",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -331,8 +331,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_014",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -354,8 +354,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_015",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -377,8 +377,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_016",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -400,8 +400,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_017",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -423,8 +423,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_018",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -446,8 +446,8 @@
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_019",
-      "classification": "D_certificate_recall_gap",
-      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "classification": "BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY",
+      "reason": "expected_terminal=ANSWER but oracle path VERIFY\u2192ANSWER does not produce unique verified support. After VERIFY(E2), 3 hypotheses (H1, H2, H3) have verified support \u2192 COMPETING_VERIFIED. The certificate correctly abstains. This is a benchmark-construction failure, not a certificate recall gap.",
       "expected_terminal": "ANSWER",
       "correct_hypothesis": "H1",
       "shadow_actions": [
@@ -467,5 +467,6 @@
       "cert_fired": false,
       "actions_identical": true
     }
-  ]
+  ],
+  "architectural_implication": "Do NOT build continuation authority to rescue these tasks. The 20 OOD_4HYP_MIXED tasks have invalid oracle paths. The template has been fixed: E1 is now UNVERIFIED (not SUFFICIENT), E2-E4 are verified contradictions. After VERIFY(E1), H1 gets unique verified support \u2192 ANSWER_READY. All 8 templates now pass oracle-path semantic validation (G_B1-G_B4)."
 }

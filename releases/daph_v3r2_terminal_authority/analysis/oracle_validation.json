@@ -1,0 +1,137 @@
+{
+  "valid_count": 8,
+  "invalid_count": 0,
+  "results": [
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_000",
+      "category": "OOD_4HYP_MIXED",
+      "valid": true,
+      "g_b1_actions_legal": true,
+      "g_b2_continuation_required": true,
+      "g_b3_terminal_matches": true,
+      "g_b4_hypothesis_justified": true,
+      "failure_reason": null,
+      "oracle_path": [
+        "VERIFY",
+        "ANSWER"
+      ],
+      "expected_terminal": "ANSWER",
+      "actual_terminal_readiness": "",
+      "final_state_summary": "n_viable=1, n_verified_support=1, readiness=ANSWER_READY"
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_000",
+      "category": "OOD_5HYP_ALL_UNVERIFIED",
+      "valid": true,
+      "g_b1_actions_legal": true,
+      "g_b2_continuation_required": true,
+      "g_b3_terminal_matches": true,
+      "g_b4_hypothesis_justified": true,
+      "failure_reason": null,
+      "oracle_path": [
+        "VERIFY",
+        "ANSWER"
+      ],
+      "expected_terminal": "ANSWER",
+      "actual_terminal_readiness": "",
+      "final_state_summary": "n_viable=1, n_verified_support=1, readiness=ANSWER_READY"
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_6hyp_partial_verify_000",
+      "category": "OOD_6HYP_PARTIAL_VERIFY",
+      "valid": true,
+      "g_b1_actions_legal": true,
+      "g_b2_continuation_required": true,
+      "g_b3_terminal_matches": true,
+      "g_b4_hypothesis_justified": true,
+      "failure_reason": null,
+      "oracle_path": [
+        "ANSWER"
+      ],
+      "expected_terminal": "ANSWER",
+      "actual_terminal_readiness": "",
+      "final_state_summary": "n_viable=4, n_verified_support=1, readiness=ANSWER_READY"
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_all_verified_unique_000",
+      "category": "OOD_4HYP_ALL_VERIFIED_UNIQUE",
+      "valid": true,
+      "g_b1_actions_legal": true,
+      "g_b2_continuation_required": true,
+      "g_b3_terminal_matches": true,
+      "g_b4_hypothesis_justified": true,
+      "failure_reason": null,
+      "oracle_path": [
+        "ANSWER"
+      ],
+      "expected_terminal": "ANSWER",
+      "actual_terminal_readiness": "",
+      "final_state_summary": "n_viable=1, n_verified_support=1, readiness=ANSWER_READY"
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_competing_verified_defer_000",
+      "category": "OOD_4HYP_COMPETING_VERIFIED_DEFER",
+      "valid": true,
+      "g_b1_actions_legal": true,
+      "g_b2_continuation_required": true,
+      "g_b3_terminal_matches": true,
+      "g_b4_hypothesis_justified": true,
+      "failure_reason": null,
+      "oracle_path": [
+        "DEFER"
+      ],
+      "expected_terminal": "DEFER",
+      "actual_terminal_readiness": "",
+      "final_state_summary": "n_viable=4, n_verified_support=3, readiness=COMPETING_VERIFIED"
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_5hyp_3elim_unique_000",
+      "category": "OOD_5HYP_3ELIM_UNIQUE",
+      "valid": true,
+      "g_b1_actions_legal": true,
+      "g_b2_continuation_required": true,
+      "g_b3_terminal_matches": true,
+      "g_b4_hypothesis_justified": true,
+      "failure_reason": null,
+      "oracle_path": [
+        "ANSWER"
+      ],
+      "expected_terminal": "ANSWER",
+      "actual_terminal_readiness": "",
+      "final_state_summary": "n_viable=2, n_verified_support=1, readiness=ANSWER_READY"
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_search_000",
+      "category": "OOD_4HYP_MIXED_SEARCH",
+      "valid": true,
+      "g_b1_actions_legal": true,
+      "g_b2_continuation_required": true,
+      "g_b3_terminal_matches": true,
+      "g_b4_hypothesis_justified": true,
+      "failure_reason": null,
+      "oracle_path": [
+        "VERIFY",
+        "ANSWER"
+      ],
+      "expected_terminal": "ANSWER",
+      "actual_terminal_readiness": "",
+      "final_state_summary": "n_viable=1, n_verified_support=1, readiness=ANSWER_READY"
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_6hyp_5elim_unique_000",
+      "category": "OOD_6HYP_5ELIM_UNIQUE",
+      "valid": true,
+      "g_b1_actions_legal": true,
+      "g_b2_continuation_required": true,
+      "g_b3_terminal_matches": true,
+      "g_b4_hypothesis_justified": true,
+      "failure_reason": null,
+      "oracle_path": [
+        "ANSWER"
+      ],
+      "expected_terminal": "ANSWER",
+      "actual_terminal_readiness": "",
+      "final_state_summary": "n_viable=2, n_verified_support=1, readiness=ANSWER_READY"
+    }
+  ]
+}

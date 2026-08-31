@@ -22,7 +22,7 @@
     "executive/evidence_schema.py": "1b261a80ffd3738f40617c18c66a08dbd30449e15144feada82789f6e3b832ec",
     "executive/model_backend.py": "a9f1c8888b702c458300096006760dc43c26a17e81a8067fa0509e1c6e6ed988",
     "executive/resources.py": "d520b54bdcf91d88420ae9d4ec782d6d7c5aaea546ee49287f6c8f984e0f6e17",
-    "executive/ood_pool_builder.py": "20f68a304d4a8e308c3daba0ea19de75cff53632280f3e392e05db7ec155840c",
+    "executive/ood_pool_builder.py": "ca0b003f0727f7371cbfd88c38d2f6bb5000832f206f17a850298a7506af4680",
     "executive/evaluator.py": "13ce96d18a159592d9373b11e7d14d5933f64e43cbbee1c513c11e52a7932ee7",
     "executive/allowed_actions.py": "482e9f6a9ab6d8c00c2f9d9e50ce5ab1e440e679f39da08dea554b3b3f50cd16",
     "executive/schema_grammar.py": "c20cd3a5adf976ddce2296ded11e21d1b2d9c972cd94c205404e5d6b410a3b0e",
@@ -60,10 +60,13 @@
     "scripts/verify_release.py": "4bd2200bb0d2136415c2039094e8a5feaf6f38e7a4ecac55e061e85271f09d1e",
     "analysis/interaction_analysis.json": "e15913696c13066cb18a3f1288288537ac0a44cd06b4957758e7fda78c2eb7e5",
     "analysis/rescue_failure_taxonomy.json": "8f43f6488ad26a87d9fad059b29a818f6cd7296a8eeda823cf0e71cc2f4f71b0",
-    "analysis/both_fail_causal_oracle.json": "46540663be38c830318069f5116839b56fe0572fd74ffd67a9ca2454c2179967",
+    "analysis/both_fail_causal_oracle.json": "87ab89dcda50247fed64cc2294728e0c2232ef1806e8690d5a6122086dd06128",
     "analysis/novelty_initial_state.json": "3ecafb94c4773533d100222094b086c7e8ae0824d47c3e532085bcd9daa71884",
     "analysis/novelty_decision_states.json": "25930944e852bd3de65213d346bacfe386a0a13e5874a21ea593cfda4d9ad7ec",
-    "analysis/novelty_force_states.json": "3837bfa92c0d698432163d7af4f52e720ede87d9cdbc46112d6818ed0b781efa"
+    "analysis/novelty_force_states.json": "3837bfa92c0d698432163d7af4f52e720ede87d9cdbc46112d6818ed0b781efa",
+    "README.md": "4cb92515777b11ab844ab3318d5f1b1a0559a4afb3cc4353e8a05909cd9e1ff0",
+    "scripts/validate_benchmark_oracles.py": "ccfb3f08440a28a63e04e02c3b5bd8b6d296ca0a4614f16fc404aba5bb65a529",
+    "analysis/oracle_validation.json": "c07fcc82d4cf619c16abb73234ebd5f8349aece718fcc00173f8c965f20caeae"
   },
   "gguf": {
     "path": "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
@@ -102,8 +105,9 @@
     "force_state_novelty_min_nn": 1.19,
     "force_state_novelty_pct_geq_3": 33.3,
     "rescue_failure_type": "100% unnecessary_VERIFY",
-    "both_fail_classification": "100% Type D (certificate recall gap)",
-    "claim_level": "Level 2 \u2014 structural task OOD (NOT Level 3 force-state OOD)"
+    "both_fail_classification": "BENCHMARK_INVALID (not certificate recall gap)",
+    "claim_level": "Level 2 \u2014 structural task OOD (NOT Level 3 force-state OOD)",
+    "benchmark_validity": "3 templates fixed, all 8 pass G_B1-G_B4"
   },
   "qualification_gates": {
     "G1_clean_source_identity": true,
@@ -120,11 +124,16 @@
     "G12_trajectory_recomputability": true,
     "G13_novelty_verified": true,
     "G14_no_post_hoc_changes": true,
-    "G15_model_identity_fixed": true
+    "G15_model_identity_fixed": true,
+    "G_B1_oracle_actions_legal": true,
+    "G_B2_continuation_required": true,
+    "G_B3_terminal_matches": true,
+    "G_B4_hypothesis_justified": true,
+    "G_B_benchmark_valid": true
   },
   "claim_level": "Level 2 \u2014 structural task OOD (behavioral pass, mechanism certificate-driven)",
   "promotion_status": "NOT_PROMOTED \u2014 pending full Q-input novelty closure and force-state OOD proof",
-  "file_count": 59,
+  "file_count": 62,
   "qualification_gates_note": "G9 marked PARTIAL: benchmark oracle-path validation was not part of original G9. Now added as G_B1-G_B4. Original 20 OOD_4HYP_MIXED tasks had invalid oracle paths (benchmark construction failure, not certificate recall gap). Templates fixed and re-validated.",
   "confirmed_executive_commit": "fb4271cf120d7456d7936c52ec485e23480fbb4b",
   "confirmed_executive_tag": "v3r2-confirmed",

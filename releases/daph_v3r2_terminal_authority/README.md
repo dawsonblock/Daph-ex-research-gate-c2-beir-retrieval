@@ -1,19 +1,9 @@
 # DAPH V3R2 Terminal Authority — Confirmed Release
 
 **Release ID:** daph_v3r2_terminal_authority
-**Source commit:** dfdd955fb7e9c2db378ed91bb7c8927a7825721b
 **Source tag:** v3r2-confirmed
 **Dirty worktree:** False
-**Created:** 2026-08-31T02:31:35.807182+00:00
-
-## Contents
-
-- `executive/` — All executive source files (hashed)
-- `models/` — Q models, schemas, utility config
-- `benchmark/` — OOD pool, development signatures, novelty report
-- `raw/` — Raw trajectories (SHADOW, HARD, ablations)
-- `analysis/` — Forensic audits, distance stratification, both-fail diagnostic
-- `scripts/` — Verification and reproduction scripts
+**Files:** 61 (all SHA256 validated)
 
 ## Key Results
 
@@ -25,27 +15,39 @@
 | Rescues | 60 |
 | Breaks | 0 |
 | Sign test p | 8.67e-19 |
-| Mechanism | Certificate-driven |
+| Mechanism | Certificate-driven (Q = burden reduction) |
 | Ablation | Q-only = CERT-only = Q+CERT |
 
-## GGUF Model
+## Benchmark Validity Note
 
-The Qwen2.5-7B-Instruct Q4_K_M GGUF file is NOT included in this bundle.
-Expected SHA256: `65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423`
+20 OOD_4HYP_MIXED tasks have INVALID oracle paths (benchmark construction
+failure, not certificate recall gap). Templates have been fixed and all 8
+templates now pass oracle-path semantic validation (G_B1-G_B4).
+
+On 100 valid OOD tasks: SHADOW=40%, HARD=100%, 60 rescues, 0 breaks.
+(Forensic reanalysis, not new confirmation.)
+
+## Qualification Gates
+
+14/15 PASS. G9 (semantic conformance) = FAIL/PARTIAL due to benchmark
+oracle-path invalidity in original templates.
 
 ## Verification
 
 ```bash
 python scripts/verify_release.py
+python scripts/validate_benchmark_oracles.py
 ```
 
-All file hashes are recorded in `RELEASE_MANIFEST.json`.
-Every SHA256 is exactly 64 lowercase hex characters.
+## GGUF Model
+
+Qwen2.5-7B-Instruct Q4_K_M — NOT included in bundle (SHA256 in manifest).
 
 ## Claim Level
 
 Level 2 — structural task OOD (behavioral pass, mechanism certificate-driven)
+NOT Level 3 — force-state OOD (d_F min NN = 1.19, only 33% ≥ 3.0)
 
 ## Promotion Status
 
-NOT PROMOTED — pending full Q-input novelty closure and force-state OOD proof.
+NOT PROMOTED — G9 fails, benchmark templates need regeneration and rerun.
