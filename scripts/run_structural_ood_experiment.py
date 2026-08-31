@@ -262,9 +262,6 @@ def main():
     # "exhausted ambiguity" clause, which only affects DEFER authority.
     # ANSWER authority logic is unchanged between confirmed and current.
 
-    # TODO: For a truly clean OOD run, we should use git worktree or
-    # temporary checkout of v3r2-confirmed tag.
-
     from run_i3_30r3_authority_isolation import (
         run_trajectory, ArmMode, QModelV3R,
     )
