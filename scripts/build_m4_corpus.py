@@ -25,7 +25,7 @@ from daph_x.benchmark.procedural_generator import (
 )
 from daph_x.benchmark.novelty_signatures import compute_all_signatures
 from daph_x.benchmark.balance_checker import check_balance
-from daph_x.receipts.checkpoint import checkpoint_from_task_and_runtime
+from daph_x.receipts.checkpoint import checkpoint_from_task_and_runtime, checkpoint_from_graph_and_task
 from daph_x.receipts.rollout_engine import (
     evaluate_all_actions_rollout, DownstreamPolicy, RolloutResult,
 )
@@ -64,6 +64,70 @@ def split_mechanisms(seed: int) -> dict:
         "mechanism_ood_families": mechanism_ood_families,
         "train_families": train_families,
     }
+
+
+def _compute_q_mb_heuristic(checkpoint, action, rollout_result) -> float:
+    """Model-based Q estimate (Q_MB) for the executive.
+
+    This is a HEURISTIC that uses the belief state and topology but
+    does NOT know the true rollout utility. It can be wrong —
+    especially under misleading evidence, belief overconfidence,
+    or world-model error.
+
+    The executive selects actions using this estimate, NOT the oracle.
+    This is the P0-A fix: the executive can pick harmful actions.
+
+    Q_MB logic:
+      - ANSWER(unique_supported): high value if belief is concentrated
+      - ANSWER(other): negative (wrong hypothesis)
+      - DEFER: moderate value, higher if competing support
+      - VERIFY(unverified): moderate value, higher if evidence discriminates
+      - STOP: low value
+    """
+    from daph_x.actions.typed_actions import ActionType
+    from daph.epistemic.topology import derive_hypothesis_topology
+
+    cost = action.expected_cost
+    belief = checkpoint.belief
+
+    if action.action_type == ActionType.ANSWER:
+        # Executive trusts the belief — if there's a unique supported
+        # hypothesis, it thinks ANSWER is good. But the supported
+        # hypothesis might be WRONG (misleading evidence).
+        if action.target == belief.unique_supported:
+            # High confidence — but might be wrong
+            confidence = belief.confidence()
+            return 80.0 * confidence - cost
+        else:
+            # Answering a non-supported hypothesis — clearly bad
+            return -50.0 - cost
+
+    if action.action_type == ActionType.DEFER:
+        # DEFER is safe — moderate value
+        if belief.readiness.value == "DEFER_READY":
+            return 40.0 - cost
+        # DEFER when answer seems ready — conservative
+        return 20.0 - cost
+
+    if action.action_type == ActionType.VERIFY:
+        # VERIFY is useful if there's unverified evidence
+        evidence_id = action.target
+        if isinstance(evidence_id, str):
+            node = checkpoint.graph.nodes.get(evidence_id)
+            if node and node.verification_state == "UNVERIFIED":
+                # Higher value if evidence discriminates between hypotheses
+                edges = checkpoint.graph.evidence_edges(evidence_id)
+                n_edges = len(edges)
+                return 25.0 + n_edges * 5.0 - cost
+        return 5.0 - cost
+
+    if action.action_type == ActionType.STOP:
+        return -10.0
+
+    if action.action_type == ActionType.COMPARE:
+        return 10.0 - cost
+
+    return -cost
 
 
 def build_corpus(
@@ -200,8 +264,13 @@ def build_corpus(
             if i % 100 == 0:
                 print(f"  {split_name}: {i}/{len(states)}")
 
-            # Create checkpoint
-            checkpoint = checkpoint_from_task_and_runtime(state.task, None, seed=state.generator_seed)
+            # Create checkpoint — use state.graph directly to preserve
+            # mechanism-specific reliability (P0-B fix)
+            checkpoint = checkpoint_from_graph_and_task(
+                graph=state.graph,
+                task=state.task,
+                seed=state.generator_seed,
+            )
 
             # Generate candidates
             candidates = generate_and_prune(state.graph)
@@ -218,11 +287,21 @@ def build_corpus(
                 seed=state.generator_seed,
             )
 
-            # Find best action by utility (oracle)
-            best_result = max(results, key=lambda r: r.utility)
-            oracle_utility = best_result.utility
+            # Oracle: best action by true rollout utility (for regret computation)
+            oracle_result = max(results, key=lambda r: r.utility)
+            oracle_utility = oracle_result.utility
 
-            # Simulate base policy: always DEFER
+            # Executive action: selected by MODEL-BASED Q estimate (Q_MB)
+            # This is NOT the oracle. Q_MB uses belief state and topology
+            # but can be wrong (especially under misleading evidence).
+            # This is the P0-A fix: the executive can make mistakes.
+            q_mb_scores = [_compute_q_mb_heuristic(checkpoint, candidates[j], results[j])
+                          for j in range(len(candidates))]
+            executive_idx = max(range(len(candidates)), key=lambda j: q_mb_scores[j])
+            executive_result = results[executive_idx]
+            executive_utility = executive_result.utility
+
+            # Base policy: always DEFER (the safe default)
             base_result = None
             for r in results:
                 if "DEFER" in r.first_action:
@@ -230,12 +309,22 @@ def build_corpus(
                     break
             if base_result is None:
                 base_result = results[0]
+            base_utility = base_result.utility
 
-            # Compute intervention metrics
-            delta_u = best_result.utility - base_result.utility
+            # Intervention: executive overrides base
+            # ΔU = U(executive_action) - U(base_action)
+            # This CAN be negative when the executive picks a wrong action
+            delta_u = executive_utility - base_utility
             is_harmful = 1 if delta_u < 0 else 0
 
             # Build intervention features (pre-decision only)
+            # Use canonical topology for has_competition (P0 fix: was comparing
+            # hash to string "competing_support")
+            from daph.epistemic.topology import derive_hypothesis_topology
+            topo = derive_hypothesis_topology(
+                evidence_items=state.graph.to_legacy_evidence_items(),
+                hypothesis_ids=state.graph.hypothesis_ids(),
+            )
             features = {
                 "n_hyp": len(state.graph.hypothesis_ids()),
                 "n_ev": len(state.graph.evidence_ids()),
@@ -246,9 +335,8 @@ def build_corpus(
                                   if n.node_type == "evidence" and n.verification_state != "UNVERIFIED"),
                 "n_unverified": sum(1 for n in state.graph.nodes.values()
                                     if n.node_type == "evidence" and n.verification_state == "UNVERIFIED"),
-                "has_competition": 1.0 if any(
-                    s.signatures.family == "competing_support" for s in [state]
-                ) else 0.0,
+                "has_competition": 1.0 if topo.has_verified_unresolved_competition else 0.0,
+                "has_unique_supported": 1.0 if topo.unique_supported_hypothesis else 0.0,
                 "harm_mechanism": state.harm_mechanism,
                 "mechanism_family": state.mechanism_family,
             }
@@ -272,6 +360,12 @@ def build_corpus(
                 record["regret"] = oracle_utility - result.utility
                 record["is_harmful_intervention"] = is_harmful
                 record["delta_u"] = delta_u
+                record["executive_action"] = executive_result.first_action
+                record["executive_utility"] = executive_utility
+                record["executive_is_oracle"] = (executive_result.first_action == oracle_result.first_action)
+                record["base_action"] = base_result.first_action
+                record["base_utility"] = base_utility
+                record["q_mb_score"] = q_mb_scores[j] if j < len(q_mb_scores) else 0.0
                 rollout_records.append(record)
 
         # Save rollout records
@@ -282,16 +376,24 @@ def build_corpus(
         print(f"  Saved {len(rollout_records)} records to {output_file}")
 
         # Run balance check for this split
-        if harm_labels and len(set(harm_labels)) > 1:
-            balance = check_balance(intervention_features, harm_labels)
-            balance_file = output_dir / f"m4_{split_name}_balance.json"
-            with open(balance_file, "w") as f:
-                json.dump(balance, f, indent=2)
-            print(f"  Balance check: {'PASS' if balance['passed'] else 'FAIL'}")
-            if balance["flagged_features"]:
-                print(f"  Flagged features (AUROC > {balance['threshold']}):")
-                for ff in balance["flagged_features"]:
-                    print(f"    {ff['feature']}: AUROC={ff['auroc']}")
+        # Balance check — FAIL if no harm classes (P0 guard)
+        if len(set(harm_labels)) < 2:
+            raise RuntimeError(
+                f"Split '{split_name}' has no harmful interventions "
+                f"({sum(harm_labels)}/{len(harm_labels)} harmful). "
+                f"Cannot train or qualify intervention-risk model. "
+                f"This likely means the executive is always correct — "
+                f"check that Q_MB selection (not oracle) is used."
+            )
+        balance = check_balance(intervention_features, harm_labels)
+        balance_file = output_dir / f"m4_{split_name}_balance.json"
+        with open(balance_file, "w") as f:
+            json.dump(balance, f, indent=2)
+        print(f"  Balance check: {'PASS' if balance['passed'] else 'FAIL'}")
+        if balance["flagged_features"]:
+            print(f"  Flagged features (AUROC > {balance['threshold']}):")
+            for ff in balance["flagged_features"]:
+                print(f"    {ff['feature']}: AUROC={ff['auroc']}")
 
     # Save metadata
     metadata = {

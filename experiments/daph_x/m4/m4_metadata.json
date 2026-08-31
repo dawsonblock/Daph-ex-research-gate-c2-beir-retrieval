@@ -1,11 +1,11 @@
 {
-  "n_states_target": 100,
+  "n_states_target": 200,
   "seed": 42,
   "splits": {
-    "train": 65,
-    "calibration": 15,
-    "structural_ood": 5,
-    "mechanism_ood": 15
+    "train": 132,
+    "calibration": 30,
+    "structural_ood": 12,
+    "mechanism_ood": 30
   },
   "mechanism_split": {
     "train_mechanisms": [
@@ -33,14 +33,14 @@
     ]
   },
   "family_overlap": {
-    "train_cal": 9,
+    "train_cal": 18,
     "train_struct_ood": 0,
-    "train_mech_ood": 5
+    "train_mech_ood": 14
   },
   "mechanism_overlap": {
     "train_mech_ood": 0
   },
-  "n_paired_worlds": 5,
+  "n_paired_worlds": 11,
   "generator_config": {
     "n_hyp_range": [
       2,

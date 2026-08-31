@@ -123,14 +123,20 @@ def compute_family_signature(graph: EpistemicGraph) -> str:
     n_support_edges = sum(1 for e in graph.edges if e.edge_type == EdgeType.SUPPORTS)
     n_contradict_edges = sum(1 for e in graph.edges if e.edge_type == EdgeType.CONTRADICTS)
 
-    # Count supported hypotheses
-    supported_hyps = set()
-    for e in graph.edges:
-        if e.edge_type == EdgeType.SUPPORTS and e.target_id in hyp_ids:
-            # Check if evidence is verified
-            ev_node = graph.nodes.get(e.source_id)
-            if ev_node and ev_node.verification_state in ("SUFFICIENT", "FALSIFIED"):
-                supported_hyps.add(e.target_id)
+    # Count supported hypotheses using CANONICAL topology
+    # (not manual reconstruction — avoids FALSIFIED polarity bug)
+    from daph.epistemic.topology import derive_hypothesis_topology
+    from daph.epistemic.types import HypothesisState
+
+    evidence_items = graph.to_legacy_evidence_items()
+    topology = derive_hypothesis_topology(
+        evidence_items=evidence_items,
+        hypothesis_ids=hyp_ids,
+    )
+    supported_hyps = {
+        h for h, state in topology.hypothesis_states.items()
+        if state == HypothesisState.SUPPORTED
+    }
 
     if len(supported_hyps) == 0:
         support_pattern = "no_support"

@@ -1,0 +1,232 @@
+{
+  "feature_aurocs": {
+    "has_competition": 0.5139,
+    "has_unique_supported": 0.5278,
+    "n_ev": 0.4028,
+    "n_hyp": 0.5856,
+    "n_unverified": 0.5231,
+    "n_verified": 0.3611,
+    "search_remaining": 0.669,
+    "steps_remaining": 0.5162,
+    "verify_remaining": 0.6574
+  },
+  "flagged_features": [],
+  "conditional_harm_rates": {
+    "harm_mechanism": {
+      "belief_overconfidence": {
+        "harm_rate": 0.7,
+        "n": 10
+      },
+      "novel_topology": {
+        "harm_rate": 0.6666666666666666,
+        "n": 12
+      },
+      "world_model_error": {
+        "harm_rate": 0.375,
+        "n": 8
+      }
+    },
+    "has_competition": {
+      "0.0": {
+        "harm_rate": 0.5925925925925926,
+        "n": 27
+      },
+      "1.0": {
+        "harm_rate": 0.6666666666666666,
+        "n": 3
+      }
+    },
+    "has_unique_supported": {
+      "0.0": {
+        "harm_rate": 0.5714285714285714,
+        "n": 14
+      },
+      "1.0": {
+        "harm_rate": 0.625,
+        "n": 16
+      }
+    },
+    "mechanism_family": {
+      "model_error": {
+        "harm_rate": 0.5555555555555556,
+        "n": 18
+      },
+      "structural": {
+        "harm_rate": 0.6666666666666666,
+        "n": 12
+      }
+    },
+    "n_ev": {
+      "1": {
+        "harm_rate": 0.8,
+        "n": 5
+      },
+      "2": {
+        "harm_rate": 0.6666666666666666,
+        "n": 3
+      },
+      "3": {
+        "harm_rate": 0.6666666666666666,
+        "n": 6
+      },
+      "4": {
+        "harm_rate": 0.4,
+        "n": 5
+      },
+      "5": {
+        "harm_rate": 0.5,
+        "n": 2
+      },
+      "6": {
+        "harm_rate": 0.5,
+        "n": 4
+      },
+      "7": {
+        "harm_rate": 0.5,
+        "n": 2
+      },
+      "8": {
+        "harm_rate": 0.6666666666666666,
+        "n": 3
+      }
+    },
+    "n_hyp": {
+      "2": {
+        "harm_rate": 0.5,
+        "n": 4
+      },
+      "3": {
+        "harm_rate": 0.5,
+        "n": 10
+      },
+      "4": {
+        "harm_rate": 1.0,
+        "n": 3
+      },
+      "5": {
+        "harm_rate": 0.6666666666666666,
+        "n": 3
+      },
+      "6": {
+        "harm_rate": 0.0,
+        "n": 2
+      },
+      "7": {
+        "harm_rate": 0.75,
+        "n": 8
+      }
+    },
+    "n_unverified": {
+      "0": {
+        "harm_rate": 0.45454545454545453,
+        "n": 11
+      },
+      "1": {
+        "harm_rate": 0.8571428571428571,
+        "n": 7
+      },
+      "2": {
+        "harm_rate": 0.8,
+        "n": 5
+      },
+      "3": {
+        "harm_rate": 0.5,
+        "n": 4
+      },
+      "4": {
+        "harm_rate": 0.3333333333333333,
+        "n": 3
+      }
+    },
+    "n_verified": {
+      "1": {
+        "harm_rate": 0.875,
+        "n": 8
+      },
+      "2": {
+        "harm_rate": 0.6,
+        "n": 5
+      },
+      "3": {
+        "harm_rate": 0.375,
+        "n": 8
+      },
+      "4": {
+        "harm_rate": 0.5,
+        "n": 8
+      },
+      "6": {
+        "harm_rate": 1.0,
+        "n": 1
+      }
+    },
+    "search_remaining": {
+      "0": {
+        "harm_rate": 0.4666666666666667,
+        "n": 15
+      },
+      "1": {
+        "harm_rate": 0.625,
+        "n": 8
+      },
+      "2": {
+        "harm_rate": 0.8571428571428571,
+        "n": 7
+      }
+    },
+    "steps_remaining": {
+      "2": {
+        "harm_rate": 0.3333333333333333,
+        "n": 3
+      },
+      "3": {
+        "harm_rate": 1.0,
+        "n": 4
+      },
+      "4": {
+        "harm_rate": 0.4,
+        "n": 5
+      },
+      "5": {
+        "harm_rate": 0.75,
+        "n": 4
+      },
+      "6": {
+        "harm_rate": 0.5,
+        "n": 4
+      },
+      "7": {
+        "harm_rate": 0.4,
+        "n": 5
+      },
+      "8": {
+        "harm_rate": 0.8,
+        "n": 5
+      }
+    },
+    "verify_remaining": {
+      "0": {
+        "harm_rate": 0.125,
+        "n": 8
+      },
+      "1": {
+        "harm_rate": 1.0,
+        "n": 4
+      },
+      "2": {
+        "harm_rate": 0.8571428571428571,
+        "n": 7
+      },
+      "3": {
+        "harm_rate": 0.8,
+        "n": 5
+      },
+      "4": {
+        "harm_rate": 0.5,
+        "n": 6
+      }
+    }
+  },
+  "threshold": 0.8,
+  "passed": true
+}

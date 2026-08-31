@@ -381,3 +381,126 @@ def test_balance_checker_passes_balanced():
     result = check_balance(features, labels, threshold=0.80)
     # May or may not pass depending on the data, just verify it runs
     assert "passed" in result
+
+
+# ─── P0-C: World Model Config Tests ───
+
+def test_world_model_config_affects_verify_transitions():
+    """Changing world_model_config must change VERIFY transition probabilities."""
+    from daph_x.world_model.transition_model import transition_model, ObservationOutcome
+
+    # Build a simple graph with unverified evidence
+    nodes = {
+        "H1": GraphNode("H1", NodeType.HYPOTHESIS, answer_action="ANSWER"),
+        "E1": GraphNode("E1", NodeType.EVIDENCE, verification_state="UNVERIFIED"),
+    }
+    edges = (GraphEdge("E1", "H1", EdgeType.SUPPORTS),)
+    graph = EpistemicGraph(nodes=nodes, edges=edges, steps_remaining=3, verify_remaining=1)
+
+    action = Action(action_type=ActionType.VERIFY, target="E1")
+
+    # Default config (0.7/0.2/0.1)
+    transitions_default = transition_model(graph, action)
+    p_suff_default = [t for t in transitions_default if t.outcome == ObservationOutcome.SUFFICIENT][0].probability
+
+    # Inverted config (0.1/0.8/0.1)
+    config_inverted = {
+        "verify_sufficient_prob": 0.1,
+        "verify_falsified_prob": 0.8,
+        "verify_inconclusive_prob": 0.1,
+    }
+    transitions_inverted = transition_model(graph, action, config_inverted)
+    p_suff_inverted = [t for t in transitions_inverted if t.outcome == ObservationOutcome.SUFFICIENT][0].probability
+
+    assert abs(p_suff_default - 0.7) < 1e-6, f"Default p_sufficient should be 0.7, got {p_suff_default}"
+    assert abs(p_suff_inverted - 0.1) < 1e-6, f"Inverted p_sufficient should be 0.1, got {p_suff_inverted}"
+    assert p_suff_default != p_suff_inverted, "Config must change transition probabilities"
+
+
+def test_world_model_config_affects_rollout_utility():
+    """Changing world_model_config must change rollout utility for VERIFY."""
+    config = GeneratorConfig(n_hyp_range=(2, 2), n_ev_range=(2, 2))
+    state = generate_state(seed=99, config=config, force_mechanism="bad_verify_target")
+    checkpoint = checkpoint_from_task_and_runtime(state.task, None, seed=99)
+
+    candidates = generate_and_prune(state.graph)
+    verify_actions = [a for a in candidates if a.action_type == ActionType.VERIFY]
+    if not verify_actions:
+        pytest.skip("No VERIFY actions in test state")
+
+    policy = DownstreamPolicy()
+
+    # High SUFFICIENT probability
+    config_high = {"verify_sufficient_prob": 0.95, "verify_falsified_prob": 0.03, "verify_inconclusive_prob": 0.02}
+    result_high = rollout(checkpoint=checkpoint, first_action=verify_actions[0],
+                          downstream_policy=policy, world_model_config=config_high, max_steps=8)
+
+    # Low SUFFICIENT probability
+    config_low = {"verify_sufficient_prob": 0.05, "verify_falsified_prob": 0.90, "verify_inconclusive_prob": 0.05}
+    result_low = rollout(checkpoint=checkpoint, first_action=verify_actions[0],
+                         downstream_policy=policy, world_model_config=config_low, max_steps=8)
+
+    # Utilities should differ because transition probabilities differ
+    assert result_high.utility != result_low.utility, \
+        "Different world model configs must produce different rollout utilities"
+
+
+# ─── P0-D: True Paired Worlds Tests ───
+
+def test_paired_worlds_same_structure_different_truth():
+    """Paired worlds must share graph structure but differ in correct hypothesis."""
+    config = GeneratorConfig(n_hyp_range=(3, 5), n_ev_range=(2, 4))
+    state_a, state_b = generate_paired_worlds(seed=42, config=config)
+
+    # Same graph (frozen, shared)
+    assert state_a.graph is state_b.graph or state_a.graph.graph_hash() == state_b.graph.graph_hash()
+
+    # Different correct hypothesis
+    assert state_a.correct_hypothesis_id != state_b.correct_hypothesis_id
+
+    # Same pair_id
+    assert state_a.pair_id == state_b.pair_id
+
+    # Different polarity
+    assert state_a.pair_polarity == "beneficial"
+    assert state_b.pair_polarity == "harmful"
+
+    # Same resource budget
+    assert state_a.graph.steps_remaining == state_b.graph.steps_remaining
+    assert state_a.graph.verify_remaining == state_b.graph.verify_remaining
+
+
+def test_paired_worlds_same_n_hyp_same_n_ev():
+    """Paired worlds must have same hypothesis and evidence counts."""
+    config = GeneratorConfig(n_hyp_range=(3, 5), n_ev_range=(2, 4))
+    state_a, state_b = generate_paired_worlds(seed=42, config=config)
+
+    assert len(state_a.graph.hypothesis_ids()) == len(state_b.graph.hypothesis_ids())
+    assert len(state_a.graph.evidence_ids()) == len(state_b.graph.evidence_ids())
+
+
+# ─── P0-B: Checkpoint from Graph Tests ───
+
+def test_checkpoint_from_graph_preserves_reliability():
+    """checkpoint_from_graph_and_task must preserve mechanism-specific reliability."""
+    from daph_x.receipts.checkpoint import checkpoint_from_graph_and_task
+
+    config = GeneratorConfig()
+    state = generate_state(seed=42, config=config, force_mechanism="weak_evidence_dependence")
+
+    checkpoint = checkpoint_from_graph_and_task(
+        graph=state.graph,
+        task=state.task,
+        seed=42,
+    )
+
+    # Check that reliability is preserved in the checkpoint graph
+    for nid, node in checkpoint.graph.nodes.items():
+        if node.node_type == NodeType.EVIDENCE:
+            original_node = state.graph.nodes.get(nid)
+            assert original_node is not None
+            if original_node.reliability:
+                assert node.reliability is not None, \
+                    f"Reliability lost for {nid} in checkpoint"
+                assert node.reliability.independence_score == original_node.reliability.independence_score, \
+                    f"Independence score changed for {nid}"

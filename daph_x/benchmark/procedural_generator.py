@@ -562,14 +562,23 @@ def generate_paired_worlds(
     World A: intervention is beneficial (ΔU > 0)
     World B: intervention is harmful (ΔU < 0)
 
-    Both worlds share the same observable coarse structure (same n_hyp,
-    n_ev, resource budget, action types) but differ in deep causal
-    properties (evidence reliability, latent truth, transition dynamics).
+    Both worlds share the SAME observable coarse structure:
+      - same hypothesis count
+      - same evidence count
+      - same resource budget
+      - same coarse topology family
+      - same candidate action types
+
+    They differ ONLY in the latent causal variable:
+      - which hypothesis is correct (truth is flipped)
+      - or evidence reliability is degraded
+
+    This prevents shortcut learning from coarse observable features.
     """
     rng = random.Random(seed)
     pair_id = f"{seed:06d}"
 
-    # Generate World A (beneficial)
+    # Generate World A (beneficial) — correct_clear mechanism
     state_a = generate_state(
         seed=seed,
         config=config,
@@ -579,19 +588,125 @@ def generate_paired_worlds(
         force_mechanism="correct_clear",
     )
 
-    # Generate World B (harmful) with same n_hyp, n_ev, resources
-    # but different mechanism
-    harmful_mechanisms = ["misleading_support", "belief_overconfidence", "near_value_inversion"]
-    if allowed_mechanisms:
-        harmful_mechanisms = [m for m in harmful_mechanisms if m in allowed_mechanisms]
-
-    state_b = generate_state(
-        seed=seed + 1,
-        config=config,
-        allowed_mechanisms=allowed_mechanisms,
-        pair_id=pair_id,
-        pair_polarity="harmful",
-        force_mechanism=rng.choice(harmful_mechanisms) if harmful_mechanisms else "misleading_support",
-    )
+    # Build World B by CLONING state_a's structure and flipping
+    # only the correct hypothesis (truth inversion).
+    # This keeps: same n_hyp, n_ev, resources, topology, action types
+    # But changes: which hypothesis is correct → ΔU flips
+    state_b = _clone_and_flip_truth(state_a, seed, pair_id)
 
     return state_a, state_b
+
+
+def _clone_and_flip_truth(
+    state_a: GeneratedState,
+    seed: int,
+    pair_id: str,
+) -> GeneratedState:
+    """Clone a state's structure but flip which hypothesis is correct.
+
+    This creates a matched pair where:
+      - Same graph structure (same nodes, edges, verification states)
+      - Same resource budgets
+      - Same candidate action types
+      - DIFFERENT correct hypothesis (truth is inverted)
+
+    In World A: the uniquely supported hypothesis is correct → ANSWER is good
+    In World B: the uniquely supported hypothesis is WRONG → ANSWER is harmful
+    """
+    rng = random.Random(seed + 1)
+
+    # Get the original correct hypothesis
+    original_correct = state_a.correct_hypothesis_id
+    hyp_ids = sorted(state_a.graph.hypothesis_ids())
+
+    # Pick a different hypothesis as correct for World B
+    # Prefer one that is NOT uniquely supported (so the supported one is wrong)
+    other_hyps = [h for h in hyp_ids if h != original_correct]
+    if not other_hyps:
+        # Can't flip if only one hypothesis — just return a copy
+        return state_a
+    new_correct = rng.choice(other_hyps)
+
+    # Clone the task but change the correct hypothesis
+    from hrm_adaptive_memory.cognitive_control.core import DecisionAction
+    from hrm_adaptive_memory.executive.evidence_benchmark.schema import (
+        EvidenceHypothesis, EvidenceItem, EvidenceTask,
+    )
+    from hrm_adaptive_memory.cognitive_control.state import (
+        TemporalStatus, VerificationState,
+    )
+
+    task_a = state_a.task
+    task_b_id = f"m4_misleading_support_pair{pair_id}_harmful_{seed+1:06d}"
+
+    # Clone hypotheses — same structure, same answer actions
+    hyp_objects = []
+    for h in task_a.hypotheses:
+        hyp_objects.append(EvidenceHypothesis(
+            hypothesis_id=h.hypothesis_id,
+            proposition=h.proposition,
+            answer_action=h.answer_action,
+            answer_payload=h.answer_payload,
+        ))
+
+    # Clone evidence — identical
+    ev_objects = []
+    for e in task_a.evidence_items:
+        ev_objects.append(EvidenceItem(
+            evidence_id=e.evidence_id,
+            proposition=e.proposition,
+            source_class=e.source_class,
+            supports=e.supports,
+            contradicts=e.contradicts,
+            verification_state=e.verification_state,
+            temporal_status=e.temporal_status,
+            retrieved=e.retrieved,
+            verify_result=e.verify_result,
+        ))
+
+    # The key change: different correct hypothesis
+    # This means the uniquely supported hypothesis is now WRONG
+    # → ANSWER(supported) is harmful
+    # → DEFER is correct (should defer because the supported hyp is wrong)
+    task_b = EvidenceTask(
+        task_id=task_b_id,
+        split="m4",
+        category="misleading_support",
+        task_summary=f"Paired world (harmful) — truth flipped from {original_correct} to {new_correct}",
+        high_stakes=True,
+        budget_profile=task_a.budget_profile,  # Same resources
+        hypotheses=tuple(hyp_objects),
+        evidence_items=tuple(ev_objects),
+        retrieve_exposes=(),
+        search_exposes=(),
+        oracle_resolution_path=("DEFER",),  # Should defer — supported hyp is wrong
+        expected_terminal=DecisionAction("DEFER"),
+        correct_hypothesis_id=new_correct,  # Flipped!
+    )
+
+    # Clone the graph — same structure, same reliability
+    # (The graph doesn't change — only the correct hypothesis metadata changes)
+    graph_b = state_a.graph  # Frozen, safe to share
+
+    # Compute new signatures
+    from daph_x.benchmark.novelty_signatures import compute_all_signatures
+    signatures_b = compute_all_signatures(
+        graph_b, new_correct, "misleading_support",
+    )
+
+    # World model config — same as World A (structure is identical)
+    wm_config = dict(state_a.world_model_config)
+
+    return GeneratedState(
+        task=task_b,
+        graph=graph_b,
+        correct_hypothesis_id=new_correct,
+        harm_mechanism="misleading_support",
+        mechanism_family="evidence_quality",
+        signatures=signatures_b,
+        pair_id=pair_id,
+        pair_polarity="harmful",
+        world_model_config=wm_config,
+        generator_seed=seed + 1,
+        generator_params=dict(state_a.generator_params),
+    )

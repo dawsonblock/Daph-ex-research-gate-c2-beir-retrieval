@@ -398,7 +398,7 @@ def _enumerate_branches(
     initial_state_hash = _graph_state_hash(initial_graph)
 
     try:
-        transitions = transition_model(initial_graph, first_action)
+        transitions = transition_model(initial_graph, first_action, world_model_config)
     except Exception as e:
         return [{
             "probability": 1.0,
@@ -560,7 +560,7 @@ def _enumerate_branch_recursive(
     state_hash_before = _graph_state_hash(graph)
 
     try:
-        transitions = transition_model(graph, next_action)
+        transitions = transition_model(graph, next_action, world_model_config)
     except Exception as e:
         errors.append(f"Transition error: {e}")
         branches.append({

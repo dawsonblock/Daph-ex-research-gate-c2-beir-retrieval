@@ -326,7 +326,13 @@ def _deserialize_belief(data: dict) -> BeliefState:
 
 
 def checkpoint_from_task_and_runtime(task, runtime, seed: int = 42) -> Checkpoint:
-    """Create a checkpoint from a legacy task and runtime."""
+    """Create a checkpoint from a legacy task and runtime.
+
+    WARNING: This reconstructs the graph from the legacy task, which
+    assigns default reliability values. For M4 procedural generation
+    where mechanism-specific reliability matters, use
+    checkpoint_from_graph_and_task() instead.
+    """
     from daph_x.graph.epistemic_graph import build_graph_from_evidence_task
     from daph_x.belief.belief_engine import compute_belief_state
 
@@ -341,7 +347,40 @@ def checkpoint_from_task_and_runtime(task, runtime, seed: int = 42) -> Checkpoin
         expected_terminal=task.expected_terminal.value,
         oracle_path=task.oracle_resolution_path,
         seed=seed,
-        downstream_policy_id="v3r2_confirmed",
+        downstream_policy_id="downstream_v1_frozen",
+        executive_version="daph_x_0.1.0",
+        model_version="Qwen2.5-7B-Instruct-Q4_K_M",
+    )
+
+
+def checkpoint_from_graph_and_task(
+    graph: EpistemicGraph,
+    task,
+    seed: int = 42,
+    downstream_policy_id: str = "downstream_v1_frozen",
+) -> Checkpoint:
+    """Create a checkpoint from an explicit graph and task metadata.
+
+    This preserves the graph's mechanism-specific reliability values
+    instead of reconstructing them from the legacy task (which would
+    assign default reliability=1.0).
+
+    Use this for M4 procedural generation where the generator creates
+    a graph with mechanism-specific EvidenceReliability.
+    """
+    from daph_x.belief.belief_engine import compute_belief_state
+
+    belief = compute_belief_state(graph)
+
+    return Checkpoint(
+        graph=graph,
+        belief=belief,
+        task_id=task.task_id,
+        correct_hypothesis_id=task.correct_hypothesis_id,
+        expected_terminal=task.expected_terminal.value,
+        oracle_path=task.oracle_resolution_path,
+        seed=seed,
+        downstream_policy_id=downstream_policy_id,
         executive_version="daph_x_0.1.0",
         model_version="Qwen2.5-7B-Instruct-Q4_K_M",
     )

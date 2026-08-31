@@ -40,11 +40,23 @@ class Transition:
     next_graph: EpistemicGraph
 
 
-def transition_model(graph: EpistemicGraph, action: Action) -> list[Transition]:
+def transition_model(
+    graph: EpistemicGraph,
+    action: Action,
+    config: dict | None = None,
+) -> list[Transition]:
     """Compute possible transitions for an action.
 
     Returns a list of (outcome, probability, next_graph) tuples.
     Probabilities sum to 1.0.
+
+    Args:
+        config: Optional world-model configuration. If provided, overrides
+                default placeholder probabilities for VERIFY/SEARCH/RETRIEVE.
+                Expected keys:
+                  verify_sufficient_prob, verify_falsified_prob,
+                  verify_inconclusive_prob,
+                  search_found_prob, retrieve_found_prob
     """
     if action.action_type == ActionType.ANSWER:
         return [Transition(
@@ -68,13 +80,13 @@ def transition_model(graph: EpistemicGraph, action: Action) -> list[Transition]:
         )]
 
     if action.action_type == ActionType.VERIFY:
-        return _verify_transitions(graph, action)
+        return _verify_transitions(graph, action, config)
 
     if action.action_type == ActionType.SEARCH:
-        return _search_transitions(graph, action)
+        return _search_transitions(graph, action, config)
 
     if action.action_type == ActionType.RETRIEVE:
-        return _retrieve_transitions(graph, action)
+        return _retrieve_transitions(graph, action, config)
 
     if action.action_type == ActionType.COMPARE:
         return [Transition(
@@ -98,12 +110,19 @@ def transition_model(graph: EpistemicGraph, action: Action) -> list[Transition]:
     )]
 
 
-def _verify_transitions(graph: EpistemicGraph, action: Action) -> list[Transition]:
+def _verify_transitions(
+    graph: EpistemicGraph, action: Action, config: dict | None = None,
+) -> list[Transition]:
     """Compute transitions for VERIFY(e).
 
     The evidence node e has a verify_result that determines the outcome.
     In synthetic tasks, verify_result is set. In real tasks, it would
     be estimated from empirical frequencies.
+
+    If config is provided, uses config probabilities instead of defaults:
+      verify_sufficient_prob (default 0.7)
+      verify_falsified_prob (default 0.2)
+      verify_inconclusive_prob (default 0.1)
     """
     evidence_id = action.target
     if not isinstance(evidence_id, str):
@@ -113,15 +132,21 @@ def _verify_transitions(graph: EpistemicGraph, action: Action) -> list[Transitio
     if not node or node.node_type != NodeType.EVIDENCE:
         return []
 
-    # Check if we have a ground-truth verify_result (synthetic tasks)
-    # In the graph, verify_result isn't stored directly — we infer from
-    # the verification_state. For UNVERIFIED evidence, we need to model
-    # possible outcomes.
+    # Get probabilities from config or use defaults
+    p_sufficient = 0.7
+    p_falsified = 0.2
+    p_inconclusive = 0.1
+    if config:
+        p_sufficient = config.get("verify_sufficient_prob", 0.7)
+        p_falsified = config.get("verify_falsified_prob", 0.2)
+        p_inconclusive = config.get("verify_inconclusive_prob", 0.1)
 
-    # For now, use a simple model:
-    # - If the evidence supports a hypothesis: 70% SUFFICIENT, 20% FALSIFIED, 10% INCONCLUSIVE
-    # - If the evidence contradicts a hypothesis: 70% SUFFICIENT, 20% FALSIFIED, 10% INCONCLUSIVE
-    # These are placeholder frequencies — should be calibrated from data.
+    # Normalize to ensure they sum to 1.0
+    total = p_sufficient + p_falsified + p_inconclusive
+    if total > 0:
+        p_sufficient /= total
+        p_falsified /= total
+        p_inconclusive /= total
 
     # Determine what verification would produce
     transitions = []
@@ -130,7 +155,7 @@ def _verify_transitions(graph: EpistemicGraph, action: Action) -> list[Transitio
     next_graph_sufficient = _apply_verify_outcome(graph, evidence_id, "SUFFICIENT")
     transitions.append(Transition(
         outcome=ObservationOutcome.SUFFICIENT,
-        probability=0.7,  # Placeholder — should be calibrated
+        probability=p_sufficient,
         next_graph=next_graph_sufficient,
     ))
 
@@ -138,7 +163,7 @@ def _verify_transitions(graph: EpistemicGraph, action: Action) -> list[Transitio
     next_graph_falsified = _apply_verify_outcome(graph, evidence_id, "FALSIFIED")
     transitions.append(Transition(
         outcome=ObservationOutcome.FALSIFIED,
-        probability=0.2,  # Placeholder
+        probability=p_falsified,
         next_graph=next_graph_falsified,
     ))
 
@@ -146,7 +171,7 @@ def _verify_transitions(graph: EpistemicGraph, action: Action) -> list[Transitio
     next_graph_inconclusive = _apply_verify_outcome(graph, evidence_id, "INCONCLUSIVE")
     transitions.append(Transition(
         outcome=ObservationOutcome.INCONCLUSIVE,
-        probability=0.1,  # Placeholder
+        probability=p_inconclusive,
         next_graph=next_graph_inconclusive,
     ))
 
@@ -195,8 +220,14 @@ def _apply_verify_outcome(
     )
 
 
-def _search_transitions(graph: EpistemicGraph, action: Action) -> list[Transition]:
+def _search_transitions(
+    graph: EpistemicGraph, action: Action, config: dict | None = None,
+) -> list[Transition]:
     """Compute transitions for SEARCH."""
+    p_found = 0.5
+    if config:
+        p_found = config.get("search_found_prob", 0.5)
+
     next_graph = EpistemicGraph(
         nodes=graph.nodes,
         edges=graph.edges,
@@ -210,17 +241,23 @@ def _search_transitions(graph: EpistemicGraph, action: Action) -> list[Transitio
     )
     return [Transition(
         outcome=ObservationOutcome.NEW_EVIDENCE_FOUND,
-        probability=0.5,  # Placeholder
+        probability=p_found,
         next_graph=next_graph,
     ), Transition(
         outcome=ObservationOutcome.NO_NEW_EVIDENCE,
-        probability=0.5,  # Placeholder
+        probability=1.0 - p_found,
         next_graph=next_graph,
     )]
 
 
-def _retrieve_transitions(graph: EpistemicGraph, action: Action) -> list[Transition]:
+def _retrieve_transitions(
+    graph: EpistemicGraph, action: Action, config: dict | None = None,
+) -> list[Transition]:
     """Compute transitions for RETRIEVE."""
+    p_found = 0.5
+    if config:
+        p_found = config.get("retrieve_found_prob", 0.5)
+
     next_graph = EpistemicGraph(
         nodes=graph.nodes,
         edges=graph.edges,
@@ -234,10 +271,10 @@ def _retrieve_transitions(graph: EpistemicGraph, action: Action) -> list[Transit
     )
     return [Transition(
         outcome=ObservationOutcome.NEW_EVIDENCE_FOUND,
-        probability=0.5,  # Placeholder
+        probability=p_found,
         next_graph=next_graph,
     ), Transition(
         outcome=ObservationOutcome.NO_NEW_EVIDENCE,
-        probability=0.5,
+        probability=1.0 - p_found,
         next_graph=next_graph,
     )]
