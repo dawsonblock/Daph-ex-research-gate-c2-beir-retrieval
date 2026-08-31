@@ -1,0 +1,1442 @@
+[
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_000",
+    "category": "OOD_4HYP_MIXED",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_001",
+    "category": "OOD_4HYP_MIXED",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_002",
+    "category": "OOD_4HYP_MIXED",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_003",
+    "category": "OOD_4HYP_MIXED",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_004",
+    "category": "OOD_4HYP_MIXED",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_005",
+    "category": "OOD_4HYP_MIXED",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_006",
+    "category": "OOD_4HYP_MIXED",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_007",
+    "category": "OOD_4HYP_MIXED",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_008",
+    "category": "OOD_4HYP_MIXED",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_009",
+    "category": "OOD_4HYP_MIXED",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_000",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_001",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_002",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_003",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_004",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_005",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_006",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_007",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_008",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_009",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_partial_verify_000",
+    "category": "OOD_6HYP_PARTIAL_VERIFY",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_partial_verify_001",
+    "category": "OOD_6HYP_PARTIAL_VERIFY",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_partial_verify_002",
+    "category": "OOD_6HYP_PARTIAL_VERIFY",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_partial_verify_003",
+    "category": "OOD_6HYP_PARTIAL_VERIFY",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_partial_verify_004",
+    "category": "OOD_6HYP_PARTIAL_VERIFY",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_partial_verify_005",
+    "category": "OOD_6HYP_PARTIAL_VERIFY",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_partial_verify_006",
+    "category": "OOD_6HYP_PARTIAL_VERIFY",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_partial_verify_007",
+    "category": "OOD_6HYP_PARTIAL_VERIFY",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_partial_verify_008",
+    "category": "OOD_6HYP_PARTIAL_VERIFY",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_partial_verify_009",
+    "category": "OOD_6HYP_PARTIAL_VERIFY",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_all_verified_unique_000",
+    "category": "OOD_4HYP_ALL_VERIFIED_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_all_verified_unique_001",
+    "category": "OOD_4HYP_ALL_VERIFIED_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_all_verified_unique_002",
+    "category": "OOD_4HYP_ALL_VERIFIED_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_all_verified_unique_003",
+    "category": "OOD_4HYP_ALL_VERIFIED_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_all_verified_unique_004",
+    "category": "OOD_4HYP_ALL_VERIFIED_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_all_verified_unique_005",
+    "category": "OOD_4HYP_ALL_VERIFIED_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_all_verified_unique_006",
+    "category": "OOD_4HYP_ALL_VERIFIED_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_all_verified_unique_007",
+    "category": "OOD_4HYP_ALL_VERIFIED_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_all_verified_unique_008",
+    "category": "OOD_4HYP_ALL_VERIFIED_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_all_verified_unique_009",
+    "category": "OOD_4HYP_ALL_VERIFIED_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_competing_verified_defer_000",
+    "category": "OOD_4HYP_COMPETING_VERIFIED_DEFER",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "DEFER(no_unique_justified_hypothesis)",
+      "target": "no_unique_justified_hypothesis",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 50.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_competing_verified_defer_001",
+    "category": "OOD_4HYP_COMPETING_VERIFIED_DEFER",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "DEFER(no_unique_justified_hypothesis)",
+      "target": "no_unique_justified_hypothesis",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 50.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_competing_verified_defer_002",
+    "category": "OOD_4HYP_COMPETING_VERIFIED_DEFER",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "DEFER(no_unique_justified_hypothesis)",
+      "target": "no_unique_justified_hypothesis",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 50.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_competing_verified_defer_003",
+    "category": "OOD_4HYP_COMPETING_VERIFIED_DEFER",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "DEFER(no_unique_justified_hypothesis)",
+      "target": "no_unique_justified_hypothesis",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 50.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_competing_verified_defer_004",
+    "category": "OOD_4HYP_COMPETING_VERIFIED_DEFER",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "DEFER(no_unique_justified_hypothesis)",
+      "target": "no_unique_justified_hypothesis",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 50.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_competing_verified_defer_005",
+    "category": "OOD_4HYP_COMPETING_VERIFIED_DEFER",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "DEFER(no_unique_justified_hypothesis)",
+      "target": "no_unique_justified_hypothesis",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 50.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_competing_verified_defer_006",
+    "category": "OOD_4HYP_COMPETING_VERIFIED_DEFER",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "DEFER(no_unique_justified_hypothesis)",
+      "target": "no_unique_justified_hypothesis",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 50.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_competing_verified_defer_007",
+    "category": "OOD_4HYP_COMPETING_VERIFIED_DEFER",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "DEFER(no_unique_justified_hypothesis)",
+      "target": "no_unique_justified_hypothesis",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 50.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_competing_verified_defer_008",
+    "category": "OOD_4HYP_COMPETING_VERIFIED_DEFER",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "DEFER(no_unique_justified_hypothesis)",
+      "target": "no_unique_justified_hypothesis",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 50.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_competing_verified_defer_009",
+    "category": "OOD_4HYP_COMPETING_VERIFIED_DEFER",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "DEFER(no_unique_justified_hypothesis)",
+      "target": "no_unique_justified_hypothesis",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 50.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_3elim_unique_000",
+    "category": "OOD_5HYP_3ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_3elim_unique_001",
+    "category": "OOD_5HYP_3ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_3elim_unique_002",
+    "category": "OOD_5HYP_3ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_3elim_unique_003",
+    "category": "OOD_5HYP_3ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_3elim_unique_004",
+    "category": "OOD_5HYP_3ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_3elim_unique_005",
+    "category": "OOD_5HYP_3ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_3elim_unique_006",
+    "category": "OOD_5HYP_3ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_3elim_unique_007",
+    "category": "OOD_5HYP_3ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_3elim_unique_008",
+    "category": "OOD_5HYP_3ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_5hyp_3elim_unique_009",
+    "category": "OOD_5HYP_3ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_search_000",
+    "category": "OOD_4HYP_MIXED_SEARCH",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_search_001",
+    "category": "OOD_4HYP_MIXED_SEARCH",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_search_002",
+    "category": "OOD_4HYP_MIXED_SEARCH",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_search_003",
+    "category": "OOD_4HYP_MIXED_SEARCH",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_search_004",
+    "category": "OOD_4HYP_MIXED_SEARCH",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_search_005",
+    "category": "OOD_4HYP_MIXED_SEARCH",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_search_006",
+    "category": "OOD_4HYP_MIXED_SEARCH",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_search_007",
+    "category": "OOD_4HYP_MIXED_SEARCH",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_search_008",
+    "category": "OOD_4HYP_MIXED_SEARCH",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_4hyp_mixed_search_009",
+    "category": "OOD_4HYP_MIXED_SEARCH",
+    "v3r2": {
+      "action": "DEFER",
+      "target": null,
+      "authority": "FORCE",
+      "correct": false
+    },
+    "daphx": {
+      "action": "VERIFY(E1)",
+      "target": "E1",
+      "authority": "ADVISE",
+      "correct": true,
+      "score": 39.5,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_5elim_unique_000",
+    "category": "OOD_6HYP_5ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_5elim_unique_001",
+    "category": "OOD_6HYP_5ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_5elim_unique_002",
+    "category": "OOD_6HYP_5ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_5elim_unique_003",
+    "category": "OOD_6HYP_5ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_5elim_unique_004",
+    "category": "OOD_6HYP_5ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_5elim_unique_005",
+    "category": "OOD_6HYP_5ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_5elim_unique_006",
+    "category": "OOD_6HYP_5ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_5elim_unique_007",
+    "category": "OOD_6HYP_5ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_5elim_unique_008",
+    "category": "OOD_6HYP_5ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  },
+  {
+    "task_id": "i3_30r3_ood_ood_6hyp_5elim_unique_009",
+    "category": "OOD_6HYP_5ELIM_UNIQUE",
+    "v3r2": {
+      "action": "ANSWER",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true
+    },
+    "daphx": {
+      "action": "ANSWER(H1)",
+      "target": "H1",
+      "authority": "FORCE",
+      "correct": true,
+      "score": 100.0,
+      "regret": 0.0
+    }
+  }
+]
