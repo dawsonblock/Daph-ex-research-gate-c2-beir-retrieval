@@ -239,37 +239,96 @@ def _compute_utility(
 ) -> float:
     """Compute utility for a fork result.
 
-    Utility function:
+    Utility function is TARGET-AWARE:
       - Correct ANSWER: 100 - total_cost
       - Wrong ANSWER: -50
       - Correct DEFER: 50 - total_cost
       - Wrong DEFER: -20
-      - VERIFY (SUFFICIENT): 20 - cost
-      - VERIFY (FALSIFIED): 10 - cost
+      - VERIFY(e) that discriminates: 40 - cost (resolves competition)
+      - VERIFY(e) that supports correct: 30 - cost
+      - VERIFY(e) redundant: 5 - cost
+      - VERIFY(e) irrelevant: 0 - cost
       - SEARCH/RETRIEVE: 5 - cost
       - Other: -cost
     """
     cost = action.expected_cost
 
     if action.action_type == ActionType.ANSWER:
-        # Check if the answer is correct
         if action.target == checkpoint.correct_hypothesis_id:
             return 100.0 - cost
         else:
             return -50.0
 
     if action.action_type == ActionType.DEFER:
-        # DEFER is correct when expected_terminal is DEFER
         if checkpoint.expected_terminal == "DEFER":
             return 50.0 - cost
         else:
             return -20.0
 
     if action.action_type == ActionType.VERIFY:
+        # Target-aware VERIFY utility
+        evidence_id = action.target
+        if not isinstance(evidence_id, str):
+            return 0.0 - cost
+
+        # Get the evidence node from the ORIGINAL graph
+        node = checkpoint.graph.nodes.get(evidence_id)
+        if node is None:
+            return 0.0 - cost
+
+        # Determine what this evidence supports/contradicts
+        supports = [e.target_id for e in checkpoint.graph.edges
+                   if e.source_id == evidence_id and e.edge_type.value == "supports"]
+        contradicts = [e.target_id for e in checkpoint.graph.edges
+                      if e.source_id == evidence_id and e.edge_type.value == "contradicts"]
+
+        # Check if verifying this evidence discriminates between hypotheses
+        # (supports/contradicts a viable hypothesis)
+        from daph.epistemic.topology import derive_hypothesis_topology
+        evidence_items = checkpoint.graph.to_legacy_evidence_items()
+        hypothesis_ids = checkpoint.graph.hypothesis_ids()
+        topo = derive_hypothesis_topology(
+            evidence_items=evidence_items,
+            hypothesis_ids=hypothesis_ids,
+        )
+
+        # Count how many SUPPORTED hypotheses this evidence affects
+        n_supported_affected = 0
+        for h_id in supports + contradicts:
+            if topo.hypothesis_states.get(h_id, None) is not None:
+                state = topo.hypothesis_states[h_id]
+                if state.value in ("SUPPORTED", "WEAKENED", "UNTESTED"):
+                    n_supported_affected += 1
+
+        # Check if this evidence supports the correct hypothesis
+        supports_correct = checkpoint.correct_hypothesis_id in supports
+        contradicts_correct = checkpoint.correct_hypothesis_id in contradicts
+
+        # Utility based on target quality
         if outcome == "SUFFICIENT":
-            return 20.0 - cost
+            if supports_correct:
+                # Verifying evidence that supports the correct hypothesis
+                return 40.0 - cost  # High value — resolves toward correct answer
+            elif contradicts_correct:
+                # Verifying evidence that contradicts the correct hypothesis
+                return 5.0 - cost  # Low value — might mislead
+            elif n_supported_affected >= 2:
+                # Evidence discriminates between multiple hypotheses
+                return 35.0 - cost
+            elif n_supported_affected == 1:
+                # Evidence affects one hypothesis
+                return 20.0 - cost
+            else:
+                # Evidence doesn't affect any viable hypothesis
+                return 5.0 - cost
         elif outcome == "FALSIFIED":
-            return 10.0 - cost
+            # Falsified evidence eliminates a hypothesis
+            if contradicts_correct:
+                return 30.0 - cost  # Good — eliminates wrong hypothesis
+            elif n_supported_affected >= 2:
+                return 25.0 - cost
+            else:
+                return 10.0 - cost
         else:
             return 5.0 - cost
 

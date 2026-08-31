@@ -1,0 +1,19 @@
+{
+  "train_templates": [
+    "TRAIN_2HYP_VERIFY",
+    "TRAIN_3HYP_UNIQUE",
+    "TRAIN_3HYP_COMPETING_DEFER",
+    "TRAIN_4HYP_ONE_UNVERIFIED"
+  ],
+  "test_templates": [
+    "TEST_5HYP_MULTI_VERIFY",
+    "TEST_6HYP_MIXED_COMPETING",
+    "TEST_7HYP_MANY_ELIM",
+    "TEST_5HYP_VERIFY_DISCRIMINATION"
+  ],
+  "train_records": 240,
+  "test_records": 320,
+  "train_groups": 80,
+  "test_groups": 80,
+  "structural_overlap": 0
+}
