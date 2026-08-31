@@ -220,30 +220,40 @@ def main():
     print(f"RMSE(Q_MB):          {rmse_mb:.2f}")
     print(f"RMSE(Q_MB + Q_res):  {rmse_hybrid:.2f}")
 
-    # Action regret comparison
+    # Action regret comparison — CORRECTED
     # For each test group, find the best action by Q_MB and by Q_hybrid
+    # CRITICAL: use test_records indices (aligned with X_test/q_res_pred),
+    # NOT group-relative indices.
     test_records = [r for r, m in zip(records, test_mask) if m]
-    groups = defaultdict(list)
-    for r in test_records:
-        groups[r["counterfactual_group_id"]].append(r)
+    test_groups_map = defaultdict(list)
+    for i, r in enumerate(test_records):
+        test_groups_map[r["counterfactual_group_id"]].append((i, r))
 
     regret_mb = []
     regret_hybrid = []
-    for gid, group_records in groups.items():
-        if len(group_records) < 2:
+    for gid, group in test_groups_map.items():
+        if len(group) < 2:
             continue
         # Oracle
-        oracle_utility = max(r["utility"] for r in group_records)
+        oracle_utility = max(r["utility"] for _, r in group)
 
-        # Q_MB best
-        q_mb_group = [compute_q_mb(r) for r in group_records]
+        # Q_MB best (recomputed per record, consistent with training)
+        q_mb_group = [compute_q_mb(r) for _, r in group]
         best_mb_idx = np.argmax(q_mb_group)
-        regret_mb.append(oracle_utility - group_records[best_mb_idx]["utility"])
+        regret_mb.append(oracle_utility - group[best_mb_idx][1]["utility"])
 
-        # Q_hybrid best
-        q_hybrid_group = [compute_q_mb(r) + q_res_pred[i] for i, r in enumerate(group_records)]
+        # Q_hybrid best — use CORRECT indices into q_res_pred
+        # i is the index in test_records (aligned with X_test/q_res_pred)
+        q_hybrid_group = [q_mb_test[i] + q_res_pred[i] for i, _ in group]
         best_hybrid_idx = np.argmax(q_hybrid_group)
-        regret_hybrid.append(oracle_utility - group_records[best_hybrid_idx]["utility"])
+        regret_hybrid.append(oracle_utility - group[best_hybrid_idx][1]["utility"])
+
+    # Invariant: if predictions are perfect, regret must be zero
+    max_pred_error = np.max(np.abs(q_hybrid - y_oracle_test))
+    if max_pred_error < 1e-9:
+        assert all(r == 0.0 for r in regret_hybrid), (
+            f"Perfect predictions but nonzero regret: {regret_hybrid}"
+        )
 
     if regret_mb:
         print(f"\nAction regret (test groups with >1 action):")
