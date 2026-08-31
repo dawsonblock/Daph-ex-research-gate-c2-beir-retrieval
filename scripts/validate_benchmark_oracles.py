@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 """Oracle-path semantic validator for benchmark tasks.
 
+Uses CANONICAL topology semantics from daph.epistemic.topology — the same
+implementation used by the executive. No duplicated epistemic-state logic.
+
 For every generated task, executes the declared oracle path deterministically
 and asserts that the terminal state matches the expected terminal.
 
 Checks:
-  G_B1: oracle actions all valid for the state
-  G_B2: nonterminal oracle states are continuation-required
-  G_B3: terminal oracle state matches expected terminal
-  G_B4: correct hypothesis is structurally justified at terminal
+  G_B1: oracle actions all legal at each step
+  G_B2: nonterminal oracle states are exactly CONTINUE_REQUIRED
+  G_B3: terminal oracle state matches expected terminal (ANSWER_READY or DEFER_READY)
+  G_B4: correct hypothesis is the canonical unique supported hypothesis
 
 Usage:
     python scripts/validate_benchmark_oracles.py
@@ -35,6 +38,14 @@ from hrm_adaptive_memory.executive.evidence_benchmark.schema import (
 from hrm_adaptive_memory.executive.evidence_benchmark.executor import EvidenceExecutor
 from hrm_adaptive_memory.executive.resources import ResourceBudget, ResourceState
 
+# CANONICAL imports — same semantics as the executive
+from daph.epistemic.topology import (
+    derive_hypothesis_topology,
+    classify_terminal_readiness,
+    is_answer_ready,
+)
+from daph.epistemic.types import HypothesisState, TerminalReadiness
+
 
 @dataclass
 class OracleValidationResult:
@@ -52,53 +63,58 @@ class OracleValidationResult:
     final_state_summary: str = ""
 
 
-def get_readiness(runtime) -> str:
-    """Determine the canonical readiness of the current state."""
+def canonical_topology_and_readiness(runtime) -> tuple:
+    """Derive canonical topology and readiness from runtime.
+
+    This is the SINGLE canonical implementation — same as the executive.
+    No duplicated epistemic-state logic.
+    """
     task = runtime.task
-    hypotheses = task.hypotheses
+    hypothesis_ids = [h.hypothesis_id for h in task.hypotheses]
     evidence = runtime.evidence
 
-    n_viable = 0
-    n_eliminated = 0
-    n_verified_support = 0
+    # Derive canonical topology
+    topology = derive_hypothesis_topology(
+        evidence_items=evidence,
+        hypothesis_ids=hypothesis_ids,
+        hidden_evidence_count=0,  # All evidence is visible in oracle validation
+    )
 
-    for h in hypotheses:
-        hyp_id = h.hypothesis_id
-        vs = False
-        vc = False
-        for e in evidence:
-            if e.verification_state == VerificationState.SUFFICIENT:
-                if hyp_id in e.supports:
-                    vs = True
-                if hyp_id in e.contradicts:
-                    vc = True
-            elif e.verification_state == VerificationState.FALSIFIED:
-                if hyp_id in e.supports:
-                    vc = True
-                if hyp_id in e.contradicts:
-                    vs = True
+    # Determine action admissibility for readiness classification
+    resources = runtime.resources
+    can_verify = (
+        resources.budget.max_verification_calls > 0
+        and topology.unverified_evidence_exists
+    )
+    can_retrieve = (
+        resources.budget.max_retrieval_calls > 0
+        and topology.hidden_evidence_count > 0
+    )
+    can_search = (
+        resources.budget.max_search_calls > 0
+        and not runtime.searched
+    )
 
-        if vc and not vs:
-            n_eliminated += 1
-        elif vs and not vc:
-            n_viable += 1
-            n_verified_support += 1
-        elif not vs and not vc:
-            n_viable += 1
-        else:
-            n_viable += 1
+    # Check for discriminating evidence
+    has_unverified_discriminating = topology.unverified_evidence_exists
+    has_hidden_evidence = topology.hidden_evidence_count > 0
+    search_could_discriminate = can_search  # Simplified
 
-    if n_verified_support == 1:
-        return "ANSWER_READY"
-    if n_verified_support >= 2:
-        return "COMPETING_VERIFIED"
-    if n_viable == 0:
-        return "ALL_ELIMINATED"
-    return "CONTINUE_REQUIRED"
+    readiness = classify_terminal_readiness(
+        topology,
+        can_verify=can_verify,
+        can_retrieve=can_retrieve,
+        can_search=can_search,
+        has_unverified_discriminating_evidence=has_unverified_discriminating,
+        has_hidden_evidence=has_hidden_evidence,
+        search_could_discriminate=search_could_discriminate,
+    )
+
+    return topology, readiness
 
 
 def validate_task_oracle(task: EvidenceTask) -> OracleValidationResult:
-    """Validate a single task's oracle path by simulating it."""
+    """Validate a single task's oracle path using canonical semantics."""
     parts = task.budget_profile.split("_")
     budget = ResourceBudget(
         max_executive_steps=int(parts[1]) if len(parts) > 1 else 4,
@@ -131,46 +147,49 @@ def validate_task_oracle(task: EvidenceTask) -> OracleValidationResult:
         is_terminal = action_name in ("ANSWER", "DEFER")
 
         if is_terminal:
-            readiness = get_readiness(runtime)
+            # G_B3: Check terminal readiness matches expected terminal
+            topology, readiness = canonical_topology_and_readiness(runtime)
+            result.actual_terminal_readiness = readiness.value
 
-            if action_name == "ANSWER" and readiness != "ANSWER_READY":
-                result.g_b3_terminal_matches = False
-                result.failure_reason = (
-                    f"Oracle ANSWER at step {i} but readiness={readiness} "
-                    f"(not ANSWER_READY). "
-                    f"n_verified_support > 1 or n_viable > 1."
-                )
-                result.actual_terminal_readiness = readiness
-                result.valid = False
-                break
+            if action_name == "ANSWER":
+                if readiness != TerminalReadiness.ANSWER_READY:
+                    result.g_b3_terminal_matches = False
+                    result.failure_reason = (
+                        f"Oracle ANSWER at step {i} but canonical readiness="
+                        f"{readiness.value} (not ANSWER_READY). "
+                        f"Topology: n_supported={topology.n_viable_hypotheses}, "
+                        f"n_contradicted={topology.n_eliminated_hypotheses}, "
+                        f"unique_supported={topology.unique_supported_hypothesis}, "
+                        f"has_competition={topology.has_verified_unresolved_competition}"
+                    )
+                    result.valid = False
+                    break
 
-            # G_B4: Check correct hypothesis is uniquely justified
+            elif action_name == "DEFER":
+                if readiness != TerminalReadiness.DEFER_READY:
+                    result.g_b3_terminal_matches = False
+                    result.failure_reason = (
+                        f"Oracle DEFER at step {i} but canonical readiness="
+                        f"{readiness.value} (not DEFER_READY). "
+                        f"Topology: n_supported={topology.n_viable_hypotheses}, "
+                        f"n_contradicted={topology.n_eliminated_hypotheses}, "
+                        f"can_verify={topology.unverified_evidence_exists}"
+                    )
+                    result.valid = False
+                    break
+
+            # G_B4: Check correct hypothesis is the canonical unique supported
             if action_name == "ANSWER":
                 correct_id = task.correct_hypothesis_id
-                has_support = False
-                other_support = 0
+                canonical_unique = topology.unique_supported_hypothesis
 
-                for h in runtime.task.hypotheses:
-                    h_id = h.hypothesis_id
-                    for e in runtime.evidence:
-                        if e.verification_state == VerificationState.SUFFICIENT:
-                            if h_id in e.supports and h_id == correct_id:
-                                has_support = True
-                            elif h_id in e.supports and h_id != correct_id:
-                                # Check if this other hypothesis is eliminated
-                                other_eliminated = False
-                                for e2 in runtime.evidence:
-                                    if e2.verification_state in (VerificationState.FALSIFIED, VerificationState.SUFFICIENT):
-                                        if h_id in e2.contradicts:
-                                            other_eliminated = True
-                                if not other_eliminated:
-                                    other_support += 1
-
-                if not has_support or other_support > 0:
+                if canonical_unique != correct_id:
                     result.g_b4_hypothesis_justified = False
                     result.failure_reason = (
-                        f"Correct hypothesis {correct_id} not uniquely justified. "
-                        f"has_support={has_support}, other_support={other_support}"
+                        f"Correct hypothesis {correct_id} is not the canonical "
+                        f"unique supported hypothesis. "
+                        f"Canonical unique: {canonical_unique}. "
+                        f"Topology states: {dict(topology.hypothesis_states)}"
                     )
                     result.valid = False
                     break
@@ -178,13 +197,17 @@ def validate_task_oracle(task: EvidenceTask) -> OracleValidationResult:
             break
 
         else:
-            # Non-terminal action — check continuation is required
-            readiness = get_readiness(runtime)
-            if readiness == "ANSWER_READY":
+            # G_B2: Non-terminal action — readiness must be EXACTLY CONTINUE_REQUIRED
+            topology, readiness = canonical_topology_and_readiness(runtime)
+
+            if readiness != TerminalReadiness.CONTINUE_REQUIRED:
                 result.g_b2_continuation_required = False
                 result.failure_reason = (
                     f"Oracle continues with {action_name} at step {i} "
-                    f"but readiness=ANSWER_READY (should have terminated)"
+                    f"but canonical readiness={readiness.value} "
+                    f"(must be exactly CONTINUE_REQUIRED). "
+                    f"Topology: n_supported={topology.n_viable_hypotheses}, "
+                    f"unique_supported={topology.unique_supported_hypothesis}"
                 )
                 result.valid = False
                 break
@@ -205,16 +228,11 @@ def validate_task_oracle(task: EvidenceTask) -> OracleValidationResult:
 
             try:
                 exec_result = executor.execute(runtime, action)
-                # The execute method returns an EvidenceActionExecution
-                # We need to update the runtime from it
-                # Check if execution succeeded
                 if hasattr(exec_result, 'next_runtime'):
                     runtime = exec_result.next_runtime
                 elif hasattr(exec_result, 'runtime'):
                     runtime = exec_result.runtime
                 else:
-                    # The executor may mutate runtime in place or return a new one
-                    # Let's check what it returns
                     result.g_b1_actions_legal = False
                     result.failure_reason = f"Cannot extract runtime from exec result: {type(exec_result)}"
                     result.valid = False
@@ -225,32 +243,14 @@ def validate_task_oracle(task: EvidenceTask) -> OracleValidationResult:
                 result.valid = False
                 break
 
-    # Build final state summary
-    n_viable = 0
-    n_verified_support = 0
-    for h in runtime.task.hypotheses:
-        h_id = h.hypothesis_id
-        vs = False
-        vc = False
-        for e in runtime.evidence:
-            if e.verification_state == VerificationState.SUFFICIENT:
-                if h_id in e.supports:
-                    vs = True
-                if h_id in e.contradicts:
-                    vc = True
-            if e.verification_state == VerificationState.FALSIFIED:
-                if h_id in e.supports:
-                    vc = True
-                if h_id in e.contradicts:
-                    vs = True
-        if vs and not vc:
-            n_verified_support += 1
-        if not vc or vs:
-            n_viable += 1
-
+    # Build final state summary from canonical topology
+    topology, readiness = canonical_topology_and_readiness(runtime)
     result.final_state_summary = (
-        f"n_viable={n_viable}, n_verified_support={n_verified_support}, "
-        f"readiness={get_readiness(runtime)}"
+        f"n_supported={topology.n_viable_hypotheses}, "
+        f"n_contradicted={topology.n_eliminated_hypotheses}, "
+        f"n_weakened={topology.n_weakened_hypotheses}, "
+        f"unique_supported={topology.unique_supported_hypothesis}, "
+        f"readiness={readiness.value}"
     )
 
     return result
@@ -264,11 +264,11 @@ def validate_all_templates():
     valid_count = 0
     invalid_count = 0
 
-    print(f"{'='*80}")
-    print("ORACLE-PATH SEMANTIC VALIDATION")
-    print(f"{'='*80}")
-    print(f"{'Category':>35} {'Valid':>6} {'G_B1':>5} {'G_B2':>5} {'G_B3':>5} {'G_B4':>5} {'Reason'}")
-    print("-" * 110)
+    print(f"{'='*90}")
+    print("ORACLE-PATH SEMANTIC VALIDATION (CANONICAL TOPOLOGY)")
+    print(f"{'='*90}")
+    print(f"{'Category':>40} {'Valid':>6} {'G_B1':>5} {'G_B2':>5} {'G_B3':>5} {'G_B4':>5} {'Reason'}")
+    print("-" * 120)
 
     for template in OOD_DOMAIN_TEMPLATES:
         task = generate_ood_candidate(template, 0)
@@ -280,19 +280,18 @@ def validate_all_templates():
         else:
             invalid_count += 1
 
-        reason = (result.failure_reason or "")[:50]
-        print(f"{result.category:>35} {str(result.valid):>6} "
+        reason = (result.failure_reason or "")[:60]
+        print(f"{result.category:>40} {str(result.valid):>6} "
               f"{str(result.g_b1_actions_legal):>5} "
               f"{str(result.g_b2_continuation_required):>5} "
               f"{str(result.g_b3_terminal_matches):>5} "
               f"{str(result.g_b4_hypothesis_justified):>5} "
               f"{reason}")
 
-    print(f"\n{'='*80}")
+    print(f"\n{'='*90}")
     print(f"Valid: {valid_count}, Invalid: {invalid_count}")
-    print(f"{'='*80}")
+    print(f"{'='*90}")
 
-    # Show details for invalid
     if invalid_count > 0:
         print(f"\nINVALID TEMPLATE DETAILS:")
         for r in results:
@@ -306,6 +305,9 @@ def validate_all_templates():
 
     # Save
     output = {
+        "validator": "canonical_topology",
+        "topology_source": "daph.epistemic.topology.derive_hypothesis_topology",
+        "readiness_source": "daph.epistemic.topology.classify_terminal_readiness",
         "valid_count": valid_count,
         "invalid_count": invalid_count,
         "results": [

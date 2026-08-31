@@ -1,4 +1,7 @@
 {
+  "validator": "canonical_topology",
+  "topology_source": "daph.epistemic.topology.derive_hypothesis_topology",
+  "readiness_source": "daph.epistemic.topology.classify_terminal_readiness",
   "valid_count": 8,
   "invalid_count": 0,
   "results": [
@@ -16,12 +19,12 @@
         "ANSWER"
       ],
       "expected_terminal": "ANSWER",
-      "actual_terminal_readiness": "",
-      "final_state_summary": "n_viable=1, n_verified_support=1, readiness=ANSWER_READY"
+      "actual_terminal_readiness": "ANSWER_READY",
+      "final_state_summary": "n_supported=1, n_contradicted=3, n_weakened=0, unique_supported=H1, readiness=ANSWER_READY"
     },
     {
-      "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_000",
-      "category": "OOD_5HYP_ALL_UNVERIFIED",
+      "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_000",
+      "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
       "valid": true,
       "g_b1_actions_legal": true,
       "g_b2_continuation_required": true,
@@ -33,8 +36,8 @@
         "ANSWER"
       ],
       "expected_terminal": "ANSWER",
-      "actual_terminal_readiness": "",
-      "final_state_summary": "n_viable=1, n_verified_support=1, readiness=ANSWER_READY"
+      "actual_terminal_readiness": "ANSWER_READY",
+      "final_state_summary": "n_supported=1, n_contradicted=4, n_weakened=0, unique_supported=H1, readiness=ANSWER_READY"
     },
     {
       "task_id": "i3_30r3_ood_ood_6hyp_partial_verify_000",
@@ -49,8 +52,8 @@
         "ANSWER"
       ],
       "expected_terminal": "ANSWER",
-      "actual_terminal_readiness": "",
-      "final_state_summary": "n_viable=4, n_verified_support=1, readiness=ANSWER_READY"
+      "actual_terminal_readiness": "ANSWER_READY",
+      "final_state_summary": "n_supported=1, n_contradicted=0, n_weakened=2, unique_supported=H1, readiness=ANSWER_READY"
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_all_verified_unique_000",
@@ -65,8 +68,8 @@
         "ANSWER"
       ],
       "expected_terminal": "ANSWER",
-      "actual_terminal_readiness": "",
-      "final_state_summary": "n_viable=1, n_verified_support=1, readiness=ANSWER_READY"
+      "actual_terminal_readiness": "ANSWER_READY",
+      "final_state_summary": "n_supported=1, n_contradicted=1, n_weakened=2, unique_supported=H1, readiness=ANSWER_READY"
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_competing_verified_defer_000",
@@ -81,8 +84,8 @@
         "DEFER"
       ],
       "expected_terminal": "DEFER",
-      "actual_terminal_readiness": "",
-      "final_state_summary": "n_viable=4, n_verified_support=3, readiness=COMPETING_VERIFIED"
+      "actual_terminal_readiness": "DEFER_READY",
+      "final_state_summary": "n_supported=3, n_contradicted=0, n_weakened=0, unique_supported=None, readiness=DEFER_READY"
     },
     {
       "task_id": "i3_30r3_ood_ood_5hyp_3elim_unique_000",
@@ -97,8 +100,8 @@
         "ANSWER"
       ],
       "expected_terminal": "ANSWER",
-      "actual_terminal_readiness": "",
-      "final_state_summary": "n_viable=2, n_verified_support=1, readiness=ANSWER_READY"
+      "actual_terminal_readiness": "ANSWER_READY",
+      "final_state_summary": "n_supported=1, n_contradicted=3, n_weakened=0, unique_supported=H1, readiness=ANSWER_READY"
     },
     {
       "task_id": "i3_30r3_ood_ood_4hyp_mixed_search_000",
@@ -114,8 +117,8 @@
         "ANSWER"
       ],
       "expected_terminal": "ANSWER",
-      "actual_terminal_readiness": "",
-      "final_state_summary": "n_viable=1, n_verified_support=1, readiness=ANSWER_READY"
+      "actual_terminal_readiness": "ANSWER_READY",
+      "final_state_summary": "n_supported=1, n_contradicted=3, n_weakened=0, unique_supported=H1, readiness=ANSWER_READY"
     },
     {
       "task_id": "i3_30r3_ood_ood_6hyp_5elim_unique_000",
@@ -130,8 +133,8 @@
         "ANSWER"
       ],
       "expected_terminal": "ANSWER",
-      "actual_terminal_readiness": "",
-      "final_state_summary": "n_viable=2, n_verified_support=1, readiness=ANSWER_READY"
+      "actual_terminal_readiness": "ANSWER_READY",
+      "final_state_summary": "n_supported=1, n_contradicted=4, n_weakened=0, unique_supported=H1, readiness=ANSWER_READY"
     }
   ]
 }

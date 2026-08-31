@@ -180,7 +180,7 @@ OOD_DOMAIN_TEMPLATES = [
     # Previous version had all 5 unverified, causing VERIFY to target E5
     # (for H5/DEFER) instead of E1 (for H1).
     {
-        "category": "OOD_5HYP_ALL_UNVERIFIED",
+        "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
         "summary": "Is the diagnosis one of five possibilities?",
         "hypotheses": [
             ("H1", "diagnosis 1", "ANSWER"),

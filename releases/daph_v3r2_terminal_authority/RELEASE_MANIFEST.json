@@ -57,7 +57,7 @@
     "scripts/evaluate_q_v3r3.py": "7102b7435c3a44a82cc36f743434057877c2591334790a2fe36b07efd6971ff0",
     "scripts/run_ablations.py": "1de27e96b65a0b371036e7f6b6952aedd98371ac11f31f4d422ccff64998b1af",
     "scripts/run_ood.py": "b60f0815027c45f601bfc674a4f9c29171c88f26d1f12f80d09c714f744b8ce7",
-    "scripts/verify_release.py": "4bd2200bb0d2136415c2039094e8a5feaf6f38e7a4ecac55e061e85271f09d1e",
+    "scripts/verify_release.py": "e6e08ed6e572824210a3500e671c77361a9b9e82a3f2e73bb33605345ef779b6",
     "analysis/interaction_analysis.json": "e15913696c13066cb18a3f1288288537ac0a44cd06b4957758e7fda78c2eb7e5",
     "analysis/rescue_failure_taxonomy.json": "8f43f6488ad26a87d9fad059b29a818f6cd7296a8eeda823cf0e71cc2f4f71b0",
     "analysis/both_fail_causal_oracle.json": "87ab89dcda50247fed64cc2294728e0c2232ef1806e8690d5a6122086dd06128",
@@ -136,7 +136,7 @@
   "claim_level": "Level 2 \u2014 structural task OOD (behavioral pass, mechanism certificate-driven)",
   "promotion_status": "NOT_PROMOTED \u2014 pending full Q-input novelty closure and force-state OOD proof",
   "file_count": 64,
-  "qualification_gates_note": "G9 marked PARTIAL: benchmark oracle-path validation was not part of original G9. Now added as G_B1-G_B4. Original 20 OOD_4HYP_MIXED tasks had invalid oracle paths (benchmark construction failure, not certificate recall gap). Templates fixed and re-validated.",
+  "qualification_gates_note": "G_B1-G_B4 now use CANONICAL topology (daph.epistemic.topology). FALSIFIED polarity bug fixed. Mutation tests verify invalid tasks are rejected. G9 remains FAIL because the original 120-task pool was generated with the old (invalid) templates. G9 will pass only after a new R4 pool is generated, validated, and run.",
   "confirmed_executive_commit": "fb4271cf120d7456d7936c52ec485e23480fbb4b",
   "confirmed_executive_tag": "v3r2-confirmed",
   "release_packaging_commit": "dfdd955fb7e9c2db378ed91bb7c8927a7825721b"

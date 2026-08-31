@@ -220,8 +220,8 @@
     "budget_profile": "OOD_4_2_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_000",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_000",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -231,8 +231,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_001",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_001",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -242,8 +242,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_002",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_002",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -253,8 +253,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_003",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_003",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -264,8 +264,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_004",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_004",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -275,8 +275,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_005",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_005",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -286,8 +286,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_006",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_006",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -297,8 +297,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_007",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_007",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -308,8 +308,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_008",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_008",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -319,8 +319,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_009",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_009",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -330,8 +330,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_010",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_010",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -341,8 +341,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_011",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_011",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -352,8 +352,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_012",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_012",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -363,8 +363,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_013",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_013",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -374,8 +374,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_014",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_014",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -385,8 +385,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_015",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_015",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -396,8 +396,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_016",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_016",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -407,8 +407,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_017",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_017",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -418,8 +418,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_018",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_018",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
@@ -429,8 +429,8 @@
     "budget_profile": "OOD_5_3_0"
   },
   {
-    "task_id": "i3_30r3_ood_ood_5hyp_all_unverified_019",
-    "category": "OOD_5HYP_ALL_UNVERIFIED",
+    "task_id": "i3_30r3_ood_ood_5hyp_verify_to_unique_019",
+    "category": "OOD_5HYP_VERIFY_TO_UNIQUE",
     "structural_signature": "n_hyp_with_verified_support=0|n_hyp_with_verified_contradiction=4|n_hyp_with_mixed_verified=0|n_viable_hypotheses=0|n_eliminated_hypotheses=4|has_unique_verified_supported_hypothesis=0|has_verified_unresolved_competition=0|verified_hyp_action_is_answer=0|verified_hyp_action_is_defer=0|n_hyp_unverified_support=1|n_hyp_unverified_contradiction=0|has_competing_unverified_support=0|verify_remaining=3|steps_remaining=5",
     "nn_distance": 4.715523187645664,
     "is_far_ood": true,
