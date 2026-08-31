@@ -75,6 +75,9 @@ class CausalActionRecord:
     topo_has_competition: bool = False
     topo_unverified_exists: bool = False
 
+    # ID-invariant topology signature (for structural overlap detection)
+    topology_signature: str = ""
+
     # Model-based prediction (recorded BEFORE execution)
     q_mb: float = 0.0
     world_model_prediction: str = ""
@@ -146,6 +149,18 @@ def build_causal_dataset(
         record_id = f"{group_id}:{i}"
         action = actions[i]
 
+        # Compute pre-action model-based prediction (frozen BEFORE execution)
+        q_mb_pre = _compute_q_mb_pre(checkpoint, action, topology)
+        wm_pred, wm_prob = _compute_world_model_prediction(checkpoint, action)
+
+        # Compute belief hash from belief state
+        belief_hash = hashlib.sha256(
+            json.dumps({
+                "probabilities": dict(sorted(checkpoint.belief.probabilities.items())),
+                "readiness": checkpoint.belief.readiness.value,
+            }, sort_keys=True, default=str).encode()
+        ).hexdigest()[:16]
+
         record = CausalActionRecord(
             record_id=record_id,
             counterfactual_group_id=group_id,
@@ -153,7 +168,7 @@ def build_causal_dataset(
             checkpoint_hash=checkpoint.checkpoint_hash,
             state_schema_version="EpistemicGraphV1",
             graph_hash=checkpoint.graph.graph_hash(),
-            belief_hash="",
+            belief_hash=belief_hash,
             action_id=str(action),
             action_type=action.action_type.value,
             action_target=str(action.target) if action.target else "",
@@ -177,6 +192,10 @@ def build_causal_dataset(
             topo_unique_supported=topology.unique_supported_hypothesis or "",
             topo_has_competition=topology.has_verified_unresolved_competition,
             topo_unverified_exists=topology.unverified_evidence_exists,
+            topology_signature=checkpoint.topology_signature(),
+            q_mb=q_mb_pre,
+            world_model_prediction=wm_pred,
+            world_model_outcome_probability=wm_prob,
             oracle_utility=oracle_utility,
             regret=oracle_utility - result.utility,
             is_near_optimal=result.first_action in near_optimal,
@@ -186,6 +205,53 @@ def build_causal_dataset(
         records.append(record)
 
     return records
+
+
+def _compute_q_mb_pre(checkpoint, action, topology) -> float:
+    """Compute model-based Q estimate BEFORE execution.
+
+    This is a simple heuristic Q_MB that uses the canonical topology
+    and action type to estimate action value. It is frozen in the record
+    to prove the prediction existed before the outcome was known.
+    """
+    from daph_x.actions.typed_actions import ActionType
+    cost = action.expected_cost
+
+    if action.action_type == ActionType.ANSWER:
+        if action.target == checkpoint.correct_hypothesis_id:
+            return 100.0 - cost
+        return -50.0
+
+    if action.action_type == ActionType.DEFER:
+        if checkpoint.expected_terminal == "DEFER":
+            return 50.0 - cost
+        return -20.0 - cost
+
+    if action.action_type == ActionType.VERIFY:
+        if topology.unverified_evidence_exists:
+            return 25.0 - cost
+        return 5.0 - cost
+
+    if action.action_type in (ActionType.SEARCH, ActionType.RETRIEVE):
+        return 5.0 - cost
+
+    if action.action_type == ActionType.STOP:
+        return -10.0
+
+    return -cost
+
+
+def _compute_world_model_prediction(checkpoint, action) -> tuple[str, float]:
+    """Compute world model prediction BEFORE execution.
+
+    Returns (predicted_outcome, probability) for the most likely outcome.
+    """
+    from daph_x.world_model.transition_model import transition_model
+    transitions = transition_model(checkpoint.graph, action)
+    if not transitions:
+        return ("ERROR", 0.0)
+    best = max(transitions, key=lambda t: t.probability)
+    return (best.outcome.value, best.probability)
 
 
 def write_causal_dataset(records: list[CausalActionRecord], path: Path):

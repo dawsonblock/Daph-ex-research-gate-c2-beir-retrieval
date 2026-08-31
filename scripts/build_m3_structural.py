@@ -132,35 +132,37 @@ TRAIN_TEMPLATES = [
 
 # Test templates: novel structures never seen in training
 TEST_TEMPLATES = [
-    # Adversarial: misleading evidence leads to wrong ANSWER
+    # Adversarial: misleading evidence with 4 hypotheses (different from TRAIN_ADV_MISLEADING which has 3)
     {
-        "category": "TEST_ADV_MISLEADING",
-        "summary": "Misleading evidence — unique supported hypothesis is WRONG",
-        "hypotheses": [("H1", "type A (wrong)", "ANSWER"), ("H2", "type B (correct)", "ANSWER"), ("H3", "type C", "DEFER")],
+        "category": "TEST_ADV_MISLEADING_4H",
+        "summary": "4-hypothesis misleading evidence — unique supported hypothesis is WRONG",
+        "hypotheses": [("H1", "type A (wrong)", "ANSWER"), ("H2", "type B (correct)", "ANSWER"), ("H3", "type C", "ANSWER"), ("H4", "type D", "DEFER")],
         "evidence": [
             ("E1", "Misleading marker for A", "initial", ("H1",), (), "SUFFICIENT", "CURRENT"),
             ("E2", "Contradiction of B", "initial", (), ("H2",), "SUFFICIENT", "CURRENT"),
             ("E3", "Contradiction of C", "initial", (), ("H3",), "SUFFICIENT", "CURRENT"),
+            ("E4", "Contradiction of D", "initial", (), ("H4",), "SUFFICIENT", "CURRENT"),
         ],
         "correct_hypothesis": "H2",  # H2 is correct but has no verified support
         "expected_terminal": "ANSWER",
         "oracle_path": ("DEFER",),  # Should defer, not answer
-        "budget": {"steps": 3, "verify": 1, "retrieve": 0, "search": 0},
+        "budget": {"steps": 4, "verify": 1, "retrieve": 0, "search": 0},
     },
-    # Adversarial: competing support where executive might pick wrong
+    # Adversarial: competing support with 4 hypotheses and unverified evidence (different from TRAIN_3HYP_COMPETING_DEFER)
     {
-        "category": "TEST_ADV_COMPETING_WRONG",
-        "summary": "Competing support — executive might pick wrong hypothesis",
-        "hypotheses": [("H1", "type A", "ANSWER"), ("H2", "type B (correct)", "ANSWER"), ("H3", "type C", "DEFER")],
+        "category": "TEST_ADV_COMPETING_4H_UNVERIFIED",
+        "summary": "4-hypothesis competing support with unverified evidence",
+        "hypotheses": [("H1", "type A", "ANSWER"), ("H2", "type B (correct)", "ANSWER"), ("H3", "type C", "ANSWER"), ("H4", "type D", "DEFER")],
         "evidence": [
             ("E1", "Marker for A", "initial", ("H1",), (), "SUFFICIENT", "CURRENT"),
-            ("E2", "Marker for B", "initial", ("H2",), (), "SUFFICIENT", "CURRENT"),
+            ("E2", "Marker for B", "initial", ("H2",), (), "UNVERIFIED", "CURRENT"),
             ("E3", "Contradiction of C", "initial", (), ("H3",), "SUFFICIENT", "CURRENT"),
+            ("E4", "Contradiction of D", "initial", (), ("H4",), "SUFFICIENT", "CURRENT"),
         ],
-        "correct_hypothesis": "H2",  # H2 is correct but H1 also has support
+        "correct_hypothesis": "H2",  # H2 is correct but its evidence is unverified
         "expected_terminal": "DEFER",
-        "oracle_path": ("DEFER",),
-        "budget": {"steps": 2, "verify": 0, "retrieve": 0, "search": 0},
+        "oracle_path": ("VERIFY", "DEFER"),
+        "budget": {"steps": 4, "verify": 2, "retrieve": 0, "search": 0},
     },
     # 5 hypotheses, multiple unverified supports — VERIFY target matters
     # 5 hypotheses, multiple unverified supports — VERIFY target matters
@@ -284,8 +286,13 @@ def generate_task(template: dict, idx: int) -> EvidenceTask:
 
 
 def build_dataset(templates, n_per_template, seed, split_name):
-    """Build a causal dataset from templates."""
+    """Build a causal dataset from templates.
+
+    Records the topology_signature (ID-invariant) for each record so
+    that structural overlap can be checked correctly.
+    """
     all_records = []
+    topology_signatures = set()
     for template in templates:
         for i in range(n_per_template):
             task = generate_task(template, i)
@@ -295,15 +302,12 @@ def build_dataset(templates, n_per_template, seed, split_name):
             if not candidates:
                 continue
             records = build_causal_dataset(checkpoint, candidates, seed=seed)
+            # topology_signature is already set in build_causal_dataset
+            topo_sig = checkpoint.topology_signature()
             all_records.extend(records)
+            topology_signatures.add(topo_sig)
 
-    # Compute structural signatures
-    signatures = set()
-    for r in all_records:
-        # Use checkpoint hash as proxy for structural signature
-        signatures.add(r.checkpoint_hash)
-
-    print(f"{split_name}: {len(all_records)} records, {len(signatures)} unique checkpoints")
+    print(f"{split_name}: {len(all_records)} records, {len(topology_signatures)} unique topology signatures")
     return all_records
 
 
@@ -317,11 +321,20 @@ def main():
     # Build test set (novel structures)
     test_records = build_dataset(TEST_TEMPLATES, n_per_template=20, seed=42, split_name="TEST")
 
-    # Check structural overlap
+    # Check structural overlap using ID-invariant topology signatures
+    train_topo_sigs = set(getattr(r, 'topology_signature', '') for r in train_records)
+    test_topo_sigs = set(getattr(r, 'topology_signature', '') for r in test_records)
+    topo_overlap = train_topo_sigs & test_topo_sigs
+    print(f"\nTopology signature overlap: {len(topo_overlap)} (should be 0)")
+    if topo_overlap:
+        print("WARNING: Topology families overlap between train and test!")
+        print(f"  Overlapping signatures: {topo_overlap}")
+
+    # Also check checkpoint hash overlap (for reference — includes oracle fields)
     train_hashes = set(r.checkpoint_hash for r in train_records)
     test_hashes = set(r.checkpoint_hash for r in test_records)
-    overlap = train_hashes & test_hashes
-    print(f"\nStructural overlap: {len(overlap)} (should be 0)")
+    hash_overlap = train_hashes & test_hashes
+    print(f"Checkpoint hash overlap (includes oracle fields): {len(hash_overlap)}")
 
     # Write
     from daph_x.receipts.causal_dataset import write_causal_dataset
@@ -336,7 +349,10 @@ def main():
         "test_records": len(test_records),
         "train_groups": len(set(r.counterfactual_group_id for r in train_records)),
         "test_groups": len(set(r.counterfactual_group_id for r in test_records)),
-        "structural_overlap": len(overlap),
+        "topology_signature_overlap": len(topo_overlap),
+        "checkpoint_hash_overlap": len(hash_overlap),
+        "train_unique_topologies": len(train_topo_sigs),
+        "test_unique_topologies": len(test_topo_sigs),
     }
     with open(output_dir / "m3_metadata.json", "w") as f:
         json.dump(metadata, f, indent=2)

@@ -7,16 +7,19 @@
     "TRAIN_ADV_MISLEADING"
   ],
   "test_templates": [
-    "TEST_ADV_MISLEADING",
-    "TEST_ADV_COMPETING_WRONG",
+    "TEST_ADV_MISLEADING_4H",
+    "TEST_ADV_COMPETING_4H_UNVERIFIED",
     "TEST_5HYP_MULTI_VERIFY",
     "TEST_6HYP_MIXED_COMPETING",
     "TEST_7HYP_MANY_ELIM",
     "TEST_5HYP_VERIFY_DISCRIMINATION"
   ],
   "train_records": 300,
-  "test_records": 440,
+  "test_records": 460,
   "train_groups": 100,
   "test_groups": 120,
-  "structural_overlap": 0
+  "topology_signature_overlap": 0,
+  "checkpoint_hash_overlap": 0,
+  "train_unique_topologies": 5,
+  "test_unique_topologies": 6
 }

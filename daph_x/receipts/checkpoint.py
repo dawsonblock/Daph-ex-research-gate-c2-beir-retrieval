@@ -22,7 +22,9 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
-from daph_x.graph.epistemic_graph import EpistemicGraph, GraphNode, GraphEdge, NodeType
+from daph_x.graph.epistemic_graph import (
+    EpistemicGraph, GraphNode, GraphEdge, NodeType, EdgeType, EvidenceReliability,
+)
 from daph_x.belief.belief_engine import BeliefState
 
 
@@ -63,8 +65,32 @@ class Checkpoint:
             object.__setattr__(self, 'checkpoint_hash', self.compute_hash())
 
     def compute_hash(self) -> str:
-        """Compute deterministic hash of the checkpoint."""
+        """Compute deterministic hash of the checkpoint (full hash).
+
+        Includes both runtime state and oracle/evaluation metadata.
+        Use runtime_hash() for structural novelty detection.
+        """
         data = self._serialize_for_hash()
+        return hashlib.sha256(data).hexdigest()
+
+    def runtime_hash(self) -> str:
+        """Hash of ONLY the observable runtime state.
+
+        Excludes oracle/evaluation fields (task_id, correct_hypothesis_id,
+        expected_terminal, oracle_path). Use this for structural novelty
+        detection and graph-topology overlap checks.
+        """
+        data = self._serialize_runtime_only()
+        return hashlib.sha256(data).hexdigest()
+
+    def topology_signature(self) -> str:
+        """ID-invariant canonical topology signature.
+
+        Normalizes hypothesis and evidence IDs to ordinal positions so
+        that two structurally identical states with different IDs produce
+        the same signature. Used for structural-family overlap detection.
+        """
+        data = self._serialize_topology_signature()
         return hashlib.sha256(data).hexdigest()
 
     def _serialize_for_hash(self) -> bytes:
@@ -80,6 +106,66 @@ class Checkpoint:
             "downstream_policy_id": self.downstream_policy_id,
             "executive_version": self.executive_version,
             "model_version": self.model_version,
+        }
+        return json.dumps(data, sort_keys=True, default=str).encode()
+
+    def _serialize_runtime_only(self) -> bytes:
+        """Serialize only observable runtime state (no oracle fields)."""
+        data = {
+            "graph": _serialize_graph(self.graph),
+            "belief": _serialize_belief(self.belief),
+            "seed": self.seed,
+            "downstream_policy_id": self.downstream_policy_id,
+            "executive_version": self.executive_version,
+            "model_version": self.model_version,
+        }
+        return json.dumps(data, sort_keys=True, default=str).encode()
+
+    def _serialize_topology_signature(self) -> bytes:
+        """ID-invariant topology signature.
+
+        Replaces hypothesis IDs with H0, H1, ... and evidence IDs with
+        E0, E1, ... in canonical order. This makes the signature depend
+        only on graph structure, not on specific ID strings.
+        """
+        # Build ID remapping in canonical order
+        hyp_ids = sorted([k for k, v in self.graph.nodes.items()
+                         if v.node_type == NodeType.HYPOTHESIS])
+        ev_ids = sorted([k for k, v in self.graph.nodes.items()
+                        if v.node_type == NodeType.EVIDENCE])
+        id_map = {}
+        for i, h in enumerate(hyp_ids):
+            id_map[h] = f"H{i}"
+        for i, e in enumerate(ev_ids):
+            id_map[e] = f"E{i}"
+
+        # Serialize nodes with remapped IDs
+        nodes = {}
+        for k, v in sorted(self.graph.nodes.items()):
+            remapped = id_map.get(k, k)
+            nodes[remapped] = {
+                "node_type": v.node_type.value,
+                "verification_state": v.verification_state,
+                "temporal_status": v.temporal_status,
+            }
+
+        # Serialize edges with remapped IDs
+        edges = sorted(
+            (id_map.get(e.source_id, e.source_id),
+             id_map.get(e.target_id, e.target_id),
+             e.edge_type.value)
+            for e in self.graph.edges
+        )
+
+        data = {
+            "nodes": nodes,
+            "edges": edges,
+            "resources": {
+                "steps_remaining": self.graph.steps_remaining,
+                "verify_remaining": self.graph.verify_remaining,
+                "retrieve_remaining": self.graph.retrieve_remaining,
+                "search_remaining": self.graph.search_remaining,
+            },
         }
         return json.dumps(data, sort_keys=True, default=str).encode()
 
@@ -120,20 +206,35 @@ class Checkpoint:
 
 
 def _serialize_graph(graph: EpistemicGraph) -> dict:
-    """Serialize graph deterministically."""
-    return {
-        "nodes": {
-            k: {
-                "node_type": v.node_type.value,
-                "label": v.label,
-                "verification_state": v.verification_state,
-                "temporal_status": v.temporal_status,
-                "answer_action": v.answer_action,
-                "source_id": v.source_id,
-                "derived_from": list(v.derived_from) if v.derived_from else [],
+    """Serialize graph deterministically.
+
+    Includes reliability metadata so that two states with different
+    evidence reliability produce different hashes.
+    """
+    nodes = {}
+    for k, v in sorted(graph.nodes.items()):
+        node_data = {
+            "node_type": v.node_type.value,
+            "label": v.label,
+            "verification_state": v.verification_state,
+            "temporal_status": v.temporal_status,
+            "answer_action": v.answer_action,
+            "source_id": v.source_id,
+            "derived_from": list(v.derived_from) if v.derived_from else [],
+        }
+        if v.reliability is not None:
+            node_data["reliability"] = {
+                "source_reliability": v.reliability.source_reliability,
+                "verification_confidence": v.reliability.verification_confidence,
+                "independence_score": v.reliability.independence_score,
+                "ambiguity": v.reliability.ambiguity,
+                "freshness": v.reliability.freshness,
+                "observation_noise": v.reliability.observation_noise,
             }
-            for k, v in sorted(graph.nodes.items())
-        },
+        nodes[k] = node_data
+
+    return {
+        "nodes": nodes,
         "edges": sorted(
             (e.source_id, e.target_id, e.edge_type.value)
             for e in graph.edges
@@ -152,12 +253,23 @@ def _deserialize_graph(data: dict) -> EpistemicGraph:
     """Deserialize graph from dict."""
     nodes = {}
     for k, v in data["nodes"].items():
+        reliability = None
+        if "reliability" in v:
+            reliability = EvidenceReliability(
+                source_reliability=v["reliability"]["source_reliability"],
+                verification_confidence=v["reliability"]["verification_confidence"],
+                independence_score=v["reliability"]["independence_score"],
+                ambiguity=v["reliability"]["ambiguity"],
+                freshness=v["reliability"]["freshness"],
+                observation_noise=v["reliability"]["observation_noise"],
+            )
         nodes[k] = GraphNode(
             node_id=k,
             node_type=NodeType(v["node_type"]),
             label=v.get("label", ""),
             verification_state=v.get("verification_state", "UNVERIFIED"),
             temporal_status=v.get("temporal_status", "CURRENT"),
+            reliability=reliability,
             answer_action=v.get("answer_action", ""),
             source_id=v.get("source_id"),
             derived_from=tuple(v.get("derived_from", [])),
@@ -165,7 +277,6 @@ def _deserialize_graph(data: dict) -> EpistemicGraph:
 
     edges = []
     for src, tgt, etype in data["edges"]:
-        from daph_x.graph.epistemic_graph import EdgeType
         edges.append(GraphEdge(
             source_id=src,
             target_id=tgt,

@@ -78,14 +78,14 @@ def transition_model(graph: EpistemicGraph, action: Action) -> list[Transition]:
 
     if action.action_type == ActionType.COMPARE:
         return [Transition(
-            outcome=ObservationOutcome.NEW_EVIDENCE,
+            outcome=ObservationOutcome.NEW_EVIDENCE_FOUND,
             probability=1.0,
             next_graph=graph,  # COMPARE doesn't change evidence
         )]
 
     if action.action_type == ActionType.CHECK_CONSISTENCY:
         return [Transition(
-            outcome=ObservationOutcome.NEW_EVIDENCE,
+            outcome=ObservationOutcome.NEW_EVIDENCE_FOUND,
             probability=1.0,
             next_graph=graph,
         )]

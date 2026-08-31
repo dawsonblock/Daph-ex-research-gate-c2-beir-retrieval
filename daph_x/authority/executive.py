@@ -144,8 +144,8 @@ def select_action(
     sorted_scores = sorted(scores.values(), reverse=True)
     value_margin = best_score - sorted_scores[1] if len(sorted_scores) > 1 else best_score
 
-    # Determine authority mode
-    authority_mode = _determine_authority_mode(
+    # Determine authority mode (FORCE is shadowed until calibration passes)
+    authority_mode, would_force = _determine_authority_mode(
         best_score, value_margin, belief, config,
     )
 
@@ -182,6 +182,7 @@ def select_action(
         llm_proposal=llm_proposal,
         llm_proposal_score=llm_proposal_score,
         intervention_advantage=intervention_advantage,
+        would_force=would_force,
     )
 
 
@@ -190,16 +191,25 @@ def _determine_authority_mode(
     value_margin: float,
     belief: BeliefState,
     config: ExecutiveConfig,
-) -> AuthorityMode:
-    """Determine the appropriate authority mode."""
-    # FORCE if high confidence and low risk
-    if (value_margin > config.force_threshold
-            and belief.readiness.value == "ANSWER_READY"):
-        return AuthorityMode.FORCE
+) -> tuple[AuthorityMode, bool]:
+    """Determine the appropriate authority mode.
 
-    # ADVISE if we have a clear preference but not enough confidence
-    if value_margin > 0:
-        return AuthorityMode.ADVISE
+    FORCE is SHADOWED: the criteria are evaluated but FORCE is never
+    actually returned. Instead, ADVISE is returned with would_force=True.
+    This remains in effect until M3.7 calibrated LCB and M3.8 mechanism-heldout
+    risk qualification independently pass.
+
+    Returns (authority_mode, would_force).
+    """
+    # Check FORCE criteria (shadowed — never actually returned)
+    would_force = (
+        value_margin > config.force_threshold
+        and belief.readiness.value == "ANSWER_READY"
+    )
+
+    # ADVISE if we have a clear preference (or would-force criteria met)
+    if value_margin > 0 or would_force:
+        return AuthorityMode.ADVISE, would_force
 
     # ABSTAIN if no clear preference
-    return AuthorityMode.ABSTAIN
+    return AuthorityMode.ABSTAIN, False

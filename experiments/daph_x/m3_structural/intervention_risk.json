@@ -2,9 +2,9 @@
   "train_interventions": 100,
   "test_interventions": 120,
   "train_harmful": 20,
-  "test_harmful": 20,
+  "test_harmful": 40,
   "brier_train": 2.8618920098073405e-10,
-  "brier_test": 2.5192253707604256e-10,
+  "brier_test": 4.2325585659950047e-10,
   "auroc_test": 1.0,
   "harm_fnr": 0.0,
   "feature_keys": [

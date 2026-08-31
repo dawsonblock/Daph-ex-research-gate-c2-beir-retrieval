@@ -99,8 +99,18 @@ def fork_and_run(
             runtime_errors.append(f"No transitions for action {first_action}")
             return _make_result(checkpoint, first_action, action_hash, "ERROR", 0.0, 0.0, runtime_errors, seed)
 
-        # For deterministic actions, take the first transition
-        # For stochastic actions, we'd need to sample — for now use the most likely
+        # Compute expected utility over ALL stochastic outcomes:
+        #   Q(s,a) = Σ_o P(o|s,a) * U(s'_o)
+        # This replaces the previous argmax-probability approach which
+        # systematically distorted action values when minority outcomes matter.
+        outcome_utilities = []
+        for t in transitions:
+            u = _compute_utility(checkpoint, first_action, t.outcome.value, t.next_graph)
+            outcome_utilities.append((t, u))
+
+        expected_utility = sum(t.probability * u for t, u in outcome_utilities)
+
+        # Use the most likely transition for state hashing and outcome reporting
         best_transition = max(transitions, key=lambda t: t.probability)
         next_graph = best_transition.next_graph
         outcome = best_transition.outcome.value
@@ -114,10 +124,10 @@ def fork_and_run(
         json.dumps(_serialize_graph(next_graph), sort_keys=True, default=str).encode()
     ).hexdigest()
 
-    # Compute utility based on outcome
-    utility = _compute_utility(checkpoint, first_action, outcome, next_graph)
+    # Use expected utility over all outcomes
+    utility = expected_utility
 
-    # Determine success
+    # Determine success (based on most likely outcome)
     success = _compute_success(checkpoint, first_action, outcome, next_graph)
 
     # Terminal outcome

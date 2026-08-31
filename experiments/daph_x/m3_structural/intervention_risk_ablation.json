@@ -1,62 +1,61 @@
 {
-  "baseline_brier": 2.5192253707604256e-10,
+  "baseline_brier": 4.2325585659950047e-10,
   "baseline_auroc": 1.0,
   "feature_importance": {
-    "action_ANSWER": 0.0,
+    "action_ANSWER": 0.030784511394873527,
     "action_COMPARE": 0.0,
-    "action_DEFER": 0.0,
+    "action_DEFER": 0.13908959065744764,
     "action_RETRIEVE": 0.0,
     "action_SEARCH": 0.0,
     "action_STOP": 0.0,
     "action_VERIFY": 0.0,
     "action_cost": 0.0,
-    "answer_is_unique_supported": 0.0,
-    "base_utility": 0.0,
-    "delta_u": 0.4724952239252227,
-    "executive_utility": 0.5275047760747774,
+    "answer_is_unique_supported": 0.07529828646415249,
     "has_competition": 0.0,
     "has_target": 0.0,
-    "has_unique_supported": 0.0,
+    "has_unique_supported": 0.10132900398395386,
     "n_contradicted": 0.0,
     "n_supported": 0.0,
     "n_untested": 0.0,
     "n_weakened": 0.0,
-    "steps_remaining": 0.0,
+    "pred_delta_q": 0.00585306310406657,
+    "sigma_q": 0.0,
+    "steps_remaining": 0.18122481716616068,
     "topology_has_competition": 0.0,
     "topology_n_contradicted": 0.0,
     "topology_n_supported": 0.0,
     "topology_unverified_exists": 0.0,
     "unverified_exists": 0.0,
-    "verify_remaining": 0.0,
+    "verify_remaining": 0.4437751828338391,
     "verify_useful": 0.0,
     "base_action=DEFER": 0.0,
-    "executive_action=ANSWER": 0.0,
-    "executive_action=DEFER": 0.0
+    "executive_action=ANSWER": 0.0013710029460072479,
+    "executive_action=DEFER": 0.02127454144949879
   },
   "ablations": {
     "no_topology": {
-      "brier": 0.08333333340716118,
-      "auroc": 0.9
+      "brier": 0.12500129434330115,
+      "auroc": 0.875
     },
     "no_action_type": {
-      "brier": 0.08333333340716118,
-      "auroc": 0.9
+      "brier": 0.12500129434330115,
+      "auroc": 0.875
     },
     "no_delta_u": {
-      "brier": 0.08333333340716118,
-      "auroc": 0.9
+      "brier": 0.12500129434330115,
+      "auroc": 0.875
     },
     "no_executive_action": {
-      "brier": 0.08333333340716118,
-      "auroc": 0.9
+      "brier": 0.12500129434330115,
+      "auroc": 0.875
     },
     "no_base_action": {
-      "brier": 0.08333333340716118,
-      "auroc": 0.9
+      "brier": 0.12500129434330115,
+      "auroc": 0.875
     },
     "minimal": {
-      "brier": 0.08333333340716118,
-      "auroc": 0.9
+      "brier": 0.12500129434330115,
+      "auroc": 0.875
     }
   }
 }

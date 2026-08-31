@@ -68,6 +68,7 @@ class ExecutiveDecision:
     llm_proposal: str | None = None
     llm_proposal_score: float | None = None
     intervention_advantage: float | None = None  # V(selected) - V(llm_proposal)
+    would_force: bool = False  # True if FORCE criteria met but FORCE is shadowed
 
     def to_dict(self) -> dict:
         return {
@@ -88,4 +89,5 @@ class ExecutiveDecision:
             "llm_proposal": self.llm_proposal,
             "llm_proposal_score": self.llm_proposal_score,
             "intervention_advantage": self.intervention_advantage,
+            "would_force": self.would_force,
         }
