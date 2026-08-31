@@ -39,7 +39,7 @@
     "models/utility_config.json": "e5c6d34acc9cc73aab36261f9332685fac68df21133c2d912254265d75057c07",
     "benchmark/development_signatures.json": "e5fc8a66b49903935374203d5b92fcc2f0f32755bb743e9f89aee3c285a19e9c",
     "benchmark/novelty_report.json": "36db10178e9a4f547035bea5abcc050cdd7d5af48476f1d71e90525b28193878",
-    "benchmark/ood_pool.json": "90f0fb11752e58c990db832532f476546be4f5384e9eae48044e6086436feb78",
+    "benchmark/ood_pool.json": "507d13a0e0899390c2a87e559ce385c722ed0d0a58989710c57ed930689f092d",
     "raw/ablation_cert_only.jsonl": "d273d83308101576541bcc7384d6584f50c27d84781c90f5e3fb676fd9fd7cc2",
     "raw/ablation_q_cert.jsonl": "a51cb9bd1adaaa57a30a54ec476983f24df9d046abf2e4759e46787d7d56dda1",
     "raw/ablation_q_only.jsonl": "d8ea78d041bd7e8bf1283058533e19fdc23c681d9a84481716c54783a2a1781e",
@@ -66,7 +66,9 @@
     "analysis/novelty_force_states.json": "3837bfa92c0d698432163d7af4f52e720ede87d9cdbc46112d6818ed0b781efa",
     "README.md": "4cb92515777b11ab844ab3318d5f1b1a0559a4afb3cc4353e8a05909cd9e1ff0",
     "scripts/validate_benchmark_oracles.py": "ccfb3f08440a28a63e04e02c3b5bd8b6d296ca0a4614f16fc404aba5bb65a529",
-    "analysis/oracle_validation.json": "c07fcc82d4cf619c16abb73234ebd5f8349aece718fcc00173f8c965f20caeae"
+    "analysis/oracle_validation.json": "c07fcc82d4cf619c16abb73234ebd5f8349aece718fcc00173f8c965f20caeae",
+    "executive/continuation_v0_1.py": "563ab5345908d183ff72f07f48d5c296b22d12bf057c834278904f7fbbbcaf2d",
+    "analysis/ood_results.md": "864a4cefdb7df97491fe7b58b064edb9fbdfebf177ebf2bf0a9f448330f03e06"
   },
   "gguf": {
     "path": "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
@@ -133,7 +135,7 @@
   },
   "claim_level": "Level 2 \u2014 structural task OOD (behavioral pass, mechanism certificate-driven)",
   "promotion_status": "NOT_PROMOTED \u2014 pending full Q-input novelty closure and force-state OOD proof",
-  "file_count": 62,
+  "file_count": 64,
   "qualification_gates_note": "G9 marked PARTIAL: benchmark oracle-path validation was not part of original G9. Now added as G_B1-G_B4. Original 20 OOD_4HYP_MIXED tasks had invalid oracle paths (benchmark construction failure, not certificate recall gap). Templates fixed and re-validated.",
   "confirmed_executive_commit": "fb4271cf120d7456d7936c52ec485e23480fbb4b",
   "confirmed_executive_tag": "v3r2-confirmed",
