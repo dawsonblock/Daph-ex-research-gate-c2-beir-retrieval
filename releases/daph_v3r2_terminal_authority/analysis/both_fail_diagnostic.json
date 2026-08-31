@@ -1,0 +1,30 @@
+{
+  "n_both_fail": 20,
+  "failure_sources": {
+    "no_certificate": 0,
+    "certificate_fired_but_failed": 0,
+    "no_authority_events": 20
+  },
+  "task_ids": [
+    "i3_30r3_ood_ood_4hyp_mixed_000",
+    "i3_30r3_ood_ood_4hyp_mixed_001",
+    "i3_30r3_ood_ood_4hyp_mixed_002",
+    "i3_30r3_ood_ood_4hyp_mixed_003",
+    "i3_30r3_ood_ood_4hyp_mixed_004",
+    "i3_30r3_ood_ood_4hyp_mixed_005",
+    "i3_30r3_ood_ood_4hyp_mixed_006",
+    "i3_30r3_ood_ood_4hyp_mixed_007",
+    "i3_30r3_ood_ood_4hyp_mixed_008",
+    "i3_30r3_ood_ood_4hyp_mixed_009",
+    "i3_30r3_ood_ood_4hyp_mixed_010",
+    "i3_30r3_ood_ood_4hyp_mixed_011",
+    "i3_30r3_ood_ood_4hyp_mixed_012",
+    "i3_30r3_ood_ood_4hyp_mixed_013",
+    "i3_30r3_ood_ood_4hyp_mixed_014",
+    "i3_30r3_ood_ood_4hyp_mixed_015",
+    "i3_30r3_ood_ood_4hyp_mixed_016",
+    "i3_30r3_ood_ood_4hyp_mixed_017",
+    "i3_30r3_ood_ood_4hyp_mixed_018",
+    "i3_30r3_ood_ood_4hyp_mixed_019"
+  ]
+}

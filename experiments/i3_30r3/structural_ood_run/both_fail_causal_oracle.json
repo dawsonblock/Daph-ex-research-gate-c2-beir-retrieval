@@ -1,0 +1,471 @@
+{
+  "n_both_fail": 20,
+  "classifications": {
+    "D_certificate_recall_gap": 20
+  },
+  "classification_probabilities": {
+    "D_certificate_recall_gap": 1.0
+  },
+  "details": [
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_000",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_001",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_002",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_003",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_004",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_005",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_006",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_007",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_008",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_009",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_010",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_011",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_012",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_013",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_014",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_015",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_016",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_017",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_018",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    },
+    {
+      "task_id": "i3_30r3_ood_ood_4hyp_mixed_019",
+      "classification": "D_certificate_recall_gap",
+      "reason": "expected_terminal=ANSWER but certificate did not fire",
+      "expected_terminal": "ANSWER",
+      "correct_hypothesis": "H1",
+      "shadow_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "hard_actions": [
+        "VERIFY",
+        "REASON_MORE",
+        "REASON_MORE",
+        "DEFER"
+      ],
+      "shadow_terminal_result": "TERMINAL_WRONG",
+      "hard_terminal_result": "TERMINAL_WRONG",
+      "cert_fired": false,
+      "actions_identical": true
+    }
+  ]
+}

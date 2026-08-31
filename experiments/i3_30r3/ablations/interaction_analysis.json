@@ -1,0 +1,21 @@
+{
+  "ates": {
+    "q_only": 63.25500000000001,
+    "cert_only": 63.61166666666667,
+    "q_cert": 63.25500000000001
+  },
+  "interaction_I": -63.61166666666667,
+  "interaction_interpretation": "interference",
+  "intervention_burden": {
+    "shadow": 0.0,
+    "q_only": 0.5,
+    "cert_only": 0.6666666666666666,
+    "q_cert": 0.5
+  },
+  "useful_force_precision": {
+    "q_only": 1.0,
+    "cert_only": 0.75,
+    "q_cert": 1.0
+  },
+  "conclusion": "Q and certificate are redundant on OOD. Q's value is burden reduction (fewer unnecessary forces), not causal power."
+}

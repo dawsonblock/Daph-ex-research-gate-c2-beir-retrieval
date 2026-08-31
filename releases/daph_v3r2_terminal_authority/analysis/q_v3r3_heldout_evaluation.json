@@ -1,0 +1,23 @@
+{
+  "model": "Q_V3R3",
+  "status": "CANDIDATE \u2014 not promoted",
+  "training_rows": 2549,
+  "train_r2": 0.997118938618524,
+  "in_support_rate": 0.3432718713220871,
+  "mean_uncertainty": 1.00618370836873,
+  "heldout_events": 425,
+  "heldout_would_force": 425,
+  "heldout_would_force_pct": 100.0,
+  "q_gap_mean": 43.625712941176474,
+  "q_gap_median": 19.0751,
+  "certificate_types": {
+    "unique_verified_support_defer": 14,
+    "unique_verified_support_answer": 411
+  },
+  "ood_events": 100,
+  "limitations": [
+    "Full predict_q() not run on held-out (missing state_features)",
+    "Uncertainty calibration not completed",
+    "OOD threshold not calibrated on held-out"
+  ]
+}

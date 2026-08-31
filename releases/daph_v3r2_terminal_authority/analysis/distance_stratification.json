@@ -1,0 +1,37 @@
+{
+  "bins": [
+    {
+      "bin": "4-5",
+      "n": 40,
+      "shadow_success": 0,
+      "hard_success": 20,
+      "shadow_rate": 0.0,
+      "hard_rate": 0.5,
+      "mean_du": 55.51500000000001,
+      "rescues": 20,
+      "breaks": 0
+    },
+    {
+      "bin": "5-6",
+      "n": 60,
+      "shadow_success": 20,
+      "hard_success": 60,
+      "shadow_rate": 0.3333333333333333,
+      "hard_rate": 1.0,
+      "mean_du": 89.50000000000001,
+      "rescues": 40,
+      "breaks": 0
+    },
+    {
+      "bin": "6+",
+      "n": 20,
+      "shadow_success": 20,
+      "hard_success": 20,
+      "shadow_rate": 1.0,
+      "hard_rate": 1.0,
+      "mean_du": 0.0,
+      "rescues": 0,
+      "breaks": 0
+    }
+  ]
+}
