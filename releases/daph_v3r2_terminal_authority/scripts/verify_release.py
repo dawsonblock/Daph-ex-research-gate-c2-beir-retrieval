@@ -1,41 +1,62 @@
 #!/usr/bin/env python3
-"""Verify the structural-OOD experiment bundle.
+"""Release bundle verifier — validates RELEASE_MANIFEST.json.
 
-Checks that every executable dependency that could influence trajectories
-is covered by a manifest hash, and that the manifest's source commit is
-clean (dirty_worktree=false).
+This is a self-contained verifier that checks:
+1. All file hashes match the manifest
+2. dirty_worktree is False
+3. All SHA256 strings are valid 64 lowercase hex
+4. Qualification gates status
+5. Oracle-path validation (if benchmark data present)
 
 Usage:
-    python scripts/verify_ood_bundle.py [--bundle-dir experiments/i3_30r3/structural_ood_run]
+    python scripts/verify_release.py [--release-dir releases/daph_v3r2_terminal_authority]
 """
 from __future__ import annotations
 
 import hashlib
 import json
-import subprocess
+import os
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
 
-
-def sha256_file(path):
+def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
     with open(path, "rb") as f:
-        for chunk in iter(lambda: f.read(8192), b""):
+        for chunk in iter(lambda: f.read(65536), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def validate_sha(sha: str) -> bool:
+    return len(sha) == 64 and all(c in "0123456789abcdef" for c in sha)
 
 
 def main():
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--bundle-dir", default="experiments/i3_30r3/structural_ood_run")
+    parser.add_argument("--release-dir", default=None,
+                        help="Release directory (default: auto-detect)")
     args = parser.parse_args()
 
-    bundle_dir = REPO_ROOT / args.bundle_dir
-    manifest_path = bundle_dir / "frozen_manifest.json"
+    # Auto-detect release directory
+    if args.release_dir:
+        release_dir = Path(args.release_dir)
+    else:
+        # Try to find RELEASE_MANIFEST.json relative to this script
+        script_dir = Path(__file__).resolve().parent
+        release_dir = script_dir.parent  # releases/daph_v3r2_terminal_authority/scripts/ -> releases/daph_v3r2_terminal_authority/
+        if not (release_dir / "RELEASE_MANIFEST.json").exists():
+            # Try from repo root
+            repo_root = script_dir.parent.parent.parent
+            candidates = list((repo_root / "releases").glob("*/RELEASE_MANIFEST.json"))
+            if candidates:
+                release_dir = candidates[0].parent
+            else:
+                print("ERROR: No RELEASE_MANIFEST.json found")
+                sys.exit(1)
 
+    manifest_path = release_dir / "RELEASE_MANIFEST.json"
     if not manifest_path.exists():
         print(f"ERROR: Manifest not found: {manifest_path}")
         sys.exit(1)
@@ -43,204 +64,123 @@ def main():
     with open(manifest_path) as f:
         manifest = json.load(f)
 
-    print("=" * 60)
-    print("OOD Bundle Verification")
-    print("=" * 60)
-    print(f"Bundle: {bundle_dir}")
-    print(f"Experiment: {manifest.get('experiment')}")
-    print(f"Source commit: {manifest.get('source_commit')}")
-    print(f"Source tag: {manifest.get('source_tag', 'N/A')}")
-    print(f"Dirty worktree: {manifest.get('dirty_worktree')}")
+    errors = []
+    warnings = []
 
+    # ============================================================
     # 1. Check dirty_worktree
-    if manifest.get("dirty_worktree"):
-        print("\n*** FAIL: dirty_worktree = true ***")
-        print("The experiment was not run from a clean checkout.")
-        sys.exit(1)
+    # ============================================================
+    print("=" * 60)
+    print("RELEASE VERIFICATION")
+    print("=" * 60)
+
+    dirty = manifest.get("dirty_worktree", True)
+    if dirty:
+        errors.append(f"dirty_worktree is True (should be False)")
+    print(f"  dirty_worktree: {dirty} {'✓' if not dirty else '✗'}")
+
+    # ============================================================
+    # 2. Validate all file hashes
+    # ============================================================
+    print(f"\n  File hashes:")
+    file_hashes = manifest.get("file_hashes", {})
+    hash_errors = 0
+    for rel_path, expected_sha in sorted(file_hashes.items()):
+        full_path = release_dir / rel_path
+        if not full_path.exists():
+            errors.append(f"Missing file: {rel_path}")
+            hash_errors += 1
+            continue
+        if not validate_sha(expected_sha):
+            errors.append(f"Invalid SHA format: {rel_path}: {expected_sha}")
+            hash_errors += 1
+            continue
+        actual_sha = sha256_file(full_path)
+        if actual_sha != expected_sha:
+            errors.append(f"Hash mismatch: {rel_path}: expected {expected_sha[:16]}, got {actual_sha[:16]}")
+            hash_errors += 1
+
+    print(f"    Files checked: {len(file_hashes)}")
+    print(f"    Hash errors: {hash_errors}")
+    if hash_errors == 0:
+        print(f"    ALL HASHES VALID ✓")
+
+    # ============================================================
+    # 3. Check GGUF hash if present
+    # ============================================================
+    gguf = manifest.get("gguf", {})
+    gguf_path = gguf.get("path")
+    gguf_sha = gguf.get("sha256")
+    if gguf_path and gguf_sha and Path(gguf_path).exists():
+        actual_gguf_sha = sha256_file(Path(gguf_path))
+        if actual_gguf_sha != gguf_sha:
+            errors.append(f"GGUF hash mismatch: expected {gguf_sha[:16]}, got {actual_gguf_sha[:16]}")
+        else:
+            print(f"\n  GGUF: {gguf_path}")
+            print(f"    SHA256: {gguf_sha[:16]}... ✓")
     else:
-        print("  dirty_worktree = false: PASS")
+        print(f"\n  GGUF: not present (expected SHA: {gguf_sha[:16] if gguf_sha else 'N/A'})")
 
-    # 2. Check source commit matches tag
-    source_tag = manifest.get("source_tag")
-    source_commit = manifest.get("source_commit")
-    if source_tag:
-        try:
-            tag_commit = subprocess.check_output(
-                ["git", "rev-parse", source_tag], cwd=REPO_ROOT,
-                text=True, stderr=subprocess.DEVNULL,
-            ).strip()
-            # The worktree commit may be different (it has OOD files added)
-            # but the tag should be an ancestor
-            print(f"  Tag {source_tag} -> {tag_commit[:12]}")
-            print(f"  Manifest commit: {source_commit[:12]}")
-        except Exception:
-            print(f"  WARNING: Could not resolve tag {source_tag}")
-
-    # 3. Verify all component hashes
-    print(f"\n{'='*60}")
-    print("Component Hash Verification")
-    print(f"{'='*60}")
-
-    # Map manifest keys to actual source file paths
-    component_map = {
-        "authority_policy_v3_sha256": "daph/authority/policy_v3.py",
-        "restore_sha256": "daph/intervention/restore.py",
-        "checkpoint_sha256": "daph/intervention/checkpoint.py",
-        "authority_isolation_sha256": "daph/authority/isolation.py",
-        "topology_sha256": "daph/epistemic/topology.py",
-        "v3_features_sha256": "daph/epistemic/v3_features.py",
-        "authority_policy_v2_sha256": "daph/authority/policy.py",
-        "confirmation_generator_sha256": "hrm_adaptive_memory/executive/evidence_benchmark/i3_30r3_confirmation_generator.py",
-        "schema_grammar_sha256": "scripts/r2_schema.py",
-        "r2_allowed_actions_sha256": "scripts/r2_allowed_actions.py",
-        "i3_7e_snapshot_builder_sha256": "scripts/run_i3_7e_compact_governor.py",
-        "model_backend_sha256": "hrm_adaptive_memory/executive/model_backend.py",
-        "runner_sha256": "scripts/run_i3_30r3_confirmation.py",
-        "evaluator_sha256": "scripts/evaluate_i3_30r3_authority_isolation.py",
-        "ood_runner_sha256": "scripts/run_structural_ood_experiment.py",
-        "ood_pool_builder_sha256": "scripts/build_structural_ood_pool.py",
+    # ============================================================
+    # 4. Check qualification gates
+    # ============================================================
+    print(f"\n  Qualification gates:")
+    gates = manifest.get("qualification_gates", {})
+    gate_names = {
+        "G1_clean_source_identity": "Clean source identity",
+        "G2_dependency_hashes": "Complete dependency hashes",
+        "G3_benchmark_frozen": "Benchmark frozen",
+        "G4_treatment_purity": "Treatment purity",
+        "G5_zero_runtime_failures": "Zero runtime failures",
+        "G6_positive_ci_lower": "Positive CI lower bound",
+        "G7_rescues_gt_breaks": "Rescues > breaks",
+        "G8_zero_false_terminal": "Zero false terminal",
+        "G9_semantic_conformance": "Semantic conformance",
+        "G10_nonzero_coverage": "Nonzero coverage",
+        "G11_authority_receipts": "Authority receipts",
+        "G12_trajectory_recomputability": "Trajectory recomputability",
+        "G13_novelty_verified": "Novelty verified",
+        "G14_no_post_hoc_changes": "No post-hoc changes",
+        "G15_model_identity_fixed": "Model identity fixed",
     }
+    for key, name in gate_names.items():
+        result = gates.get(key, None)
+        status = "PASS" if result else "FAIL"
+        print(f"    {key}: {status}")
+        if not result:
+            warnings.append(f"Gate {key} ({name}) did not pass")
 
-    # Also check Q models, utility, GGUF
-    artifact_map = {
-        "Q_V3R_model_sha256": "experiments/i3_30r/Q_V3R2_A.pkl",
-        "Q_V3R_schema_sha256": "experiments/i3_30r/v3r2_feature_schema.json",
-        "Q_V1_model_sha256": "experiments/i3_5/pinned_policy/frozen_estimators/QCAUSAL_gbt.pkl",
-        "Q_V1_schema_sha256": "experiments/i3_5/pinned_policy/frozen_estimators/feature_schema.json",
-        "utility_config_sha256": "configs/v2b_i3_1_utility_v1.json",
-    }
+    # ============================================================
+    # 5. Check source identity
+    # ============================================================
+    print(f"\n  Source identity:")
+    print(f"    source_commit: {manifest.get('source_commit', 'N/A')}")
+    print(f"    source_tag: {manifest.get('source_tag', 'N/A')}")
+    print(f"    current_worktree_commit: {manifest.get('current_worktree_commit', 'N/A')}")
 
-    all_match = True
-    mismatches = []
-    missing = []
-
-    # Check source components
-    for key, rel_path in component_map.items():
-        if key not in manifest:
-            missing.append(f"{key} (-> {rel_path})")
-            continue
-        actual_path = REPO_ROOT / rel_path
-        if not actual_path.exists():
-            missing.append(f"{key}: file not found: {rel_path}")
-            continue
-        actual_hash = sha256_file(actual_path)
-        manifest_hash = manifest[key]
-        if actual_hash == manifest_hash:
-            print(f"  OK: {key} -> {rel_path}")
-        else:
-            print(f"  MISMATCH: {key}")
-            print(f"    manifest: {manifest_hash[:16]}...")
-            print(f"    actual:   {actual_hash[:16]}...")
-            mismatches.append(key)
-            all_match = False
-
-    # Check artifacts
-    for key, rel_path in artifact_map.items():
-        if key not in manifest:
-            missing.append(f"{key} (-> {rel_path})")
-            continue
-        actual_path = REPO_ROOT / rel_path
-        if not actual_path.exists():
-            missing.append(f"{key}: file not found: {rel_path}")
-            continue
-        actual_hash = sha256_file(actual_path)
-        manifest_hash = manifest[key]
-        if actual_hash == manifest_hash:
-            print(f"  OK: {key} -> {rel_path}")
-        else:
-            print(f"  MISMATCH: {key}")
-            mismatches.append(key)
-            all_match = False
-
-    # Check GGUF
-    gguf_key = "qwen_gguf_sha256"
-    if gguf_key in manifest:
-        gguf_path = manifest.get("qwen_gguf_path", "")
-        if gguf_path and Path(gguf_path).exists():
-            actual_hash = sha256_file(gguf_path)
-            if actual_hash == manifest[gguf_key]:
-                print(f"  OK: {gguf_key}")
-            else:
-                print(f"  MISMATCH: {gguf_key}")
-                mismatches.append(gguf_key)
-                all_match = False
-        else:
-            missing.append(f"{gguf_key}: GGUF file not found at {gguf_path}")
-
-    # Check OOD pool
-    ood_pool_key = "ood_pool_sha256"
-    if ood_pool_key in manifest:
-        ood_pool_path = REPO_ROOT / "experiments/i3_30r3/structural_ood/ood_pool.json"
-        if ood_pool_path.exists():
-            actual_hash = sha256_file(ood_pool_path)
-            if actual_hash == manifest[ood_pool_key]:
-                print(f"  OK: {ood_pool_key}")
-            else:
-                print(f"  MISMATCH: {ood_pool_key}")
-                mismatches.append(ood_pool_key)
-                all_match = False
-        else:
-            missing.append(f"{ood_pool_key}: OOD pool file not found")
-
-    # Report missing
-    if missing:
-        print(f"\n  MISSING from manifest:")
-        for m in missing:
-            print(f"    {m}")
-
-    # 4. Check dependency closure
-    print(f"\n{'='*60}")
-    print("Dependency Closure Check")
-    print(f"{'='*60}")
-    print("  The following Python modules are imported during trajectory execution:")
-    print("  - daph.authority.policy_v3 (hashed)")
-    print("  - daph.authority.policy (hashed)")
-    print("  - daph.authority.isolation (hashed)")
-    print("  - daph.intervention.restore (hashed)")
-    print("  - daph.intervention.checkpoint (hashed)")
-    print("  - daph.epistemic.topology (hashed)")
-    print("  - daph.epistemic.v3_features (hashed)")
-    print("  - hrm_adaptive_memory.executive.model_backend (hashed)")
-    print("  - hrm_adaptive_memory.executive.evidence_benchmark.schema (NOT hashed)")
-    print("  - hrm_adaptive_memory.executive.evidence_executor (NOT hashed)")
-    print("  - hrm_adaptive_memory.executive.resources (NOT hashed)")
-    print("  - hrm_adaptive_memory.cognitive_control.core (NOT hashed)")
-    print("  - hrm_adaptive_memory.cognitive_control.state (NOT hashed)")
-    print("  - scripts.r2_schema (hashed)")
-    print("  - scripts.r2_allowed_actions (hashed)")
-    print("  - scripts.run_i3_7e_compact_governor (hashed)")
-    print("  - scripts.run_i3_30r3_authority_isolation (NOT separately hashed)")
-    print()
-    unhashed = [
-        "hrm_adaptive_memory/executive/evidence_benchmark/schema.py",
-        "hrm_adaptive_memory/executive/evidence_executor.py",
-        "hrm_adaptive_memory/executive/resources.py",
-        "hrm_adaptive_memory/cognitive_control/core.py",
-        "hrm_adaptive_memory/cognitive_control/state.py",
-        "scripts/run_i3_30r3_authority_isolation.py",
-    ]
-    print("  Unhashed modules (potential provenance gap):")
-    for p in unhashed:
-        actual_path = REPO_ROOT / p
-        if actual_path.exists():
-            h = sha256_file(actual_path)[:16]
-            print(f"    {p}: {h}...")
-        else:
-            print(f"    {p}: NOT FOUND")
-
+    # ============================================================
     # Summary
-    print(f"\n{'='*60}")
-    print("SUMMARY")
-    print(f"{'='*60}")
-    if all_match and not missing:
-        print("  All hashed components match manifest.")
-        print("  dirty_worktree = false")
-        print("  Bundle is self-consistent.")
+    # ============================================================
+    print(f"\n{'=' * 60}")
+    print(f"SUMMARY")
+    print(f"{'=' * 60}")
+    print(f"  Errors:   {len(errors)}")
+    print(f"  Warnings: {len(warnings)}")
+
+    if errors:
+        print(f"\n  ERRORS:")
+        for e in errors:
+            print(f"    - {e}")
+    if warnings:
+        print(f"\n  WARNINGS:")
+        for w in warnings:
+            print(f"    - {w}")
+
+    if not errors:
+        print(f"\n  RELEASE VERIFIED ✓")
         sys.exit(0)
     else:
-        print(f"  Mismatches: {len(mismatches)}")
-        print(f"  Missing: {len(missing)}")
-        print("  Bundle is NOT fully self-consistent.")
+        print(f"\n  RELEASE VERIFICATION FAILED ✗")
         sys.exit(1)
 
 

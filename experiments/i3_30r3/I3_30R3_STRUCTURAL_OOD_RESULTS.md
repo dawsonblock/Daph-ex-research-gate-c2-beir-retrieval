@@ -162,34 +162,49 @@ while HARD remains at 50-100%. The authority effect is NOT monotonically
 increasing with distance — the 6+ bin has both arms succeeding because
 those tasks (4-hyp all-verified unique) are closer to development structures.
 
-## Both-Fail Diagnostic (20 `ood_4hyp_mixed` tasks)
+## Both-Fail Diagnostic (20 `ood_4hyp_mixed` tasks) — BENCHMARK INVALID
 
-All 20 both-fail tasks have **zero authority events** — the certificate
-never fires. Both SHADOW and HARD execute identical actions:
+**IMPORTANT CORRECTION**: The 20 OOD_4HYP_MIXED both-fail tasks are
+**semantically invalid benchmark instances**, not certificate recall gaps.
 
-```
-VERIFY → REASON_MORE → REASON_MORE → DEFER (wrong)
-```
+The original template defined:
+- H1→ANSWER, H2→ANSWER, H3→ANSWER, H4→DEFER
+- E1 supports H1 (SUFFICIENT/verified)
+- E2 supports H2 (UNVERIFIED)
+- E3 supports H3 (SUFFICIENT/verified)
+- E4 contradicts H4 (SUFFICIENT/verified)
+- Oracle path: VERIFY → ANSWER
 
-The certificate correctly abstains (no unique verified support), but the
-model then prematurely defers. Neither arm can resolve the mixed-verification
-state.
+After VERIFY(E2), E2 becomes SUFFICIENT, giving H1, H2, and H3 all
+verified support → `COMPETING_VERIFIED` (3 competing supported hypotheses).
+ANSWER is NOT structurally justified. The certificate correctly abstains.
 
-**Failure source classification**:
-- `no_authority_events`: 20/20
-- `certificate_fired_but_failed`: 0/20
-- `no_certificate`: 0/20
+The oracle path `VERIFY→ANSWER` is inconsistent with the evidence topology.
+The `expected_terminal=ANSWER` label is wrong for this topology.
 
-**Implication**: The next DAPH architectural focus should be **safe
-continuation authority** — forcing VERIFY/SEARCH/RETRIEVE when the state
-is CONTINUE_REQUIRED and the model proposes premature DEFER — rather
-than more terminal authority.
+**Corrected classification**: `BENCHMARK_INVALID_ORACLE_TOPOLOGY_INCONSISTENCY`
+(not `D_certificate_recall_gap` as previously reported)
+
+**Template fix applied**: E1 is now UNVERIFIED, E2-E4 are verified
+contradictions. After VERIFY(E1), H1 gets unique verified support →
+ANSWER_READY. All 8 templates now pass oracle-path semantic validation
+(G_B1-G_B4).
+
+**Do NOT build continuation authority to rescue these tasks.**
+The 20 tasks were never valid evidence of a certificate gap.
+
+**Impact on headline result**: On the 100 valid OOD tasks (excluding
+the 20 invalid), SHADOW=40/100=40% and HARD=100/100=100%. The terminal
+authority effect is descriptively stronger on valid tasks. However, the
+100-task subset should be treated as a forensic reanalysis, not a new
+preregistered confirmation. The next step is to regenerate the OOD pool
+with fixed templates and rerun the full protocol.
 
 ## By Category
 
 | Category | N | SHADOW | HARD | Rescues | Breaks |
 |----------|---|--------|------|---------|--------|
-| ood_4hyp_mixed | 20 | 0 | 0 | 0 | 0 |
+| ood_4hyp_mixed | 20 | 0 | 0 | 0 | 0 | **BENCHMARK INVALID** |
 | ood_5hyp_all_unverified | 20 | 0 | 20 | 20 | 0 |
 | ood_6hyp_partial_verify | 20 | 0 | 20 | 20 | 0 |
 | ood_4hyp_all_verified_unique | 20 | 20 | 20 | 0 | 0 |
@@ -212,18 +227,26 @@ random seeds than development.
 1. **Single model backend**: Only Qwen2.5-7B-Instruct tested.
 2. **One task family**: Synthetic evidence-based reasoning. Generalization
    to other domains is untested.
-3. **One category both-fails**: 20 `ood_4hyp_mixed` tasks fail in both arms.
-   The certificate correctly abstains but no continuation authority exists.
+3. **BENCHMARK VALIDITY BUG (P0)**: 20 `ood_4hyp_mixed` tasks have invalid
+   oracle paths. The template has been fixed and all 8 templates now pass
+   oracle-path semantic validation (G_B1-G_B4). The existing 120-task
+   results are preserved as historical data. A new pool must be generated
+   and run as a new experiment.
 4. **Certificate-driven on OOD**: Q is non-binding in all 60 OOD rescues.
-   The OOD result is about deterministic certificate robustness, not
-   learned Q generalization.
-5. **Structural novelty only**: 0% overlap on 14-field structural signature
+   Q's role is burden reduction (precision 1.0 vs 0.75 for CERT-only),
+   not causal power.
+5. **Force-state novelty NOT confirmed**: d_F min NN = 1.19, only 33% ≥ 3.0.
+   OOD tasks are driven into familiar terminal states, then terminal authority
+   succeeds. Claim is Level 2, not Level 3.
+6. **Structural novelty only**: 0% overlap on 14-field structural signature
    does not prove 0% overlap on the full causal state representation.
-6. **Ablations pending**: CERT-only and Q-only ablations are in progress.
-   Until they complete, mechanism attribution is not fully separated.
-7. **Provenance gap**: 6 Python modules are not yet hashed in the manifest.
+7. **G9 semantic conformance PARTIAL**: Oracle-path validation was not part
+   of original G9. Now added as G_B1-G_B4. Templates fixed, but existing
+   results were generated with the old (invalid) templates.
 8. **Q_V3R3 not promoted**: The repaired Q_V3R3 candidate has not passed
    full held-out evaluation and is not used in any live run.
+9. **Release verifier was broken**: Now rewritten to validate against
+   RELEASE_MANIFEST.json schema. All 59 hashes verified.
 
 ## Ablation Results: Mechanism Fully Attributed
 

@@ -149,6 +149,10 @@ def load_development_signatures() -> tuple[set[str], np.ndarray | None]:
 # OOD pool uses: 4-6 hypotheses, novel topology patterns
 OOD_DOMAIN_TEMPLATES = [
     # 4 hypotheses with mixed verified/unverified support
+    # Fixed: E1 starts UNVERIFIED, E2-E4 are verified contradictions.
+    # After VERIFY(E1), H1 gets unique verified support → ANSWER_READY.
+    # Previous version had E3 as SUFFICIENT support for H3, creating
+    # competing verified support that made the oracle path invalid.
     {
         "category": "OOD_4HYP_MIXED",
         "summary": "Is the condition type A, B, C, or D?",
@@ -159,9 +163,9 @@ OOD_DOMAIN_TEMPLATES = [
             ("H4", "type D", "DEFER"),
         ],
         "evidence": [
-            ("E1", "Marker for A", "initial", ("H1",), (), "SUFFICIENT", "CURRENT"),
-            ("E2", "Marker for B", "initial", ("H2",), (), "UNVERIFIED", "CURRENT"),
-            ("E3", "Marker for C", "initial", ("H3",), (), "SUFFICIENT", "CURRENT"),
+            ("E1", "Marker for A", "initial", ("H1",), (), "UNVERIFIED", "CURRENT"),
+            ("E2", "Contradiction of B", "initial", (), ("H2",), "SUFFICIENT", "CURRENT"),
+            ("E3", "Contradiction of C", "initial", (), ("H3",), "SUFFICIENT", "CURRENT"),
             ("E4", "Contradiction of D", "initial", (), ("H4",), "SUFFICIENT", "CURRENT"),
         ],
         "correct_hypothesis": "H1",
@@ -170,6 +174,11 @@ OOD_DOMAIN_TEMPLATES = [
         "budget": {"steps": 4, "verify": 2, "retrieve": 0, "search": 0},
     },
     # 5 hypotheses with all unverified
+    # Fixed: E2-E5 are now verified contradictions (FALSIFIED), so only E1
+    # is unverified. The executor's VERIFY targets the last unverified item,
+    # which is now E1. After VERIFY(E1), H1 gets unique verified support.
+    # Previous version had all 5 unverified, causing VERIFY to target E5
+    # (for H5/DEFER) instead of E1 (for H1).
     {
         "category": "OOD_5HYP_ALL_UNVERIFIED",
         "summary": "Is the diagnosis one of five possibilities?",
@@ -182,14 +191,14 @@ OOD_DOMAIN_TEMPLATES = [
         ],
         "evidence": [
             ("E1", "Test for 1", "initial", ("H1",), (), "UNVERIFIED", "CURRENT"),
-            ("E2", "Test for 2", "initial", ("H2",), (), "UNVERIFIED", "CURRENT"),
-            ("E3", "Test for 3", "initial", ("H3",), (), "UNVERIFIED", "CURRENT"),
-            ("E4", "Test for 4", "initial", ("H4",), (), "UNVERIFIED", "CURRENT"),
-            ("E5", "Test for 5", "initial", ("H5",), (), "UNVERIFIED", "CURRENT"),
+            ("E2", "Ruling out 2", "initial", (), ("H2",), "SUFFICIENT", "CURRENT"),
+            ("E3", "Ruling out 3", "initial", (), ("H3",), "SUFFICIENT", "CURRENT"),
+            ("E4", "Ruling out 4", "initial", (), ("H4",), "SUFFICIENT", "CURRENT"),
+            ("E5", "Ruling out 5", "initial", (), ("H5",), "SUFFICIENT", "CURRENT"),
         ],
         "correct_hypothesis": "H1",
         "expected_terminal": "ANSWER",
-        "oracle_path": ("VERIFY", "VERIFY", "ANSWER"),
+        "oracle_path": ("VERIFY", "ANSWER"),
         "budget": {"steps": 5, "verify": 3, "retrieve": 0, "search": 0},
     },
     # 6 hypotheses with partial verification
@@ -282,6 +291,10 @@ OOD_DOMAIN_TEMPLATES = [
         "budget": {"steps": 2, "verify": 1, "retrieve": 0, "search": 0},
     },
     # 4 hypotheses with mixed verified, no unique support, search available
+    # Fixed: E1 was SUFFICIENT (verified support for H1) which made
+    # the initial state already ANSWER_READY. Changed E1 to UNVERIFIED
+    # and added E4 as verified contradiction of H4.
+    # After SEARCH_MORE reveals E1, then VERIFY(E1) → H1 uniquely supported.
     {
         "category": "OOD_4HYP_MIXED_SEARCH",
         "summary": "Is the lesion A, B, C, or D — need more info?",
@@ -292,13 +305,14 @@ OOD_DOMAIN_TEMPLATES = [
             ("H4", "lesion D", "DEFER"),
         ],
         "evidence": [
-            ("E1", "Scan for A", "initial", ("H1",), (), "SUFFICIENT", "CURRENT"),
-            ("E2", "Scan for B", "initial", ("H2",), (), "UNVERIFIED", "CURRENT"),
-            ("E3", "Scan for C", "initial", ("H3",), (), "FALSIFIED", "CURRENT"),
+            ("E1", "Scan for A", "initial", ("H1",), (), "UNVERIFIED", "CURRENT"),
+            ("E2", "Contradiction of B", "initial", (), ("H2",), "SUFFICIENT", "CURRENT"),
+            ("E3", "Contradiction of C", "initial", (), ("H3",), "SUFFICIENT", "CURRENT"),
+            ("E4", "Contradiction of D", "initial", (), ("H4",), "SUFFICIENT", "CURRENT"),
         ],
         "correct_hypothesis": "H1",
         "expected_terminal": "ANSWER",
-        "oracle_path": ("SEARCH_MORE", "ANSWER"),
+        "oracle_path": ("VERIFY", "ANSWER"),
         "budget": {"steps": 4, "verify": 1, "retrieve": 0, "search": 2},
     },
     # 6 hypotheses with 5 eliminated, unique support (novel elimination count)

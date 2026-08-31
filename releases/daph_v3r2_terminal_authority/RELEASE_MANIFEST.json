@@ -2,12 +2,8 @@
   "release_id": "daph_v3r2_terminal_authority",
   "release_name": "DAPH V3R2 Terminal Authority Confirmed",
   "created_at": "2026-08-31T02:31:35.807182+00:00",
-  "source_commit": "fb4271cf120d7456d7936c52ec485e23480fbb4b",
   "source_tree": "aa5808ee714f2ceea5fbbf9ecc2c4f69753e4754",
-  "source_tag": "v3r2-confirmed",
   "dirty_worktree": false,
-  "current_worktree_commit": "dfdd955fb7e9c2db378ed91bb7c8927a7825721b",
-  "current_worktree_dirty": false,
   "file_hashes": {
     "executive/authority_isolation.py": "d31989d8d16b48a62ae2135e62eb2fd838f7f45b228ca900aeea30cd777e1d34",
     "executive/policy.py": "340dd37323bd15bbb49800c07a0c479d0e4a6b4ccadc3d297e94fe224040d007",
@@ -61,7 +57,7 @@
     "scripts/evaluate_q_v3r3.py": "7102b7435c3a44a82cc36f743434057877c2591334790a2fe36b07efd6971ff0",
     "scripts/run_ablations.py": "1de27e96b65a0b371036e7f6b6952aedd98371ac11f31f4d422ccff64998b1af",
     "scripts/run_ood.py": "b60f0815027c45f601bfc674a4f9c29171c88f26d1f12f80d09c714f744b8ce7",
-    "scripts/verify_release.py": "8d6b33fa6a20f4ba9514b693a76d228540407eae41224f2e272077bd061a2b7b",
+    "scripts/verify_release.py": "4bd2200bb0d2136415c2039094e8a5feaf6f38e7a4ecac55e061e85271f09d1e",
     "analysis/interaction_analysis.json": "e15913696c13066cb18a3f1288288537ac0a44cd06b4957758e7fda78c2eb7e5",
     "analysis/rescue_failure_taxonomy.json": "8f43f6488ad26a87d9fad059b29a818f6cd7296a8eeda823cf0e71cc2f4f71b0",
     "analysis/both_fail_causal_oracle.json": "46540663be38c830318069f5116839b56fe0572fd74ffd67a9ca2454c2179967",
@@ -118,7 +114,7 @@
     "G6_positive_ci_lower": true,
     "G7_rescues_gt_breaks": true,
     "G8_zero_false_terminal": true,
-    "G9_semantic_conformance": true,
+    "G9_semantic_conformance": false,
     "G10_nonzero_coverage": true,
     "G11_authority_receipts": true,
     "G12_trajectory_recomputability": true,
@@ -128,5 +124,9 @@
   },
   "claim_level": "Level 2 \u2014 structural task OOD (behavioral pass, mechanism certificate-driven)",
   "promotion_status": "NOT_PROMOTED \u2014 pending full Q-input novelty closure and force-state OOD proof",
-  "file_count": 59
+  "file_count": 59,
+  "qualification_gates_note": "G9 marked PARTIAL: benchmark oracle-path validation was not part of original G9. Now added as G_B1-G_B4. Original 20 OOD_4HYP_MIXED tasks had invalid oracle paths (benchmark construction failure, not certificate recall gap). Templates fixed and re-validated.",
+  "confirmed_executive_commit": "fb4271cf120d7456d7936c52ec485e23480fbb4b",
+  "confirmed_executive_tag": "v3r2-confirmed",
+  "release_packaging_commit": "dfdd955fb7e9c2db378ed91bb7c8927a7825721b"
 }
