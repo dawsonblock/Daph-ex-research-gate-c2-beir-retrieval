@@ -1,0 +1,537 @@
+{
+  "config": {
+    "n_probe_tests": 2,
+    "rho": 0.05,
+    "tau_delta": -50.0,
+    "seed": 42,
+    "n_dev": 30,
+    "n_cal": 7,
+    "n_confirmation": 14
+  },
+  "summary": {
+    "base": {
+      "mean_utility": 53.206491422775706,
+      "std_utility": 45.471226053294934,
+      "task_success": 6,
+      "task_success_rate": 0.42857142857142855,
+      "mean_tests_passed": 3.0714285714285716,
+      "mean_probe_cost": 0.0,
+      "total_probe_cost": 0,
+      "improvements_vs_base": 0,
+      "regressions_vs_base": 0
+    },
+    "probe_baseline": {
+      "mean_utility": 78.20580029470008,
+      "std_utility": 35.2950886080389,
+      "task_success": 9,
+      "task_success_rate": 0.6428571428571429,
+      "mean_tests_passed": 4.071428571428571,
+      "mean_probe_cost": 8.0,
+      "total_probe_cost": 112,
+      "improvements_vs_base": 5,
+      "regressions_vs_base": 0
+    },
+    "simple_reranker": {
+      "mean_utility": 78.50954074096322,
+      "std_utility": 32.42185308016633,
+      "task_success": 8,
+      "task_success_rate": 0.5714285714285714,
+      "mean_tests_passed": 4.071428571428571,
+      "mean_probe_cost": 8.0,
+      "total_probe_cost": 112,
+      "improvements_vs_base": 6,
+      "regressions_vs_base": 1
+    },
+    "daphx": {
+      "mean_utility": 73.92797650898517,
+      "std_utility": 41.54400529321009,
+      "task_success": 9,
+      "task_success_rate": 0.6428571428571429,
+      "mean_tests_passed": 3.857142857142857,
+      "mean_probe_cost": 8.0,
+      "total_probe_cost": 112,
+      "n_disagreements": 10,
+      "n_force": 4,
+      "rescues": 4,
+      "breaks": 0,
+      "break_rate": 0.0,
+      "rescue_recall": 0.6666666666666666,
+      "n_rescue_opportunities": 6,
+      "break_rate_upper_95": 0.75
+    }
+  },
+  "conformal": {
+    "q_90": 63.96134362800678,
+    "n_cal": 28
+  },
+  "per_task_results": {
+    "base": [
+      {
+        "pick_id": "code_089_sliding_window_median_c0",
+        "utility": 99.86181441700319,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 0
+      },
+      {
+        "pick_id": "code_085_restore_ip_c0",
+        "utility": -0.10790129099041224,
+        "tests_passed": 0,
+        "tests_total": 6,
+        "probe_cost": 0
+      },
+      {
+        "pick_id": "code_073_word_ladder_length_c0",
+        "utility": 99.77605387504445,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 0
+      },
+      {
+        "pick_id": "code_091_backspace_compare_c0",
+        "utility": 99.89105145802023,
+        "tests_passed": 7,
+        "tests_total": 7,
+        "probe_cost": 0
+      },
+      {
+        "pick_id": "code_060_text_justify_c0",
+        "utility": 39.87098954204703,
+        "tests_passed": 2,
+        "tests_total": 5,
+        "probe_cost": 0
+      },
+      {
+        "pick_id": "code_072_min_path_sum_triangle_c0",
+        "utility": 99.88744654104812,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 0
+      },
+      {
+        "pick_id": "code_068_reach_point_c0",
+        "utility": -10.0,
+        "tests_passed": 0,
+        "tests_total": 6,
+        "probe_cost": 0
+      },
+      {
+        "pick_id": "code_100_count_bits_c0",
+        "utility": 99.89597412495641,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 0
+      },
+      {
+        "pick_id": "code_070_zuma_game_c0",
+        "utility": -0.16548895800951868,
+        "tests_passed": 0,
+        "tests_total": 5,
+        "probe_cost": 0
+      },
+      {
+        "pick_id": "code_057_min_window_substring_hard_c0",
+        "utility": 99.89918141701492,
+        "tests_passed": 8,
+        "tests_total": 8,
+        "probe_cost": 0
+      },
+      {
+        "pick_id": "code_092_custom_sort_c0",
+        "utility": 79.89355087501463,
+        "tests_passed": 4,
+        "tests_total": 5,
+        "probe_cost": 0
+      },
+      {
+        "pick_id": "code_064_confusing_numbers_c0",
+        "utility": 16.41930387568815,
+        "tests_passed": 1,
+        "tests_total": 6,
+        "probe_cost": 0
+      },
+      {
+        "pick_id": "code_078_lru_cache_c0",
+        "utility": -0.1093467500177212,
+        "tests_passed": 0,
+        "tests_total": 1,
+        "probe_cost": 0
+      },
+      {
+        "pick_id": "code_088_kth_largest_c0",
+        "utility": 19.87825079204049,
+        "tests_passed": 1,
+        "tests_total": 5,
+        "probe_cost": 0
+      }
+    ],
+    "probe_baseline": [
+      {
+        "pick_id": "code_089_sliding_window_median_c0",
+        "utility": 99.86181441700319,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_085_restore_ip_c0",
+        "utility": -0.10790129099041224,
+        "tests_passed": 0,
+        "tests_total": 6,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_073_word_ladder_length_c0",
+        "utility": 99.77605387504445,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_091_backspace_compare_c0",
+        "utility": 99.89105145802023,
+        "tests_passed": 7,
+        "tests_total": 7,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_060_text_justify_c3",
+        "utility": 99.87126487499336,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_072_min_path_sum_triangle_c0",
+        "utility": 99.88744654104812,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_068_reach_point_c1",
+        "utility": 49.88953300000867,
+        "tests_passed": 3,
+        "tests_total": 6,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_100_count_bits_c0",
+        "utility": 99.89597412495641,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_070_zuma_game_c0",
+        "utility": -0.16548895800951868,
+        "tests_passed": 0,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_057_min_window_substring_hard_c0",
+        "utility": 99.89918141701492,
+        "tests_passed": 8,
+        "tests_total": 8,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_092_custom_sort_c0",
+        "utility": 79.89355087501463,
+        "tests_passed": 4,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_064_confusing_numbers_c2",
+        "utility": 66.53331875065729,
+        "tests_passed": 4,
+        "tests_total": 6,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_078_lru_cache_c1",
+        "utility": 99.89501833298709,
+        "tests_passed": 1,
+        "tests_total": 1,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_088_kth_largest_c3",
+        "utility": 99.86038670805283,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8
+      }
+    ],
+    "simple_reranker": [
+      {
+        "pick_id": "code_089_sliding_window_median_c1",
+        "utility": 99.84492033300921,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_085_restore_ip_c1",
+        "utility": 16.553136749697536,
+        "tests_passed": 1,
+        "tests_total": 6,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_073_word_ladder_length_c1",
+        "utility": 99.84033350000391,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_091_backspace_compare_c0",
+        "utility": 99.89105145802023,
+        "tests_passed": 7,
+        "tests_total": 7,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_060_text_justify_c3",
+        "utility": 99.87126487499336,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_072_min_path_sum_triangle_c0",
+        "utility": 99.88744654104812,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_068_reach_point_c1",
+        "utility": 49.88953300000867,
+        "tests_passed": 3,
+        "tests_total": 6,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_100_count_bits_c1",
+        "utility": 99.90037912502885,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_070_zuma_game_c1",
+        "utility": -0.12230404099682346,
+        "tests_passed": 0,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_057_min_window_substring_hard_c1",
+        "utility": 87.39714620797895,
+        "tests_passed": 7,
+        "tests_total": 8,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_092_custom_sort_c1",
+        "utility": 79.89193883299595,
+        "tests_passed": 4,
+        "tests_total": 5,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_064_confusing_numbers_c2",
+        "utility": 66.53331875065729,
+        "tests_passed": 4,
+        "tests_total": 6,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_078_lru_cache_c1",
+        "utility": 99.89501833298709,
+        "tests_passed": 1,
+        "tests_total": 1,
+        "probe_cost": 8
+      },
+      {
+        "pick_id": "code_088_kth_largest_c3",
+        "utility": 99.86038670805283,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8
+      }
+    ],
+    "daphx": [
+      {
+        "pick_id": "code_089_sliding_window_median_c0",
+        "utility": 99.86181441700319,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8,
+        "would_force": false,
+        "disagreement": false
+      },
+      {
+        "pick_id": "code_085_restore_ip_c0",
+        "utility": -0.10790129099041224,
+        "tests_passed": 0,
+        "tests_total": 6,
+        "probe_cost": 8,
+        "would_force": false,
+        "disagreement": true,
+        "delta_q": 2.4810474645133507,
+        "lcb": -61.48029616349343,
+        "risk_prob": 0.003148908596033692,
+        "pairwise_pred": -0.21571202610047996
+      },
+      {
+        "pick_id": "code_073_word_ladder_length_c0",
+        "utility": 99.77605387504445,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8,
+        "would_force": false,
+        "disagreement": true,
+        "delta_q": 0.393759022671361,
+        "lcb": -63.56758460533542,
+        "risk_prob": 2.1302623379196037e-09,
+        "pairwise_pred": 0.39435089597498296
+      },
+      {
+        "pick_id": "code_091_backspace_compare_c0",
+        "utility": 99.89105145802023,
+        "tests_passed": 7,
+        "tests_total": 7,
+        "probe_cost": 8,
+        "would_force": false,
+        "disagreement": false
+      },
+      {
+        "pick_id": "code_060_text_justify_c3",
+        "utility": 99.87126487499336,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8,
+        "would_force": true,
+        "disagreement": true,
+        "delta_q": 90.40086144382761,
+        "lcb": 26.439517815820828,
+        "risk_prob": 1.4829641322926183e-09,
+        "pairwise_pred": 68.54119866475982
+      },
+      {
+        "pick_id": "code_072_min_path_sum_triangle_c0",
+        "utility": 99.88744654104812,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8,
+        "would_force": false,
+        "disagreement": false
+      },
+      {
+        "pick_id": "code_068_reach_point_c0",
+        "utility": -10.0,
+        "tests_passed": 0,
+        "tests_total": 6,
+        "probe_cost": 8,
+        "would_force": false,
+        "disagreement": false
+      },
+      {
+        "pick_id": "code_100_count_bits_c0",
+        "utility": 99.89597412495641,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8,
+        "would_force": false,
+        "disagreement": true,
+        "delta_q": 0.46131931702259976,
+        "lcb": -63.50002431098418,
+        "risk_prob": 9.46771457283517e-09,
+        "pairwise_pred": 0.06114951063576237
+      },
+      {
+        "pick_id": "code_070_zuma_game_c0",
+        "utility": -0.16548895800951868,
+        "tests_passed": 0,
+        "tests_total": 5,
+        "probe_cost": 8,
+        "would_force": false,
+        "disagreement": true,
+        "delta_q": 11.449130944574721,
+        "lcb": -52.51221268343206,
+        "risk_prob": 0.999881453643658,
+        "pairwise_pred": -4.3264053049371
+      },
+      {
+        "pick_id": "code_057_min_window_substring_hard_c0",
+        "utility": 99.89918141701492,
+        "tests_passed": 8,
+        "tests_total": 8,
+        "probe_cost": 8,
+        "would_force": false,
+        "disagreement": true,
+        "delta_q": 0.023693213400633795,
+        "lcb": -63.937650414606146,
+        "risk_prob": 5.26986963764459e-09,
+        "pairwise_pred": 4.039455418138582
+      },
+      {
+        "pick_id": "code_092_custom_sort_c0",
+        "utility": 79.89355087501463,
+        "tests_passed": 4,
+        "tests_total": 5,
+        "probe_cost": 8,
+        "would_force": false,
+        "disagreement": true,
+        "delta_q": 1.8807776962333378,
+        "lcb": -62.08056593177344,
+        "risk_prob": 1.6757633989713707e-06,
+        "pairwise_pred": -3.391584570409127
+      },
+      {
+        "pick_id": "code_064_confusing_numbers_c2",
+        "utility": 66.53331875065729,
+        "tests_passed": 4,
+        "tests_total": 6,
+        "probe_cost": 8,
+        "would_force": true,
+        "disagreement": true,
+        "delta_q": 97.6075394615688,
+        "lcb": 33.646195833562025,
+        "risk_prob": 1.8606457321432262e-09,
+        "pairwise_pred": 82.61869694266473
+      },
+      {
+        "pick_id": "code_078_lru_cache_c1",
+        "utility": 99.89501833298709,
+        "tests_passed": 1,
+        "tests_total": 1,
+        "probe_cost": 8,
+        "would_force": true,
+        "disagreement": true,
+        "delta_q": 44.047691938162764,
+        "lcb": -19.913651689844016,
+        "risk_prob": 2.3911467337602564e-06,
+        "pairwise_pred": 74.40189919328526
+      },
+      {
+        "pick_id": "code_088_kth_largest_c3",
+        "utility": 99.86038670805283,
+        "tests_passed": 5,
+        "tests_total": 5,
+        "probe_cost": 8,
+        "would_force": true,
+        "disagreement": true,
+        "delta_q": 93.20831770465814,
+        "lcb": 29.246974076651362,
+        "risk_prob": 6.448614942191478e-09,
+        "pairwise_pred": 69.1030686261617
+      }
+    ]
+  }
+}
