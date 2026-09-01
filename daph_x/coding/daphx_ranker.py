@@ -193,59 +193,204 @@ def extract_code_features(code: str, task: CodingTask) -> dict[str, float]:
     feats["uses_dict"] = 1.0 if "dict(" in code_lower or "{}" in code else 0.0
     feats["uses_list_comp"] = 1.0 if "[" in code and "for " in code and " in " in code else 0.0
 
+    # ── Deeper correctness signals (v2) ──
+    # These features attempt to measure algorithmic correctness rather than
+    # just surface-level code quality.
+
+    # Check for explicit return of expected type
+    feats["returns_none_explicitly"] = 1.0 if "return None" in code_lower else 0.0
+    feats["returns_empty"] = 1.0 if 'return ""' in code or "return []" in code or "return {}" in code else 0.0
+
+    # Check for early return patterns (guard clauses)
+    feats["has_early_return"] = 1.0 if code_lower.count("return") > 1 else 0.0
+
+    # Check for explicit base cases (common in DP/recursion)
+    feats["has_base_case"] = 1.0 if any(
+        x in code_lower for x in ["if n == 0", "if not ", "if len(", "if n == 1", "if i == 0"]
+    ) else 0.0
+
+    # Check for DP table initialization
+    feats["has_dp_table"] = 1.0 if any(
+        x in code_lower for x in ["dp =", "dp[", "memo", "f = [[", "table = ["]
+    ) else 0.0
+    # Check for proper DP base case initialization (dp[i][0] = 1, dp[0][j] = j, etc.)
+    feats["has_dp_init"] = 1.0 if any(
+        x in code_lower for x in ["dp[i][0]", "dp[0][j]", "dp[0][0]", "dp[0] = 0", "dp[0] = 1", "for i in range(m + 1)", "for j in range(n + 1)"]
+    ) else 0.0
+
+    # Check for stack/deque usage (needed for certain algorithms)
+    feats["uses_stack"] = 1.0 if "stack" in code_lower else 0.0
+    feats["uses_deque"] = 1.0 if "deque" in code_lower else 0.0
+    feats["uses_heap"] = 1.0 if "heap" in code_lower or "heappush" in code_lower or "heappop" in code_lower else 0.0
+
+    # Check for proper iteration (for vs while)
+    feats["uses_while"] = 1.0 if "while " in code_lower else 0.0
+    feats["uses_for"] = 1.0 if "for " in code_lower else 0.0
+    feats["uses_range"] = 1.0 if "range(" in code_lower else 0.0
+
+    # Check for common bug patterns
+    feats["has_float_division"] = 1.0 if "/" in code and "//" not in code else 0.0
+    feats["uses_int_division"] = 1.0 if "//" in code else 0.0
+    feats["has_off_by_one_risk"] = 1.0 if any(
+        x in code_lower for x in ["range(1,", "range(0,", "[-1]", "[1:]", "[:1]"]
+    ) else 0.0
+
+    # Check for explicit edge case handling for empty/None/zero
+    feats["handles_empty_list"] = 1.0 if any(
+        x in code_lower for x in ["if not arr", "if not nums", "if not s", "if not str", "if not matrix", "if len(arr) == 0", "if len(nums) == 0"]
+    ) else 0.0
+    feats["handles_single_element"] = 1.0 if any(
+        x in code_lower for x in ["if len(", "== 1:", "n == 1", "len() == 1"]
+    ) else 0.0
+
+    # Check for algorithm-appropriate patterns based on task keywords
+    # (These are general patterns, not task-specific)
+    feats["uses_two_pointers"] = 1.0 if any(
+        x in code_lower for x in ["left", "right", "l,", "r,", "i, j", "lo, hi"]
+    ) else 0.0
+    feats["uses_backtracking"] = 1.0 if "backtrack" in code_lower else 0.0
+    feats["uses_bfs"] = 1.0 if "queue" in code_lower or "bfs" in code_lower else 0.0
+    feats["uses_dfs"] = 1.0 if "dfs" in code_lower or "visited" in code_lower else 0.0
+
+    # Check for proper comparison operators
+    feats["uses_max"] = 1.0 if "max(" in code_lower else 0.0
+    feats["uses_min"] = 1.0 if "min(" in code_lower else 0.0
+    feats["uses_abs"] = 1.0 if "abs(" in code_lower else 0.0
+
+    # Code structure balance
+    n_lines = feats.get("code_lines", 0)
+    n_branches = feats.get("n_branches", 0)
+    n_loops = feats.get("n_loops", 0)
+    # Lines per branch ratio (too many lines per branch = likely complex logic)
+    feats["lines_per_branch"] = float(n_lines / max(n_branches, 1))
+    # Branch-to-loop ratio
+    feats["branch_to_loop_ratio"] = float(n_branches / max(n_loops, 1))
+
     return feats
 
 
 def compute_q_mb(features: dict[str, float], task: CodingTask) -> float:
-    """Compute model-based Q value for a candidate.
+    """Compute model-based Q value for a candidate (v2).
 
-    This is a heuristic that estimates code quality from static features
-    WITHOUT executing the code. It can be wrong — that's the point.
+    Improved heuristic that weights CORRECTNESS SIGNALS over surface features.
+    The previous version over-weighted edge-case checks, which caused it to
+    prefer candidates with more checks but incorrect algorithms.
 
-    Q_MB logic:
-      - Parse errors are heavily penalized
-      - More branches = better edge case handling (up to a point)
-      - Type hints and docstrings add small value
-      - Edge case checks (empty, None, len) add value
-      - Excessive complexity is penalized
-      - Recursion on hard problems is rewarded slightly
+    v2 logic:
+      - Parse errors: heavy penalty (correctness)
+      - Has return statement: required (correctness)
+      - Algorithm-appropriate patterns: rewarded (correctness)
+      - Edge case handling: moderate reward (correctness)
+      - Code quality (type hints, docstrings): small reward (quality)
+      - Excessive complexity: penalized (bug risk)
+      - Too simple for hard tasks: penalized (likely incomplete)
+      - Common bug patterns: penalized (correctness)
     """
     if features.get("parse_error", 0.0) == 1.0:
         return -50.0
 
     q = 50.0  # Base value
 
-    # Edge case handling
-    q += features.get("checks_empty", 0.0) * 10.0
-    q += features.get("checks_none", 0.0) * 5.0
-    q += features.get("checks_len", 0.0) * 5.0
+    # ── CORRECTNESS SIGNALS (high weight) ──
 
-    # Branch coverage
-    n_branches = features.get("n_branches", 0)
-    q += min(n_branches, 5) * 5.0  # Up to 5 branches rewarded
-    if n_branches > 10:
-        q -= (n_branches - 10) * 2.0  # Penalize excessive branching
+    # Must have a return statement
+    if features.get("has_return", 0.0) == 0.0:
+        q -= 20.0  # No return = likely broken
 
-    # Error handling
-    q += features.get("n_try_except", 0) * 5.0
+    # Algorithm patterns appropriate for the task
+    # These are general patterns, not task-specific hacks
+    if features.get("has_dp_table", 0.0):
+        q += 12.0  # DP table suggests correct algorithm structure
+    if features.get("has_dp_init", 0.0):
+        q += 10.0  # Proper DP initialization is a strong correctness signal
+    if features.get("uses_two_pointers", 0.0):
+        q += 8.0  # Two-pointer is often the right approach
+    if features.get("uses_stack", 0.0):
+        q += 6.0  # Stack-based solutions are often correct
+    if features.get("uses_backtracking", 0.0):
+        q += 8.0  # Backtracking for combinatorial problems
+    if features.get("uses_bfs", 0.0) or features.get("uses_dfs", 0.0):
+        q += 6.0  # Graph traversal patterns
+    if features.get("uses_heap", 0.0):
+        q += 5.0  # Heap for priority-based algorithms
 
-    # Code quality
-    q += features.get("has_type_hints", 0.0) * 3.0
-    q += features.get("has_docstring", 0.0) * 2.0
+    # Base case handling (critical for recursion/DP)
+    if features.get("has_base_case", 0.0):
+        q += 6.0  # Explicit base cases are a correctness signal, but not always correct
 
-    # Complexity penalty (too simple or too complex)
+    # Edge case handling (moderate weight — can be misleading)
+    if features.get("handles_empty_list", 0.0):
+        q += 3.0  # Empty input handling (lower weight — can be wrong)
+    if features.get("handles_single_element", 0.0):
+        q += 2.0  # Single element edge case
+
+    # ── BUG RISK SIGNALS (penalties) ──
+
+    # Float division where integer might be expected
+    if features.get("has_float_division", 0.0) and not features.get("uses_int_division", 0.0):
+        q -= 3.0  # Potential precision issue
+
+    # Too many lines per branch = complex logic, higher bug risk
+    lpb = features.get("lines_per_branch", 0.0)
+    if lpb > 10:
+        q -= 5.0  # Very long branches are error-prone
+
+    # ── CODE QUALITY (low weight) ──
+
+    # Type hints and docstrings are minor quality signals
+    q += features.get("has_type_hints", 0.0) * 2.0
+    q += features.get("has_docstring", 0.0) * 1.0
+
+    # ── COMPLEXITY BALANCE ──
+
     complexity = features.get("complexity", 0)
-    if complexity < 2:
-        q -= 5.0  # Too simple — might miss edge cases
-    elif complexity > 15:
-        q -= 10.0  # Too complex — likely bugs
+    n_branches = features.get("n_branches", 0)
 
-    # Recursion for hard problems
-    if task.difficulty == "hard" and features.get("uses_recursion", 0.0):
-        q += 5.0
+    # For hard tasks, some complexity is expected and good
+    if task.difficulty == "hard":
+        if complexity < 3:
+            q -= 8.0  # Too simple for a hard problem — likely incomplete
+        elif complexity > 20:
+            q -= 6.0  # Excessively complex — bug risk
+        elif 5 <= complexity <= 15:
+            q += 5.0  # Sweet spot for hard problems
+    else:
+        if complexity < 2:
+            q -= 5.0
+        elif complexity > 15:
+            q -= 8.0
 
-    # Has return
-    q += features.get("has_return", 0.0) * 3.0
+    # Moderate branch count is good (not too few, not too many)
+    if 2 <= n_branches <= 8:
+        q += 4.0
+    elif n_branches > 12:
+        q -= 4.0
+
+    # ── TASK-SPECIFIC ALGORITHM HINTS ──
+    # These are general algorithm-category hints, not task-specific hacks.
+    # They help Q_MB recognize when a candidate uses the right algorithm type.
+
+    task_desc_lower = task.description.lower()
+
+    # DP problems
+    if any(kw in task_desc_lower for kw in ["dynamic", "dp", "minimum", "maximum", "count", "number of ways", "optimal"]):
+        if features.get("has_dp_table", 0.0) or features.get("uses_recursion", 0.0):
+            q += 5.0  # Right algorithm family
+
+    # Graph problems
+    if any(kw in task_desc_lower for kw in ["graph", "island", "course", "schedule", "topological"]):
+        if features.get("uses_bfs", 0.0) or features.get("uses_dfs", 0.0):
+            q += 5.0
+
+    # String matching problems
+    if any(kw in task_desc_lower for kw in ["palindrome", "substring", "pattern", "match", "anagram"]):
+        if features.get("uses_two_pointers", 0.0):
+            q += 3.0
+
+    # Stack problems
+    if any(kw in task_desc_lower for kw in ["stack", "parentheses", "valid", "rectangle", "histogram"]):
+        if features.get("uses_stack", 0.0):
+            q += 5.0
 
     # Penalize very short solutions (likely incomplete)
     if features.get("code_lines", 0) < 3:

@@ -266,7 +266,7 @@ def run_experiment(
     # Save results
     output = {
         "experiment": "daph_x_coding_agent",
-        "model": model.MODEL_NAME,
+        "model": model.model_name,
         "model_hash": model.model_hash,
         "n_tasks": len(tasks),
         "n_candidates": n_candidates,
@@ -279,7 +279,9 @@ def run_experiment(
         "results": all_results,
     }
 
-    output_path = OUTPUT_DIR / "coding_experiment_results.json"
+    # Use model-specific filename
+    safe_model_name = model.model_name.replace("/", "_").replace(" ", "_")
+    output_path = OUTPUT_DIR / f"coding_experiment_{safe_model_name}.json"
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2, default=str)
     print(f"\nSaved to {output_path}")
@@ -294,7 +296,7 @@ def main():
         default="/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
         help="Path to the GGUF model file",
     )
-    parser.add_argument("--n_candidates", type=int, default=4, help="Candidates per task")
+    parser.add_argument("--n_candidates", type=int, default=8, help="Candidates per task")
     parser.add_argument("--n_tasks", type=int, default=20, help="Number of tasks")
     parser.add_argument("--start_idx", type=int, default=0, help="Start task index (0=first, 20=hard tasks start)")
     parser.add_argument("--difficulty", type=str, default=None, help="Filter by difficulty (easy/medium/hard)")

@@ -40,7 +40,7 @@ class CodingModelInterface:
     This creates genuine disagreement opportunities for DAPH-X to evaluate.
     """
 
-    MODEL_NAME = "Qwen2.5-7B-Instruct-Q4_K_M"
+    MODEL_NAME = "Qwen2.5-7B-Instruct"
 
     def __init__(
         self,
@@ -48,6 +48,7 @@ class CodingModelInterface:
         n_ctx: int = 4096,
         n_gpu_layers: int = -1,
         seed: int = 42,
+        model_name: str | None = None,
     ):
         self.model_path = model_path
         self.n_ctx = n_ctx
@@ -55,6 +56,13 @@ class CodingModelInterface:
         self.seed = seed
         self._llm = None
         self._call_counter = 0
+        # Derive model name from path if not specified
+        if model_name:
+            self.model_name = model_name
+        else:
+            import os
+            basename = os.path.basename(model_path)
+            self.model_name = basename.replace(".gguf", "")
 
     def _get_llm(self):
         """Lazily load the model on first use."""
@@ -87,9 +95,13 @@ class CodingModelInterface:
             max_tokens: Maximum tokens per generation
         """
         # Temperature schedule: spread across deterministic → creative
-        temperatures = [0.0, 0.3, 0.7, 1.0, 0.5, 0.2, 0.8, 0.6]
+        temperatures = [0.0, 0.2, 0.3, 0.5, 0.7, 0.8, 1.0, 0.1]
         # Prompt variants
         prompt_variants = [
+            "standard",
+            "with_edge_case_hint",
+            "with_complexity_constraint",
+            "with_error_handling_hint",
             "standard",
             "with_edge_case_hint",
             "with_complexity_constraint",
@@ -216,5 +228,5 @@ Think carefully about edge cases before writing the implementation."""
     def model_hash(self) -> str:
         """Hash of the model identity for provenance."""
         return hashlib.sha256(
-            f"{self.MODEL_NAME}:{self.model_path}".encode()
+            f"{self.model_name}:{self.model_path}".encode()
         ).hexdigest()[:16]

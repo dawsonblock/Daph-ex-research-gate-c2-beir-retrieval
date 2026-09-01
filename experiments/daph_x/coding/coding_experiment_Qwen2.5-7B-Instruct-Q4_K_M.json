@@ -1,14 +1,14 @@
 {
   "experiment": "daph_x_coding_agent",
   "model": "Qwen2.5-7B-Instruct-Q4_K_M",
-  "model_hash": "4aaf2ce6385735a3",
+  "model_hash": "2cd42281a9307345",
   "n_tasks": 10,
   "n_candidates": 8,
-  "n_disagreements": 6,
+  "n_disagreements": 5,
   "n_rescues": 1,
   "n_breaks": 0,
-  "n_ties": 5,
-  "force_precision": 0.16666666666666666,
+  "n_ties": 4,
+  "force_precision": 0.2,
   "break_rate": 0.0,
   "results": [
     {
@@ -18,8 +18,8 @@
       "disagreement": false,
       "base_candidate_id": "code_041_wildcard_match_c0",
       "daphx_candidate_id": "code_041_wildcard_match_c0",
-      "base_utility": 89.59074283399968,
-      "daphx_utility": 89.59074283399968,
+      "base_utility": 89.67203449999215,
+      "daphx_utility": 89.67203449999215,
       "delta_u": 0.0,
       "base_tests": 9,
       "daphx_tests": 9,
@@ -35,52 +35,52 @@
           "rank": 1
         },
         {
-          "candidate_id": "code_041_wildcard_match_c1",
+          "candidate_id": "code_041_wildcard_match_c2",
           "q_mb": 94.0,
           "q_res": -14.57550180602612,
           "q_x": 79.42449819397388,
           "rank": 2
         },
         {
-          "candidate_id": "code_041_wildcard_match_c2",
+          "candidate_id": "code_041_wildcard_match_c3",
           "q_mb": 94.0,
           "q_res": -14.57550180602612,
           "q_x": 79.42449819397388,
           "rank": 3
         },
         {
-          "candidate_id": "code_041_wildcard_match_c3",
+          "candidate_id": "code_041_wildcard_match_c4",
           "q_mb": 94.0,
           "q_res": -14.57550180602612,
           "q_x": 79.42449819397388,
           "rank": 4
         },
         {
-          "candidate_id": "code_041_wildcard_match_c4",
+          "candidate_id": "code_041_wildcard_match_c6",
           "q_mb": 94.0,
           "q_res": -14.57550180602612,
           "q_x": 79.42449819397388,
           "rank": 5
         },
         {
-          "candidate_id": "code_041_wildcard_match_c5",
+          "candidate_id": "code_041_wildcard_match_c7",
           "q_mb": 94.0,
           "q_res": -14.57550180602612,
           "q_x": 79.42449819397388,
           "rank": 6
         },
         {
-          "candidate_id": "code_041_wildcard_match_c6",
-          "q_mb": 94.0,
+          "candidate_id": "code_041_wildcard_match_c1",
+          "q_mb": 75.0,
           "q_res": -14.57550180602612,
-          "q_x": 79.42449819397388,
+          "q_x": 60.42449819397388,
           "rank": 7
         },
         {
-          "candidate_id": "code_041_wildcard_match_c7",
-          "q_mb": 94.0,
+          "candidate_id": "code_041_wildcard_match_c5",
+          "q_mb": 75.0,
           "q_res": -14.57550180602612,
-          "q_x": 79.42449819397388,
+          "q_x": 60.42449819397388,
           "rank": 8
         }
       ]
@@ -89,73 +89,72 @@
       "task_id": "code_042_jump_game_ii",
       "description": "Find minimum number of jumps to reach the end of an array",
       "difficulty": "hard",
-      "disagreement": true,
+      "disagreement": false,
       "base_candidate_id": "code_042_jump_game_ii_c0",
-      "daphx_candidate_id": "code_042_jump_game_ii_c1",
-      "base_utility": 99.71906891698018,
-      "daphx_utility": 99.82485862498288,
-      "delta_u": 0.10578970800270326,
+      "daphx_candidate_id": "code_042_jump_game_ii_c0",
+      "base_utility": 99.7236741669767,
+      "daphx_utility": 99.7236741669767,
+      "delta_u": 0.0,
       "base_tests": 7,
       "daphx_tests": 7,
       "total_tests": 7,
       "base_error": null,
       "daphx_error": null,
-      "outcome": "TIE",
       "rankings": [
         {
-          "candidate_id": "code_042_jump_game_ii_c1",
+          "candidate_id": "code_042_jump_game_ii_c0",
           "q_mb": 72.0,
           "q_res": -14.57550180602612,
           "q_x": 57.42449819397388,
           "rank": 1
         },
         {
-          "candidate_id": "code_042_jump_game_ii_c3",
+          "candidate_id": "code_042_jump_game_ii_c1",
           "q_mb": 72.0,
           "q_res": -14.57550180602612,
           "q_x": 57.42449819397388,
           "rank": 2
         },
         {
-          "candidate_id": "code_042_jump_game_ii_c5",
+          "candidate_id": "code_042_jump_game_ii_c7",
           "q_mb": 72.0,
           "q_res": -14.57550180602612,
           "q_x": 57.42449819397388,
           "rank": 3
         },
         {
-          "candidate_id": "code_042_jump_game_ii_c7",
-          "q_mb": 72.0,
+          "candidate_id": "code_042_jump_game_ii_c2",
+          "q_mb": 69.0,
           "q_res": -14.57550180602612,
-          "q_x": 57.42449819397388,
+          "q_x": 54.42449819397388,
           "rank": 4
         },
         {
           "candidate_id": "code_042_jump_game_ii_c4",
-          "q_mb": 70.0,
+          "q_mb": 69.0,
           "q_res": -14.57550180602612,
-          "q_x": 55.42449819397388,
+          "q_x": 54.42449819397388,
           "rank": 5
         },
         {
-          "candidate_id": "code_042_jump_game_ii_c0",
-          "q_mb": 61.0,
+          "candidate_id": "code_042_jump_game_ii_c5",
+          "q_mb": 69.0,
           "q_res": -14.57550180602612,
-          "q_x": 46.42449819397388,
+          "q_x": 54.42449819397388,
           "rank": 6
         },
         {
-          "candidate_id": "code_042_jump_game_ii_c2",
-          "q_mb": 61.0,
+          "candidate_id": "code_042_jump_game_ii_c6",
+          "q_mb": 47.0,
           "q_res": -14.57550180602612,
-          "q_x": 46.42449819397388,
+          "q_x": 32.42449819397388,
           "rank": 7
         },
         {
-          "candidate_id": "code_042_jump_game_ii_c6",
-          "q_mb": 61.0,
+          "candidate_id": "code_042_jump_game_ii_c3",
+          "q_mb": -50.0,
           "q_res": -14.57550180602612,
-          "q_x": 46.42449819397388,
+          "q_x": -64.57550180602612,
           "rank": 8
         }
       ]
@@ -167,15 +166,15 @@
       "disagreement": true,
       "base_candidate_id": "code_043_substring_with_concat_c0",
       "daphx_candidate_id": "code_043_substring_with_concat_c1",
-      "base_utility": 49.71256237500347,
-      "daphx_utility": 66.48763112564725,
-      "delta_u": 16.775068750643783,
-      "base_tests": 3,
+      "base_utility": 66.25789016666627,
+      "daphx_utility": 66.47474433264384,
+      "delta_u": 0.21685416597756557,
+      "base_tests": 4,
       "daphx_tests": 4,
       "total_tests": 6,
       "base_error": null,
       "daphx_error": null,
-      "outcome": "RESCUE",
+      "outcome": "TIE",
       "rankings": [
         {
           "candidate_id": "code_043_substring_with_concat_c1",
@@ -185,52 +184,52 @@
           "rank": 1
         },
         {
-          "candidate_id": "code_043_substring_with_concat_c3",
+          "candidate_id": "code_043_substring_with_concat_c4",
           "q_mb": 81.0,
           "q_res": -14.57550180602612,
           "q_x": 66.42449819397388,
           "rank": 2
         },
         {
-          "candidate_id": "code_043_substring_with_concat_c4",
+          "candidate_id": "code_043_substring_with_concat_c5",
           "q_mb": 81.0,
           "q_res": -14.57550180602612,
           "q_x": 66.42449819397388,
           "rank": 3
         },
         {
-          "candidate_id": "code_043_substring_with_concat_c5",
+          "candidate_id": "code_043_substring_with_concat_c7",
           "q_mb": 81.0,
           "q_res": -14.57550180602612,
           "q_x": 66.42449819397388,
           "rank": 4
         },
         {
-          "candidate_id": "code_043_substring_with_concat_c7",
-          "q_mb": 81.0,
+          "candidate_id": "code_043_substring_with_concat_c3",
+          "q_mb": 78.0,
           "q_res": -14.57550180602612,
-          "q_x": 66.42449819397388,
+          "q_x": 63.42449819397388,
           "rank": 5
         },
         {
           "candidate_id": "code_043_substring_with_concat_c6",
-          "q_mb": 72.0,
+          "q_mb": 78.0,
           "q_res": -14.57550180602612,
-          "q_x": 57.42449819397388,
+          "q_x": 63.42449819397388,
           "rank": 6
         },
         {
           "candidate_id": "code_043_substring_with_concat_c0",
-          "q_mb": 67.0,
+          "q_mb": 76.0,
           "q_res": -14.57550180602612,
-          "q_x": 52.42449819397388,
+          "q_x": 61.42449819397388,
           "rank": 7
         },
         {
           "candidate_id": "code_043_substring_with_concat_c2",
-          "q_mb": 67.0,
+          "q_mb": 76.0,
           "q_res": -14.57550180602612,
-          "q_x": 52.42449819397388,
+          "q_x": 61.42449819397388,
           "rank": 8
         }
       ]
@@ -239,73 +238,72 @@
       "task_id": "code_044_largest_rectangle",
       "description": "Find the largest rectangle area in a histogram",
       "difficulty": "hard",
-      "disagreement": true,
+      "disagreement": false,
       "base_candidate_id": "code_044_largest_rectangle_c0",
-      "daphx_candidate_id": "code_044_largest_rectangle_c1",
-      "base_utility": 99.62312574998941,
-      "daphx_utility": 99.89597087498987,
-      "delta_u": 0.2728451250004582,
+      "daphx_candidate_id": "code_044_largest_rectangle_c0",
+      "base_utility": 99.51559674998862,
+      "daphx_utility": 99.51559674998862,
+      "delta_u": 0.0,
       "base_tests": 7,
       "daphx_tests": 7,
       "total_tests": 7,
       "base_error": null,
       "daphx_error": null,
-      "outcome": "TIE",
       "rankings": [
-        {
-          "candidate_id": "code_044_largest_rectangle_c1",
-          "q_mb": 76.0,
-          "q_res": -14.57550180602612,
-          "q_x": 61.42449819397388,
-          "rank": 1
-        },
-        {
-          "candidate_id": "code_044_largest_rectangle_c7",
-          "q_mb": 76.0,
-          "q_res": -14.57550180602612,
-          "q_x": 61.42449819397388,
-          "rank": 2
-        },
-        {
-          "candidate_id": "code_044_largest_rectangle_c5",
-          "q_mb": 69.0,
-          "q_res": -14.57550180602612,
-          "q_x": 54.42449819397388,
-          "rank": 3
-        },
         {
           "candidate_id": "code_044_largest_rectangle_c0",
           "q_mb": 67.0,
           "q_res": -14.57550180602612,
           "q_x": 52.42449819397388,
-          "rank": 4
+          "rank": 1
         },
         {
           "candidate_id": "code_044_largest_rectangle_c2",
           "q_mb": 67.0,
           "q_res": -14.57550180602612,
           "q_x": 52.42449819397388,
-          "rank": 5
-        },
-        {
-          "candidate_id": "code_044_largest_rectangle_c3",
-          "q_mb": 67.0,
-          "q_res": -14.57550180602612,
-          "q_x": 52.42449819397388,
-          "rank": 6
-        },
-        {
-          "candidate_id": "code_044_largest_rectangle_c4",
-          "q_mb": 67.0,
-          "q_res": -14.57550180602612,
-          "q_x": 52.42449819397388,
-          "rank": 7
+          "rank": 2
         },
         {
           "candidate_id": "code_044_largest_rectangle_c6",
           "q_mb": 67.0,
           "q_res": -14.57550180602612,
           "q_x": 52.42449819397388,
+          "rank": 3
+        },
+        {
+          "candidate_id": "code_044_largest_rectangle_c1",
+          "q_mb": 64.0,
+          "q_res": -14.57550180602612,
+          "q_x": 49.42449819397388,
+          "rank": 4
+        },
+        {
+          "candidate_id": "code_044_largest_rectangle_c3",
+          "q_mb": 64.0,
+          "q_res": -14.57550180602612,
+          "q_x": 49.42449819397388,
+          "rank": 5
+        },
+        {
+          "candidate_id": "code_044_largest_rectangle_c5",
+          "q_mb": 64.0,
+          "q_res": -14.57550180602612,
+          "q_x": 49.42449819397388,
+          "rank": 6
+        },
+        {
+          "candidate_id": "code_044_largest_rectangle_c7",
+          "q_mb": 64.0,
+          "q_res": -14.57550180602612,
+          "q_x": 49.42449819397388,
+          "rank": 7
+        },
+        {
+          "candidate_id": "code_044_largest_rectangle_c4",
+          "q_mb": 58.0,
+          "q_res": -14.57550180602612,
+          "q_x": 43.42449819397388,
           "rank": 8
         }
       ]
@@ -314,72 +312,73 @@
       "task_id": "code_045_min_stack",
       "description": "Design a stack that supports push, pop, top, and retrieving the minimum element in O(1) time",
       "difficulty": "hard",
-      "disagreement": false,
+      "disagreement": true,
       "base_candidate_id": "code_045_min_stack_c0",
-      "daphx_candidate_id": "code_045_min_stack_c0",
-      "base_utility": -0.2804007919912692,
-      "daphx_utility": -0.2804007919912692,
-      "delta_u": 0.0,
+      "daphx_candidate_id": "code_045_min_stack_c3",
+      "base_utility": -0.2970541249960661,
+      "daphx_utility": -0.09872516698669642,
+      "delta_u": 0.19832895800936967,
       "base_tests": 0,
       "daphx_tests": 0,
       "total_tests": 1,
       "base_error": null,
       "daphx_error": null,
+      "outcome": "TIE",
       "rankings": [
         {
-          "candidate_id": "code_045_min_stack_c0",
-          "q_mb": 81.0,
+          "candidate_id": "code_045_min_stack_c3",
+          "q_mb": 84.0,
           "q_res": -14.57550180602612,
-          "q_x": 66.42449819397388,
+          "q_x": 69.42449819397388,
           "rank": 1
         },
         {
-          "candidate_id": "code_045_min_stack_c2",
-          "q_mb": 81.0,
+          "candidate_id": "code_045_min_stack_c7",
+          "q_mb": 84.0,
           "q_res": -14.57550180602612,
-          "q_x": 66.42449819397388,
+          "q_x": 69.42449819397388,
           "rank": 2
         },
         {
-          "candidate_id": "code_045_min_stack_c3",
-          "q_mb": 81.0,
+          "candidate_id": "code_045_min_stack_c5",
+          "q_mb": 82.0,
           "q_res": -14.57550180602612,
-          "q_x": 66.42449819397388,
+          "q_x": 67.42449819397388,
           "rank": 3
         },
         {
-          "candidate_id": "code_045_min_stack_c5",
+          "candidate_id": "code_045_min_stack_c4",
           "q_mb": 81.0,
           "q_res": -14.57550180602612,
           "q_x": 66.42449819397388,
           "rank": 4
         },
         {
-          "candidate_id": "code_045_min_stack_c6",
-          "q_mb": 81.0,
+          "candidate_id": "code_045_min_stack_c1",
+          "q_mb": 76.0,
           "q_res": -14.57550180602612,
-          "q_x": 66.42449819397388,
+          "q_x": 61.42449819397388,
           "rank": 5
         },
         {
-          "candidate_id": "code_045_min_stack_c1",
-          "q_mb": 79.0,
+          "candidate_id": "code_045_min_stack_c0",
+          "q_mb": 75.0,
           "q_res": -14.57550180602612,
-          "q_x": 64.42449819397388,
+          "q_x": 60.42449819397388,
           "rank": 6
         },
         {
-          "candidate_id": "code_045_min_stack_c4",
-          "q_mb": 79.0,
+          "candidate_id": "code_045_min_stack_c2",
+          "q_mb": 58.0,
           "q_res": -14.57550180602612,
-          "q_x": 64.42449819397388,
+          "q_x": 43.42449819397388,
           "rank": 7
         },
         {
-          "candidate_id": "code_045_min_stack_c7",
-          "q_mb": 79.0,
+          "candidate_id": "code_045_min_stack_c6",
+          "q_mb": 58.0,
           "q_res": -14.57550180602612,
-          "q_x": 64.42449819397388,
+          "q_x": 43.42449819397388,
           "rank": 8
         }
       ]
@@ -391,70 +390,70 @@
       "disagreement": true,
       "base_candidate_id": "code_046_calculate_basic_c0",
       "daphx_candidate_id": "code_046_calculate_basic_c1",
-      "base_utility": 56.761413559858084,
-      "daphx_utility": 56.95503943386055,
-      "delta_u": 0.19362587400246412,
-      "base_tests": 4,
-      "daphx_tests": 4,
+      "base_utility": -0.4202156660030596,
+      "daphx_utility": 42.643900857144864,
+      "delta_u": 43.06411652314792,
+      "base_tests": 0,
+      "daphx_tests": 3,
       "total_tests": 7,
       "base_error": null,
       "daphx_error": null,
-      "outcome": "TIE",
+      "outcome": "RESCUE",
       "rankings": [
         {
           "candidate_id": "code_046_calculate_basic_c1",
-          "q_mb": 75.0,
+          "q_mb": 74.0,
           "q_res": -14.57550180602612,
-          "q_x": 60.42449819397388,
+          "q_x": 59.42449819397388,
           "rank": 1
         },
         {
           "candidate_id": "code_046_calculate_basic_c5",
-          "q_mb": 75.0,
+          "q_mb": 74.0,
           "q_res": -14.57550180602612,
-          "q_x": 60.42449819397388,
+          "q_x": 59.42449819397388,
           "rank": 2
         },
         {
-          "candidate_id": "code_046_calculate_basic_c0",
-          "q_mb": 66.0,
+          "candidate_id": "code_046_calculate_basic_c2",
+          "q_mb": 72.0,
           "q_res": -14.57550180602612,
-          "q_x": 51.42449819397388,
+          "q_x": 57.42449819397388,
           "rank": 3
         },
         {
-          "candidate_id": "code_046_calculate_basic_c2",
-          "q_mb": 66.0,
+          "candidate_id": "code_046_calculate_basic_c6",
+          "q_mb": 69.0,
           "q_res": -14.57550180602612,
-          "q_x": 51.42449819397388,
+          "q_x": 54.42449819397388,
           "rank": 4
         },
         {
-          "candidate_id": "code_046_calculate_basic_c4",
-          "q_mb": 66.0,
+          "candidate_id": "code_046_calculate_basic_c0",
+          "q_mb": 65.0,
           "q_res": -14.57550180602612,
-          "q_x": 51.42449819397388,
+          "q_x": 50.42449819397388,
           "rank": 5
         },
         {
-          "candidate_id": "code_046_calculate_basic_c6",
-          "q_mb": 66.0,
+          "candidate_id": "code_046_calculate_basic_c4",
+          "q_mb": 65.0,
           "q_res": -14.57550180602612,
-          "q_x": 51.42449819397388,
+          "q_x": 50.42449819397388,
           "rank": 6
         },
         {
           "candidate_id": "code_046_calculate_basic_c7",
-          "q_mb": 66.0,
+          "q_mb": 65.0,
           "q_res": -14.57550180602612,
-          "q_x": 51.42449819397388,
+          "q_x": 50.42449819397388,
           "rank": 7
         },
         {
           "candidate_id": "code_046_calculate_basic_c3",
-          "q_mb": 61.0,
+          "q_mb": 58.0,
           "q_res": -14.57550180602612,
-          "q_x": 46.42449819397388,
+          "q_x": 43.42449819397388,
           "rank": 8
         }
       ]
@@ -463,30 +462,31 @@
       "task_id": "code_047_sliding_window_max",
       "description": "Find the maximum element in each sliding window of size k",
       "difficulty": "hard",
-      "disagreement": false,
+      "disagreement": true,
       "base_candidate_id": "code_047_sliding_window_max_c0",
-      "daphx_candidate_id": "code_047_sliding_window_max_c0",
-      "base_utility": 99.72068054199917,
-      "daphx_utility": 99.72068054199917,
-      "delta_u": 0.0,
+      "daphx_candidate_id": "code_047_sliding_window_max_c1",
+      "base_utility": 99.51384787500137,
+      "daphx_utility": 99.90063529199688,
+      "delta_u": 0.386787416995503,
       "base_tests": 5,
       "daphx_tests": 5,
       "total_tests": 5,
       "base_error": null,
       "daphx_error": null,
+      "outcome": "TIE",
       "rankings": [
         {
-          "candidate_id": "code_047_sliding_window_max_c0",
-          "q_mb": 78.0,
+          "candidate_id": "code_047_sliding_window_max_c1",
+          "q_mb": 81.0,
           "q_res": -14.57550180602612,
-          "q_x": 63.42449819397388,
+          "q_x": 66.42449819397388,
           "rank": 1
         },
         {
-          "candidate_id": "code_047_sliding_window_max_c1",
-          "q_mb": 78.0,
+          "candidate_id": "code_047_sliding_window_max_c5",
+          "q_mb": 80.0,
           "q_res": -14.57550180602612,
-          "q_x": 63.42449819397388,
+          "q_x": 65.42449819397388,
           "rank": 2
         },
         {
@@ -525,10 +525,10 @@
           "rank": 7
         },
         {
-          "candidate_id": "code_047_sliding_window_max_c5",
-          "q_mb": 72.0,
+          "candidate_id": "code_047_sliding_window_max_c0",
+          "q_mb": 69.0,
           "q_res": -14.57550180602612,
-          "q_x": 57.42449819397388,
+          "q_x": 54.42449819397388,
           "rank": 8
         }
       ]
@@ -537,72 +537,73 @@
       "task_id": "code_048_alien_dictionary",
       "description": "Determine the order of characters in an alien language from sorted words",
       "difficulty": "hard",
-      "disagreement": false,
+      "disagreement": true,
       "base_candidate_id": "code_048_alien_dictionary_c0",
-      "daphx_candidate_id": "code_048_alien_dictionary_c0",
-      "base_utility": 99.72383516700938,
-      "daphx_utility": 99.72383516700938,
-      "delta_u": 0.0,
+      "daphx_candidate_id": "code_048_alien_dictionary_c1",
+      "base_utility": 99.59514200000558,
+      "daphx_utility": 99.89471158300876,
+      "delta_u": 0.2995695830031764,
       "base_tests": 5,
       "daphx_tests": 5,
       "total_tests": 5,
       "base_error": null,
       "daphx_error": null,
+      "outcome": "TIE",
       "rankings": [
         {
-          "candidate_id": "code_048_alien_dictionary_c0",
+          "candidate_id": "code_048_alien_dictionary_c1",
           "q_mb": 83.0,
           "q_res": -14.57550180602612,
           "q_x": 68.42449819397388,
           "rank": 1
         },
         {
-          "candidate_id": "code_048_alien_dictionary_c1",
+          "candidate_id": "code_048_alien_dictionary_c2",
           "q_mb": 83.0,
           "q_res": -14.57550180602612,
           "q_x": 68.42449819397388,
           "rank": 2
         },
         {
-          "candidate_id": "code_048_alien_dictionary_c2",
+          "candidate_id": "code_048_alien_dictionary_c4",
           "q_mb": 83.0,
           "q_res": -14.57550180602612,
           "q_x": 68.42449819397388,
           "rank": 3
         },
         {
-          "candidate_id": "code_048_alien_dictionary_c4",
+          "candidate_id": "code_048_alien_dictionary_c7",
           "q_mb": 83.0,
           "q_res": -14.57550180602612,
           "q_x": 68.42449819397388,
           "rank": 4
         },
         {
-          "candidate_id": "code_048_alien_dictionary_c6",
-          "q_mb": 83.0,
+          "candidate_id": "code_048_alien_dictionary_c0",
+          "q_mb": 78.0,
           "q_res": -14.57550180602612,
-          "q_x": 68.42449819397388,
+          "q_x": 63.42449819397388,
           "rank": 5
         },
         {
-          "candidate_id": "code_048_alien_dictionary_c7",
-          "q_mb": 83.0,
+          "candidate_id": "code_048_alien_dictionary_c5",
+          "q_mb": 78.0,
           "q_res": -14.57550180602612,
-          "q_x": 68.42449819397388,
+          "q_x": 63.42449819397388,
           "rank": 6
         },
         {
           "candidate_id": "code_048_alien_dictionary_c3",
-          "q_mb": 78.0,
+          "q_mb": 77.0,
           "q_res": -14.57550180602612,
-          "q_x": 63.42449819397388,
+          "q_x": 62.42449819397388,
           "rank": 7
         },
         {
-          "candidate_id": "code_048_alien_dictionary_c5",
-          "q_mb": 75.0,
+          "candidate_id": "code_048_alien_dictionary_c6",
+          "q_mb": 77.0,
           "q_res": -14.57550180602612,
-          "q_x": 60.42449819397388,
+          "q_x": 62.42449819397388,
           "rank": 8
         }
       ]
@@ -611,73 +612,72 @@
       "task_id": "code_049_course_schedule_ii",
       "description": "Return the ordering of courses to take to finish all courses (topological sort)",
       "difficulty": "hard",
-      "disagreement": true,
+      "disagreement": false,
       "base_candidate_id": "code_049_course_schedule_ii_c0",
-      "daphx_candidate_id": "code_049_course_schedule_ii_c1",
-      "base_utility": 99.59732704100315,
-      "daphx_utility": 99.89686425001128,
-      "delta_u": 0.29953720900812186,
+      "daphx_candidate_id": "code_049_course_schedule_ii_c0",
+      "base_utility": 99.57393016701099,
+      "daphx_utility": 99.57393016701099,
+      "delta_u": 0.0,
       "base_tests": 5,
       "daphx_tests": 5,
       "total_tests": 5,
       "base_error": null,
       "daphx_error": null,
-      "outcome": "TIE",
       "rankings": [
         {
-          "candidate_id": "code_049_course_schedule_ii_c1",
+          "candidate_id": "code_049_course_schedule_ii_c0",
           "q_mb": 83.0,
           "q_res": -14.57550180602612,
           "q_x": 68.42449819397388,
           "rank": 1
         },
         {
-          "candidate_id": "code_049_course_schedule_ii_c4",
+          "candidate_id": "code_049_course_schedule_ii_c3",
           "q_mb": 83.0,
           "q_res": -14.57550180602612,
           "q_x": 68.42449819397388,
           "rank": 2
         },
         {
-          "candidate_id": "code_049_course_schedule_ii_c6",
+          "candidate_id": "code_049_course_schedule_ii_c4",
           "q_mb": 83.0,
           "q_res": -14.57550180602612,
           "q_x": 68.42449819397388,
           "rank": 3
         },
         {
-          "candidate_id": "code_049_course_schedule_ii_c0",
-          "q_mb": 79.0,
+          "candidate_id": "code_049_course_schedule_ii_c5",
+          "q_mb": 83.0,
           "q_res": -14.57550180602612,
-          "q_x": 64.42449819397388,
+          "q_x": 68.42449819397388,
           "rank": 4
+        },
+        {
+          "candidate_id": "code_049_course_schedule_ii_c6",
+          "q_mb": 83.0,
+          "q_res": -14.57550180602612,
+          "q_x": 68.42449819397388,
+          "rank": 5
+        },
+        {
+          "candidate_id": "code_049_course_schedule_ii_c7",
+          "q_mb": 83.0,
+          "q_res": -14.57550180602612,
+          "q_x": 68.42449819397388,
+          "rank": 6
         },
         {
           "candidate_id": "code_049_course_schedule_ii_c2",
           "q_mb": 79.0,
           "q_res": -14.57550180602612,
           "q_x": 64.42449819397388,
-          "rank": 5
-        },
-        {
-          "candidate_id": "code_049_course_schedule_ii_c3",
-          "q_mb": 79.0,
-          "q_res": -14.57550180602612,
-          "q_x": 64.42449819397388,
-          "rank": 6
-        },
-        {
-          "candidate_id": "code_049_course_schedule_ii_c7",
-          "q_mb": 79.0,
-          "q_res": -14.57550180602612,
-          "q_x": 64.42449819397388,
           "rank": 7
         },
         {
-          "candidate_id": "code_049_course_schedule_ii_c5",
-          "q_mb": 75.0,
+          "candidate_id": "code_049_course_schedule_ii_c1",
+          "q_mb": 64.0,
           "q_res": -14.57550180602612,
-          "q_x": 60.42449819397388,
+          "q_x": 49.42449819397388,
           "rank": 8
         }
       ]
@@ -686,73 +686,72 @@
       "task_id": "code_050_number_of_islands",
       "description": "Count the number of islands in a 2D grid (connected components of '1's)",
       "difficulty": "hard",
-      "disagreement": true,
+      "disagreement": false,
       "base_candidate_id": "code_050_number_of_islands_c0",
-      "daphx_candidate_id": "code_050_number_of_islands_c1",
-      "base_utility": 99.64941874999204,
-      "daphx_utility": 99.82891212499817,
-      "delta_u": 0.17949337500613183,
+      "daphx_candidate_id": "code_050_number_of_islands_c0",
+      "base_utility": 99.69151870900532,
+      "daphx_utility": 99.69151870900532,
+      "delta_u": 0.0,
       "base_tests": 5,
       "daphx_tests": 5,
       "total_tests": 5,
       "base_error": null,
       "daphx_error": null,
-      "outcome": "TIE",
       "rankings": [
         {
-          "candidate_id": "code_050_number_of_islands_c1",
+          "candidate_id": "code_050_number_of_islands_c0",
           "q_mb": 86.0,
           "q_res": -14.57550180602612,
           "q_x": 71.42449819397388,
           "rank": 1
         },
         {
-          "candidate_id": "code_050_number_of_islands_c3",
+          "candidate_id": "code_050_number_of_islands_c1",
           "q_mb": 86.0,
           "q_res": -14.57550180602612,
           "q_x": 71.42449819397388,
           "rank": 2
         },
         {
-          "candidate_id": "code_050_number_of_islands_c4",
+          "candidate_id": "code_050_number_of_islands_c2",
           "q_mb": 86.0,
           "q_res": -14.57550180602612,
           "q_x": 71.42449819397388,
           "rank": 3
         },
         {
-          "candidate_id": "code_050_number_of_islands_c5",
+          "candidate_id": "code_050_number_of_islands_c3",
           "q_mb": 86.0,
           "q_res": -14.57550180602612,
           "q_x": 71.42449819397388,
           "rank": 4
         },
         {
-          "candidate_id": "code_050_number_of_islands_c7",
+          "candidate_id": "code_050_number_of_islands_c4",
           "q_mb": 86.0,
           "q_res": -14.57550180602612,
           "q_x": 71.42449819397388,
           "rank": 5
         },
         {
-          "candidate_id": "code_050_number_of_islands_c0",
-          "q_mb": 80.0,
+          "candidate_id": "code_050_number_of_islands_c5",
+          "q_mb": 86.0,
           "q_res": -14.57550180602612,
-          "q_x": 65.42449819397388,
+          "q_x": 71.42449819397388,
           "rank": 6
         },
         {
-          "candidate_id": "code_050_number_of_islands_c2",
-          "q_mb": 80.0,
+          "candidate_id": "code_050_number_of_islands_c6",
+          "q_mb": 86.0,
           "q_res": -14.57550180602612,
-          "q_x": 65.42449819397388,
+          "q_x": 71.42449819397388,
           "rank": 7
         },
         {
-          "candidate_id": "code_050_number_of_islands_c6",
-          "q_mb": 80.0,
+          "candidate_id": "code_050_number_of_islands_c7",
+          "q_mb": 86.0,
           "q_res": -14.57550180602612,
-          "q_x": 65.42449819397388,
+          "q_x": 71.42449819397388,
           "rank": 8
         }
       ]
