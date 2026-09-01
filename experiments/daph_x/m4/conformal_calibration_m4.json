@@ -1,6 +1,6 @@
 {
   "calibration_pairs": 300,
-  "calibration_harmful": 104,
+  "calibration_harmful": 46,
   "alpha_levels": [
     0.5,
     0.8,
@@ -9,117 +9,174 @@
     0.99
   ],
   "results": {
+    "calibration_self": {
+      "coverage_0.50": {
+        "nominal_coverage": 0.5,
+        "q_alpha": 0.0,
+        "empirical_coverage": 0.5133,
+        "n_force": 146,
+        "n_correct": 100,
+        "n_harmful": 46,
+        "force_precision": 0.6849,
+        "break_rate": 0.3151,
+        "break_rate_upper_95": null
+      },
+      "coverage_0.80": {
+        "nominal_coverage": 0.8,
+        "q_alpha": 12.8852,
+        "empirical_coverage": 0.8033,
+        "n_force": 55,
+        "n_correct": 41,
+        "n_harmful": 14,
+        "force_precision": 0.7455,
+        "break_rate": 0.2545,
+        "break_rate_upper_95": null
+      },
+      "coverage_0.90": {
+        "nominal_coverage": 0.9,
+        "q_alpha": 58.9116,
+        "empirical_coverage": 0.9033,
+        "n_force": 11,
+        "n_correct": 11,
+        "n_harmful": 0,
+        "force_precision": 1.0,
+        "break_rate": 0.0,
+        "break_rate_upper_95": 0.2727
+      },
+      "coverage_0.95": {
+        "nominal_coverage": 0.95,
+        "q_alpha": 76.5829,
+        "empirical_coverage": 0.9533,
+        "n_force": 3,
+        "n_correct": 3,
+        "n_harmful": 0,
+        "force_precision": 1.0,
+        "break_rate": 0.0,
+        "break_rate_upper_95": 1.0
+      },
+      "coverage_0.99": {
+        "nominal_coverage": 0.99,
+        "q_alpha": 111.5794,
+        "empirical_coverage": 0.9933,
+        "n_force": 0,
+        "n_correct": 0,
+        "n_harmful": 0,
+        "force_precision": 0.0,
+        "break_rate": 0.0,
+        "break_rate_upper_95": null
+      }
+    },
     "structural_ood": {
-      "alpha_0.50": {
-        "alpha": 0.5,
-        "q_alpha": 1.6215,
-        "coverage": 0.45,
-        "n_force": 139,
-        "n_correct": 73,
-        "n_harmful": 66,
-        "force_precision": 0.5252,
-        "break_rate": 0.4748,
+      "coverage_0.50": {
+        "nominal_coverage": 0.5,
+        "q_alpha": 0.0,
+        "empirical_coverage": 0.31,
+        "n_force": 207,
+        "n_correct": 118,
+        "n_harmful": 89,
+        "force_precision": 0.57,
+        "break_rate": 0.43,
         "break_rate_upper_95": null
       },
-      "alpha_0.80": {
-        "alpha": 0.8,
-        "q_alpha": 0.0,
-        "coverage": 0.43,
-        "n_force": 171,
-        "n_correct": 85,
-        "n_harmful": 86,
-        "force_precision": 0.4971,
-        "break_rate": 0.5029,
+      "coverage_0.80": {
+        "nominal_coverage": 0.8,
+        "q_alpha": 12.8852,
+        "empirical_coverage": 0.7067,
+        "n_force": 76,
+        "n_correct": 58,
+        "n_harmful": 18,
+        "force_precision": 0.7632,
+        "break_rate": 0.2368,
         "break_rate_upper_95": null
       },
-      "alpha_0.90": {
-        "alpha": 0.9,
-        "q_alpha": 0.0,
-        "coverage": 0.43,
-        "n_force": 171,
-        "n_correct": 85,
-        "n_harmful": 86,
-        "force_precision": 0.4971,
-        "break_rate": 0.5029,
-        "break_rate_upper_95": null
+      "coverage_0.90": {
+        "nominal_coverage": 0.9,
+        "q_alpha": 58.9116,
+        "empirical_coverage": 0.82,
+        "n_force": 12,
+        "n_correct": 12,
+        "n_harmful": 0,
+        "force_precision": 1.0,
+        "break_rate": 0.0,
+        "break_rate_upper_95": 0.25
       },
-      "alpha_0.95": {
-        "alpha": 0.95,
-        "q_alpha": 0.0,
-        "coverage": 0.43,
-        "n_force": 171,
-        "n_correct": 85,
-        "n_harmful": 86,
-        "force_precision": 0.4971,
-        "break_rate": 0.5029,
-        "break_rate_upper_95": null
+      "coverage_0.95": {
+        "nominal_coverage": 0.95,
+        "q_alpha": 76.5829,
+        "empirical_coverage": 0.8967,
+        "n_force": 4,
+        "n_correct": 4,
+        "n_harmful": 0,
+        "force_precision": 1.0,
+        "break_rate": 0.0,
+        "break_rate_upper_95": 0.75
       },
-      "alpha_0.99": {
-        "alpha": 0.99,
-        "q_alpha": 0.0,
-        "coverage": 0.43,
-        "n_force": 171,
-        "n_correct": 85,
-        "n_harmful": 86,
-        "force_precision": 0.4971,
-        "break_rate": 0.5029,
+      "coverage_0.99": {
+        "nominal_coverage": 0.99,
+        "q_alpha": 111.5794,
+        "empirical_coverage": 0.9767,
+        "n_force": 0,
+        "n_correct": 0,
+        "n_harmful": 0,
+        "force_precision": 0.0,
+        "break_rate": 0.0,
         "break_rate_upper_95": null
       }
     },
     "mechanism_ood": {
-      "alpha_0.50": {
-        "alpha": 0.5,
-        "q_alpha": 1.6215,
-        "coverage": 0.37,
-        "n_force": 163,
-        "n_correct": 17,
-        "n_harmful": 146,
-        "force_precision": 0.1043,
-        "break_rate": 0.8957,
+      "coverage_0.50": {
+        "nominal_coverage": 0.5,
+        "q_alpha": 0.0,
+        "empirical_coverage": 0.8067,
+        "n_force": 58,
+        "n_correct": 7,
+        "n_harmful": 51,
+        "force_precision": 0.1207,
+        "break_rate": 0.8793,
         "break_rate_upper_95": null
       },
-      "alpha_0.80": {
-        "alpha": 0.8,
-        "q_alpha": 0.0,
-        "coverage": 0.35,
-        "n_force": 195,
-        "n_correct": 19,
-        "n_harmful": 176,
-        "force_precision": 0.0974,
-        "break_rate": 0.9026,
+      "coverage_0.80": {
+        "nominal_coverage": 0.8,
+        "q_alpha": 12.8852,
+        "empirical_coverage": 0.8933,
+        "n_force": 18,
+        "n_correct": 3,
+        "n_harmful": 15,
+        "force_precision": 0.1667,
+        "break_rate": 0.8333,
         "break_rate_upper_95": null
       },
-      "alpha_0.90": {
-        "alpha": 0.9,
-        "q_alpha": 0.0,
-        "coverage": 0.35,
-        "n_force": 195,
-        "n_correct": 19,
-        "n_harmful": 176,
-        "force_precision": 0.0974,
-        "break_rate": 0.9026,
+      "coverage_0.90": {
+        "nominal_coverage": 0.9,
+        "q_alpha": 58.9116,
+        "empirical_coverage": 0.9533,
+        "n_force": 0,
+        "n_correct": 0,
+        "n_harmful": 0,
+        "force_precision": 0.0,
+        "break_rate": 0.0,
         "break_rate_upper_95": null
       },
-      "alpha_0.95": {
-        "alpha": 0.95,
-        "q_alpha": 0.0,
-        "coverage": 0.35,
-        "n_force": 195,
-        "n_correct": 19,
-        "n_harmful": 176,
-        "force_precision": 0.0974,
-        "break_rate": 0.9026,
+      "coverage_0.95": {
+        "nominal_coverage": 0.95,
+        "q_alpha": 76.5829,
+        "empirical_coverage": 0.9667,
+        "n_force": 0,
+        "n_correct": 0,
+        "n_harmful": 0,
+        "force_precision": 0.0,
+        "break_rate": 0.0,
         "break_rate_upper_95": null
       },
-      "alpha_0.99": {
-        "alpha": 0.99,
-        "q_alpha": 0.0,
-        "coverage": 0.35,
-        "n_force": 195,
-        "n_correct": 19,
-        "n_harmful": 176,
-        "force_precision": 0.0974,
-        "break_rate": 0.9026,
+      "coverage_0.99": {
+        "nominal_coverage": 0.99,
+        "q_alpha": 111.5794,
+        "empirical_coverage": 0.99,
+        "n_force": 0,
+        "n_correct": 0,
+        "n_harmful": 0,
+        "force_precision": 0.0,
+        "break_rate": 0.0,
         "break_rate_upper_95": null
       }
     }

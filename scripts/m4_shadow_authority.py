@@ -52,9 +52,9 @@ def run_shadow_authority(
 
     # Load conformal calibration to get q_alpha
     cal_data = json.loads(open(M4_DIR / "conformal_calibration_m4.json").read())
-    # Use the specified alpha level from structural_ood
+    # Use the specified coverage level from structural_ood
     struct_cal = cal_data["results"]["structural_ood"]
-    q_alpha = struct_cal[f"alpha_{alpha:.2f}"]["q_alpha"]
+    q_alpha = struct_cal[f"coverage_{alpha:.2f}"]["q_alpha"]
 
     print(f"Shadow authority configuration:")
     print(f"  tau_delta (LCB threshold): {tau_delta}")

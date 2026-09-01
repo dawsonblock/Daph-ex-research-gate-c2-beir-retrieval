@@ -31,6 +31,9 @@ from daph_x.receipts.rollout_engine import (
 )
 from daph_x.actions.candidate_generator import generate_and_prune
 from daph_x.graph.epistemic_graph import build_graph_from_evidence_task
+from daph_x.features.graph_features import extract_graph_features
+from daph_x.belief.belief_engine import compute_belief_state
+from daph.epistemic.topology import derive_hypothesis_topology
 
 
 def split_mechanisms(seed: int) -> dict:
@@ -354,6 +357,15 @@ def build_corpus(
             intervention_features.append(features)
 
             # Build rollout records
+            # Compute graph features once per state (topology + belief are
+            # state-level, not action-level). Action-target features are
+            # computed per-action below.
+            topo = derive_hypothesis_topology(
+                evidence_items=state.graph.to_legacy_evidence_items(),
+                hypothesis_ids=state.graph.hypothesis_ids(),
+            )
+            belief = compute_belief_state(state.graph)
+
             for j, result in enumerate(results):
                 record = result.to_dict()
                 record["record_id"] = f"{state.task.task_id}:{j}"
@@ -375,6 +387,20 @@ def build_corpus(
                 record["base_action"] = base_result.first_action
                 record["base_utility"] = base_utility
                 record["q_mb_score"] = q_mb_scores[j] if j < len(q_mb_scores) else 0.0
+
+                # Embed graph-structural features (replaces topo_hash_prefix)
+                action = candidates[j] if j < len(candidates) else None
+                action_type = action.action_type.value if action else ""
+                action_target = action.target if action else ""
+                graph_feats = extract_graph_features(
+                    graph=state.graph,
+                    topology=topo,
+                    belief=belief,
+                    action_type=action_type,
+                    action_target=action_target,
+                )
+                record["graph_features"] = graph_feats
+
                 rollout_records.append(record)
 
         # Save rollout records

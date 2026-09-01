@@ -138,12 +138,24 @@ def main():
         "artifact_integrity_pass": True,  # Will be verified
         "scientific_qualification_pass": False,  # NOT qualified
         "reasons": [
-            "Q_res does not generalize to structural OOD (MAE worse than Q_MB)",
-            "Conformal coverage below nominal on OOD splits",
-            "Shadow authority break rate 27.6% on structural OOD, 100% on mechanism OOD",
-            "Intervention risk harm FNR 20-34% on OOD",
-            "Structural OOD has only 300 states (smoke test, not full qualification)",
+            "Conformal coverage on structural OOD at 90% nominal is 82% (below target)",
+            "Shadow authority 95% upper bound on break rate is 25% (not safe enough for production)",
+            "Shadow authority rescue recall is 5.7% on structural OOD (too conservative)",
+            "Shadow authority abstains entirely on mechanism OOD (0 would-force — safe but not useful)",
+            "Intervention risk harm FNR 16.2% on structural OOD (improved but not authority-grade)",
+            "Structural OOD has only 300 states (insufficient for high-confidence break-rate bounds)",
             "V3R2 comparison uses rule proxy, not frozen V3R2 release",
+        ],
+        "improvements_over_previous": [
+            "Conformal quantile direction fixed (was implementation-invalid, now correct)",
+            "topo_hash_prefix removed and replaced with 57 real graph-structural features",
+            "Q_res structural OOD regret: 20.02 → 14.57 (now improves over Q_MB=17.16)",
+            "Q_res mechanism OOD regret: 27.90 → 12.04",
+            "Risk model structural OOD AUROC: 0.798 → 0.949",
+            "Risk model mechanism OOD harm FNR: 33.7% → 5.7%",
+            "Shadow authority structural OOD break rate: 27.6% → 0% (12 interventions, 0 breaks)",
+            "Shadow authority mechanism OOD: 100% break rate → 0 would-force (abstained)",
+            "Paired-world exact signature equality bug fixed (resources dict mismatch)",
         ],
     }
 

@@ -504,3 +504,65 @@ def test_checkpoint_from_graph_preserves_reliability():
                     f"Reliability lost for {nid} in checkpoint"
                 assert node.reliability.independence_score == original_node.reliability.independence_score, \
                     f"Independence score changed for {nid}"
+
+
+# ─── Paired-World Deterministic Invariant Tests ───
+
+def test_paired_worlds_exact_signature_equality():
+    """Paired worlds must have identical exact signatures when only hidden truth changes.
+
+    The exact signature captures observable structure (graph topology, resources,
+    evidence states). The hidden correct hypothesis is NOT part of the observable
+    signature. Therefore, flipping only the hidden truth must preserve the exact
+    signature.
+    """
+    config = GeneratorConfig(n_hyp_range=(3, 5), n_ev_range=(2, 4))
+    for seed in range(42, 52):
+        state_a, state_b = generate_paired_worlds(seed=seed, config=config)
+        assert state_a.signatures.exact == state_b.signatures.exact, (
+            f"Paired worlds (seed={seed}) have different exact signatures "
+            f"but should differ only in hidden truth.\n"
+            f"  A: {state_a.signatures.exact[:16]}...\n"
+            f"  B: {state_b.signatures.exact[:16]}..."
+        )
+
+
+def test_paired_worlds_family_signature_equality():
+    """Paired worlds must have identical family signatures."""
+    config = GeneratorConfig(n_hyp_range=(3, 5), n_ev_range=(2, 4))
+    for seed in range(42, 52):
+        state_a, state_b = generate_paired_worlds(seed=seed, config=config)
+        assert state_a.signatures.family == state_b.signatures.family, (
+            f"Paired worlds (seed={seed}) have different family signatures."
+        )
+
+
+def test_paired_worlds_different_correct_hypothesis():
+    """Paired worlds must differ in the hidden correct hypothesis."""
+    config = GeneratorConfig(n_hyp_range=(3, 5), n_ev_range=(2, 4))
+    for seed in range(42, 52):
+        state_a, state_b = generate_paired_worlds(seed=seed, config=config)
+        assert state_a.correct_hypothesis_id != state_b.correct_hypothesis_id, (
+            f"Paired worlds (seed={seed}) have the same correct hypothesis "
+            f"({state_a.correct_hypothesis_id})."
+        )
+
+
+def test_paired_worlds_same_graph_hash():
+    """Paired worlds must share the same graph structure (graph hash)."""
+    config = GeneratorConfig(n_hyp_range=(3, 5), n_ev_range=(2, 4))
+    for seed in range(42, 52):
+        state_a, state_b = generate_paired_worlds(seed=seed, config=config)
+        assert state_a.graph.graph_hash() == state_b.graph.graph_hash(), (
+            f"Paired worlds (seed={seed}) have different graph hashes."
+        )
+
+
+def test_paired_worlds_same_resource_budget():
+    """Paired worlds must have identical resource budgets."""
+    config = GeneratorConfig(n_hyp_range=(3, 5), n_ev_range=(2, 4))
+    for seed in range(42, 52):
+        state_a, state_b = generate_paired_worlds(seed=seed, config=config)
+        assert state_a.graph.steps_remaining == state_b.graph.steps_remaining
+        assert state_a.graph.verify_remaining == state_b.graph.verify_remaining
+        assert state_a.graph.search_remaining == state_b.graph.search_remaining

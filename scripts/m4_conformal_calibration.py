@@ -9,8 +9,13 @@ against true rollout:
 Uses the calibration split (NOT train, NOT OOD) to compute conformal quantiles.
 Reports empirical coverage at 50/80/90/95/99% on structural_ood and mechanism_ood.
 
+The alpha parameter is COVERAGE (not miscoverage):
+  alpha = 0.90 means 90% nominal coverage.
+  q_alpha = ceil(alpha * (n_cal + 1)) / n_cal quantile of |residuals|.
+  This is the standard split-conformal finite-sample correction.
+
 Outputs:
-  LCB_Δ = ΔQ_hat - q_{1-α}  (lower confidence bound on advantage)
+  LCB_Δ = ΔQ_hat - q_alpha  (lower confidence bound on advantage)
 
 Usage:
     python scripts/m4_conformal_calibration.py
@@ -103,19 +108,21 @@ def conformal_calibrate(
 ) -> dict:
     """Conformal calibration of pairwise advantage predictions.
 
-    For each alpha level:
-      q_{1-alpha} = quantile of calibration residuals at (1-alpha) level
-      LCB_delta = delta_q_hat - q_{1-alpha}
-      Coverage = fraction of eval pairs where |delta_q_hat - delta_u| <= q_{1-alpha}
+    For each alpha level (alpha = nominal coverage, e.g. 0.90 = 90%):
+      q_alpha = alpha quantile of calibration |residuals| with finite-sample correction
+      LCB_delta = delta_q_hat - q_alpha
+      Coverage = fraction of eval pairs where |delta_q_hat - delta_u| <= q_alpha
     """
     cal_residuals = np.array([p["residual"] for p in cal_pairs])
     n_cal = len(cal_residuals)
 
     results = {}
     for alpha in alpha_levels:
-        # Conformal quantile with finite-sample correction
-        # q = (1-alpha) quantile of |residuals|, with upper bound correction
-        q_level = np.ceil((1 - alpha) * (n_cal + 1)) / n_cal
+        # Split-conformal quantile: for coverage level alpha,
+        # q_alpha = ceil(alpha * (n_cal + 1)) / n_cal quantile of |residuals|.
+        # This is the standard finite-sample correction (Vovk et al.).
+        # The +1 and ceil ensure the coverage guarantee holds in finite samples.
+        q_level = np.ceil(alpha * (n_cal + 1)) / n_cal
         q_level = min(q_level, 1.0)
         q_alpha = float(np.quantile(cal_residuals, q_level))
 
@@ -141,10 +148,10 @@ def conformal_calibrate(
         else:
             break_rate_upper_95 = None
 
-        results[f"alpha_{alpha:.2f}"] = {
-            "alpha": alpha,
+        results[f"coverage_{alpha:.2f}"] = {
+            "nominal_coverage": alpha,
             "q_alpha": round(q_alpha, 4),
-            "coverage": round(coverage, 4),
+            "empirical_coverage": round(coverage, 4),
             "n_force": n_force,
             "n_correct": n_correct,
             "n_harmful": n_harmful,
@@ -190,6 +197,19 @@ def main():
     alpha_levels = [0.50, 0.80, 0.90, 0.95, 0.99]
 
     all_results = {}
+
+    # Self-coverage check: calibrate on calibration set, evaluate on calibration set
+    # This should achieve approximately nominal coverage if the method is correct.
+    print(f"\n{'='*60}")
+    print(f"  Conformal SELF-COVERAGE check → CALIBRATION")
+    print(f"{'='*60}")
+    cal_self_results = conformal_calibrate(cal_pairs, cal_pairs, alpha_levels)
+    all_results["calibration_self"] = cal_self_results
+    print(f"\n  Coverage  q_alpha    EmpCov      n_force    Precision    BreakRate    BreakUpper95")
+    for key, r in cal_self_results.items():
+        bu95 = f"{r['break_rate_upper_95']:.4f}" if r['break_rate_upper_95'] else "N/A"
+        print(f"  {r['nominal_coverage']:.2f}     {r['q_alpha']:.4f}     {r['empirical_coverage']:.4f}      {r['n_force']:5d}      {r['force_precision']:.4f}       {r['break_rate']:.4f}       {bu95}")
+
     for eval_name, eval_pairs in [("structural_ood", struct_ood_pairs), ("mechanism_ood", mech_ood_pairs)]:
         print(f"\n{'='*60}")
         print(f"  Conformal calibration → {eval_name.upper()}")
@@ -198,10 +218,10 @@ def main():
         results = conformal_calibrate(cal_pairs, eval_pairs, alpha_levels)
         all_results[eval_name] = results
 
-        print(f"\n  Alpha    q_alpha    Coverage    n_force    Precision    BreakRate    BreakUpper95")
+        print(f"\n  Coverage  q_alpha    EmpCov      n_force    Precision    BreakRate    BreakUpper95")
         for key, r in results.items():
             bu95 = f"{r['break_rate_upper_95']:.4f}" if r['break_rate_upper_95'] else "N/A"
-            print(f"  {r['alpha']:.2f}     {r['q_alpha']:.4f}     {r['coverage']:.4f}      {r['n_force']:5d}      {r['force_precision']:.4f}       {r['break_rate']:.4f}       {bu95}")
+            print(f"  {r['nominal_coverage']:.2f}     {r['q_alpha']:.4f}     {r['empirical_coverage']:.4f}      {r['n_force']:5d}      {r['force_precision']:.4f}       {r['break_rate']:.4f}       {bu95}")
 
     # Save results
     output = {

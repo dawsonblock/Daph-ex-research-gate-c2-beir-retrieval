@@ -209,9 +209,9 @@ def main():
     cal_q_alpha = 0.0
     if cal_path.exists():
         cal_data = json.loads(open(cal_path).read())
-        # Use 90% alpha from structural_ood
+        # Use 90% coverage level from structural_ood
         struct_results = cal_data.get("results", {}).get("structural_ood", {})
-        cal_q_alpha = struct_results.get("alpha_0.90", {}).get("q_alpha", 0.0)
+        cal_q_alpha = struct_results.get("coverage_0.90", {}).get("q_alpha", 0.0)
 
     # Load splits
     train_records = load_m4_split("train")

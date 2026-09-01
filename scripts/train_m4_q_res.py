@@ -50,6 +50,9 @@ def extract_m4_features(record: dict) -> dict[str, float]:
     ONLY uses information available BEFORE the action is executed.
     Does NOT use: utility, oracle_utility, regret, delta_u, terminal_reason,
     trajectory outcomes, or any post-action information.
+
+    Uses embedded graph_features if available (M4 corpus v2+).
+    Falls back to basic features for legacy records without graph_features.
     """
     feats = {}
 
@@ -62,8 +65,6 @@ def extract_m4_features(record: dict) -> dict[str, float]:
     feats["has_target"] = 1.0 if record.get("first_action", "") != "" else 0.0
 
     # Resource state (pre-decision, from checkpoint)
-    # These are embedded in the topology_signature but we extract them
-    # from the record's generator_params if available
     gen_params = record.get("generator_params", {})
     if isinstance(gen_params, str):
         import json as _json
@@ -88,13 +89,37 @@ def extract_m4_features(record: dict) -> dict[str, float]:
     feats["wm_verify_sufficient"] = float(wm_config.get("verify_sufficient_prob", 0.7))
     feats["wm_verify_falsified"] = float(wm_config.get("verify_falsified_prob", 0.2))
 
-    # Topology signature hash → convert to numeric features
-    # We use the first 8 hex chars as an integer (pre-decision structural info)
-    topo_sig = record.get("topology_signature", "")
-    if topo_sig:
-        feats["topo_hash_prefix"] = float(int(topo_sig[:8], 16) % 1000) / 1000.0
+    # Graph-structural features (replaces topo_hash_prefix)
+    # These are embedded in the record during corpus building.
+    # If graph_features is missing (legacy record), use basic fallbacks.
+    graph_feats = record.get("graph_features", {})
+    if graph_feats:
+        feats.update(graph_feats)
     else:
-        feats["topo_hash_prefix"] = 0.0
+        # Legacy fallback: minimal features (no graph structure available)
+        # This should not happen with v2+ corpus, but prevents crashes.
+        from daph_x.features.graph_features import _ensure_action_features
+        _ensure_action_features(feats, action_type)
+        # Set all graph feature defaults to 0
+        for k in [
+            "topo_n_supported", "topo_n_contradicted", "topo_n_untested",
+            "topo_n_weakened", "topo_n_stale", "topo_n_mixed_verified",
+            "topo_has_unique_supported", "topo_has_competition",
+            "topo_verification_complete", "topo_unverified_exists",
+            "graph_edge_density", "graph_support_edge_ratio", "graph_contradict_edge_ratio",
+            "graph_mean_support_degree", "graph_std_support_degree",
+            "graph_mean_contradict_degree", "graph_std_contradict_degree",
+            "graph_support_entropy",
+            "ev_n_verified", "ev_n_unverified", "ev_n_falsified", "ev_n_stale",
+            "ev_verify_ratio", "ev_unverified_ratio",
+            "ev_mean_source_reliability", "ev_mean_independence", "ev_std_source_reliability",
+            "belief_entropy", "belief_confidence", "belief_top_two_margin",
+            "belief_normalized_entropy",
+            "resource_verify_ratio", "resource_steps_ratio",
+            "resource_search_ratio", "resource_verify_per_hyp",
+        ]:
+            if k not in feats:
+                feats[k] = 0.0
 
     # Q_MB score (pre-decision model prediction, stored in record)
     feats["q_mb_score"] = float(record.get("q_mb_score", 0.0))

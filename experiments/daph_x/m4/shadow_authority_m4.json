@@ -3,42 +3,42 @@
     "tau_delta": 0.0,
     "rho": 0.3,
     "alpha": 0.9,
-    "q_alpha": 0.0
+    "q_alpha": 58.9116
   },
   "results": {
     "structural_ood": {
       "n": 300,
-      "n_force": 29,
-      "n_harmful": 86,
-      "rescues": 21,
-      "breaks": 8,
-      "force_precision": 0.7241,
-      "break_rate": 0.2759,
-      "rescue_recall": 0.0981,
-      "break_rate_upper_95": null,
+      "n_force": 12,
+      "n_harmful": 89,
+      "rescues": 12,
+      "breaks": 0,
+      "force_precision": 1.0,
+      "break_rate": 0.0,
+      "rescue_recall": 0.0569,
+      "break_rate_upper_95": 0.25,
       "contingency": {
-        "both_correct": 193,
-        "base_correct_daph_wrong": 21,
-        "base_wrong_daph_correct": 78,
-        "both_wrong": 8
+        "both_correct": 199,
+        "base_correct_daph_wrong": 12,
+        "base_wrong_daph_correct": 89,
+        "both_wrong": 0
       },
       "force_applied": 0
     },
     "mechanism_ood": {
       "n": 300,
-      "n_force": 28,
-      "n_harmful": 176,
+      "n_force": 0,
+      "n_harmful": 51,
       "rescues": 0,
-      "breaks": 28,
+      "breaks": 0,
       "force_precision": 0.0,
-      "break_rate": 1.0,
+      "break_rate": 0.0,
       "rescue_recall": 0.0,
       "break_rate_upper_95": null,
       "contingency": {
-        "both_correct": 124,
+        "both_correct": 249,
         "base_correct_daph_wrong": 0,
-        "base_wrong_daph_correct": 148,
-        "both_wrong": 28
+        "base_wrong_daph_correct": 51,
+        "both_wrong": 0
       },
       "force_applied": 0
     }

@@ -688,10 +688,19 @@ def _clone_and_flip_truth(
     # (The graph doesn't change — only the correct hypothesis metadata changes)
     graph_b = state_a.graph  # Frozen, safe to share
 
-    # Compute new signatures
+    # Compute new signatures — pass same resources as state_a to ensure
+    # exact signature equality. state_a's signatures were computed with
+    # explicit resources from generator_params, so we must use the same.
     from daph_x.benchmark.novelty_signatures import compute_all_signatures
+    gen_params_a = state_a.generator_params
+    resources_b = {
+        "steps": gen_params_a.get("steps", state_a.graph.steps_remaining),
+        "verify": gen_params_a.get("verify_budget", state_a.graph.verify_remaining),
+        "retrieve": gen_params_a.get("retrieve_budget", state_a.graph.retrieve_remaining),
+        "search": gen_params_a.get("search_budget", state_a.graph.search_remaining),
+    }
     signatures_b = compute_all_signatures(
-        graph_b, new_correct, "misleading_support",
+        graph_b, new_correct, "misleading_support", resources_b,
     )
 
     # World model config — same as World A (structure is identical)
