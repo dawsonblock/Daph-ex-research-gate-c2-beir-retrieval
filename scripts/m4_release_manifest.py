@@ -135,27 +135,43 @@ def main():
 
     # Scientific qualification status
     manifest["qualification_status"] = {
-        "artifact_integrity_pass": True,  # Will be verified
-        "scientific_qualification_pass": False,  # NOT qualified
-        "reasons": [
-            "Conformal coverage on structural OOD at 90% nominal is 82% (below target)",
-            "Shadow authority 95% upper bound on break rate is 25% (not safe enough for production)",
-            "Shadow authority rescue recall is 5.7% on structural OOD (too conservative)",
-            "Shadow authority abstains entirely on mechanism OOD (0 would-force — safe but not useful)",
-            "Intervention risk harm FNR 16.2% on structural OOD (improved but not authority-grade)",
-            "Structural OOD has only 300 states (insufficient for high-confidence break-rate bounds)",
-            "V3R2 comparison uses rule proxy, not frozen V3R2 release",
+        "artifact_integrity_pass": True,
+        "scientific_qualification_pass": False,  # NOT qualified — 7/8 gates pass
+        "promotion_gates_passed": 7,
+        "promotion_gates_total": 8,
+        "failed_gates": [
+            "N_effective_intervention = 287 (need >= 300 — 13 short)",
         ],
-        "improvements_over_previous": [
-            "Conformal quantile direction fixed (was implementation-invalid, now correct)",
-            "topo_hash_prefix removed and replaced with 57 real graph-structural features",
-            "Q_res structural OOD regret: 20.02 → 14.57 (now improves over Q_MB=17.16)",
-            "Q_res mechanism OOD regret: 27.90 → 12.04",
-            "Risk model structural OOD AUROC: 0.798 → 0.949",
-            "Risk model mechanism OOD harm FNR: 33.7% → 5.7%",
-            "Shadow authority structural OOD break rate: 27.6% → 0% (12 interventions, 0 breaks)",
-            "Shadow authority mechanism OOD: 100% break rate → 0 would-force (abstained)",
-            "Paired-world exact signature equality bug fixed (resources dict mismatch)",
+        "reasons": [
+            "N_effective_intervention = 287, just 13 short of 300 threshold",
+            "Mechanism OOD has 1 break (not zero) — need to investigate",
+            "V3R2 comparison uses rule proxy, not frozen V3R2 release",
+            "Need fresh confirmation corpus before any hard authority promotion",
+        ],
+        "passed_gates": [
+            "Regret_hybrid^structOOD (11.29) < Regret_MB^structOOD (19.94)",
+            "Regret_hybrid^mechOOD (15.06) < Regret_MB^mechOOD (31.66)",
+            "Stratified conformal coverage_90^structOOD = 0.904 >= 0.88",
+            "Mechanism OOD harm FNR = 8.3% < 10%",
+            "Breaks == 0 on structural OOD (74 interventions)",
+            "UCB_95(break_rate) = 4.05% < 5% on structural OOD",
+            "Rescue recall > 0 on both splits (struct=11.9%, mech=40.5%)",
+        ],
+        "improvements_over_m4": [
+            "Corpus expanded 2.5x: 1248→3168 train, 300→750 per OOD split",
+            "Added ambiguous_competition mechanism for near-boundary cases",
+            "Boundary-weighted Q_res training prioritizes decision-boundary examples",
+            "Pairwise advantage model trained directly on ΔU (85% sign acc on struct OOD)",
+            "Stratified conformal calibration (6 strata by action/entropy/competition)",
+            "Struct OOD coverage_90: 82% → 86.7% (global) → 90.4% (stratified)",
+            "Struct OOD regret: 14.57 → 11.29",
+            "Struct OOD top-1: 0.480 → 0.552",
+            "Risk model struct OOD AUROC: 0.949 → 0.974",
+            "Risk model struct OOD harm FNR: 16.2% → 7.5%",
+            "Shadow authority struct OOD: 12 force/0 breaks → 74 force/0 breaks",
+            "Shadow authority mech OOD: 0 force (abstained) → 213 force/1 break",
+            "Shadow authority rescue recall: struct 5.7% → 11.9%, mech 0% → 40.5%",
+            "V3R2 proxy: DAPH-X +13.98 utility on struct OOD, +13.52 on mech OOD",
         ],
     }
 

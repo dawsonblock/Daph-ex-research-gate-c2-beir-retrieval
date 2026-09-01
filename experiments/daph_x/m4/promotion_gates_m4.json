@@ -1,0 +1,63 @@
+{
+  "gates": [
+    {
+      "name": "regret_structOOD_hybrid_lt_MB",
+      "description": "Regret_hybrid^structOOD < Regret_MB^structOOD",
+      "value_left": 11.29,
+      "value_right": 19.94,
+      "pass": true
+    },
+    {
+      "name": "regret_mechOOD_hybrid_lt_MB",
+      "description": "Regret_hybrid^mechOOD < Regret_MB^mechOOD",
+      "value_left": 15.06,
+      "value_right": 31.66,
+      "pass": true
+    },
+    {
+      "name": "coverage_90_structOOD_stratified",
+      "description": "Stratified conformal coverage_90^structOOD >= 0.88",
+      "value_left": 0.904,
+      "value_right": 0.88,
+      "pass": true
+    },
+    {
+      "name": "mechOOD_harm_fnr_lt_10pct",
+      "description": "Mechanism OOD harm FNR < 10%",
+      "value_left": 0.0832,
+      "value_right": 0.1,
+      "pass": true
+    },
+    {
+      "name": "n_effective_intervention_gte_300",
+      "description": "N_effective_intervention >= 300 (total OOD)",
+      "value_left": 287,
+      "value_right": 300,
+      "pass": false
+    },
+    {
+      "name": "breaks_structOOD_zero",
+      "description": "Breaks == 0 on structural OOD",
+      "value_left": 0,
+      "value_right": 0,
+      "pass": true
+    },
+    {
+      "name": "ucb95_breakrate_structOOD_lt_5pct",
+      "description": "UCB_95(break_rate) < 5% on structural OOD",
+      "value_left": 0.0405,
+      "value_right": 0.05,
+      "pass": true
+    },
+    {
+      "name": "rescue_recall_positive",
+      "description": "Rescue recall > 0 on both OOD splits",
+      "value_left": "struct=0.1194, mech=0.4046",
+      "value_right": "both > 0",
+      "pass": true
+    }
+  ],
+  "all_pass": false,
+  "n_pass": 7,
+  "n_total": 8
+}

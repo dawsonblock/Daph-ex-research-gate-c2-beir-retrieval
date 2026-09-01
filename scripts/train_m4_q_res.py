@@ -141,7 +141,14 @@ def load_m4_split(split_name: str) -> list[dict]:
 
 
 def train_q_res():
-    """Train Q_res on M4 train split, evaluate on OOD splits."""
+    """Train Q_res on M4 train split, evaluate on OOD splits.
+
+    Trains two models:
+    1. Q_res_value: predicts Q_oracle - Q_MB (value correction)
+       — with boundary-weighted sample weights to prioritize near-boundary examples
+    2. Q_pairwise: predicts ΔU = U(exec) - U(base) directly (pairwise advantage)
+       — trained on group-level features, targets the advantage
+    """
     # Load data
     train_records = load_m4_split("train")
     struct_ood_records = load_m4_split("structural_ood")
@@ -172,8 +179,59 @@ def train_q_res():
     print(f"q_mb: min={q_mb_train.min():.1f}, max={q_mb_train.max():.1f}, mean={q_mb_train.mean():.1f}")
     print(f"y_res: min={y_res_train.min():.1f}, max={y_res_train.max():.1f}, mean={y_res_train.mean():.1f}")
 
-    # Train Q_res model
-    print(f"\nTraining GradientBoostingRegressor...")
+    # ── Compute boundary-weighted sample weights ──
+    # Weight examples near the decision boundary more heavily.
+    # For each group, compute |ΔU| = |U(exec) - U(base)|.
+    # Examples in groups with small |ΔU| are near-boundary and matter more for FORCE.
+    groups_train = defaultdict(list)
+    for i, r in enumerate(train_records):
+        groups_train[r["counterfactual_group_id"]].append((i, r))
+
+    sample_weights = np.ones(len(train_records))
+    delta_u_values = []
+    for gid, group in groups_train.items():
+        if len(group) < 2:
+            continue
+        # Find exec and base
+        q_mb_group = [q_mb_train[i] for i, _ in group]
+        exec_idx = max(range(len(group)), key=lambda j: q_mb_group[j])
+        base_idx = None
+        for j, (_, rec) in enumerate(group):
+            if "DEFER" in rec["first_action"]:
+                base_idx = j
+                break
+        if base_idx is None:
+            base_idx = 0
+        delta_u = group[exec_idx][1]["utility"] - group[base_idx][1]["utility"]
+        delta_u_values.append(abs(delta_u))
+
+    if delta_u_values:
+        scale = np.median(delta_u_values)
+        for gid, group in groups_train.items():
+            if len(group) < 2:
+                continue
+            q_mb_group = [q_mb_train[i] for i, _ in group]
+            exec_idx = max(range(len(group)), key=lambda j: q_mb_group[j])
+            base_idx = None
+            for j, (_, rec) in enumerate(group):
+                if "DEFER" in rec["first_action"]:
+                    base_idx = j
+                    break
+            if base_idx is None:
+                base_idx = 0
+            delta_u = abs(group[exec_idx][1]["utility"] - group[base_idx][1]["utility"])
+            # Weight: 1.0 at boundary, ~0.33 far from boundary
+            w = 1.0 / (1.0 + delta_u / max(scale, 1.0))
+            for idx, _ in group:
+                sample_weights[idx] = w
+
+    print(f"\nBoundary-weighted training:")
+    print(f"  |ΔU| scale (median): {scale:.2f}" if delta_u_values else "  No groups found")
+    print(f"  Weight range: [{sample_weights.min():.3f}, {sample_weights.max():.3f}]")
+    print(f"  Mean weight: {sample_weights.mean():.3f}")
+
+    # Train Q_res value model with boundary weighting
+    print(f"\nTraining Q_res value model (boundary-weighted)...")
     model = GradientBoostingRegressor(
         n_estimators=200,
         max_depth=4,
@@ -181,7 +239,74 @@ def train_q_res():
         subsample=0.8,
         random_state=42,
     )
-    model.fit(X_train, y_res_train)
+    model.fit(X_train, y_res_train, sample_weight=sample_weights)
+
+    # ── Train pairwise advantage model ──
+    # This model directly predicts ΔU = U(exec) - U(base) from state features.
+    # It captures the pairwise ordering that matters for FORCE decisions.
+    print(f"\nTraining pairwise advantage model...")
+
+    pairwise_features = []
+    pairwise_targets = []
+    pairwise_weights = []
+
+    for gid, group in groups_train.items():
+        if len(group) < 2:
+            continue
+        # Find exec (argmax Q_MB) and base (DEFER)
+        q_mb_group = [q_mb_train[i] for i, _ in group]
+        exec_idx = max(range(len(group)), key=lambda j: q_mb_group[j])
+        base_idx = None
+        for j, (_, rec) in enumerate(group):
+            if "DEFER" in rec["first_action"]:
+                base_idx = j
+                break
+        if base_idx is None:
+            base_idx = 0
+
+        exec_rec = group[exec_idx][1]
+        base_rec = group[base_idx][1]
+        delta_u = exec_rec["utility"] - base_rec["utility"]
+
+        # Features: executive action's features + delta_q_mb
+        exec_feats = extract_m4_features(exec_rec)
+        feats = dict(exec_feats)
+        feats["delta_q_mb"] = float(q_mb_group[exec_idx] - q_mb_group[base_idx])
+        # Add Q_res prediction for exec and base as features
+        exec_x = np.array([[exec_feats[k] for k in feature_keys]])
+        base_feats_dict = extract_m4_features(base_rec)
+        base_x = np.array([[base_feats_dict[k] for k in feature_keys]])
+        feats["q_res_exec_pred"] = float(model.predict(exec_x)[0])
+        feats["q_res_base_pred"] = float(model.predict(base_x)[0])
+        feats["delta_q_res_pred"] = feats["q_res_exec_pred"] - feats["q_res_base_pred"]
+
+        pairwise_features.append(feats)
+        pairwise_targets.append(delta_u)
+        # Weight near-boundary examples more
+        pairwise_weights.append(1.0 / (1.0 + abs(delta_u) / max(scale, 1.0)))
+
+    pairwise_feature_keys = sorted(pairwise_features[0].keys())
+    X_pairwise = np.array([[f[k] for k in pairwise_feature_keys] for f in pairwise_features])
+    y_pairwise = np.array(pairwise_targets)
+    w_pairwise = np.array(pairwise_weights)
+
+    # Verify no forbidden features in pairwise model
+    for k in pairwise_feature_keys:
+        for forbidden in FORBIDDEN_FEATURES:
+            assert forbidden not in k.lower(), f"Forbidden pairwise feature: {k}"
+
+    pairwise_model = GradientBoostingRegressor(
+        n_estimators=200,
+        max_depth=4,
+        learning_rate=0.05,
+        subsample=0.8,
+        random_state=42,
+    )
+    pairwise_model.fit(X_pairwise, y_pairwise, sample_weight=w_pairwise)
+
+    # Evaluate pairwise model
+    print(f"\n  Pairwise model feature keys ({len(pairwise_feature_keys)}): {pairwise_feature_keys}")
+    print(f"  Pairwise targets: min={y_pairwise.min():.1f}, max={y_pairwise.max():.1f}, mean={y_pairwise.mean():.1f}")
 
     # Evaluate on each split
     results = {}
@@ -204,7 +329,7 @@ def train_q_res():
         mae_mb = mean_absolute_error(y_oracle, q_mb)
         mae_hybrid = mean_absolute_error(y_oracle, q_hybrid)
 
-        # Regret: for each group, find best action by Q_MB and Q_hybrid
+        # Regret and pairwise evaluation
         groups = defaultdict(list)
         for i, r in enumerate(records):
             groups[r["counterfactual_group_id"]].append((i, r))
@@ -214,6 +339,11 @@ def train_q_res():
         top1_mb = 0
         top1_hybrid = 0
         n_groups = 0
+
+        # Pairwise sign accuracy
+        pairwise_preds = []
+        pairwise_truths = []
+        pairwise_maes = []
 
         for gid, group in groups.items():
             if len(group) < 2:
@@ -235,6 +365,47 @@ def train_q_res():
             if group[best_hybrid_idx][1]["utility"] == oracle_utility:
                 top1_hybrid += 1
 
+            # Pairwise evaluation
+            exec_idx = max(range(len(group)), key=lambda j: q_mb_group[j])
+            base_idx = None
+            for j, (_, rec) in enumerate(group):
+                if "DEFER" in rec["first_action"]:
+                    base_idx = j
+                    break
+            if base_idx is None:
+                base_idx = 0
+
+            exec_rec = group[exec_idx][1]
+            base_rec = group[base_idx][1]
+            delta_u = exec_rec["utility"] - base_rec["utility"]
+
+            # Build pairwise features
+            exec_feats = extract_m4_features(exec_rec)
+            pw_feats = dict(exec_feats)
+            pw_feats["delta_q_mb"] = float(q_mb_group[exec_idx] - q_mb_group[base_idx])
+            exec_x = np.array([[exec_feats[k] for k in feature_keys]])
+            base_feats_dict = extract_m4_features(base_rec)
+            base_x = np.array([[base_feats_dict[k] for k in feature_keys]])
+            pw_feats["q_res_exec_pred"] = float(model.predict(exec_x)[0])
+            pw_feats["q_res_base_pred"] = float(model.predict(base_x)[0])
+            pw_feats["delta_q_res_pred"] = pw_feats["q_res_exec_pred"] - pw_feats["q_res_base_pred"]
+
+            pw_x = np.array([[pw_feats.get(k, 0.0) for k in pairwise_feature_keys]])
+            pw_pred = pairwise_model.predict(pw_x)[0]
+
+            pairwise_preds.append(pw_pred)
+            pairwise_truths.append(delta_u)
+            pairwise_maes.append(abs(pw_pred - delta_u))
+
+        # Pairwise sign accuracy: fraction where sign(pred) == sign(truth)
+        pairwise_preds = np.array(pairwise_preds)
+        pairwise_truths = np.array(pairwise_truths)
+        sign_acc = np.mean(np.sign(pairwise_preds) == np.sign(pairwise_truths)) if len(pairwise_preds) > 0 else 0.0
+        # Sign accuracy on non-ties (|ΔU| > 5, meaningful interventions)
+        non_tie_mask = np.abs(pairwise_truths) > 5.0
+        sign_acc_nontie = np.mean(np.sign(pairwise_preds[non_tie_mask]) == np.sign(pairwise_truths[non_tie_mask])) if non_tie_mask.sum() > 0 else 0.0
+        pairwise_mae = np.mean(pairwise_maes) if pairwise_maes else 0.0
+
         result = {
             "n_records": len(records),
             "n_groups": n_groups,
@@ -247,6 +418,10 @@ def train_q_res():
             "regret_improvement": round(float(np.mean(regret_mb) - np.mean(regret_hybrid)), 2) if regret_hybrid else 0.0,
             "top1_mb": round(top1_mb / max(n_groups, 1), 3),
             "top1_hybrid": round(top1_hybrid / max(n_groups, 1), 3),
+            "pairwise_mae": round(float(pairwise_mae), 2),
+            "pairwise_sign_acc": round(float(sign_acc), 4),
+            "pairwise_sign_acc_nontie": round(float(sign_acc_nontie), 4),
+            "pairwise_n_nontie": int(non_tie_mask.sum()),
         }
         results[split_name] = result
 
@@ -263,22 +438,39 @@ def train_q_res():
             print(f"  Regret Improvement:  {np.mean(regret_mb) - np.mean(regret_hybrid):.2f}")
             print(f"  Top-1(Q_MB):         {top1_mb}/{n_groups} ({top1_mb/max(n_groups,1):.3f})")
             print(f"  Top-1(Q_hybrid):     {top1_hybrid}/{n_groups} ({top1_hybrid/max(n_groups,1):.3f})")
+        print(f"  Pairwise MAE:        {pairwise_mae:.2f}")
+        print(f"  Pairwise Sign Acc:   {sign_acc:.4f}")
+        print(f"  Pairwise Sign Acc (non-tie, n={int(non_tie_mask.sum())}): {sign_acc_nontie:.4f}")
 
     # Feature importance
-    print(f"\nFeature importance:")
+    print(f"\nQ_res value model feature importance:")
     importances = model.feature_importances_
     for k, imp in sorted(zip(feature_keys, importances), key=lambda x: -x[1])[:10]:
         print(f"  {k}: {imp:.4f}")
 
-    # Save model
+    print(f"\nPairwise model feature importance:")
+    pw_importances = pairwise_model.feature_importances_
+    for k, imp in sorted(zip(pairwise_feature_keys, pw_importances), key=lambda x: -x[1])[:10]:
+        print(f"  {k}: {imp:.4f}")
+
+    # Save models
     model_path = M4_DIR / "q_res_m4.pkl"
     joblib.dump({
         "model": model,
         "feature_keys": feature_keys,
         "results": results,
         "train_size": len(train_records),
+        "boundary_weighted": True,
     }, model_path)
-    print(f"\nSaved model to {model_path}")
+    print(f"\nSaved Q_res model to {model_path}")
+
+    pairwise_model_path = M4_DIR / "pairwise_model_m4.pkl"
+    joblib.dump({
+        "model": pairwise_model,
+        "feature_keys": pairwise_feature_keys,
+        "train_size": len(pairwise_targets),
+    }, pairwise_model_path)
+    print(f"Saved pairwise model to {pairwise_model_path}")
 
     # Save results
     results_path = M4_DIR / "q_res_m4_results.json"

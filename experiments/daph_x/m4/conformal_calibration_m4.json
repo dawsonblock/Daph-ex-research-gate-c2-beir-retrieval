@@ -1,6 +1,6 @@
 {
-  "calibration_pairs": 300,
-  "calibration_harmful": 46,
+  "calibration_pairs": 750,
+  "calibration_harmful": 242,
   "alpha_levels": [
     0.5,
     0.8,
@@ -12,52 +12,52 @@
     "calibration_self": {
       "coverage_0.50": {
         "nominal_coverage": 0.5,
-        "q_alpha": 0.0,
-        "empirical_coverage": 0.5133,
-        "n_force": 146,
-        "n_correct": 100,
-        "n_harmful": 46,
-        "force_precision": 0.6849,
-        "break_rate": 0.3151,
+        "q_alpha": 4.6584,
+        "empirical_coverage": 0.5013,
+        "n_force": 383,
+        "n_correct": 230,
+        "n_harmful": 153,
+        "force_precision": 0.6005,
+        "break_rate": 0.3995,
         "break_rate_upper_95": null
       },
       "coverage_0.80": {
         "nominal_coverage": 0.8,
-        "q_alpha": 12.8852,
-        "empirical_coverage": 0.8033,
-        "n_force": 55,
-        "n_correct": 41,
-        "n_harmful": 14,
-        "force_precision": 0.7455,
-        "break_rate": 0.2545,
-        "break_rate_upper_95": null
+        "q_alpha": 37.9561,
+        "empirical_coverage": 0.8013,
+        "n_force": 51,
+        "n_correct": 51,
+        "n_harmful": 0,
+        "force_precision": 1.0,
+        "break_rate": 0.0,
+        "break_rate_upper_95": 0.0588
       },
       "coverage_0.90": {
         "nominal_coverage": 0.9,
-        "q_alpha": 58.9116,
-        "empirical_coverage": 0.9033,
-        "n_force": 11,
-        "n_correct": 11,
+        "q_alpha": 76.9698,
+        "empirical_coverage": 0.9013,
+        "n_force": 0,
+        "n_correct": 0,
         "n_harmful": 0,
-        "force_precision": 1.0,
+        "force_precision": 0.0,
         "break_rate": 0.0,
-        "break_rate_upper_95": 0.2727
+        "break_rate_upper_95": null
       },
       "coverage_0.95": {
         "nominal_coverage": 0.95,
-        "q_alpha": 76.5829,
-        "empirical_coverage": 0.9533,
-        "n_force": 3,
-        "n_correct": 3,
+        "q_alpha": 85.6298,
+        "empirical_coverage": 0.952,
+        "n_force": 0,
+        "n_correct": 0,
         "n_harmful": 0,
-        "force_precision": 1.0,
+        "force_precision": 0.0,
         "break_rate": 0.0,
-        "break_rate_upper_95": 1.0
+        "break_rate_upper_95": null
       },
       "coverage_0.99": {
         "nominal_coverage": 0.99,
-        "q_alpha": 111.5794,
-        "empirical_coverage": 0.9933,
+        "q_alpha": 103.8112,
+        "empirical_coverage": 0.992,
         "n_force": 0,
         "n_correct": 0,
         "n_harmful": 0,
@@ -66,33 +66,22 @@
         "break_rate_upper_95": null
       }
     },
-    "structural_ood": {
+    "structural_ood_global": {
       "coverage_0.50": {
         "nominal_coverage": 0.5,
-        "q_alpha": 0.0,
-        "empirical_coverage": 0.31,
-        "n_force": 207,
-        "n_correct": 118,
-        "n_harmful": 89,
-        "force_precision": 0.57,
-        "break_rate": 0.43,
+        "q_alpha": 4.6584,
+        "empirical_coverage": 0.6213,
+        "n_force": 309,
+        "n_correct": 234,
+        "n_harmful": 75,
+        "force_precision": 0.7573,
+        "break_rate": 0.2427,
         "break_rate_upper_95": null
       },
       "coverage_0.80": {
         "nominal_coverage": 0.8,
-        "q_alpha": 12.8852,
-        "empirical_coverage": 0.7067,
-        "n_force": 76,
-        "n_correct": 58,
-        "n_harmful": 18,
-        "force_precision": 0.7632,
-        "break_rate": 0.2368,
-        "break_rate_upper_95": null
-      },
-      "coverage_0.90": {
-        "nominal_coverage": 0.9,
-        "q_alpha": 58.9116,
-        "empirical_coverage": 0.82,
+        "q_alpha": 37.9561,
+        "empirical_coverage": 0.8253,
         "n_force": 12,
         "n_correct": 12,
         "n_harmful": 0,
@@ -100,21 +89,32 @@
         "break_rate": 0.0,
         "break_rate_upper_95": 0.25
       },
+      "coverage_0.90": {
+        "nominal_coverage": 0.9,
+        "q_alpha": 76.9698,
+        "empirical_coverage": 0.8667,
+        "n_force": 0,
+        "n_correct": 0,
+        "n_harmful": 0,
+        "force_precision": 0.0,
+        "break_rate": 0.0,
+        "break_rate_upper_95": null
+      },
       "coverage_0.95": {
         "nominal_coverage": 0.95,
-        "q_alpha": 76.5829,
-        "empirical_coverage": 0.8967,
-        "n_force": 4,
-        "n_correct": 4,
+        "q_alpha": 85.6298,
+        "empirical_coverage": 0.8933,
+        "n_force": 0,
+        "n_correct": 0,
         "n_harmful": 0,
-        "force_precision": 1.0,
+        "force_precision": 0.0,
         "break_rate": 0.0,
-        "break_rate_upper_95": 0.75
+        "break_rate_upper_95": null
       },
       "coverage_0.99": {
         "nominal_coverage": 0.99,
-        "q_alpha": 111.5794,
-        "empirical_coverage": 0.9767,
+        "q_alpha": 103.8112,
+        "empirical_coverage": 0.9707,
         "n_force": 0,
         "n_correct": 0,
         "n_harmful": 0,
@@ -123,33 +123,320 @@
         "break_rate_upper_95": null
       }
     },
-    "mechanism_ood": {
+    "structural_ood_stratified": {
       "coverage_0.50": {
         "nominal_coverage": 0.5,
-        "q_alpha": 0.0,
-        "empirical_coverage": 0.8067,
-        "n_force": 58,
-        "n_correct": 7,
-        "n_harmful": 51,
-        "force_precision": 0.1207,
-        "break_rate": 0.8793,
+        "q_alpha_global": 4.6584,
+        "empirical_coverage": 0.5813,
+        "n_force": 231,
+        "n_correct": 154,
+        "n_harmful": 77,
+        "force_precision": 0.6667,
+        "break_rate": 0.3333,
+        "break_rate_upper_95": null,
+        "n_strata": 6,
+        "n_strata_fallback": 0,
+        "strata": {
+          "OTHER_low_nocomp": {
+            "n_cal": 67,
+            "n_eval": 228,
+            "q_alpha": 0.0,
+            "coverage": 0.6667,
+            "fallback": false
+          },
+          "OTHER_high_comp": {
+            "n_cal": 232,
+            "n_eval": 171,
+            "q_alpha": 3.9906,
+            "coverage": 0.8012,
+            "fallback": false
+          },
+          "OTHER_high_nocomp": {
+            "n_cal": 348,
+            "n_eval": 217,
+            "q_alpha": 4.0536,
+            "coverage": 0.4332,
+            "fallback": false
+          },
+          "ANSWER_low_nocomp": {
+            "n_cal": 20,
+            "n_eval": 57,
+            "q_alpha": 75.3116,
+            "coverage": 0.2456,
+            "fallback": false
+          },
+          "ANSWER_high_nocomp": {
+            "n_cal": 71,
+            "n_eval": 54,
+            "q_alpha": 76.3262,
+            "coverage": 0.2963,
+            "fallback": false
+          },
+          "OTHER_low_comp": {
+            "n_cal": 12,
+            "n_eval": 23,
+            "q_alpha": 8.2418,
+            "coverage": 1.0,
+            "fallback": false
+          }
+        }
+      },
+      "coverage_0.80": {
+        "nominal_coverage": 0.8,
+        "q_alpha_global": 37.9561,
+        "empirical_coverage": 0.7613,
+        "n_force": 110,
+        "n_correct": 96,
+        "n_harmful": 14,
+        "force_precision": 0.8727,
+        "break_rate": 0.1273,
+        "break_rate_upper_95": null,
+        "n_strata": 6,
+        "n_strata_fallback": 0,
+        "strata": {
+          "OTHER_low_nocomp": {
+            "n_cal": 67,
+            "n_eval": 228,
+            "q_alpha": 1.0298,
+            "coverage": 0.7018,
+            "fallback": false
+          },
+          "OTHER_high_comp": {
+            "n_cal": 232,
+            "n_eval": 171,
+            "q_alpha": 15.7042,
+            "coverage": 1.0,
+            "fallback": false
+          },
+          "OTHER_high_nocomp": {
+            "n_cal": 348,
+            "n_eval": 217,
+            "q_alpha": 11.5041,
+            "coverage": 0.7788,
+            "fallback": false
+          },
+          "ANSWER_low_nocomp": {
+            "n_cal": 20,
+            "n_eval": 57,
+            "q_alpha": 90.7452,
+            "coverage": 0.4211,
+            "fallback": false
+          },
+          "ANSWER_high_nocomp": {
+            "n_cal": 71,
+            "n_eval": 54,
+            "q_alpha": 88.6385,
+            "coverage": 0.4444,
+            "fallback": false
+          },
+          "OTHER_low_comp": {
+            "n_cal": 12,
+            "n_eval": 23,
+            "q_alpha": 58.2676,
+            "coverage": 1.0,
+            "fallback": false
+          }
+        }
+      },
+      "coverage_0.90": {
+        "nominal_coverage": 0.9,
+        "q_alpha_global": 76.9698,
+        "empirical_coverage": 0.904,
+        "n_force": 0,
+        "n_correct": 0,
+        "n_harmful": 0,
+        "force_precision": 0.0,
+        "break_rate": 0.0,
+        "break_rate_upper_95": null,
+        "n_strata": 6,
+        "n_strata_fallback": 0,
+        "strata": {
+          "OTHER_low_nocomp": {
+            "n_cal": 67,
+            "n_eval": 228,
+            "q_alpha": 17.5414,
+            "coverage": 0.9649,
+            "fallback": false
+          },
+          "OTHER_high_comp": {
+            "n_cal": 232,
+            "n_eval": 171,
+            "q_alpha": 35.1436,
+            "coverage": 1.0,
+            "fallback": false
+          },
+          "OTHER_high_nocomp": {
+            "n_cal": 348,
+            "n_eval": 217,
+            "q_alpha": 71.0478,
+            "coverage": 0.8618,
+            "fallback": false
+          },
+          "ANSWER_low_nocomp": {
+            "n_cal": 20,
+            "n_eval": 57,
+            "q_alpha": 97.3495,
+            "coverage": 0.6491,
+            "fallback": false
+          },
+          "ANSWER_high_nocomp": {
+            "n_cal": 71,
+            "n_eval": 54,
+            "q_alpha": 99.8857,
+            "coverage": 0.7407,
+            "fallback": false
+          },
+          "OTHER_low_comp": {
+            "n_cal": 12,
+            "n_eval": 23,
+            "q_alpha": 81.811,
+            "coverage": 1.0,
+            "fallback": false
+          }
+        }
+      },
+      "coverage_0.95": {
+        "nominal_coverage": 0.95,
+        "q_alpha_global": 85.6298,
+        "empirical_coverage": 0.968,
+        "n_force": 0,
+        "n_correct": 0,
+        "n_harmful": 0,
+        "force_precision": 0.0,
+        "break_rate": 0.0,
+        "break_rate_upper_95": null,
+        "n_strata": 6,
+        "n_strata_fallback": 0,
+        "strata": {
+          "OTHER_low_nocomp": {
+            "n_cal": 67,
+            "n_eval": 228,
+            "q_alpha": 49.0089,
+            "coverage": 0.9825,
+            "fallback": false
+          },
+          "OTHER_high_comp": {
+            "n_cal": 232,
+            "n_eval": 171,
+            "q_alpha": 69.3518,
+            "coverage": 1.0,
+            "fallback": false
+          },
+          "OTHER_high_nocomp": {
+            "n_cal": 348,
+            "n_eval": 217,
+            "q_alpha": 78.6132,
+            "coverage": 0.9447,
+            "fallback": false
+          },
+          "ANSWER_low_nocomp": {
+            "n_cal": 20,
+            "n_eval": 57,
+            "q_alpha": 110.7647,
+            "coverage": 0.9298,
+            "fallback": false
+          },
+          "ANSWER_high_nocomp": {
+            "n_cal": 71,
+            "n_eval": 54,
+            "q_alpha": 110.5893,
+            "coverage": 0.9259,
+            "fallback": false
+          },
+          "OTHER_low_comp": {
+            "n_cal": 12,
+            "n_eval": 23,
+            "q_alpha": 81.811,
+            "coverage": 1.0,
+            "fallback": false
+          }
+        }
+      },
+      "coverage_0.99": {
+        "nominal_coverage": 0.99,
+        "q_alpha_global": 103.8112,
+        "empirical_coverage": 0.9907,
+        "n_force": 0,
+        "n_correct": 0,
+        "n_harmful": 0,
+        "force_precision": 0.0,
+        "break_rate": 0.0,
+        "break_rate_upper_95": null,
+        "n_strata": 6,
+        "n_strata_fallback": 0,
+        "strata": {
+          "OTHER_low_nocomp": {
+            "n_cal": 67,
+            "n_eval": 228,
+            "q_alpha": 104.7662,
+            "coverage": 0.9868,
+            "fallback": false
+          },
+          "OTHER_high_comp": {
+            "n_cal": 232,
+            "n_eval": 171,
+            "q_alpha": 90.1999,
+            "coverage": 1.0,
+            "fallback": false
+          },
+          "OTHER_high_nocomp": {
+            "n_cal": 348,
+            "n_eval": 217,
+            "q_alpha": 102.7723,
+            "coverage": 1.0,
+            "fallback": false
+          },
+          "ANSWER_low_nocomp": {
+            "n_cal": 20,
+            "n_eval": 57,
+            "q_alpha": 110.7647,
+            "coverage": 0.9298,
+            "fallback": false
+          },
+          "ANSWER_high_nocomp": {
+            "n_cal": 71,
+            "n_eval": 54,
+            "q_alpha": 123.5113,
+            "coverage": 1.0,
+            "fallback": false
+          },
+          "OTHER_low_comp": {
+            "n_cal": 12,
+            "n_eval": 23,
+            "q_alpha": 81.811,
+            "coverage": 1.0,
+            "fallback": false
+          }
+        }
+      }
+    },
+    "mechanism_ood_global": {
+      "coverage_0.50": {
+        "nominal_coverage": 0.5,
+        "q_alpha": 4.6584,
+        "empirical_coverage": 0.696,
+        "n_force": 167,
+        "n_correct": 29,
+        "n_harmful": 138,
+        "force_precision": 0.1737,
+        "break_rate": 0.8263,
         "break_rate_upper_95": null
       },
       "coverage_0.80": {
         "nominal_coverage": 0.8,
-        "q_alpha": 12.8852,
-        "empirical_coverage": 0.8933,
-        "n_force": 18,
-        "n_correct": 3,
-        "n_harmful": 15,
-        "force_precision": 0.1667,
-        "break_rate": 0.8333,
+        "q_alpha": 37.9561,
+        "empirical_coverage": 0.888,
+        "n_force": 12,
+        "n_correct": 4,
+        "n_harmful": 8,
+        "force_precision": 0.3333,
+        "break_rate": 0.6667,
         "break_rate_upper_95": null
       },
       "coverage_0.90": {
         "nominal_coverage": 0.9,
-        "q_alpha": 58.9116,
-        "empirical_coverage": 0.9533,
+        "q_alpha": 76.9698,
+        "empirical_coverage": 0.9507,
         "n_force": 0,
         "n_correct": 0,
         "n_harmful": 0,
@@ -159,8 +446,8 @@
       },
       "coverage_0.95": {
         "nominal_coverage": 0.95,
-        "q_alpha": 76.5829,
-        "empirical_coverage": 0.9667,
+        "q_alpha": 85.6298,
+        "empirical_coverage": 0.9627,
         "n_force": 0,
         "n_correct": 0,
         "n_harmful": 0,
@@ -170,14 +457,301 @@
       },
       "coverage_0.99": {
         "nominal_coverage": 0.99,
-        "q_alpha": 111.5794,
-        "empirical_coverage": 0.99,
+        "q_alpha": 103.8112,
+        "empirical_coverage": 0.976,
         "n_force": 0,
         "n_correct": 0,
         "n_harmful": 0,
         "force_precision": 0.0,
         "break_rate": 0.0,
         "break_rate_upper_95": null
+      }
+    },
+    "mechanism_ood_stratified": {
+      "coverage_0.50": {
+        "nominal_coverage": 0.5,
+        "q_alpha_global": 4.6584,
+        "empirical_coverage": 0.7373,
+        "n_force": 139,
+        "n_correct": 25,
+        "n_harmful": 114,
+        "force_precision": 0.1799,
+        "break_rate": 0.8201,
+        "break_rate_upper_95": null,
+        "n_strata": 6,
+        "n_strata_fallback": 0,
+        "strata": {
+          "OTHER_high_nocomp": {
+            "n_cal": 348,
+            "n_eval": 430,
+            "q_alpha": 4.0536,
+            "coverage": 0.7488,
+            "fallback": false
+          },
+          "OTHER_high_comp": {
+            "n_cal": 232,
+            "n_eval": 81,
+            "q_alpha": 3.9906,
+            "coverage": 0.5062,
+            "fallback": false
+          },
+          "OTHER_low_nocomp": {
+            "n_cal": 67,
+            "n_eval": 174,
+            "q_alpha": 0.0,
+            "coverage": 0.8448,
+            "fallback": false
+          },
+          "ANSWER_high_nocomp": {
+            "n_cal": 71,
+            "n_eval": 52,
+            "q_alpha": 76.3262,
+            "coverage": 0.6154,
+            "fallback": false
+          },
+          "ANSWER_low_nocomp": {
+            "n_cal": 20,
+            "n_eval": 10,
+            "q_alpha": 75.3116,
+            "coverage": 0.8,
+            "fallback": false
+          },
+          "OTHER_low_comp": {
+            "n_cal": 12,
+            "n_eval": 3,
+            "q_alpha": 8.2418,
+            "coverage": 1.0,
+            "fallback": false
+          }
+        }
+      },
+      "coverage_0.80": {
+        "nominal_coverage": 0.8,
+        "q_alpha_global": 37.9561,
+        "empirical_coverage": 0.828,
+        "n_force": 58,
+        "n_correct": 11,
+        "n_harmful": 47,
+        "force_precision": 0.1897,
+        "break_rate": 0.8103,
+        "break_rate_upper_95": null,
+        "n_strata": 6,
+        "n_strata_fallback": 0,
+        "strata": {
+          "OTHER_high_nocomp": {
+            "n_cal": 348,
+            "n_eval": 430,
+            "q_alpha": 11.5041,
+            "coverage": 0.8442,
+            "fallback": false
+          },
+          "OTHER_high_comp": {
+            "n_cal": 232,
+            "n_eval": 81,
+            "q_alpha": 15.7042,
+            "coverage": 0.7654,
+            "fallback": false
+          },
+          "OTHER_low_nocomp": {
+            "n_cal": 67,
+            "n_eval": 174,
+            "q_alpha": 1.0298,
+            "coverage": 0.8448,
+            "fallback": false
+          },
+          "ANSWER_high_nocomp": {
+            "n_cal": 71,
+            "n_eval": 52,
+            "q_alpha": 88.6385,
+            "coverage": 0.7308,
+            "fallback": false
+          },
+          "ANSWER_low_nocomp": {
+            "n_cal": 20,
+            "n_eval": 10,
+            "q_alpha": 90.7452,
+            "coverage": 0.8,
+            "fallback": false
+          },
+          "OTHER_low_comp": {
+            "n_cal": 12,
+            "n_eval": 3,
+            "q_alpha": 58.2676,
+            "coverage": 1.0,
+            "fallback": false
+          }
+        }
+      },
+      "coverage_0.90": {
+        "nominal_coverage": 0.9,
+        "q_alpha_global": 76.9698,
+        "empirical_coverage": 0.9453,
+        "n_force": 0,
+        "n_correct": 0,
+        "n_harmful": 0,
+        "force_precision": 0.0,
+        "break_rate": 0.0,
+        "break_rate_upper_95": null,
+        "n_strata": 6,
+        "n_strata_fallback": 0,
+        "strata": {
+          "OTHER_high_nocomp": {
+            "n_cal": 348,
+            "n_eval": 430,
+            "q_alpha": 71.0478,
+            "coverage": 0.9721,
+            "fallback": false
+          },
+          "OTHER_high_comp": {
+            "n_cal": 232,
+            "n_eval": 81,
+            "q_alpha": 35.1436,
+            "coverage": 0.9136,
+            "fallback": false
+          },
+          "OTHER_low_nocomp": {
+            "n_cal": 67,
+            "n_eval": 174,
+            "q_alpha": 17.5414,
+            "coverage": 0.9598,
+            "fallback": false
+          },
+          "ANSWER_high_nocomp": {
+            "n_cal": 71,
+            "n_eval": 52,
+            "q_alpha": 99.8857,
+            "coverage": 0.7308,
+            "fallback": false
+          },
+          "ANSWER_low_nocomp": {
+            "n_cal": 20,
+            "n_eval": 10,
+            "q_alpha": 97.3495,
+            "coverage": 0.9,
+            "fallback": false
+          },
+          "OTHER_low_comp": {
+            "n_cal": 12,
+            "n_eval": 3,
+            "q_alpha": 81.811,
+            "coverage": 1.0,
+            "fallback": false
+          }
+        }
+      },
+      "coverage_0.95": {
+        "nominal_coverage": 0.95,
+        "q_alpha_global": 85.6298,
+        "empirical_coverage": 0.9733,
+        "n_force": 0,
+        "n_correct": 0,
+        "n_harmful": 0,
+        "force_precision": 0.0,
+        "break_rate": 0.0,
+        "break_rate_upper_95": null,
+        "n_strata": 6,
+        "n_strata_fallback": 0,
+        "strata": {
+          "OTHER_high_nocomp": {
+            "n_cal": 348,
+            "n_eval": 430,
+            "q_alpha": 78.6132,
+            "coverage": 0.9767,
+            "fallback": false
+          },
+          "OTHER_high_comp": {
+            "n_cal": 232,
+            "n_eval": 81,
+            "q_alpha": 69.3518,
+            "coverage": 0.9383,
+            "fallback": false
+          },
+          "OTHER_low_nocomp": {
+            "n_cal": 67,
+            "n_eval": 174,
+            "q_alpha": 49.0089,
+            "coverage": 0.9828,
+            "fallback": false
+          },
+          "ANSWER_high_nocomp": {
+            "n_cal": 71,
+            "n_eval": 52,
+            "q_alpha": 110.5893,
+            "coverage": 0.9615,
+            "fallback": false
+          },
+          "ANSWER_low_nocomp": {
+            "n_cal": 20,
+            "n_eval": 10,
+            "q_alpha": 110.7647,
+            "coverage": 1.0,
+            "fallback": false
+          },
+          "OTHER_low_comp": {
+            "n_cal": 12,
+            "n_eval": 3,
+            "q_alpha": 81.811,
+            "coverage": 1.0,
+            "fallback": false
+          }
+        }
+      },
+      "coverage_0.99": {
+        "nominal_coverage": 0.99,
+        "q_alpha_global": 103.8112,
+        "empirical_coverage": 0.9933,
+        "n_force": 0,
+        "n_correct": 0,
+        "n_harmful": 0,
+        "force_precision": 0.0,
+        "break_rate": 0.0,
+        "break_rate_upper_95": null,
+        "n_strata": 6,
+        "n_strata_fallback": 0,
+        "strata": {
+          "OTHER_high_nocomp": {
+            "n_cal": 348,
+            "n_eval": 430,
+            "q_alpha": 102.7723,
+            "coverage": 0.9907,
+            "fallback": false
+          },
+          "OTHER_high_comp": {
+            "n_cal": 232,
+            "n_eval": 81,
+            "q_alpha": 90.1999,
+            "coverage": 1.0,
+            "fallback": false
+          },
+          "OTHER_low_nocomp": {
+            "n_cal": 67,
+            "n_eval": 174,
+            "q_alpha": 104.7662,
+            "coverage": 0.9943,
+            "fallback": false
+          },
+          "ANSWER_high_nocomp": {
+            "n_cal": 71,
+            "n_eval": 52,
+            "q_alpha": 123.5113,
+            "coverage": 1.0,
+            "fallback": false
+          },
+          "ANSWER_low_nocomp": {
+            "n_cal": 20,
+            "n_eval": 10,
+            "q_alpha": 110.7647,
+            "coverage": 1.0,
+            "fallback": false
+          },
+          "OTHER_low_comp": {
+            "n_cal": 12,
+            "n_eval": 3,
+            "q_alpha": 81.811,
+            "coverage": 1.0,
+            "fallback": false
+          }
+        }
       }
     }
   }

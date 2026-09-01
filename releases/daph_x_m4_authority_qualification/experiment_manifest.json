@@ -1,43 +1,43 @@
 {
   "release_name": "daph_x_m4_authority_qualification",
-  "source_commit": "fe5142df6dd5c02ef459e0cba398e7167d79d036",
+  "source_commit": "71db72df62e31f8eafb886a52ff61a60732d7323",
   "dirty_worktree": true,
   "python_version": "3.12.0",
   "platform": "macOS-26.2-arm64-arm-64bit",
   "corpus": {
     "train": {
       "path": "experiments/daph_x/m4/m4_train.jsonl",
-      "sha256": "f8a059da083029d8a563146f918640305c70f6639ada3007471283cb609a5787",
-      "size_bytes": 22117163
+      "sha256": "4f9ff76d970ca5f60a9751d1eb54a8c27a06e72f28c072cb65298d1468941661",
+      "size_bytes": 57166277
     },
     "calibration": {
       "path": "experiments/daph_x/m4/m4_calibration.jsonl",
-      "sha256": "372bc9eef4bfc12f2161cee35334aca1ea75c156baa6247ed227c1eb77c3bbce",
-      "size_bytes": 5559079
+      "sha256": "c87a7d0995941423023c486af18988e4b6a3ef41557957f09ae811e576566f84",
+      "size_bytes": 14472217
     },
     "structural_ood": {
       "path": "experiments/daph_x/m4/m4_structural_ood.jsonl",
-      "sha256": "e92e1b1e5cf34f8f548f0fde08523de2bd9f71bc408c6440891dbde9a77539ac",
-      "size_bytes": 5434126
+      "sha256": "4b63612be7a3b083be75724de38c5e28845e45212b43df4a1d3e71a04147bf2f",
+      "size_bytes": 12040421
     },
     "mechanism_ood": {
       "path": "experiments/daph_x/m4/m4_mechanism_ood.jsonl",
-      "sha256": "431356c854d5965249b7bfb945e5f13e6e149864732fabfb14cac3f6ca538353",
-      "size_bytes": 4564488
+      "sha256": "028a00880c8e079f76b87c1225a8aa1d814bc42564d63412ce48aeb90bb3d5b1",
+      "size_bytes": 11512779
     },
     "metadata": {
       "path": "experiments/daph_x/m4/m4_metadata.json",
-      "sha256": "849286e0f5f64f5a6721f67b179fbe2f1d64f8a9ddb881416c7857858b189532"
+      "sha256": "aa59c14b27a8603d796bfa0607cc0d9f09935e3a7ad04d544839f71656503e63"
     }
   },
   "models": {
     "q_res": {
       "path": "experiments/daph_x/m4/q_res_m4.pkl",
-      "sha256": "f440e4d73d719402aa7c89bcefd34b9c212c96e8cfdadedc6f2a5560281e3743"
+      "sha256": "4b04c6f919168722e7a616a0b4bf0f044635a7003f152a181ffbb529e9721b33"
     },
     "risk_model": {
       "path": "experiments/daph_x/m4/risk_model_m4.pkl",
-      "sha256": "1108c5ef38bea3c27778d2bfc11f5981380b5e47a552772dff3d3fac7937d835"
+      "sha256": "de72fa7e2e45bef6166ddde28b50ed2934174dd9db87afc7219df7439dc76bfd"
     }
   },
   "authority": {
@@ -51,19 +51,19 @@
   "qualification": {
     "q_res_results": {
       "path": "experiments/daph_x/m4/q_res_m4_results.json",
-      "sha256": "df085b89cecd8ce1e2023deb4f4030a23d2307c602bebff84a5b3cb514b36e8d"
+      "sha256": "8c9cd0af7138456d21e2b3da23ac9bdd3af8e137ca752fb1ae7809bec5fbe47c"
     },
     "conformal_calibration": {
       "path": "experiments/daph_x/m4/conformal_calibration_m4.json",
-      "sha256": "d9fce2ca9eca195eb205e85a78a854b81eb9a29f1f5a4ce37b475c0678e9f2c2"
+      "sha256": "1613e68f7cb9b24bcf0361e1ad93c7ebe6a3445f25970ae2642dede4a33c545e"
     },
     "intervention_risk": {
       "path": "experiments/daph_x/m4/intervention_risk_m4.json",
-      "sha256": "35349070888af64f777b373361e9241b59ac9698efb4a80a7b1b7512112f0b52"
+      "sha256": "8a6d11cfc7767ee7582e20131d851fb543985f471d952d87892338be397b41c6"
     },
     "shadow_authority": {
       "path": "experiments/daph_x/m4/shadow_authority_m4.json",
-      "sha256": "73bc74f76283737dc752ec2c4ea5826826d3bd5f12c15f72a00b86863db8bcff"
+      "sha256": "054c3b7d1a17a650fc81681bf6506f285103b28613947c9d5f0ffc358e9328df"
     },
     "v3r2_proxy_comparison": {
       "path": "experiments/daph_x/m4/v3r2_proxy_comparison_m4.json",
@@ -73,25 +73,41 @@
   "qualification_status": {
     "artifact_integrity_pass": true,
     "scientific_qualification_pass": false,
-    "reasons": [
-      "Conformal coverage on structural OOD at 90% nominal is 82% (below target)",
-      "Shadow authority 95% upper bound on break rate is 25% (not safe enough for production)",
-      "Shadow authority rescue recall is 5.7% on structural OOD (too conservative)",
-      "Shadow authority abstains entirely on mechanism OOD (0 would-force \u2014 safe but not useful)",
-      "Intervention risk harm FNR 16.2% on structural OOD (improved but not authority-grade)",
-      "Structural OOD has only 300 states (insufficient for high-confidence break-rate bounds)",
-      "V3R2 comparison uses rule proxy, not frozen V3R2 release"
+    "promotion_gates_passed": 7,
+    "promotion_gates_total": 8,
+    "failed_gates": [
+      "N_effective_intervention = 287 (need >= 300 \u2014 13 short)"
     ],
-    "improvements_over_previous": [
-      "Conformal quantile direction fixed (was implementation-invalid, now correct)",
-      "topo_hash_prefix removed and replaced with 57 real graph-structural features",
-      "Q_res structural OOD regret: 20.02 \u2192 14.57 (now improves over Q_MB=17.16)",
-      "Q_res mechanism OOD regret: 27.90 \u2192 12.04",
-      "Risk model structural OOD AUROC: 0.798 \u2192 0.949",
-      "Risk model mechanism OOD harm FNR: 33.7% \u2192 5.7%",
-      "Shadow authority structural OOD break rate: 27.6% \u2192 0% (12 interventions, 0 breaks)",
-      "Shadow authority mechanism OOD: 100% break rate \u2192 0 would-force (abstained)",
-      "Paired-world exact signature equality bug fixed (resources dict mismatch)"
+    "reasons": [
+      "N_effective_intervention = 287, just 13 short of 300 threshold",
+      "Mechanism OOD has 1 break (not zero) \u2014 need to investigate",
+      "V3R2 comparison uses rule proxy, not frozen V3R2 release",
+      "Need fresh confirmation corpus before any hard authority promotion"
+    ],
+    "passed_gates": [
+      "Regret_hybrid^structOOD (11.29) < Regret_MB^structOOD (19.94)",
+      "Regret_hybrid^mechOOD (15.06) < Regret_MB^mechOOD (31.66)",
+      "Stratified conformal coverage_90^structOOD = 0.904 >= 0.88",
+      "Mechanism OOD harm FNR = 8.3% < 10%",
+      "Breaks == 0 on structural OOD (74 interventions)",
+      "UCB_95(break_rate) = 4.05% < 5% on structural OOD",
+      "Rescue recall > 0 on both splits (struct=11.9%, mech=40.5%)"
+    ],
+    "improvements_over_m4": [
+      "Corpus expanded 2.5x: 1248\u21923168 train, 300\u2192750 per OOD split",
+      "Added ambiguous_competition mechanism for near-boundary cases",
+      "Boundary-weighted Q_res training prioritizes decision-boundary examples",
+      "Pairwise advantage model trained directly on \u0394U (85% sign acc on struct OOD)",
+      "Stratified conformal calibration (6 strata by action/entropy/competition)",
+      "Struct OOD coverage_90: 82% \u2192 86.7% (global) \u2192 90.4% (stratified)",
+      "Struct OOD regret: 14.57 \u2192 11.29",
+      "Struct OOD top-1: 0.480 \u2192 0.552",
+      "Risk model struct OOD AUROC: 0.949 \u2192 0.974",
+      "Risk model struct OOD harm FNR: 16.2% \u2192 7.5%",
+      "Shadow authority struct OOD: 12 force/0 breaks \u2192 74 force/0 breaks",
+      "Shadow authority mech OOD: 0 force (abstained) \u2192 213 force/1 break",
+      "Shadow authority rescue recall: struct 5.7% \u2192 11.9%, mech 0% \u2192 40.5%",
+      "V3R2 proxy: DAPH-X +13.98 utility on struct OOD, +13.52 on mech OOD"
     ]
   }
 }

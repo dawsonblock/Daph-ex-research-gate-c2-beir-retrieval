@@ -51,6 +51,7 @@ HARM_MECHANISMS = [
     "resource_depletion",
     "weak_evidence_dependence",
     "near_value_inversion",
+    "ambiguous_competition",
     "world_model_error",
     "belief_overconfidence",
     "novel_topology",
@@ -60,7 +61,7 @@ HARM_MECHANISMS = [
 # Mechanism families for train/test split
 MECHANISM_FAMILIES = {
     "evidence_quality": ["misleading_support", "weak_evidence_dependence"],
-    "action_selection": ["bad_verify_target", "near_value_inversion"],
+    "action_selection": ["bad_verify_target", "near_value_inversion", "ambiguous_competition"],
     "resource": ["resource_depletion"],
     "model_error": ["world_model_error", "belief_overconfidence"],
     "structural": ["novel_topology"],
@@ -278,6 +279,38 @@ def generate_state(
             else:
                 target = rng.randint(0, n_hyp - 1)
                 supports = (f"H{target + 1}",) if rng.random() < 0.5 else ()
+                contradicts = () if supports else (f"H{target + 1}",)
+                vstate = rng.choice(["SUFFICIENT", "UNVERIFIED"])
+        elif harm_mechanism == "ambiguous_competition":
+            # Near-boundary: multiple hypotheses with partial support,
+            # unverified evidence that could discriminate. The executive
+            # is uncertain whether to ANSWER or DEFER. |ΔU| is small.
+            if j == 0:
+                # Verified support for correct hypothesis
+                supports = (f"H{correct_idx + 1}",)
+                contradicts = ()
+                vstate = "SUFFICIENT"
+            elif j == 1:
+                # Verified support for a competing hypothesis
+                wrong_idx = (correct_idx + 1) % n_hyp
+                supports = (f"H{wrong_idx + 1}",)
+                contradicts = ()
+                vstate = "SUFFICIENT"
+            elif j == 2 and n_ev > 2:
+                # Unverified evidence that could discriminate —
+                # supports correct, contradicts wrong (or vice versa)
+                wrong_idx = (correct_idx + 1) % n_hyp
+                if rng.random() < 0.5:
+                    supports = (f"H{correct_idx + 1}",)
+                    contradicts = (f"H{wrong_idx + 1}",)
+                else:
+                    supports = (f"H{wrong_idx + 1}",)
+                    contradicts = (f"H{correct_idx + 1}",)
+                vstate = "UNVERIFIED"
+            else:
+                # Background noise evidence
+                target = rng.randint(0, n_hyp - 1)
+                supports = (f"H{target + 1}",) if rng.random() < 0.4 else ()
                 contradicts = () if supports else (f"H{target + 1}",)
                 vstate = rng.choice(["SUFFICIENT", "UNVERIFIED"])
         elif harm_mechanism == "world_model_error":

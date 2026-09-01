@@ -1,48 +1,52 @@
 {
   "config": {
     "tau_delta": 0.0,
-    "rho": 0.3,
-    "alpha": 0.9,
-    "q_alpha": 58.9116
+    "rho": 0.05,
+    "alpha": 0.5,
+    "q_alpha": 4.6584,
+    "use_stratified": true,
+    "use_pairwise": true,
+    "pairwise_threshold": 0.0,
+    "gate_mode": "pairwise_risk"
   },
   "results": {
     "structural_ood": {
-      "n": 300,
-      "n_force": 12,
-      "n_harmful": 89,
-      "rescues": 12,
+      "n": 750,
+      "n_force": 74,
+      "n_harmful": 130,
+      "rescues": 74,
       "breaks": 0,
       "force_precision": 1.0,
       "break_rate": 0.0,
-      "rescue_recall": 0.0569,
-      "break_rate_upper_95": 0.25,
+      "rescue_recall": 0.1194,
+      "break_rate_upper_95": 0.0405,
       "contingency": {
-        "both_correct": 199,
-        "base_correct_daph_wrong": 12,
-        "base_wrong_daph_correct": 89,
+        "both_correct": 546,
+        "base_correct_daph_wrong": 74,
+        "base_wrong_daph_correct": 130,
         "both_wrong": 0
       },
       "force_applied": 0
     },
     "mechanism_ood": {
-      "n": 300,
-      "n_force": 0,
-      "n_harmful": 51,
-      "rescues": 0,
-      "breaks": 0,
-      "force_precision": 0.0,
-      "break_rate": 0.0,
-      "rescue_recall": 0.0,
+      "n": 750,
+      "n_force": 213,
+      "n_harmful": 226,
+      "rescues": 212,
+      "breaks": 1,
+      "force_precision": 0.9953,
+      "break_rate": 0.0047,
+      "rescue_recall": 0.4046,
       "break_rate_upper_95": null,
       "contingency": {
-        "both_correct": 249,
-        "base_correct_daph_wrong": 0,
-        "base_wrong_daph_correct": 51,
-        "both_wrong": 0
+        "both_correct": 312,
+        "base_correct_daph_wrong": 212,
+        "base_wrong_daph_correct": 225,
+        "both_wrong": 1
       },
       "force_applied": 0
     }
   },
   "force_applied": 0,
-  "note": "Shadow authority using learned Q_res + conformal LCB + risk model. force_applied=0 always."
+  "note": "Shadow authority using boundary-weighted Q_res + stratified conformal + risk model + pairwise advantage gate. Thresholds tuned on calibration only. force_applied=0 always."
 }

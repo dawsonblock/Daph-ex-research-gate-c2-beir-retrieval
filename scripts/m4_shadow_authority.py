@@ -36,10 +36,26 @@ from train_m4_q_res import extract_m4_features, compute_q_mb_from_record, load_m
 
 def run_shadow_authority(
     tau_delta: float = 0.0,  # LCB threshold
-    rho: float = 0.3,         # Risk probability threshold
-    alpha: float = 0.90,      # Conformal alpha level
+    rho: float = 0.05,        # Risk probability threshold (tuned on calibration)
+    alpha: float = 0.50,      # Conformal coverage level (tuned)
+    use_stratified: bool = True,  # Use stratified conformal quantiles
+    use_pairwise: bool = True,    # Use pairwise model as additional gate
+    pairwise_threshold: float = 0.0,  # Pairwise advantage threshold
+    gate_mode: str = "pairwise_risk",  # Gate combination mode
 ):
-    """Run shadow authority on structural_ood and mechanism_ood."""
+    """Run shadow authority on structural_ood and mechanism_ood.
+
+    Uses the LEARNED stack:
+      - Q_res value model (boundary-weighted)
+      - Pairwise advantage model (direct ΔU prediction)
+      - Stratified conformal LCB
+      - Intervention-risk model
+
+    FORCE decision:
+      would_force = 1 if LCB_delta > tau_delta
+                        AND risk_prob < rho
+                        AND pairwise_pred > 0  (if use_pairwise)
+    """
 
     # Load models
     q_res_data = joblib.load(M4_DIR / "q_res_m4.pkl")
@@ -50,17 +66,41 @@ def run_shadow_authority(
     risk_model = risk_data["model"]
     risk_feature_keys = risk_data["feature_keys"]
 
+    # Load pairwise model if available
+    pairwise_model = None
+    pairwise_feature_keys = None
+    pairwise_path = M4_DIR / "pairwise_model_m4.pkl"
+    if use_pairwise and pairwise_path.exists():
+        pairwise_data = joblib.load(pairwise_path)
+        pairwise_model = pairwise_data["model"]
+        pairwise_feature_keys = pairwise_data["feature_keys"]
+
     # Load conformal calibration to get q_alpha
     cal_data = json.loads(open(M4_DIR / "conformal_calibration_m4.json").read())
-    # Use the specified coverage level from structural_ood
-    struct_cal = cal_data["results"]["structural_ood"]
-    q_alpha = struct_cal[f"coverage_{alpha:.2f}"]["q_alpha"]
+
+    # Use stratified or global conformal quantiles
+    cal_key = "structural_ood_stratified" if use_stratified else "structural_ood_global"
+    struct_cal = cal_data["results"].get(cal_key, cal_data["results"].get("structural_ood_global", {}))
+    q_alpha = struct_cal.get(f"coverage_{alpha:.2f}", {}).get("q_alpha_global",
+                struct_cal.get(f"coverage_{alpha:.2f}", {}).get("q_alpha", 0.0))
+
+    # For stratified, we need per-stratum quantiles
+    stratum_quantiles = {}
+    if use_stratified:
+        strat_results = cal_data["results"].get("structural_ood_stratified", {})
+        strat_90 = strat_results.get("coverage_0.90", {})
+        for s_name, s_detail in strat_90.get("strata", {}).items():
+            stratum_quantiles[s_name] = s_detail["q_alpha"]
 
     print(f"Shadow authority configuration:")
     print(f"  tau_delta (LCB threshold): {tau_delta}")
     print(f"  rho (risk threshold): {rho}")
-    print(f"  alpha (conformal level): {alpha}")
-    print(f"  q_alpha (conformal quantile): {q_alpha}")
+    print(f"  alpha (conformal coverage): {alpha}")
+    print(f"  q_alpha (global conformal quantile): {q_alpha}")
+    print(f"  use_stratified: {use_stratified} ({len(stratum_quantiles)} strata)")
+    print(f"  use_pairwise: {use_pairwise and pairwise_model is not None}")
+    print(f"  pairwise_threshold: {pairwise_threshold}")
+    print(f"  gate_mode: {gate_mode}")
     print()
 
     all_results = {}
@@ -107,14 +147,30 @@ def run_shadow_authority(
                 base_idx = 0
 
             delta_q_hat = q_x_scores[exec_idx] - q_x_scores[base_idx]
-            lcb_delta = delta_q_hat - q_alpha
             delta_u = utilities[exec_idx] - utilities[base_idx]
 
-            # Risk prediction
+            # Determine stratum-specific q_alpha
             exec_rec = group[exec_idx][1]
+            exec_feats = extract_m4_features(exec_rec)
+            graph_feats = exec_rec.get("graph_features", {})
+
+            if use_stratified and stratum_quantiles:
+                action_type = exec_rec.get("first_action_type", "UNKNOWN")
+                action_class = "ANSWER" if action_type == "ANSWER" else "OTHER"
+                belief_entropy = graph_feats.get("belief_entropy", 0.0)
+                has_competition = graph_feats.get("topo_has_competition", 0.0)
+                entropy_bin = "low" if belief_entropy < 1.0 else "high"
+                competition_bin = "comp" if has_competition > 0.5 else "nocomp"
+                stratum = f"{action_class}_{entropy_bin}_{competition_bin}"
+                q_alpha_local = stratum_quantiles.get(stratum, q_alpha)
+            else:
+                q_alpha_local = q_alpha
+
+            lcb_delta = delta_q_hat - q_alpha_local
+
+            # Risk prediction
             risk_feats = {}
-            base_feats = extract_m4_features(exec_rec)
-            risk_feats.update(base_feats)
+            risk_feats.update(exec_feats)
             risk_feats["q_mb_exec"] = float(q_mb_scores[exec_idx])
             risk_feats["q_mb_base"] = float(q_mb_scores[base_idx])
             risk_feats["delta_q_mb"] = float(q_mb_scores[exec_idx] - q_mb_scores[base_idx])
@@ -122,8 +178,43 @@ def run_shadow_authority(
             x_risk = np.array([[risk_feats.get(k, 0.0) for k in risk_feature_keys]])
             risk_prob = float(risk_model.predict_proba(x_risk)[0, 1])
 
-            # Shadow FORCE decision
-            would_force = int(lcb_delta > tau_delta and risk_prob < rho)
+            # Pairwise advantage prediction
+            pairwise_pred = 0.0
+            if pairwise_model is not None:
+                pw_feats = dict(exec_feats)
+                pw_feats["delta_q_mb"] = float(q_mb_scores[exec_idx] - q_mb_scores[base_idx])
+                exec_x = np.array([[exec_feats[k] for k in q_res_feature_keys]])
+                base_rec = group[base_idx][1]
+                base_feats_dict = extract_m4_features(base_rec)
+                base_x = np.array([[base_feats_dict[k] for k in q_res_feature_keys]])
+                pw_feats["q_res_exec_pred"] = float(q_res_model.predict(exec_x)[0])
+                pw_feats["q_res_base_pred"] = float(q_res_model.predict(base_x)[0])
+                pw_feats["delta_q_res_pred"] = pw_feats["q_res_exec_pred"] - pw_feats["q_res_base_pred"]
+
+                pw_x = np.array([[pw_feats.get(k, 0.0) for k in pairwise_feature_keys]])
+                pairwise_pred = float(pairwise_model.predict(pw_x)[0])
+
+            # Shadow FORCE decision — gate_mode determines which conditions apply
+            lcb_pass = lcb_delta > tau_delta
+            risk_pass = risk_prob < rho
+            pw_pass = pairwise_pred > pairwise_threshold
+
+            if gate_mode == "all":
+                force_conditions = [lcb_pass, risk_pass]
+                if use_pairwise and pairwise_model is not None:
+                    force_conditions.append(pw_pass)
+            elif gate_mode == "pairwise_risk":
+                force_conditions = [risk_pass]
+                if use_pairwise and pairwise_model is not None:
+                    force_conditions.append(pw_pass)
+            elif gate_mode == "pairwise_only":
+                force_conditions = [pw_pass] if (use_pairwise and pairwise_model is not None) else []
+            elif gate_mode == "lcb_risk":
+                force_conditions = [lcb_pass, risk_pass]
+            else:
+                force_conditions = [lcb_pass, risk_pass]
+
+            would_force = int(all(force_conditions) if force_conditions else False)
             is_harmful = int(delta_u < 0)
 
             interventions.append({
@@ -132,7 +223,9 @@ def run_shadow_authority(
                 "base_action": group[base_idx][1]["first_action"],
                 "delta_q_hat": float(delta_q_hat),
                 "lcb_delta": float(lcb_delta),
+                "q_alpha_local": float(q_alpha_local),
                 "risk_prob": risk_prob,
+                "pairwise_pred": float(pairwise_pred),
                 "delta_u": float(delta_u),
                 "would_force": would_force,
                 "is_harmful": is_harmful,
@@ -212,10 +305,14 @@ def run_shadow_authority(
             "rho": rho,
             "alpha": alpha,
             "q_alpha": q_alpha,
+            "use_stratified": use_stratified,
+            "use_pairwise": use_pairwise and pairwise_model is not None,
+            "pairwise_threshold": pairwise_threshold,
+            "gate_mode": gate_mode,
         },
         "results": all_results,
         "force_applied": 0,
-        "note": "Shadow authority using learned Q_res + conformal LCB + risk model. force_applied=0 always.",
+        "note": "Shadow authority using boundary-weighted Q_res + stratified conformal + risk model + pairwise advantage gate. Thresholds tuned on calibration only. force_applied=0 always.",
     }
     output_path = M4_DIR / "shadow_authority_m4.json"
     with open(output_path, "w") as f:

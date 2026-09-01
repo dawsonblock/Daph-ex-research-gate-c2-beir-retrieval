@@ -1,0 +1,22 @@
+{
+  "target_break_upper": 0.05,
+  "best_config": {
+    "alpha": 0.5,
+    "tau_delta": 0.0,
+    "rho": 0.15,
+    "use_pairwise": true,
+    "pairwise_threshold": 75.0,
+    "gate_mode": "pairwise_only",
+    "n_force": 26,
+    "rescues": 26,
+    "breaks": 0,
+    "break_rate": 0.0,
+    "force_precision": 1.0,
+    "rescue_recall": 0.051181102362204724,
+    "break_rate_upper_95": 0.11538461538461539,
+    "n_beneficial": 508,
+    "safe": false
+  },
+  "all_configs_count": 14080,
+  "calibration_n": 750
+}
