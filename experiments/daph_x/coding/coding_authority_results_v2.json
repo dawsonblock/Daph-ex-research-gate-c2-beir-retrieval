@@ -1,0 +1,236 @@
+{
+  "config": {
+    "n_probe": 2,
+    "rho": 0.05,
+    "tau_delta": -50.0
+  },
+  "results": [
+    {
+      "task_id": "code_003_fibonacci",
+      "disagreement": true,
+      "would_force": true,
+      "delta_u": 0.0,
+      "delta_q_hat": 0.3379058492758844,
+      "lcb": -21.173664204039028,
+      "risk_prob": 2.1903586619094234e-06,
+      "pairwise_pred": 0.4082208441338988,
+      "outcome": "TIE_FORCE",
+      "daphx_id": "code_003_fibonacci_c3",
+      "base_id": "code_003_fibonacci_c0"
+    },
+    {
+      "task_id": "code_058_critical_connections",
+      "disagreement": true,
+      "would_force": true,
+      "delta_u": 100.0,
+      "delta_q_hat": 83.26817267443883,
+      "lcb": 61.75660262112392,
+      "risk_prob": 5.215012032896891e-05,
+      "pairwise_pred": 58.645445561081,
+      "outcome": "RESCUE",
+      "daphx_id": "code_058_critical_connections_c1",
+      "base_id": "code_058_critical_connections_c0"
+    },
+    {
+      "task_id": "code_042_jump_game_ii",
+      "disagreement": true,
+      "would_force": true,
+      "delta_u": 0.0,
+      "delta_q_hat": 2.672027133225157,
+      "lcb": -18.839542920089755,
+      "risk_prob": 5.486868005488591e-06,
+      "pairwise_pred": 0.43070756415470624,
+      "outcome": "TIE_FORCE",
+      "daphx_id": "code_042_jump_game_ii_c4",
+      "base_id": "code_042_jump_game_ii_c0"
+    },
+    {
+      "task_id": "code_038_n_queens",
+      "disagreement": true,
+      "would_force": false,
+      "delta_u": -66.66666666666667,
+      "delta_q_hat": 3.3206041308821312,
+      "lcb": -18.19096592243278,
+      "risk_prob": 1.4217275284680833e-06,
+      "pairwise_pred": -0.670964141238412,
+      "outcome": "ABSTAIN",
+      "daphx_id": "code_038_n_queens_c5",
+      "base_id": "code_038_n_queens_c0"
+    },
+    {
+      "task_id": "code_057_min_window_substring_hard",
+      "disagreement": true,
+      "would_force": false,
+      "delta_u": 0.0,
+      "delta_q_hat": 2.097797626533705,
+      "lcb": -19.413772426781208,
+      "risk_prob": 8.254744965611794e-06,
+      "pairwise_pred": -0.43509880118986616,
+      "outcome": "ABSTAIN",
+      "daphx_id": "code_057_min_window_substring_hard_c3",
+      "base_id": "code_057_min_window_substring_hard_c0"
+    },
+    {
+      "task_id": "code_024_spiral_order",
+      "disagreement": true,
+      "would_force": true,
+      "delta_u": 0.0,
+      "delta_q_hat": 12.734253865979156,
+      "lcb": -8.777316187335757,
+      "risk_prob": 8.109620252159958e-06,
+      "pairwise_pred": 0.3958563416878031,
+      "outcome": "TIE_FORCE",
+      "daphx_id": "code_024_spiral_order_c5",
+      "base_id": "code_024_spiral_order_c0"
+    },
+    {
+      "task_id": "code_060_text_justify",
+      "disagreement": true,
+      "would_force": true,
+      "delta_u": 100.0,
+      "delta_q_hat": 91.03212958363133,
+      "lcb": 69.52055953031642,
+      "risk_prob": 1.282007555973703e-06,
+      "pairwise_pred": 57.389816297253184,
+      "outcome": "RESCUE",
+      "daphx_id": "code_060_text_justify_c5",
+      "base_id": "code_060_text_justify_c0"
+    },
+    {
+      "task_id": "code_011_factorial",
+      "disagreement": true,
+      "would_force": false,
+      "delta_u": 0.0,
+      "delta_q_hat": 0.7951211554652104,
+      "lcb": -20.716448897849702,
+      "risk_prob": 8.842741415559504e-07,
+      "pairwise_pred": -0.011751511988742348,
+      "outcome": "ABSTAIN",
+      "daphx_id": "code_011_factorial_c1",
+      "base_id": "code_011_factorial_c0"
+    },
+    {
+      "task_id": "code_023_rotate_matrix",
+      "disagreement": true,
+      "would_force": true,
+      "delta_u": 0.0,
+      "delta_q_hat": 11.498574000107979,
+      "lcb": -10.012996053206933,
+      "risk_prob": 5.491288849124248e-06,
+      "pairwise_pred": 0.6181857270057763,
+      "outcome": "TIE_FORCE",
+      "daphx_id": "code_023_rotate_matrix_c4",
+      "base_id": "code_023_rotate_matrix_c0"
+    },
+    {
+      "task_id": "code_019_first_unique",
+      "disagreement": true,
+      "would_force": false,
+      "delta_u": 0.0,
+      "delta_q_hat": 3.902272818455728,
+      "lcb": -17.609297234859184,
+      "risk_prob": 6.222124188642745e-06,
+      "pairwise_pred": -0.33314880752672654,
+      "outcome": "ABSTAIN",
+      "daphx_id": "code_019_first_unique_c4",
+      "base_id": "code_019_first_unique_c0"
+    },
+    {
+      "task_id": "code_062_parse_boolean_expr",
+      "disagreement": true,
+      "would_force": true,
+      "delta_u": 85.71428571428571,
+      "delta_q_hat": 72.06486410218702,
+      "lcb": 50.553294048872104,
+      "risk_prob": 0.00032323154654552005,
+      "pairwise_pred": 69.34424545015374,
+      "outcome": "RESCUE",
+      "daphx_id": "code_062_parse_boolean_expr_c4",
+      "base_id": "code_062_parse_boolean_expr_c0"
+    },
+    {
+      "task_id": "code_041_wildcard_match",
+      "disagreement": false,
+      "would_force": false,
+      "delta_u": 0.0,
+      "outcome": "AGREE"
+    },
+    {
+      "task_id": "code_021_trap_rain_water",
+      "disagreement": false,
+      "would_force": false,
+      "delta_u": 0.0,
+      "outcome": "AGREE"
+    },
+    {
+      "task_id": "code_065_cracking_safe",
+      "disagreement": true,
+      "would_force": false,
+      "delta_u": 0.0,
+      "delta_q_hat": 4.631466399253264,
+      "lcb": -16.88010365406165,
+      "risk_prob": 0.08185242327118525,
+      "pairwise_pred": 1.951719287304987,
+      "outcome": "ABSTAIN",
+      "daphx_id": "code_065_cracking_safe_c2",
+      "base_id": "code_065_cracking_safe_c0"
+    },
+    {
+      "task_id": "code_008_count_words",
+      "disagreement": true,
+      "would_force": false,
+      "delta_u": 0.0,
+      "delta_q_hat": 4.098871823485865,
+      "lcb": -17.412698229829047,
+      "risk_prob": 2.5260372351452023e-06,
+      "pairwise_pred": -0.16165521483490755,
+      "outcome": "ABSTAIN",
+      "daphx_id": "code_008_count_words_c2",
+      "base_id": "code_008_count_words_c0"
+    },
+    {
+      "task_id": "code_045_min_stack",
+      "disagreement": false,
+      "would_force": false,
+      "delta_u": 0.0,
+      "outcome": "AGREE"
+    },
+    {
+      "task_id": "code_015_valid_number",
+      "disagreement": false,
+      "would_force": false,
+      "delta_u": 0.0,
+      "outcome": "AGREE"
+    },
+    {
+      "task_id": "code_056_serialize_tree",
+      "disagreement": true,
+      "would_force": false,
+      "delta_u": 0.0,
+      "delta_q_hat": 7.8416234646651715,
+      "lcb": -13.66994658864974,
+      "risk_prob": 0.223253186748824,
+      "pairwise_pred": 2.0580148890318526,
+      "outcome": "ABSTAIN",
+      "daphx_id": "code_056_serialize_tree_c3",
+      "base_id": "code_056_serialize_tree_c0"
+    }
+  ],
+  "summary": {
+    "n_disagree": 14,
+    "n_force": 7,
+    "n_rescue": 3,
+    "n_break": 0,
+    "n_tie": 4,
+    "qmb_baseline": {
+      "n_disagree": 11,
+      "n_rescue": 1,
+      "n_break": 2
+    }
+  },
+  "conformal": {
+    "q_90": 21.511570053314912,
+    "q_50": 3.195576332566106,
+    "n_cal": 54
+  }
+}

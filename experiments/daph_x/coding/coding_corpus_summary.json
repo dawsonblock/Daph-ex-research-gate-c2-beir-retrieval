@@ -1,0 +1,194 @@
+{
+  "model": "Qwen2.5-7B-Instruct-Q4_K_M",
+  "model_hash": "2cd42281a9307345",
+  "n_tasks": 18,
+  "n_candidates_per_task": 6,
+  "total_candidates": 108,
+  "total_disagreements": 32,
+  "daphx_disagreements": 14,
+  "daphx_rescues": 5,
+  "daphx_breaks": 3,
+  "corpus_path": "experiments/daph_x/coding/coding_corpus_hard.jsonl",
+  "task_summaries": [
+    {
+      "task_id": "code_053_fraction_to_decimal",
+      "difficulty": "hard",
+      "base_utility": 99.35075212497031,
+      "best_utility": 99.76786108396482,
+      "base_rank": 5,
+      "n_disagreements": 0,
+      "daphx_picks_base": false,
+      "daphx_delta_u": -9.55659008299699
+    },
+    {
+      "task_id": "code_054_skyline_problem",
+      "difficulty": "hard",
+      "base_utility": 19.540807667013723,
+      "best_utility": 19.82817408401752,
+      "base_rank": 6,
+      "n_disagreements": 0,
+      "daphx_picks_base": true,
+      "daphx_delta_u": 0.0
+    },
+    {
+      "task_id": "code_055_median_stream",
+      "difficulty": "hard",
+      "base_utility": 79.13437387504382,
+      "best_utility": 79.85731066699373,
+      "base_rank": 5,
+      "n_disagreements": 4,
+      "daphx_picks_base": false,
+      "daphx_delta_u": 0.5432369579211809
+    },
+    {
+      "task_id": "code_056_serialize_tree",
+      "difficulty": "hard",
+      "base_utility": -0.6262052090023644,
+      "best_utility": -0.1439309159759432,
+      "base_rank": 6,
+      "n_disagreements": 0,
+      "daphx_picks_base": false,
+      "daphx_delta_u": 0.4816977509763092
+    },
+    {
+      "task_id": "code_057_min_window_substring_hard",
+      "difficulty": "hard",
+      "base_utility": 99.60728899994865,
+      "best_utility": 99.88125441700686,
+      "base_rank": 3,
+      "n_disagreements": 0,
+      "daphx_picks_base": false,
+      "daphx_delta_u": -12.535629416932352
+    },
+    {
+      "task_id": "code_058_critical_connections",
+      "difficulty": "hard",
+      "base_utility": -0.5751292500062846,
+      "best_utility": 99.58458470803453,
+      "base_rank": 6,
+      "n_disagreements": 4,
+      "daphx_picks_base": false,
+      "daphx_delta_u": 100.065177957993
+    },
+    {
+      "task_id": "code_059_reorganize_string",
+      "difficulty": "hard",
+      "base_utility": 70.7146071785745,
+      "best_utility": 85.35269175623709,
+      "base_rank": 4,
+      "n_disagreements": 2,
+      "daphx_picks_base": false,
+      "daphx_delta_u": 14.526137785728281
+    },
+    {
+      "task_id": "code_060_text_justify",
+      "difficulty": "hard",
+      "base_utility": 39.144206332974136,
+      "best_utility": 99.86055583297275,
+      "base_rank": 6,
+      "n_disagreements": 5,
+      "daphx_picks_base": true,
+      "daphx_delta_u": 0.0
+    },
+    {
+      "task_id": "code_061_stamping_sequence",
+      "difficulty": "hard",
+      "base_utility": -0.37523370899725705,
+      "best_utility": 24.8793865419575,
+      "base_rank": 6,
+      "n_disagreements": 4,
+      "daphx_picks_base": false,
+      "daphx_delta_u": 0.19962229201337323
+    },
+    {
+      "task_id": "code_062_parse_boolean_expr",
+      "difficulty": "hard",
+      "base_utility": 21.82889863921769,
+      "best_utility": 88.47034792987526,
+      "base_rank": 4,
+      "n_disagreements": 1,
+      "daphx_picks_base": false,
+      "daphx_delta_u": 0.12512612499995157
+    },
+    {
+      "task_id": "code_063_brace_expansion",
+      "difficulty": "hard",
+      "base_utility": 28.136630029425888,
+      "best_utility": 28.475617530472974,
+      "base_rank": 2,
+      "n_disagreements": 0,
+      "daphx_picks_base": false,
+      "daphx_delta_u": -13.949511618677725
+    },
+    {
+      "task_id": "code_064_confusing_numbers",
+      "difficulty": "hard",
+      "base_utility": 16.26126312468356,
+      "best_utility": 66.55082541667312,
+      "base_rank": 6,
+      "n_disagreements": 1,
+      "daphx_picks_base": false,
+      "daphx_delta_u": 0.20703962596599013
+    },
+    {
+      "task_id": "code_065_cracking_safe",
+      "difficulty": "hard",
+      "base_utility": -0.5458008330315351,
+      "best_utility": -0.09923512500245124,
+      "base_rank": 5,
+      "n_disagreements": 0,
+      "daphx_picks_base": false,
+      "daphx_delta_u": 0.4465657080290839
+    },
+    {
+      "task_id": "code_066_race_car",
+      "difficulty": "hard",
+      "base_utility": 99.62452366703656,
+      "best_utility": 99.86944937502267,
+      "base_rank": 5,
+      "n_disagreements": 0,
+      "daphx_picks_base": true,
+      "daphx_delta_u": 0.0
+    },
+    {
+      "task_id": "code_067_odd_even_jump",
+      "difficulty": "hard",
+      "base_utility": 39.585697792004794,
+      "best_utility": 79.88566208299017,
+      "base_rank": 4,
+      "n_disagreements": 3,
+      "daphx_picks_base": true,
+      "daphx_delta_u": 0.0
+    },
+    {
+      "task_id": "code_068_reach_point",
+      "difficulty": "hard",
+      "base_utility": -10.0,
+      "best_utility": 66.57052654165696,
+      "base_rank": 6,
+      "n_disagreements": 5,
+      "daphx_picks_base": false,
+      "daphx_delta_u": 76.57052654165696
+    },
+    {
+      "task_id": "code_069_chalkboard_xor",
+      "difficulty": "hard",
+      "base_utility": -0.3240284999483265,
+      "best_utility": 66.43461504169196,
+      "base_rank": 6,
+      "n_disagreements": 3,
+      "daphx_picks_base": false,
+      "daphx_delta_u": 66.75864354164028
+    },
+    {
+      "task_id": "code_070_zuma_game",
+      "difficulty": "hard",
+      "base_utility": -0.33751466701505706,
+      "best_utility": -0.13227466598618776,
+      "base_rank": 5,
+      "n_disagreements": 0,
+      "daphx_picks_base": false,
+      "daphx_delta_u": 0.17484708299161866
+    }
+  ]
+}
