@@ -1,0 +1,450 @@
+{
+  "aggregate": {
+    "base": {
+      "mean": 49.333333333333336,
+      "std": 6.463573143221773,
+      "min": 36.666666666666664,
+      "max": 53.333333333333336,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "majority_vote": {
+      "mean": 57.33333333333333,
+      "std": 8.000000000000002,
+      "min": 43.333333333333336,
+      "max": 66.66666666666667,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "max_confidence": {
+      "mean": 57.333333333333336,
+      "std": 7.423685817106696,
+      "min": 43.333333333333336,
+      "max": 63.333333333333336,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "max_verification": {
+      "mean": 59.333333333333336,
+      "std": 3.8873012632302006,
+      "min": 53.333333333333336,
+      "max": 63.333333333333336,
+      "tot_f": 150,
+      "tot_r": 15,
+      "tot_b": 0
+    },
+    "max_calibrated_v": {
+      "mean": 61.333333333333336,
+      "std": 8.589399151150086,
+      "min": 46.666666666666664,
+      "max": 70.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "gate_a_v": {
+      "mean": 61.333333333333336,
+      "std": 8.589399151150086,
+      "min": 46.666666666666664,
+      "max": 70.0,
+      "tot_f": 43,
+      "tot_r": 19,
+      "tot_b": 1
+    },
+    "verification_override": {
+      "mean": 62.0,
+      "std": 7.483314773547884,
+      "min": 50.0,
+      "max": 70.0,
+      "tot_f": 1,
+      "tot_r": 1,
+      "tot_b": 0
+    },
+    "daphx_r8": {
+      "mean": 61.333333333333336,
+      "std": 8.589399151150086,
+      "min": 46.666666666666664,
+      "max": 70.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    }
+  },
+  "per_seed": {
+    "42": {
+      "base": {
+        "mean_utility": 53.333333333333336,
+        "success_rate": 0.5333333333333333,
+        "improvements": 0,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 66.66666666666667,
+        "success_rate": 0.6666666666666666,
+        "improvements": 4,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 63.333333333333336,
+        "success_rate": 0.6333333333333333,
+        "improvements": 4,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_verification": {
+        "mean_utility": 63.333333333333336,
+        "success_rate": 0.6333333333333333,
+        "improvements": 3,
+        "regressions": 0,
+        "n_force": 30,
+        "rescues": 3,
+        "breaks": 0
+      },
+      "max_calibrated_v": {
+        "mean_utility": 66.66666666666667,
+        "success_rate": 0.6666666666666666,
+        "improvements": 5,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "gate_a_v": {
+        "mean_utility": 66.66666666666667,
+        "success_rate": 0.6666666666666666,
+        "improvements": 5,
+        "regressions": 1,
+        "n_force": 9,
+        "rescues": 5,
+        "breaks": 1
+      },
+      "verification_override": {
+        "mean_utility": 66.66666666666667,
+        "success_rate": 0.6666666666666666,
+        "improvements": 5,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "daphx_r8": {
+        "mean_utility": 66.66666666666667,
+        "success_rate": 0.6666666666666666,
+        "improvements": 5,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      }
+    },
+    "123": {
+      "base": {
+        "mean_utility": 36.666666666666664,
+        "success_rate": 0.36666666666666664,
+        "improvements": 0,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 43.333333333333336,
+        "success_rate": 0.43333333333333335,
+        "improvements": 2,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 43.333333333333336,
+        "success_rate": 0.43333333333333335,
+        "improvements": 3,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_verification": {
+        "mean_utility": 53.333333333333336,
+        "success_rate": 0.5333333333333333,
+        "improvements": 5,
+        "regressions": 0,
+        "n_force": 30,
+        "rescues": 5,
+        "breaks": 0
+      },
+      "max_calibrated_v": {
+        "mean_utility": 46.666666666666664,
+        "success_rate": 0.4666666666666667,
+        "improvements": 3,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "gate_a_v": {
+        "mean_utility": 46.666666666666664,
+        "success_rate": 0.4666666666666667,
+        "improvements": 3,
+        "regressions": 0,
+        "n_force": 12,
+        "rescues": 3,
+        "breaks": 0
+      },
+      "verification_override": {
+        "mean_utility": 50.0,
+        "success_rate": 0.5,
+        "improvements": 4,
+        "regressions": 0,
+        "n_force": 1,
+        "rescues": 1,
+        "breaks": 0
+      },
+      "daphx_r8": {
+        "mean_utility": 46.666666666666664,
+        "success_rate": 0.4666666666666667,
+        "improvements": 3,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      }
+    },
+    "7": {
+      "base": {
+        "mean_utility": 53.333333333333336,
+        "success_rate": 0.5333333333333333,
+        "improvements": 0,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 56.666666666666664,
+        "success_rate": 0.5666666666666667,
+        "improvements": 1,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 56.666666666666664,
+        "success_rate": 0.5666666666666667,
+        "improvements": 2,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_verification": {
+        "mean_utility": 56.666666666666664,
+        "success_rate": 0.5666666666666667,
+        "improvements": 1,
+        "regressions": 0,
+        "n_force": 30,
+        "rescues": 1,
+        "breaks": 0
+      },
+      "max_calibrated_v": {
+        "mean_utility": 56.666666666666664,
+        "success_rate": 0.5666666666666667,
+        "improvements": 2,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "gate_a_v": {
+        "mean_utility": 56.666666666666664,
+        "success_rate": 0.5666666666666667,
+        "improvements": 1,
+        "regressions": 0,
+        "n_force": 1,
+        "rescues": 1,
+        "breaks": 0
+      },
+      "verification_override": {
+        "mean_utility": 56.666666666666664,
+        "success_rate": 0.5666666666666667,
+        "improvements": 2,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "daphx_r8": {
+        "mean_utility": 56.666666666666664,
+        "success_rate": 0.5666666666666667,
+        "improvements": 2,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      }
+    },
+    "99": {
+      "base": {
+        "mean_utility": 50.0,
+        "success_rate": 0.5,
+        "improvements": 0,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 56.666666666666664,
+        "success_rate": 0.5666666666666667,
+        "improvements": 2,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "improvements": 3,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_verification": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "improvements": 3,
+        "regressions": 0,
+        "n_force": 30,
+        "rescues": 3,
+        "breaks": 0
+      },
+      "max_calibrated_v": {
+        "mean_utility": 66.66666666666667,
+        "success_rate": 0.6666666666666666,
+        "improvements": 5,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "gate_a_v": {
+        "mean_utility": 66.66666666666667,
+        "success_rate": 0.6666666666666666,
+        "improvements": 5,
+        "regressions": 0,
+        "n_force": 13,
+        "rescues": 5,
+        "breaks": 0
+      },
+      "verification_override": {
+        "mean_utility": 66.66666666666667,
+        "success_rate": 0.6666666666666666,
+        "improvements": 5,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "daphx_r8": {
+        "mean_utility": 66.66666666666667,
+        "success_rate": 0.6666666666666666,
+        "improvements": 5,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      }
+    },
+    "2024": {
+      "base": {
+        "mean_utility": 53.333333333333336,
+        "success_rate": 0.5333333333333333,
+        "improvements": 0,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 63.333333333333336,
+        "success_rate": 0.6333333333333333,
+        "improvements": 3,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 63.333333333333336,
+        "success_rate": 0.6333333333333333,
+        "improvements": 4,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_verification": {
+        "mean_utility": 63.333333333333336,
+        "success_rate": 0.6333333333333333,
+        "improvements": 3,
+        "regressions": 0,
+        "n_force": 30,
+        "rescues": 3,
+        "breaks": 0
+      },
+      "max_calibrated_v": {
+        "mean_utility": 70.0,
+        "success_rate": 0.7,
+        "improvements": 5,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "gate_a_v": {
+        "mean_utility": 70.0,
+        "success_rate": 0.7,
+        "improvements": 5,
+        "regressions": 0,
+        "n_force": 8,
+        "rescues": 5,
+        "breaks": 0
+      },
+      "verification_override": {
+        "mean_utility": 70.0,
+        "success_rate": 0.7,
+        "improvements": 5,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "daphx_r8": {
+        "mean_utility": 70.0,
+        "success_rate": 0.7,
+        "improvements": 5,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      }
+    }
+  },
+  "verification_correlation": 0.4583518198424721,
+  "n_features": 71
+}
