@@ -1,0 +1,56 @@
+{
+  "config": {
+    "tau_r": 0.3,
+    "tau_b": 0.1,
+    "seed": 2024,
+    "n_dev": 36,
+    "n_cal": 9,
+    "n_confirmation": 15
+  },
+  "summary": {
+    "base": {
+      "mean_utility": 40.0,
+      "task_success": 6,
+      "task_success_rate": 0.4,
+      "improvements_vs_base": 0,
+      "regressions_vs_base": 0
+    },
+    "majority_vote": {
+      "mean_utility": 53.333333333333336,
+      "task_success": 8,
+      "task_success_rate": 0.5333333333333333,
+      "improvements_vs_base": 2,
+      "regressions_vs_base": 0
+    },
+    "max_confidence": {
+      "mean_utility": 46.666666666666664,
+      "task_success": 7,
+      "task_success_rate": 0.4666666666666667,
+      "improvements_vs_base": 1,
+      "regressions_vs_base": 0
+    },
+    "max_calibrated": {
+      "mean_utility": 53.333333333333336,
+      "task_success": 8,
+      "task_success_rate": 0.5333333333333333,
+      "improvements_vs_base": 2,
+      "regressions_vs_base": 0
+    },
+    "daphx": {
+      "mean_utility": 40.0,
+      "task_success": 6,
+      "task_success_rate": 0.4,
+      "improvements_vs_base": 0,
+      "regressions_vs_base": 0,
+      "n_force": 0,
+      "rescues": 0,
+      "breaks": 0,
+      "rescue_recall": 0.0,
+      "n_rescue_opportunities": 4
+    }
+  },
+  "calibration": {
+    "brier_score": 0.1620370370370371,
+    "cal_accuracy": 0.75
+  }
+}
