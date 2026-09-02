@@ -42,6 +42,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 from daph_x.coding.tasks import get_all_tasks, get_task, CodingTask
+from daph_x.coding.misleading_probe_tasks import get_misleading_probe_tasks
 from daph_x.coding.code_executor import execute_solution
 from daph_x.coding.model_interface import CodingModelInterface
 from daph_x.coding.daphx_ranker import extract_code_features, compute_q_mb
@@ -195,12 +196,15 @@ def main():
 
     R1_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Load tasks — use only hard tasks (code_050+) for R1
+    # Load tasks — use hard tasks + misleading-probe tasks for R1
     all_tasks = get_all_tasks()
     hard_tasks = [t for t in all_tasks if int(t.task_id.split("_")[1]) >= 50]
+    misleading = get_misleading_probe_tasks()
+    # Combine: hard tasks first, then misleading-probe tasks
+    combined = hard_tasks + misleading
     if args.difficulty:
-        hard_tasks = [t for t in hard_tasks if t.difficulty == args.difficulty]
-    tasks = hard_tasks[args.start_idx:args.start_idx + args.n_tasks]
+        combined = [t for t in combined if t.difficulty == args.difficulty]
+    tasks = combined[args.start_idx:args.start_idx + args.n_tasks]
 
     print(f"R1 Data Collection")
     print(f"  Tasks: {len(tasks)} (from {len(hard_tasks)} available hard tasks)")

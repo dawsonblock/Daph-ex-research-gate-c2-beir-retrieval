@@ -2168,4 +2168,9 @@ def get_task(task_id: str) -> CodingTask | None:
     for t in TASKS:
         if t.task_id == task_id:
             return t
+    # Also check misleading-probe tasks
+    from daph_x.coding.misleading_probe_tasks import get_misleading_probe_tasks
+    for t in get_misleading_probe_tasks():
+        if t.task_id == task_id:
+            return t
     return None

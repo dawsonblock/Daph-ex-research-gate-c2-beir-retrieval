@@ -1,0 +1,61 @@
+{
+  "config": {
+    "n_probe_tests": 2,
+    "rho": 0.05,
+    "tau_delta": -10.0,
+    "seed": 42,
+    "n_dev": 48,
+    "n_cal": 12,
+    "n_confirmation": 21
+  },
+  "summary": {
+    "base": {
+      "mean_utility": 68.27492744021086,
+      "std_utility": 41.33957245520549,
+      "task_success": 10,
+      "task_success_rate": 0.47619047619047616,
+      "mean_probe_cost": 0.0,
+      "improvements_vs_base": 0,
+      "regressions_vs_base": 0
+    },
+    "probe_baseline": {
+      "mean_utility": 80.67407977339658,
+      "std_utility": 34.448343687925636,
+      "task_success": 13,
+      "task_success_rate": 0.6190476190476191,
+      "mean_probe_cost": 8.0,
+      "improvements_vs_base": 4,
+      "regressions_vs_base": 0
+    },
+    "simple_reranker": {
+      "mean_utility": 80.67407977339658,
+      "std_utility": 34.448343687925636,
+      "task_success": 13,
+      "task_success_rate": 0.6190476190476191,
+      "mean_probe_cost": 8.0,
+      "improvements_vs_base": 4,
+      "regressions_vs_base": 0
+    },
+    "daphx": {
+      "mean_utility": 80.67688639244466,
+      "std_utility": 34.449902731540604,
+      "task_success": 13,
+      "task_success_rate": 0.6190476190476191,
+      "mean_probe_cost": 8.0,
+      "improvements_vs_base": 4,
+      "regressions_vs_base": 0,
+      "n_disagreements": 13,
+      "n_force": 1,
+      "rescues_vs_probe": 0,
+      "breaks_vs_probe": 0,
+      "rescue_recall_vs_probe": 0.0,
+      "n_probe_suboptimal": 1
+    }
+  },
+  "conformal": {
+    "q_90": 29.99818897768811,
+    "q_80": 16.974903428175708,
+    "q_50": 7.700922216053343,
+    "n_cal": 48
+  }
+}
