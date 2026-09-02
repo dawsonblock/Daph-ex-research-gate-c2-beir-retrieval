@@ -1,0 +1,50 @@
+{
+  "config": {
+    "rho": 0.05,
+    "tau_delta": 0.0,
+    "seed": 42,
+    "n_dev": 36,
+    "n_cal": 9,
+    "n_confirmation": 15
+  },
+  "summary": {
+    "base": {
+      "mean_utility": 66.66666666666667,
+      "task_success": 10,
+      "task_success_rate": 0.6666666666666666,
+      "improvements_vs_base": 0,
+      "regressions_vs_base": 0
+    },
+    "majority_vote": {
+      "mean_utility": 73.33333333333333,
+      "task_success": 11,
+      "task_success_rate": 0.7333333333333333,
+      "improvements_vs_base": 1,
+      "regressions_vs_base": 0
+    },
+    "self_confidence": {
+      "mean_utility": 73.33333333333333,
+      "task_success": 11,
+      "task_success_rate": 0.7333333333333333,
+      "improvements_vs_base": 1,
+      "regressions_vs_base": 0
+    },
+    "daphx": {
+      "mean_utility": 66.66666666666667,
+      "task_success": 10,
+      "task_success_rate": 0.6666666666666666,
+      "improvements_vs_base": 0,
+      "regressions_vs_base": 0,
+      "n_disagreements": 11,
+      "n_force": 0,
+      "rescues": 0,
+      "breaks": 0,
+      "rescue_recall": 0.0,
+      "n_rescue_opportunities": 2
+    }
+  },
+  "conformal": {
+    "q_90": 97.49130853118545,
+    "n_cal": 36
+  }
+}

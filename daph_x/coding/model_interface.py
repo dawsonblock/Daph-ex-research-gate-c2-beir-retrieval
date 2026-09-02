@@ -78,6 +78,31 @@ class CodingModelInterface:
             print("Model loaded.")
         return self._llm
 
+    def generate_raw(
+        self,
+        prompt: str,
+        temperature: float = 0.0,
+        max_tokens: int = 300,
+        seed: int | None = None,
+        system_prompt: str = "You are a helpful assistant. Solve problems step by step.",
+    ) -> str:
+        """Generate a raw text response (not code-specific)."""
+        try:
+            llm = self._get_llm()
+            result = llm.create_chat_completion(
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": prompt},
+                ],
+                max_tokens=max_tokens,
+                temperature=temperature,
+                top_p=0.95,
+                seed=seed if seed is not None else self.seed,
+            )
+            return result["choices"][0]["message"]["content"] or ""
+        except Exception as e:
+            return f"Error: {e}"
+
     def generate_candidates(
         self,
         task: CodingTask,
