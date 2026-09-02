@@ -1,0 +1,69 @@
+{
+  "config": {
+    "tau_r": 0.5,
+    "tau_b": 0.3,
+    "seed": 2024,
+    "n_dev": 72,
+    "n_cal": 18,
+    "n_confirmation": 30,
+    "n_train_pairs": 328
+  },
+  "summary": {
+    "base": {
+      "mean_utility": 53.333333333333336,
+      "task_success": 16,
+      "task_success_rate": 0.5333333333333333,
+      "improvements_vs_base": 0,
+      "regressions_vs_base": 0,
+      "challenge_correct": 1,
+      "challenge_n": 13,
+      "challenge_rate": 0.07692307692307693
+    },
+    "majority_vote": {
+      "mean_utility": 63.333333333333336,
+      "task_success": 19,
+      "task_success_rate": 0.6333333333333333,
+      "improvements_vs_base": 3,
+      "regressions_vs_base": 0,
+      "challenge_correct": 2,
+      "challenge_n": 13,
+      "challenge_rate": 0.15384615384615385
+    },
+    "max_confidence": {
+      "mean_utility": 63.333333333333336,
+      "task_success": 19,
+      "task_success_rate": 0.6333333333333333,
+      "improvements_vs_base": 4,
+      "regressions_vs_base": 1,
+      "challenge_correct": 2,
+      "challenge_n": 13,
+      "challenge_rate": 0.15384615384615385
+    },
+    "max_calibrated": {
+      "mean_utility": 66.66666666666667,
+      "task_success": 20,
+      "task_success_rate": 0.6666666666666666,
+      "improvements_vs_base": 4,
+      "regressions_vs_base": 0,
+      "challenge_correct": 3,
+      "challenge_n": 13,
+      "challenge_rate": 0.23076923076923078
+    },
+    "daphx": {
+      "mean_utility": 63.333333333333336,
+      "task_success": 19,
+      "task_success_rate": 0.6333333333333333,
+      "improvements_vs_base": 3,
+      "regressions_vs_base": 0,
+      "n_force": 3,
+      "rescues": 3,
+      "breaks": 0,
+      "rescue_recall": 0.6,
+      "n_rescue_opportunities": 5,
+      "challenge_correct": 2,
+      "challenge_n": 13,
+      "challenge_rate": 0.15384615384615385
+    }
+  },
+  "challenge_set_size": 13
+}
