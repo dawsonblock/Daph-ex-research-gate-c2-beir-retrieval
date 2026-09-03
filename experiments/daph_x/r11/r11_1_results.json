@@ -1,0 +1,1320 @@
+{
+  "aggregate": {
+    "maxcal_2": {
+      "mean_acc": 0.5920000000000001,
+      "std_acc": 0.06144916598294887,
+      "mean_k": 2.0,
+      "j01": 0.5920000000000001,
+      "j02": 0.5920000000000001
+    },
+    "maxcal_4": {
+      "mean_acc": 0.6320000000000001,
+      "std_acc": 0.0448998886412873,
+      "mean_k": 4.0,
+      "j01": 0.6120000000000001,
+      "j02": 0.5920000000000001
+    },
+    "maxcal_6": {
+      "mean_acc": 0.66,
+      "std_acc": 0.053665631459994964,
+      "mean_k": 6.0,
+      "j01": 0.62,
+      "j02": 0.5800000000000001
+    },
+    "maxcal_8": {
+      "mean_acc": 0.6839999999999999,
+      "std_acc": 0.07200000000000001,
+      "mean_k": 8.0,
+      "j01": 0.6239999999999999,
+      "j02": 0.564
+    },
+    "maxcal_10": {
+      "mean_acc": 0.6839999999999999,
+      "std_acc": 0.07200000000000001,
+      "mean_k": 10.0,
+      "j01": 0.6039999999999999,
+      "j02": 0.5239999999999999
+    },
+    "maxcal_12": {
+      "mean_acc": 0.6839999999999999,
+      "std_acc": 0.07200000000000001,
+      "mean_k": 12.0,
+      "j01": 0.584,
+      "j02": 0.48399999999999993
+    },
+    "daphx_voi": {
+      "mean_acc": 0.632,
+      "std_acc": 0.06523802572120035,
+      "mean_k": 2.8240000000000003,
+      "j01": 0.62376,
+      "j02": 0.61552
+    },
+    "daphx_voi_mink6": {
+      "mean_acc": 0.676,
+      "std_acc": 0.06740919818541088,
+      "mean_k": 6.304,
+      "j01": 0.6329600000000001,
+      "j02": 0.58992
+    },
+    "daphx_voi_lowcost": {
+      "mean_acc": 0.664,
+      "std_acc": 0.06740919818541088,
+      "mean_k": 3.832,
+      "j01": 0.64568,
+      "j02": 0.62736
+    },
+    "daphx_thresh_005": {
+      "mean_acc": 0.644,
+      "std_acc": 0.06858571279792898,
+      "mean_k": 3.3839999999999995,
+      "j01": 0.63016,
+      "j02": 0.61632
+    },
+    "daphx_thresh_010": {
+      "mean_acc": 0.628,
+      "std_acc": 0.06013318551349163,
+      "mean_k": 2.4799999999999995,
+      "j01": 0.6232,
+      "j02": 0.6184000000000001
+    },
+    "daphx_thresh_020": {
+      "mean_acc": 0.624,
+      "std_acc": 0.06374950980203689,
+      "mean_k": 2.368,
+      "j01": 0.62032,
+      "j02": 0.61664
+    },
+    "daphx_thresh_005_mink6": {
+      "mean_acc": 0.68,
+      "std_acc": 0.06811754546370562,
+      "mean_k": 6.4959999999999996,
+      "j01": 0.63504,
+      "j02": 0.59008
+    },
+    "daphx_hybrid_p70": {
+      "mean_acc": 0.68,
+      "std_acc": 0.06811754546370562,
+      "mean_k": 6.984,
+      "j01": 0.63016,
+      "j02": 0.5803200000000001
+    },
+    "daphx_hybrid_p80": {
+      "mean_acc": 0.6839999999999999,
+      "std_acc": 0.07200000000000001,
+      "mean_k": 7.4319999999999995,
+      "j01": 0.6296799999999999,
+      "j02": 0.57536
+    },
+    "daphx_oracle": {
+      "mean_acc": 0.6320000000000001,
+      "std_acc": 0.0448998886412873,
+      "mean_k": 2.08,
+      "j01": 0.6312000000000001,
+      "j02": 0.6304000000000001
+    },
+    "random_avg8": {
+      "mean_acc": 0.6320000000000001,
+      "std_acc": 0.06399999999999997,
+      "mean_k": 4.896,
+      "j01": 0.6030400000000001,
+      "j02": 0.5740800000000001
+    },
+    "random_avg10": {
+      "mean_acc": 0.656,
+      "std_acc": 0.07735631842325486,
+      "mean_k": 8.024000000000001,
+      "j01": 0.5957600000000001,
+      "j02": 0.53552
+    },
+    "uncertainty_p50": {
+      "mean_acc": 0.6759999999999999,
+      "std_acc": 0.07310266752998827,
+      "mean_k": 4.832,
+      "j01": 0.6476799999999999,
+      "j02": 0.6193599999999999
+    },
+    "uncertainty_p70": {
+      "mean_acc": 0.68,
+      "std_acc": 0.06811754546370562,
+      "mean_k": 5.839999999999999,
+      "j01": 0.6416000000000001,
+      "j02": 0.6032000000000001
+    },
+    "entropy_1.0": {
+      "mean_acc": 0.5920000000000001,
+      "std_acc": 0.06144916598294887,
+      "mean_k": 2.0,
+      "j01": 0.5920000000000001,
+      "j02": 0.5920000000000001
+    },
+    "entropy_0.5": {
+      "mean_acc": 0.632,
+      "std_acc": 0.06764613810115104,
+      "mean_k": 4.4719999999999995,
+      "j01": 0.60728,
+      "j02": 0.58256
+    }
+  },
+  "per_seed": {
+    "42": {
+      "summary": {
+        "maxcal_2": {
+          "mean_utility": 64.0,
+          "success_rate": 0.64,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "maxcal_4": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 4.0,
+          "n": 50
+        },
+        "maxcal_6": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 6.0,
+          "n": 50
+        },
+        "maxcal_8": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 8.0,
+          "n": 50
+        },
+        "maxcal_10": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 10.0,
+          "n": 50
+        },
+        "maxcal_12": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 12.0,
+          "n": 50
+        },
+        "oracle_2": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "oracle_4": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 4.0,
+          "n": 50
+        },
+        "oracle_6": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 6.0,
+          "n": 50
+        },
+        "oracle_8": {
+          "mean_utility": 82.0,
+          "success_rate": 0.82,
+          "avg_k": 8.0,
+          "n": 50
+        },
+        "oracle_10": {
+          "mean_utility": 82.0,
+          "success_rate": 0.82,
+          "avg_k": 10.0,
+          "n": 50
+        },
+        "oracle_12": {
+          "mean_utility": 82.0,
+          "success_rate": 0.82,
+          "avg_k": 12.0,
+          "n": 50
+        },
+        "daphx_voi": {
+          "mean_utility": 72.0,
+          "success_rate": 0.72,
+          "avg_k": 3.92,
+          "n": 50
+        },
+        "daphx_voi_mink6": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 6.88,
+          "n": 50
+        },
+        "daphx_voi_lowcost": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 4.0,
+          "n": 50
+        },
+        "daphx_thresh_005": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 4.0,
+          "n": 50
+        },
+        "daphx_thresh_010": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 2.44,
+          "n": 50
+        },
+        "daphx_thresh_020": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 2.44,
+          "n": 50
+        },
+        "daphx_thresh_005_mink6": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 6.88,
+          "n": 50
+        },
+        "daphx_hybrid_p70": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 6.16,
+          "n": 50
+        },
+        "daphx_hybrid_p80": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 6.56,
+          "n": 50
+        },
+        "daphx_oracle": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 2.04,
+          "n": 50
+        },
+        "random_avg8": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 5.0,
+          "n": 50
+        },
+        "random_avg10": {
+          "mean_utility": 72.0,
+          "success_rate": 0.72,
+          "avg_k": 7.8,
+          "n": 50
+        },
+        "uncertainty_p50": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 4.84,
+          "n": 50
+        },
+        "uncertainty_p70": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 4.84,
+          "n": 50
+        },
+        "entropy_1.0": {
+          "mean_utility": 64.0,
+          "success_rate": 0.64,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "entropy_0.5": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.48,
+          "n": 50
+        }
+      },
+      "oracle_curve": {
+        "1": {
+          "n": 50,
+          "oracle": 0.62,
+          "maxcal": 0.62,
+          "majority": 0.62,
+          "base": 0.62,
+          "headroom": 0.0
+        },
+        "2": {
+          "n": 50,
+          "oracle": 0.66,
+          "maxcal": 0.64,
+          "majority": 0.62,
+          "base": 0.62,
+          "headroom": 0.020000000000000018
+        },
+        "4": {
+          "n": 50,
+          "oracle": 0.7,
+          "maxcal": 0.66,
+          "majority": 0.68,
+          "base": 0.62,
+          "headroom": 0.039999999999999925
+        },
+        "6": {
+          "n": 50,
+          "oracle": 0.74,
+          "maxcal": 0.68,
+          "majority": 0.66,
+          "base": 0.62,
+          "headroom": 0.05999999999999994
+        },
+        "8": {
+          "n": 50,
+          "oracle": 0.82,
+          "maxcal": 0.76,
+          "majority": 0.68,
+          "base": 0.62,
+          "headroom": 0.05999999999999994
+        },
+        "10": {
+          "n": 50,
+          "oracle": 0.82,
+          "maxcal": 0.76,
+          "majority": 0.68,
+          "base": 0.62,
+          "headroom": 0.05999999999999994
+        },
+        "12": {
+          "n": 50,
+          "oracle": 0.82,
+          "maxcal": 0.76,
+          "majority": 0.66,
+          "base": 0.62,
+          "headroom": 0.05999999999999994
+        }
+      },
+      "n_train_rescues": 21,
+      "n_train_breaks": 0
+    },
+    "123": {
+      "summary": {
+        "maxcal_2": {
+          "mean_utility": 50.0,
+          "success_rate": 0.5,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "maxcal_4": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 4.0,
+          "n": 50
+        },
+        "maxcal_6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.0,
+          "n": 50
+        },
+        "maxcal_8": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 8.0,
+          "n": 50
+        },
+        "maxcal_10": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 10.0,
+          "n": 50
+        },
+        "maxcal_12": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 12.0,
+          "n": 50
+        },
+        "oracle_2": {
+          "mean_utility": 50.0,
+          "success_rate": 0.5,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "oracle_4": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 4.0,
+          "n": 50
+        },
+        "oracle_6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.0,
+          "n": 50
+        },
+        "oracle_8": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 8.0,
+          "n": 50
+        },
+        "oracle_10": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 10.0,
+          "n": 50
+        },
+        "oracle_12": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 12.0,
+          "n": 50
+        },
+        "daphx_voi": {
+          "mean_utility": 54.0,
+          "success_rate": 0.54,
+          "avg_k": 3.32,
+          "n": 50
+        },
+        "daphx_voi_mink6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.04,
+          "n": 50
+        },
+        "daphx_voi_lowcost": {
+          "mean_utility": 58.0,
+          "success_rate": 0.58,
+          "avg_k": 4.04,
+          "n": 50
+        },
+        "daphx_thresh_005": {
+          "mean_utility": 54.0,
+          "success_rate": 0.54,
+          "avg_k": 3.36,
+          "n": 50
+        },
+        "daphx_thresh_010": {
+          "mean_utility": 54.0,
+          "success_rate": 0.54,
+          "avg_k": 3.08,
+          "n": 50
+        },
+        "daphx_thresh_020": {
+          "mean_utility": 54.0,
+          "success_rate": 0.54,
+          "avg_k": 2.88,
+          "n": 50
+        },
+        "daphx_thresh_005_mink6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.08,
+          "n": 50
+        },
+        "daphx_hybrid_p70": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 7.08,
+          "n": 50
+        },
+        "daphx_hybrid_p80": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 7.08,
+          "n": 50
+        },
+        "daphx_oracle": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 2.12,
+          "n": 50
+        },
+        "random_avg8": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 4.68,
+          "n": 50
+        },
+        "random_avg10": {
+          "mean_utility": 58.0,
+          "success_rate": 0.58,
+          "avg_k": 7.8,
+          "n": 50
+        },
+        "uncertainty_p50": {
+          "mean_utility": 58.0,
+          "success_rate": 0.58,
+          "avg_k": 4.72,
+          "n": 50
+        },
+        "uncertainty_p70": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.0,
+          "n": 50
+        },
+        "entropy_1.0": {
+          "mean_utility": 50.0,
+          "success_rate": 0.5,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "entropy_0.5": {
+          "mean_utility": 54.0,
+          "success_rate": 0.54,
+          "avg_k": 4.08,
+          "n": 50
+        }
+      },
+      "oracle_curve": {
+        "1": {
+          "n": 50,
+          "oracle": 0.46,
+          "maxcal": 0.46,
+          "majority": 0.46,
+          "base": 0.46,
+          "headroom": 0.0
+        },
+        "2": {
+          "n": 50,
+          "oracle": 0.5,
+          "maxcal": 0.5,
+          "majority": 0.46,
+          "base": 0.46,
+          "headroom": 0.0
+        },
+        "4": {
+          "n": 50,
+          "oracle": 0.56,
+          "maxcal": 0.56,
+          "majority": 0.5,
+          "base": 0.46,
+          "headroom": 0.0
+        },
+        "6": {
+          "n": 50,
+          "oracle": 0.6,
+          "maxcal": 0.6,
+          "majority": 0.5,
+          "base": 0.46,
+          "headroom": 0.0
+        },
+        "8": {
+          "n": 50,
+          "oracle": 0.74,
+          "maxcal": 0.6,
+          "majority": 0.5,
+          "base": 0.46,
+          "headroom": 0.14
+        },
+        "10": {
+          "n": 50,
+          "oracle": 0.76,
+          "maxcal": 0.6,
+          "majority": 0.6,
+          "base": 0.46,
+          "headroom": 0.16000000000000003
+        },
+        "12": {
+          "n": 50,
+          "oracle": 0.76,
+          "maxcal": 0.6,
+          "majority": 0.6,
+          "base": 0.46,
+          "headroom": 0.16000000000000003
+        }
+      },
+      "n_train_rescues": 15,
+      "n_train_breaks": 0
+    },
+    "7": {
+      "summary": {
+        "maxcal_2": {
+          "mean_utility": 54.0,
+          "success_rate": 0.54,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "maxcal_4": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 4.0,
+          "n": 50
+        },
+        "maxcal_6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.0,
+          "n": 50
+        },
+        "maxcal_8": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 8.0,
+          "n": 50
+        },
+        "maxcal_10": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 10.0,
+          "n": 50
+        },
+        "maxcal_12": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 12.0,
+          "n": 50
+        },
+        "oracle_2": {
+          "mean_utility": 54.0,
+          "success_rate": 0.54,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "oracle_4": {
+          "mean_utility": 62.0,
+          "success_rate": 0.62,
+          "avg_k": 4.0,
+          "n": 50
+        },
+        "oracle_6": {
+          "mean_utility": 64.0,
+          "success_rate": 0.64,
+          "avg_k": 6.0,
+          "n": 50
+        },
+        "oracle_8": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 8.0,
+          "n": 50
+        },
+        "oracle_10": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 10.0,
+          "n": 50
+        },
+        "oracle_12": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 12.0,
+          "n": 50
+        },
+        "daphx_voi": {
+          "mean_utility": 58.0,
+          "success_rate": 0.58,
+          "avg_k": 2.28,
+          "n": 50
+        },
+        "daphx_voi_mink6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.04,
+          "n": 50
+        },
+        "daphx_voi_lowcost": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 3.28,
+          "n": 50
+        },
+        "daphx_thresh_005": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 3.04,
+          "n": 50
+        },
+        "daphx_thresh_010": {
+          "mean_utility": 58.0,
+          "success_rate": 0.58,
+          "avg_k": 2.28,
+          "n": 50
+        },
+        "daphx_thresh_020": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 2.12,
+          "n": 50
+        },
+        "daphx_thresh_005_mink6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.36,
+          "n": 50
+        },
+        "daphx_hybrid_p70": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 7.84,
+          "n": 50
+        },
+        "daphx_hybrid_p80": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 8.8,
+          "n": 50
+        },
+        "daphx_oracle": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 2.12,
+          "n": 50
+        },
+        "random_avg8": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 5.52,
+          "n": 50
+        },
+        "random_avg10": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 8.96,
+          "n": 50
+        },
+        "uncertainty_p50": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.88,
+          "n": 50
+        },
+        "uncertainty_p70": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.88,
+          "n": 50
+        },
+        "entropy_1.0": {
+          "mean_utility": 54.0,
+          "success_rate": 0.54,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "entropy_0.5": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 4.6,
+          "n": 50
+        }
+      },
+      "oracle_curve": {
+        "1": {
+          "n": 50,
+          "oracle": 0.52,
+          "maxcal": 0.52,
+          "majority": 0.52,
+          "base": 0.52,
+          "headroom": 0.0
+        },
+        "2": {
+          "n": 50,
+          "oracle": 0.54,
+          "maxcal": 0.54,
+          "majority": 0.52,
+          "base": 0.52,
+          "headroom": 0.0
+        },
+        "4": {
+          "n": 50,
+          "oracle": 0.62,
+          "maxcal": 0.6,
+          "majority": 0.56,
+          "base": 0.52,
+          "headroom": 0.020000000000000018
+        },
+        "6": {
+          "n": 50,
+          "oracle": 0.64,
+          "maxcal": 0.6,
+          "majority": 0.56,
+          "base": 0.52,
+          "headroom": 0.040000000000000036
+        },
+        "8": {
+          "n": 50,
+          "oracle": 0.7,
+          "maxcal": 0.6,
+          "majority": 0.52,
+          "base": 0.52,
+          "headroom": 0.09999999999999998
+        },
+        "10": {
+          "n": 50,
+          "oracle": 0.7,
+          "maxcal": 0.6,
+          "majority": 0.54,
+          "base": 0.52,
+          "headroom": 0.09999999999999998
+        },
+        "12": {
+          "n": 50,
+          "oracle": 0.7,
+          "maxcal": 0.6,
+          "majority": 0.5,
+          "base": 0.52,
+          "headroom": 0.09999999999999998
+        }
+      },
+      "n_train_rescues": 20,
+      "n_train_breaks": 0
+    },
+    "99": {
+      "summary": {
+        "maxcal_2": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "maxcal_4": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.0,
+          "n": 50
+        },
+        "maxcal_6": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 6.0,
+          "n": 50
+        },
+        "maxcal_8": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 8.0,
+          "n": 50
+        },
+        "maxcal_10": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 10.0,
+          "n": 50
+        },
+        "maxcal_12": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 12.0,
+          "n": 50
+        },
+        "oracle_2": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "oracle_4": {
+          "mean_utility": 72.0,
+          "success_rate": 0.72,
+          "avg_k": 4.0,
+          "n": 50
+        },
+        "oracle_6": {
+          "mean_utility": 78.0,
+          "success_rate": 0.78,
+          "avg_k": 6.0,
+          "n": 50
+        },
+        "oracle_8": {
+          "mean_utility": 82.0,
+          "success_rate": 0.82,
+          "avg_k": 8.0,
+          "n": 50
+        },
+        "oracle_10": {
+          "mean_utility": 82.0,
+          "success_rate": 0.82,
+          "avg_k": 10.0,
+          "n": 50
+        },
+        "oracle_12": {
+          "mean_utility": 82.0,
+          "success_rate": 0.82,
+          "avg_k": 12.0,
+          "n": 50
+        },
+        "daphx_voi": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 2.56,
+          "n": 50
+        },
+        "daphx_voi_mink6": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 6.56,
+          "n": 50
+        },
+        "daphx_voi_lowcost": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 3.88,
+          "n": 50
+        },
+        "daphx_thresh_005": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 2.56,
+          "n": 50
+        },
+        "daphx_thresh_010": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 2.56,
+          "n": 50
+        },
+        "daphx_thresh_020": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 2.36,
+          "n": 50
+        },
+        "daphx_thresh_005_mink6": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 6.56,
+          "n": 50
+        },
+        "daphx_hybrid_p70": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 6.24,
+          "n": 50
+        },
+        "daphx_hybrid_p80": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 6.24,
+          "n": 50
+        },
+        "daphx_oracle": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 2.04,
+          "n": 50
+        },
+        "random_avg8": {
+          "mean_utility": 72.0,
+          "success_rate": 0.72,
+          "avg_k": 4.48,
+          "n": 50
+        },
+        "random_avg10": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 7.4,
+          "n": 50
+        },
+        "uncertainty_p50": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 4.12,
+          "n": 50
+        },
+        "uncertainty_p70": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 4.88,
+          "n": 50
+        },
+        "entropy_1.0": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "entropy_0.5": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 3.84,
+          "n": 50
+        }
+      },
+      "oracle_curve": {
+        "1": {
+          "n": 50,
+          "oracle": 0.56,
+          "maxcal": 0.56,
+          "majority": 0.56,
+          "base": 0.56,
+          "headroom": 0.0
+        },
+        "2": {
+          "n": 50,
+          "oracle": 0.68,
+          "maxcal": 0.66,
+          "majority": 0.56,
+          "base": 0.56,
+          "headroom": 0.020000000000000018
+        },
+        "4": {
+          "n": 50,
+          "oracle": 0.72,
+          "maxcal": 0.68,
+          "majority": 0.68,
+          "base": 0.56,
+          "headroom": 0.039999999999999925
+        },
+        "6": {
+          "n": 50,
+          "oracle": 0.78,
+          "maxcal": 0.74,
+          "majority": 0.66,
+          "base": 0.56,
+          "headroom": 0.040000000000000036
+        },
+        "8": {
+          "n": 50,
+          "oracle": 0.82,
+          "maxcal": 0.76,
+          "majority": 0.64,
+          "base": 0.56,
+          "headroom": 0.05999999999999994
+        },
+        "10": {
+          "n": 50,
+          "oracle": 0.82,
+          "maxcal": 0.76,
+          "majority": 0.68,
+          "base": 0.56,
+          "headroom": 0.05999999999999994
+        },
+        "12": {
+          "n": 50,
+          "oracle": 0.82,
+          "maxcal": 0.76,
+          "majority": 0.64,
+          "base": 0.56,
+          "headroom": 0.05999999999999994
+        }
+      },
+      "n_train_rescues": 20,
+      "n_train_breaks": 0
+    },
+    "2024": {
+      "summary": {
+        "maxcal_2": {
+          "mean_utility": 62.0,
+          "success_rate": 0.62,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "maxcal_4": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 4.0,
+          "n": 50
+        },
+        "maxcal_6": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 6.0,
+          "n": 50
+        },
+        "maxcal_8": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 8.0,
+          "n": 50
+        },
+        "maxcal_10": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 10.0,
+          "n": 50
+        },
+        "maxcal_12": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 12.0,
+          "n": 50
+        },
+        "oracle_2": {
+          "mean_utility": 64.0,
+          "success_rate": 0.64,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "oracle_4": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 4.0,
+          "n": 50
+        },
+        "oracle_6": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 6.0,
+          "n": 50
+        },
+        "oracle_8": {
+          "mean_utility": 78.0,
+          "success_rate": 0.78,
+          "avg_k": 8.0,
+          "n": 50
+        },
+        "oracle_10": {
+          "mean_utility": 78.0,
+          "success_rate": 0.78,
+          "avg_k": 10.0,
+          "n": 50
+        },
+        "oracle_12": {
+          "mean_utility": 78.0,
+          "success_rate": 0.78,
+          "avg_k": 12.0,
+          "n": 50
+        },
+        "daphx_voi": {
+          "mean_utility": 64.0,
+          "success_rate": 0.64,
+          "avg_k": 2.04,
+          "n": 50
+        },
+        "daphx_voi_mink6": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 6.0,
+          "n": 50
+        },
+        "daphx_voi_lowcost": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 3.96,
+          "n": 50
+        },
+        "daphx_thresh_005": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 3.96,
+          "n": 50
+        },
+        "daphx_thresh_010": {
+          "mean_utility": 64.0,
+          "success_rate": 0.64,
+          "avg_k": 2.04,
+          "n": 50
+        },
+        "daphx_thresh_020": {
+          "mean_utility": 64.0,
+          "success_rate": 0.64,
+          "avg_k": 2.04,
+          "n": 50
+        },
+        "daphx_thresh_005_mink6": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 6.6,
+          "n": 50
+        },
+        "daphx_hybrid_p70": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 7.6,
+          "n": 50
+        },
+        "daphx_hybrid_p80": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 8.48,
+          "n": 50
+        },
+        "daphx_oracle": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 2.08,
+          "n": 50
+        },
+        "random_avg8": {
+          "mean_utility": 64.0,
+          "success_rate": 0.64,
+          "avg_k": 4.8,
+          "n": 50
+        },
+        "random_avg10": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 8.16,
+          "n": 50
+        },
+        "uncertainty_p50": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 3.6,
+          "n": 50
+        },
+        "uncertainty_p70": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 6.6,
+          "n": 50
+        },
+        "entropy_1.0": {
+          "mean_utility": 62.0,
+          "success_rate": 0.62,
+          "avg_k": 2.0,
+          "n": 50
+        },
+        "entropy_0.5": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 5.36,
+          "n": 50
+        }
+      },
+      "oracle_curve": {
+        "1": {
+          "n": 50,
+          "oracle": 0.54,
+          "maxcal": 0.54,
+          "majority": 0.54,
+          "base": 0.54,
+          "headroom": 0.0
+        },
+        "2": {
+          "n": 50,
+          "oracle": 0.64,
+          "maxcal": 0.62,
+          "majority": 0.54,
+          "base": 0.54,
+          "headroom": 0.020000000000000018
+        },
+        "4": {
+          "n": 50,
+          "oracle": 0.7,
+          "maxcal": 0.66,
+          "majority": 0.64,
+          "base": 0.54,
+          "headroom": 0.039999999999999925
+        },
+        "6": {
+          "n": 50,
+          "oracle": 0.74,
+          "maxcal": 0.68,
+          "majority": 0.66,
+          "base": 0.54,
+          "headroom": 0.05999999999999994
+        },
+        "8": {
+          "n": 50,
+          "oracle": 0.78,
+          "maxcal": 0.7,
+          "majority": 0.6,
+          "base": 0.54,
+          "headroom": 0.08000000000000007
+        },
+        "10": {
+          "n": 50,
+          "oracle": 0.78,
+          "maxcal": 0.7,
+          "majority": 0.62,
+          "base": 0.54,
+          "headroom": 0.08000000000000007
+        },
+        "12": {
+          "n": 50,
+          "oracle": 0.78,
+          "maxcal": 0.7,
+          "majority": 0.58,
+          "base": 0.54,
+          "headroom": 0.08000000000000007
+        }
+      },
+      "n_train_rescues": 22,
+      "n_train_breaks": 0
+    }
+  }
+}
