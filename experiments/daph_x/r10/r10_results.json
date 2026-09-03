@@ -1,0 +1,589 @@
+{
+  "aggregate": {
+    "base": {
+      "mean": 54.0,
+      "std": 5.215361924162119,
+      "min": 46.0,
+      "max": 62.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "majority_vote": {
+      "mean": 59.6,
+      "std": 6.499230723708768,
+      "min": 50.0,
+      "max": 66.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "max_confidence": {
+      "mean": 62.0,
+      "std": 6.81175454637056,
+      "min": 50.0,
+      "max": 70.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "maxcal": {
+      "mean": 62.8,
+      "std": 8.158431221748456,
+      "min": 54.0,
+      "max": 76.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "r10_lam3": {
+      "mean": 62.8,
+      "std": 8.158431221748456,
+      "min": 54.0,
+      "max": 76.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "r10_lam5": {
+      "mean": 62.8,
+      "std": 8.158431221748456,
+      "min": 54.0,
+      "max": 76.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "r10_lam10": {
+      "mean": 62.8,
+      "std": 8.158431221748456,
+      "min": 54.0,
+      "max": 76.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "r10_thresh_r50_b10": {
+      "mean": 62.8,
+      "std": 8.158431221748456,
+      "min": 54.0,
+      "max": 76.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "r10_thresh_r30_b05": {
+      "mean": 62.8,
+      "std": 8.158431221748456,
+      "min": 54.0,
+      "max": 76.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "r10_verify_gate": {
+      "mean": 62.8,
+      "std": 8.158431221748456,
+      "min": 54.0,
+      "max": 76.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "r10_majority_gate": {
+      "mean": 61.6,
+      "std": 5.986651818838306,
+      "min": 54.0,
+      "max": 70.0,
+      "tot_f": 40,
+      "tot_r": 2,
+      "tot_b": 5
+    },
+    "r10_combined_gate": {
+      "mean": 61.2,
+      "std": 6.523802572120037,
+      "min": 52.0,
+      "max": 70.0,
+      "tot_f": 66,
+      "tot_r": 2,
+      "tot_b": 6
+    },
+    "r10_lowconf_gate": {
+      "mean": 62.4,
+      "std": 7.735631842325486,
+      "min": 54.0,
+      "max": 76.0,
+      "tot_f": 70,
+      "tot_r": 1,
+      "tot_b": 2
+    }
+  },
+  "per_seed": {
+    "42": {
+      "base": {
+        "mean_utility": 62.0,
+        "success_rate": 0.62,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 66.0,
+        "success_rate": 0.66,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 64.0,
+        "success_rate": 0.64,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "maxcal": {
+        "mean_utility": 68.0,
+        "success_rate": 0.68,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam3": {
+        "mean_utility": 68.0,
+        "success_rate": 0.68,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam5": {
+        "mean_utility": 68.0,
+        "success_rate": 0.68,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam10": {
+        "mean_utility": 68.0,
+        "success_rate": 0.68,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_thresh_r50_b10": {
+        "mean_utility": 68.0,
+        "success_rate": 0.68,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_thresh_r30_b05": {
+        "mean_utility": 68.0,
+        "success_rate": 0.68,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_verify_gate": {
+        "mean_utility": 68.0,
+        "success_rate": 0.68,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_majority_gate": {
+        "mean_utility": 66.0,
+        "success_rate": 0.66,
+        "n_force": 8,
+        "rescues": 0,
+        "breaks": 1
+      },
+      "r10_combined_gate": {
+        "mean_utility": 66.0,
+        "success_rate": 0.66,
+        "n_force": 13,
+        "rescues": 0,
+        "breaks": 1
+      },
+      "r10_lowconf_gate": {
+        "mean_utility": 64.0,
+        "success_rate": 0.64,
+        "n_force": 14,
+        "rescues": 0,
+        "breaks": 2
+      }
+    },
+    "123": {
+      "base": {
+        "mean_utility": 46.0,
+        "success_rate": 0.46,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 50.0,
+        "success_rate": 0.5,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 50.0,
+        "success_rate": 0.5,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "maxcal": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam3": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam5": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam10": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_thresh_r50_b10": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_thresh_r30_b05": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_verify_gate": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_majority_gate": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "n_force": 9,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_combined_gate": {
+        "mean_utility": 52.0,
+        "success_rate": 0.52,
+        "n_force": 15,
+        "rescues": 0,
+        "breaks": 1
+      },
+      "r10_lowconf_gate": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "n_force": 17,
+        "rescues": 0,
+        "breaks": 0
+      }
+    },
+    "7": {
+      "base": {
+        "mean_utility": 52.0,
+        "success_rate": 0.52,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "maxcal": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam3": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam5": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam10": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_thresh_r50_b10": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_thresh_r30_b05": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_verify_gate": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_majority_gate": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "n_force": 8,
+        "rescues": 1,
+        "breaks": 1
+      },
+      "r10_combined_gate": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "n_force": 16,
+        "rescues": 1,
+        "breaks": 1
+      },
+      "r10_lowconf_gate": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "n_force": 16,
+        "rescues": 0,
+        "breaks": 0
+      }
+    },
+    "99": {
+      "base": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 66.0,
+        "success_rate": 0.66,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 70.0,
+        "success_rate": 0.7,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "maxcal": {
+        "mean_utility": 76.0,
+        "success_rate": 0.76,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam3": {
+        "mean_utility": 76.0,
+        "success_rate": 0.76,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam5": {
+        "mean_utility": 76.0,
+        "success_rate": 0.76,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam10": {
+        "mean_utility": 76.0,
+        "success_rate": 0.76,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_thresh_r50_b10": {
+        "mean_utility": 76.0,
+        "success_rate": 0.76,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_thresh_r30_b05": {
+        "mean_utility": 76.0,
+        "success_rate": 0.76,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_verify_gate": {
+        "mean_utility": 76.0,
+        "success_rate": 0.76,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_majority_gate": {
+        "mean_utility": 70.0,
+        "success_rate": 0.7,
+        "n_force": 10,
+        "rescues": 0,
+        "breaks": 3
+      },
+      "r10_combined_gate": {
+        "mean_utility": 70.0,
+        "success_rate": 0.7,
+        "n_force": 13,
+        "rescues": 0,
+        "breaks": 3
+      },
+      "r10_lowconf_gate": {
+        "mean_utility": 76.0,
+        "success_rate": 0.76,
+        "n_force": 10,
+        "rescues": 0,
+        "breaks": 0
+      }
+    },
+    "2024": {
+      "base": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 62.0,
+        "success_rate": 0.62,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 66.0,
+        "success_rate": 0.66,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "maxcal": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam3": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam5": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_lam10": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_thresh_r50_b10": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_thresh_r30_b05": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_verify_gate": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "r10_majority_gate": {
+        "mean_utility": 62.0,
+        "success_rate": 0.62,
+        "n_force": 5,
+        "rescues": 1,
+        "breaks": 0
+      },
+      "r10_combined_gate": {
+        "mean_utility": 62.0,
+        "success_rate": 0.62,
+        "n_force": 9,
+        "rescues": 1,
+        "breaks": 0
+      },
+      "r10_lowconf_gate": {
+        "mean_utility": 62.0,
+        "success_rate": 0.62,
+        "n_force": 13,
+        "rescues": 1,
+        "breaks": 0
+      }
+    }
+  },
+  "n_disagreement_features": 30
+}
