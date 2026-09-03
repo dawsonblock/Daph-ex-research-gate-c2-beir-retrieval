@@ -1,0 +1,506 @@
+{
+  "aggregate": {
+    "base": {
+      "mean": 54.0,
+      "std": 5.215361924162119,
+      "min": 46.0,
+      "max": 62.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "majority_vote": {
+      "mean": 59.6,
+      "std": 6.499230723708768,
+      "min": 50.0,
+      "max": 66.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "max_confidence": {
+      "mean": 62.0,
+      "std": 6.81175454637056,
+      "min": 50.0,
+      "max": 70.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "max_verification": {
+      "mean": 54.0,
+      "std": 6.06630035524124,
+      "min": 46.0,
+      "max": 62.0,
+      "tot_f": 250,
+      "tot_r": 21,
+      "tot_b": 21
+    },
+    "max_pairwise": {
+      "mean": 46.8,
+      "std": 6.273754856543249,
+      "min": 36.0,
+      "max": 54.0,
+      "tot_f": 250,
+      "tot_r": 6,
+      "tot_b": 24
+    },
+    "max_calibrated_r9": {
+      "mean": 62.8,
+      "std": 8.158431221748456,
+      "min": 54.0,
+      "max": 76.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    },
+    "gate_a_r9": {
+      "mean": 62.4,
+      "std": 7.939773296511683,
+      "min": 54.0,
+      "max": 76.0,
+      "tot_f": 74,
+      "tot_r": 27,
+      "tot_b": 6
+    },
+    "pairwise_consensus": {
+      "mean": 62.8,
+      "std": 8.158431221748456,
+      "min": 54.0,
+      "max": 76.0,
+      "tot_f": 85,
+      "tot_r": 28,
+      "tot_b": 6
+    },
+    "daphx_r9": {
+      "mean": 62.8,
+      "std": 8.158431221748456,
+      "min": 54.0,
+      "max": 76.0,
+      "tot_f": 0,
+      "tot_r": 0,
+      "tot_b": 0
+    }
+  },
+  "per_seed": {
+    "42": {
+      "base": {
+        "mean_utility": 62.0,
+        "success_rate": 0.62,
+        "improvements": 0,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 66.0,
+        "success_rate": 0.66,
+        "improvements": 3,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 64.0,
+        "success_rate": 0.64,
+        "improvements": 3,
+        "regressions": 2,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_verification": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "improvements": 3,
+        "regressions": 4,
+        "n_force": 50,
+        "rescues": 3,
+        "breaks": 4
+      },
+      "max_pairwise": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "improvements": 1,
+        "regressions": 5,
+        "n_force": 50,
+        "rescues": 1,
+        "breaks": 5
+      },
+      "max_calibrated_r9": {
+        "mean_utility": 68.0,
+        "success_rate": 0.68,
+        "improvements": 4,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "gate_a_r9": {
+        "mean_utility": 66.0,
+        "success_rate": 0.66,
+        "improvements": 3,
+        "regressions": 1,
+        "n_force": 10,
+        "rescues": 3,
+        "breaks": 1
+      },
+      "pairwise_consensus": {
+        "mean_utility": 68.0,
+        "success_rate": 0.68,
+        "improvements": 4,
+        "regressions": 1,
+        "n_force": 18,
+        "rescues": 4,
+        "breaks": 1
+      },
+      "daphx_r9": {
+        "mean_utility": 68.0,
+        "success_rate": 0.68,
+        "improvements": 4,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      }
+    },
+    "123": {
+      "base": {
+        "mean_utility": 46.0,
+        "success_rate": 0.46,
+        "improvements": 0,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 50.0,
+        "success_rate": 0.5,
+        "improvements": 2,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 50.0,
+        "success_rate": 0.5,
+        "improvements": 3,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_verification": {
+        "mean_utility": 50.0,
+        "success_rate": 0.5,
+        "improvements": 4,
+        "regressions": 2,
+        "n_force": 50,
+        "rescues": 4,
+        "breaks": 2
+      },
+      "max_pairwise": {
+        "mean_utility": 36.0,
+        "success_rate": 0.36,
+        "improvements": 1,
+        "regressions": 6,
+        "n_force": 50,
+        "rescues": 1,
+        "breaks": 6
+      },
+      "max_calibrated_r9": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "improvements": 4,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "gate_a_r9": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "improvements": 4,
+        "regressions": 0,
+        "n_force": 14,
+        "rescues": 4,
+        "breaks": 0
+      },
+      "pairwise_consensus": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "improvements": 4,
+        "regressions": 0,
+        "n_force": 15,
+        "rescues": 4,
+        "breaks": 0
+      },
+      "daphx_r9": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "improvements": 4,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      }
+    },
+    "7": {
+      "base": {
+        "mean_utility": 52.0,
+        "success_rate": 0.52,
+        "improvements": 0,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "improvements": 2,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "improvements": 4,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_verification": {
+        "mean_utility": 52.0,
+        "success_rate": 0.52,
+        "improvements": 3,
+        "regressions": 3,
+        "n_force": 50,
+        "rescues": 3,
+        "breaks": 3
+      },
+      "max_pairwise": {
+        "mean_utility": 46.0,
+        "success_rate": 0.46,
+        "improvements": 1,
+        "regressions": 4,
+        "n_force": 50,
+        "rescues": 1,
+        "breaks": 4
+      },
+      "max_calibrated_r9": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "improvements": 4,
+        "regressions": 2,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "gate_a_r9": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "improvements": 4,
+        "regressions": 2,
+        "n_force": 20,
+        "rescues": 4,
+        "breaks": 2
+      },
+      "pairwise_consensus": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "improvements": 4,
+        "regressions": 2,
+        "n_force": 20,
+        "rescues": 4,
+        "breaks": 2
+      },
+      "daphx_r9": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "improvements": 4,
+        "regressions": 2,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      }
+    },
+    "99": {
+      "base": {
+        "mean_utility": 56.0,
+        "success_rate": 0.56,
+        "improvements": 0,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 66.0,
+        "success_rate": 0.66,
+        "improvements": 6,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 70.0,
+        "success_rate": 0.7,
+        "improvements": 8,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_verification": {
+        "mean_utility": 62.0,
+        "success_rate": 0.62,
+        "improvements": 8,
+        "regressions": 5,
+        "n_force": 50,
+        "rescues": 8,
+        "breaks": 5
+      },
+      "max_pairwise": {
+        "mean_utility": 52.0,
+        "success_rate": 0.52,
+        "improvements": 3,
+        "regressions": 5,
+        "n_force": 50,
+        "rescues": 3,
+        "breaks": 5
+      },
+      "max_calibrated_r9": {
+        "mean_utility": 76.0,
+        "success_rate": 0.76,
+        "improvements": 11,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "gate_a_r9": {
+        "mean_utility": 76.0,
+        "success_rate": 0.76,
+        "improvements": 11,
+        "regressions": 1,
+        "n_force": 16,
+        "rescues": 11,
+        "breaks": 1
+      },
+      "pairwise_consensus": {
+        "mean_utility": 76.0,
+        "success_rate": 0.76,
+        "improvements": 11,
+        "regressions": 1,
+        "n_force": 17,
+        "rescues": 11,
+        "breaks": 1
+      },
+      "daphx_r9": {
+        "mean_utility": 76.0,
+        "success_rate": 0.76,
+        "improvements": 11,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      }
+    },
+    "2024": {
+      "base": {
+        "mean_utility": 54.0,
+        "success_rate": 0.54,
+        "improvements": 0,
+        "regressions": 0,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "majority_vote": {
+        "mean_utility": 62.0,
+        "success_rate": 0.62,
+        "improvements": 5,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_confidence": {
+        "mean_utility": 66.0,
+        "success_rate": 0.66,
+        "improvements": 7,
+        "regressions": 1,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "max_verification": {
+        "mean_utility": 46.0,
+        "success_rate": 0.46,
+        "improvements": 3,
+        "regressions": 7,
+        "n_force": 50,
+        "rescues": 3,
+        "breaks": 7
+      },
+      "max_pairwise": {
+        "mean_utility": 46.0,
+        "success_rate": 0.46,
+        "improvements": 0,
+        "regressions": 4,
+        "n_force": 50,
+        "rescues": 0,
+        "breaks": 4
+      },
+      "max_calibrated_r9": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "improvements": 5,
+        "regressions": 2,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      },
+      "gate_a_r9": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "improvements": 5,
+        "regressions": 2,
+        "n_force": 14,
+        "rescues": 5,
+        "breaks": 2
+      },
+      "pairwise_consensus": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "improvements": 5,
+        "regressions": 2,
+        "n_force": 15,
+        "rescues": 5,
+        "breaks": 2
+      },
+      "daphx_r9": {
+        "mean_utility": 60.0,
+        "success_rate": 0.6,
+        "improvements": 5,
+        "regressions": 2,
+        "n_force": 0,
+        "rescues": 0,
+        "breaks": 0
+      }
+    }
+  },
+  "verification_correlation": 0.30146331521937797,
+  "pairwise_verification_correlation": 0.1851931855211513,
+  "confidence_pairwise_correlation": 0.0657209068738065,
+  "n_features": 80
+}
