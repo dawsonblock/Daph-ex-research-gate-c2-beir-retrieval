@@ -1,0 +1,42 @@
+{
+  "results": {
+    "1": {
+      "n": 200,
+      "oracle": 0.515,
+      "maxcal": 0.515,
+      "majority": 0.515,
+      "base": 0.515,
+      "headroom_oracle_vs_maxcal": 0.0,
+      "headroom_oracle_vs_base": 0.0
+    },
+    "2": {
+      "n": 200,
+      "oracle": 0.595,
+      "maxcal": 0.56,
+      "majority": 0.515,
+      "base": 0.515,
+      "headroom_oracle_vs_maxcal": 0.03499999999999992,
+      "headroom_oracle_vs_base": 0.07999999999999996
+    },
+    "4": {
+      "n": 200,
+      "oracle": 0.67,
+      "maxcal": 0.59,
+      "majority": 0.585,
+      "base": 0.515,
+      "headroom_oracle_vs_maxcal": 0.08000000000000007,
+      "headroom_oracle_vs_base": 0.15500000000000003
+    },
+    "6": {
+      "n": 200,
+      "oracle": 0.7,
+      "maxcal": 0.61,
+      "majority": 0.59,
+      "base": 0.515,
+      "headroom_oracle_vs_maxcal": 0.08999999999999997,
+      "headroom_oracle_vs_base": 0.18499999999999994
+    }
+  },
+  "max_k": 32,
+  "n_tasks": 200
+}

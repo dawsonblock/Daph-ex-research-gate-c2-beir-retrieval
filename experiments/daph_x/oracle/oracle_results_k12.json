@@ -1,0 +1,60 @@
+{
+  "results": {
+    "1": {
+      "n": 50,
+      "oracle": 0.58,
+      "maxcal": 0.58,
+      "majority": 0.58,
+      "base": 0.58,
+      "headroom_oracle_vs_maxcal": 0.0,
+      "headroom_oracle_vs_base": 0.0
+    },
+    "2": {
+      "n": 50,
+      "oracle": 0.68,
+      "maxcal": 0.62,
+      "majority": 0.58,
+      "base": 0.58,
+      "headroom_oracle_vs_maxcal": 0.06000000000000005,
+      "headroom_oracle_vs_base": 0.10000000000000009
+    },
+    "4": {
+      "n": 50,
+      "oracle": 0.74,
+      "maxcal": 0.62,
+      "majority": 0.68,
+      "base": 0.58,
+      "headroom_oracle_vs_maxcal": 0.12,
+      "headroom_oracle_vs_base": 0.16000000000000003
+    },
+    "6": {
+      "n": 50,
+      "oracle": 0.74,
+      "maxcal": 0.6,
+      "majority": 0.68,
+      "base": 0.58,
+      "headroom_oracle_vs_maxcal": 0.14,
+      "headroom_oracle_vs_base": 0.16000000000000003
+    },
+    "8": {
+      "n": 50,
+      "oracle": 0.76,
+      "maxcal": 0.64,
+      "majority": 0.68,
+      "base": 0.58,
+      "headroom_oracle_vs_maxcal": 0.12,
+      "headroom_oracle_vs_base": 0.18000000000000005
+    },
+    "12": {
+      "n": 50,
+      "oracle": 0.78,
+      "maxcal": 0.64,
+      "majority": 0.68,
+      "base": 0.58,
+      "headroom_oracle_vs_maxcal": 0.14,
+      "headroom_oracle_vs_base": 0.20000000000000007
+    }
+  },
+  "max_k": 12,
+  "n_tasks": 50
+}

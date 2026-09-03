@@ -1,0 +1,376 @@
+{
+  "aggregate": {
+    "maxcal_6": {
+      "mean": 70.76923076923076,
+      "std": 3.076923076923077,
+      "avg_k": 6.0,
+      "avg_extra": 0.0
+    },
+    "maxcal_8": {
+      "mean": 69.23076923076923,
+      "std": 4.865042554105197,
+      "avg_k": 8.0,
+      "avg_extra": 0.0
+    },
+    "maxcal_12": {
+      "mean": 69.23076923076923,
+      "std": 4.865042554105197,
+      "avg_k": 12.0,
+      "avg_extra": 0.0
+    },
+    "oracle_6": {
+      "mean": 78.46153846153845,
+      "std": 8.970695222838925,
+      "avg_k": 6.0,
+      "avg_extra": 0.0
+    },
+    "oracle_8": {
+      "mean": 78.46153846153845,
+      "std": 8.970695222838925,
+      "avg_k": 8.0,
+      "avg_extra": 0.0
+    },
+    "oracle_12": {
+      "mean": 81.53846153846155,
+      "std": 7.844645405527363,
+      "avg_k": 12.0,
+      "avg_extra": 0.0
+    },
+    "daphx_r11_p20": {
+      "mean": 70.76923076923076,
+      "std": 3.076923076923077,
+      "avg_k": 6.0,
+      "avg_extra": 0.0
+    },
+    "daphx_r11_p30": {
+      "mean": 70.76923076923076,
+      "std": 3.076923076923077,
+      "avg_k": 6.0,
+      "avg_extra": 0.0
+    },
+    "daphx_r11_p50": {
+      "mean": 70.76923076923076,
+      "std": 3.076923076923077,
+      "avg_k": 6.0,
+      "avg_extra": 0.0
+    },
+    "daphx_oracle": {
+      "mean": 70.76923076923076,
+      "std": 3.076923076923077,
+      "avg_k": 7.753846153846153,
+      "avg_extra": 3.8
+    }
+  },
+  "per_seed": {
+    "42": {
+      "maxcal_6": {
+        "mean_utility": 76.92307692307692,
+        "success_rate": 0.7692307692307693,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "maxcal_8": {
+        "mean_utility": 76.92307692307692,
+        "success_rate": 0.7692307692307693,
+        "avg_candidates": 8.0,
+        "n_generated_extra": 0
+      },
+      "maxcal_12": {
+        "mean_utility": 76.92307692307692,
+        "success_rate": 0.7692307692307693,
+        "avg_candidates": 12.0,
+        "n_generated_extra": 0
+      },
+      "oracle_6": {
+        "mean_utility": 84.61538461538461,
+        "success_rate": 0.8461538461538461,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "oracle_8": {
+        "mean_utility": 84.61538461538461,
+        "success_rate": 0.8461538461538461,
+        "avg_candidates": 8.0,
+        "n_generated_extra": 0
+      },
+      "oracle_12": {
+        "mean_utility": 84.61538461538461,
+        "success_rate": 0.8461538461538461,
+        "avg_candidates": 12.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p20": {
+        "mean_utility": 76.92307692307692,
+        "success_rate": 0.7692307692307693,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p30": {
+        "mean_utility": 76.92307692307692,
+        "success_rate": 0.7692307692307693,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p50": {
+        "mean_utility": 76.92307692307692,
+        "success_rate": 0.7692307692307693,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_oracle": {
+        "mean_utility": 76.92307692307692,
+        "success_rate": 0.7692307692307693,
+        "avg_candidates": 7.384615384615385,
+        "n_generated_extra": 3
+      }
+    },
+    "123": {
+      "maxcal_6": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "maxcal_8": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 8.0,
+        "n_generated_extra": 0
+      },
+      "maxcal_12": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 12.0,
+        "n_generated_extra": 0
+      },
+      "oracle_6": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "oracle_8": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 8.0,
+        "n_generated_extra": 0
+      },
+      "oracle_12": {
+        "mean_utility": 76.92307692307692,
+        "success_rate": 0.7692307692307693,
+        "avg_candidates": 12.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p20": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p30": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p50": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_oracle": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 7.846153846153846,
+        "n_generated_extra": 4
+      }
+    },
+    "7": {
+      "maxcal_6": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "maxcal_8": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 8.0,
+        "n_generated_extra": 0
+      },
+      "maxcal_12": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 12.0,
+        "n_generated_extra": 0
+      },
+      "oracle_6": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "oracle_8": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 8.0,
+        "n_generated_extra": 0
+      },
+      "oracle_12": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 12.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p20": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p30": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p50": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_oracle": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 7.846153846153846,
+        "n_generated_extra": 4
+      }
+    },
+    "99": {
+      "maxcal_6": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "maxcal_8": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 8.0,
+        "n_generated_extra": 0
+      },
+      "maxcal_12": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 12.0,
+        "n_generated_extra": 0
+      },
+      "oracle_6": {
+        "mean_utility": 92.3076923076923,
+        "success_rate": 0.9230769230769231,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "oracle_8": {
+        "mean_utility": 92.3076923076923,
+        "success_rate": 0.9230769230769231,
+        "avg_candidates": 8.0,
+        "n_generated_extra": 0
+      },
+      "oracle_12": {
+        "mean_utility": 92.3076923076923,
+        "success_rate": 0.9230769230769231,
+        "avg_candidates": 12.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p20": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p30": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p50": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_oracle": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 7.846153846153846,
+        "n_generated_extra": 4
+      }
+    },
+    "2024": {
+      "maxcal_6": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "maxcal_8": {
+        "mean_utility": 61.53846153846154,
+        "success_rate": 0.6153846153846154,
+        "avg_candidates": 8.0,
+        "n_generated_extra": 0
+      },
+      "maxcal_12": {
+        "mean_utility": 61.53846153846154,
+        "success_rate": 0.6153846153846154,
+        "avg_candidates": 12.0,
+        "n_generated_extra": 0
+      },
+      "oracle_6": {
+        "mean_utility": 76.92307692307692,
+        "success_rate": 0.7692307692307693,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "oracle_8": {
+        "mean_utility": 76.92307692307692,
+        "success_rate": 0.7692307692307693,
+        "avg_candidates": 8.0,
+        "n_generated_extra": 0
+      },
+      "oracle_12": {
+        "mean_utility": 84.61538461538461,
+        "success_rate": 0.8461538461538461,
+        "avg_candidates": 12.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p20": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p30": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_r11_p50": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 6.0,
+        "n_generated_extra": 0
+      },
+      "daphx_oracle": {
+        "mean_utility": 69.23076923076923,
+        "success_rate": 0.6923076923076923,
+        "avg_candidates": 7.846153846153846,
+        "n_generated_extra": 4
+      }
+    }
+  }
+}

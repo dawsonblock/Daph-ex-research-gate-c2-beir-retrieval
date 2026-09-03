@@ -2068,22 +2068,31 @@ def get_reasoning_task(task_id: str) -> ReasoningTask | None:
 
 
 def check_answer(response: str, correct_answer: str, answer_type: str) -> bool:
-    """Check if a response matches the correct answer."""
+    """Check if a response matches the correct answer.
+
+    Numeric answers are normalized so that "2" and "2.0" are equivalent,
+    "16" and "16.0" are equivalent, etc. This prevents format-only
+    mismatches from being counted as wrong answers.
+    """
     response = response.strip().lower()
     correct = correct_answer.strip().lower()
 
     if answer_type == "int":
         try:
-            return int(response) == int(correct)
+            return int(float(response)) == int(float(correct))
         except ValueError:
             return False
     elif answer_type == "float":
         try:
-            return abs(float(response) - float(correct)) < 0.01
+            return abs(float(response) - float(correct)) < 0.001
         except ValueError:
             return False
     else:
-        return response == correct
+        # Also try numeric equivalence for string answers that are numeric
+        try:
+            return abs(float(response) - float(correct)) < 0.001
+        except (ValueError, TypeError):
+            return response == correct
 
 
 if __name__ == "__main__":
