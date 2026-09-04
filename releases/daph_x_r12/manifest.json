@@ -1,0 +1,161 @@
+{
+  "release": "daph_x_r12",
+  "release_date": "2026-09-04T21:40:43.629789Z",
+  "git_commit": "d67869bd4fc3983c08d78bac2d7891d71f551b76",
+  "git_branch": "daph-x",
+  "description": "R12: Decision-aligned adaptive compute on 500-task \u00d7 12-candidate corpus. Two-stage pipeline (raw generation + enrichment). \u0394Q value model with trajectory features. Matches MaxCal@8 accuracy with 33% less compute.",
+  "config": {
+    "base_model": "Qwen2.5-7B-Instruct Q4_K_M",
+    "model_path": "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "n_tasks": 500,
+    "n_candidates": 12,
+    "max_tokens": 256,
+    "temperature_schedule": [
+      0.0,
+      0.2,
+      0.3,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9,
+      1.0,
+      1.0,
+      1.2,
+      1.2
+    ],
+    "verification_rounds": 1,
+    "verification_version": "v2",
+    "split": {
+      "train": 300,
+      "cal": 75,
+      "dev": 25,
+      "test": 100
+    },
+    "seeds": [
+      42,
+      123,
+      7,
+      99,
+      2024
+    ],
+    "lambda_costs": [
+      0.1,
+      0.2
+    ],
+    "checkpoints": [
+      2,
+      4,
+      6,
+      8,
+      10
+    ],
+    "cost_per_step": 0.2,
+    "evaluator_version": "r12_v1"
+  },
+  "key_results": {
+    "base_correct": 0.52,
+    "oracle_at_8": 0.726,
+    "oracle_at_12": 0.752,
+    "rescue_available": 0.232,
+    "counterfactual_rescue_rate": 0.029,
+    "counterfactual_break_rate": 0.001,
+    "counterfactual_waste_rate": 0.97,
+    "best_r12_policy": "r12_dq_t0.01",
+    "best_r12_accuracy": 0.684,
+    "best_r12_avg_k": 5.4,
+    "best_r12_j_0_1": 0.65,
+    "maxcal_8_accuracy": 0.676,
+    "maxcal_8_k": 8.0,
+    "uncertainty_p50_accuracy": 0.682,
+    "uncertainty_p50_k": 5.0,
+    "oracle_lookahead6_accuracy": 0.684,
+    "oracle_lookahead6_k": 2.3,
+    "oracle_regret_accuracy": 0.0,
+    "oracle_regret_compute": 3.1,
+    "rescue_auroc_compact": 0.932,
+    "rescue_auroc_r12": 0.898
+  },
+  "artifacts": {
+    "raw_candidates": {
+      "path": "experiments/daph_x/r12/r12_raw_candidates.jsonl",
+      "sha256": "87be0dcb1276de8fa9bbd6615d8cd36e66f9d647703436d566bfd41a62ffc529",
+      "size_bytes": 5541417
+    },
+    "enriched_corpus": {
+      "path": "experiments/daph_x/r12/r12_enriched_corpus.jsonl",
+      "sha256": "0bff1052e75c70c49348ae35bf95754699d4ae419b718ee9af6aa480f1162bee",
+      "size_bytes": 18120518
+    },
+    "counterfactuals_full": {
+      "path": "experiments/daph_x/r12/r12_counterfactuals_full.jsonl",
+      "sha256": "e7cf6fba5e49d285f690fa846539de9a1ffff6ac054edf65f2d19208f856d2d9",
+      "size_bytes": 3381740
+    },
+    "counterfactual_summary": {
+      "path": "experiments/daph_x/r12/r12_counterfactual_summary.json",
+      "sha256": "461d28fbee0a93f821332aa2e584fcee27b2d65bd87eebbe2346b18fca6952b5",
+      "size_bytes": 9068
+    },
+    "r12_results": {
+      "path": "experiments/daph_x/r12/r12_results.json",
+      "sha256": "eac16d8d03ce41f12474db3c931ac3ea773d093f805580a2f4e0cdab0d661a1c",
+      "size_bytes": 54956
+    },
+    "r12_eval_full_log": {
+      "path": "experiments/daph_x/r12/r12_eval_full.log",
+      "sha256": "899e4196fc6ba8cbdb0fa32d264364eb18334a4fd044b7ba1fd43bf11e577689",
+      "size_bytes": 6548
+    },
+    "r12_eval_multiseed_log": {
+      "path": "experiments/daph_x/r12/r12_eval_multiseed.log",
+      "sha256": "309c2f344446a391d36bc03323a137dbc9db11c45a33b70eb5e714b44f301378",
+      "size_bytes": 18386
+    },
+    "r12_results_report": {
+      "path": "experiments/daph_x/r12/R12_RESULTS_REPORT.md",
+      "sha256": "a21ce5c5b5dee2a731e3bf30b80f632a2612280a8181dc828d195465a5b6f8b9",
+      "size_bytes": 8617
+    },
+    "stage1_log": {
+      "path": "experiments/daph_x/r12/stage1.log",
+      "sha256": "7b5711013a51a21acd1ec9edee6ec1b4d97142a6c905b84cefd928913aa227ea",
+      "size_bytes": 320766
+    },
+    "stage2_log": {
+      "path": "experiments/daph_x/r12/stage2.log",
+      "sha256": "a6e78a8e51bdc9a8ce82751c6428eeb2df65b0469eb3b68d311f6b5998eb2949",
+      "size_bytes": 216105
+    },
+    "reasoning_tasks_py": {
+      "path": "daph_x/coding/reasoning_tasks.py",
+      "sha256": "be4a5b6befb9dd8c3eecd091671df007989aa61f9b9835a41304eba885192468",
+      "size_bytes": 204477
+    },
+    "r12_collection_py": {
+      "path": "scripts/run_r12_collection.py",
+      "sha256": "6eaad62125abd51b98ccde59ecfa20473d571c9ea6874638b2e5d4f2c7092792",
+      "size_bytes": 21044
+    },
+    "r12_evaluation_py": {
+      "path": "scripts/run_r12_evaluation.py",
+      "sha256": "c998b0cd06cb713bf144cc6448b0f190e7ef8eacc04b444900d988461b6e62ab",
+      "size_bytes": 37584
+    },
+    "r12_counterfactual_py": {
+      "path": "scripts/run_r12_counterfactual.py",
+      "sha256": "f269281e85de9d7b73bbb2b331f63371f707c3ce7b1a32223a9fd4d79ddfd029",
+      "size_bytes": 12052
+    },
+    "r12_data_collection_py": {
+      "path": "scripts/run_r12_data_collection.py",
+      "sha256": "6d0373f2c59623ef567fc0b4320bf466317fda642150f339ee9547f40751fb98",
+      "size_bytes": 14452
+    },
+    "test_r12_corpus": {
+      "path": "tests/unit/test_r12_reasoning_corpus.py",
+      "sha256": "89fc6ab0538906413a73349fa9792e395218b58f12334742964ae5bda4acd25c",
+      "size_bytes": 7061
+    }
+  }
+}
