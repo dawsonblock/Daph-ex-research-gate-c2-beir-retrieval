@@ -1,0 +1,136 @@
+R12 Evaluation: Decision-Aligned Adaptive Compute
+  Loaded 500 tasks with >= 12 candidates
+
+  Enriching candidates...
+  Enrichment complete.
+
+====================================================================================================
+  seed=42
+====================================================================================================
+  Split: 300 train, 75 cal, 25 dev, 100 test
+  Train: 1500 examples, 47 rescues, 0 breaks, 98 lookahead rescues
+  R12 rescue AUROC (dev): 0.8977 (compact+trajectory)
+  Compact rescue AUROC (dev): 0.9318 (base 6)
+  P@5%=0.000 R@5%=0.000 (R12 features)
+  P@10%=0.167 R@10%=0.500 (R12 features)
+
+  ΔQ DISTRIBUTION DIAGNOSTICS (dev):
+    Rescue: n=4, ΔQ mean=0.0708 std=0.0433
+    Waste:  n=121, ΔQ mean=0.0107 std=0.0431
+    P@5%=0.167 R@5%=0.250
+    P@10%=0.167 R@10%=0.500
+    Calibration bins:
+      [-0.0200, -0.0042): n=85, actual_rescue=0.000, pred_ΔQ=-0.0113
+      [0.0116, 0.0274): n=6, actual_rescue=0.000, pred_ΔQ=0.0157
+      [0.0274, 0.0432): n=19, actual_rescue=0.105, pred_ΔQ=0.0326
+      [0.0589, 0.0747): n=1, actual_rescue=0.000, pred_ΔQ=0.0657
+      [0.0747, 0.0905): n=3, actual_rescue=0.333, pred_ΔQ=0.0800
+
+  System                        Acc    AvgK   J(0.1)   J(0.2)
+  ------------------------------------------------------------
+  maxcal_2                   57.0%     2.0    0.570    0.570
+  maxcal_4                   60.0%     4.0    0.580    0.560
+  maxcal_6                   64.0%     6.0    0.600    0.560
+  maxcal_8                   64.0%     8.0    0.580    0.520
+  maxcal_12                  65.0%    12.0    0.550    0.450
+  oracle_6                   69.0%     6.0    0.650    0.610
+  oracle_12                  72.0%    12.0    0.620    0.520
+  oracle_myopic              61.0%     2.1    0.609    0.608
+  oracle_lookahead4          65.0%     2.2    0.648    0.645
+  oracle_lookahead6          65.0%     2.2    0.648    0.645
+  r12_dq_t-0.05              65.0%    12.0    0.550    0.450
+  r12_dq_t-0.025             65.0%    12.0    0.550    0.450
+  r12_dq_t0                  64.0%     6.0    0.600    0.560
+  r12_dq_t0.01               64.0%     6.0    0.600    0.560
+  r12_dq_t0.025              64.0%     5.3    0.607    0.574
+  r12_dq_t0.05               61.0%     4.4    0.586    0.562
+  r12_dq_t0.10               61.0%     4.3    0.587    0.563
+  r12_dq_t0.20               60.0%     4.0    0.580    0.560
+  r12_dq_brake_t0.01         64.0%     6.0    0.600    0.560
+  r12_dq_brake_t0.025        64.0%     5.3    0.607    0.574
+  random_avg8                60.0%     5.0    0.570    0.540
+  uncertainty_p50            65.0%     5.7    0.613    0.576
+  uncertainty_p70            65.0%     6.4    0.606    0.562
+  entropy_0.5                60.0%     4.8    0.572    0.544
+  r11_value_v_t010           65.0%     6.3    0.607    0.564
+
+  THRESHOLD SELECTION (dev):
+    r12_dq_t-0.05: acc=76.0% K=12.0 J=0.660 *
+    r12_dq_t-0.025: acc=76.0% K=12.0 J=0.660 
+    r12_dq_t0: acc=76.0% K=6.2 J=0.718 *
+    r12_dq_t0.01: acc=76.0% K=6.2 J=0.718 
+    r12_dq_t0.025: acc=76.0% K=5.9 J=0.721 *
+    r12_dq_t0.05: acc=68.0% K=4.7 J=0.653 
+    r12_dq_t0.10: acc=68.0% K=4.7 J=0.653 
+    r12_dq_t0.20: acc=64.0% K=4.0 J=0.620 
+  Selected: r12_dq_t0.025 (J=0.721)
+
+====================================================================================================
+  R12 AGGREGATE
+====================================================================================================
+System                       Mean     Std    AvgK   J(0.1)   J(0.2)
+----------------------------------------------------------------------
+maxcal_2                   57.0%   0.0%     2.0    0.570    0.570
+maxcal_4                   60.0%   0.0%     4.0    0.580    0.560
+maxcal_6                   64.0%   0.0%     6.0    0.600    0.560
+maxcal_8                   64.0%   0.0%     8.0    0.580    0.520
+maxcal_12                  65.0%   0.0%    12.0    0.550    0.450
+oracle_6                   69.0%   0.0%     6.0    0.650    0.610
+oracle_12                  72.0%   0.0%    12.0    0.620    0.520
+oracle_myopic              61.0%   0.0%     2.1    0.609    0.608
+oracle_lookahead4          65.0%   0.0%     2.2    0.648    0.645
+oracle_lookahead6          65.0%   0.0%     2.2    0.648    0.645
+r12_dq_t-0.05              65.0%   0.0%    12.0    0.550    0.450
+r12_dq_t-0.025             65.0%   0.0%    12.0    0.550    0.450
+r12_dq_t0                  64.0%   0.0%     6.0    0.600    0.560
+r12_dq_t0.01               64.0%   0.0%     6.0    0.600    0.560
+r12_dq_t0.025              64.0%   0.0%     5.3    0.607    0.574
+r12_dq_t0.05               61.0%   0.0%     4.4    0.586    0.562
+r12_dq_t0.10               61.0%   0.0%     4.3    0.587    0.563
+r12_dq_t0.20               60.0%   0.0%     4.0    0.580    0.560
+r12_dq_brake_t0.01         64.0%   0.0%     6.0    0.600    0.560
+r12_dq_brake_t0.025        64.0%   0.0%     5.3    0.607    0.574
+random_avg8                60.0%   0.0%     5.0    0.570    0.540
+uncertainty_p50            65.0%   0.0%     5.7    0.613    0.576
+uncertainty_p70            65.0%   0.0%     6.4    0.606    0.562
+entropy_0.5                60.0%   0.0%     4.8    0.572    0.544
+r11_value_v_t010           65.0%   0.0%     6.3    0.607    0.564
+
+  KEY COMPARISONS:
+    Best R12: r12_dq_t0.025 (64.0%, K=5.3, J=0.607)
+    vs maxcal_6: +0.0% MATCHES
+    vs maxcal_8: +0.0% MATCHES
+    vs maxcal_12: -1.0% WORSE
+    vs random_avg8: +4.0% BEATS
+    vs uncertainty_p50: -1.0% WORSE
+    vs uncertainty_p70: -1.0% WORSE
+
+  ORACLE REGRET:
+    Oracle: 65.0% at K=2.2
+    Best R12: 64.0% at K=5.3
+    Wasted compute: 3.1 candidates/task
+    Accuracy gap: 1.0%
+
+  PARETO FRONTIER (Accuracy vs E[K]):
+    (2.0, 57.0%) — maxcal_2
+    (4.0, 60.0%) — maxcal_4
+    (4.0, 60.0%) — r12_dq_t0.20
+    (4.3, 61.0%) — r12_dq_t0.10
+    (4.4, 61.0%) — r12_dq_t0.05
+    (4.8, 60.0%) — entropy_0.5
+    (5.0, 60.0%) — random_avg8
+    (5.3, 64.0%) — r12_dq_brake_t0.025
+    (5.3, 64.0%) — r12_dq_t0.025
+    (5.7, 65.0%) — uncertainty_p50
+    (6.0, 64.0%) — r12_dq_brake_t0.01
+    (6.0, 64.0%) — r12_dq_t0.01
+    (6.0, 64.0%) — maxcal_6
+    (6.0, 64.0%) — r12_dq_t0
+    (6.3, 65.0%) — r11_value_v_t010
+    (6.4, 65.0%) — uncertainty_p70
+    (8.0, 64.0%) — maxcal_8
+    (12.0, 65.0%) — maxcal_12
+    (12.0, 65.0%) — r12_dq_t-0.025
+    (12.0, 65.0%) — r12_dq_t-0.05
+
+  Results saved to /Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/daph_x/r12/r12_results.json

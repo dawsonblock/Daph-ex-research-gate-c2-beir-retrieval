@@ -1,0 +1,331 @@
+{
+  "per_seed": {
+    "42": {
+      "n_total": 2500,
+      "n_rescue": 74,
+      "n_break": 2,
+      "n_waste": 2424,
+      "rescue_rate": 0.0296,
+      "break_rate": 0.0008,
+      "waste_rate": 0.9696,
+      "mean_delta_u": 0.0288,
+      "mean_delta_q": 0.008799999999999992,
+      "mean_delta_u_full": 0.0616,
+      "per_checkpoint": {
+        "2": {
+          "n": 500,
+          "rescue_rate": 0.056,
+          "break_rate": 0.002,
+          "waste_rate": 0.942,
+          "mean_delta_u": 0.054,
+          "mean_delta_q": 0.03399999999999999,
+          "u_stop_rate": 0.586,
+          "u_generate_rate": 0.64
+        },
+        "4": {
+          "n": 500,
+          "rescue_rate": 0.046,
+          "break_rate": 0.0,
+          "waste_rate": 0.954,
+          "mean_delta_u": 0.046,
+          "mean_delta_q": 0.025999999999999985,
+          "u_stop_rate": 0.64,
+          "u_generate_rate": 0.686
+        },
+        "6": {
+          "n": 500,
+          "rescue_rate": 0.02,
+          "break_rate": 0.0,
+          "waste_rate": 0.98,
+          "mean_delta_u": 0.02,
+          "mean_delta_q": -1.0658141036401503e-17,
+          "u_stop_rate": 0.686,
+          "u_generate_rate": 0.706
+        },
+        "8": {
+          "n": 500,
+          "rescue_rate": 0.018,
+          "break_rate": 0.0,
+          "waste_rate": 0.982,
+          "mean_delta_u": 0.018,
+          "mean_delta_q": -0.0020000000000000104,
+          "u_stop_rate": 0.706,
+          "u_generate_rate": 0.724
+        },
+        "10": {
+          "n": 500,
+          "rescue_rate": 0.008,
+          "break_rate": 0.002,
+          "waste_rate": 0.99,
+          "mean_delta_u": 0.006,
+          "mean_delta_q": -0.014000000000000009,
+          "u_stop_rate": 0.724,
+          "u_generate_rate": 0.73
+        }
+      }
+    },
+    "123": {
+      "n_total": 2500,
+      "n_rescue": 75,
+      "n_break": 2,
+      "n_waste": 2423,
+      "rescue_rate": 0.03,
+      "break_rate": 0.0008,
+      "waste_rate": 0.9692,
+      "mean_delta_u": 0.0292,
+      "mean_delta_q": 0.009199999999999993,
+      "mean_delta_u_full": 0.0592,
+      "per_checkpoint": {
+        "2": {
+          "n": 500,
+          "rescue_rate": 0.068,
+          "break_rate": 0.0,
+          "waste_rate": 0.932,
+          "mean_delta_u": 0.068,
+          "mean_delta_q": 0.04799999999999999,
+          "u_stop_rate": 0.582,
+          "u_generate_rate": 0.65
+        },
+        "4": {
+          "n": 500,
+          "rescue_rate": 0.036,
+          "break_rate": 0.0,
+          "waste_rate": 0.964,
+          "mean_delta_u": 0.036,
+          "mean_delta_q": 0.01599999999999999,
+          "u_stop_rate": 0.65,
+          "u_generate_rate": 0.686
+        },
+        "6": {
+          "n": 500,
+          "rescue_rate": 0.022,
+          "break_rate": 0.004,
+          "waste_rate": 0.974,
+          "mean_delta_u": 0.018,
+          "mean_delta_q": -0.0020000000000000118,
+          "u_stop_rate": 0.686,
+          "u_generate_rate": 0.704
+        },
+        "8": {
+          "n": 500,
+          "rescue_rate": 0.018,
+          "break_rate": 0.0,
+          "waste_rate": 0.982,
+          "mean_delta_u": 0.018,
+          "mean_delta_q": -0.0020000000000000104,
+          "u_stop_rate": 0.704,
+          "u_generate_rate": 0.722
+        },
+        "10": {
+          "n": 500,
+          "rescue_rate": 0.006,
+          "break_rate": 0.0,
+          "waste_rate": 0.994,
+          "mean_delta_u": 0.006,
+          "mean_delta_q": -0.014000000000000009,
+          "u_stop_rate": 0.722,
+          "u_generate_rate": 0.728
+        }
+      }
+    },
+    "7": {
+      "n_total": 2500,
+      "n_rescue": 74,
+      "n_break": 3,
+      "n_waste": 2423,
+      "rescue_rate": 0.0296,
+      "break_rate": 0.0012,
+      "waste_rate": 0.9692,
+      "mean_delta_u": 0.0284,
+      "mean_delta_q": 0.008399999999999993,
+      "mean_delta_u_full": 0.0564,
+      "per_checkpoint": {
+        "2": {
+          "n": 500,
+          "rescue_rate": 0.064,
+          "break_rate": 0.002,
+          "waste_rate": 0.934,
+          "mean_delta_u": 0.062,
+          "mean_delta_q": 0.04199999999999999,
+          "u_stop_rate": 0.586,
+          "u_generate_rate": 0.648
+        },
+        "4": {
+          "n": 500,
+          "rescue_rate": 0.042,
+          "break_rate": 0.0,
+          "waste_rate": 0.958,
+          "mean_delta_u": 0.042,
+          "mean_delta_q": 0.02199999999999999,
+          "u_stop_rate": 0.648,
+          "u_generate_rate": 0.69
+        },
+        "6": {
+          "n": 500,
+          "rescue_rate": 0.02,
+          "break_rate": 0.002,
+          "waste_rate": 0.978,
+          "mean_delta_u": 0.018,
+          "mean_delta_q": -0.0020000000000000118,
+          "u_stop_rate": 0.69,
+          "u_generate_rate": 0.708
+        },
+        "8": {
+          "n": 500,
+          "rescue_rate": 0.018,
+          "break_rate": 0.0,
+          "waste_rate": 0.982,
+          "mean_delta_u": 0.018,
+          "mean_delta_q": -0.0020000000000000096,
+          "u_stop_rate": 0.708,
+          "u_generate_rate": 0.726
+        },
+        "10": {
+          "n": 500,
+          "rescue_rate": 0.004,
+          "break_rate": 0.002,
+          "waste_rate": 0.994,
+          "mean_delta_u": 0.002,
+          "mean_delta_q": -0.01800000000000001,
+          "u_stop_rate": 0.726,
+          "u_generate_rate": 0.728
+        }
+      }
+    },
+    "99": {
+      "n_total": 2500,
+      "n_rescue": 72,
+      "n_break": 2,
+      "n_waste": 2426,
+      "rescue_rate": 0.0288,
+      "break_rate": 0.0008,
+      "waste_rate": 0.9704,
+      "mean_delta_u": 0.028,
+      "mean_delta_q": 0.007999999999999991,
+      "mean_delta_u_full": 0.0564,
+      "per_checkpoint": {
+        "2": {
+          "n": 500,
+          "rescue_rate": 0.06,
+          "break_rate": 0.0,
+          "waste_rate": 0.94,
+          "mean_delta_u": 0.06,
+          "mean_delta_q": 0.03999999999999999,
+          "u_stop_rate": 0.582,
+          "u_generate_rate": 0.642
+        },
+        "4": {
+          "n": 500,
+          "rescue_rate": 0.04,
+          "break_rate": 0.0,
+          "waste_rate": 0.96,
+          "mean_delta_u": 0.04,
+          "mean_delta_q": 0.019999999999999987,
+          "u_stop_rate": 0.642,
+          "u_generate_rate": 0.682
+        },
+        "6": {
+          "n": 500,
+          "rescue_rate": 0.02,
+          "break_rate": 0.0,
+          "waste_rate": 0.98,
+          "mean_delta_u": 0.02,
+          "mean_delta_q": -1.021405182655144e-17,
+          "u_stop_rate": 0.682,
+          "u_generate_rate": 0.702
+        },
+        "8": {
+          "n": 500,
+          "rescue_rate": 0.02,
+          "break_rate": 0.002,
+          "waste_rate": 0.978,
+          "mean_delta_u": 0.018,
+          "mean_delta_q": -0.0020000000000000104,
+          "u_stop_rate": 0.702,
+          "u_generate_rate": 0.72
+        },
+        "10": {
+          "n": 500,
+          "rescue_rate": 0.004,
+          "break_rate": 0.002,
+          "waste_rate": 0.994,
+          "mean_delta_u": 0.002,
+          "mean_delta_q": -0.018000000000000006,
+          "u_stop_rate": 0.72,
+          "u_generate_rate": 0.722
+        }
+      }
+    },
+    "2024": {
+      "n_total": 2500,
+      "n_rescue": 72,
+      "n_break": 5,
+      "n_waste": 2423,
+      "rescue_rate": 0.0288,
+      "break_rate": 0.002,
+      "waste_rate": 0.9692,
+      "mean_delta_u": 0.0268,
+      "mean_delta_q": 0.006799999999999992,
+      "mean_delta_u_full": 0.0508,
+      "per_checkpoint": {
+        "2": {
+          "n": 500,
+          "rescue_rate": 0.064,
+          "break_rate": 0.002,
+          "waste_rate": 0.934,
+          "mean_delta_u": 0.062,
+          "mean_delta_q": 0.04199999999999999,
+          "u_stop_rate": 0.584,
+          "u_generate_rate": 0.646
+        },
+        "4": {
+          "n": 500,
+          "rescue_rate": 0.042,
+          "break_rate": 0.0,
+          "waste_rate": 0.958,
+          "mean_delta_u": 0.042,
+          "mean_delta_q": 0.021999999999999985,
+          "u_stop_rate": 0.646,
+          "u_generate_rate": 0.688
+        },
+        "6": {
+          "n": 500,
+          "rescue_rate": 0.018,
+          "break_rate": 0.002,
+          "waste_rate": 0.98,
+          "mean_delta_u": 0.016,
+          "mean_delta_q": -0.00400000000000001,
+          "u_stop_rate": 0.688,
+          "u_generate_rate": 0.704
+        },
+        "8": {
+          "n": 500,
+          "rescue_rate": 0.014,
+          "break_rate": 0.004,
+          "waste_rate": 0.982,
+          "mean_delta_u": 0.01,
+          "mean_delta_q": -0.01000000000000001,
+          "u_stop_rate": 0.704,
+          "u_generate_rate": 0.714
+        },
+        "10": {
+          "n": 500,
+          "rescue_rate": 0.006,
+          "break_rate": 0.002,
+          "waste_rate": 0.992,
+          "mean_delta_u": 0.004,
+          "mean_delta_q": -0.016000000000000007,
+          "u_stop_rate": 0.714,
+          "u_generate_rate": 0.718
+        }
+      }
+    }
+  },
+  "aggregate": {
+    "rescue_rate": 0.029359999999999997,
+    "break_rate": 0.00112,
+    "waste_rate": 0.9695199999999999,
+    "mean_delta_u": 0.028239999999999998,
+    "mean_delta_q": 0.008239999999999994
+  }
+}
