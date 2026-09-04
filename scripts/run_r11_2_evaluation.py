@@ -330,7 +330,7 @@ def run_non_myopic_oracle(task, corr_model, corr_cal, fk,
 
 # ─── Fix 4: VERIFY action ───
 
-def run_verify_action(task, k, corr_model, corr_cal, fk):
+def run_verify_action(task, k, corr_model, corr_cal, fk, verify_weight=0.4):
     """VERIFY: use verification scores to re-rank candidates.
 
     Instead of MaxCal (calibrated P(correct)), use verification-weighted score.
@@ -349,8 +349,7 @@ def run_verify_action(task, k, corr_model, corr_cal, fk):
     for i, c in enumerate(cands_k):
         v = c.get("verification_score", 0.5)
         p = p_values[i]
-        # Weighted combination: 60% calibrated P(correct), 40% verification
-        combined = 0.6 * p + 0.4 * v
+        combined = (1 - verify_weight) * p + verify_weight * v
         verify_scores.append(combined)
 
     verify_idx = np.argmax(verify_scores)
@@ -361,20 +360,32 @@ def run_verify_action(task, k, corr_model, corr_cal, fk):
         "verify_pick": verify_pick,
         "changed": maxcal_pick["answer"] != verify_pick["answer"],
         "correct": verify_pick["is_correct"],
+        "maxcal_correct": maxcal_pick["is_correct"],
     }
+
+
+def should_verify(state, cv_disagreement_threshold=0.15):
+    """Decide whether VERIFY is worthwhile.
+
+    Only verify when confidence and verification disagree — that's when
+    verification might change the pick. If they agree, verify is wasted compute.
+    """
+    return state.get("cv_disagreement", 0.0) > cv_disagreement_threshold
 
 
 def run_sequential_policy_v2(task, rescue_model, rescue_cal,
                               corr_model, corr_cal, fk,
                               threshold=0.01, start_k=2, max_k=12, step=2,
-                              min_k=4, use_verify=True):
-    """Sequential policy with non-myopic rescue model and optional VERIFY.
+                              min_k=4, use_verify=True,
+                              verify_threshold=0.15, value_model=None,
+                              value_threshold=0.02, ptop1_model_override=None):
+    """Sequential policy with non-myopic rescue model and selective VERIFY.
 
     At each checkpoint K:
       1. Compute enhanced state features
-      2. Predict P(lookahead rescue)
-      3. If P > threshold: GENERATE(+2)
-      4. Else: STOP, optionally try VERIFY first
+      2. Predict P(lookahead rescue) or use value model
+      3. If prediction > threshold: GENERATE(+2)
+      4. Else: STOP, selectively VERIFY if confidence-verification disagree
     """
     cands = task["candidates"]
     prev_state = None
@@ -384,8 +395,8 @@ def run_sequential_policy_v2(task, rescue_model, rescue_cal,
         state = compute_enhanced_state_features(task, k, corr_model, corr_cal, fk, prev_state)
 
         if k >= max_k or k + step > len(cands):
-            # At max, optionally verify
-            if use_verify:
+            # At max: selectively verify
+            if use_verify and should_verify(state, verify_threshold):
                 v = run_verify_action(task, k, corr_model, corr_cal, fk)
                 return {
                     "correct": v["correct"],
@@ -411,17 +422,26 @@ def run_sequential_policy_v2(task, rescue_model, rescue_cal,
             k += step
             continue
 
-        # Predict lookahead rescue
-        p_r = 0.0
-        if rescue_model is not None:
-            p_r = predict_calibrated_enhanced(rescue_model, rescue_cal, state)
+        # Predict: use value model if available, else rescue model, else ptop1 ablation
+        if value_model is not None:
+            x = enhanced_state_to_vector(state).reshape(1, -1)
+            score = value_model.predict(x)[0]
+            should_gen = score > value_threshold
+        elif ptop1_model_override is not None:
+            p_r = predict_ptop1_only(ptop1_model_override, state)
+            should_gen = p_r > threshold
+        else:
+            p_r = 0.0
+            if rescue_model is not None:
+                p_r = predict_calibrated_enhanced(rescue_model, rescue_cal, state)
+            should_gen = p_r > threshold
 
-        if p_r > threshold:
+        if should_gen:
             prev_state = state
             k += step
         else:
-            # STOP: optionally try VERIFY
-            if use_verify:
+            # STOP: selectively verify
+            if use_verify and should_verify(state, verify_threshold):
                 v = run_verify_action(task, k, corr_model, corr_cal, fk)
                 return {
                     "correct": v["correct"],
@@ -505,22 +525,62 @@ def train_value_model(examples):
     return model
 
 
+def train_ptop1_only_model(examples):
+    """Ablation: rescue model using only p_top1 (uncertainty alone)."""
+    X = np.array([[ex["state"]["p_top1"]] for ex in examples])
+    y = np.array([1 if ex["lookahead_rescue"] else 0 for ex in examples])
+    if y.sum() < 3:
+        return None
+    sw = compute_sample_weight("balanced", y)
+    model = GradientBoostingClassifier(
+        n_estimators=100, max_depth=2, learning_rate=0.1,
+        subsample=0.8, random_state=42)
+    model.fit(X, y, sample_weight=sw)
+    return model
+
+
+def predict_ptop1_only(model, state):
+    """Predict with p_top1-only model."""
+    x = np.array([[state["p_top1"]]])
+    return float(model.predict_proba(x)[0, 1])
+
+
+def paired_bootstrap_ci(daphx_utils, baseline_utils, n_bootstrap=2000, ci=95):
+    """Paired bootstrap confidence interval for utility difference.
+
+    Returns (mean_diff, ci_low, ci_high).
+    """
+    from sklearn.utils import resample
+    diffs = np.array(daphx_utils) - np.array(baseline_utils)
+    n = len(diffs)
+    boot_means = []
+    for _ in range(n_bootstrap):
+        boot_idx = resample(range(n), n_samples=n)
+        boot_means.append(np.mean(diffs[boot_idx]))
+    alpha = (100 - ci) / 2
+    ci_low, ci_high = np.percentile(boot_means, [alpha, 100 - alpha])
+    return float(np.mean(diffs)), float(ci_low), float(ci_high)
+
+
 # ─── Evaluation ───
 
 def evaluate_all_v2(eval_tasks, rescue_model, rescue_cal, value_model,
-                     corr_model, corr_cal, fk):
+                     ptop1_model, corr_model, corr_cal, fk):
     results = {name: [] for name in [
         "maxcal_2", "maxcal_4", "maxcal_6", "maxcal_8", "maxcal_10", "maxcal_12",
         "oracle_6", "oracle_12",
         "oracle_myopic", "oracle_lookahead4", "oracle_lookahead6",
         "daphx_t001", "daphx_t005", "daphx_t010", "daphx_t020",
         "daphx_t001_verify", "daphx_t005_verify", "daphx_t010_verify",
-        "daphx_value",
+        "daphx_value", "daphx_value_v",
+        "daphx_value_v_t005", "daphx_value_v_t010", "daphx_value_v_t020",
         "daphx_t001_mink6", "daphx_t005_mink6",
+        "daphx_ptop1_t001", "daphx_ptop1_t005", "daphx_ptop1_t010",
         "random_avg8", "random_avg10",
         "uncertainty_p50", "uncertainty_p70",
         "entropy_1.0", "entropy_0.5",
         "verify_only_6", "verify_only_8", "verify_only_12",
+        "verify_selective_6", "verify_selective_8",
     ]}
 
     for task in eval_tasks:
@@ -559,12 +619,12 @@ def evaluate_all_v2(eval_tasks, rescue_model, rescue_cal, value_model,
                 task, rescue_model, rescue_cal, corr_model, corr_cal, fk,
                 threshold=thresh, use_verify=False))
 
-        # DAPH-X with VERIFY
+        # DAPH-X with selective VERIFY
         for thresh, name in [(0.01, "daphx_t001_verify"), (0.05, "daphx_t005_verify"),
                               (0.10, "daphx_t010_verify")]:
             results[name].append(run_sequential_policy_v2(
                 task, rescue_model, rescue_cal, corr_model, corr_cal, fk,
-                threshold=thresh, use_verify=True))
+                threshold=thresh, use_verify=True, verify_threshold=0.15))
 
         # DAPH-X with min_k=6
         for thresh, name in [(0.01, "daphx_t001_mink6"), (0.05, "daphx_t005_mink6")]:
@@ -572,31 +632,31 @@ def evaluate_all_v2(eval_tasks, rescue_model, rescue_cal, value_model,
                 task, rescue_model, rescue_cal, corr_model, corr_cal, fk,
                 threshold=thresh, min_k=6, use_verify=False))
 
-        # DAPH-X value-based
-        if value_model is not None:
-            # Use value model to decide: generate if E[delta_u] > cost
-            cands_t = cands
-            k = 2
-            prev_state = None
-            while k < 12 and k + 2 <= len(cands_t):
-                state = compute_enhanced_state_features(task, k, corr_model, corr_cal, fk, prev_state)
-                if k < 4:
-                    prev_state = state
-                    k += 2
-                    continue
-                x = enhanced_state_to_vector(state).reshape(1, -1)
-                v = value_model.predict(x)[0]
-                if v > 0.02:  # cost threshold
-                    prev_state = state
-                    k += 2
-                else:
-                    break
-            pick = max(cands_t[:k], key=lambda c: predict_correctness_r9(
-                corr_model, corr_cal, c.get("enriched_features", {}), c, fk))
-            results["daphx_value"].append({
-                "correct": pick["is_correct"],
-                "utility": 100.0 if pick["is_correct"] else 0.0,
-                "final_k": k, "n_generations": k})
+        # DAPH-X value-based (no verify)
+        results["daphx_value"].append(run_sequential_policy_v2(
+            task, rescue_model, rescue_cal, corr_model, corr_cal, fk,
+            value_model=value_model, value_threshold=0.02, use_verify=False))
+
+        # DAPH-X value-based + selective verify
+        results["daphx_value_v"].append(run_sequential_policy_v2(
+            task, rescue_model, rescue_cal, corr_model, corr_cal, fk,
+            value_model=value_model, value_threshold=0.02, use_verify=True))
+
+        # Value model with different thresholds + verify
+        for vt, name in [(0.005, "daphx_value_v_t005"), (0.01, "daphx_value_v_t010"),
+                         (0.02, "daphx_value_v_t020")]:
+            results[name].append(run_sequential_policy_v2(
+                task, rescue_model, rescue_cal, corr_model, corr_cal, fk,
+                value_model=value_model, value_threshold=vt, use_verify=True))
+
+        # Ablation: p_top1-only model
+        if ptop1_model is not None:
+            for thresh, name in [(0.01, "daphx_ptop1_t001"), (0.05, "daphx_ptop1_t005"),
+                                 (0.10, "daphx_ptop1_t010")]:
+                results[name].append(run_sequential_policy_v2(
+                    task, rescue_model, rescue_cal, corr_model, corr_cal, fk,
+                    threshold=thresh, use_verify=False,
+                    ptop1_model_override=ptop1_model))
 
         # Random and heuristic baselines
         results["random_avg8"].append(run_random_policy(
@@ -612,7 +672,7 @@ def evaluate_all_v2(eval_tasks, rescue_model, rescue_cal, value_model,
         results["entropy_0.5"].append(run_entropy_policy(
             task, corr_model, corr_cal, fk, entropy_threshold=0.5))
 
-        # Verify-only baselines (MaxCal pick, then verify re-rank)
+        # Verify-only baselines (always verify)
         for k in [6, 8, 12]:
             if k <= n:
                 v = run_verify_action(task, k, corr_model, corr_cal, fk)
@@ -620,6 +680,24 @@ def evaluate_all_v2(eval_tasks, rescue_model, rescue_cal, value_model,
                     "correct": v["correct"],
                     "utility": 100.0 if v["correct"] else 0.0,
                     "final_k": k, "n_generations": k})
+
+        # Selective verify: only when cv_disagreement > 0.15
+        for k in [6, 8]:
+            if k <= n:
+                state = compute_enhanced_state_features(task, k, corr_model, corr_cal, fk)
+                if should_verify(state, 0.15):
+                    v = run_verify_action(task, k, corr_model, corr_cal, fk)
+                    results[f"verify_selective_{k}"].append({
+                        "correct": v["correct"],
+                        "utility": 100.0 if v["correct"] else 0.0,
+                        "final_k": k, "n_generations": k})
+                else:
+                    pick = max(cands[:k], key=lambda c: predict_correctness_r9(
+                        corr_model, corr_cal, c.get("enriched_features", {}), c, fk))
+                    results[f"verify_selective_{k}"].append({
+                        "correct": pick["is_correct"],
+                        "utility": 100.0 if pick["is_correct"] else 0.0,
+                        "final_k": k, "n_generations": k})
 
     return results
 
@@ -697,6 +775,19 @@ def main():
         # Train value model
         value_model = train_value_model(train_ex)
 
+        # Train ptop1-only ablation model
+        ptop1_model = train_ptop1_only_model(train_ex)
+
+        # Ablation AUROC
+        if ptop1_model and n_eval_lookahead > 0:
+            eval_y = np.array([1 if ex["lookahead_rescue"] else 0 for ex in eval_ex])
+            if len(set(eval_y)) >= 2:
+                ptop1_probs = np.array([predict_ptop1_only(ptop1_model, ex["state"]) for ex in eval_ex])
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    auroc_ptop1 = roc_auc_score(eval_y, ptop1_probs)
+                print(f"  p_top1-only AUROC:      {auroc_ptop1:.4f}")
+
         # AUROC
         if rescue_model and n_eval_lookahead > 0:
             eval_y = np.array([1 if ex["lookahead_rescue"] else 0 for ex in eval_ex])
@@ -722,7 +813,7 @@ def main():
 
         # Evaluate
         results = evaluate_all_v2(eval_tasks, rescue_model, rescue_cal, value_model,
-                                   corr_model, corr_cal, feature_keys)
+                                   ptop1_model, corr_model, corr_cal, feature_keys)
         summary = summarize(results)
 
         print(f"\n  {'System':<25} {'Acc':>7} {'AvgK':>7} {'J(0.1)':>8} {'Verify':>7}")
@@ -732,12 +823,15 @@ def main():
                      "oracle_myopic", "oracle_lookahead4", "oracle_lookahead6",
                      "daphx_t001", "daphx_t005", "daphx_t010", "daphx_t020",
                      "daphx_t001_verify", "daphx_t005_verify", "daphx_t010_verify",
-                     "daphx_value",
+                     "daphx_value", "daphx_value_v",
+                     "daphx_value_v_t005", "daphx_value_v_t010", "daphx_value_v_t020",
                      "daphx_t001_mink6", "daphx_t005_mink6",
+                     "daphx_ptop1_t001", "daphx_ptop1_t005", "daphx_ptop1_t010",
                      "random_avg8", "random_avg10",
                      "uncertainty_p50", "uncertainty_p70",
                      "entropy_1.0", "entropy_0.5",
-                     "verify_only_6", "verify_only_8", "verify_only_12"]:
+                     "verify_only_6", "verify_only_8", "verify_only_12",
+                     "verify_selective_6", "verify_selective_8"]:
             if name not in summary:
                 continue
             s = summary[name]
@@ -759,12 +853,15 @@ def main():
              "oracle_myopic", "oracle_lookahead4", "oracle_lookahead6",
              "daphx_t001", "daphx_t005", "daphx_t010", "daphx_t020",
              "daphx_t001_verify", "daphx_t005_verify", "daphx_t010_verify",
-             "daphx_value",
+             "daphx_value", "daphx_value_v",
+             "daphx_value_v_t005", "daphx_value_v_t010", "daphx_value_v_t020",
              "daphx_t001_mink6", "daphx_t005_mink6",
+             "daphx_ptop1_t001", "daphx_ptop1_t005", "daphx_ptop1_t010",
              "random_avg8", "random_avg10",
              "uncertainty_p50", "uncertainty_p70",
              "entropy_1.0", "entropy_0.5",
-             "verify_only_6", "verify_only_8", "verify_only_12"]
+             "verify_only_6", "verify_only_8", "verify_only_12",
+             "verify_selective_6", "verify_selective_8"]
 
     print(f"{'System':<25} {'Mean':>7} {'Std':>7} {'AvgK':>7} {'J(0.1)':>8} {'J(0.2)':>8}")
     print("-" * 70)
@@ -829,13 +926,80 @@ def main():
 
     # Verify analysis
     print(f"\n  VERIFY ANALYSIS:")
-    for vn in ["verify_only_6", "verify_only_8", "verify_only_12"]:
+    for vn in ["verify_only_6", "verify_only_8", "verify_only_12",
+               "verify_selective_6", "verify_selective_8"]:
         if vn in agg:
-            mc_name = vn.replace("verify_only", "maxcal")
+            mc_name = vn.replace("verify_only", "maxcal").replace("verify_selective", "maxcal")
             if mc_name in agg:
                 diff = agg[vn]["mean_acc"] - agg[mc_name]["mean_acc"]
                 v = "BEATS" if diff > 0.01 else ("MATCHES" if abs(diff) < 0.01 else "WORSE")
                 print(f"    {vn} vs {mc_name}: {diff:+.1%} {v}")
+
+    # Ablation: full features vs p_top1 only
+    print(f"\n  ABLATION: Full features vs p_top1 only:")
+    for thresh in ["t001", "t005", "t010"]:
+        full_name = f"daphx_{thresh}"
+        ptop1_name = f"daphx_ptop1_{thresh}"
+        if full_name in agg and ptop1_name in agg:
+            diff = agg[full_name]["mean_acc"] - agg[ptop1_name]["mean_acc"]
+            v = "ADDS" if diff > 0.01 else ("SAME" if abs(diff) < 0.01 else "HURTS")
+            print(f"    {thresh}: full={agg[full_name]['mean_acc']:.1%} vs "
+                  f"ptop1={agg[ptop1_name]['mean_acc']:.1%}: {diff:+.1%} {v}")
+
+    # Value model threshold sweep
+    print(f"\n  VALUE MODEL THRESHOLD SWEEP:")
+    for vn in ["daphx_value_v_t005", "daphx_value_v_t010", "daphx_value_v_t020", "daphx_value_v"]:
+        if vn in agg:
+            print(f"    {vn}: {agg[vn]['mean_acc']:.1%} at K={agg[vn]['mean_k']:.1f}, J={agg[vn]['j01']:.3f}")
+
+    # Paired bootstrap CI for best DAPH-X vs key baselines
+    print(f"\n  PAIRED BOOTSTRAP CI (seed 42, per-task):")
+    if 42 in all_results:
+        train_tasks_s42, cal_tasks_s42, eval_tasks_s42 = split_tasks(tasks, seed=42)
+        corr_model_s42 = train_correctness_r9(flatten_candidates(train_tasks_s42), feature_keys)
+        corr_cal_s42 = calibrate_r9(corr_model_s42, flatten_candidates(cal_tasks_s42), feature_keys)
+        train_ex_s42 = extract_non_myopic_examples(train_tasks_s42, corr_model_s42, corr_cal_s42, feature_keys)
+        rescue_model_s42 = train_lookahead_rescue_model(train_ex_s42)
+        rescue_cal_s42 = calibrate_isotonic_enhanced(rescue_model_s42,
+            extract_non_myopic_examples(cal_tasks_s42, corr_model_s42, corr_cal_s42, feature_keys),
+            "lookahead_rescue")
+        value_model_s42 = train_value_model(train_ex_s42)
+
+        # Get per-task utilities for bootstrap
+        best_daphx_name = max(daphx_names, key=lambda n: agg[n]["j01"]) if daphx_names else None
+        if best_daphx_name:
+            daphx_utils = []
+            baseline_utils = {}
+            for task in eval_tasks_s42:
+                daphx_res = run_sequential_policy_v2(
+                    task, rescue_model_s42, rescue_cal_s42, corr_model_s42, corr_cal_s42, feature_keys,
+                    threshold=0.01, use_verify=True, verify_threshold=0.15)
+                daphx_utils.append(daphx_res["utility"])
+
+                # Baselines
+                for bname, bfn in [
+                    ("maxcal_6", lambda t: max(t["candidates"][:6], key=lambda c: predict_correctness_r9(
+                        corr_model_s42, corr_cal_s42, c.get("enriched_features", {}), c, feature_keys))),
+                    ("uncertainty_p50", None),
+                    ("uncertainty_p70", None),
+                ]:
+                    if bfn is not None:
+                        pick = bfn(task)
+                        baseline_utils.setdefault(bname, []).append(100.0 if pick["is_correct"] else 0.0)
+                    elif bname == "uncertainty_p50":
+                        r = run_uncertainty_policy(task, corr_model_s42, corr_cal_s42, feature_keys, p_threshold=0.5)
+                        baseline_utils.setdefault(bname, []).append(r["utility"])
+                    elif bname == "uncertainty_p70":
+                        r = run_uncertainty_policy(task, corr_model_s42, corr_cal_s42, feature_keys, p_threshold=0.7)
+                        baseline_utils.setdefault(bname, []).append(r["utility"])
+
+            for bname, butils in baseline_utils.items():
+                if len(daphx_utils) == len(butils):
+                    mean_diff, ci_low, ci_high = paired_bootstrap_ci(daphx_utils, butils)
+                    sig = "SIGNIFICANT" if (ci_low > 0 or ci_high < 0) else "n.s."
+                    print(f"    {best_daphx_name} vs {bname}: "
+                          f"mean diff = {mean_diff:+.1f} "
+                          f"95% CI = [{ci_low:+.1f}, {ci_high:+.1f}] {sig}")
 
     # Intervention analysis
     print(f"\n  INTERVENTION ANALYSIS:")
