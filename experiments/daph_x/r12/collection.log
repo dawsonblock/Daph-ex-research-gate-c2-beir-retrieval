@@ -1,0 +1,559 @@
+R12 Data Collection
+  Tasks: 500 (from 500 available)
+  Candidates per task: 12
+  Max tokens: 256
+  Model: /Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf
+
+  Resuming: 2 tasks already complete, 498 to do
+
+[3/500] reason_003
+
+  Task: reason_003 (medium, math)
+  Compound interest
+Loading model from /Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf...
+Model loaded.
+    c 0 (T=0.0): X  ans=                1000 conf=  0 v=0.10
+    c 1 (T=0.2): X  ans=                1000 conf=  0 v=0.10
+    c 2 (T=0.3): X  ans=                1000 conf=  0 v=0.10
+    c 3 (T=0.5): X  ans=                1000 conf=  0 v=0.10
+    c 4 (T=0.6): X  ans=                1000 conf=  0 v=0.10
+    c 5 (T=0.7): X  ans=                1000 conf=  0 v=0.10
+    c 6 (T=0.8): X  ans=                1000 conf=  0 v=0.10
+    c 7 (T=0.9): X  ans=                1000 conf=  0 v=0.10
+    c 8 (T=1.0): X  ans=                1000 conf=  0 v=0.10
+    c 9 (T=1.0): X  ans=                1000 conf=  0 v=0.10
+    c10 (T=1.2): X  ans=                1000 conf=  0 v=0.10
+    c11 (T=1.2): X  ans=                1000 conf=  0 v=0.10
+  Base: X  | Any correct: False | Agreement: 1.00 | Time: 144.4s
+[4/500] reason_004
+
+  Task: reason_004 (medium, math)
+  Work rate problem
+    c 0 (T=0.0): X  ans=                  12 conf= 20 v=0.20
+    c 1 (T=0.2): X  ans=                   1 conf= 25 v=0.50
+    c 2 (T=0.3): X  ans=                   1 conf= 25 v=0.50
+    c 3 (T=0.5): X  ans=                   5 conf= 25 v=0.50
+    c 4 (T=0.6): X  ans=                   1 conf= 25 v=0.50
+    c 5 (T=0.7): X  ans=                  12 conf= 20 v=0.20
+    c 6 (T=0.8): X  ans=                   1 conf= 25 v=0.50
+    c 7 (T=0.9): X  ans=                   1 conf= 25 v=0.50
+    c 8 (T=1.0): X  ans=                   1 conf= 25 v=0.50
+    c 9 (T=1.0): X  ans=                   4 conf= 25 v=0.50
+    c10 (T=1.2): X  ans=                  12 conf= 20 v=0.20
+    c11 (T=1.2): X  ans=                   3 conf= 25 v=0.50
+  Base: X  | Any correct: False | Agreement: 0.50 | Time: 140.3s
+[5/500] reason_005
+
+  Task: reason_005 (hard, math)
+  Mixture problem
+    c 0 (T=0.0): X  ans=                   5 conf= 80 v=0.20
+    c 1 (T=0.2): X  ans=                0.20 conf=  0 v=0.20
+    c 2 (T=0.3): X  ans=                0.20 conf=  0 v=0.20
+    c 3 (T=0.5): X  ans=                0.30 conf=  0 v=0.20
+    c 4 (T=0.6): X  ans=                 0.3 conf=  0 v=0.20
+    c 5 (T=0.7): X  ans=                0.30 conf=  0 v=0.20
+    c 6 (T=0.8): X  ans=                0.30 conf=  0 v=0.20
+    c 7 (T=0.9): X  ans=                  0. conf=  0 v=0.20
+    c 8 (T=1.0): X  ans=                  30 conf= 80 v=0.20
+    c 9 (T=1.0): X  ans=                   4 conf= 80 v=0.20
+    c10 (T=1.2): X  ans=                 0.1 conf=  0 v=0.20
+    c11 (T=1.2): X  ans=                 0.1 conf=  0 v=0.20
+  Base: X  | Any correct: False | Agreement: 0.25 | Time: 137.9s
+[6/500] reason_006
+
+  Task: reason_006 (easy, math)
+  Speed/distance/time
+    c 0 (T=0.0): OK ans=                   3 conf= 30 v=0.50
+    c 1 (T=0.2): OK ans=                   3 conf= 30 v=0.50
+    c 2 (T=0.3): OK ans=                   3 conf= 30 v=0.50
+    c 3 (T=0.5): OK ans=                   3 conf= 30 v=0.50
+    c 4 (T=0.6): OK ans=                   3 conf= 30 v=0.50
+    c 5 (T=0.7): OK ans=                   3 conf= 30 v=0.50
+    c 6 (T=0.8): OK ans=                   3 conf= 30 v=0.50
+    c 7 (T=0.9): OK ans=                   3 conf= 30 v=0.50
+    c 8 (T=1.0): OK ans=                   3 conf= 30 v=0.50
+    c 9 (T=1.0): OK ans=                   3 conf= 30 v=0.50
+    c10 (T=1.2): OK ans=                   3 conf= 30 v=0.50
+    c11 (T=1.2): OK ans=                   3 conf= 30 v=0.50
+  Base: OK | Any correct: True | Agreement: 1.00 | Time: 111.8s
+[7/500] reason_007
+
+  Task: reason_007 (hard, math)
+  Geometric sequence sum
+    c 0 (T=0.0): X  ans=                1023 conf= 95 v=0.50
+    c 1 (T=0.2): X  ans=                1023 conf= 95 v=0.50
+    c 2 (T=0.3): X  ans=                1023 conf= 95 v=0.50
+    c 3 (T=0.5): X  ans=                   3 conf= 95 v=0.50
+    c 4 (T=0.6): X  ans=                   3 conf= 95 v=0.50
+    c 5 (T=0.7): X  ans=                1024 conf= 95 v=0.50
+    c 6 (T=0.8): OK ans=                3069 conf= 95 v=0.50
+    c 7 (T=0.9): OK ans=                3069 conf= 95 v=0.50
+    c 8 (T=1.0): OK ans=                3069 conf= 95 v=0.50
+    c 9 (T=1.0): X  ans=                  10 conf= 30 v=0.50
+    c10 (T=1.2): OK ans=                3069 conf= 95 v=0.50
+    c11 (T=1.2): OK ans=                3069 conf= 95 v=0.50
+  Base: X  | Any correct: True | Agreement: 0.42 | Time: 136.0s
+[8/500] reason_008
+
+  Task: reason_008 (medium, math)
+  Probability problem
+    c 0 (T=0.0): X  ans=                  56 conf=  0 v=0.50
+    c 1 (T=0.2): X  ans=                  56 conf=  0 v=0.50
+    c 2 (T=0.3): X  ans=                   2 conf=  0 v=0.50
+    c 3 (T=0.5): X  ans=                   5 conf=  0 v=0.50
+    c 4 (T=0.6): X  ans=                   8 conf=  0 v=0.50
+    c 5 (T=0.7): X  ans=                 4/7 conf=  0 v=0.50
+    c 6 (T=0.8): X  ans=                   5 conf=  0 v=0.50
+    c 7 (T=0.9): X  ans=                   5 conf=  0 v=0.50
+    c 8 (T=1.0): X  ans=                   5 conf=  0 v=0.50
+    c 9 (T=1.0): X  ans=                 4/7 conf=  0 v=0.50
+    c10 (T=1.2): X  ans=                   7 conf=  0 v=0.50
+    c11 (T=1.2): X  ans=                   7 conf=  0 v=0.50
+  Base: X  | Any correct: False | Agreement: 0.33 | Time: 134.2s
+[9/500] reason_009
+
+  Task: reason_009 (medium, sequence)
+  Integer sequence
+    c 0 (T=0.0): OK ans=                  42 conf= 80 v=0.50
+    c 1 (T=0.2): OK ans=                  42 conf= 80 v=0.50
+    c 2 (T=0.3): OK ans=                  42 conf= 80 v=0.50
+    c 3 (T=0.5): OK ans=                  42 conf= 80 v=0.50
+    c 4 (T=0.6): OK ans=                  42 conf= 80 v=0.50
+    c 5 (T=0.7): X  ans=                   1 conf=  0 v=0.50
+    c 6 (T=0.8): OK ans=                  42 conf= 80 v=0.50
+    c 7 (T=0.9): X  ans=                     conf= 80 v=0.50
+    c 8 (T=1.0): OK ans=                  42 conf= 80 v=0.50
+    c 9 (T=1.0): OK ans=                  42 conf= 80 v=0.50
+    c10 (T=1.2): OK ans=                  42 conf= 80 v=0.50
+    c11 (T=1.2): X  ans=                   1 conf=  0 v=0.50
+  Base: OK | Any correct: True | Agreement: 0.75 | Time: 123.4s
+[10/500] reason_010
+
+  Task: reason_010 (easy, sequence)
+  Fibonacci variant
+    c 0 (T=0.0): OK ans=                  21 conf= 95 v=0.50
+    c 1 (T=0.2): OK ans=                  21 conf= 95 v=0.50
+    c 2 (T=0.3): OK ans=                  21 conf= 95 v=0.50
+    c 3 (T=0.5): OK ans=                  21 conf= 95 v=0.50
+    c 4 (T=0.6): OK ans=                  21 conf= 95 v=0.50
+    c 5 (T=0.7): OK ans=                  21 conf= 95 v=0.50
+    c 6 (T=0.8): OK ans=                  21 conf= 95 v=0.50
+    c 7 (T=0.9): OK ans=                  21 conf= 95 v=0.50
+    c 8 (T=1.0): OK ans=                  21 conf= 95 v=0.50
+    c 9 (T=1.0): OK ans=                  21 conf= 95 v=0.50
+    c10 (T=1.2): OK ans=                  21 conf= 95 v=0.50
+    c11 (T=1.2): OK ans=                  21 conf= 95 v=0.50
+  Base: OK | Any correct: True | Agreement: 1.00 | Time: 117.7s
+[11/500] reason_011
+
+  Task: reason_011 (easy, sequence)
+  Geometric sequence
+    c 0 (T=0.0): X  ans=                   2 conf=  0 v=0.50
+    c 1 (T=0.2): OK ans=                 243 conf=100 v=0.50
+    c 2 (T=0.3): OK ans=                 243 conf=100 v=0.50
+    c 3 (T=0.5): OK ans=                 243 conf=100 v=0.50
+    c 4 (T=0.6): OK ans=                 243 conf=100 v=0.50
+    c 5 (T=0.7): OK ans=                 243 conf=100 v=0.50
+    c 6 (T=0.8): OK ans=                 243 conf=100 v=0.50
+    c 7 (T=0.9): OK ans=                 243 conf=100 v=0.50
+    c 8 (T=1.0): OK ans=                 243 conf=100 v=0.50
+    c 9 (T=1.0): OK ans=                 243 conf=100 v=0.50
+    c10 (T=1.2): OK ans=                 243 conf=100 v=0.50
+    c11 (T=1.2): OK ans=                 243 conf=100 v=0.50
+  Base: X  | Any correct: True | Agreement: 0.92 | Time: 115.8s
+[12/500] reason_012
+
+  Task: reason_012 (medium, sequence)
+  Triangular numbers
+    c 0 (T=0.0): OK ans=                  21 conf= 95 v=0.50
+    c 1 (T=0.2): OK ans=                  21 conf= 95 v=0.50
+    c 2 (T=0.3): OK ans=                  21 conf= 95 v=0.50
+    c 3 (T=0.5): OK ans=                  21 conf= 95 v=0.50
+    c 4 (T=0.6): OK ans=                  21 conf= 95 v=0.50
+    c 5 (T=0.7): OK ans=                  21 conf= 95 v=0.50
+    c 6 (T=0.8): OK ans=                  21 conf= 95 v=0.50
+    c 7 (T=0.9): OK ans=                  21 conf= 95 v=0.50
+    c 8 (T=1.0): OK ans=                  21 conf= 95 v=0.50
+    c 9 (T=1.0): OK ans=                  21 conf= 95 v=0.50
+    c10 (T=1.2): OK ans=                  21 conf= 95 v=0.50
+    c11 (T=1.2): OK ans=                  21 conf= 95 v=0.50
+  Base: OK | Any correct: True | Agreement: 1.00 | Time: 121.3s
+[13/500] reason_013
+
+  Task: reason_013 (hard, logic)
+  Knights and knaves
+    c 0 (T=0.0): X  ans=                   2 conf=  0 v=0.50
+    c 1 (T=0.2): X  ans=                   2 conf=  0 v=0.50
+    c 2 (T=0.3): X  ans=                   2 conf=  0 v=0.50
+    c 3 (T=0.5): X  ans=                   2 conf=  0 v=0.50
+    c 4 (T=0.6): X  ans=                   2 conf=  0 v=0.50
+    c 5 (T=0.7): X  ans=                   2 conf=  0 v=0.50
+    c 6 (T=0.8): X  ans=                   2 conf=  0 v=0.50
+    c 7 (T=0.9): X  ans=                   2 conf=  0 v=0.50
+    c 8 (T=1.0): X  ans=                   2 conf=  0 v=0.50
+    c 9 (T=1.0): X  ans=                   2 conf=  0 v=0.50
+    c10 (T=1.2): X  ans=                   2 conf=  0 v=0.50
+    c11 (T=1.2): X  ans=                  2. conf=  0 v=0.50
+  Base: X  | Any correct: False | Agreement: 0.92 | Time: 137.0s
+[14/500] reason_014
+
+  Task: reason_014 (medium, logic)
+  Syllogism
+    c 0 (T=0.0): X  ans=                   b conf= 80 v=0.50
+    c 1 (T=0.2): X  ans=                   b conf= 80 v=0.50
+    c 2 (T=0.3): OK ans=                   d conf= 80 v=0.50
+    c 3 (T=0.5): X  ans=                   b conf= 80 v=0.50
+    c 4 (T=0.6): X  ans=                   b conf= 80 v=0.50
+    c 5 (T=0.7): X  ans=                   b conf= 80 v=0.50
+    c 6 (T=0.8): X  ans=                   b conf= 80 v=0.50
+    c 7 (T=0.9): X  ans=                  5. conf= 50 v=0.20
+    c 8 (T=1.0): OK ans=                   d conf= 80 v=0.50
+    c 9 (T=1.0): X  ans=                   b conf= 80 v=0.50
+    c10 (T=1.2): OK ans=                   d conf= 80 v=0.50
+    c11 (T=1.2): X  ans=                   b conf= 80 v=0.50
+  Base: X  | Any correct: True | Agreement: 0.67 | Time: 105.9s
+[15/500] reason_015
+
+  Task: reason_015 (easy, logic)
+  Truth table
+    c 0 (T=0.0): OK ans=                true conf= 80 v=0.50
+    c 1 (T=0.2): X  ans=                   3 conf=  0 v=0.50
+    c 2 (T=0.3): X  ans=                  4. conf=  0 v=0.50
+    c 3 (T=0.5): X  ans=                   3 conf=  0 v=0.50
+    c 4 (T=0.6): OK ans=                true conf= 80 v=0.50
+    c 5 (T=0.7): OK ans=                true conf= 80 v=0.50
+    c 6 (T=0.8): X  ans=                   3 conf=  0 v=0.50
+    c 7 (T=0.9): OK ans=                true conf= 80 v=0.50
+    c 8 (T=1.0): OK ans=                true conf= 80 v=0.50
+    c 9 (T=1.0): OK ans=                true conf= 80 v=0.50
+    c10 (T=1.2): OK ans=                true conf= 80 v=0.50
+    c11 (T=1.2): X  ans=                  5. conf=  0 v=0.50
+  Base: OK | Any correct: True | Agreement: 0.58 | Time: 120.1s
+[16/500] reason_016
+
+  Task: reason_016 (medium, logic)
+  Conditional logic
+    c 0 (T=0.0): X  ans=                  4. conf=  0 v=0.20
+    c 1 (T=0.2): OK ans=                  no conf= 80 v=0.50
+    c 2 (T=0.3): OK ans=                  no conf= 80 v=0.50
+    c 3 (T=0.5): OK ans=                  no conf= 80 v=0.50
+    c 4 (T=0.6): OK ans=                  no conf= 80 v=0.50
+    c 5 (T=0.7): OK ans=                  no conf= 80 v=0.50
+    c 6 (T=0.8): X  ans=          Answer: no conf= 80 v=0.50
+    c 7 (T=0.9): OK ans=                  no conf= 80 v=0.50
+    c 8 (T=1.0): OK ans=                  no conf= 80 v=0.50
+    c 9 (T=1.0): X  ans=    cannot determine conf= 80 v=0.50
+    c10 (T=1.2): OK ans=                  no conf= 80 v=0.50
+    c11 (T=1.2): X  ans=          Answer: no conf= 80 v=0.50
+  Base: X  | Any correct: True | Agreement: 0.67 | Time: 113.3s
+[17/500] reason_017
+
+  Task: reason_017 (easy, combinatorics)
+  Permutations
+    c 0 (T=0.0): OK ans=                 120 conf=100 v=0.50
+    c 1 (T=0.2): OK ans=                 120 conf=100 v=0.50
+    c 2 (T=0.3): OK ans=                 120 conf=100 v=0.50
+    c 3 (T=0.5): OK ans=                 120 conf=100 v=0.50
+    c 4 (T=0.6): OK ans=                 120 conf=100 v=0.50
+    c 5 (T=0.7): OK ans=                 120 conf=100 v=0.50
+    c 6 (T=0.8): OK ans=                 120 conf=100 v=0.50
+    c 7 (T=0.9): OK ans=                 120 conf=100 v=0.50
+    c 8 (T=1.0): OK ans=                 120 conf=100 v=0.50
+    c 9 (T=1.0): OK ans=                 120 conf=100 v=0.50
+    c10 (T=1.2): OK ans=                 120 conf=100 v=0.50
+    c11 (T=1.2): OK ans=                 120 conf=100 v=0.50
+  Base: OK | Any correct: True | Agreement: 1.00 | Time: 109.7s
+[18/500] reason_018
+
+  Task: reason_018 (medium, combinatorics)
+  Combinations
+    c 0 (T=0.0): X  ans=                   4 conf= 35 v=0.20
+    c 1 (T=0.2): X  ans=                   4 conf= 35 v=0.20
+    c 2 (T=0.3): X  ans=                   4 conf= 35 v=0.20
+    c 3 (T=0.5): X  ans=                   6 conf= 35 v=0.20
+    c 4 (T=0.6): X  ans=                  14 conf= 35 v=0.50
+    c 5 (T=0.7): X  ans=                   7 conf= 35 v=0.20
+    c 6 (T=0.8): X  ans=                   3 conf= 35 v=0.20
+    c 7 (T=0.9): OK ans=                  35 conf= 35 v=0.50
+    c 8 (T=1.0): X  ans=                   4 conf= 35 v=0.20
+    c 9 (T=1.0): X  ans=                   5 conf= 35 v=0.20
+    c10 (T=1.2): X  ans=                   4 conf= 35 v=0.20
+    c11 (T=1.2): X  ans=                   7 conf= 35 v=0.20
+  Base: X  | Any correct: True | Agreement: 0.42 | Time: 133.1s
+[19/500] reason_019
+
+  Task: reason_019 (hard, combinatorics)
+  Stars and bars
+    c 0 (T=0.0): X  ans=                   1 conf= 20 v=0.20
+    c 1 (T=0.2): X  ans=                  10 conf= 20 v=0.20
+    c 2 (T=0.3): OK ans=                  66 conf= 80 v=0.50
+    c 3 (T=0.5): X  ans=                  10 conf= 20 v=0.20
+    c 4 (T=0.6): X  ans=                  10 conf= 20 v=0.20
+    c 5 (T=0.7): X  ans=                  10 conf= 20 v=0.20
+    c 6 (T=0.8): X  ans=                  12 conf= 20 v=0.20
+    c 7 (T=0.9): X  ans=                  10 conf= 20 v=0.20
+    c 8 (T=1.0): X  ans=                  10 conf= 20 v=0.20
+    c 9 (T=1.0): X  ans=                  10 conf= 20 v=0.20
+    c10 (T=1.2): X  ans=                  10 conf= 20 v=0.20
+    c11 (T=1.2): X  ans=                   1 conf= 20 v=0.20
+  Base: X  | Any correct: True | Agreement: 0.67 | Time: 134.8s
+[20/500] reason_020
+
+  Task: reason_020 (hard, combinatorics)
+  Derangements
+    c 0 (T=0.0): X  ans=                   0 conf= 90 v=0.50
+    c 1 (T=0.2): X  ans=                   1 conf= 90 v=0.50
+    c 2 (T=0.3): X  ans=                   1 conf= 90 v=0.50
+    c 3 (T=0.5): X  ans=                   1 conf= 90 v=0.50
+    c 4 (T=0.6): X  ans=                   1 conf= 90 v=0.50
+    c 5 (T=0.7): X  ans=                   0 conf= 90 v=0.50
+    c 6 (T=0.8): X  ans=                   1 conf= 90 v=0.50
+    c 7 (T=0.9): X  ans=                 0.5 conf= 90 v=0.20
+    c 8 (T=1.0): X  ans=                   0 conf= 90 v=0.50
+    c 9 (T=1.0): X  ans=                   4 conf= 90 v=0.50
+    c10 (T=1.2): X  ans=                   4 conf= 90 v=0.50
+    c11 (T=1.2): X  ans=                  -1 conf=  0 v=0.20
+  Base: X  | Any correct: False | Agreement: 0.42 | Time: 137.9s
+[21/500] reason_021
+
+  Task: reason_021 (hard, math)
+  Modular arithmetic
+    c 0 (T=0.0): OK ans=                   1 conf=100 v=0.50
+    c 1 (T=0.2): X  ans=                   7 conf=  1 v=0.50
+    c 2 (T=0.3): OK ans=                   1 conf=100 v=0.50
+    c 3 (T=0.5): OK ans=                   1 conf=100 v=0.50
+    c 4 (T=0.6): OK ans=                   1 conf=100 v=0.50
+    c 5 (T=0.7): OK ans=                   1 conf=100 v=0.50
+    c 6 (T=0.8): OK ans=                   1 conf=100 v=0.50
+    c 7 (T=0.9): OK ans=                   1 conf=100 v=0.50
+    c 8 (T=1.0): X  ans=                   7 conf=  1 v=0.50
+    c 9 (T=1.0): OK ans=                   1 conf=100 v=0.50
+    c10 (T=1.2): X  ans=                   7 conf=  1 v=0.50
+    c11 (T=1.2): OK ans=                   1 conf=100 v=0.50
+  Base: OK | Any correct: True | Agreement: 0.75 | Time: 127.3s
+[22/500] reason_022
+
+  Task: reason_022 (medium, math)
+  Number theory
+    c 0 (T=0.0): X  ans=                1071 conf= 30 v=0.20
+    c 1 (T=0.2): X  ans=                  21 conf=100 v=0.50
+    c 2 (T=0.3): X  ans=                  21 conf=100 v=0.50
+    c 3 (T=0.5): X  ans=                   7 conf=100 v=0.50
+    c 4 (T=0.6): X  ans=                   7 conf=100 v=0.50
+    c 5 (T=0.7): X  ans=                1071 conf= 30 v=0.20
+    c 6 (T=0.8): X  ans=                 147 conf=100 v=0.50
+    c 7 (T=0.9): X  ans=                 147 conf=100 v=0.50
+    c 8 (T=1.0): X  ans=                  21 conf=100 v=0.50
+    c 9 (T=1.0): X  ans=                  21 conf=100 v=0.50
+    c10 (T=1.2): X  ans=                  21 conf=100 v=0.50
+    c11 (T=1.2): X  ans=                  21 conf=100 v=0.50
+  Base: X  | Any correct: False | Agreement: 0.50 | Time: 130.9s
+[23/500] reason_023
+
+  Task: reason_023 (medium, math)
+  Algebra
+    c 0 (T=0.0): OK ans=                   5 conf= 50 v=0.50
+    c 1 (T=0.2): X  ans=                   0 conf= 50 v=0.50
+    c 2 (T=0.3): X  ans=                   0 conf= 50 v=0.50
+    c 3 (T=0.5): OK ans=                   5 conf= 50 v=0.50
+    c 4 (T=0.6): X  ans=                   2 conf= 50 v=0.50
+    c 5 (T=0.7): X  ans=                   0 conf= 50 v=0.50
+    c 6 (T=0.8): OK ans=                   5 conf= 50 v=0.50
+    c 7 (T=0.9): X  ans=                   2 conf= 50 v=0.50
+    c 8 (T=1.0): OK ans=                   5 conf= 50 v=0.50
+    c 9 (T=1.0): OK ans=                   5 conf= 50 v=0.50
+    c10 (T=1.2): X  ans=                   2 conf= 50 v=0.50
+    c11 (T=1.2): X  ans=                   2 conf= 50 v=0.50
+  Base: OK | Any correct: True | Agreement: 0.42 | Time: 127.6s
+[24/500] reason_024
+
+  Task: reason_024 (medium, math)
+  Inequality
+    c 0 (T=0.0): X  ans=                  -7 conf= 20 v=0.50
+    c 1 (T=0.2): OK ans=                   5 conf= 50 v=0.50
+    c 2 (T=0.3): OK ans=                   5 conf= 50 v=0.50
+    c 3 (T=0.5): X  ans=                  -7 conf= 20 v=0.50
+    c 4 (T=0.6): X  ans=                   1 conf= 50 v=0.50
+    c 5 (T=0.7): X  ans=                  -7 conf= 20 v=0.50
+    c 6 (T=0.8): X  ans=                   7 conf= 50 v=0.50
+    c 7 (T=0.9): X  ans=                   4 conf= 50 v=0.50
+    c 8 (T=1.0): OK ans=                   5 conf= 50 v=0.50
+    c 9 (T=1.0): OK ans=                   5 conf= 50 v=0.50
+    c10 (T=1.2): X  ans=                   2 conf= 50 v=0.50
+    c11 (T=1.2): X  ans=                  -4 conf= 20 v=0.50
+  Base: X  | Any correct: True | Agreement: 0.33 | Time: 135.1s
+[25/500] reason_025
+
+  Task: reason_025 (medium, math)
+  Logarithm
+    c 0 (T=0.0): OK ans=                1024 conf=100 v=0.50
+    c 1 (T=0.2): OK ans=                1024 conf=100 v=0.50
+    c 2 (T=0.3): OK ans=                1024 conf=100 v=0.50
+    c 3 (T=0.5): OK ans=                1024 conf=100 v=0.50
+    c 4 (T=0.6): OK ans=                1024 conf=100 v=0.50
+    c 5 (T=0.7): OK ans=                1024 conf=100 v=0.50
+    c 6 (T=0.8): OK ans=                1024 conf=100 v=0.50
+    c 7 (T=0.9): OK ans=                1024 conf=100 v=0.50
+    c 8 (T=1.0): OK ans=                1024 conf=100 v=0.50
+    c 9 (T=1.0): OK ans=                1024 conf=100 v=0.50
+    c10 (T=1.2): OK ans=                1024 conf=100 v=0.50
+    c11 (T=1.2): OK ans=                1024 conf=100 v=0.50
+  Base: OK | Any correct: True | Agreement: 1.00 | Time: 94.2s
+[26/500] reason_026
+
+  Task: reason_026 (easy, math)
+  Sum of arithmetic series
+    c 0 (T=0.0): OK ans=                5050 conf=100 v=0.50
+    c 1 (T=0.2): OK ans=                5050 conf=100 v=0.50
+    c 2 (T=0.3): X  ans=                  50 conf= 50 v=0.20
+    c 3 (T=0.5): OK ans=                5050 conf=100 v=0.50
+    c 4 (T=0.6): OK ans=                5050 conf=100 v=0.50
+    c 5 (T=0.7): X  ans=                 101 conf= 50 v=0.20
+    c 6 (T=0.8): OK ans=                5050 conf=100 v=0.50
+    c 7 (T=0.9): OK ans=                5050 conf=100 v=0.50
+    c 8 (T=1.0): OK ans=                5050 conf=100 v=0.50
+    c 9 (T=1.0): OK ans=                5050 conf=100 v=0.50
+    c10 (T=1.2): X  ans=                   5 conf= 50 v=0.20
+    c11 (T=1.2): OK ans=                5050 conf=100 v=0.50
+  Base: OK | Any correct: True | Agreement: 0.75 | Time: 124.5s
+[27/500] reason_027
+
+  Task: reason_027 (easy, math)
+  Pythagorean theorem
+    c 0 (T=0.0): OK ans=                  13 conf=100 v=0.50
+    c 1 (T=0.2): OK ans=                  13 conf=100 v=0.50
+    c 2 (T=0.3): OK ans=                  13 conf=100 v=0.50
+    c 3 (T=0.5): OK ans=                  13 conf=100 v=0.50
+    c 4 (T=0.6): OK ans=                  13 conf=100 v=0.50
+    c 5 (T=0.7): OK ans=                  13 conf=100 v=0.50
+    c 6 (T=0.8): OK ans=                  13 conf=100 v=0.50
+    c 7 (T=0.9): OK ans=                  13 conf=100 v=0.50
+    c 8 (T=1.0): OK ans=                  13 conf=100 v=0.50
+    c 9 (T=1.0): OK ans=                  13 conf=100 v=0.50
+    c10 (T=1.2): OK ans=                  13 conf=100 v=0.50
+    c11 (T=1.2): OK ans=                  13 conf=100 v=0.50
+  Base: OK | Any correct: True | Agreement: 1.00 | Time: 122.6s
+[28/500] reason_028
+
+  Task: reason_028 (easy, math)
+  Area problem
+    c 0 (T=0.0): OK ans=              113.04 conf=100 v=0.50
+    c 1 (T=0.2): OK ans=              113.04 conf=100 v=0.50
+    c 2 (T=0.3): OK ans=              113.04 conf=100 v=0.50
+    c 3 (T=0.5): OK ans=              113.04 conf=100 v=0.50
+    c 4 (T=0.6): OK ans=              113.04 conf=100 v=0.50
+    c 5 (T=0.7): OK ans=              113.04 conf=100 v=0.50
+    c 6 (T=0.8): OK ans=              113.04 conf=100 v=0.50
+    c 7 (T=0.9): OK ans=              113.04 conf=100 v=0.50
+    c 8 (T=1.0): OK ans=              113.04 conf=100 v=0.50
+    c 9 (T=1.0): OK ans=              113.04 conf=100 v=0.50
+    c10 (T=1.2): OK ans=              113.04 conf=100 v=0.50
+    c11 (T=1.2): OK ans=              113.04 conf=100 v=0.50
+  Base: OK | Any correct: True | Agreement: 1.00 | Time: 103.8s
+[29/500] reason_029
+
+  Task: reason_029 (easy, math)
+  Ratio problem
+    c 0 (T=0.0): OK ans=                  15 conf=100 v=0.50
+    c 1 (T=0.2): OK ans=                  15 conf=100 v=0.50
+    c 2 (T=0.3): OK ans=                  15 conf=100 v=0.50
+    c 3 (T=0.5): OK ans=                  15 conf=100 v=0.50
+    c 4 (T=0.6): OK ans=                  15 conf=100 v=0.50
+    c 5 (T=0.7): OK ans=                  15 conf=100 v=0.50
+    c 6 (T=0.8): OK ans=                  15 conf=100 v=0.50
+    c 7 (T=0.9): OK ans=                  15 conf=100 v=0.50
+    c 8 (T=1.0): OK ans=                  15 conf=100 v=0.50
+    c 9 (T=1.0): OK ans=                  15 conf=100 v=0.50
+    c10 (T=1.2): OK ans=                  15 conf=100 v=0.50
+    c11 (T=1.2): OK ans=                  15 conf=100 v=0.50
+  Base: OK | Any correct: True | Agreement: 1.00 | Time: 110.2s
+[30/500] reason_030
+
+  Task: reason_030 (hard, math)
+  Age problem
+    c 0 (T=0.0): OK ans=                  40 conf= 80 v=0.50
+    c 1 (T=0.2): OK ans=                  40 conf= 80 v=0.50
+    c 2 (T=0.3): OK ans=                  40 conf= 80 v=0.50
+    c 3 (T=0.5): OK ans=                  40 conf= 80 v=0.50
+    c 4 (T=0.6): X  ans=                  20 conf= 80 v=0.50
+    c 5 (T=0.7): OK ans=                  40 conf= 80 v=0.50
+    c 6 (T=0.8): OK ans=                  40 conf= 80 v=0.50
+    c 7 (T=0.9): X  ans=                   3 conf= 20 v=0.50
+    c 8 (T=1.0): OK ans=                  40 conf= 80 v=0.50
+    c 9 (T=1.0): X  ans=                  20 conf= 80 v=0.50
+    c10 (T=1.2): OK ans=                  40 conf= 80 v=0.50
+    c11 (T=1.2): OK ans=                  40 conf= 80 v=0.50
+  Base: OK | Any correct: True | Agreement: 0.75 | Time: 132.7s
+[31/500] reason_031
+
+  Task: reason_031 (hard, math)
+  Digit sum
+    c 0 (T=0.0): X  ans=                  13 conf=100 v=0.50
+    c 1 (T=0.2): OK ans=                  31 conf= 95 v=0.50
+    c 2 (T=0.3): OK ans=                  31 conf= 95 v=0.50
+    c 3 (T=0.5): OK ans=                  31 conf= 95 v=0.50
+    c 4 (T=0.6): OK ans=                  31 conf= 95 v=0.50
+    c 5 (T=0.7): OK ans=                  31 conf= 95 v=0.50
+    c 6 (T=0.8): OK ans=                  31 conf= 95 v=0.50
+    c 7 (T=0.9): OK ans=                  31 conf= 95 v=0.50
+    c 8 (T=1.0): OK ans=                  31 conf= 95 v=0.50
+    c 9 (T=1.0): OK ans=                  31 conf= 95 v=0.50
+    c10 (T=1.2): OK ans=                  31 conf= 95 v=0.50
+    c11 (T=1.2): OK ans=                  31 conf= 95 v=0.50
+  Base: X  | Any correct: True | Agreement: 0.92 | Time: 94.3s
+[32/500] reason_032
+
+  Task: reason_032 (hard, math)
+  Remainder problem
+    c 0 (T=0.0): OK ans=                   0 conf=100 v=0.50
+    c 1 (T=0.2): X  ans=                 100 conf=  1 v=0.50
+    c 2 (T=0.3): X  ans=                 100 conf=  1 v=0.50
+    c 3 (T=0.5): X  ans=                  96 conf=100 v=0.50
+    c 4 (T=0.6): X  ans=                 100 conf=  1 v=0.50
+    c 5 (T=0.7): X  ans=                 100 conf=  1 v=0.50
+    c 6 (T=0.8): X  ans=                 100 conf=  1 v=0.50
+    c 7 (T=0.9): X  ans=                  97 conf=  0 v=0.20
+    c 8 (T=1.0): X  ans=                  97 conf=  0 v=0.20
+    c 9 (T=1.0): X  ans=                 100 conf=  1 v=0.50
+    c10 (T=1.2): X  ans=                 100 conf=  1 v=0.50
+    c11 (T=1.2): X  ans=                   9 conf=100 v=0.50
+  Base: OK | Any correct: True | Agreement: 0.58 | Time: 136.1s
+[33/500] reason_033
+
+  Task: reason_033 (medium, math)
+  Average speed
+    c 0 (T=0.0): X  ans=                   2 conf= 40 v=0.20
+    c 1 (T=0.2): X  ans=                   2 conf= 40 v=0.20
+    c 2 (T=0.3): X  ans=                   2 conf= 40 v=0.20
+    c 3 (T=0.5): X  ans=                   2 conf= 40 v=0.20
+    c 4 (T=0.6): X  ans=                   1 conf= 40 v=0.20
+    c 5 (T=0.7): X  ans=                   1 conf= 40 v=0.20
+    c 6 (T=0.8): X  ans=                   1 conf= 40 v=0.20
+    c 7 (T=0.9): X  ans=                   1 conf= 40 v=0.20
+    c 8 (T=1.0): OK ans=                40.0 conf= 40 v=0.50
+    c 9 (T=1.0): X  ans=                   5 conf= 40 v=0.50
+    c10 (T=1.2): X  ans=                   3 conf= 40 v=0.20
+    c11 (T=1.2): OK ans=                40.0 conf= 40 v=0.50
+  Base: X  | Any correct: True | Agreement: 0.33 | Time: 136.5s
+[34/500] reason_034
+
+  Task: reason_034 (medium, math)
+  LCM problem
+    c 0 (T=0.0): OK ans=                  60 conf=100 v=0.50
+    c 1 (T=0.2): OK ans=                  60 conf=100 v=0.50
+    c 2 (T=0.3): OK ans=                  60 conf=100 v=0.50
+    c 3 (T=0.5): OK ans=                  60 conf=100 v=0.50
+    c 4 (T=0.6): OK ans=                  60 conf=100 v=0.50
+    c 5 (T=0.7): OK ans=                  60 conf=100 v=0.50
+    c 6 (T=0.8): OK ans=                  60 conf=100 v=0.50
+    c 7 (T=0.9): OK ans=                  60 conf=100 v=0.50
+    c 8 (T=1.0): OK ans=                  60 conf=100 v=0.50
+    c 9 (T=1.0): OK ans=                  60 conf=100 v=0.50
+    c10 (T=1.2): OK ans=                  60 conf=100 v=0.50
+    c11 (T=1.2): X  ans=                   6 conf= 60 v=0.20
+  Base: OK | Any correct: True | Agreement: 0.92 | Time: 121.6s
+[35/500] reason_035
+
+  Task: reason_035 (hard, math)
+  Telescoping series
+    c 0 (T=0.0): X  ans=                   1 conf=  0 v=0.50

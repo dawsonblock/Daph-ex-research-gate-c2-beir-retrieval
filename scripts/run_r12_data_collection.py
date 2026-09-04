@@ -75,19 +75,19 @@ def generate_candidate_with_metrics(
     t0 = time.monotonic()
     eval_response = model.generate_raw(
         prompt=eval_prompt, temperature=0.0,
-        max_tokens=20, seed=seed + 1000,
+        max_tokens=10, seed=seed + 1000,
     )
     eval_latency_ms = (time.monotonic() - t0) * 1000
     self_confidence = extract_self_confidence(eval_response)
 
-    # 3-round verification
+    # 1-round verification (reduced from 3 for speed)
     verification_rounds = []
-    for round_idx, vprompt_fn in enumerate(VERIFICATION_PROMPTS[:3]):
+    for round_idx, vprompt_fn in enumerate(VERIFICATION_PROMPTS[:1]):
         v_prompt = vprompt_fn(task.prompt, answer)
         t0 = time.monotonic()
         v_response = model.generate_raw(
             prompt=v_prompt, temperature=0.0,
-            max_tokens=200, seed=seed + 2000 + round_idx * 100,
+            max_tokens=100, seed=seed + 2000 + round_idx * 100,
         )
         v_latency_ms = (time.monotonic() - t0) * 1000
         v_score, _ = extract_verification_score(v_response)
@@ -323,7 +323,7 @@ def main():
             with open(output_path, "w") as f:
                 for tid in sorted(existing.keys()):
                     f.write(json.dumps(existing[tid], default=str) + "\n")
-            f.flush()
+                f.flush()
 
         except Exception as e:
             print(f"  ERROR: {e}")

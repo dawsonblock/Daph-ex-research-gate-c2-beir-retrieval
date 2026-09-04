@@ -1,0 +1,18 @@
+R12 Stage 2: Enrichment
+  Loaded 100 raw tasks
+  Verification: 1 round(s), version=v2
+  Output: /Users/dawsonblock/Downloads/Daph-ex-research-gate-c2-beir-retrieval-background-verification-v2a/experiments/daph_x/r12/r12_enriched_corpus.jsonl
+
+  Resuming: 0 tasks already enriched, 100 to do
+
+[1/100] reason_001
+
+  Enriching: reason_001 (easy, math)
+Loading model from /Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf...
+Model loaded.
+    c 0: OK conf= 80 v=0.50
+    c 1: OK conf= 80 v=0.50
+    c 2: OK conf= 80 v=0.50
+    c 3: OK conf= 80 v=0.50
+    c 4: OK conf= 80 v=0.50
+    c 5: OK conf= 80 v=0.50

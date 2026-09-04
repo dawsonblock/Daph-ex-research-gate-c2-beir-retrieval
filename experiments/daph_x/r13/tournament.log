@@ -1,0 +1,16 @@
+Loaded 254 checkpoints
+Operators: ['STOP', 'SAMPLE_STANDARD', 'SAMPLE_DIVERSE', 'CRITIQUE_RETRY', 'VERIFY_TARGETED']
+
+R13 Tournament: 254 checkpoints × 5 operators = 1270 executions
+
+[1/203] reason_321 (3 checkpoints)
+  K=2 STOP                : stop     (0.0s)
+Loading model from /Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf...
+Model loaded.
+  K=2 SAMPLE_STANDARD     : waste    (18.3s)
+  K=2 SAMPLE_DIVERSE      : waste    (15.8s)
+  K=2 CRITIQUE_RETRY      : waste    (14.9s)
+  K=2 VERIFY_TARGETED     : waste    (15.1s)
+  K=4 STOP                : stop     (0.0s)
+  K=4 SAMPLE_STANDARD     : waste    (14.6s)
+  K=4 SAMPLE_DIVERSE      : waste    (16.0s)
