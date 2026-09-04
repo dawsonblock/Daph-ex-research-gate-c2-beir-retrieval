@@ -1,0 +1,1446 @@
+{
+  "aggregate": {
+    "maxcal_2": {
+      "mean_acc": 0.5920000000000001,
+      "std_acc": 0.06144916598294887,
+      "mean_k": 2.0,
+      "j01": 0.5920000000000001,
+      "j02": 0.5920000000000001
+    },
+    "maxcal_4": {
+      "mean_acc": 0.6320000000000001,
+      "std_acc": 0.0448998886412873,
+      "mean_k": 4.0,
+      "j01": 0.6120000000000001,
+      "j02": 0.5920000000000001
+    },
+    "maxcal_6": {
+      "mean_acc": 0.66,
+      "std_acc": 0.053665631459994964,
+      "mean_k": 6.0,
+      "j01": 0.62,
+      "j02": 0.5800000000000001
+    },
+    "maxcal_8": {
+      "mean_acc": 0.6839999999999999,
+      "std_acc": 0.07200000000000001,
+      "mean_k": 8.0,
+      "j01": 0.6239999999999999,
+      "j02": 0.564
+    },
+    "maxcal_10": {
+      "mean_acc": 0.6839999999999999,
+      "std_acc": 0.07200000000000001,
+      "mean_k": 10.0,
+      "j01": 0.6039999999999999,
+      "j02": 0.5239999999999999
+    },
+    "maxcal_12": {
+      "mean_acc": 0.6839999999999999,
+      "std_acc": 0.07200000000000001,
+      "mean_k": 12.0,
+      "j01": 0.584,
+      "j02": 0.48399999999999993
+    },
+    "oracle_6": {
+      "mean_acc": 0.7,
+      "std_acc": 0.06811754546370562,
+      "mean_k": 6.0,
+      "j01": 0.6599999999999999,
+      "j02": 0.6199999999999999
+    },
+    "oracle_12": {
+      "mean_acc": 0.776,
+      "std_acc": 0.04454211490264017,
+      "mean_k": 12.0,
+      "j01": 0.676,
+      "j02": 0.5760000000000001
+    },
+    "oracle_myopic": {
+      "mean_acc": 0.6320000000000001,
+      "std_acc": 0.0448998886412873,
+      "mean_k": 2.08,
+      "j01": 0.6312000000000001,
+      "j02": 0.6304000000000001
+    },
+    "oracle_lookahead4": {
+      "mean_acc": 0.66,
+      "std_acc": 0.053665631459994964,
+      "mean_k": 2.192,
+      "j01": 0.65808,
+      "j02": 0.6561600000000001
+    },
+    "oracle_lookahead6": {
+      "mean_acc": 0.688,
+      "std_acc": 0.07332121111929345,
+      "mean_k": 2.3600000000000003,
+      "j01": 0.6843999999999999,
+      "j02": 0.6808
+    },
+    "daphx_t001": {
+      "mean_acc": 0.6639999999999999,
+      "std_acc": 0.059866518188383074,
+      "mean_k": 4.56,
+      "j01": 0.6384,
+      "j02": 0.6127999999999999
+    },
+    "daphx_t005": {
+      "mean_acc": 0.6560000000000001,
+      "std_acc": 0.06974238309665078,
+      "mean_k": 4.456,
+      "j01": 0.6314400000000001,
+      "j02": 0.6068800000000001
+    },
+    "daphx_t010": {
+      "mean_acc": 0.644,
+      "std_acc": 0.05425863986500214,
+      "mean_k": 4.272,
+      "j01": 0.62128,
+      "j02": 0.59856
+    },
+    "daphx_t020": {
+      "mean_acc": 0.64,
+      "std_acc": 0.05215361924162118,
+      "mean_k": 4.159999999999999,
+      "j01": 0.6184000000000001,
+      "j02": 0.5968
+    },
+    "daphx_t001_verify": {
+      "mean_acc": 0.668,
+      "std_acc": 0.06645299090334462,
+      "mean_k": 4.56,
+      "j01": 0.6424000000000001,
+      "j02": 0.6168
+    },
+    "daphx_t005_verify": {
+      "mean_acc": 0.66,
+      "std_acc": 0.0758946638440411,
+      "mean_k": 4.456,
+      "j01": 0.63544,
+      "j02": 0.61088
+    },
+    "daphx_t010_verify": {
+      "mean_acc": 0.6480000000000001,
+      "std_acc": 0.05878775382679626,
+      "mean_k": 4.272,
+      "j01": 0.6252800000000002,
+      "j02": 0.6025600000000001
+    },
+    "daphx_value": {
+      "mean_acc": 0.6759999999999999,
+      "std_acc": 0.07310266752998827,
+      "mean_k": 6.160000000000001,
+      "j01": 0.6344,
+      "j02": 0.5927999999999999
+    },
+    "daphx_t001_mink6": {
+      "mean_acc": 0.672,
+      "std_acc": 0.0627375485654325,
+      "mean_k": 6.272,
+      "j01": 0.6292800000000001,
+      "j02": 0.58656
+    },
+    "daphx_t005_mink6": {
+      "mean_acc": 0.672,
+      "std_acc": 0.0627375485654325,
+      "mean_k": 6.232,
+      "j01": 0.62968,
+      "j02": 0.58736
+    },
+    "random_avg8": {
+      "mean_acc": 0.632,
+      "std_acc": 0.06144916598294886,
+      "mean_k": 4.5600000000000005,
+      "j01": 0.6064,
+      "j02": 0.5808
+    },
+    "random_avg10": {
+      "mean_acc": 0.6599999999999999,
+      "std_acc": 0.07155417527999329,
+      "mean_k": 7.328,
+      "j01": 0.6067199999999999,
+      "j02": 0.5534399999999999
+    },
+    "uncertainty_p50": {
+      "mean_acc": 0.6759999999999999,
+      "std_acc": 0.07310266752998827,
+      "mean_k": 4.832,
+      "j01": 0.6476799999999999,
+      "j02": 0.6193599999999999
+    },
+    "uncertainty_p70": {
+      "mean_acc": 0.68,
+      "std_acc": 0.06811754546370562,
+      "mean_k": 5.839999999999999,
+      "j01": 0.6416000000000001,
+      "j02": 0.6032000000000001
+    },
+    "entropy_1.0": {
+      "mean_acc": 0.5920000000000001,
+      "std_acc": 0.06144916598294887,
+      "mean_k": 2.0,
+      "j01": 0.5920000000000001,
+      "j02": 0.5920000000000001
+    },
+    "entropy_0.5": {
+      "mean_acc": 0.632,
+      "std_acc": 0.06764613810115104,
+      "mean_k": 4.4719999999999995,
+      "j01": 0.60728,
+      "j02": 0.58256
+    },
+    "verify_only_6": {
+      "mean_acc": 0.664,
+      "std_acc": 0.06118823416311343,
+      "mean_k": 6.0,
+      "j01": 0.624,
+      "j02": 0.5840000000000001
+    },
+    "verify_only_8": {
+      "mean_acc": 0.6839999999999999,
+      "std_acc": 0.07310266752998827,
+      "mean_k": 8.0,
+      "j01": 0.6239999999999999,
+      "j02": 0.564
+    },
+    "verify_only_12": {
+      "mean_acc": 0.6839999999999999,
+      "std_acc": 0.07310266752998827,
+      "mean_k": 12.0,
+      "j01": 0.584,
+      "j02": 0.48399999999999993
+    }
+  },
+  "per_seed": {
+    "42": {
+      "summary": {
+        "maxcal_2": {
+          "mean_utility": 64.0,
+          "success_rate": 0.64,
+          "avg_k": 2.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_4": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 4.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_6": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_8": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 8.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_10": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 10.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_12": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_6": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_12": {
+          "mean_utility": 82.0,
+          "success_rate": 0.82,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_myopic": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 2.04,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_lookahead4": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 2.12,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_lookahead6": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 2.6,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.24,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t005": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.24,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t010": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.24,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t020": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.24,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001_verify": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.24,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 2
+        },
+        "daphx_t005_verify": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.24,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 2
+        },
+        "daphx_t010_verify": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.24,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 2
+        },
+        "daphx_value": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 5.76,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001_mink6": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 6.12,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t005_mink6": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 6.12,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "random_avg8": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 4.76,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "random_avg10": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 7.4,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "uncertainty_p50": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 4.84,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "uncertainty_p70": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 4.84,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "entropy_1.0": {
+          "mean_utility": 64.0,
+          "success_rate": 0.64,
+          "avg_k": 2.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "entropy_0.5": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.48,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_6": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_8": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 8.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_12": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        }
+      },
+      "n_lookahead_train": 40,
+      "n_lookahead_eval": 15
+    },
+    "123": {
+      "summary": {
+        "maxcal_2": {
+          "mean_utility": 50.0,
+          "success_rate": 0.5,
+          "avg_k": 2.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_4": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 4.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_8": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 8.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_10": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 10.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_12": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_12": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_myopic": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 2.12,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_lookahead4": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 2.28,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_lookahead6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 2.28,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 4.8,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t005": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 4.4,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t010": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 4.28,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t020": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 4.08,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001_verify": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 4.8,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 0
+        },
+        "daphx_t005_verify": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 4.4,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 0
+        },
+        "daphx_t010_verify": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 4.28,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 0
+        },
+        "daphx_value": {
+          "mean_utility": 58.0,
+          "success_rate": 0.58,
+          "avg_k": 5.56,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001_mink6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.24,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t005_mink6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.04,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "random_avg8": {
+          "mean_utility": 54.0,
+          "success_rate": 0.54,
+          "avg_k": 4.08,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "random_avg10": {
+          "mean_utility": 58.0,
+          "success_rate": 0.58,
+          "avg_k": 7.36,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "uncertainty_p50": {
+          "mean_utility": 58.0,
+          "success_rate": 0.58,
+          "avg_k": 4.72,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "uncertainty_p70": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "entropy_1.0": {
+          "mean_utility": 50.0,
+          "success_rate": 0.5,
+          "avg_k": 2.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "entropy_0.5": {
+          "mean_utility": 54.0,
+          "success_rate": 0.54,
+          "avg_k": 4.08,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_8": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 8.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_12": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        }
+      },
+      "n_lookahead_train": 19,
+      "n_lookahead_eval": 7
+    },
+    "7": {
+      "summary": {
+        "maxcal_2": {
+          "mean_utility": 54.0,
+          "success_rate": 0.54,
+          "avg_k": 2.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_4": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 4.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_8": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 8.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_10": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 10.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_12": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_6": {
+          "mean_utility": 64.0,
+          "success_rate": 0.64,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_12": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_myopic": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 2.12,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_lookahead4": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 2.12,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_lookahead6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 2.12,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 4.28,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t005": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 4.28,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t010": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 4.28,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t020": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 4.04,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001_verify": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 4.28,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 1
+        },
+        "daphx_t005_verify": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 4.28,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 1
+        },
+        "daphx_t010_verify": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 4.28,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 1
+        },
+        "daphx_value": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 7.24,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001_mink6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.2,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t005_mink6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.2,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "random_avg8": {
+          "mean_utility": 58.0,
+          "success_rate": 0.58,
+          "avg_k": 4.92,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "random_avg10": {
+          "mean_utility": 58.0,
+          "success_rate": 0.58,
+          "avg_k": 7.44,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "uncertainty_p50": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.88,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "uncertainty_p70": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.88,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "entropy_1.0": {
+          "mean_utility": 54.0,
+          "success_rate": 0.54,
+          "avg_k": 2.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "entropy_0.5": {
+          "mean_utility": 56.0,
+          "success_rate": 0.56,
+          "avg_k": 4.6,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_6": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_8": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 8.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_12": {
+          "mean_utility": 60.0,
+          "success_rate": 0.6,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        }
+      },
+      "n_lookahead_train": 38,
+      "n_lookahead_eval": 3
+    },
+    "99": {
+      "summary": {
+        "maxcal_2": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 2.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_4": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_6": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_8": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 8.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_10": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 10.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_12": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_6": {
+          "mean_utility": 78.0,
+          "success_rate": 0.78,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_12": {
+          "mean_utility": 82.0,
+          "success_rate": 0.82,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_myopic": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 2.04,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_lookahead4": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 2.28,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_lookahead6": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 2.4,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 5.08,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t005": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 5.08,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t010": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 4.36,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t020": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 4.36,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001_verify": {
+          "mean_utility": 78.0,
+          "success_rate": 0.78,
+          "avg_k": 5.08,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 2
+        },
+        "daphx_t005_verify": {
+          "mean_utility": 78.0,
+          "success_rate": 0.78,
+          "avg_k": 5.08,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 2
+        },
+        "daphx_t010_verify": {
+          "mean_utility": 72.0,
+          "success_rate": 0.72,
+          "avg_k": 4.36,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 2
+        },
+        "daphx_value": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 5.48,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001_mink6": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 6.68,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t005_mink6": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 6.68,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "random_avg8": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.08,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "random_avg10": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 7.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "uncertainty_p50": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 4.12,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "uncertainty_p70": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 4.88,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "entropy_1.0": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 2.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "entropy_0.5": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 3.84,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_6": {
+          "mean_utility": 76.0,
+          "success_rate": 0.76,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_8": {
+          "mean_utility": 78.0,
+          "success_rate": 0.78,
+          "avg_k": 8.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_12": {
+          "mean_utility": 78.0,
+          "success_rate": 0.78,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        }
+      },
+      "n_lookahead_train": 38,
+      "n_lookahead_eval": 10
+    },
+    "2024": {
+      "summary": {
+        "maxcal_2": {
+          "mean_utility": 62.0,
+          "success_rate": 0.62,
+          "avg_k": 2.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_4": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 4.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_6": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_8": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 8.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_10": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 10.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "maxcal_12": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_6": {
+          "mean_utility": 74.0,
+          "success_rate": 0.74,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_12": {
+          "mean_utility": 78.0,
+          "success_rate": 0.78,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_myopic": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 2.08,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_lookahead4": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 2.16,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "oracle_lookahead6": {
+          "mean_utility": 72.0,
+          "success_rate": 0.72,
+          "avg_k": 2.4,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.4,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t005": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.28,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t010": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.2,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t020": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 4.08,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001_verify": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.4,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 1
+        },
+        "daphx_t005_verify": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.28,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 1
+        },
+        "daphx_t010_verify": {
+          "mean_utility": 68.0,
+          "success_rate": 0.68,
+          "avg_k": 4.2,
+          "n": 50,
+          "n_verify_used": 50,
+          "n_verify_changed": 1
+        },
+        "daphx_value": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 6.76,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t001_mink6": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 6.12,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "daphx_t005_mink6": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 6.12,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "random_avg8": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 4.96,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "random_avg10": {
+          "mean_utility": 66.0,
+          "success_rate": 0.66,
+          "avg_k": 7.44,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "uncertainty_p50": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 3.6,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "uncertainty_p70": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 6.6,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "entropy_1.0": {
+          "mean_utility": 62.0,
+          "success_rate": 0.62,
+          "avg_k": 2.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "entropy_0.5": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 5.36,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_6": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 6.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_8": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 8.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        },
+        "verify_only_12": {
+          "mean_utility": 70.0,
+          "success_rate": 0.7,
+          "avg_k": 12.0,
+          "n": 50,
+          "n_verify_used": 0,
+          "n_verify_changed": 0
+        }
+      },
+      "n_lookahead_train": 42,
+      "n_lookahead_eval": 10
+    }
+  }
+}
