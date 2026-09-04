@@ -1,0 +1,72 @@
+{
+  "release_name": "R11.2_BASELINE",
+  "git_commit": "555aae9",
+  "git_branch": "daph-x",
+  "created_by": "R12 qualification campaign",
+  "description": "Frozen R11.2 baseline for R12 comparison. All R12 results must reference this release.",
+  "model": {
+    "name": "Qwen2.5-7B-Instruct-Q4_K_M",
+    "path": "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "quantization": "Q4_K_M",
+    "format": "GGUF",
+    "sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+    "size_bytes": 4683074240
+  },
+  "files": {
+    "daph_x/coding/reasoning_tasks.py": {
+      "sha256": "8ed684c6b544a6f22ae6a1d2d8d6149fc6d26644092bd43c21f380b276142d12",
+      "size_bytes": 82653
+    },
+    "daph_x/coding/model_interface.py": {
+      "sha256": "2f987e2d48b549d879bae8632f13787b78f085c1d2693984f8cb042f11f406b2",
+      "size_bytes": 8509
+    },
+    "scripts/run_r11_data_collection.py": {
+      "sha256": "732c516d025875c7bbda5f69b6f419a1dbc74f974fada45d25a989b7a91b9de4",
+      "size_bytes": 6868
+    },
+    "scripts/run_r11_1_evaluation.py": {
+      "sha256": "31a77f3bc01a099f48d21f88b3d9f1ccc920ea4e359d69380a048318f61dcac8",
+      "size_bytes": 41215
+    },
+    "scripts/run_r11_2_evaluation.py": {
+      "sha256": "8aaa6b44704c3482bb27ec0280256b0565f3ceb8b52570cdbf8f8f8bf7dcf061",
+      "size_bytes": 43417
+    },
+    "scripts/diagnose_r11_1.py": {
+      "sha256": "12c62916dc81b7c356cb18e1451ed9c4db6b7561baa0973d35a3689d9cb39293",
+      "size_bytes": 14388
+    },
+    "scripts/run_reasoning_collection.py": {
+      "sha256": "96a0519c88f041071bf0c90438a0023b07ed1d6351205e210ef5a423f4f8685e",
+      "size_bytes": 13831
+    },
+    "experiments/daph_x/r11/r11_corpus_12.jsonl": {
+      "sha256": "de3d1b67ccf35344c7f1916f2d58bccd641c05c7df32644fce9728259d0ed941",
+      "size_bytes": 5789254
+    },
+    "experiments/daph_x/r11/r11_2_results.json": {
+      "sha256": "b254b9ac1d1ca2c289abe64abdb2b5715f930051e53fbf6a6511687a097d2930",
+      "size_bytes": 48034
+    }
+  },
+  "evaluator": {
+    "function": "check_answer",
+    "source_file": "daph_x/coding/reasoning_tasks.py",
+    "normalization": "int/float equivalence via float() conversion",
+    "note": "Pre-fix experiments (before 8ec1b8f) used old evaluator without numeric normalization. Results from those experiments are superseded."
+  },
+  "r11_2_key_results": {
+    "best_daphx_variant": "daphx_value_v_t010",
+    "best_daphx_accuracy": 0.684,
+    "best_daphx_avg_k": 6.4,
+    "best_daphx_j01": 0.64,
+    "maxcal_8_accuracy": 0.684,
+    "maxcal_8_k": 8.0,
+    "oracle_lookahead6_accuracy": 0.688,
+    "oracle_lookahead6_k": 2.4,
+    "oracle_12_accuracy": 0.776,
+    "ablation_finding": "p_top1-only model (68.0% at K=6.7) beats full 26-feature model (66.4% at K=4.6) in policy accuracy despite lower AUROC (0.80 vs 0.92)",
+    "statistical_significance": "No paired comparison reached statistical significance on 50 eval tasks"
+  }
+}
