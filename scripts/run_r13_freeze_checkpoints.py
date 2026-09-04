@@ -23,6 +23,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 from daph_x.operators.base import CheckpointState
+from daph_x.coding.reasoning_tasks import get_reasoning_task
 
 
 def load_r12_corpus(path: Path) -> list:
@@ -153,6 +154,10 @@ def freeze_checkpoints(tasks: list, checkpoints: list = None,
         if len(cands) < 12:
             continue
 
+        # Get the actual prompt from the reasoning tasks registry
+        reasoning_task = get_reasoning_task(task["task_id"])
+        task_prompt = reasoning_task.prompt if reasoning_task else task.get("description", "")
+
         prev_features = None
         for k in checkpoints:
             features = compute_state_features(cands, k, prev_features)
@@ -161,7 +166,7 @@ def freeze_checkpoints(tasks: list, checkpoints: list = None,
             # Build the frozen state
             state = CheckpointState(
                 task_id=task["task_id"],
-                task_prompt=task.get("description", ""),  # Use description as prompt
+                task_prompt=task_prompt,  # Use actual problem prompt
                 correct_answer=task["correct_answer"],
                 answer_type=task["answer_type"],
                 difficulty=task["difficulty"],
