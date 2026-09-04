@@ -5090,32 +5090,117 @@ def get_reasoning_task(task_id: str) -> ReasoningTask | None:
     return None
 
 
+def _parse_numeric(s: str) -> float | None:
+    """Parse a string as a number, handling fractions, scientific notation, percentages, and signed values.
+
+    Supports:
+      - Integers: "42", "-7"
+      - Decimals: "3.14", "-0.5"
+      - Scientific: "1e3", "5e-1", "1.5E10"
+      - Fractions: "1/2", "3/8", "-2/3"
+      - Percentages: "50%" -> 0.5
+      - Mixed: "1 1/2" -> 1.5
+
+    Returns None if the string cannot be parsed as a number.
+    """
+    s = s.strip().lower()
+    if not s:
+        return None
+
+    # Remove trailing percent sign and convert
+    is_percent = s.endswith("%")
+    if is_percent:
+        s = s[:-1].strip()
+
+    # Remove leading/trailing whitespace and common punctuation
+    s = s.rstrip(".")
+    if not s:
+        return None
+
+    # Try simple float first (handles integers, decimals, scientific notation)
+    try:
+        val = float(s)
+        return val / 100.0 if is_percent else val
+    except ValueError:
+        pass
+
+    # Try fraction "a/b"
+    if "/" in s and " " not in s:
+        parts = s.split("/")
+        if len(parts) == 2:
+            try:
+                num = float(parts[0])
+                den = float(parts[1])
+                if den != 0:
+                    val = num / den
+                    return val / 100.0 if is_percent else val
+            except ValueError:
+                pass
+
+    # Try mixed number "a b/c"
+    if " " in s and "/" in s:
+        parts = s.split()
+        if len(parts) == 2 and "/" in parts[1]:
+            try:
+                whole = float(parts[0])
+                frac_parts = parts[1].split("/")
+                if len(frac_parts) == 2:
+                    num = float(frac_parts[0])
+                    den = float(frac_parts[1])
+                    if den != 0:
+                        val = whole + num / den
+                        return val / 100.0 if is_percent else val
+            except ValueError:
+                pass
+
+    return None
+
+
 def check_answer(response: str, correct_answer: str, answer_type: str) -> bool:
     """Check if a response matches the correct answer.
 
-    Numeric answers are normalized so that "2" and "2.0" are equivalent,
-    "16" and "16.0" are equivalent, etc. This prevents format-only
-    mismatches from being counted as wrong answers.
+    Numeric answers are normalized so that all of the following are equivalent:
+      - "2" and "2.0"
+      - "0.5" and "1/2"
+      - "5e-1" and "0.5"
+      - "50%" and "0.5"
+      - "-3" and "-3.0"
+
+    For genuinely symbolic/string answers (e.g., "yes", "true", "knight"),
+    literal string matching is used after lowercasing and stripping.
+
+    The answer_type field controls the comparison strategy:
+      - "int": Parse both as numbers, compare as integers
+      - "float": Parse both as numbers, compare with tolerance 0.001
+      - "string": Try numeric equivalence first, then fall back to literal match
     """
     response = response.strip().lower()
     correct = correct_answer.strip().lower()
 
+    # Quick literal match shortcut
+    if response == correct:
+        return True
+
     if answer_type == "int":
-        try:
-            return int(float(response)) == int(float(correct))
-        except ValueError:
-            return False
+        r_val = _parse_numeric(response)
+        c_val = _parse_numeric(correct)
+        if r_val is not None and c_val is not None:
+            return int(r_val) == int(c_val)
+        return False
     elif answer_type == "float":
-        try:
-            return abs(float(response) - float(correct)) < 0.001
-        except ValueError:
-            return False
+        r_val = _parse_numeric(response)
+        c_val = _parse_numeric(correct)
+        if r_val is not None and c_val is not None:
+            return abs(r_val - c_val) < 0.001
+        return False
     else:
-        # Also try numeric equivalence for string answers that are numeric
-        try:
-            return abs(float(response) - float(correct)) < 0.001
-        except (ValueError, TypeError):
-            return response == correct
+        # For string answers: try numeric equivalence first, then literal match
+        r_val = _parse_numeric(response)
+        c_val = _parse_numeric(correct)
+        if r_val is not None and c_val is not None:
+            return abs(r_val - c_val) < 0.001
+        # Fall back to literal string comparison
+        return response == correct
 
 
 if __name__ == "__main__":

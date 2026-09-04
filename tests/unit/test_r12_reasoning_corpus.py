@@ -95,15 +95,24 @@ class TestAnswerChecking:
         assert check_answer("1/8", "1/8", "string")
 
     def test_string_answer_numeric_equiv(self):
-        """String answers with numeric equivalence match (when both are parseable as floats)."""
-        # "0.5" and "0.5" match as strings
-        assert check_answer("0.5", "0.5", "string")
-        # "1/2" and "1/2" match as strings (float() can't parse fractions)
+        """String answers with numeric equivalence match via _parse_numeric."""
+        # Fraction <-> decimal
+        assert check_answer("0.5", "1/2", "string")
+        assert check_answer("1/2", "0.5", "string")
+        # Fraction <-> unsimplified fraction
+        assert check_answer("3/8", "6/16", "string")
+        # Scientific notation
+        assert check_answer("5e-1", "0.5", "string")
+        # Percentage
+        assert check_answer("50%", "0.5", "string")
+        # Same fraction
         assert check_answer("1/2", "1/2", "string")
-        # "3/8" and "3/8" match as strings
         assert check_answer("3/8", "3/8", "string")
-        # "yes" and "yes" match
+        # Symbolic strings still match literally
         assert check_answer("yes", "yes", "string")
+        assert check_answer("knight", "knight", "string")
+        # Different symbolic strings don't match
+        assert not check_answer("yes", "no", "string")
 
 
 class TestSpecificTaskAnswers:

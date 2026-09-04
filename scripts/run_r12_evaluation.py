@@ -67,15 +67,70 @@ from run_r11_2_evaluation import (
 
 
 # ─── R12 Compact Feature Set ───
-
+# Compact base: 6 features
 COMPACT_FEATURE_KEYS = [
     "p_top1", "margin", "answer_entropy",
     "selection_stability", "delta_p_top1", "agreement_rate",
 ]
 
+# R12 trajectory features: K, 1/K, consecutive_same, delta_entropy, n_unique
+# These capture diminishing returns and convergence structure.
+TRAJECTORY_FEATURE_KEYS = [
+    "k", "inv_k", "consecutive_same", "delta_entropy", "n_unique_answers",
+]
+
+# Full compact + trajectory feature set
+R12_FEATURE_KEYS = COMPACT_FEATURE_KEYS + TRAJECTORY_FEATURE_KEYS
+
+
+def _compute_trajectory_features(state, prev_state, k):
+    """Compute trajectory features that capture convergence and diminishing returns."""
+    # K and 1/K
+    inv_k = 1.0 / max(k, 1)
+
+    # Consecutive same: how many checkpoints has the top answer remained unchanged?
+    consecutive_same = 0
+    if prev_state is not None:
+        consecutive_same = prev_state.get("_consecutive_same", 0)
+        # Check if the MaxCal pick changed from previous checkpoint
+        prev_pick = prev_state.get("_maxcal_answer", "")
+        curr_pick = state.get("_maxcal_answer", "")
+        if curr_pick == prev_pick and curr_pick != "":
+            consecutive_same += 1
+        else:
+            consecutive_same = 0
+
+    # Delta entropy: change in answer entropy from previous checkpoint
+    delta_entropy = 0.0
+    if prev_state is not None:
+        delta_entropy = state.get("answer_entropy", 0.0) - prev_state.get("answer_entropy", 0.0)
+
+    # Store for next checkpoint
+    state["_consecutive_same"] = consecutive_same
+
+    return {
+        "k": float(k),
+        "inv_k": inv_k,
+        "consecutive_same": float(consecutive_same),
+        "delta_entropy": float(delta_entropy),
+        "n_unique_answers": float(state.get("n_unique_answers", 0.0)),
+    }
+
+
+def state_to_r12_vector(state, prev_state=None, k=0):
+    """Convert state to R12 feature vector (compact + trajectory)."""
+    # Start with compact features
+    vals = [state.get(k2, 0.0) for k2 in COMPACT_FEATURE_KEYS]
+
+    # Add trajectory features
+    traj = _compute_trajectory_features(state, prev_state, k)
+    vals.extend([traj[k2] for k2 in TRAJECTORY_FEATURE_KEYS])
+
+    return np.array(vals)
+
 
 def compact_state_to_vector(state):
-    """Convert state to compact feature vector."""
+    """Convert state to compact feature vector (base 6 only)."""
     return np.array([state.get(k, 0.0) for k in COMPACT_FEATURE_KEYS])
 
 
@@ -135,6 +190,9 @@ def extract_counterfactual_examples(tasks, corr_model, corr_cal, fk, lambda_cost
                 "state": {k2: v for k2, v in state_k.items() if not k2.startswith("_")},
                 "compact_vector": compact_state_to_vector(
                     {k2: v for k2, v in state_k.items() if not k2.startswith("_")}),
+                "r12_vector": state_to_r12_vector(
+                    {k2: v for k2, v in state_k.items() if not k2.startswith("_")},
+                    prev_state, k),
                 "delta_u": delta_u,
                 "delta_q": delta_q,
                 "delta_u_full": delta_u_full,
@@ -154,9 +212,13 @@ def extract_counterfactual_examples(tasks, corr_model, corr_cal, fk, lambda_cost
 
 # ─── R12 Models ───
 
-def train_delta_q_model(examples):
-    """Train E[ΔQ] regression model on compact features."""
-    X = np.array([ex["compact_vector"] for ex in examples])
+def train_delta_q_model(examples, feature_key="r12_vector"):
+    """Train E[ΔQ] regression model.
+
+    feature_key: "compact_vector" for base 6 features,
+                 "r12_vector" for compact + trajectory (11 features).
+    """
+    X = np.array([ex[feature_key] for ex in examples])
     y = np.array([ex["delta_q"] for ex in examples])
     if len(set(y)) < 2:
         return None
@@ -167,9 +229,9 @@ def train_delta_q_model(examples):
     return model
 
 
-def train_break_risk_model(examples):
-    """Train P(break) classifier on compact features."""
-    X = np.array([ex["compact_vector"] for ex in examples])
+def train_break_risk_model(examples, feature_key="r12_vector"):
+    """Train P(break) classifier. Returns None if < 3 break events."""
+    X = np.array([ex[feature_key] for ex in examples])
     y = np.array([1 if ex["break"] else 0 for ex in examples])
     if y.sum() < 3:
         return None
@@ -181,9 +243,9 @@ def train_break_risk_model(examples):
     return model
 
 
-def train_rescue_model_compact(examples):
-    """Train P(rescue) classifier on compact features."""
-    X = np.array([ex["compact_vector"] for ex in examples])
+def train_rescue_model_compact(examples, feature_key="r12_vector"):
+    """Train P(rescue) classifier."""
+    X = np.array([ex[feature_key] for ex in examples])
     y = np.array([1 if ex["rescue"] else 0 for ex in examples])
     if y.sum() < 3:
         return None
@@ -195,11 +257,11 @@ def train_rescue_model_compact(examples):
     return model
 
 
-def calibrate_delta_q(model, cal_examples):
+def calibrate_delta_q(model, cal_examples, feature_key="r12_vector"):
     """Calibrate ΔQ predictions using isotonic regression."""
     if model is None or len(cal_examples) < 10:
         return None
-    X = np.array([ex["compact_vector"] for ex in cal_examples])
+    X = np.array([ex[feature_key] for ex in cal_examples])
     y = np.array([ex["delta_q"] for ex in cal_examples])
     raw_preds = model.predict(X)
     try:
@@ -210,23 +272,112 @@ def calibrate_delta_q(model, cal_examples):
         return None
 
 
-def predict_delta_q(model, cal, state):
-    """Predict calibrated ΔQ."""
+def predict_delta_q(model, cal, state, prev_state=None, k=0):
+    """Predict calibrated ΔQ using R12 features."""
     if model is None:
         return 0.0
-    x = compact_state_to_vector(state).reshape(1, -1)
+    x = state_to_r12_vector(state, prev_state, k).reshape(1, -1)
     raw = model.predict(x)[0]
     if cal is not None:
         return float(cal.predict([raw])[0])
     return float(raw)
 
 
-def predict_break_risk(model, state):
+def predict_break_risk(model, state, prev_state=None, k=0):
     """Predict P(break)."""
     if model is None:
         return 0.0
-    x = compact_state_to_vector(state).reshape(1, -1)
+    x = state_to_r12_vector(state, prev_state, k).reshape(1, -1)
     return float(model.predict_proba(x)[0, 1])
+
+
+# ─── Precision/Recall at Budget ───
+
+def precision_recall_at_budget(y_true, y_scores, budget_pct):
+    """Compute precision and recall at a given budget percentage.
+
+    If budget_pct=5%, we flag the top 5% of scored examples as positive.
+    Returns (precision, recall) at that budget.
+    """
+    n = len(y_true)
+    n_budget = max(1, int(n * budget_pct / 100.0))
+
+    # Sort by score descending
+    sorted_indices = np.argsort(y_scores)[::-1]
+    flagged = sorted_indices[:n_budget]
+
+    n_true_positive = sum(y_true[i] for i in flagged)
+    n_actual_positive = sum(y_true)
+
+    precision = n_true_positive / n_budget if n_budget > 0 else 0.0
+    recall = n_true_positive / n_actual_positive if n_actual_positive > 0 else 0.0
+
+    return precision, recall
+
+
+# ─── ΔQ Distribution Diagnostics ───
+
+def dq_distribution_diagnostics(examples, delta_q_model, delta_q_cal, feature_key="r12_vector"):
+    """Diagnose ΔQ distribution by class (rescue/waste/break).
+
+    Reports:
+    - Mean/std ΔQ prediction by class
+    - Calibration by predicted-value bins
+    - Precision/recall at 5% and 10% budgets
+    """
+    if delta_q_model is None or len(examples) == 0:
+        return {}
+
+    X = np.array([ex[feature_key] for ex in examples])
+    raw_preds = delta_q_model.predict(X)
+    if delta_q_cal is not None:
+        preds = np.array([float(delta_q_cal.predict([r])[0]) for r in raw_preds])
+    else:
+        preds = raw_preds
+
+    y_rescue = np.array([1 if ex["rescue"] else 0 for ex in examples])
+    y_break = np.array([1 if ex["break"] else 0 for ex in examples])
+
+    # Distribution by class
+    rescue_mask = y_rescue == 1
+    break_mask = y_break == 1
+    waste_mask = (y_rescue == 0) & (y_break == 0)
+
+    diagnostics = {
+        "n_total": len(examples),
+        "n_rescue": int(rescue_mask.sum()),
+        "n_break": int(break_mask.sum()),
+        "n_waste": int(waste_mask.sum()),
+        "dq_rescue_mean": float(preds[rescue_mask].mean()) if rescue_mask.any() else 0.0,
+        "dq_rescue_std": float(preds[rescue_mask].std()) if rescue_mask.sum() > 1 else 0.0,
+        "dq_waste_mean": float(preds[waste_mask].mean()) if waste_mask.any() else 0.0,
+        "dq_waste_std": float(preds[waste_mask].std()) if waste_mask.sum() > 1 else 0.0,
+        "dq_break_mean": float(preds[break_mask].mean()) if break_mask.any() else 0.0,
+        "dq_break_std": float(preds[break_mask].std()) if break_mask.sum() > 1 else 0.0,
+    }
+
+    # Calibration by predicted-value bins
+    bins = np.linspace(preds.min(), preds.max(), 11)
+    bin_cal = []
+    for i in range(len(bins) - 1):
+        mask = (preds >= bins[i]) & (preds < bins[i + 1])
+        if mask.sum() > 0:
+            bin_cal.append({
+                "bin_low": float(bins[i]),
+                "bin_high": float(bins[i + 1]),
+                "n": int(mask.sum()),
+                "actual_rescue_rate": float(y_rescue[mask].mean()),
+                "mean_pred_dq": float(preds[mask].mean()),
+            })
+    diagnostics["calibration_bins"] = bin_cal
+
+    # Precision/recall at budget
+    for budget in [5, 10]:
+        p, r = precision_recall_at_budget(y_rescue, preds, budget)
+        diagnostics[f"precision@{budget}%"] = float(p)
+        diagnostics[f"recall@{budget}%"] = float(r)
+
+    return diagnostics
 
 
 # ─── R12 Sequential Policy ───
@@ -267,13 +418,13 @@ def run_r12_policy(task, delta_q_model, delta_q_cal, break_model,
             k += step
             continue
 
-        # Predict ΔQ
-        dq = predict_delta_q(delta_q_model, delta_q_cal, state)
+        # Predict ΔQ (using R12 features with trajectory)
+        dq = predict_delta_q(delta_q_model, delta_q_cal, state, prev_state, k)
 
         # Check break risk
         p_break = 0.0
         if use_break_gate and break_model is not None:
-            p_break = predict_break_risk(break_model, state)
+            p_break = predict_break_risk(break_model, state, prev_state, k)
 
         # Decision
         if dq > threshold and (not use_break_gate or p_break < break_threshold):
@@ -304,8 +455,17 @@ def compute_cost_sensitive_utility(accuracy, avg_k, lam=0.1):
     return accuracy - lam * (avg_k - 2) / 10
 
 
-def split_tasks(tasks, seed=42, train_frac=0.6, cal_frac=0.15, dev_frac=0.1):
-    """Split tasks into train/cal/dev/test with no leakage."""
+def split_tasks(tasks, seed=42, train_frac=0.6, cal_frac=0.15, dev_frac=0.05):
+    """Split tasks into train/cal/dev/test with no leakage.
+
+    R12 default split (for 500 tasks):
+      - 300 train (60%)
+      - 75 calibration (15%)
+      - 25 development (5%) — for threshold selection
+      - 100 confirmation/test (20%)
+
+    For smaller corpora, uses proportional splits.
+    """
     n = len(tasks)
     rng = np.random.RandomState(seed)
     indices = rng.permutation(n)
@@ -585,27 +745,70 @@ def main():
         print(f"  Train: {len(train_ex)} examples, {n_rescue} rescues, "
               f"{n_break} breaks, {n_lookahead} lookahead rescues")
 
-        # Train R12 models
-        delta_q_model = train_delta_q_model(train_ex)
-        delta_q_cal = calibrate_delta_q(delta_q_model, cal_ex)
-        break_model = train_break_risk_model(train_ex)
-        rescue_model_compact = train_rescue_model_compact(train_ex)
+        # Train R12 models (using R12 features = compact + trajectory)
+        delta_q_model = train_delta_q_model(train_ex, feature_key="r12_vector")
+        delta_q_cal = calibrate_delta_q(delta_q_model, cal_ex, feature_key="r12_vector")
+        break_model = train_break_risk_model(train_ex, feature_key="r12_vector")
+        rescue_model_compact = train_rescue_model_compact(train_ex, feature_key="r12_vector")
+
+        # Also train compact-only model for ablation
+        delta_q_model_compact = train_delta_q_model(train_ex, feature_key="compact_vector")
+        rescue_model_compact_only = train_rescue_model_compact(train_ex, feature_key="compact_vector")
 
         # Also train R11.2-style models for comparison
         rescue_cal = calibrate_isotonic_enhanced(
             train_lookahead_rescue_model(train_ex), cal_ex, "lookahead_rescue")
         value_model_full = train_value_model(train_ex)
 
-        # AUROC on dev
+        # AUROC on dev (for both feature sets)
         if len(dev_ex) > 0 and rescue_model_compact is not None:
             dev_y = np.array([1 if ex["rescue"] else 0 for ex in dev_ex])
             if len(set(dev_y)) >= 2:
-                dev_X = np.array([ex["compact_vector"] for ex in dev_ex])
+                dev_X_r12 = np.array([ex["r12_vector"] for ex in dev_ex])
+                dev_X_compact = np.array([ex["compact_vector"] for ex in dev_ex])
                 with warnings.catch_warnings():
                     warnings.simplefilter("ignore")
-                    auroc_rescue = roc_auc_score(
-                        dev_y, rescue_model_compact.predict_proba(dev_X)[:, 1])
-                print(f"  Compact rescue AUROC (dev): {auroc_rescue:.4f}")
+                    auroc_r12 = roc_auc_score(
+                        dev_y, rescue_model_compact.predict_proba(dev_X_r12)[:, 1])
+                    if rescue_model_compact_only is not None:
+                        auroc_compact = roc_auc_score(
+                            dev_y, rescue_model_compact_only.predict_proba(dev_X_compact)[:, 1])
+                    else:
+                        auroc_compact = 0.0
+                print(f"  R12 rescue AUROC (dev): {auroc_r12:.4f} (compact+trajectory)")
+                print(f"  Compact rescue AUROC (dev): {auroc_compact:.4f} (base 6)")
+
+                # Precision/recall at budget
+                dev_scores_r12 = rescue_model_compact.predict_proba(dev_X_r12)[:, 1]
+                for budget in [5, 10]:
+                    p, r = precision_recall_at_budget(dev_y, dev_scores_r12, budget)
+                    print(f"  P@{budget}%={p:.3f} R@{budget}%={r:.3f} (R12 features)")
+
+        # ΔQ distribution diagnostics
+        if len(dev_ex) > 0:
+            dq_diag = dq_distribution_diagnostics(
+                dev_ex, delta_q_model, delta_q_cal, feature_key="r12_vector")
+            if dq_diag:
+                print(f"\n  ΔQ DISTRIBUTION DIAGNOSTICS (dev):")
+                print(f"    Rescue: n={dq_diag['n_rescue']}, "
+                      f"ΔQ mean={dq_diag['dq_rescue_mean']:.4f} "
+                      f"std={dq_diag['dq_rescue_std']:.4f}")
+                print(f"    Waste:  n={dq_diag['n_waste']}, "
+                      f"ΔQ mean={dq_diag['dq_waste_mean']:.4f} "
+                      f"std={dq_diag['dq_waste_std']:.4f}")
+                if dq_diag['n_break'] > 0:
+                    print(f"    Break:  n={dq_diag['n_break']}, "
+                          f"ΔQ mean={dq_diag['dq_break_mean']:.4f} "
+                          f"std={dq_diag['dq_break_std']:.4f}")
+                print(f"    P@5%={dq_diag.get('precision@5%', 0):.3f} "
+                      f"R@5%={dq_diag.get('recall@5%', 0):.3f}")
+                print(f"    P@10%={dq_diag.get('precision@10%', 0):.3f} "
+                      f"R@10%={dq_diag.get('recall@10%', 0):.3f}")
+                print(f"    Calibration bins:")
+                for b in dq_diag.get("calibration_bins", []):
+                    print(f"      [{b['bin_low']:.4f}, {b['bin_high']:.4f}): "
+                          f"n={b['n']}, actual_rescue={b['actual_rescue_rate']:.3f}, "
+                          f"pred_ΔQ={b['mean_pred_dq']:.4f}")
 
         # Evaluate on test
         results = evaluate_r12(
