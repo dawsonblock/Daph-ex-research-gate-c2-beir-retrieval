@@ -136,6 +136,7 @@ def run_tournament_v2(
                     if not op.is_admissible(checkpoint.runtime_state):
                         receipt = {
                             "execution_id": exec_id,
+                            "checkpoint_id": checkpoint.checkpoint_id,
                             "checkpoint_hash": checkpoint.sha256(),
                             "task_id": checkpoint.runtime_state.task_id,
                             "k": checkpoint.runtime_state.k,
@@ -168,6 +169,7 @@ def run_tournament_v2(
 
                     receipt = {
                         "execution_id": exec_id,
+                        "checkpoint_id": checkpoint.checkpoint_id,
                         "checkpoint_hash": checkpoint.sha256(),
                         "state_hash_before": hash_before,
                         "state_hash_after": hash_after,
