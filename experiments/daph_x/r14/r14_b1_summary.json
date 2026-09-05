@@ -1,0 +1,77 @@
+{
+  "experiment": "R14-B1",
+  "timestamp": "2026-09-05T08:59:41Z",
+  "n_checkpoints": 20,
+  "n_operators": 5,
+  "seed": 42,
+  "optillm_url": "http://127.0.0.1:8000/v1",
+  "model": "qwen",
+  "token_accounting_note": "usage.total_tokens is FINAL_RESPONSE_ONLY for multi-call strategies. Use wall_ms for Pareto analysis.",
+  "operators": {
+    "STOP": {
+      "n": 20,
+      "n_success": 20,
+      "n_correct": 10,
+      "n_evaluable": 20,
+      "accuracy": 0.5,
+      "success_rate": 1.0,
+      "wall_ms_mean": 0.0,
+      "wall_ms_median": 0,
+      "total_tokens_mean": null,
+      "total_tokens_reported": 0,
+      "token_accounting_note": null
+    },
+    "OPT_COT_REFLECT": {
+      "n": 20,
+      "n_success": 20,
+      "n_correct": 10,
+      "n_evaluable": 20,
+      "accuracy": 0.5,
+      "success_rate": 1.0,
+      "wall_ms_mean": 1714.7373958476237,
+      "wall_ms_median": 283.291208994342,
+      "total_tokens_mean": 106.55,
+      "total_tokens_reported": 20,
+      "token_accounting_note": "FINAL_RESPONSE_ONLY for multi-call strategies"
+    },
+    "OPT_RE2": {
+      "n": 20,
+      "n_success": 20,
+      "n_correct": 10,
+      "n_evaluable": 20,
+      "accuracy": 0.5,
+      "success_rate": 1.0,
+      "wall_ms_mean": 1503.3651438017841,
+      "wall_ms_median": 132.0411249762401,
+      "total_tokens_mean": 106.55,
+      "total_tokens_reported": 20,
+      "token_accounting_note": "FINAL_RESPONSE_ONLY for multi-call strategies"
+    },
+    "OPT_PLANSEARCH_LOW": {
+      "n": 20,
+      "n_success": 20,
+      "n_correct": 10,
+      "n_evaluable": 20,
+      "accuracy": 0.5,
+      "success_rate": 1.0,
+      "wall_ms_mean": 3603.5338188521564,
+      "wall_ms_median": 263.7679160106927,
+      "total_tokens_mean": 106.55,
+      "total_tokens_reported": 20,
+      "token_accounting_note": "FINAL_RESPONSE_ONLY for multi-call strategies"
+    },
+    "OPT_SC_LOW": {
+      "n": 20,
+      "n_success": 20,
+      "n_correct": 10,
+      "n_evaluable": 20,
+      "accuracy": 0.5,
+      "success_rate": 1.0,
+      "wall_ms_mean": 3554.180341650499,
+      "wall_ms_median": 265.76941600069404,
+      "total_tokens_mean": 99.75,
+      "total_tokens_reported": 20,
+      "token_accounting_note": "FINAL_RESPONSE_ONLY for multi-call strategies"
+    }
+  }
+}
