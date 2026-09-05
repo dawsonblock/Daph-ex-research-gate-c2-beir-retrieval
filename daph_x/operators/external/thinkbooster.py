@@ -103,8 +103,12 @@ class ThinkBoosterProfile:
     strategy_params: dict[str, Any] = field(default_factory=dict)
 
     def url_path(self) -> str:
-        """URL path component for this profile."""
-        return f"/v1/{self.strategy}/{self.scorer}"
+        """URL path component for this profile (relative to base_url).
+
+        If base_url is http://localhost:8001/v1, the full endpoint becomes:
+            http://localhost:8001/v1/{strategy}/{scorer}/chat/completions
+        """
+        return f"/{self.strategy}/{self.scorer}"
 
 
 # Frozen profiles per R14_PROTOCOL.md §6

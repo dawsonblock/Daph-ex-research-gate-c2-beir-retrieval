@@ -278,6 +278,8 @@ class TestBackendImmutability:
 
     def test_thinkbooster_url_construction(self):
         b = OpenAICompatibleBackend(base_url="http://localhost:8001/v1", model="m")
+        # ThinkBooster profile url_path is /{strategy}/{scorer}, not /v1/{strategy}/{scorer}
+        # because base_url already includes /v1
         tb_b = b.with_base_url("http://localhost:8001/v1/beam_search/prm")
         assert tb_b.chat_completions_url == "http://localhost:8001/v1/beam_search/prm/chat/completions"
 
@@ -408,7 +410,7 @@ class TestThinkBoosterProfiles:
 
     def test_profile_url_path(self):
         profile = TB_PROFILES["TB_BON_LOW"]
-        assert profile.url_path() == "/v1/best_of_n/prm"
+        assert profile.url_path() == "/best_of_n/prm"
 
     def test_operator_creation(self):
         backend = _make_backend()

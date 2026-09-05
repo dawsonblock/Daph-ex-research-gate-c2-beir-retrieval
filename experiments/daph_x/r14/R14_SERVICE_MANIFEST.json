@@ -1,0 +1,94 @@
+{
+  "manifest_version": "1",
+  "frozen_at": "2026-09-05T02:53:00Z",
+  "base_model": {
+    "model_id": "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "model_family": "qwen2.5",
+    "parameter_size": "7B",
+    "quantization": "Q4_K_M",
+    "backend": "llama-server",
+    "llama_server_version": "homebrew"
+  },
+  "services": {
+    "llama_server": {
+      "base_url": "http://127.0.0.1:8080/v1",
+      "port": 8080,
+      "status": "RUNNING"
+    },
+    "optillm": {
+      "base_url": "http://127.0.0.1:8000/v1",
+      "port": 8000,
+      "version": "0.3.22",
+      "approach": "none",
+      "base_url_upstream": "http://127.0.0.1:8080/v1",
+      "status": "RUNNING"
+    },
+    "thinkbooster": {
+      "base_url": "http://localhost:8001/v1",
+      "port": 8001,
+      "version": "0.1.1",
+      "status": "NOT_AVAILABLE",
+      "reason": "vllm dependency does not build on macOS arm64. ThinkBooster service_app requires vllm for model serving. Library installed with --no-deps but service cannot start."
+    }
+  },
+  "token_accounting_semantics": {
+    "optillm_self_consistency_n4": {
+      "determination": "FINAL_RESPONSE_ONLY",
+      "evidence": {
+        "n1_prompt_tokens": 63,
+        "n1_completion_tokens": 246,
+        "n1_total_tokens": 309,
+        "n4_prompt_tokens": 63,
+        "n4_completion_tokens": 246,
+        "n4_total_tokens": 309,
+        "n4_num_choices": 4,
+        "n4_choice_char_lengths": [693, 871, 846, 633],
+        "upstream_calls": 1,
+        "note": "usage.total_tokens is identical for N=1 and N=4. llama-server returns 4 choices in 1 request but reports usage for only 1 generation. Pareto analysis using this field is INVALID for multi-call strategies."
+      },
+      "implication": "Must use alternative cost axis for multi-call strategies. Options: (1) wall_ms, (2) count upstream HTTP calls × per-call token estimate, (3) instrument llama-server logs."
+    },
+    "optillm_cot_reflection": {
+      "determination": "AGGREGATE_INTERNAL_COMPUTE",
+      "evidence": {
+        "upstream_calls": 1,
+        "note": "cot_reflection makes 1 upstream call. usage.total_tokens accurately reflects the single generation including thinking/reflection sections."
+      }
+    },
+    "optillm_re2": {
+      "determination": "AGGREGATE_INTERNAL_COMPUTE",
+      "evidence": {
+        "upstream_calls": 1,
+        "note": "re2 makes 1 upstream call with repeated prompt. usage.total_tokens accurately reflects the single generation."
+      }
+    },
+    "optillm_plansearch": {
+      "determination": "PARTIAL",
+      "evidence": {
+        "upstream_calls": 1,
+        "note": "plansearch made only 1 upstream call for simple arithmetic. May make more calls for complex problems. usage.total_tokens reflects only the observed call."
+      }
+    },
+    "thinkbooster": {
+      "determination": "UNKNOWN",
+      "reason": "Service not available on macOS. Cannot determine token accounting semantics without live service."
+    }
+  },
+  "live_conformance_results": {
+    "optillm_tests": "4/4 PASSED",
+    "optillm_strategies_tested": ["cot_reflection", "re2", "plansearch"],
+    "thinkbooster_tests": "BLOCKED (service unavailable)",
+    "answer_extraction_tests": "13/13 PASSED (all answer types)",
+    "live_answer_extraction": "PASSED",
+    "token_accounting_determination": "COMPLETED for OptiLLM, UNKNOWN for ThinkBooster"
+  },
+  "r14_b_readiness": {
+    "optillm_profiles_admissible": ["OPT_COT_REFLECT", "OPT_RE2", "OPT_PLANSEARCH_LOW", "OPT_SC_LOW"],
+    "optillm_profiles_inadmissible": ["OPT_BON_LOW", "OPT_MOA_LOW"],
+    "thinkbooster_profiles": "BLOCKED — requires vllm or alternative backend",
+    "blocking_issues": [
+      "ThinkBooster service cannot run on macOS (vllm dependency)",
+      "Token accounting for multi-call strategies is FINAL_RESPONSE_ONLY — need alternative cost axis"
+    ]
+  }
+}
