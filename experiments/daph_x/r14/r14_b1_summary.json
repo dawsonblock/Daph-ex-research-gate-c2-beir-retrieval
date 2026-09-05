@@ -1,12 +1,19 @@
 {
-  "experiment": "R14-B1",
+  "experiment": "R14-B2",
   "timestamp": "2026-09-05T21:03:08Z",
   "n_checkpoints": 90,
-  "n_operators": 5,
+  "n_operators": 4,
   "seed": 42,
   "optillm_url": "http://127.0.0.1:8000/v1",
   "model": "qwen",
-  "token_accounting_note": "usage.total_tokens is FINAL_RESPONSE_ONLY for multi-call strategies. Use wall_ms for Pareto analysis.",
+  "excluded_profiles": ["OPT_PLANSEARCH_LOW"],
+  "exclusion_reason": "PlanSearch makes 12+ upstream calls per request (~100s/checkpoint). Run separately.",
+  "token_accounting_note": "usage.total_tokens is null for multi-call strategies. Wall_ms is the primary cost axis. True token/GPU compute is NOT instrumented yet.",
+  "invalidates_previous": {
+    "commit": "e8829ad",
+    "reason": "OptiLLM pass-through bug: --approach none prepends none- to model name, causing approaches[0]=='none' pass-through. No strategy actually executed. All strategies produced identical output. Results invalidated.",
+    "fix_commit": "70aa4cb"
+  },
   "operators": {
     "STOP": {
       "n": 90,

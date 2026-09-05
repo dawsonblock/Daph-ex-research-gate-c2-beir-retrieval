@@ -1,0 +1,131 @@
+{
+  "manifest_version": "2",
+  "frozen_at": "2026-09-05T22:00:00Z",
+  "purpose": "R14-C qualification provenance. Every field needed to reproduce the exact treatment.",
+
+  "hardware": {
+    "cpu": "Apple M2 Pro",
+    "memory_bytes": 17179869184,
+    "os": "Darwin 25.2.0 (arm64)",
+    "kernel": "xnu-12377.61.12~1/RELEASE_ARM64_T6020"
+  },
+
+  "python": {
+    "version": "3.12.0",
+    "implementation": "CPython",
+    "pyenv_version": "3.12.0"
+  },
+
+  "base_model": {
+    "model_name": "Qwen2.5-7B-Instruct",
+    "gguf_filename": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "gguf_path": "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "gguf_sha256": "65b8fcd92af6b4fefa935c625d1ac27ea29dcb6ee14589c55a8f115ceaaa1423",
+    "parameter_count": 7615616512,
+    "quantization": "Q4_K_M",
+    "context_size": 4096,
+    "vocab_size": 152064,
+    "embedding_dim": 3584
+  },
+
+  "llama_server": {
+    "binary_path": "/opt/homebrew/bin/llama-server",
+    "version": "9760",
+    "build_hash": "6ee0f6579",
+    "compiler": "AppleClang 21.0.0.21000099",
+    "target": "Darwin arm64",
+    "homebrew_package": "llama.cpp 9760",
+    "invocation_flags": [
+      "--model", "/Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "--port", "8080",
+      "--host", "127.0.0.1",
+      "--ctx-size", "4096",
+      "--temp", "0.0"
+    ],
+    "port": 8080,
+    "system_fingerprint": "b9760-6ee0f6579"
+  },
+
+  "optillm": {
+    "version": "0.3.22",
+    "pip_package": "optillm==0.3.22",
+    "source_hash_sha256": "d33d2cd2be1c2b8f100bc9b3a248eaeefc81788e213541d27853e6b8f515d583",
+    "install_path": "/Users/dawsonblock/.pyenv/versions/3.12.0/lib/python3.12/site-packages/optillm",
+    "invocation_flags": [
+      "--base_url", "http://127.0.0.1:8080/v1",
+      "--port", "8000",
+      "--approach", "none"
+    ],
+    "port": 8000,
+    "upstream_base_url": "http://127.0.0.1:8080/v1",
+    "approach_override": "auto (set per-request via extra_body to prevent none- prepend pass-through)",
+    "known_bug": "When --approach none is set, OptiLLM prepends none- to the model name. parse_combined_approach sees approaches[0]=='none' and triggers pass-through, skipping the requested strategy. Fix: set optillm_approach=auto in request extra_body."
+  },
+
+  "operator_profiles": {
+    "STOP": {
+      "type": "native_control",
+      "description": "Use current state answer, zero cost",
+      "version": "2"
+    },
+    "OPT_COT_REFLECT": {
+      "type": "optillm_external",
+      "slug": "cot_reflection",
+      "strategy_params": {},
+      "state_mode": "FRESH_SOLVE",
+      "tier": 1,
+      "description": "Chain-of-thought with reflection: thinking + reflection + output"
+    },
+    "OPT_RE2": {
+      "type": "optillm_external",
+      "slug": "re2",
+      "strategy_params": {},
+      "state_mode": "FRESH_SOLVE",
+      "tier": 1,
+      "description": "RE2: rereading for improved reasoning"
+    },
+    "OPT_SC_LOW": {
+      "type": "optillm_external",
+      "slug": "self_consistency",
+      "strategy_params": {"n": 4, "temperature": 0.7},
+      "state_mode": "FRESH_SOLVE",
+      "tier": 2,
+      "description": "Self-consistency with N=4 samples",
+      "status": "RETIRED_FROM_R14C - dominated by COT_REFLECT on accuracy/latency"
+    },
+    "OPT_PLANSEARCH_LOW": {
+      "type": "optillm_external",
+      "slug": "plansearch",
+      "strategy_params": {"n": 3},
+      "state_mode": "PARALLEL_SEARCH",
+      "tier": 2,
+      "description": "Search over candidate plans",
+      "status": "PENDING_ISOLATED_SCREENING - ~100s/checkpoint, too slow for batch"
+    }
+  },
+
+  "token_accounting": {
+    "status": "NOT_INSTRUMENTED",
+    "usage_total_tokens": "null for multi-call strategies (cot_reflection, re2, self_consistency, plansearch)",
+    "underlying_model_calls": "null - OptiLLM does not report internal call count",
+    "primary_cost_axis": "wall_ms (observed end-to-end latency)",
+    "limitation": "R14-C can qualify accuracy vs observed wall latency, but NOT accuracy vs true token/GPU compute. The wall_ms distribution is strongly skewed (e.g. SC: mean 25.4s, median 2.0s), so mean alone is misleading. Report mean, median, p90, p95."
+  },
+
+  "checkpoint_corpus": {
+    "source": "experiments/daph_x/r13/v2/checkpoints.jsonl",
+    "n_checkpoints": 90,
+    "n_unique_task_ids": 81,
+    "answer_types": {"int": 73, "float": 6, "string": 11},
+    "categories": {"math": 57, "combinatorics": 15, "logic": 13, "sequence": 5},
+    "note": "81 unique task IDs across 90 checkpoints means some tasks appear at multiple K values. All R14-C confidence intervals and hypothesis tests must be task-clustered."
+  },
+
+  "invalidated_results": {
+    "commit": "e8829ad",
+    "experiment": "R14-B1 (original)",
+    "reason": "OptiLLM pass-through bug: no strategy actually executed. All strategies produced identical output with 63.3% accuracy. The 63.3% was the base model pass-through rate, not any strategy result.",
+    "fix_commit": "70aa4cb",
+    "valid_results_commit": "8c11c85"
+  }
+}
