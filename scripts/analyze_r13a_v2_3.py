@@ -451,17 +451,30 @@ def main():
         complete_checkpoints.add((ev["checkpoint_id"], ev["operator_id"], ev["replicate_id"]))
     n_cells = len(complete_checkpoints)
     print(f"Total (checkpoint, operator, replicate) cells: {n_cells}")
-    if n_cells != 0 and n_cells != 90 * 5 * 3:
-        print(f"WARNING: expected {90 * 5 * 3} cells, got {n_cells}")
+    expected_cells = 90 * 5 * 3
+    if n_cells != expected_cells:
+        raise SystemExit(
+            f"INTEGRITY FAIL: expected {expected_cells} (checkpoint, operator, replicate) cells, got {n_cells}. "
+            f"Replication is incomplete; analysis aborted under Addendum 3 fail-closed rule."
+        )
 
     averaged = average_replicates(events)
     print(f"Averaged to {len(averaged)} (checkpoint, operator) records")
+    expected_averaged = 90 * 5
+    if len(averaged) != expected_averaged:
+        raise SystemExit(
+            f"INTEGRITY FAIL: expected {expected_averaged} averaged (checkpoint, operator) records, got {len(averaged)}. "
+            f"Some checkpoint/operator pairs are missing replicates; analysis aborted."
+        )
 
     complete = keep_complete_checkpoints(averaged)
     n_cp = len(complete) // 5
     print(f"Complete checkpoints: {n_cp}")
-    if n_cp != 0 and n_cp != 90:
-        print(f"WARNING: expected 90 complete checkpoints, got {n_cp}")
+    if n_cp != 90:
+        raise SystemExit(
+            f"INTEGRITY FAIL: expected 90 complete checkpoints (5 operators each), got {n_cp}. "
+            f"Analysis aborted under Addendum 3 fail-closed rule."
+        )
 
     analyze_q4(events)
     analyze_q5(averaged)
