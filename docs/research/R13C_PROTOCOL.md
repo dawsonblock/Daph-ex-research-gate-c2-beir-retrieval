@@ -1,5 +1,8 @@
 # R13-C Protocol — Action-Value Regression for Hierarchical Cognitive Control
 
+> **STATUS: PAUSED_PENDING_EXTERNAL_OPERATOR_QUALIFICATION (R14)**  
+> Execution of R13-C is paused. Following architectural review, DAPH-X pivots from training custom routers over weak native operators to acting as an external, cost-aware cognitive executive over mature external reasoning systems (ThinkBooster, OptiLLM, DeepConf, MUR, etc.). R13-C remains frozen as a preregistered reference branch; native operators are reclassified as reference baselines.
+
 ## Preregistration
 
 This protocol is committed **after** the R13-A v2.3 replicated qualification result (`86b898f`) and **before** any model training or descriptive analysis of the continuing-state structure. No model is trained until this protocol is complete.
