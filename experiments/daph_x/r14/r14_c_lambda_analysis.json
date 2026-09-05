@@ -1,8 +1,14 @@
 {
   "experiment": "R14-C",
-  "analysis": "preregistered_lambda_scan_and_deployment",
+  "analysis": "corrected_lambda_scan_and_deployment",
+  "corrections": [
+    "3-run mean latency L\u0304(s,a) = (1/3) \u03a3_r L(s,a,r) instead of seed-42 only",
+    "threshold direction corrected for entropy/uncertainty (escalate if ABOVE)",
+    "threshold splits use equivalence classes of identical values",
+    "full Pareto frontier reported instead of single best",
+    "\u03bb grid refined around RE2 best-fixed interval (~0.054-0.057)"
+  ],
   "n_checkpoints": 90,
-  "note": "Uses unique 90 checkpoints (seed 42). All seeds identical under temp=0.0.",
   "lambda_scan": [
     {
       "lambda": 0.0,
@@ -16,93 +22,133 @@
     },
     {
       "lambda": 0.001,
-      "j_oracle": 0.9308833986721888,
-      "j_best_fixed": 0.8924475217819444,
+      "j_oracle": 0.9308846320385593,
+      "j_best_fixed": 0.8923970563873185,
       "best_fixed_op": "OPT_COT_REFLECT",
-      "routing_headroom": 0.038435876890244414,
+      "routing_headroom": 0.038487575651240835,
       "j_stop": 0.4888888888888889,
-      "j_re2": 0.5543145265296111,
-      "j_cot": 0.8924475217819444
+      "j_re2": 0.5543839794944334,
+      "j_cot": 0.8923970563873185
     },
     {
       "lambda": 0.005,
-      "j_oracle": 0.9210836600276113,
-      "j_best_fixed": 0.8622376089097219,
+      "j_oracle": 0.9210898268594632,
+      "j_best_fixed": 0.8619852819365926,
       "best_fixed_op": "OPT_COT_REFLECT",
-      "routing_headroom": 0.05884605111788943,
+      "routing_headroom": 0.05910454492287054,
       "j_stop": 0.4888888888888889,
-      "j_re2": 0.5493504104258335,
-      "j_cot": 0.8622376089097219
+      "j_re2": 0.5496976752499447,
+      "j_cot": 0.8619852819365926
     },
     {
       "lambda": 0.01,
-      "j_oracle": 0.9088339867218893,
-      "j_best_fixed": 0.8244752178194437,
+      "j_oracle": 0.908846320385593,
+      "j_best_fixed": 0.8239705638731853,
       "best_fixed_op": "OPT_COT_REFLECT",
-      "routing_headroom": 0.08435876890244565,
+      "routing_headroom": 0.08487575651240764,
       "j_stop": 0.4888888888888889,
-      "j_re2": 0.5431452652961114,
-      "j_cot": 0.8244752178194437
+      "j_re2": 0.5438397949443339,
+      "j_cot": 0.8239705638731853
     },
     {
       "lambda": 0.02,
-      "j_oracle": 0.8843346401104454,
-      "j_best_fixed": 0.7489504356388873,
+      "j_oracle": 0.8843593074378524,
+      "j_best_fixed": 0.7479411277463706,
       "best_fixed_op": "OPT_COT_REFLECT",
-      "routing_headroom": 0.13538420447155808,
+      "routing_headroom": 0.13641817969148184,
       "j_stop": 0.4888888888888889,
-      "j_re2": 0.5307349750366674,
-      "j_cot": 0.7489504356388873
+      "j_re2": 0.5321240343331122,
+      "j_cot": 0.7479411277463706
     },
     {
       "lambda": 0.05,
-      "j_oracle": 0.8108366002761127,
-      "j_best_fixed": 0.5223760890972183,
+      "j_oracle": 0.8108982685946311,
+      "j_best_fixed": 0.5198528193659263,
       "best_fixed_op": "OPT_COT_REFLECT",
-      "routing_headroom": 0.2884605111788944,
+      "routing_headroom": 0.2910454492287048,
       "j_stop": 0.4888888888888889,
-      "j_re2": 0.4935041042583352,
-      "j_cot": 0.5223760890972183
+      "j_re2": 0.4969767524994471,
+      "j_cot": 0.5198528193659263
+    },
+    {
+      "lambda": 0.054,
+      "j_oracle": 0.801103463415535,
+      "j_best_fixed": 0.4922904482549585,
+      "best_fixed_op": "OPT_RE2",
+      "routing_headroom": 0.30881301516057647,
+      "j_stop": 0.4888888888888889,
+      "j_re2": 0.4922904482549585,
+      "j_cot": 0.4894410449152005
+    },
+    {
+      "lambda": 0.057,
+      "j_oracle": 0.793757359531213,
+      "j_best_fixed": 0.4888888888888889,
+      "best_fixed_op": "STOP",
+      "routing_headroom": 0.3048684706423241,
+      "j_stop": 0.4888888888888889,
+      "j_re2": 0.488775720071592,
+      "j_cot": 0.466632214077156
+    },
+    {
+      "lambda": 0.06,
+      "j_oracle": 0.7865867615820018,
+      "j_best_fixed": 0.4888888888888889,
+      "best_fixed_op": "STOP",
+      "routing_headroom": 0.29769787269311293,
+      "j_stop": 0.4888888888888889,
+      "j_re2": 0.48526099188822547,
+      "j_cot": 0.4438233832391117
+    },
+    {
+      "lambda": 0.08,
+      "j_oracle": 0.7421173376029646,
+      "j_best_fixed": 0.4888888888888889,
+      "best_fixed_op": "STOP",
+      "routing_headroom": 0.25322844871407574,
+      "j_stop": 0.4888888888888889,
+      "j_re2": 0.46182947066578206,
+      "j_cot": 0.2917645109854822
     },
     {
       "lambda": 0.1,
-      "j_oracle": 0.7065757450411122,
+      "j_oracle": 0.7077179843333343,
       "j_best_fixed": 0.4888888888888889,
       "best_fixed_op": "STOP",
-      "routing_headroom": 0.21768685615222333,
+      "routing_headroom": 0.21882909544444545,
       "j_stop": 0.4888888888888889,
-      "j_re2": 0.43145265296111474,
-      "j_cot": 0.14475217819443664
+      "j_re2": 0.4383979494433387,
+      "j_cot": 0.13970563873185268
     },
     {
       "lambda": 0.2,
-      "j_oracle": 0.6516768171155611,
+      "j_oracle": 0.654529596291115,
       "j_best_fixed": 0.4888888888888889,
       "best_fixed_op": "STOP",
-      "routing_headroom": 0.16278792822667226,
+      "routing_headroom": 0.16564070740222608,
       "j_stop": 0.4888888888888889,
-      "j_re2": 0.3073497503666739,
-      "j_cot": -0.6104956436111267
+      "j_re2": 0.3212403433311219,
+      "j_cot": -0.6205887225362946
     },
     {
       "lambda": 0.5,
-      "j_oracle": 0.6134538525166742,
+      "j_oracle": 0.620529320203709,
       "j_best_fixed": 0.4888888888888889,
       "best_fixed_op": "STOP",
-      "routing_headroom": 0.1245649636277853,
+      "routing_headroom": 0.13164043131482012,
       "j_stop": 0.4888888888888889,
-      "j_re2": -0.06495895741664855,
-      "j_cot": -2.8762391090278165
+      "j_re2": -0.03023247500552854,
+      "j_cot": -2.9014718063407368
     },
     {
       "lambda": 1.0,
-      "j_oracle": 0.5719292772777812,
+      "j_oracle": 0.5842806103259338,
       "j_best_fixed": 0.4888888888888889,
       "best_fixed_op": "STOP",
-      "routing_headroom": 0.08304038838889233,
+      "routing_headroom": 0.09539172143704494,
       "j_stop": 0.4888888888888889,
-      "j_re2": -0.6854734703888526,
-      "j_cot": -6.652478218055633
+      "j_re2": -0.6160205055666126,
+      "j_cot": -6.702943612681473
     }
   ],
   "deployment": {
@@ -114,102 +160,520 @@
       },
       "OPT_RE2": {
         "accuracy": 0.5555555555555556,
-        "mean_latency_s": 1.2410290259444081,
+        "mean_latency_s": 1.1715760611221682,
         "n_correct": 50
       },
       "OPT_COT_REFLECT": {
         "accuracy": 0.9,
-        "mean_latency_s": 7.552478218055633,
+        "mean_latency_s": 7.602943612681473,
         "n_correct": 81
       }
     },
     "oracle_stop_to_cot": {
       "correct": 82,
-      "latency_ms": 417709.73612200026,
+      "latency_s": 420.84713205599957,
       "accuracy": 0.9111111111111111,
-      "mean_latency_s": 4.641219290244448
+      "mean_latency_s": 4.676079245066662
     },
     "oracle_stop_to_re2": {
       "correct": 64,
-      "latency_ms": 74467.55450399723,
+      "latency_s": 72.00676243166164,
       "accuracy": 0.7111111111111111,
-      "mean_latency_s": 0.8274172722666359
+      "mean_latency_s": 0.8000751381295738
     },
     "oracle_3way": {
       "correct": 84,
-      "latency_ms": 220494.11950299694,
+      "latency_s": 220.38311652966388,
       "accuracy": 0.9333333333333333,
-      "mean_latency_s": 2.44993466114441
+      "mean_latency_s": 2.448701294774043
+    }
+  },
+  "threshold_frontiers_dev_only": {
+    "p_top1": {
+      "label": "escalate if p_top1 < t",
+      "pareto_frontier": [
+        {
+          "threshold": null,
+          "n_escalated": 0,
+          "accuracy": 0.4888888888888889,
+          "mean_latency_s": 0.0,
+          "n_correct": 44,
+          "policy": "never escalate (always STOP)"
+        },
+        {
+          "threshold": 0.25,
+          "n_escalated": 0,
+          "accuracy": 0.4888888888888889,
+          "mean_latency_s": 0.0,
+          "n_correct": 44,
+          "policy": "escalate if p_top1 < t"
+        },
+        {
+          "threshold": 0.3333333333333333,
+          "n_escalated": 2,
+          "accuracy": 0.5111111111111111,
+          "mean_latency_s": 0.23728870107777902,
+          "n_correct": 46,
+          "policy": "escalate if p_top1 < t"
+        },
+        {
+          "threshold": 0.5,
+          "n_escalated": 8,
+          "accuracy": 0.5555555555555556,
+          "mean_latency_s": 0.7854571678999963,
+          "n_correct": 50,
+          "policy": "escalate if p_top1 < t"
+        },
+        {
+          "threshold": 0.6666666666666666,
+          "n_escalated": 45,
+          "accuracy": 0.8222222222222222,
+          "mean_latency_s": 4.56186561528148,
+          "n_correct": 74,
+          "policy": "escalate if p_top1 < t"
+        },
+        {
+          "threshold": 0.75,
+          "n_escalated": 49,
+          "accuracy": 0.8444444444444444,
+          "mean_latency_s": 4.898481978862961,
+          "n_correct": 76,
+          "policy": "escalate if p_top1 < t"
+        },
+        {
+          "threshold": 0.8333333333333334,
+          "n_escalated": 57,
+          "accuracy": 0.8666666666666667,
+          "mean_latency_s": 5.521895684722201,
+          "n_correct": 78,
+          "policy": "escalate if p_top1 < t"
+        },
+        {
+          "threshold": null,
+          "n_escalated": 90,
+          "accuracy": 0.9,
+          "mean_latency_s": 7.602943612681473,
+          "n_correct": 81,
+          "policy": "always escalate (always COT)"
+        }
+      ]
     },
-    "threshold_baselines_dev_only": {
-      "p_top1": {
-        "feature": "p_top1",
-        "threshold": 1.0,
-        "direction": "escalate_if_below",
-        "accuracy": 0.9,
-        "mean_latency_s": 6.008267903211122,
-        "n_escalated": 64,
-        "n_correct": 81
-      },
-      "margin": {
-        "feature": "margin",
-        "threshold": 1.0,
-        "direction": "escalate_if_below",
-        "accuracy": 0.9,
-        "mean_latency_s": 6.008267903211122,
-        "n_escalated": 64,
-        "n_correct": 81
-      },
-      "agreement_rate": {
-        "feature": "agreement_rate",
-        "threshold": 1.0,
-        "direction": "escalate_if_below",
-        "accuracy": 0.9,
-        "mean_latency_s": 6.008267903211122,
-        "n_escalated": 64,
-        "n_correct": 81
-      },
-      "entropy": {
-        "feature": "entropy",
-        "threshold": Infinity,
-        "direction": "escalate_if_below",
-        "accuracy": 0.9,
-        "mean_latency_s": 7.552478218055631,
-        "n_escalated": 90,
-        "n_correct": 81
-      },
-      "uncertainty_current": {
-        "feature": "uncertainty_current",
-        "threshold": 0.9999999997114609,
-        "direction": "escalate_if_below",
-        "accuracy": 0.9,
-        "mean_latency_s": 7.245033005544506,
-        "n_escalated": 87,
-        "n_correct": 81
-      }
+    "agreement_rate": {
+      "label": "escalate if agreement_rate < t",
+      "pareto_frontier": [
+        {
+          "threshold": null,
+          "n_escalated": 0,
+          "accuracy": 0.4888888888888889,
+          "mean_latency_s": 0.0,
+          "n_correct": 44,
+          "policy": "never escalate (always STOP)"
+        },
+        {
+          "threshold": 0.25,
+          "n_escalated": 0,
+          "accuracy": 0.4888888888888889,
+          "mean_latency_s": 0.0,
+          "n_correct": 44,
+          "policy": "escalate if agreement_rate < t"
+        },
+        {
+          "threshold": 0.3333333333333333,
+          "n_escalated": 2,
+          "accuracy": 0.5111111111111111,
+          "mean_latency_s": 0.23728870107777902,
+          "n_correct": 46,
+          "policy": "escalate if agreement_rate < t"
+        },
+        {
+          "threshold": 0.5,
+          "n_escalated": 8,
+          "accuracy": 0.5555555555555556,
+          "mean_latency_s": 0.7854571678999963,
+          "n_correct": 50,
+          "policy": "escalate if agreement_rate < t"
+        },
+        {
+          "threshold": 0.6666666666666666,
+          "n_escalated": 45,
+          "accuracy": 0.8222222222222222,
+          "mean_latency_s": 4.56186561528148,
+          "n_correct": 74,
+          "policy": "escalate if agreement_rate < t"
+        },
+        {
+          "threshold": 0.75,
+          "n_escalated": 49,
+          "accuracy": 0.8444444444444444,
+          "mean_latency_s": 4.898481978862961,
+          "n_correct": 76,
+          "policy": "escalate if agreement_rate < t"
+        },
+        {
+          "threshold": 0.8333333333333334,
+          "n_escalated": 57,
+          "accuracy": 0.8666666666666667,
+          "mean_latency_s": 5.521895684722201,
+          "n_correct": 78,
+          "policy": "escalate if agreement_rate < t"
+        },
+        {
+          "threshold": null,
+          "n_escalated": 90,
+          "accuracy": 0.9,
+          "mean_latency_s": 7.602943612681473,
+          "n_correct": 81,
+          "policy": "always escalate (always COT)"
+        }
+      ]
     },
-    "deployment_targets": {
-      "0.85": {
-        "best_policy": [
-          "3-way oracle",
-          0.9333333333333333,
-          2.44993466114441
-        ]
-      },
-      "0.88": {
-        "best_policy": [
-          "3-way oracle",
-          0.9333333333333333,
-          2.44993466114441
-        ]
-      },
-      "0.9": {
-        "best_policy": [
-          "3-way oracle",
-          0.9333333333333333,
-          2.44993466114441
-        ]
-      }
+    "margin": {
+      "label": "escalate if margin < t",
+      "pareto_frontier": [
+        {
+          "threshold": null,
+          "n_escalated": 0,
+          "accuracy": 0.4888888888888889,
+          "mean_latency_s": 0.0,
+          "n_correct": 44,
+          "policy": "never escalate (always STOP)"
+        },
+        {
+          "threshold": 0.0,
+          "n_escalated": 0,
+          "accuracy": 0.4888888888888889,
+          "mean_latency_s": 0.0,
+          "n_correct": 44,
+          "policy": "escalate if margin < t"
+        },
+        {
+          "threshold": 0.16666666666666666,
+          "n_escalated": 28,
+          "accuracy": 0.6666666666666666,
+          "mean_latency_s": 2.7911995077185434,
+          "n_correct": 60,
+          "policy": "escalate if margin < t"
+        },
+        {
+          "threshold": 0.16666666666666669,
+          "n_escalated": 29,
+          "accuracy": 0.6777777777777778,
+          "mean_latency_s": 2.8741939435185415,
+          "n_correct": 61,
+          "policy": "escalate if margin < t"
+        },
+        {
+          "threshold": 0.25,
+          "n_escalated": 34,
+          "accuracy": 0.7111111111111111,
+          "mean_latency_s": 3.506601199381502,
+          "n_correct": 64,
+          "policy": "escalate if margin < t"
+        },
+        {
+          "threshold": 0.33333333333333337,
+          "n_escalated": 42,
+          "accuracy": 0.7888888888888889,
+          "mean_latency_s": 4.244319329325919,
+          "n_correct": 71,
+          "policy": "escalate if margin < t"
+        },
+        {
+          "threshold": 0.5,
+          "n_escalated": 45,
+          "accuracy": 0.8222222222222222,
+          "mean_latency_s": 4.56186561528148,
+          "n_correct": 74,
+          "policy": "escalate if margin < t"
+        },
+        {
+          "threshold": 0.6666666666666667,
+          "n_escalated": 57,
+          "accuracy": 0.8666666666666667,
+          "mean_latency_s": 5.521895684722201,
+          "n_correct": 78,
+          "policy": "escalate if margin < t"
+        },
+        {
+          "threshold": null,
+          "n_escalated": 90,
+          "accuracy": 0.9,
+          "mean_latency_s": 7.602943612681473,
+          "n_correct": 81,
+          "policy": "always escalate (always COT)"
+        }
+      ]
+    },
+    "entropy": {
+      "label": "escalate if entropy > t",
+      "pareto_frontier": [
+        {
+          "threshold": null,
+          "n_escalated": 0,
+          "accuracy": 0.4888888888888889,
+          "mean_latency_s": 0.0,
+          "n_correct": 44,
+          "policy": "never escalate (always STOP)"
+        },
+        {
+          "threshold": 0.4505612086663046,
+          "n_escalated": 57,
+          "accuracy": 0.8666666666666667,
+          "mean_latency_s": 5.521895684722201,
+          "n_correct": 78,
+          "policy": "escalate if entropy > t"
+        },
+        {
+          "threshold": 0.5623351444188083,
+          "n_escalated": 49,
+          "accuracy": 0.8444444444444444,
+          "mean_latency_s": 4.898481978862961,
+          "n_correct": 76,
+          "policy": "escalate if entropy > t"
+        },
+        {
+          "threshold": 0.6931471803599453,
+          "n_escalated": 28,
+          "accuracy": 0.7222222222222222,
+          "mean_latency_s": 2.8097452032444155,
+          "n_correct": 65,
+          "policy": "escalate if entropy > t"
+        },
+        {
+          "threshold": 0.8675632281814611,
+          "n_escalated": 24,
+          "accuracy": 0.7,
+          "mean_latency_s": 2.473128839662935,
+          "n_correct": 63,
+          "policy": "escalate if entropy > t"
+        },
+        {
+          "threshold": 1.0114042644073518,
+          "n_escalated": 19,
+          "accuracy": 0.6666666666666666,
+          "mean_latency_s": 1.8407215837999744,
+          "n_correct": 60,
+          "policy": "escalate if entropy > t"
+        },
+        {
+          "threshold": 1.0397207705399178,
+          "n_escalated": 11,
+          "accuracy": 0.5888888888888889,
+          "mean_latency_s": 1.103003453855557,
+          "n_correct": 53,
+          "policy": "escalate if entropy > t"
+        },
+        {
+          "threshold": 1.242453324494,
+          "n_escalated": 8,
+          "accuracy": 0.5555555555555556,
+          "mean_latency_s": 0.7854571678999963,
+          "n_correct": 50,
+          "policy": "escalate if entropy > t"
+        },
+        {
+          "threshold": 1.3296613484547581,
+          "n_escalated": 3,
+          "accuracy": 0.5222222222222223,
+          "mean_latency_s": 0.3202831368777778,
+          "n_correct": 47,
+          "policy": "escalate if entropy > t"
+        },
+        {
+          "threshold": 1.3862943607198905,
+          "n_escalated": 1,
+          "accuracy": 0.5,
+          "mean_latency_s": 0.0829944357999988,
+          "n_correct": 45,
+          "policy": "escalate if entropy > t"
+        },
+        {
+          "threshold": 1.5607104085414063,
+          "n_escalated": 0,
+          "accuracy": 0.4888888888888889,
+          "mean_latency_s": 0.0,
+          "n_correct": 44,
+          "policy": "escalate if entropy > t"
+        },
+        {
+          "threshold": null,
+          "n_escalated": 90,
+          "accuracy": 0.9,
+          "mean_latency_s": 7.602943612681473,
+          "n_correct": 81,
+          "policy": "always escalate (always COT)"
+        }
+      ]
+    },
+    "uncertainty_current": {
+      "label": "escalate if uncertainty > t",
+      "pareto_frontier": [
+        {
+          "threshold": null,
+          "n_escalated": 0,
+          "accuracy": 0.4888888888888889,
+          "mean_latency_s": 0.0,
+          "n_correct": 44,
+          "policy": "never escalate (always STOP)"
+        },
+        {
+          "threshold": -1.4426951601859516e-10,
+          "n_escalated": 75,
+          "accuracy": 0.8777777777777778,
+          "mean_latency_s": 6.627315868222239,
+          "n_correct": 79,
+          "policy": "escalate if uncertainty > t"
+        },
+        {
+          "threshold": 0.3868528071229195,
+          "n_escalated": 56,
+          "accuracy": 0.8666666666666667,
+          "mean_latency_s": 5.421557766662947,
+          "n_correct": 78,
+          "policy": "escalate if uncertainty > t"
+        },
+        {
+          "threshold": 0.4056390620852969,
+          "n_escalated": 48,
+          "accuracy": 0.8444444444444444,
+          "mean_latency_s": 4.798144060803707,
+          "n_correct": 76,
+          "policy": "escalate if uncertainty > t"
+        },
+        {
+          "threshold": 0.48419625685317796,
+          "n_escalated": 44,
+          "accuracy": 0.8222222222222222,
+          "mean_latency_s": 4.461527697222226,
+          "n_correct": 74,
+          "policy": "escalate if uncertainty > t"
+        },
+        {
+          "threshold": 0.49999999985573046,
+          "n_escalated": 39,
+          "accuracy": 0.7888888888888889,
+          "mean_latency_s": 3.8747772399740787,
+          "n_correct": 71,
+          "policy": "escalate if uncertainty > t"
+        },
+        {
+          "threshold": 0.5644754677049905,
+          "n_escalated": 34,
+          "accuracy": 0.7555555555555555,
+          "mean_latency_s": 3.2423699841111184,
+          "n_correct": 68,
+          "policy": "escalate if uncertainty > t"
+        },
+        {
+          "threshold": 0.6934264033940264,
+          "n_escalated": 31,
+          "accuracy": 0.7222222222222222,
+          "mean_latency_s": 2.9248236981555578,
+          "n_correct": 65,
+          "policy": "escalate if uncertainty > t"
+        },
+        {
+          "threshold": 0.7420981282870613,
+          "n_escalated": 26,
+          "accuracy": 0.6888888888888889,
+          "mean_latency_s": 2.459649667133339,
+          "n_correct": 62,
+          "policy": "escalate if uncertainty > t"
+        },
+        {
+          "threshold": 0.7499999997835957,
+          "n_escalated": 18,
+          "accuracy": 0.6111111111111112,
+          "mean_latency_s": 1.7219315371889226,
+          "n_correct": 55,
+          "policy": "escalate if uncertainty > t"
+        },
+        {
+          "threshold": 0.8710490639760974,
+          "n_escalated": 17,
+          "accuracy": 0.6,
+          "mean_latency_s": 1.638937101388924,
+          "n_correct": 54,
+          "policy": "escalate if uncertainty > t"
+        },
+        {
+          "threshold": 0.9999999997114609,
+          "n_escalated": 0,
+          "accuracy": 0.4888888888888889,
+          "mean_latency_s": 0.0,
+          "n_correct": 44,
+          "policy": "escalate if uncertainty > t"
+        },
+        {
+          "threshold": null,
+          "n_escalated": 90,
+          "accuracy": 0.9,
+          "mean_latency_s": 7.602943612681473,
+          "n_correct": 81,
+          "policy": "always escalate (always COT)"
+        }
+      ]
+    },
+    "n_unique_answers": {
+      "label": "escalate if n_unique > t",
+      "pareto_frontier": [
+        {
+          "threshold": null,
+          "n_escalated": 0,
+          "accuracy": 0.4888888888888889,
+          "mean_latency_s": 0.0,
+          "n_correct": 44,
+          "policy": "never escalate (always STOP)"
+        },
+        {
+          "threshold": 1.0,
+          "n_escalated": 58,
+          "accuracy": 0.8666666666666667,
+          "mean_latency_s": 5.569704597996282,
+          "n_correct": 78,
+          "policy": "escalate if n_unique > t"
+        },
+        {
+          "threshold": 2.0,
+          "n_escalated": 28,
+          "accuracy": 0.7222222222222222,
+          "mean_latency_s": 2.8097452032444155,
+          "n_correct": 65,
+          "policy": "escalate if n_unique > t"
+        },
+        {
+          "threshold": 3.0,
+          "n_escalated": 11,
+          "accuracy": 0.5888888888888889,
+          "mean_latency_s": 1.103003453855557,
+          "n_correct": 53,
+          "policy": "escalate if n_unique > t"
+        },
+        {
+          "threshold": 4.0,
+          "n_escalated": 1,
+          "accuracy": 0.5,
+          "mean_latency_s": 0.0829944357999988,
+          "n_correct": 45,
+          "policy": "escalate if n_unique > t"
+        },
+        {
+          "threshold": 5.0,
+          "n_escalated": 0,
+          "accuracy": 0.4888888888888889,
+          "mean_latency_s": 0.0,
+          "n_correct": 44,
+          "policy": "escalate if n_unique > t"
+        },
+        {
+          "threshold": null,
+          "n_escalated": 90,
+          "accuracy": 0.9,
+          "mean_latency_s": 7.602943612681473,
+          "n_correct": 81,
+          "policy": "always escalate (always COT)"
+        }
+      ]
     }
   }
 }
