@@ -273,6 +273,24 @@ class TestMixedAnswerTypeExtractionLive:
         result = extract_answer(text, "numeric")
         assert result == "5", f"Expected '5', got '{result}'"
 
+    def test_string_type_extracts_yes_from_verbose(self):
+        """Bug fix: string type with yes/no answer must extract just 'yes'."""
+        text = "Yes. 28 is a perfect number because the sum of its proper divisors (1, 2, 4, 7, 14) equals the number itself (1 + 2 + 4 + 7 + 14 = 28)."
+        result = extract_answer(text, "string")
+        assert result == "yes", f"Expected 'yes', got '{result}'"
+
+    def test_string_type_extracts_no_from_verbose(self):
+        """Bug fix: string type with no answer must extract just 'no'."""
+        text = "No, because the sum of proper divisors exceeds the number."
+        result = extract_answer(text, "string")
+        assert result == "no", f"Expected 'no', got '{result}'"
+
+    def test_string_type_extracts_fraction(self):
+        """String type with fraction answer should extract the fraction."""
+        text = "After working through the ratios, the answer is 2/3."
+        result = extract_answer(text, "string")
+        assert result == "2/3", f"Expected '2/3', got '{result}'"
+
 
 # ---------------------------------------------------------------------------
 # Token accounting semantics determination

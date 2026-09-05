@@ -262,6 +262,15 @@ class OptiLLMOperator(CognitiveOperator):
         for k, v in self._profile.strategy_params.items():
             extra_params[k] = v
 
+        # Critical: override the server's default approach. When OptiLLM's
+        # default approach is 'none' (the factory default), it prepends
+        # 'none-' to the model name, producing 'none-cot_reflection-qwen'.
+        # parse_combined_approach then sees approaches=['none','cot_reflection']
+        # and approaches[0]=='none' triggers a pass-through, silently skipping
+        # the requested strategy. Setting optillm_approach='auto' prevents
+        # the prepend so the slug prefix is the only approach.
+        extra_params["optillm_approach"] = "auto"
+
         max_tokens = 4096
         if budget is not None and budget.max_tokens is not None:
             max_tokens = min(max_tokens, budget.max_tokens)

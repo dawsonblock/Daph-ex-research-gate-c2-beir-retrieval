@@ -115,10 +115,22 @@ def extract_answer(raw_text: str, answer_type: str = "default") -> str:
             return letters[-1].upper()
 
     elif at == "string":
-        # Try quoted strings
+        # Try quoted strings first
         quoted = _QUOTED_RE.findall(text)
         if quoted:
             return quoted[-1].strip()
+        # Try yes/no patterns — many "string" tasks have yes/no answers
+        yn = _YES_NO_RE.findall(text)
+        if yn:
+            return yn[-1].lower()
+        # Try true/false patterns
+        tf = _TRUE_FALSE_RE.findall(text)
+        if tf:
+            return tf[-1].lower()
+        # Try fraction patterns (e.g., "2/3")
+        fracs = _FRACTION_RE.findall(text)
+        if fracs:
+            return fracs[-1].replace(" ", "")
         # Try last non-empty line
         lines = [l.strip() for l in text.split("\n") if l.strip()]
         if lines:

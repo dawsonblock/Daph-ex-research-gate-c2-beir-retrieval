@@ -167,22 +167,28 @@ def run_screening(
     optillm_url: str,
     model: str,
     seed: int,
+    exclude: set[str] | None = None,
 ) -> list[dict]:
     """Run all operators on all checkpoints."""
     # Build OptiLLM backend and operators
+    # Use 300s timeout for plansearch which makes 12+ upstream calls
     backend = OpenAICompatibleBackend(
         base_url=optillm_url,
         model=model,
         api_key="no_key",
         provider_name="optillm",
+        timeout_s=300.0,
     )
 
     operators: list[tuple[str, OptiLLMOperator | None]] = []
     # Native controls
     for ctrl in NATIVE_CONTROLS:
         operators.append((ctrl, None))
-    # OptiLLM profiles
+    # OptiLLM profiles (respect exclude set)
+    exclude = exclude or set()
     for pid in ADMISSIBLE_OPTILLM_PROFILES:
+        if pid in exclude:
+            continue
         op = OptiLLMOperator(OPT_PROFILES[pid], backend)
         operators.append((pid, op))
 
@@ -258,6 +264,8 @@ def main():
     parser.add_argument("--optillm-url", default=os.environ.get("DAPH_OPTILLM_URL", "http://127.0.0.1:8000/v1"))
     parser.add_argument("--model", default=os.environ.get("DAPH_R14_MODEL", "qwen"))
     parser.add_argument("--output-dir", default=str(R14_OUTPUT_DIR))
+    parser.add_argument("--exclude", nargs="*", default=[],
+                        help="OptiLLM profile IDs to exclude (e.g. OPT_PLANSEARCH_LOW)")
     args = parser.parse_args()
 
     # Load data
@@ -279,7 +287,8 @@ def main():
     print(f"  Admissible OptiLLM: {ADMISSIBLE_OPTILLM_PROFILES}")
     print()
 
-    results = run_screening(selected, labels, args.optillm_url, args.model, args.seed)
+    results = run_screening(selected, labels, args.optillm_url, args.model, args.seed,
+                            exclude=set(args.exclude))
 
     # Save results
     output_dir = Path(args.output_dir)
