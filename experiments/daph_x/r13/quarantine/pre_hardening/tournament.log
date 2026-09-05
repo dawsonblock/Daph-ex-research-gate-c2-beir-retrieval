@@ -1384,8 +1384,3 @@ Model loaded.
   K=6 STOP                : stop     (0.0s)
   K=6 SAMPLE_STANDARD     : waste    (17.0s)
   K=6 SAMPLE_DIVERSE      : waste    (17.9s)
-  K=6 CRITIQUE_RETRY      : waste    (16.2s)
-  K=6 VERIFY_TARGETED     : waste    (16.5s)
-
-[162/203] reason_384 (1 checkpoints)
-  K=6 STOP                : stop     (0.0s)

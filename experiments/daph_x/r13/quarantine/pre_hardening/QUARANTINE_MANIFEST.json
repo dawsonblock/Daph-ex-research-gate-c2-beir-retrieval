@@ -1,0 +1,43 @@
+{
+  "status": "NON_QUALIFYING",
+  "reason_codes": [
+    "INCOMPLETE_TOURNAMENT",
+    "VERIFY_VERDICT_SUBSTRING_BUG",
+    "ORACLE_LABELS_PRESENT_IN_RUNTIME_STATE",
+    "APPROXIMATE_COST_ACCOUNTING",
+    "NO_STATE_IMMUTABILITY_ASSERTION",
+    "STOPPED_EARLY"
+  ],
+  "may_be_used_for": [
+    "debugging",
+    "operator development"
+  ],
+  "may_not_be_used_for": [
+    "R13-Q4",
+    "R13-Q5",
+    "router training",
+    "scientific claims",
+    "confirmation evaluation"
+  ],
+  "quarantine_date": "2026-09-05T02:42:05.599823Z",
+  "source_commit": "e4a23ba",
+  "n_checkpoints_quarantined": 254,
+  "n_executions_quarantined": null,
+  "files": {
+    "r13a_checkpoints.jsonl": {
+      "path": "experiments/daph_x/r13/quarantine/pre_hardening/r13a_checkpoints.jsonl",
+      "sha256": "91747d222525994cb2c80640c97bb5623898abe217bc223b7db54144960536cc",
+      "size_bytes": 3481805
+    },
+    "r13a_tournament.jsonl": {
+      "path": "experiments/daph_x/r13/quarantine/pre_hardening/r13a_tournament.jsonl",
+      "sha256": "8615dd33a95b7f72a81161acab5d2f5062c94b972d3958cbe57083341e3485cf",
+      "size_bytes": 3049457
+    },
+    "tournament.log": {
+      "path": "experiments/daph_x/r13/quarantine/pre_hardening/tournament.log",
+      "sha256": "343cddd09dfc563052db7486f124c85c1bc0083c2b181dd417404eb7a1b15c65",
+      "size_bytes": 53647
+    }
+  }
+}
