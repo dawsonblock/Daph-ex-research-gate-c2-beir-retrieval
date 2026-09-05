@@ -1,0 +1,215 @@
+{
+  "experiment": "R14-C",
+  "analysis": "preregistered_lambda_scan_and_deployment",
+  "n_checkpoints": 90,
+  "note": "Uses unique 90 checkpoints (seed 42). All seeds identical under temp=0.0.",
+  "lambda_scan": [
+    {
+      "lambda": 0.0,
+      "j_oracle": 0.9333333333333333,
+      "j_best_fixed": 0.9,
+      "best_fixed_op": "OPT_COT_REFLECT",
+      "routing_headroom": 0.033333333333333326,
+      "j_stop": 0.4888888888888889,
+      "j_re2": 0.5555555555555556,
+      "j_cot": 0.9
+    },
+    {
+      "lambda": 0.001,
+      "j_oracle": 0.9308833986721888,
+      "j_best_fixed": 0.8924475217819444,
+      "best_fixed_op": "OPT_COT_REFLECT",
+      "routing_headroom": 0.038435876890244414,
+      "j_stop": 0.4888888888888889,
+      "j_re2": 0.5543145265296111,
+      "j_cot": 0.8924475217819444
+    },
+    {
+      "lambda": 0.005,
+      "j_oracle": 0.9210836600276113,
+      "j_best_fixed": 0.8622376089097219,
+      "best_fixed_op": "OPT_COT_REFLECT",
+      "routing_headroom": 0.05884605111788943,
+      "j_stop": 0.4888888888888889,
+      "j_re2": 0.5493504104258335,
+      "j_cot": 0.8622376089097219
+    },
+    {
+      "lambda": 0.01,
+      "j_oracle": 0.9088339867218893,
+      "j_best_fixed": 0.8244752178194437,
+      "best_fixed_op": "OPT_COT_REFLECT",
+      "routing_headroom": 0.08435876890244565,
+      "j_stop": 0.4888888888888889,
+      "j_re2": 0.5431452652961114,
+      "j_cot": 0.8244752178194437
+    },
+    {
+      "lambda": 0.02,
+      "j_oracle": 0.8843346401104454,
+      "j_best_fixed": 0.7489504356388873,
+      "best_fixed_op": "OPT_COT_REFLECT",
+      "routing_headroom": 0.13538420447155808,
+      "j_stop": 0.4888888888888889,
+      "j_re2": 0.5307349750366674,
+      "j_cot": 0.7489504356388873
+    },
+    {
+      "lambda": 0.05,
+      "j_oracle": 0.8108366002761127,
+      "j_best_fixed": 0.5223760890972183,
+      "best_fixed_op": "OPT_COT_REFLECT",
+      "routing_headroom": 0.2884605111788944,
+      "j_stop": 0.4888888888888889,
+      "j_re2": 0.4935041042583352,
+      "j_cot": 0.5223760890972183
+    },
+    {
+      "lambda": 0.1,
+      "j_oracle": 0.7065757450411122,
+      "j_best_fixed": 0.4888888888888889,
+      "best_fixed_op": "STOP",
+      "routing_headroom": 0.21768685615222333,
+      "j_stop": 0.4888888888888889,
+      "j_re2": 0.43145265296111474,
+      "j_cot": 0.14475217819443664
+    },
+    {
+      "lambda": 0.2,
+      "j_oracle": 0.6516768171155611,
+      "j_best_fixed": 0.4888888888888889,
+      "best_fixed_op": "STOP",
+      "routing_headroom": 0.16278792822667226,
+      "j_stop": 0.4888888888888889,
+      "j_re2": 0.3073497503666739,
+      "j_cot": -0.6104956436111267
+    },
+    {
+      "lambda": 0.5,
+      "j_oracle": 0.6134538525166742,
+      "j_best_fixed": 0.4888888888888889,
+      "best_fixed_op": "STOP",
+      "routing_headroom": 0.1245649636277853,
+      "j_stop": 0.4888888888888889,
+      "j_re2": -0.06495895741664855,
+      "j_cot": -2.8762391090278165
+    },
+    {
+      "lambda": 1.0,
+      "j_oracle": 0.5719292772777812,
+      "j_best_fixed": 0.4888888888888889,
+      "best_fixed_op": "STOP",
+      "routing_headroom": 0.08304038838889233,
+      "j_stop": 0.4888888888888889,
+      "j_re2": -0.6854734703888526,
+      "j_cot": -6.652478218055633
+    }
+  ],
+  "deployment": {
+    "fixed": {
+      "STOP": {
+        "accuracy": 0.4888888888888889,
+        "mean_latency_s": 0.0,
+        "n_correct": 44
+      },
+      "OPT_RE2": {
+        "accuracy": 0.5555555555555556,
+        "mean_latency_s": 1.2410290259444081,
+        "n_correct": 50
+      },
+      "OPT_COT_REFLECT": {
+        "accuracy": 0.9,
+        "mean_latency_s": 7.552478218055633,
+        "n_correct": 81
+      }
+    },
+    "oracle_stop_to_cot": {
+      "correct": 82,
+      "latency_ms": 417709.73612200026,
+      "accuracy": 0.9111111111111111,
+      "mean_latency_s": 4.641219290244448
+    },
+    "oracle_stop_to_re2": {
+      "correct": 64,
+      "latency_ms": 74467.55450399723,
+      "accuracy": 0.7111111111111111,
+      "mean_latency_s": 0.8274172722666359
+    },
+    "oracle_3way": {
+      "correct": 84,
+      "latency_ms": 220494.11950299694,
+      "accuracy": 0.9333333333333333,
+      "mean_latency_s": 2.44993466114441
+    },
+    "threshold_baselines_dev_only": {
+      "p_top1": {
+        "feature": "p_top1",
+        "threshold": 1.0,
+        "direction": "escalate_if_below",
+        "accuracy": 0.9,
+        "mean_latency_s": 6.008267903211122,
+        "n_escalated": 64,
+        "n_correct": 81
+      },
+      "margin": {
+        "feature": "margin",
+        "threshold": 1.0,
+        "direction": "escalate_if_below",
+        "accuracy": 0.9,
+        "mean_latency_s": 6.008267903211122,
+        "n_escalated": 64,
+        "n_correct": 81
+      },
+      "agreement_rate": {
+        "feature": "agreement_rate",
+        "threshold": 1.0,
+        "direction": "escalate_if_below",
+        "accuracy": 0.9,
+        "mean_latency_s": 6.008267903211122,
+        "n_escalated": 64,
+        "n_correct": 81
+      },
+      "entropy": {
+        "feature": "entropy",
+        "threshold": Infinity,
+        "direction": "escalate_if_below",
+        "accuracy": 0.9,
+        "mean_latency_s": 7.552478218055631,
+        "n_escalated": 90,
+        "n_correct": 81
+      },
+      "uncertainty_current": {
+        "feature": "uncertainty_current",
+        "threshold": 0.9999999997114609,
+        "direction": "escalate_if_below",
+        "accuracy": 0.9,
+        "mean_latency_s": 7.245033005544506,
+        "n_escalated": 87,
+        "n_correct": 81
+      }
+    },
+    "deployment_targets": {
+      "0.85": {
+        "best_policy": [
+          "3-way oracle",
+          0.9333333333333333,
+          2.44993466114441
+        ]
+      },
+      "0.88": {
+        "best_policy": [
+          "3-way oracle",
+          0.9333333333333333,
+          2.44993466114441
+        ]
+      },
+      "0.9": {
+        "best_policy": [
+          "3-way oracle",
+          0.9333333333333333,
+          2.44993466114441
+        ]
+      }
+    }
+  }
+}
