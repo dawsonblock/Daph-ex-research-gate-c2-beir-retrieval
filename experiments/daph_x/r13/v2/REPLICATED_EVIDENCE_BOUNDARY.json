@@ -1,0 +1,56 @@
+{
+  "evidence_boundary": "R13-A v2.3 replicated three-seed qualification",
+  "source_commit": "2d615ab",
+  "n_executions": 1350,
+  "n_checkpoints": 90,
+  "n_complete_checkpoints": 90,
+  "replicate_seeds": [42, 123, 2024],
+  "analyzer": "scripts/analyze_r13a_v2_3.py",
+  "checksums": {
+    "checkpoints": "2867c258c6a40ec7b679a7ce863c129f26d74292357b83991882f2ec8a2cdcc8",
+    "executions_replicated": "17fffe381db40d1c57576650f1c5bb78f2636422253bcf31f9a527d236af28b5"
+  },
+  "integrity": {
+    "cells_expected": 1350,
+    "cells_observed": 1350,
+    "averaged_records_expected": 450,
+    "averaged_records_observed": 450,
+    "complete_checkpoints_expected": 90,
+    "complete_checkpoints_observed": 90,
+    "status": "PASS"
+  },
+  "q4_results": {
+    "VERIFY_TARGETED": {"all_state_rescue_pct": 3.7, "conditional_rescue_pct": 7.2, "break_pct": 1.1, "mean_tokens": 490},
+    "SAMPLE_STANDARD": {"all_state_rescue_pct": 1.5, "conditional_rescue_pct": 2.9, "break_pct": 0.4, "mean_tokens": 407},
+    "CRITIQUE_RETRY": {"all_state_rescue_pct": 1.1, "conditional_rescue_pct": 2.2, "break_pct": 0.4, "mean_tokens": 434},
+    "SAMPLE_DIVERSE": {"all_state_rescue_pct": 0.7, "conditional_rescue_pct": 1.4, "break_pct": 0.0, "mean_tokens": 491}
+  },
+  "q5_results": {
+    "v0": "VERIFY_TARGETED",
+    "heterogeneous_oracle_action_distribution": {
+      "STOP": 81,
+      "VERIFY_TARGETED": 5,
+      "SAMPLE_STANDARD": 2,
+      "CRITIQUE_RETRY": 2,
+      "SAMPLE_DIVERSE": 0
+    },
+    "delta_het_vs_bin_best": {
+      "lambda_0.000": {"mean": 0.0074, "ucb95": 0.0157, "lcb5": 0.0000, "eligibility": "FAIL"},
+      "lambda_0.002": {"mean": 0.0072, "ucb95": 0.0155, "lcb5": 0.0000, "eligibility": "FAIL"},
+      "lambda_0.005": {"mean": 0.0073, "ucb95": 0.0156, "lcb5": 0.0000, "eligibility": "FAIL"},
+      "lambda_0.010": {"mean": 0.0074, "ucb95": 0.0158, "lcb5": 0.0000, "eligibility": "FAIL"},
+      "lambda_0.020": {"mean": 0.0072, "ucb95": 0.0156, "lcb5": 0.0000, "eligibility": "FAIL"},
+      "lambda_0.050": {"mean": 0.0072, "ucb95": 0.0156, "lcb5": 0.0001, "eligibility": "FAIL"},
+      "lambda_0.100": {"mean": 0.0071, "ucb95": 0.0154, "lcb5": 0.0002, "eligibility": "FAIL"},
+      "lambda_0.200": {"mean": 0.0068, "ucb95": 0.0146, "lcb5": 0.0005, "eligibility": "FAIL"},
+      "lambda_0.500": {"mean": 0.0039, "ucb95": 0.0100, "lcb5": 0.0003, "eligibility": "FAIL"}
+    }
+  },
+  "eligibility_gate": {
+    "rule": "UCB_95(J_het - J_bin_best) < 0.005 for every lambda in frozen grid",
+    "result": "FAIL at all 9 lambda values",
+    "r13b_status": "NOT ELIGIBLE"
+  },
+  "scientific_conclusion": "Replicated three-seed evidence does not establish equivalence between heterogeneous routing and the best fixed-continuation binary architecture. R13-B as preregistered (binary STOP/CONTINUE with fixed VERIFY_TARGETED) is NOT ELIGIBLE. The evidence points toward a hierarchical controller: STOP vs ESCALATE, then continuation choice among VERIFY_TARGETED / SAMPLE_STANDARD / CRITIQUE_RETRY. SAMPLE_DIVERSE has zero oracle selections and should be excluded.",
+  "status": "FROZEN"
+}
