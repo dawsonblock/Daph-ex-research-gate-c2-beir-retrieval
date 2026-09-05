@@ -16,7 +16,7 @@ class StopV2:
     def estimate_cost(self, state: RuntimeState) -> CostEstimate:
         return CostEstimate()
 
-    def execute(self, state: RuntimeState, backend: CognitiveBackend) -> Observation:
+    def execute(self, state: RuntimeState, backend: CognitiveBackend, replicate_id: int = 42) -> Observation:
         return Observation(
             operator_id=self.operator_id,
             operator_version=self.operator_version,
