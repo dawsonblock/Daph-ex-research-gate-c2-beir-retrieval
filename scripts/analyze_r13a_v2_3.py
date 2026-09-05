@@ -358,24 +358,28 @@ def analyze_q5(averaged_events):
 
 def _bootstrap_ceilings(averaged_events, n_boot=10000, seed=99):
     print("\n" + "=" * 70)
-    print("Bootstrap: J_het - J_bin_best with multiplicity-correct task weights (v2.3)")
+    print("Bootstrap: J_het - J_bin_best with multiplicity-correct task-cluster (v2.3.1)")
     print("=" * 70)
 
     complete = keep_complete_checkpoints(averaged_events)
 
-    by_task = defaultdict(list)
+    # Preserve all checkpoint states per task so multi-K tasks are not collapsed.
+    states_by_task = defaultdict(list)
+    state_records = {}
     for ev in complete:
-        by_task[ev["task_id"]].append(ev)
+        cp_id = ev["checkpoint_id"]
+        if cp_id not in state_records:
+            state_records[cp_id] = {
+                "task_id": ev["task_id"],
+                "operators": {},
+            }
+        state_records[cp_id]["operators"][ev["operator_id"]] = (ev["mean_q"], ev["mean_c"])
 
-    task_ids = sorted(by_task.keys())
+    for cp_id, rec in state_records.items():
+        states_by_task[rec["task_id"]].append(rec["operators"])
+
+    task_ids = sorted(states_by_task.keys())
     rng = random.Random(seed)
-
-    # Precompute per-task aggregates to avoid redundant work
-    task_operator_q = {}
-    task_operator_c = {}
-    for tid, evs in by_task.items():
-        task_operator_q[tid] = {ev["operator_id"]: ev["mean_q"] for ev in evs}
-        task_operator_c[tid] = {ev["operator_id"]: ev["mean_c"] for ev in evs}
 
     for lambda_ in LAMBDA_GRID:
         gaps = []
@@ -383,39 +387,38 @@ def _bootstrap_ceilings(averaged_events, n_boot=10000, seed=99):
             sampled_tasks = [rng.choice(task_ids) for _ in range(len(task_ids))]
             weights = Counter(sampled_tasks)
 
-            # Identify continuation operators present
+            # Identify continuation operators present across all sampled states
             conts = set()
-            for tid in by_task:
-                conts.update(task_operator_q[tid].keys())
+            for tid in states_by_task:
+                for ops in states_by_task[tid]:
+                    conts.update(ops.keys())
             conts = sorted(c for c in conts if c != "STOP")
             if not conts:
                 continue
 
-            # Heterogeneous values
+            # Heterogeneous values: per-checkpoint max, weighted by task multiplicity
             het_num = 0.0
             denom = 0
             for tid, weight in weights.items():
-                ou = task_operator_q[tid]
-                oc = task_operator_c[tid]
-                utilities = {op: ou[op] - lambda_ * (oc[op] / 1000.0) for op in ou}
-                best = max(utilities.values())
-                het_num += weight * best
-                denom += weight
+                for ops in states_by_task[tid]:
+                    utilities = {op: q - lambda_ * (c / 1000.0) for op, (q, c) in ops.items()}
+                    best = max(utilities.values())
+                    het_num += weight * best
+                    denom += weight
 
-            # Best binary
+            # Best fixed binary: for each continuation, per-checkpoint max(STOP, cont)
             bin_best = -1e9
             for cont in conts:
                 bin_num = 0.0
                 bin_den = 0
                 for tid, weight in weights.items():
-                    ou = task_operator_q[tid]
-                    oc = task_operator_c[tid]
-                    utilities = {op: ou[op] - lambda_ * (oc[op] / 1000.0) for op in ou}
-                    stop_u = utilities.get("STOP", -1e9)
-                    cont_u = utilities.get(cont, -1e9)
-                    val = max(stop_u, cont_u)
-                    bin_num += weight * val
-                    bin_den += weight
+                    for ops in states_by_task[tid]:
+                        utilities = {op: q - lambda_ * (c / 1000.0) for op, (q, c) in ops.items()}
+                        stop_u = utilities.get("STOP", -1e9)
+                        cont_u = utilities.get(cont, -1e9)
+                        val = max(stop_u, cont_u)
+                        bin_num += weight * val
+                        bin_den += weight
                 mean_bin = bin_num / bin_den if bin_den else 0
                 if mean_bin > bin_best:
                     bin_best = mean_bin
@@ -442,11 +445,23 @@ def main():
     events = load_events(Path(args.executions), Path(args.checkpoints))
     print(f"Loaded {len(events)} raw events")
 
+    # Integrity: each complete checkpoint should have exactly 5 operators × 3 seeds = 15 raw receipts.
+    complete_checkpoints = set()
+    for ev in events:
+        complete_checkpoints.add((ev["checkpoint_id"], ev["operator_id"], ev["replicate_id"]))
+    n_cells = len(complete_checkpoints)
+    print(f"Total (checkpoint, operator, replicate) cells: {n_cells}")
+    if n_cells != 0 and n_cells != 90 * 5 * 3:
+        print(f"WARNING: expected {90 * 5 * 3} cells, got {n_cells}")
+
     averaged = average_replicates(events)
     print(f"Averaged to {len(averaged)} (checkpoint, operator) records")
 
     complete = keep_complete_checkpoints(averaged)
-    print(f"Complete checkpoints: {len(complete) // 5}")
+    n_cp = len(complete) // 5
+    print(f"Complete checkpoints: {n_cp}")
+    if n_cp != 0 and n_cp != 90:
+        print(f"WARNING: expected 90 complete checkpoints, got {n_cp}")
 
     analyze_q4(events)
     analyze_q5(averaged)
