@@ -1,0 +1,10 @@
+Resuming: 0 executions already completed
+Checkpoints: 90, operators: 5, replicates: 1
+Total: 450, remaining: 450
+  checkpoint 1/90 STOP r=42 SUCCESS
+Loading model from /Users/dawsonblock/Downloads/qwen_gguf/Qwen2.5-7B-Instruct-Q4_K_M.gguf...
+Model loaded.
+  checkpoint 1/90 SAMPLE_STANDARD r=42 SUCCESS
+  checkpoint 1/90 SAMPLE_DIVERSE r=42 SUCCESS
+  checkpoint 1/90 CRITIQUE_RETRY r=42 SUCCESS
+  checkpoint 1/90 VERIFY_TARGETED r=42 SUCCESS
