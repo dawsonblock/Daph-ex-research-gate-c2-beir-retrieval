@@ -1389,3 +1389,38 @@ Model loaded.
 
 [162/203] reason_384 (1 checkpoints)
   K=6 STOP                : stop     (0.0s)
+  K=6 SAMPLE_STANDARD     : waste    (17.5s)
+  K=6 SAMPLE_DIVERSE      : waste    (18.3s)
+  K=6 CRITIQUE_RETRY      : waste    (16.4s)
+  K=6 VERIFY_TARGETED     : waste    (16.0s)
+
+[163/203] reason_296 (1 checkpoints)
+  K=6 STOP                : stop     (0.0s)
+  K=6 SAMPLE_STANDARD     : waste    (17.5s)
+  K=6 SAMPLE_DIVERSE      : waste    (17.4s)
+  K=6 CRITIQUE_RETRY      : waste    (16.9s)
+  K=6 VERIFY_TARGETED     : waste    (16.4s)
+
+[164/203] reason_007 (1 checkpoints)
+  K=6 STOP                : stop     (0.0s)
+  K=6 SAMPLE_STANDARD     : waste    (17.4s)
+  K=6 SAMPLE_DIVERSE      : waste    (15.4s)
+  K=6 CRITIQUE_RETRY      : waste    (14.5s)
+  K=6 VERIFY_TARGETED     : waste    (14.5s)
+
+[165/203] reason_084 (1 checkpoints)
+  K=6 STOP                : stop     (0.0s)
+  K=6 SAMPLE_STANDARD     : waste    (13.4s)
+  K=6 SAMPLE_DIVERSE      : waste    (15.2s)
+  K=6 CRITIQUE_RETRY      : waste    (14.4s)
+  K=6 VERIFY_TARGETED     : waste    (14.4s)
+
+[166/203] reason_193 (1 checkpoints)
+  K=6 STOP                : stop     (0.0s)
+  K=6 SAMPLE_STANDARD     : waste    (16.0s)
+  K=6 SAMPLE_DIVERSE      : waste    (17.1s)
+  K=6 CRITIQUE_RETRY      : waste    (16.0s)
+  K=6 VERIFY_TARGETED     : waste    (16.1s)
+
+[167/203] reason_140 (1 checkpoints)
+  K=6 STOP                : stop     (0.0s)
