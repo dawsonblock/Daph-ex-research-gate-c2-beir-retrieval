@@ -30,23 +30,34 @@ class CostVector:
 
     Rule: Unmeasured dimensions are None (NOT_MEASURED), never zero.
     Only genuinely free operations (e.g. STOP) record explicit 0.
+
+    gateway_calls: HTTP requests made by DAPH-X to the external service.
+    underlying_model_calls: LLM inference calls made by the external service
+        internally (e.g. Best-of-N with N=8 → 8 underlying calls). None if
+        the service does not report this.
     """
     prompt_tokens: int | None = None
     completion_tokens: int | None = None
     total_tokens: int | None = None
-    model_calls: int = 1
-    wall_ms: float = 0.0
+    gateway_calls: int | None = None
+    underlying_model_calls: int | None = None
+    wall_ms: float | None = None
     gpu_ms: float | None = None
     gpu_memory_peak_mb: float | None = None
     api_cost_usd: float | None = None
     estimated_flops: float | None = None
 
-    def effective_total_tokens(self) -> int:
+    def effective_total_tokens(self) -> int | None:
+        """Return total tokens if measurable, else None.
+
+        None means 'not measured' — this is NOT the same as zero.
+        Budget checks must treat None as 'unknown, cannot verify'.
+        """
         if self.total_tokens is not None:
             return self.total_tokens
-        p = self.prompt_tokens or 0
-        c = self.completion_tokens or 0
-        return p + c
+        if self.prompt_tokens is not None and self.completion_tokens is not None:
+            return self.prompt_tokens + self.completion_tokens
+        return None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -54,7 +65,8 @@ class CostVector:
             "completion_tokens": self.completion_tokens,
             "total_tokens": self.total_tokens,
             "effective_tokens": self.effective_total_tokens(),
-            "model_calls": self.model_calls,
+            "gateway_calls": self.gateway_calls,
+            "underlying_model_calls": self.underlying_model_calls,
             "wall_ms": self.wall_ms,
             "gpu_ms": self.gpu_ms,
             "gpu_memory_peak_mb": self.gpu_memory_peak_mb,
@@ -68,8 +80,9 @@ class CostVector:
             prompt_tokens=data.get("prompt_tokens"),
             completion_tokens=data.get("completion_tokens"),
             total_tokens=data.get("total_tokens"),
-            model_calls=int(data.get("model_calls", 1)),
-            wall_ms=float(data.get("wall_ms", 0.0)),
+            gateway_calls=data.get("gateway_calls"),
+            underlying_model_calls=data.get("underlying_model_calls"),
+            wall_ms=data.get("wall_ms"),
             gpu_ms=data.get("gpu_ms"),
             gpu_memory_peak_mb=data.get("gpu_memory_peak_mb"),
             api_cost_usd=data.get("api_cost_usd"),
@@ -209,20 +222,41 @@ class CognitiveOperator(ABC):
         capabilities: set[str] | Sequence[str] | None = None,
         budget: BudgetEnvelope | None = None,
     ) -> bool:
-        """Check admissibility given state, hardware capabilities, and budget."""
+        """Check admissibility given state, hardware/service capabilities, and budget.
+
+        Capabilities are properties of the execution provider, not necessarily
+        DAPH-X itself. For example, a ThinkBooster service that owns a vLLM
+        backend advertises 'thinkbooster.whitebox' and 'thinkbooster.mur' as
+        service capabilities, even if DAPH-X's client machine has no white-box
+        access.
+        """
         if capabilities is not None:
             caps_set = set(capabilities)
+            # Check declared backend requirements
             for req in self.spec.backend_requirements:
                 if req not in caps_set:
                     return False
+            # Enforce white-box requirement
+            if self.spec.requires_whitebox and "whitebox" not in caps_set:
+                # Allow service-level whitebox capability (e.g. thinkbooster.whitebox)
+                if not any(c.endswith(".whitebox") for c in caps_set):
+                    return False
+            # Enforce logprobs requirement
+            if self.spec.requires_logprobs and "logprobs" not in caps_set:
+                if not any("logprobs" in c for c in caps_set):
+                    return False
         if budget is not None:
             est = self.estimate_cost(state, budget)
-            if budget.is_exceeded_by(
-                tokens=est.effective_total_tokens(),
-                calls=est.model_calls,
-                wall_ms=est.wall_ms,
-                gpu_ms=est.gpu_ms,
-                cost_usd=est.api_cost_usd,
-            ):
+            # Only check budget dimensions that are actually measured (not None)
+            tokens = est.effective_total_tokens()
+            if tokens is not None and budget.max_tokens is not None and tokens > budget.max_tokens:
+                return False
+            if est.gateway_calls is not None and budget.max_calls is not None and est.gateway_calls > budget.max_calls:
+                return False
+            if est.wall_ms is not None and budget.max_wall_ms is not None and est.wall_ms > budget.max_wall_ms:
+                return False
+            if est.gpu_ms is not None and budget.max_gpu_ms is not None and est.gpu_ms > budget.max_gpu_ms:
+                return False
+            if est.api_cost_usd is not None and budget.max_cost_usd is not None and est.api_cost_usd > budget.max_cost_usd:
                 return False
         return True

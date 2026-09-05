@@ -51,6 +51,7 @@ from daph_x.operators.external.base import (
     StateMode,
 )
 from daph_x.operators.types import Candidate, RuntimeState
+from daph_x.evaluation.answer_extractor import extract_answer
 
 
 # ---------------------------------------------------------------------------
@@ -210,8 +211,9 @@ class ThinkBoosterOperator(CognitiveOperator):
             prompt_tokens=None,
             completion_tokens=None,
             total_tokens=None,
-            model_calls=effective_calls,
-            wall_ms=0.0,
+            gateway_calls=1,
+            underlying_model_calls=effective_calls,
+            wall_ms=None,
             gpu_ms=None,
             api_cost_usd=None,
         )
@@ -233,7 +235,12 @@ class ThinkBoosterOperator(CognitiveOperator):
                 error_message=f"Expected OpenAICompatibleBackend, got {type(active_backend).__name__}",
             )
 
-        # Construct the ThinkBooster-specific base URL with strategy/scorer path
+        # Construct the ThinkBooster-specific base URL with strategy/scorer path.
+        # The ThinkBooster gateway uses the strategy/scorer as part of the
+        # OpenAI base_url, so chat completions go to:
+        #   {root}/v1/{strategy}/{scorer}/chat/completions
+        # We use base_url_override for thread-safe routing without mutating
+        # the shared backend instance.
         tb_base_url = active_backend.base_url + self._profile.url_path()
 
         # Build the chat request from the task prompt
@@ -268,13 +275,9 @@ class ThinkBoosterOperator(CognitiveOperator):
             extra_params=extra_params,
         )
 
-        # Temporarily override the backend URL to include strategy path
-        original_base_url = active_backend.base_url
-        try:
-            active_backend.base_url = tb_base_url
-            result = active_backend.generate(request)
-        finally:
-            active_backend.base_url = original_base_url
+        # Use base_url_override for thread-safe routing. Do NOT mutate the
+        # shared backend instance.
+        result = active_backend.generate(request, base_url_override=tb_base_url)
 
         if not result.is_success:
             return OperatorResult(
@@ -286,20 +289,24 @@ class ThinkBoosterOperator(CognitiveOperator):
                     prompt_tokens=result.prompt_tokens,
                     completion_tokens=result.completion_tokens,
                     total_tokens=result.total_tokens,
-                    model_calls=1,
+                    gateway_calls=1,
+                    underlying_model_calls=None,
                     wall_ms=result.latency_ms,
                 ),
                 provenance={
                     "thinkbooster_strategy": self._profile.strategy,
                     "thinkbooster_scorer": self._profile.scorer,
                     "request_hash": result.request_hash,
+                    **active_backend.service_identity.to_dict(),
                 },
             )
 
         # Build candidate from the response
+        # Use canonical answer extractor for terminal_answer, full text for trace
+        terminal = extract_answer(result.text, state.answer_type)
         candidate = Candidate(
             candidate_id=f"tb_{self._profile.profile_id}_{replicate_id}",
-            answer=result.text.strip(),
+            answer=terminal,
             reasoning_trace=result.text,
             temperature=self._profile.strategy_params.get("temperature", 0.0),
             seed=replicate_id,
@@ -308,11 +315,12 @@ class ThinkBoosterOperator(CognitiveOperator):
                 "strategy": self._profile.strategy,
                 "scorer": self._profile.scorer,
                 "finish_reason": result.finish_reason,
+                "raw_answer": result.text.strip()[:200],
             },
         )
 
         return OperatorResult(
-            terminal_answer=result.text.strip(),
+            terminal_answer=terminal,
             candidates=(candidate,),
             reasoning_artifacts={
                 "raw_text": result.text,
@@ -328,17 +336,22 @@ class ThinkBoosterOperator(CognitiveOperator):
                 prompt_tokens=result.prompt_tokens,
                 completion_tokens=result.completion_tokens,
                 total_tokens=result.total_tokens,
-                model_calls=1,
+                # gateway_calls: DAPH-X made 1 HTTP request to ThinkBooster
+                gateway_calls=1,
+                # underlying_model_calls: unknown until ThinkBooster reports it
+                underlying_model_calls=None,
                 wall_ms=result.latency_ms,
             ),
             provenance={
                 "thinkbooster_strategy": self._profile.strategy,
                 "thinkbooster_scorer": self._profile.scorer,
                 "thinkbooster_params": dict(self._profile.strategy_params),
-                "backend_url": original_base_url,
+                "backend_url": active_backend.base_url,
+                "endpoint_url": tb_base_url + "/chat/completions",
                 "model_id": result.model_id,
                 "request_hash": result.request_hash,
                 "response_hash": result.response_hash,
+                **active_backend.service_identity.to_dict(),
             },
         )
 

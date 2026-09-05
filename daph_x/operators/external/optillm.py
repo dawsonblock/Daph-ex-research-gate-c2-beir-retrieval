@@ -28,7 +28,7 @@ due to llama-server's sampling limitations:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Sequence
 
 from daph_x.backends.openai_compat import (
     ChatMessage,
@@ -44,6 +44,7 @@ from daph_x.operators.external.base import (
     StateMode,
 )
 from daph_x.operators.types import Candidate, RuntimeState
+from daph_x.evaluation.answer_extractor import extract_answer
 
 
 # ---------------------------------------------------------------------------
@@ -84,6 +85,27 @@ _SLUG_TIER: dict[str, int] = {
 
 # Approaches compatible with llama-server (no multi-sample required)
 _LLAMACPP_COMPATIBLE = {"cot_reflection", "leap", "plansearch", "rstar", "rto", "self_consistency", "re2", "z3"}
+
+# Approaches requiring multi-response sampling (not supported by llama-server)
+_REQUIRES_MULTI_SAMPLE = {"bon", "moa", "mcts"}
+
+
+def is_slug_compatible_with_capabilities(slug: str, capabilities: set[str]) -> bool:
+    """Check if an OptiLLM slug is compatible with the available capabilities.
+
+    llama-server and Ollama do not support multi-response sampling, which
+    limits the available approaches. If the backend advertises
+    'multi_sample' capability, all slugs are allowed. Otherwise, only
+    llama-server-compatible slugs are admissible.
+    """
+    if "multi_sample" in capabilities:
+        return True
+    if slug in _LLAMACPP_COMPATIBLE:
+        return True
+    if slug in _REQUIRES_MULTI_SAMPLE:
+        return False
+    # Unknown slugs: allow by default, will be caught by live conformance
+    return True
 
 
 # ---------------------------------------------------------------------------
@@ -178,6 +200,19 @@ class OptiLLMOperator(CognitiveOperator):
     def spec(self) -> OperatorSpec:
         return self._spec
 
+    def is_admissible(
+        self,
+        state: RuntimeState,
+        capabilities: set[str] | Sequence[str] | None = None,
+        budget: BudgetEnvelope | None = None,
+    ) -> bool:
+        """Check admissibility including OptiLLM slug/backend compatibility."""
+        if capabilities is not None:
+            caps = set(capabilities)
+            if not is_slug_compatible_with_capabilities(self._profile.slug, caps):
+                return False
+        return super().is_admissible(state, capabilities=capabilities, budget=budget)
+
     def estimate_cost(
         self,
         state: RuntimeState,
@@ -192,8 +227,9 @@ class OptiLLMOperator(CognitiveOperator):
             prompt_tokens=None,
             completion_tokens=None,
             total_tokens=None,
-            model_calls=effective_calls,
-            wall_ms=0.0,
+            gateway_calls=1,
+            underlying_model_calls=effective_calls,
+            wall_ms=None,
         )
 
     def execute(
@@ -251,18 +287,22 @@ class OptiLLMOperator(CognitiveOperator):
                     prompt_tokens=result.prompt_tokens,
                     completion_tokens=result.completion_tokens,
                     total_tokens=result.total_tokens,
-                    model_calls=1,
+                    gateway_calls=1,
+                    underlying_model_calls=None,
                     wall_ms=result.latency_ms,
                 ),
                 provenance={
                     "optillm_slug": self._profile.slug,
                     "request_hash": result.request_hash,
+                    **active_backend.service_identity.to_dict(),
                 },
             )
 
+        # Use canonical answer extractor for terminal_answer, full text for trace
+        terminal = extract_answer(result.text, state.answer_type)
         candidate = Candidate(
             candidate_id=f"opt_{self._profile.profile_id}_{replicate_id}",
-            answer=result.text.strip(),
+            answer=terminal,
             reasoning_trace=result.text,
             temperature=self._profile.strategy_params.get("temperature", 0.0),
             seed=replicate_id,
@@ -270,11 +310,12 @@ class OptiLLMOperator(CognitiveOperator):
             metadata={
                 "slug": self._profile.slug,
                 "finish_reason": result.finish_reason,
+                "raw_answer": result.text.strip()[:200],
             },
         )
 
         return OperatorResult(
-            terminal_answer=result.text.strip(),
+            terminal_answer=terminal,
             candidates=(candidate,),
             reasoning_artifacts={
                 "raw_text": result.text,
@@ -289,16 +330,21 @@ class OptiLLMOperator(CognitiveOperator):
                 prompt_tokens=result.prompt_tokens,
                 completion_tokens=result.completion_tokens,
                 total_tokens=result.total_tokens,
-                model_calls=1,
+                # gateway_calls: DAPH-X made 1 HTTP request to OptiLLM proxy
+                gateway_calls=1,
+                # underlying_model_calls: unknown until OptiLLM reports it
+                underlying_model_calls=None,
                 wall_ms=result.latency_ms,
             ),
             provenance={
                 "optillm_slug": self._profile.slug,
                 "optillm_params": dict(self._profile.strategy_params),
                 "backend_url": active_backend.base_url,
+                "endpoint_url": active_backend.chat_completions_url,
                 "model_id": result.model_id,
                 "request_hash": result.request_hash,
                 "response_hash": result.response_hash,
+                **active_backend.service_identity.to_dict(),
             },
         )
 
