@@ -1,0 +1,19 @@
+{
+  "evidence_boundary": "R13-A v2.1 seed-42 screening",
+  "source_commit": "f00066b",
+  "n_executions": 450,
+  "n_checkpoints": 90,
+  "replicate_seed": 42,
+  "analyzer": "scripts/analyze_r13a_v2_1.py",
+  "report": "experiments/daph_x/r13/v2/R13A_v2_1_CORRECTED_RESULTS.md",
+  "checksums": {
+    "checkpoints": "2867c258c6a40ec7b679a7ce863c129f26d74292357b83991882f2ec8a2cdcc8",
+    "executions_seed_42": "cf5dd5a4265590c4bd855ccda9f4d324c67b94dfab69b1d61e45db291e7c7a99"
+  },
+  "key_findings": {
+    "q4": "No non-standard operator materially exceeds SAMPLE_STANDARD; VERIFY_TARGETED strongest at 5.6% all-state / 10.9% conditional rescue",
+    "q5": "Heterogeneous oracle equals binary STOP/CONTINUE oracle; STOP is optimal for 83/90 checkpoints",
+    "conclusion": "Multiclass heterogeneous routing not justified; DAPH-X reduces to binary STOP/CONTINUE value-of-compute decision"
+  },
+  "status": "FROZEN \u2014 do not modify operators, thresholds, action set, or analysis rules while replicates 123 and 2024 run"
+}
