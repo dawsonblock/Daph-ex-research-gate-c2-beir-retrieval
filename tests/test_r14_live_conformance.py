@@ -50,7 +50,8 @@ _TB_URL = os.environ.get("DAPH_THINKBOOSTER_URL", "http://localhost:8001/v1")
 _OPT_URL = os.environ.get("DAPH_OPTILLM_URL", "http://localhost:8000/v1")
 _MODEL = os.environ.get("DAPH_R14_MODEL", "test-model")
 
-pytestmark = pytest.mark.skipif(
+# Skip marker for tests requiring live services
+live_only = pytest.mark.skipif(
     not _LIVE_TESTS_ENABLED,
     reason="Set DAPH_R14_LIVE_TESTS=1 to run live conformance tests",
 )
@@ -94,6 +95,7 @@ def _make_state(prompt: str = "What is 17 * 23?") -> RuntimeState:
 # ThinkBooster live tests
 # ---------------------------------------------------------------------------
 
+@live_only
 class TestThinkBoosterLive:
     def _make_backend(self) -> OpenAICompatibleBackend:
         return OpenAICompatibleBackend(
@@ -165,6 +167,7 @@ class TestThinkBoosterLive:
 # OptiLLM live tests
 # ---------------------------------------------------------------------------
 
+@live_only
 class TestOptiLLMLive:
     def _make_backend(self) -> OpenAICompatibleBackend:
         return OpenAICompatibleBackend(
@@ -201,6 +204,7 @@ class TestOptiLLMLive:
 # Answer extraction live tests
 # ---------------------------------------------------------------------------
 
+@live_only
 class TestAnswerExtractionLive:
     def test_extracted_answer_is_canonical(self):
         """Verify the terminal answer is canonical, not the full reasoning trace."""
@@ -221,3 +225,137 @@ class TestAnswerExtractionLive:
             assert len(result.terminal_answer) < 500, \
                 f"Terminal answer too long ({len(result.terminal_answer)} chars), " \
                 f"extraction may have failed: {result.terminal_answer[:100]}..."
+
+
+# ---------------------------------------------------------------------------
+# Mixed answer-type extraction smoke
+# ---------------------------------------------------------------------------
+
+class TestMixedAnswerTypeExtractionLive:
+    """Run extraction across all answer types used in R13 corpus.
+
+    This is a unit test (no live service needed) that verifies the extractor
+    handles verbose responses for each answer_type. Run before R14-B0 to
+    ensure the extractor does not need correction after evidence is generated.
+    """
+
+    @pytest.mark.parametrize("answer_type,raw_text,expected", [
+        ("numeric", "Let me compute 17 * 23. 17 * 23 = 391. The answer is 391.", "391"),
+        ("numeric", "After careful analysis, \\boxed{391}", "391"),
+        ("float", "The result is approximately 2.40 meters.", "2.40"),
+        ("fraction", "We need to simplify. 5/14 is already in lowest terms.", "5/14"),
+        ("yes_no", "After considering all evidence, yes.", "yes"),
+        ("yes_no", "The answer is no because the condition fails.", "no"),
+        ("true_false", "The statement is true given the premises.", "true"),
+        ("true_false", "This claim is false.", "false"),
+        ("letter", "Option A is wrong, B is close, but D is correct.", "D"),
+        ("string", 'The character is "knight".', "knight"),
+        ("string", 'The person is "Bob".', "Bob"),
+        ("integer", "Count: 42 items total.", "42"),
+    ])
+    def test_extraction_by_type(self, answer_type: str, raw_text: str, expected: str):
+        """Verify extraction produces canonical answer for each type."""
+        result = extract_answer(raw_text, answer_type)
+        assert result == expected, \
+            f"answer_type={answer_type}: expected '{expected}', got '{result}' " \
+            f"from text: {raw_text[:80]}..."
+
+    def test_verbose_reasoning_still_extracts(self):
+        """A long reasoning trace should still yield the correct answer."""
+        text = (
+            "Let me work through this step by step. "
+            "First, we consider the constraints. "
+            "The problem asks for the number of ordered pairs. "
+            "We can enumerate: (1,1), (2,1), (3,2), (4,3), (5,6). "
+            "Wait, let me recount. Actually there are 5 pairs. "
+            "Final answer: 5"
+        )
+        result = extract_answer(text, "numeric")
+        assert result == "5", f"Expected '5', got '{result}'"
+
+
+# ---------------------------------------------------------------------------
+# Token accounting semantics determination
+# ---------------------------------------------------------------------------
+
+@live_only
+class TestTokenAccountingSemanticsLive:
+    """Determine whether external services report aggregate or final-only tokens.
+
+    This is the most important R14-B measurement question. If usage.total_tokens
+    contains only the final selected response, Pareto analysis using that field
+    will be invalid. This test captures the raw response for manual inspection
+    and records the determination.
+    """
+
+    def test_thinkbooster_bon_token_semantics(self):
+        """For TB_BON_LOW (N=4), inspect whether usage includes all 4 generations."""
+        backend = OpenAICompatibleBackend(
+            base_url=_TB_URL,
+            model=_MODEL,
+            api_key="EMPTY",
+            provider_name="thinkbooster",
+        )
+        op = ThinkBoosterOperator(TB_PROFILES["TB_BON_LOW"], backend)
+        state = _make_state("What is 12 * 12?")
+        result = op.execute(state, replicate_id=42)
+
+        assert result.status == "SUCCESS", \
+            f"Live service required: {result.error_code} - {result.error_message}"
+
+        # The cost vector should have token data
+        tokens = result.cost.effective_total_tokens()
+        n_samples = TB_PROFILES["TB_BON_LOW"].strategy_params.get("tts_n_samples", 4)
+
+        # Record the determination for manual inspection
+        # This test does not assert a specific semantics — it captures data
+        # for the frozen service manifest.
+        print(f"\n--- Token Accounting Determination (TB_BON_LOW, N={n_samples}) ---")
+        print(f"  prompt_tokens: {result.cost.prompt_tokens}")
+        print(f"  completion_tokens: {result.cost.completion_tokens}")
+        print(f"  total_tokens: {result.cost.total_tokens}")
+        print(f"  effective_total_tokens: {tokens}")
+        print(f"  gateway_calls: {result.cost.gateway_calls}")
+        print(f"  underlying_model_calls: {result.cost.underlying_model_calls}")
+        print(f"  raw_response keys: {list(result.provenance.keys())}")
+        print(f"  Determination needed: AGGREGATE_INTERNAL_COMPUTE or FINAL_RESPONSE_ONLY")
+        print(f"  If total_tokens < ~100 for N=4 generations, likely FINAL_RESPONSE_ONLY")
+
+        # Minimum assertion: tokens should be reported (not None) for Pareto analysis
+        # If None, we must instrument the service before R14-B
+        if tokens is None:
+            pytest.skip(
+                "Service does not report token usage. "
+                "Must instrument service or use alternative cost axis before R14-B."
+            )
+
+    def test_optillm_multicall_token_semantics(self):
+        """For OPT_SC_LOW (self-consistency, N=4), inspect token reporting."""
+        backend = OpenAICompatibleBackend(
+            base_url=_OPT_URL,
+            model=_MODEL,
+            api_key="no_key",
+            provider_name="optillm",
+        )
+        op = OptiLLMOperator(OPT_PROFILES["OPT_SC_LOW"], backend)
+        state = _make_state("What is 15 * 15?")
+        result = op.execute(state, replicate_id=42)
+
+        assert result.status == "SUCCESS", \
+            f"Live service required: {result.error_code} - {result.error_message}"
+
+        tokens = result.cost.effective_total_tokens()
+        n = OPT_PROFILES["OPT_SC_LOW"].strategy_params.get("n", 4)
+
+        print(f"\n--- Token Accounting Determination (OPT_SC_LOW, N={n}) ---")
+        print(f"  prompt_tokens: {result.cost.prompt_tokens}")
+        print(f"  completion_tokens: {result.cost.completion_tokens}")
+        print(f"  total_tokens: {result.cost.total_tokens}")
+        print(f"  effective_total_tokens: {tokens}")
+        print(f"  Determination needed: AGGREGATE_INTERNAL_COMPUTE or FINAL_RESPONSE_ONLY")
+
+        if tokens is None:
+            pytest.skip(
+                "Service does not report token usage. "
+                "Must instrument service or use alternative cost axis before R14-B."
+            )
