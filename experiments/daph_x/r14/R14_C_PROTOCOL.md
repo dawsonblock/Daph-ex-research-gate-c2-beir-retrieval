@@ -45,20 +45,18 @@ SC is dominated by COT_REFLECT (lower accuracy, higher mean latency). SC is reti
 | OPT_RE2 | INCLUDED | Low-cost intermediate tier on Pareto frontier |
 | OPT_COT_REFLECT | INCLUDED | High-accuracy strategy, dominant |
 | OPT_SC_LOW | RETIRED | Dominated by COT_REFLECT |
-| OPT_PLANSEARCH_LOW | PENDING | Isolated screening before R14-C freeze |
-
-If PlanSearch lands on or above the Pareto frontier in isolated screening, it will be included in R14-C. If below, it is eliminated.
+| OPT_PLANSEARCH_LOW | RETIRED | 10% accuracy at 106s mean latency in isolated screening. Outputs are Python code blocks, not direct answers. Dominated by STOP and COT_REFLECT. |
 
 ## Design
 
 ```
 90 frozen checkpoints (from R13-A v2 corpus)
 ×
-{STOP, OPT_RE2, OPT_COT_REFLECT}  [+ OPT_PLANSEARCH_LOW if it passes screening]
+{STOP, OPT_RE2, OPT_COT_REFLECT}
 ×
 seeds {42, 123, 2024}
 =
-810 action cells  [+ 270 if PlanSearch included]
+810 action cells
 ```
 
 ## Preregistered questions
