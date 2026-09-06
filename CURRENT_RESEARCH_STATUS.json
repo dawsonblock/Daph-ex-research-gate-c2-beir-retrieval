@@ -102,5 +102,50 @@
     "status": "FROZEN"
   },
 
-  "next_step": "Targeted live safety study (D1-D5, V1 vs V3R) if manifest is frozen"
+  "next_step": "Targeted live safety study (D1-D5, V1 vs V3R) if manifest is frozen",
+
+  "daph_x_research_track": {
+    "last_updated": "2026-09-05-R15-A-complete",
+    "branch": "daph-x",
+    "model": "Qwen2.5-7B-Instruct Q4_K_M, temp=0.0, ctx=4096",
+    "hardware": "Apple M2 Pro, 16GB RAM",
+
+    "R14": {
+      "status": "COMPLETE",
+      "result": "COT_REFLECT achieves 90.0% accuracy vs STOP 48.9%. STOP->COT oracle saves 38.5% latency at +1.1pp accuracy. 3-way oracle saves 67.8% at +3.3pp. Routing headroom is real and positive at all lambda values.",
+      "commit": "d11e930",
+      "operators": {
+        "STOP": "48.9% acc, 0.000s",
+        "OPT_RE2": "55.6% acc, 1.172s",
+        "OPT_COT_REFLECT": "90.0% acc, 7.603s"
+      },
+      "retired_operators": ["OPT_SC_LOW (dominated by COT)", "OPT_PLANSEARCH_LOW (10% acc, 105.9s)"]
+    },
+
+    "R15-A": {
+      "status": "COMPLETE — FAIL (failed to demonstrate non-inferiority, failed Bronze)",
+      "commit": "4fa5085",
+      "question": "Can frozen observable RuntimeState features decide STOP vs COT_REFLECT while preserving accuracy and reducing latency?",
+      "champion": "Ridge regression for DeltaJ_COT(s), hash 20c1a06e...",
+      "confirmation_set": "419 held-out R12 tasks, 419 unique task IDs",
+      "results": {
+        "always_stop": "55.85% acc, 0.000s",
+        "always_cot": "86.63% acc, 8.348s",
+        "oracle_stop_to_cot": "89.50% acc, 4.877s (41.6% saving)",
+        "champion_router": "85.68% acc, 7.448s (10.8% saving, R_L=25.9%)"
+      },
+      "non_inferiority_gate": "FAIL (0.8568 < 0.8613 = A_COT - 0.005)",
+      "bootstrap_ci_acc_diff": "[-0.0239, +0.0024] — did not prove inferiority, but failed to demonstrate non-inferiority",
+      "selective_prediction": "91.4% STOP precision on 70 STOP decisions, but only 16.7% coverage (need ~55.9%)",
+      "diagnosis": "Coverage problem, not absence of signal. Vote statistics cannot distinguish 'agree because correct' from 'agree because same misconception.'",
+      "evidence_boundary": "4fa5085 frozen. No further tuning against these 419 labels."
+    },
+
+    "R16": {
+      "status": "DRAFT — not yet preregistered",
+      "question": "What information is missing from RuntimeState that would let us identify safe STOP states?",
+      "direction": "Cheap metacognitive probes (self-check, alternative-answer, contradiction probe) as new executive information. Economic test: can probe cost pay for itself via avoided COT calls?",
+      "draft_document": "experiments/daph_x/r16/R16_DIRECTION.md"
+    }
+  }
 }
