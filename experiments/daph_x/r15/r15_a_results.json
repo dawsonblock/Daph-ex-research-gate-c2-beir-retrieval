@@ -1,0 +1,48 @@
+{
+  "experiment": "R15-A",
+  "champion_hash": "20c1a06e0c62b67c752b1ef53d4d0567edf5d85dfe18e4cb8dfa9c8cc9b3fe72",
+  "n_checkpoints": 419,
+  "n_unique_tasks": 419,
+  "n_escalated": 349,
+  "always_stop": {
+    "accuracy": 0.5584725536992841,
+    "mean_latency_s": 0.0
+  },
+  "always_cot": {
+    "accuracy": 0.8663484486873508,
+    "mean_latency_s": 8.34804903849645
+  },
+  "oracle_stop_to_cot": {
+    "accuracy": 0.8949880668257757,
+    "mean_latency_s": 4.877222461532218
+  },
+  "router": {
+    "accuracy": 0.8568019093078759,
+    "mean_latency_s": 7.448476529434369,
+    "n_correct": 359
+  },
+  "confusion": {
+    "stop_kept_correct": 64,
+    "stop_kept_wrong": 6,
+    "cot_escalated_correct": 295,
+    "cot_escalated_wrong": 54
+  },
+  "non_inferiority_gate": {
+    "A_router": 0.8568019093078759,
+    "A_COT": 0.8663484486873508,
+    "margin": 0.005,
+    "threshold": 0.8613484486873508,
+    "passed": false
+  },
+  "latency": {
+    "router_saving": 0.10775841216477822,
+    "oracle_saving": 0.4157649962235195,
+    "oracle_headroom_recovery": 0.25918105935701763
+  },
+  "tier": "NONE",
+  "bootstrap_ci_acc_diff": {
+    "mean": -0.009546539379474916,
+    "ci_lo": -0.02386634844868729,
+    "ci_hi": 0.0023866348448687846
+  }
+}
